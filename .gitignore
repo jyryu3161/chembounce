@@ -1,7 +1,9 @@
 data/
 backup/
 input/
-output/
+output*
+data.zip
+*ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

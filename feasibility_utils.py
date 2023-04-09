@@ -68,7 +68,7 @@ def check_feasibility(input_smiles_list):
         smiles = smiles_candidates[i]
         dist = np.linalg.norm(original_feat-pred_feat)    
         cos_sim = dot(original_feat, pred_feat)/(norm(original_feat)*norm(pred_feat))
-        if cos_sim > 0.95:
+        if cos_sim > 0.9:
             feasible_compound_smiles.append(smiles)
     
     return feasible_compound_smiles

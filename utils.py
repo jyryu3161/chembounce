@@ -10,11 +10,22 @@ import scaffoldgraph as sg
 from rdkit import RDLogger
 import os
 import warnings
+import argparse
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 lg = RDLogger.logger()
 lg.setLevel(RDLogger.CRITICAL)
 warnings.filterwarnings('ignore')
+
+def argument_parser():
+    parser = argparse.ArgumentParser()    
+    parser.add_argument('-o', '--output_dir', required=True, help="Output directory")
+    parser.add_argument('-i', '--input_smiles', required=True, help="Input smiles")
+    parser.add_argument('-c', '--core_smiles', required=False, default="C", help="Core smiles file", type=str) 
+    parser.add_argument('-n', '--top_n', required=False, default=100, help="Top n structures", type=int) 
+    parser.add_argument('-b', '--iso_n', required=False, default=1, help="bioiso n", type=int) 
+    
+    return parser
 
 def calc_shape(smiles1, smiles2):
     query_mol = oddt.toolkit.readstring('smi', smiles1)
