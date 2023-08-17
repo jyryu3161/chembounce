@@ -11,6 +11,9 @@ from rdkit import RDLogger
 import os
 import warnings
 import argparse
+import cats_module
+from scipy.spatial.distance import euclidean, cosine
+import pubchempy as pcp
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 lg = RDLogger.logger()
@@ -23,7 +26,7 @@ def argument_parser():
     parser.add_argument('-i', '--input_smiles', required=True, help="Input smiles")
     parser.add_argument('-c', '--core_smiles', required=False, default="C", help="Core smiles file", type=str) 
     parser.add_argument('-n', '--top_n', required=False, default=100, help="Top n structures", type=int) 
-    parser.add_argument('-b', '--iso_n', required=False, default=1, help="bioiso n", type=int) 
+    parser.add_argument('-t', '--threshold', required=False, default=0.7, help="Sim threshold", type=float) 
     
     return parser
 
@@ -55,6 +58,24 @@ def calc_tanimoto_sim(mol1, mol2):
     fp2 = AllChem.GetMorganFingerprint(mol2,2)
     sim = DataStructs.TanimotoSimilarity(fp1, fp2)
     return sim
+
+def calculate_cats_des(mol1, mol2):
+    cats = cats_module.CATS2D()
+    cats1 = cats.getCATs2D(mol1)
+    cats2 = cats.getCATs2D(mol2)
+    
+    return euclidean(cats1, cats2)
+
+def get_cid_by_structure(smiles):
+    try:
+        compounds = pcp.get_compounds(smiles, 'smiles')
+        if compounds:
+            return compounds[0].cid
+        else:
+            return 'N/A'
+    except Exception as e:
+        print(f"Error: {e}")
+        return 'N/A' 
 
 def get_atom_object_from_idx(mol, atom_idx_list):
     atom_obj_list = []
@@ -107,6 +128,7 @@ def get_submol_from_atom_list(mol, atom_list):
         bonds = get_bonds_from_atom_list(mol, atom_list)
         tmp_submol = Chem.PathToSubmol(mol, bonds)
     return tmp_submol
+
 
 def get_symbol_from_atom(mol, atom_idx):
     symbol = mol.GetAtomWithIdx(atom_idx).GetSymbol()

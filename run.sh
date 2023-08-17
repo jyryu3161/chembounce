@@ -1,1 +1,1 @@
-python run_scaffold_hopper.py -o output_test -i "C1=CC(=CC=C1C(=O)OC2=CC3=C(C=C2)C=C(C=C3)C(=N)N)N=C(N)N" -n 100
+python run_scaffold_hopper.py -o output_test -i "O=C(C)Oc1ccccc1C(=O)O" -n 500 -t 0.5

@@ -12,10 +12,7 @@ import itertools
 import copy
 import os
 import warnings
-
-import bioisostere
-import feasibility_utils
-
+from moses.metrics import SA, QED, logP
 import pickle
 
 def remove_substructures(mol, pattern_mol):
@@ -154,7 +151,7 @@ def replace_molecule(target_mol, pattern_mol, replace_mol, top_n):
             start_replace_scaffold_list = tmp_replace_scaffold_list
     
     final_candidates.sort(reverse=True)
-    final_candidates = final_candidates[0:top_n]
+    final_candidates = final_candidates[0:top_n*5]
     return final_candidates
 
 def read_fragments(target_smiles, fragment_file):
@@ -170,12 +167,18 @@ def read_fragments(target_smiles, fragment_file):
                     fragments.append(mol)
     return fragments
 
-def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n):
+def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n, threshold):
+    original_scaffold_smiles = Chem.MolToSmiles(original_scaffold)
+    
     scaffold_scores = []
-    threshold = 0.7
     for each_frag_candidate in tqdm.tqdm(fragments_DB):
+        candidate_smiles = Chem.MolToSmiles(each_frag_candidate)
+        if len(candidate_smiles) > len(original_scaffold_smiles)*2:
+            continue
+        if len(original_scaffold_smiles) > len(candidate_smiles)*2:
+            continue
         sim = utils.calc_tanimoto_sim(original_scaffold, each_frag_candidate)
-        if sim > threshold:
+        if sim > 0.1:
             if sim != 1.0:
                 scaffold_scores.append([sim, Chem.MolToSmiles(each_frag_candidate)])
     
@@ -211,12 +214,9 @@ def main():
     options = parser.parse_args()    
     target_smiles = options.input_smiles
     core_smiles = options.core_smiles
-    iso_n = options.iso_n
+    threshold = options.threshold
     final_top_n = options.top_n
     output_dir = options.output_dir
-    
-    scaffold_top_n = 1000
-    bioisostere_flag = True
     
     try:
         os.mkdir(output_dir)
@@ -224,80 +224,50 @@ def main():
         pass
     
     fragment_file = './data/Scaffolds_processed.txt'
-#     fragments_DB = read_fragments(target_smiles, fragment_file)
-#     with open('./data/fragment_data.pickle', 'wb') as f:
-#         pickle.dump(fragments_DB, f, pickle.HIGHEST_PROTOCOL)
-    
     f = open('./data/fragment_data.pickle', 'rb')
     fragments_DB = pickle.load(f)
     f.close()
 
     target_mol, target_smiles = utils.init_mol(target_smiles)
-    
+
     fp = open(output_dir+'/result.txt', 'w')
-    fp.write('%s\t%s\t%s\t%s\t%s\n'%('Original scaffold', 'Replacement scaffold', 'Final product', 'TC Similarity', 'Electron Similarity'))
+    fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%('Scaffold Num','Original scaffold', 'Replaced scaffold', 'Final structure', 'Tanimoto Similarity', 'Electron shape Similarity','CATS2D dist', 'QED', 'SAscore', 'logP'))
     frags = sg.get_all_murcko_fragments(target_mol, break_fused_rings=False)
     saved_results = {}
-
+    
+    cnt = 0
     for pattern_mol in tqdm.tqdm(frags):
+        cnt+=1
         original_scaffold = Chem.MolToSmiles(pattern_mol)
         pattern_mol, original_scaffold = utils.init_mol(original_scaffold)
         
-        replace_scaffold_list = search_similar_scaffolds(pattern_mol, fragments_DB, scaffold_top_n)
-        
-        for replace_scaffold in tqdm.tqdm(replace_scaffold_list):
+        replace_scaffold_list = search_similar_scaffolds(pattern_mol, fragments_DB, final_top_n, threshold)
+
+        for replace_scaffold in tqdm.tqdm(replace_scaffold_list, desc='Scaffold'):
             replace_mol, replace_scaffold = utils.init_mol(replace_scaffold)
             try:
                 final_candidates = replace_molecule(target_mol, pattern_mol, replace_mol, final_top_n)
             except:
                 continue
-
-            for each_score, each_candidate in final_candidates:
+            
+            for _, each_candidate in tqdm.tqdm(final_candidates, desc='Final candidates'):
                 if each_candidate in saved_results:
                     continue
-                saved_results[each_candidate] = each_score 
+                saved_results[each_candidate] = 1 
                 
+                mol = Chem.MolFromSmiles(each_candidate)
+                tanimoto_sim = utils.calc_tanimoto_sim(target_mol, mol)
                 try:
-                    sim = utils.calc_electron_shape(target_smiles, each_candidate)
-                    if sim >= 0.7:
-                        fp.write('%s\t%s\t%s\t%s\t%s\n'%(original_scaffold, replace_scaffold, each_candidate, each_score, sim))
+                    if tanimoto_sim >= threshold:
+                        electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
+                        sa_score = SA(mol)
+                        qed_score = QED(mol)
+                        logp_score = logP(mol)
+                        cats_des_dist = utils.calculate_cats_des(target_mol, mol)
+
+                        fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%(cnt, original_scaffold, replace_scaffold, each_candidate, tanimoto_sim, electron_shape_sim, cats_des_dist, qed_score, sa_score, logp_score))
                 except:
                     continue
-    fp.close()
-    
-    candidates = []
-    candidate_smiles_list = []
-    with open(output_dir+'/result.txt', 'r') as fp:
-        fp.readline()
-        for line in fp:
-            sptlist = line.strip().split('\t')
-            smiles = sptlist[2].strip()
-            candidates.append(smiles)
-            candidate_smiles_list.append(smiles)
-    candidates = list(set(candidates))
-    fp2 = open(output_dir+'/result_bioisostere.txt', 'w')
-    fp2.write('%s\t%s\n'%('Original Smiles', 'Bioisostere'))
-    for smiles in tqdm.tqdm(candidates):
-        try:
-            total_smiles_list = bioisostere.run_transformation(smiles, iso_n)
-        except:
-            continue
-        for each_smiles in total_smiles_list:
-            fp2.write('%s\t%s\n'%(smiles, each_smiles))
-            candidate_smiles_list.append(each_smiles)
-    fp2.close()
-    
-    candidate_smiles_list = list(set(candidate_smiles_list))
-    feasible_smiles_list = feasibility_utils.check_feasibility(candidate_smiles_list)
-    fp = open(output_dir+'/result_final_structures.txt', 'w')
-    fp.write('%s\t%s\t%s\n'%('Smiles', 'TC Sim', 'Electron sim'))
-    
-    for smiles in feasible_smiles_list:
-        each_mol = Chem.MolFromSmiles(smiles)
-        sim = utils.calc_tanimoto_sim(target_mol, each_mol)
-        esim = utils.calc_electron_shape(target_smiles, smiles)
-        if sim >= 0.7 and esim >= 0.7:
-            fp.write('%s\t%s\t%s\n'%(smiles, sim, esim))
     fp.close()
     return
 
