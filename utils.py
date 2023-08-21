@@ -14,12 +14,16 @@ import argparse
 import cats_module
 from scipy.spatial.distance import euclidean, cosine
 import pubchempy as pcp
+import pickle
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 lg = RDLogger.logger()
 lg.setLevel(RDLogger.CRITICAL)
 warnings.filterwarnings('ignore')
 
+#### CLI ####
+
+# Argument of parser
 def argument_parser():
     parser = argparse.ArgumentParser()    
     parser.add_argument('-o', '--output_dir', required=True, help="Output directory")
@@ -29,6 +33,22 @@ def argument_parser():
     parser.add_argument('-t', '--threshold', required=False, default=0.7, help="Sim threshold", type=float) 
     
     return parser
+
+
+#### Reference data ####
+
+PLF_LOC=os.path.split(os.path.abspath(__file__))[0]
+
+# Calling reference data
+def call_frag_db():
+    fragment_file = os.path.join(PLF_LOC,'data','Scaffolds_processed.txt') # TODO - check usage
+    fragment_pkl_file = os.path.join(PLF_LOC,'data','fragment_data.pickle')
+    with open(fragment_pkl_file, 'rb') as f:
+        fragments_DB = pickle.load(f)
+    return fragment_file, fragment_pkl_file, fragments_DB
+
+
+#### Sub functions ####
 
 def calc_shape(smiles1, smiles2):
     query_mol = oddt.toolkit.readstring('smi', smiles1)

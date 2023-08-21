@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+"""
+Scaffold hopping main functions and subfuctions
+"""
 import logging
 import utils
 from rdkit import RDLogger
@@ -6,6 +10,7 @@ from rdkit.Chem import AllChem
 import tqdm
 
 import numpy as np
+import pandas as pd
 
 import scaffoldgraph as sg
 import itertools
@@ -15,6 +20,8 @@ import warnings
 from moses.metrics import SA, QED, logP
 import pickle
 
+
+# Removal of substructures for given molecule
 def remove_substructures(mol, pattern_mol):
     substructure_list = utils.get_substructure_info(mol, pattern_mol)
     candidate_structures = []
@@ -70,6 +77,7 @@ def remove_substructures(mol, pattern_mol):
             
         break
     return candidate_structures
+
 
 def merge_structures(template_mol, mol, frag_mol, top_n=3):
     template_smiles = Chem.MolToSmiles(template_mol)
@@ -189,49 +197,23 @@ def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n, th
         replace_scaffold_list.append(each_data[1])
     return replace_scaffold_list
 
-def main():
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-    lg = RDLogger.logger()
-    lg.setLevel(RDLogger.CRITICAL)
-    warnings.filterwarnings('ignore')
-    RDLogger.DisableLog('rdApp.*')
-    
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-    mylogger = logging.getLogger("log")
-    mylogger.setLevel(logging.INFO)
-
-    stream_hander = logging.StreamHandler()
-    stream_hander.setFormatter(formatter)
-    mylogger.addHandler(stream_hander)
-    
-    file_handler = logging.FileHandler('log.log')
-    file_handler.setFormatter(formatter)
-    mylogger.addHandler(file_handler)
-    
-    parser = utils.argument_parser()
-    
-    options = parser.parse_args()    
-    target_smiles = options.input_smiles
-    core_smiles = options.core_smiles
-    threshold = options.threshold
-    final_top_n = options.top_n
-    output_dir = options.output_dir
-    
-    try:
-        os.mkdir(output_dir)
-    except:
-        pass
-    
-    fragment_file = './data/Scaffolds_processed.txt'
-    f = open('./data/fragment_data.pickle', 'rb')
-    fragments_DB = pickle.load(f)
-    f.close()
-
+# Main function
+def scaffold_hopping(target_smiles:str,
+                     fragments_DB:list,
+                     core_smiles:str='C',
+                     threshold:float=0.5,
+                     final_top_n:int=1000,
+                     output_dir:str='./output',
+                    ):
+    if not fragments_DB:
+        fragments_DB = utils.call_frag_db()[2] # TODO - check loaded data
     target_mol, target_smiles = utils.init_mol(target_smiles)
+    
+    result_df = pd.DataFrame({},columns=['Scaffold Num','Original scaffold', 'Replaced scaffold', 'Final structure', 'Tanimoto Similarity', 'Electron shape Similarity','CATS2D dist', 'QED', 'SAscore', 'logP'])
 
-    fp = open(output_dir+'/result.txt', 'w')
-    fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%('Scaffold Num','Original scaffold', 'Replaced scaffold', 'Final structure', 'Tanimoto Similarity', 'Electron shape Similarity','CATS2D dist', 'QED', 'SAscore', 'logP'))
+#     fp = open(output_dir+'/result.txt', 'w')
+#     fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%('Scaffold Num','Original scaffold', 'Replaced scaffold', 'Final structure', 'Tanimoto Similarity', 'Electron shape Similarity','CATS2D dist', 'QED', 'SAscore', 'logP'))
     frags = sg.get_all_murcko_fragments(target_mol, break_fused_rings=False)
     saved_results = {}
     
@@ -264,12 +246,108 @@ def main():
                         qed_score = QED(mol)
                         logp_score = logP(mol)
                         cats_des_dist = utils.calculate_cats_des(target_mol, mol)
+                        curr_ser = pd.Series([cnt, original_scaffold, replace_scaffold, each_candidate, tanimoto_sim, electron_shape_sim, cats_des_dist, qed_score, sa_score, logp_score],index=result_df.columns)
+                        result_df = result_df.append(curr_ser,ignore_index=True)
 
-                        fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%(cnt, original_scaffold, replace_scaffold, each_candidate, tanimoto_sim, electron_shape_sim, cats_des_dist, qed_score, sa_score, logp_score))
+#                         fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%(cnt, original_scaffold, replace_scaffold, each_candidate, tanimoto_sim, electron_shape_sim, cats_des_dist, qed_score, sa_score, logp_score))
                 except:
                     continue
-    fp.close()
-    return
+            
+    if type(output_dir)==str:
+        if os.path.isdir(output_dir):
+            os.makedirs(output_dir,exist_ok=True)
+            result_df.to_csv(os.path.join(output_dir,'result.txt'),sep='\t',index=None)
+#     fp.close()
+    return result_df
+
+
+def main():
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+    lg = RDLogger.logger()
+    lg.setLevel(RDLogger.CRITICAL)
+    warnings.filterwarnings('ignore')
+    RDLogger.DisableLog('rdApp.*')
+    
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    mylogger = logging.getLogger("log")
+    mylogger.setLevel(logging.INFO)
+
+    stream_hander = logging.StreamHandler()
+    stream_hander.setFormatter(formatter)
+    mylogger.addHandler(stream_hander)
+    
+    # TODO - Check if logging works
+    file_handler = logging.FileHandler('log.log')
+    file_handler.setFormatter(formatter)
+    mylogger.addHandler(file_handler)
+    
+    parser = utils.argument_parser()
+    
+    options = parser.parse_args()    
+    target_smiles = options.input_smiles
+    # TODO - check usage of core smiles
+    core_smiles = options.core_smiles
+    threshold = options.threshold
+    final_top_n = options.top_n
+    output_dir = options.output_dir
+    
+    os.makedirs(output_dir,exist_ok=True)
+    
+    _, _, fragments_DB = utils.call_frag_db()
+    
+    result_df = scaffold_hopping(
+        target_smiles=options.input_smiles,
+        fragments_DB=fragments_DB,
+        core_smiles=options.core_smiles,
+        threshold=options.threshold,
+        final_top_n=options.top_n,
+        output_dir=options.output_dir,
+    )
+    
+
+#     target_mol, target_smiles = utils.init_mol(target_smiles)
+
+#     fp = open(output_dir+'/result.txt', 'w')
+#     fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%('Scaffold Num','Original scaffold', 'Replaced scaffold', 'Final structure', 'Tanimoto Similarity', 'Electron shape Similarity','CATS2D dist', 'QED', 'SAscore', 'logP'))
+#     frags = sg.get_all_murcko_fragments(target_mol, break_fused_rings=False)
+#     saved_results = {}
+    
+#     cnt = 0
+#     for pattern_mol in tqdm.tqdm(frags):
+#         cnt+=1
+#         original_scaffold = Chem.MolToSmiles(pattern_mol)
+#         pattern_mol, original_scaffold = utils.init_mol(original_scaffold)
+        
+#         replace_scaffold_list = search_similar_scaffolds(pattern_mol, fragments_DB, final_top_n, threshold)
+
+#         for replace_scaffold in tqdm.tqdm(replace_scaffold_list, desc='Scaffold'):
+#             replace_mol, replace_scaffold = utils.init_mol(replace_scaffold)
+#             try:
+#                 final_candidates = replace_molecule(target_mol, pattern_mol, replace_mol, final_top_n)
+#             except:
+#                 continue
+            
+#             for _, each_candidate in tqdm.tqdm(final_candidates, desc='Final candidates'):
+#                 if each_candidate in saved_results:
+#                     continue
+#                 saved_results[each_candidate] = 1 
+                
+#                 mol = Chem.MolFromSmiles(each_candidate)
+#                 tanimoto_sim = utils.calc_tanimoto_sim(target_mol, mol)
+#                 try:
+#                     if tanimoto_sim >= threshold:
+#                         electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
+#                         sa_score = SA(mol)
+#                         qed_score = QED(mol)
+#                         logp_score = logP(mol)
+#                         cats_des_dist = utils.calculate_cats_des(target_mol, mol)
+
+#                         fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%(cnt, original_scaffold, replace_scaffold, each_candidate, tanimoto_sim, electron_shape_sim, cats_des_dist, qed_score, sa_score, logp_score))
+#                 except:
+#                     continue
+#     fp.close()
+#     return
 
 if __name__ == '__main__':
     main()
