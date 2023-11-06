@@ -212,12 +212,10 @@ def scaffold_hopping(target_smiles:str,
     
     result_df = pd.DataFrame({},columns=[
         'Scaffold Num','Original scaffold',
-        'Replaced scaffold','Replaced structure','Final structure',
+        'Replaced scaffold','Final structure','Standardized final structure',
         'Tanimoto Similarity','Electron shape Similarity',
         'CATS2D dist', 'QED', 'SAscore', 'logP'])
 
-#     fp = open(output_dir+'/result.txt', 'w')
-#     fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%('Scaffold Num','Original scaffold', 'Replaced scaffold', 'Final structure', 'Tanimoto Similarity', 'Electron shape Similarity','CATS2D dist', 'QED', 'SAscore', 'logP'))
     frags = sg.get_all_murcko_fragments(target_mol, break_fused_rings=False)
     saved_results = {}
     
@@ -242,14 +240,17 @@ def scaffold_hopping(target_smiles:str,
                 saved_results[each_candidate] = 1 
                 
                 mol = Chem.MolFromSmiles(each_candidate)
+                # Tanimoto similarity cutoff for selection
                 tanimoto_sim = utils.calc_tanimoto_sim(target_mol, mol)
                 try:
                     if tanimoto_sim >= threshold:
+                        # calculatio nof subscores and similarity
                         electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
                         sa_score = SA(mol)
                         qed_score = QED(mol)
                         logp_score = logP(mol)
                         cats_des_dist = utils.calculate_cats_des(target_mol, mol)
+                        # Standardization of smiles structure
                         try:
                             _fin_structure, valid_info = utils.get_standard_smiles(each_candidate)
                         except:
@@ -260,8 +261,6 @@ def scaffold_hopping(target_smiles:str,
                             tanimoto_sim, electron_shape_sim,
                             cats_des_dist, qed_score, sa_score, logp_score],index=result_df.columns)
                         result_df = result_df.append(curr_ser,ignore_index=True)
-
-#                         fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%(cnt, original_scaffold, replace_scaffold, each_candidate, tanimoto_sim, electron_shape_sim, cats_des_dist, qed_score, sa_score, logp_score))
                 except:
                     continue
             
@@ -269,10 +268,10 @@ def scaffold_hopping(target_smiles:str,
         if os.path.isdir(output_dir):
             os.makedirs(output_dir,exist_ok=True)
             result_df.to_csv(os.path.join(output_dir,'result.txt'),sep='\t',index=None)
-#     fp.close()
     return result_df
 
 
+# Main function
 def main():
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     lg = RDLogger.logger()
@@ -317,49 +316,6 @@ def main():
         output_dir=options.output_dir,
     )
     
-
-#     target_mol, target_smiles = utils.init_mol(target_smiles)
-
-#     fp = open(output_dir+'/result.txt', 'w')
-#     fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%('Scaffold Num','Original scaffold', 'Replaced scaffold', 'Final structure', 'Tanimoto Similarity', 'Electron shape Similarity','CATS2D dist', 'QED', 'SAscore', 'logP'))
-#     frags = sg.get_all_murcko_fragments(target_mol, break_fused_rings=False)
-#     saved_results = {}
-    
-#     cnt = 0
-#     for pattern_mol in tqdm.tqdm(frags):
-#         cnt+=1
-#         original_scaffold = Chem.MolToSmiles(pattern_mol)
-#         pattern_mol, original_scaffold = utils.init_mol(original_scaffold)
-        
-#         replace_scaffold_list = search_similar_scaffolds(pattern_mol, fragments_DB, final_top_n, threshold)
-
-#         for replace_scaffold in tqdm.tqdm(replace_scaffold_list, desc='Scaffold'):
-#             replace_mol, replace_scaffold = utils.init_mol(replace_scaffold)
-#             try:
-#                 final_candidates = replace_molecule(target_mol, pattern_mol, replace_mol, final_top_n)
-#             except:
-#                 continue
-            
-#             for _, each_candidate in tqdm.tqdm(final_candidates, desc='Final candidates'):
-#                 if each_candidate in saved_results:
-#                     continue
-#                 saved_results[each_candidate] = 1 
-                
-#                 mol = Chem.MolFromSmiles(each_candidate)
-#                 tanimoto_sim = utils.calc_tanimoto_sim(target_mol, mol)
-#                 try:
-#                     if tanimoto_sim >= threshold:
-#                         electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
-#                         sa_score = SA(mol)
-#                         qed_score = QED(mol)
-#                         logp_score = logP(mol)
-#                         cats_des_dist = utils.calculate_cats_des(target_mol, mol)
-
-#                         fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%(cnt, original_scaffold, replace_scaffold, each_candidate, tanimoto_sim, electron_shape_sim, cats_des_dist, qed_score, sa_score, logp_score))
-#                 except:
-#                     continue
-#     fp.close()
-#     return
 
 if __name__ == '__main__':
     main()
