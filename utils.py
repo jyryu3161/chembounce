@@ -15,6 +15,7 @@ import cats_module
 from scipy.spatial.distance import euclidean, cosine
 import pubchempy as pcp
 import pickle
+import molvs
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 lg = RDLogger.logger()
@@ -165,3 +166,8 @@ def init_mol(smiles):
     submolblock = Chem.MolToMolBlock(mol)
     mol = Chem.MolFromMolBlock(submolblock)
     return mol, Chem.MolToSmiles(mol)
+
+def get_standard_smiles(smiles):
+    std_smi = molvs.standardize_smiles(smiles)
+    smi_val = molvs.validate_smiles(smiles)
+    return std_smi, smi_val

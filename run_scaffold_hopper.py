@@ -210,7 +210,11 @@ def scaffold_hopping(target_smiles:str,
         fragments_DB = utils.call_frag_db()[2] # TODO - check loaded data
     target_mol, target_smiles = utils.init_mol(target_smiles)
     
-    result_df = pd.DataFrame({},columns=['Scaffold Num','Original scaffold', 'Replaced scaffold', 'Final structure', 'Tanimoto Similarity', 'Electron shape Similarity','CATS2D dist', 'QED', 'SAscore', 'logP'])
+    result_df = pd.DataFrame({},columns=[
+        'Scaffold Num','Original scaffold',
+        'Replaced scaffold','Replaced structure','Final structure',
+        'Tanimoto Similarity','Electron shape Similarity',
+        'CATS2D dist', 'QED', 'SAscore', 'logP'])
 
 #     fp = open(output_dir+'/result.txt', 'w')
 #     fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%('Scaffold Num','Original scaffold', 'Replaced scaffold', 'Final structure', 'Tanimoto Similarity', 'Electron shape Similarity','CATS2D dist', 'QED', 'SAscore', 'logP'))
@@ -246,7 +250,15 @@ def scaffold_hopping(target_smiles:str,
                         qed_score = QED(mol)
                         logp_score = logP(mol)
                         cats_des_dist = utils.calculate_cats_des(target_mol, mol)
-                        curr_ser = pd.Series([cnt, original_scaffold, replace_scaffold, each_candidate, tanimoto_sim, electron_shape_sim, cats_des_dist, qed_score, sa_score, logp_score],index=result_df.columns)
+                        try:
+                            _fin_structure, valid_info = utils.get_standard_smiles(each_candidate)
+                        except:
+                            _fin_structure = ''
+                        curr_ser = pd.Series([
+                            cnt, original_scaffold,
+                            replace_scaffold, each_candidate, _fin_structure,
+                            tanimoto_sim, electron_shape_sim,
+                            cats_des_dist, qed_score, sa_score, logp_score],index=result_df.columns)
                         result_df = result_df.append(curr_ser,ignore_index=True)
 
 #                         fp.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n'%(cnt, original_scaffold, replace_scaffold, each_candidate, tanimoto_sim, electron_shape_sim, cats_des_dist, qed_score, sa_score, logp_score))
