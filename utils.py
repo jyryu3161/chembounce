@@ -15,6 +15,8 @@ import cats_module
 from scipy.spatial.distance import euclidean, cosine
 import pubchempy as pcp
 import pickle
+from rdkit.Chem import Descriptors
+# from rdkit.Contrib.SA_Score import sascorer
 import molvs
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -29,9 +31,10 @@ def argument_parser():
     parser = argparse.ArgumentParser()    
     parser.add_argument('-o', '--output_dir', required=True, help="Output directory")
     parser.add_argument('-i', '--input_smiles', required=True, help="Input smiles")
-    parser.add_argument('-c', '--core_smiles', required=False, default="C", help="Core smiles file", type=str) 
-    parser.add_argument('-n', '--top_n', required=False, default=100, help="Top n structures", type=int) 
-    parser.add_argument('-t', '--threshold', required=False, default=0.7, help="Sim threshold", type=float) 
+    parser.add_argument('-c', '--core_smiles', required=False, default="C", help="Core smiles file", type=str)
+    parser.add_argument('-n', '--top_n', required=False, default=100, help="Top n structures", type=int)
+    parser.add_argument('-t', '--threshold', required=False, default=0.7, help="Sim threshold", type=float)
+    parser.add_argument('-l', '--low_mem', required=False, action='store_true', default=False, help="Low memory mode")
     
     return parser
 
@@ -47,6 +50,15 @@ def call_frag_db():
     with open(fragment_pkl_file, 'rb') as f:
         fragments_DB = pickle.load(f)
     return fragment_file, fragment_pkl_file, fragments_DB
+
+
+# Calling reference data
+def _call_frag_db_smi_(fragment_file:str=''):
+    if not os.isfile(fragment_file):
+        fragment_file = os.path.join(PLF_LOC,'data','Scaffolds_processed.txt') # TODO - check usage
+    with open(fragment_file, 'rb') as f:
+        fragments_DB = f.read().decode().splitlines()
+    return fragment_file, fragments_DB
 
 
 #### Sub functions ####
@@ -171,3 +183,10 @@ def get_standard_smiles(smiles):
     std_smi = molvs.standardize_smiles(smiles)
     smi_val = molvs.validate_smiles(smiles)
     return std_smi, smi_val
+
+# def _get_molecular_prop_(mol):
+#     sa = sascorer.calculateScore(mol) # TODO -sascorer
+#     qed = Chem.QED.default(mol)
+#     mw = Descriptors.MolWt(mol)
+#     logp = Descriptors.MolLogP(mol)
+#     return sa, qed, mw, logp
