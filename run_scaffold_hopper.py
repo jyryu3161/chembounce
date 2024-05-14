@@ -16,9 +16,10 @@ import scaffoldgraph as sg
 import itertools
 import copy
 import os
+import sys
 import warnings
-from moses.metrics import SA, QED, logP
 import pickle
+import copy
 
 
 # Removal of substructures for given molecule
@@ -206,32 +207,45 @@ def scaffold_hopping(target_smiles:str,
                      final_top_n:int=1000,
                      output_dir:str='./output',
                     ):
+    if type(output_dir)==str:
+        os.makedirs(output_dir,exist_ok=True)
+    
     if not fragments_DB:
         fragments_DB = utils.call_frag_db()[2] # TODO - check loaded data
     target_mol, target_smiles = utils.init_mol(target_smiles)
     
-    result_df = pd.DataFrame({},columns=[
+    result_features = [
         'Scaffold Num','Original scaffold',
         'Replaced scaffold','Final structure','Standardized final structure',
         'Tanimoto Similarity','Electron shape Similarity',
-        'CATS2D dist', 'QED', 'SAscore', 'logP'])
+        'CATS2D dist', 'QED', 'SAscore', 'logP']
+    fp = open(output_dir+'/result.txt', 'w')
+    fp.write('\t'.join(result_features)+'\n')
 
     frags = sg.get_all_murcko_fragments(target_mol, break_fused_rings=False)
     saved_results = {}
+    cnt_ser_l = []
     
     cnt = 0
-    for pattern_mol in tqdm.tqdm(frags):
+    for pattern_mol in tqdm.tqdm(frags, desc='Fragments'):
+        # TODO - top n count : not count here but to topn / frag
         cnt+=1
         original_scaffold = Chem.MolToSmiles(pattern_mol)
         pattern_mol, original_scaffold = utils.init_mol(original_scaffold)
         
-        replace_scaffold_list = search_similar_scaffolds(pattern_mol, fragments_DB, final_top_n, threshold)
-
+        replace_scaffold_list = search_similar_scaffolds(
+            original_scaffold=pattern_mol,
+            # TODO-WARNING-revert here
+            fragments_DB=fragments_DB,
+#             fragments_DB=fragments_DB[:50000],
+            # TODO-WARNING-by here
+            scaffold_top_n=final_top_n,
+            threshold=threshold)
         for replace_scaffold in tqdm.tqdm(replace_scaffold_list, desc='Scaffold'):
             replace_mol, replace_scaffold = utils.init_mol(replace_scaffold)
             try:
                 final_candidates = replace_molecule(target_mol, pattern_mol, replace_mol, final_top_n)
-            except:
+            except Exception as e:
                 continue
             
             for _, each_candidate in tqdm.tqdm(final_candidates, desc='Final candidates'):
@@ -242,32 +256,35 @@ def scaffold_hopping(target_smiles:str,
                 mol = Chem.MolFromSmiles(each_candidate)
                 # Tanimoto similarity cutoff for selection
                 tanimoto_sim = utils.calc_tanimoto_sim(target_mol, mol)
-                try:
-                    if tanimoto_sim >= threshold:
-                        # calculatio nof subscores and similarity
-                        electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
-                        sa_score = SA(mol)
-                        qed_score = QED(mol)
-                        logp_score = logP(mol)
-                        cats_des_dist = utils.calculate_cats_des(target_mol, mol)
-                        # Standardization of smiles structure
-                        try:
-                            _fin_structure, valid_info = utils.get_standard_smiles(each_candidate)
-                        except:
-                            _fin_structure = ''
-                        curr_ser = pd.Series([
-                            cnt, original_scaffold,
-                            replace_scaffold, each_candidate, _fin_structure,
-                            tanimoto_sim, electron_shape_sim,
-                            cats_des_dist, qed_score, sa_score, logp_score],index=result_df.columns)
-                        result_df = result_df.append(curr_ser,ignore_index=True)
-                except:
-                    continue
-            
-    if type(output_dir)==str:
-        if os.path.isdir(output_dir):
-            os.makedirs(output_dir,exist_ok=True)
-            result_df.to_csv(os.path.join(output_dir,'result.txt'),sep='\t',index=None)
+#                 try:
+                if tanimoto_sim >= threshold:
+                    # calculatio nof subscores and similarity
+                    electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
+                    sa_score, qed_score, _mw_, logp_score = utils._get_molecular_prop_(mol)
+                    cats_des_dist = utils.calculate_cats_des(target_mol, mol)
+                    # Standardization of smiles structure
+                    try:
+                        _fin_structure, valid_info = utils.get_standard_smiles(each_candidate)
+                    except Exception as e:
+                        print(f'Failed to find the standard SMILES of {each_candidate}',e)
+                        _fin_structure = ''
+                    fp.write('\t'.join([str(i) for i in [
+                        cnt, original_scaffold,
+                        replace_scaffold, each_candidate, _fin_structure,
+                        tanimoto_sim, electron_shape_sim,
+                        cats_des_dist, qed_score, sa_score, logp_score,
+                    ]])+'\n')
+#                     curr_ser = pd.Series([
+#                         cnt, original_scaffold,
+#                         replace_scaffold, each_candidate, _fin_structure,
+#                         tanimoto_sim, electron_shape_sim,
+#                         cats_des_dist, qed_score, sa_score, logp_score],index=result_features)
+#                     cnt_ser_l.append(copy.deepcopy(curr_ser))
+#                 except:
+#                     continue
+    
+    result_df = pd.concat(cnt_ser_l,axis=1,ignore_index=True).T
+#     result_df.to_csv(os.path.join(output_dir,'result.txt'),sep='\t',index=None)
     return result_df
 
 

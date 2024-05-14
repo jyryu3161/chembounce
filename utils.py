@@ -16,7 +16,10 @@ from scipy.spatial.distance import euclidean, cosine
 import pubchempy as pcp
 import pickle
 from rdkit.Chem import Descriptors
-# from rdkit.Contrib.SA_Score import sascorer
+try:
+    from rdkit.Contrib.SA_Score import sascorer as calc_SA
+except:
+    from moses.metrics import SA as calc_SA
 import molvs
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -184,9 +187,9 @@ def get_standard_smiles(smiles):
     smi_val = molvs.validate_smiles(smiles)
     return std_smi, smi_val
 
-# def _get_molecular_prop_(mol):
-#     sa = sascorer.calculateScore(mol) # TODO -sascorer
-#     qed = Chem.QED.default(mol)
-#     mw = Descriptors.MolWt(mol)
-#     logp = Descriptors.MolLogP(mol)
-#     return sa, qed, mw, logp
+def _get_molecular_prop_(mol):
+    sa = calc_SA(mol)
+    qed = Chem.QED.default(mol)
+    logp = Descriptors.MolLogP(mol)
+    mw = Descriptors.MolWt(mol)
+    return sa, qed, mw, logp
