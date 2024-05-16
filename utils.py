@@ -60,8 +60,8 @@ def call_frag_db():
 
 # Calling reference data
 def _call_frag_db_smi_(fragment_file:str=''):
-    if not os.isfile(fragment_file):
-        fragment_file = os.path.join(PLF_LOC,'data','Scaffolds_processed.txt') # TODO - check usage
+    if not os.path.isfile(fragment_file):
+        fragment_file = os.path.join(PLF_LOC,'data','Scaffolds_processed.txt') # TODO - change the file
     with open(fragment_file, 'rb') as f:
         fragments_DB = f.read().decode().splitlines()
     return fragment_file, fragments_DB

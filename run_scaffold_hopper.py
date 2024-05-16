@@ -176,20 +176,25 @@ def read_fragments(target_smiles, fragment_file):
                     fragments.append(mol)
     return fragments
 
-def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n, threshold):
+def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n, threshold, low_mem:bool=False):
     original_scaffold_smiles = Chem.MolToSmiles(original_scaffold)
     
     scaffold_scores = []
     for each_frag_candidate in tqdm.tqdm(fragments_DB):
-        candidate_smiles = Chem.MolToSmiles(each_frag_candidate)
+        if low_mem: # candidate of SMILES obj.
+            candidate_smiles = each_frag_candidate
+            candidate_mol = Chem.MolFromSmiles(candidate_smiles)
+        else: # Candidate of mol obj.
+            candidate_mol = each_frag_candidate
+            candidate_smiles = Chem.MolToSmiles(each_frag_candidate)
         if len(candidate_smiles) > len(original_scaffold_smiles)*2:
             continue
         if len(original_scaffold_smiles) > len(candidate_smiles)*2:
             continue
-        sim = utils.calc_tanimoto_sim(original_scaffold, each_frag_candidate)
+        sim = utils.calc_tanimoto_sim(original_scaffold, candidate_mol)
         if sim > 0.1:
             if sim != 1.0:
-                scaffold_scores.append([sim, Chem.MolToSmiles(each_frag_candidate)])
+                scaffold_scores.append([sim, candidate_smiles])
     
     replace_scaffold_list = []
     scaffold_scores.sort(reverse=True)
@@ -206,12 +211,16 @@ def scaffold_hopping(target_smiles:str,
                      threshold:float=0.5,
                      final_top_n:int=1000,
                      output_dir:str='./output',
+                     low_mem:bool=False,
                     ):
     if type(output_dir)==str:
         os.makedirs(output_dir,exist_ok=True)
     
     if not fragments_DB:
-        fragments_DB = utils.call_frag_db()[2] # TODO - check loaded data
+        if not low_mem:
+            fragments_DB = utils.call_frag_db()[2] # TODO - check loaded data
+        else:
+            fragments_DB = utils._call_frag_db_smi_()[1] # TODO - check loaded data: SMILES comparison with the original one
     target_mol, target_smiles = utils.init_mol(target_smiles)
     
     result_features = [
@@ -237,7 +246,9 @@ def scaffold_hopping(target_smiles:str,
             original_scaffold=pattern_mol,
             fragments_DB=fragments_DB,
             scaffold_top_n=final_top_n,
-            threshold=threshold)
+            threshold=threshold,
+            low_mem=low_mem,
+        )
         for replace_scaffold in tqdm.tqdm(replace_scaffold_list, desc='Scaffold'):
             replace_mol, replace_scaffold = utils.init_mol(replace_scaffold)
             try:
@@ -319,7 +330,10 @@ def main():
     
     os.makedirs(output_dir,exist_ok=True)
     
-    _, _, fragments_DB = utils.call_frag_db()
+    if options.low_mem:
+        _, fragments_DB = utils._call_frag_db_smi_()
+    else:
+        _, _, fragments_DB = utils.call_frag_db()
     
     result_df = scaffold_hopping(
         target_smiles=options.input_smiles,
@@ -328,6 +342,7 @@ def main():
         threshold=options.threshold,
         final_top_n=options.top_n,
         output_dir=options.output_dir,
+        low_mem=options.low_mem,
     )
     
 
