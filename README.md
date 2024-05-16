@@ -4,12 +4,12 @@ scaffold hopping
 # Installation
 
 For download reference files, run `bash install.sh`
-Install conda environment as follows: `conda create env -f environment.yml`
+Install conda environment as follows: `conda env create -n ENVIRONMENT_NAME -f environment.yml`
 
 
 # How to run
 
-Before running, make sure conda environment is activate `conda activate scaffold`
+Before running, make sure conda environment is activate `conda activate ENVIRONMENT_NAME`
 
 `python run_scaffold_hopper.py -o OUTPUT_DIRECTORY -i INPUT_SMILES -n NUMBER_OF_STRUCTURES -t SIMILARITY_THRESHOLD`
 
@@ -22,8 +22,6 @@ Before running, make sure conda environment is activate `conda activate scaffold
 # Result
 
 Result file will be generated as follows: `OUTPUT_DIRECTORY/result.txt` with tap-delimitted format. `Final structure` column is the final result SMILES of scaffold hopping and `Standardized final structure` is standardized SMILES format for the corresponding result.
-
-
 
 
 

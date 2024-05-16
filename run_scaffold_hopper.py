@@ -235,10 +235,7 @@ def scaffold_hopping(target_smiles:str,
         
         replace_scaffold_list = search_similar_scaffolds(
             original_scaffold=pattern_mol,
-            # TODO-WARNING-revert here
             fragments_DB=fragments_DB,
-#             fragments_DB=fragments_DB[:50000],
-            # TODO-WARNING-by here
             scaffold_top_n=final_top_n,
             threshold=threshold)
         for replace_scaffold in tqdm.tqdm(replace_scaffold_list, desc='Scaffold'):
@@ -274,12 +271,12 @@ def scaffold_hopping(target_smiles:str,
                         tanimoto_sim, electron_shape_sim,
                         cats_des_dist, qed_score, sa_score, logp_score,
                     ]])+'\n')
-#                     curr_ser = pd.Series([
-#                         cnt, original_scaffold,
-#                         replace_scaffold, each_candidate, _fin_structure,
-#                         tanimoto_sim, electron_shape_sim,
-#                         cats_des_dist, qed_score, sa_score, logp_score],index=result_features)
-#                     cnt_ser_l.append(copy.deepcopy(curr_ser))
+                    curr_ser = pd.Series([
+                        cnt, original_scaffold,
+                        replace_scaffold, each_candidate, _fin_structure,
+                        tanimoto_sim, electron_shape_sim,
+                        cats_des_dist, qed_score, sa_score, logp_score],index=result_features)
+                    cnt_ser_l.append(copy.deepcopy(curr_ser))
 #                 except:
 #                     continue
     

@@ -9,6 +9,7 @@ from rdkit import DataStructs
 import scaffoldgraph as sg
 from rdkit import RDLogger
 import os
+import sys
 import warnings
 import argparse
 import cats_module
@@ -16,8 +17,10 @@ from scipy.spatial.distance import euclidean, cosine
 import pubchempy as pcp
 import pickle
 from rdkit.Chem import Descriptors
+import rdkit.RDConfig as RDConfig
+sys.path.append(os.environ['RDBASE'])
 try:
-    from rdkit.Contrib.SA_Score import sascorer as calc_SA
+    from Contrib.SA_Score.sascorer import calculateScore as calc_SA
 except:
     from moses.metrics import SA as calc_SA
 import molvs
