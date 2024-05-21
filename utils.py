@@ -17,12 +17,18 @@ from scipy.spatial.distance import euclidean, cosine
 import pubchempy as pcp
 import pickle
 from rdkit.Chem import Descriptors
+# SA score calcualtion function - dependency of importing path by the rdkit version
+import rdkit.RDPaths as RDPaths
 import rdkit.RDConfig as RDConfig
+sys.path.append(RDPaths.RDContribDir)
 sys.path.append(os.environ['RDBASE'])
 try:
     from Contrib.SA_Score.sascorer import calculateScore as calc_SA
 except:
-    from moses.metrics import SA as calc_SA
+    try:
+        from SA_Score.sascorer import calculateScore as calc_SA
+    except:
+        from moses.metrics import SA as calc_SA
 import molvs
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -35,11 +41,11 @@ warnings.filterwarnings('ignore')
 # Argument of parser
 def argument_parser():
     parser = argparse.ArgumentParser()    
-    parser.add_argument('-o', '--output_dir', required=True, help="Output directory")
-    parser.add_argument('-i', '--input_smiles', required=True, help="Input smiles")
-    parser.add_argument('-c', '--core_smiles', required=False, default="C", help="Core smiles file", type=str)
-    parser.add_argument('-n', '--top_n', required=False, default=100, help="Top n structures", type=int)
-    parser.add_argument('-t', '--threshold', required=False, default=0.7, help="Sim threshold", type=float)
+    parser.add_argument('-o', '--output_dir', required=True, help="Output location")
+    parser.add_argument('-i', '--input_smiles', required=True, help="Input SMILES, the target molecular structure")
+    parser.add_argument('-c', '--core_smiles', required=False, default="C", help="Core SMILES which should not be altered while scaffold hopping", type=str)
+    parser.add_argument('-n', '--top_n', required=False, default=100, help="Number of top fragments to test", type=int)
+    parser.add_argument('-t', '--threshold', required=False, default=0.7, help="Similarity threshold, between 0 and 1: used to exclude irrelated molecular structure, based on the similarity between the original structure and scaffold-hopped one. Default is 0.5", type=float)
     parser.add_argument('-l', '--low_mem', required=False, action='store_true', default=False, help="Low memory mode")
     
     return parser
@@ -51,7 +57,7 @@ PLF_LOC=os.path.split(os.path.abspath(__file__))[0]
 
 # Calling reference data
 def call_frag_db():
-    fragment_file = os.path.join(PLF_LOC,'data','Scaffolds_processed.txt') # TODO - check usage
+    fragment_file = os.path.join(PLF_LOC,'data','Scaffolds_processed.txt')
     fragment_pkl_file = os.path.join(PLF_LOC,'data','fragment_data.pickle')
     with open(fragment_pkl_file, 'rb') as f:
         fragments_DB = pickle.load(f)
@@ -61,7 +67,9 @@ def call_frag_db():
 # Calling reference data
 def _call_frag_db_smi_(fragment_file:str=''):
     if not os.path.isfile(fragment_file):
-        fragment_file = os.path.join(PLF_LOC,'data','Scaffolds_processed.txt') # TODO - change the file
+        fragment_file = os.path.join(PLF_LOC,'data','fragment_data.smi.txt')
+        if not os.path.isfile(fragment_file):
+            fragment_file = os.path.join(PLF_LOC,'data','Scaffolds_processed.txt')
     with open(fragment_file, 'rb') as f:
         fragments_DB = f.read().decode().splitlines()
     return fragment_file, fragments_DB

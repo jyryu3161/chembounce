@@ -176,11 +176,11 @@ def read_fragments(target_smiles, fragment_file):
                     fragments.append(mol)
     return fragments
 
-def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n, threshold, low_mem:bool=False):
+def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n, threshold, low_mem:bool=False, tqdm_quiet:bool=False):
     original_scaffold_smiles = Chem.MolToSmiles(original_scaffold)
     
     scaffold_scores = []
-    for each_frag_candidate in tqdm.tqdm(fragments_DB):
+    for each_frag_candidate in tqdm.tqdm(fragments_DB,desc=original_scaffold_smiles,disable=tqdm_quiet):
         if low_mem: # candidate of SMILES obj.
             candidate_smiles = each_frag_candidate
             candidate_mol = Chem.MolFromSmiles(candidate_smiles)
@@ -212,15 +212,17 @@ def scaffold_hopping(target_smiles:str,
                      final_top_n:int=1000,
                      output_dir:str='./output',
                      low_mem:bool=False,
+                     tqdm_quiet:bool=False,
                     ):
     if type(output_dir)==str:
         os.makedirs(output_dir,exist_ok=True)
     
     if not fragments_DB:
+        print("Calling fragment DB..")
         if not low_mem:
-            fragments_DB = utils.call_frag_db()[2] # TODO - check loaded data
+            fragments_DB = utils.call_frag_db()[2]
         else:
-            fragments_DB = utils._call_frag_db_smi_()[1] # TODO - check loaded data: SMILES comparison with the original one
+            fragments_DB = utils._call_frag_db_smi_()[1]
     target_mol, target_smiles = utils.init_mol(target_smiles)
     
     result_features = [
@@ -230,24 +232,26 @@ def scaffold_hopping(target_smiles:str,
         'CATS2D dist', 'QED', 'SAscore', 'logP']
     fp = open(output_dir+'/result.txt', 'w')
     fp.write('\t'.join(result_features)+'\n')
-
+    
     frags = sg.get_all_murcko_fragments(target_mol, break_fused_rings=False)
     saved_results = {}
     cnt_ser_l = []
     
     cnt = 0
+    print(f"Fragments found\t: {len(frags)}")
     for pattern_mol in tqdm.tqdm(frags, desc='Fragments'):
         # TODO - top n count : not count here but to topn / frag
         cnt+=1
         original_scaffold = Chem.MolToSmiles(pattern_mol)
         pattern_mol, original_scaffold = utils.init_mol(original_scaffold)
-        
+        print(f"Finding alternatives for\t\t{original_scaffold}")
         replace_scaffold_list = search_similar_scaffolds(
             original_scaffold=pattern_mol,
             fragments_DB=fragments_DB,
             scaffold_top_n=final_top_n,
             threshold=threshold,
             low_mem=low_mem,
+            tqdm_quiet=tqdm_quiet,
         )
         for replace_scaffold in tqdm.tqdm(replace_scaffold_list, desc='Scaffold'):
             replace_mol, replace_scaffold = utils.init_mol(replace_scaffold)
@@ -293,6 +297,7 @@ def scaffold_hopping(target_smiles:str,
     
     result_df = pd.concat(cnt_ser_l,axis=1,ignore_index=True).T
 #     result_df.to_csv(os.path.join(output_dir,'result.txt'),sep='\t',index=None)
+    print(f"Found hopped structures\t: {result_df.shape[0]}")
     return result_df
 
 
@@ -313,7 +318,6 @@ def main():
     stream_hander.setFormatter(formatter)
     mylogger.addHandler(stream_hander)
     
-    # TODO - Check if logging works
     file_handler = logging.FileHandler('log.log')
     file_handler.setFormatter(formatter)
     mylogger.addHandler(file_handler)
@@ -322,7 +326,6 @@ def main():
     
     options = parser.parse_args()    
     target_smiles = options.input_smiles
-    # TODO - check usage of core smiles
     core_smiles = options.core_smiles
     threshold = options.threshold
     final_top_n = options.top_n
