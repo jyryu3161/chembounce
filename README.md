@@ -1,8 +1,8 @@
-# scaffoldhopper
+# chembound
 
 <!--<img src="./assets/graphical_abstract.png" width="450px"></img>-->
 
-## Installation
+## Dependencies
 
 Install conda environment as follows: 
 
@@ -21,8 +21,10 @@ bash install.sh
 Before running, make sure conda environment is activate `conda activate ENVIRONMENT_NAME`
 
 ```bash
-python run_scaffold_hopper.py -o OUTPUT_DIRECTORY -i INPUT_SMILES -c CORE_SMILES -n NUMBER_OF_FRAGMENTS -t SIMILARITY_THRESHOLD
+python chembound.py -o OUTPUT_DIRECTORY -i INPUT_SMILES -c CORE_SMILES -n NUMBER_OF_FRAGMENTS -t SIMILARITY_THRESHOLD
 ```
+See the example of `run.sh`
+
 
 ### Parameters
 

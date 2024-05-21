@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Scaffold hopping main functions and subfuctions
+Chembound main functions and subfuctions
 """
 import logging
 import utils
@@ -176,7 +176,8 @@ def read_fragments(target_smiles, fragment_file):
                     fragments.append(mol)
     return fragments
 
-def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n, threshold, low_mem:bool=False, tqdm_quiet:bool=False):
+def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n, threshold,
+                             low_mem:bool=False, tqdm_quiet:bool=False):
     original_scaffold_smiles = Chem.MolToSmiles(original_scaffold)
     
     scaffold_scores = []
@@ -205,15 +206,15 @@ def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n, th
 
 
 # Main function
-def scaffold_hopping(target_smiles:str,
-                     fragments_DB:list,
-                     core_smiles:str='C',
-                     threshold:float=0.5,
-                     final_top_n:int=1000,
-                     output_dir:str='./output',
-                     low_mem:bool=False,
-                     tqdm_quiet:bool=False,
-                    ):
+def chembound(target_smiles:str,
+              fragments_DB:list,
+              core_smiles:str='C',
+              threshold:float=0.5,
+              final_top_n:int=1000,
+              output_dir:str='./output',
+              low_mem:bool=False,
+              tqdm_quiet:bool=False,
+             ):
     if type(output_dir)==str:
         os.makedirs(output_dir,exist_ok=True)
     
@@ -268,7 +269,6 @@ def scaffold_hopping(target_smiles:str,
                 mol = Chem.MolFromSmiles(each_candidate)
                 # Tanimoto similarity cutoff for selection
                 tanimoto_sim = utils.calc_tanimoto_sim(target_mol, mol)
-#                 try:
                 if tanimoto_sim >= threshold:
                     # calculatio nof subscores and similarity
                     electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
@@ -292,11 +292,8 @@ def scaffold_hopping(target_smiles:str,
                         tanimoto_sim, electron_shape_sim,
                         cats_des_dist, qed_score, sa_score, logp_score],index=result_features)
                     cnt_ser_l.append(copy.deepcopy(curr_ser))
-#                 except:
-#                     continue
     
     result_df = pd.concat(cnt_ser_l,axis=1,ignore_index=True).T
-#     result_df.to_csv(os.path.join(output_dir,'result.txt'),sep='\t',index=None)
     print(f"Found hopped structures\t: {result_df.shape[0]}")
     return result_df
 
@@ -338,7 +335,7 @@ def main():
     else:
         _, _, fragments_DB = utils.call_frag_db()
     
-    result_df = scaffold_hopping(
+    result_df = chembound(
         target_smiles=options.input_smiles,
         fragments_DB=fragments_DB,
         core_smiles=options.core_smiles,

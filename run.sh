@@ -1,1 +1,4 @@
-python run_scaffold_hopper.py -o output_test -i "O=C(C)Oc1ccccc1C(=O)O" -n 500 -t 0.5
+python chembound.py \
+	-o ./output \
+	-i "O=C(C)Oc1ccccc1C(=O)O" -n 500 -t 0.5
+
