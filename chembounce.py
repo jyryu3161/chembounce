@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Chembound main functions and subfuctions
+ChemBounce main functions and subfuctions
 """
 import logging
 import utils
@@ -206,15 +206,15 @@ def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n, th
 
 
 # Main function
-def chembound(target_smiles:str,
-              fragments_DB:list,
-              core_smiles:str='C',
-              threshold:float=0.5,
-              final_top_n:int=1000,
-              output_dir:str='./output',
-              low_mem:bool=False,
-              tqdm_quiet:bool=False,
-             ):
+def chembounce(target_smiles:str,
+               fragments_DB:list,
+               core_smiles:str='C',
+               threshold:float=0.5,
+               final_top_n:int=1000,
+               output_dir:str='./output',
+               low_mem:bool=False,
+               tqdm_quiet:bool=False,
+              ):
     if type(output_dir)==str:
         os.makedirs(output_dir,exist_ok=True)
     
@@ -335,7 +335,7 @@ def main():
     else:
         _, _, fragments_DB = utils.call_frag_db()
     
-    result_df = chembound(
+    result_df = chembounce(
         target_smiles=options.input_smiles,
         fragments_DB=fragments_DB,
         core_smiles=options.core_smiles,

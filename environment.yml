@@ -1,4 +1,4 @@
-name: chembound
+name: chembounce
 channels:
   - bioconda
   - bio
@@ -174,4 +174,4 @@ dependencies:
     - threadpoolctl==3.4.0
     - urllib3==2.2.1
     - zipp==3.18.1
-prefix: /BiO/home/cdgu/anaconda3/envs/chembound
+prefix: /BiO/home/cdgu/anaconda3/envs/chembounce

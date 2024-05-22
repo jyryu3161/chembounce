@@ -1,4 +1,4 @@
-# chembound
+# ChemBounce
 
 <!--<img src="./assets/graphical_abstract.png" width="450px"></img>-->
 
@@ -21,7 +21,7 @@ bash install.sh
 Before running, make sure conda environment is activate `conda activate ENVIRONMENT_NAME`
 
 ```bash
-python chembound.py -o OUTPUT_DIRECTORY -i INPUT_SMILES -c CORE_SMILES -n NUMBER_OF_FRAGMENTS -t SIMILARITY_THRESHOLD
+python chembounce.py -o OUTPUT_DIRECTORY -i INPUT_SMILES -c CORE_SMILES -n NUMBER_OF_FRAGMENTS -t SIMILARITY_THRESHOLD
 ```
 See the example of `run.sh`
 
