@@ -32,7 +32,7 @@ See the example of `run.sh`
 - `-i INPUT_SMILES` : Input SMILES, the target molecular structure
 - `-c CORE_SMILES` : (Optional) Core SMILES which should not be altered while scaffold hopping
 - `-n NUMBER_OF_FRAGMENTS` : (`int`) Number of fragments to test for scaffold hopping
-- `-t SIMILARITY_THRESHOLD` : (`float`; `0` to `1`) Threshold for Tanimoto simiarity between `INPUT_SMILES` and generated SMILES. (default is `0.5`)
+- `-t SIMILARITY_THRESHOLD` : (`float`; `0` to `1`) Threshold for Tanimoto simiarity between `INPUT_SMILES` and generated SMILES. (default is `0.7`)
 - `-l` : (Optional) Low memory mode.
 
 

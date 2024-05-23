@@ -45,7 +45,7 @@ def argument_parser():
     parser.add_argument('-i', '--input_smiles', required=True, help="Input SMILES, the target molecular structure")
     parser.add_argument('-c', '--core_smiles', required=False, default="C", help="Core SMILES which should not be altered while scaffold hopping", type=str)
     parser.add_argument('-n', '--top_n', required=False, default=100, help="Number of top fragments to test", type=int)
-    parser.add_argument('-t', '--threshold', required=False, default=0.7, help="Similarity threshold, between 0 and 1: used to exclude irrelated molecular structure, based on the similarity between the original structure and scaffold-hopped one. Default is 0.5", type=float)
+    parser.add_argument('-t', '--threshold', required=False, default=0.7, help="Similarity threshold, between 0 and 1: used to exclude irrelated molecular structure, based on the similarity between the original structure and scaffold-hopped one. Default is 0.7", type=float)
     parser.add_argument('-l', '--low_mem', required=False, action='store_true', default=False, help="Low memory mode")
     
     return parser
