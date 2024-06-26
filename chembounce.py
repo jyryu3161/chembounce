@@ -8,7 +8,7 @@ from rdkit import RDLogger
 from rdkit import Chem
 from rdkit.Chem import AllChem
 import tqdm
-
+import gc
 import numpy as np
 import pandas as pd
 
@@ -20,6 +20,7 @@ import sys
 import warnings
 import pickle
 import copy
+import datetime
 
 
 # Removal of substructures for given molecule
@@ -100,6 +101,7 @@ def merge_structures(template_mol, mol, frag_mol, top_n=3):
     
     structure_candidates = []
     substructure_list = utils.get_substructure_info(combo, mol)
+#     for each_atom in substructure_list[0]:
     for each_atom in substructure_list[0]:
         symbol = combo.GetAtomWithIdx(each_atom).GetSymbol()
         
@@ -131,37 +133,41 @@ def merge_structures(template_mol, mol, frag_mol, top_n=3):
     structure_candidates.sort(reverse=True)
     return structure_candidates
 
-def replace_molecule(target_mol, pattern_mol, replace_mol, top_n):
-    start_replace_scaffold_list = [replace_mol]
+def replace_molecule(target_mol, pattern_mol, replace_mol, max_n, _merge_structure_top_n_):
     candidate_structures = remove_substructures(target_mol, pattern_mol)
     
     final_candidates = []
     saved_structures = {}
+    # Permutation for merge order for fragment remnants
     candidate_sets = itertools.permutations(candidate_structures)
-    
-    for each_set in candidate_sets:
+
+    # code_ rearr. : unlimit ub/ 
+    for each_set in candidate_sets: # permut round
         candidate_set = list(each_set)
-        for each_structure in candidate_set:
+        start_replace_scaffold_list = [(1.,replace_mol)] # seed mol : reset for each_set
+        for each_structure in candidate_set: # frag round
             frag_mol = Chem.MolFromSmiles(each_structure)
             tmp_replace_scaffold_list = []
-
-            for each_replace_mol in start_replace_scaffold_list:
-                structure_candidates = merge_structures(target_mol, each_replace_mol, frag_mol, top_n)
-
+            for _score_,each_replace_mol in start_replace_scaffold_list[:max_n]:
+                structure_candidates = merge_structures(
+                    target_mol, each_replace_mol, frag_mol, _merge_structure_top_n_)
                 for each_candidate in structure_candidates:
                     each_score = each_candidate[0]
                     each_str = each_candidate[1]
                     if each_str not in saved_structures:
                         saved_structures[each_str] = True
-                        final_candidates.append([each_score, each_str])
                         each_str_mol, each_str = utils.init_mol(each_str)
-                        tmp_replace_scaffold_list.append(each_str_mol)
+                        tmp_replace_scaffold_list.append(tuple([each_score,each_str_mol]))
             tmp_replace_scaffold_list = list(set(tmp_replace_scaffold_list))
-            start_replace_scaffold_list = tmp_replace_scaffold_list
+            tmp_replace_scaffold_list.sort(reverse=True,key=lambda x: x[0])
+            start_replace_scaffold_list = tmp_replace_scaffold_list # update seed mole
+        final_candidates.extend(
+            [tuple([score,Chem.MolToSmiles(mol)]) for (score, mol) in start_replace_scaffold_list])
     
     final_candidates.sort(reverse=True)
-    final_candidates = final_candidates[0:top_n*5]
+    final_candidates = final_candidates[0:max_n]
     return final_candidates
+
 
 def read_fragments(target_smiles, fragment_file):
     fragments = []           
@@ -176,11 +182,12 @@ def read_fragments(target_smiles, fragment_file):
                     fragments.append(mol)
     return fragments
 
-def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n, threshold,
+def search_similar_scaffolds(original_scaffold, fragments_DB,
+#                              scaffold_top_n:int, threshold:int=None,
                              low_mem:bool=False, tqdm_quiet:bool=False):
     original_scaffold_smiles = Chem.MolToSmiles(original_scaffold)
     
-    scaffold_scores = []
+    scaffold_scores = dict()
     for each_frag_candidate in tqdm.tqdm(fragments_DB,desc=original_scaffold_smiles,disable=tqdm_quiet):
         if low_mem: # candidate of SMILES obj.
             candidate_smiles = each_frag_candidate
@@ -195,29 +202,32 @@ def search_similar_scaffolds(original_scaffold, fragments_DB, scaffold_top_n, th
         sim = utils.calc_tanimoto_sim(original_scaffold, candidate_mol)
         if sim > 0.1:
             if sim != 1.0:
-                scaffold_scores.append([sim, candidate_smiles])
+                scaffold_scores[candidate_smiles] = sim
+    scaffold_scores = pd.Series(scaffold_scores)
+    scaffold_scores.sort_values(ascending=False)
+    return scaffold_scores
+
     
-    replace_scaffold_list = []
-    scaffold_scores.sort(reverse=True)
-    scaffold_scores = scaffold_scores[0:scaffold_top_n]
-    for each_data in scaffold_scores:
-        replace_scaffold_list.append(each_data[1])
-    return replace_scaffold_list
-
-
 # Main function
 def chembounce(target_smiles:str,
                fragments_DB:list,
-               core_smiles:str='C',
+#                core_smiles:str='C', # TODO - TBD
                threshold:float=0.5,
-               final_top_n:int=1000,
+               overall_max_n:int=None,
+               frag_max_n:int=None,
+               scaffold_top_n:int=None,
+               cand_max_n__rplc:int=None,
+               _merge_structure_top_n_:int=100,
                output_dir:str='./output',
                low_mem:bool=False,
                tqdm_quiet:bool=False,
+               fragments:list=[],
+               replace_scaffold_files:list=[],
               ):
     if type(output_dir)==str:
         os.makedirs(output_dir,exist_ok=True)
     
+    # TODO - move calling DB to the section of replace scaffold
     if not fragments_DB:
         print("Calling fragment DB..")
         if not low_mem:
@@ -227,52 +237,136 @@ def chembounce(target_smiles:str,
     target_mol, target_smiles = utils.init_mol(target_smiles)
     
     result_features = [
-        'Scaffold Num','Original scaffold',
+        'Fragment_no','Original scaffold',
         'Replaced scaffold','Final structure','Standardized final structure',
         'Tanimoto Similarity','Electron shape Similarity',
         'CATS2D dist', 'QED', 'SAscore', 'logP']
-    fp = open(output_dir+'/result.txt', 'w')
-    fp.write('\t'.join(result_features)+'\n')
+    fp = open(os.path.join(output_dir,'overall_result.txt'), 'wb')
+    fp.write('\t'.join(result_features).encode())
+    fp.write('\n'.encode())
+    # Fragment info
+    if fragments:
+        frags = [Chem.MolFromSmiles(i) for i in fragments]
+    else:
+        frags = sg.get_all_murcko_fragments(target_mol, break_fused_rings=False)
+    frags_n = len(frags)
+    saved_results = {target_smiles:1}
     
-    frags = sg.get_all_murcko_fragments(target_mol, break_fused_rings=False)
-    saved_results = {}
-    cnt_ser_l = []
-    
-    cnt = 0
+    frag_info = pd.DataFrame([[Chem.MolToSmiles(i) for i in frags]],index=['SMILES']).T
+    frag_info.index.name = 'Fragment_no'
+    frag_info.to_csv(os.path.join(output_dir,'fragment_info.tsv'),sep='\t')
     print(f"Fragments found\t: {len(frags)}")
-    for pattern_mol in tqdm.tqdm(frags, desc='Fragments'):
-        # TODO - top n count : not count here but to topn / frag
-        cnt+=1
+    
+    # Getting replace_mol_list
+    print("Finding scaffolds for replacement...")
+#     scaffold_len_n_l = []
+    for frag_no, pattern_mol in tqdm.tqdm(enumerate(frags), desc='Fragments'):
+        # Pre-defined replace_scaffold_list for given fragment
+        _scf_f_n_ = os.path.join(output_dir,f"replace_scaffold_list.fragment_{frag_no:04d}.tsv")
+        predefined=False
+        # pre-defined scaffold list
+        if fragments and replace_scaffold_files:
+            curr_frag_f = replace_scaffold_files[frag_no]
+            print(f"Finding scaffolds for fragment {Chem.MolToSmiles(pattern_mol)} at {curr_frag_f}")
+            if os.path.isfile(curr_frag_f):
+                try:
+                    # pre-defined one
+                    _scf_ser = pd.read_csv(curr_frag_f,sep='\t',index_col=0)
+                    # In case that replace_scaffold_file is SMILES-only without data (without header)
+                    if len(_scf_ser.columns) == 0:
+                        with open(curr_frag_f,'rb') as f:
+                            _scf_ser = f.read().decode().splitlines()
+                        _scf_ser = pd.Series(list(range(len(_scf_ser),0,-1)),index=_scf_ser)
+                        _scf_ser.name='Order'
+                    predefined=True
+                    _scf_ser.to_csv(_scf_f_n_,sep='\t')
+                except:
+                    predefined=False
+        if not predefined:
+            print(f"Finding alternatives for\t\t{Chem.MolToSmiles(pattern_mol)}")
+            replace_scaffold_ser = search_similar_scaffolds(
+                original_scaffold=pattern_mol,
+                fragments_DB=fragments_DB,
+                low_mem=low_mem,
+                tqdm_quiet=tqdm_quiet,
+            )
+            replace_scaffold_ser.name='Tanimoto Similarity'
+            replace_scaffold_ser.to_csv(_scf_f_n_,sep='\t')
+            
+    overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_ = utils._scaffold_no_reassign_(
+        overall_max_n=overall_max_n,
+        frag_max_n=frag_max_n,
+        scaffold_top_n=scaffold_top_n,
+        cand_max_n__rplc=cand_max_n__rplc,
+        _merge_structure_top_n_=_merge_structure_top_n_,
+        frag_n=len(frags),
+    )
+    # TODO remove here
+    print(overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_)
+    #
+    # Finding candidates
+    _overall_cand_cnt_ = 0
+    
+#     # TODO-remove here
+#     return frags,overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_
+#     #
+    
+    for frag_no, pattern_mol in enumerate(frags):
+        gc.collect()
         original_scaffold = Chem.MolToSmiles(pattern_mol)
         pattern_mol, original_scaffold = utils.init_mol(original_scaffold)
-        print(f"Finding alternatives for\t\t{original_scaffold}")
-        replace_scaffold_list = search_similar_scaffolds(
-            original_scaffold=pattern_mol,
-            fragments_DB=fragments_DB,
-            scaffold_top_n=final_top_n,
-            threshold=threshold,
-            low_mem=low_mem,
-            tqdm_quiet=tqdm_quiet,
-        )
-        for replace_scaffold in tqdm.tqdm(replace_scaffold_list, desc='Scaffold'):
+        _frag_start = datetime.datetime.now()
+        _frag_cand_cnt_ = 0
+        # Fragment IO
+        f_frag = open(os.path.join(output_dir,f'fragment_result_{frag_no:04d}.txt'), 'wb')
+        f_frag.write('\t'.join(result_features).encode())
+        f_frag.write('\n'.encode())
+        frag_saved_results = {target_smiles:1}
+        
+        replace_scaffold_df = pd.read_csv(
+            os.path.join(output_dir,f"replace_scaffold_list.fragment_{frag_no:04d}.tsv"),
+            sep='\t',index_col=0)
+        replace_scaffold_df = replace_scaffold_df.sort_values(
+            by=replace_scaffold_df.columns[0],ascending=False)
+        
+        # TODO - application of scaffold_top_n when replace_scaffold_files is imposed
+        if fragments and replace_scaffold_files:
+            scaffold_top_n__frg = scaffold_top_n
+#             scaffold_top_n__frg = len(replace_scaffold_df.index) # all th SMILES of replace_scaffold_list will be proceeded at reach to overall_max_n
+        else:
+            scaffold_top_n__frg = scaffold_top_n
+        
+        # TODO - limit iteration of screening to satisfy overall_max_n
+        replc_scf_it_obj = tqdm.tqdm(enumerate(list(replace_scaffold_df.index)[:scaffold_top_n__frg]), desc='Scaffold')
+        for replc_scf_cnt, replace_scaffold in replc_scf_it_obj:
+            gc.collect()
             replace_mol, replace_scaffold = utils.init_mol(replace_scaffold)
             try:
-                final_candidates = replace_molecule(target_mol, pattern_mol, replace_mol, final_top_n)
+                final_candidates = replace_molecule(
+                    target_mol, pattern_mol, replace_mol,
+                    max_n=cand_max_n__rplc,
+                    _merge_structure_top_n_=_merge_structure_top_n_)
             except Exception as e:
                 continue
-            
-            for _, each_candidate in tqdm.tqdm(final_candidates, desc='Final candidates'):
-                if each_candidate in saved_results:
+            for cand_cnt, [_, each_candidate] in enumerate(final_candidates):
+                if each_candidate in frag_saved_results:
                     continue
-                saved_results[each_candidate] = 1 
-                
+                frag_saved_results[each_candidate] = 1
                 mol = Chem.MolFromSmiles(each_candidate)
                 # Tanimoto similarity cutoff for selection
-                tanimoto_sim = utils.calc_tanimoto_sim(target_mol, mol)
+                try: # Possible error in calculation of Tanimoto similarity
+                    tanimoto_sim = utils.calc_tanimoto_sim(target_mol, mol)
+                except:
+                    continue
+                # Thresholds
                 if tanimoto_sim >= threshold:
-                    # calculatio nof subscores and similarity
-                    electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
+                    # calculation of electron similarity and subscores
+                    try: # Possible error in calculation of electron shape
+                        electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
+                    except:
+                        electron_shape_sim = float('nan')
                     sa_score, qed_score, _mw_, logp_score = utils._get_molecular_prop_(mol)
+                    
                     cats_des_dist = utils.calculate_cats_des(target_mol, mol)
                     # Standardization of smiles structure
                     try:
@@ -280,26 +374,49 @@ def chembounce(target_smiles:str,
                     except Exception as e:
                         print(f'Failed to find the standard SMILES of {each_candidate}',e)
                         _fin_structure = ''
-                    fp.write('\t'.join([str(i) for i in [
-                        cnt, original_scaffold,
+                    f_frag.write('\t'.join([str(i) for i in [
+                        frag_no, original_scaffold,
                         replace_scaffold, each_candidate, _fin_structure,
                         tanimoto_sim, electron_shape_sim,
                         cats_des_dist, qed_score, sa_score, logp_score,
-                    ]])+'\n')
-                    curr_ser = pd.Series([
-                        cnt, original_scaffold,
-                        replace_scaffold, each_candidate, _fin_structure,
-                        tanimoto_sim, electron_shape_sim,
-                        cats_des_dist, qed_score, sa_score, logp_score],index=result_features)
-                    cnt_ser_l.append(copy.deepcopy(curr_ser))
-    
-    result_df = pd.concat(cnt_ser_l,axis=1,ignore_index=True).T
+                    ]]).encode())
+                    f_frag.write('\n'.encode())
+                    _frag_cand_cnt_ += 1
+                    if each_candidate not in saved_results:
+                        fp.write('\t'.join([str(i) for i in [
+                            frag_no, original_scaffold,
+                            replace_scaffold, each_candidate, _fin_structure,
+                            tanimoto_sim, electron_shape_sim,
+                            cats_des_dist, qed_score, sa_score, logp_score,
+                        ]]).encode())
+                        saved_results[each_candidate] = 1
+                        fp.write('\n'.encode())
+                        _overall_cand_cnt_ += 1
+            # Early stopping
+            # 2-fold more iterations in case that number of candidates is less than max_n
+#             if replc_scf_cnt%10==9:
+#                 print(replc_scf_cnt,scaffold_top_n__frg)
+            if _frag_cand_cnt_ > frag_max_n or replc_scf_cnt > scaffold_top_n__frg:
+                print(_frag_cand_cnt_, "candidates have found")
+                replc_scf_it_obj.close()
+                print("Time cost for fragment ",frag_no)
+                print(datetime.datetime.now() - _frag_start)
+                f_frag.close()
+                break
+        print("Time cost for fragment ",frag_no)
+        print(datetime.datetime.now() - _frag_start)
+        f_frag.close()
+    fp.close()
+    result_df = pd.read_csv(os.path.join(output_dir,'overall_result.txt'),sep='\t')
     print(f"Found hopped structures\t: {result_df.shape[0]}")
     return result_df
 
 
 # Main function
 def main():
+    start = datetime.datetime.now()
+    print("Started at \t",start)
+    
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     lg = RDLogger.logger()
     lg.setLevel(RDLogger.CRITICAL)
@@ -323,10 +440,8 @@ def main():
     
     options = parser.parse_args()    
     target_smiles = options.input_smiles
-    core_smiles = options.core_smiles
-    threshold = options.threshold
-    final_top_n = options.top_n
-    output_dir = options.output_dir
+#     core_smiles = options.core_smiles
+    output_dir = os.path.abspath(options.output_dir)
     
     os.makedirs(output_dir,exist_ok=True)
     
@@ -334,18 +449,26 @@ def main():
         _, fragments_DB = utils._call_frag_db_smi_()
     else:
         _, _, fragments_DB = utils.call_frag_db()
-    
+
     result_df = chembounce(
-        target_smiles=options.input_smiles,
+        target_smiles=target_smiles,
         fragments_DB=fragments_DB,
-        core_smiles=options.core_smiles,
-        threshold=options.threshold,
-        final_top_n=options.top_n,
-        output_dir=options.output_dir,
+#         core_smiles=options.core_smiles, # TODO-further dev
+        overall_max_n=options.overall_max_n,
+        frag_max_n=options.frag_max_n,
+        scaffold_top_n=options.scaffold_top_n,
+        cand_max_n__rplc=options.cand_max_n__rplc,
+        _merge_structure_top_n_=100,
+        threshold=options.tanimoto_threshold,
+        output_dir=output_dir,
         low_mem=options.low_mem,
+        fragments=options.fragments,
+        replace_scaffold_files=options.replace_scaffold_files,
     )
-    
+    end = datetime.datetime.now()
+    print("Finished at\t",end)
+    cost = end-start
+    print("Time cost: \t",end-start)
 
 if __name__ == '__main__':
     main()
-    

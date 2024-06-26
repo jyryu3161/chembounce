@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+"""
+util codes for ChemBounce
+"""
 import copy
 import oddt
 from oddt import shape
@@ -16,6 +20,7 @@ import cats_module
 from scipy.spatial.distance import euclidean, cosine
 import pubchempy as pcp
 import pickle
+import math
 from rdkit.Chem import Descriptors
 # SA score calcualtion function - dependency of importing path by the rdkit version
 import rdkit.RDPaths as RDPaths
@@ -43,10 +48,30 @@ def argument_parser():
     parser = argparse.ArgumentParser()    
     parser.add_argument('-o', '--output_dir', required=True, help="Output location")
     parser.add_argument('-i', '--input_smiles', required=True, help="Input SMILES, the target molecular structure")
-    parser.add_argument('-c', '--core_smiles', required=False, default="C", help="Core SMILES which should not be altered while scaffold hopping", type=str)
-    parser.add_argument('-n', '--top_n', required=False, default=100, help="Number of top fragments to test", type=int)
-    parser.add_argument('-t', '--threshold', required=False, default=0.7, help="Similarity threshold, between 0 and 1: used to exclude irrelated molecular structure, based on the similarity between the original structure and scaffold-hopped one. Default is 0.7", type=float)
-    parser.add_argument('-l', '--low_mem', required=False, action='store_true', default=False, help="Low memory mode")
+#     parser.add_argument('-c', '--core_smiles', required=False, default="C", help="Core SMILES which should not be altered while scaffold hopping", type=str) # TODO - TBD
+    # Max numbers to test
+    parser.add_argument('--overall_max_n', required=False, default=None, type=int,
+                        help="Maximal number of scaffold-hopped candidates for overall fragments")
+    parser.add_argument('-n','--frag_max_n', required=False, default=1000, type=int,
+                        help="Maximal number of scaffold-hopped candidates for a fragment")
+    parser.add_argument('--scaffold_top_n', required=False, default=None, type=int,
+                        help="Number of scaffolds to test for a fragment")
+    parser.add_argument('--cand_max_n__rplc', required=False, default=10, type=int,
+                        help="Maximal number of candidates for a replaced scaffold")
+#     parser.add_argument('--merge_structure_top_n', required=False, default=100, help="Number of top fragments to test", type=int)
+    parser.add_argument('-t', '--tanimoto_threshold', required=False, default=0.5, type=float,
+                        help="Similarity threshold, between 0 and 1: used to exclude irrelated molecular structure, based on the similarity between the original structure and scaffold-hopped one. Default is 0.5")
+    # Thresholds on molecular properties
+#     parser.add_argument('--sascore', required=False, default=None, help="Maximal SAscore (~ 10.0)", type=float)
+#     parser.add_argument('--qed', required=False, default=None, help="Minimal QED score", type=float)
+#     parser.add_argument('--logp_min', required=False, default=None, help="Minimal logP limit", type=float)
+#     parser.add_argument('--logp_max', required=False, default=None, help="Maximal logP limit", type=float)
+    parser.add_argument('-l', '--low_mem', required=False, action='store_true', default=False,
+                        help="Low memory mode")
+    parser.add_argument('-f', '--fragments', required=False, action='append', default=[],
+                        help="Specific fragment smiles for scaffold hopping")
+    parser.add_argument('--replace_scaffold_files', required=False, action='append', default=[],
+                        help="Replace scaffold file, for a specific fragment")
     
     return parser
 
@@ -204,3 +229,86 @@ def _get_molecular_prop_(mol):
     logp = Descriptors.MolLogP(mol)
     mw = Descriptors.MolWt(mol)
     return sa, qed, mw, logp
+
+
+#### Counts and numbers for limit on the main fuction ####
+
+# frag_max_n = overall_max_n/frag_n*3
+# scaffold_top_n = int(frag_max_n/cand_max_n__rplc*2)
+# (cand_max_n__rplc ~ 10)
+# # TODO - scaffold_top_n numbers : with Tanimoto threshold?
+def _scaffold_no_reassign_(overall_max_n:int=None, # recommend: ~ 10000
+                           frag_max_n:int=None, # recommend: ~ 1000
+                           scaffold_top_n:int=None, # recommend: ~ 200
+                           cand_max_n__rplc:int=None, # recommend: <= 10
+                           _merge_structure_top_n_:int=100,
+                           frag_n:int=1,
+                          ):
+    if not _merge_structure_top_n_:
+        _merge_structure_top_n_ = 100
+    # define overall_max_n and frag_max_n
+    # if frag_max_n is defined
+    if not overall_max_n and frag_max_n:
+        overall_max_n = int(frag_max_n*frag_n*3)
+    # if overall_max_n is defined
+    elif not frag_max_n and overall_max_n:
+        frag_max_n = int(overall_max_n/frag_n*3)
+    # if both overall_max_n and frag_max_n are not defined
+    elif not overall_max_n and not frag_max_n:
+        if scaffold_top_n and cand_max_n__rplc:
+            frag_max_n = int(scaffold_top_n*cand_max_n__rplc*2)
+            overall_max_n = int(frag_max_n*frag_n*3)
+        elif not scaffold_top_n and cand_max_n__rplc:
+            overall_max_n = 10000
+            frag_max_n = int(overall_max_n/frag_n*3)
+        elif scaffold_top_n and not cand_max_n__rplc:
+            cand_max_n__rplc = 10
+            frag_max_n = int(scaffold_top_n*cand_max_n__rplc*2)
+            overall_max_n = int(frag_max_n*frag_n*3)
+        else: # all has not been defined
+            overall_max_n = 10000
+            frag_max_n = int(overall_max_n/frag_n*3)
+    if not cand_max_n__rplc and not scaffold_top_n:
+        cand_max_n__rplc = 10
+        scaffold_top_n = int(frag_max_n/cand_max_n__rplc*2)
+    elif not cand_max_n__rplc and scaffold_top_n:
+        cand_max_n__rplc = int(frag_max_n/scaffold_top_n*2)
+    elif cand_max_n__rplc and not scaffold_top_n:
+        scaffold_top_n = int(frag_max_n/cand_max_n__rplc*2)
+    return overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_
+
+
+# Determine threshold : including tanimoto, SA, QED and more
+def determine_thresholds(values:dict={'tanimoto':None},
+                         min_thresholds:dict={'tanimoto':0.5},
+                         max_thresholds:dict={'tanimoto':1.0},
+                         ignore_null_val:bool=False,
+                        ):
+    for term, val in values.items():
+        if type(val) in [int, float, bool]:
+            try:
+                _val_ = float(val)
+                if math.isnan(_val_):
+                    if ignore_null_val:
+                        continue
+                    else:
+                        return False
+                else:
+                    # min limit
+                    if term in min_thresholds:
+                        min_thr=float(min_thresholds[term])
+                        if val<min_thr:
+                            return False
+                    # max limit
+                    if term in min_thresholds:
+                        max_thr=float(max_thresholds[term])
+                        if val>max_thr:
+                            return False
+            except:
+                return False
+        else:
+            if ignore_null_val:
+                continue
+            else:
+                return False
+    return True
