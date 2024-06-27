@@ -249,25 +249,25 @@ def _scaffold_no_reassign_(overall_max_n:int=None, # recommend: ~ 10000
     # define overall_max_n and frag_max_n
     # if frag_max_n is defined
     if not overall_max_n and frag_max_n:
-        overall_max_n = int(frag_max_n*frag_n*3)
+        overall_max_n = int(frag_max_n*frag_n*1.5)
     # if overall_max_n is defined
     elif not frag_max_n and overall_max_n:
-        frag_max_n = int(overall_max_n/frag_n*3)
+        frag_max_n = int(overall_max_n/frag_n*1.5)
     # if both overall_max_n and frag_max_n are not defined
     elif not overall_max_n and not frag_max_n:
         if scaffold_top_n and cand_max_n__rplc:
             frag_max_n = int(scaffold_top_n*cand_max_n__rplc*2)
-            overall_max_n = int(frag_max_n*frag_n*3)
+            overall_max_n = int(frag_max_n*frag_n)
         elif not scaffold_top_n and cand_max_n__rplc:
             overall_max_n = 10000
-            frag_max_n = int(overall_max_n/frag_n*3)
+            frag_max_n = int(overall_max_n/frag_n*1.5)
         elif scaffold_top_n and not cand_max_n__rplc:
             cand_max_n__rplc = 10
             frag_max_n = int(scaffold_top_n*cand_max_n__rplc*2)
-            overall_max_n = int(frag_max_n*frag_n*3)
+            overall_max_n = int(frag_max_n*frag_n*1.5)
         else: # all has not been defined
             overall_max_n = 10000
-            frag_max_n = int(overall_max_n/frag_n*3)
+            frag_max_n = int(overall_max_n/frag_n*1.5)
     if not cand_max_n__rplc and not scaffold_top_n:
         cand_max_n__rplc = 10
         scaffold_top_n = int(frag_max_n/cand_max_n__rplc*2)
