@@ -9,13 +9,13 @@ import itertools
 import logging
 from rdkit import Chem
 from rdkit.Chem import AllChem
+from rdkit.Chem import Lipinski
 from rdkit import DataStructs
 import scaffoldgraph as sg
 from rdkit import RDLogger
 import os
 import sys
 import warnings
-import argparse
 import cats_module
 from scipy.spatial.distance import euclidean, cosine
 import pubchempy as pcp
@@ -40,41 +40,6 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 lg = RDLogger.logger()
 lg.setLevel(RDLogger.CRITICAL)
 warnings.filterwarnings('ignore')
-
-#### CLI ####
-
-# Argument of parser
-def argument_parser():
-    parser = argparse.ArgumentParser()    
-    parser.add_argument('-o', '--output_dir', required=True, help="Output location")
-    parser.add_argument('-i', '--input_smiles', required=True, help="Input SMILES, the target molecular structure")
-#     parser.add_argument('-c', '--core_smiles', required=False, default="C", help="Core SMILES which should not be altered while scaffold hopping", type=str) # TODO - TBD
-    # Max numbers to test
-    parser.add_argument('--overall_max_n', required=False, default=None, type=int,
-                        help="Maximal number of scaffold-hopped candidates for overall fragments")
-    parser.add_argument('-n','--frag_max_n', required=False, default=1000, type=int,
-                        help="Maximal number of scaffold-hopped candidates for a fragment")
-    parser.add_argument('--scaffold_top_n', required=False, default=None, type=int,
-                        help="Number of scaffolds to test for a fragment")
-    parser.add_argument('--cand_max_n__rplc', required=False, default=10, type=int,
-                        help="Maximal number of candidates for a replaced scaffold")
-#     parser.add_argument('--merge_structure_top_n', required=False, default=100, help="Number of top fragments to test", type=int)
-    parser.add_argument('-t', '--tanimoto_threshold', required=False, default=0.5, type=float,
-                        help="Similarity threshold, between 0 and 1: used to exclude irrelated molecular structure, based on the similarity between the original structure and scaffold-hopped one. Default is 0.5")
-    # Thresholds on molecular properties
-#     parser.add_argument('--sascore', required=False, default=None, help="Maximal SAscore (~ 10.0)", type=float)
-#     parser.add_argument('--qed', required=False, default=None, help="Minimal QED score", type=float)
-#     parser.add_argument('--logp_min', required=False, default=None, help="Minimal logP limit", type=float)
-#     parser.add_argument('--logp_max', required=False, default=None, help="Maximal logP limit", type=float)
-    parser.add_argument('-l', '--low_mem', required=False, action='store_true', default=False,
-                        help="Low memory mode")
-    parser.add_argument('-f', '--fragments', required=False, action='append', default=[],
-                        help="Specific fragment smiles for scaffold hopping")
-    parser.add_argument('--replace_scaffold_files', required=False, action='append', default=[],
-                        help="Replace scaffold file, for a specific fragment")
-    
-    return parser
-
 
 #### Reference data ####
 
@@ -223,12 +188,21 @@ def get_standard_smiles(smiles):
     smi_val = molvs.validate_smiles(smiles)
     return std_smi, smi_val
 
+
 def _get_molecular_prop_(mol):
     sa = calc_SA(mol)
     qed = Chem.QED.default(mol)
     logp = Descriptors.MolLogP(mol)
     mw = Descriptors.MolWt(mol)
     return sa, qed, mw, logp
+
+
+def _get_molecular_prop_extd_(mol):
+    sa, qed, mw, logp = _get_molecular_prop_(mol)
+    props = {'sa':sa,'qed':qed,'mw':mw,'logp':logp}
+    props['n_hdonor'] = Lipinski.NumHDonors(mol)
+    props['n_hacceptor'] = Lipinski.NumHAcceptors(mol)
+    return props
 
 
 #### Counts and numbers for limit on the main fuction ####
@@ -256,7 +230,7 @@ def _scaffold_no_reassign_(overall_max_n:int=None, # recommend: ~ 10000
     # if both overall_max_n and frag_max_n are not defined
     elif not overall_max_n and not frag_max_n:
         if scaffold_top_n and cand_max_n__rplc:
-            frag_max_n = int(scaffold_top_n*cand_max_n__rplc*2)
+            frag_max_n = int(scaffold_top_n*cand_max_n__rplc)
             overall_max_n = int(frag_max_n*frag_n)
         elif not scaffold_top_n and cand_max_n__rplc:
             overall_max_n = 10000
@@ -270,45 +244,77 @@ def _scaffold_no_reassign_(overall_max_n:int=None, # recommend: ~ 10000
             frag_max_n = int(overall_max_n/frag_n*1.5)
     if not cand_max_n__rplc and not scaffold_top_n:
         cand_max_n__rplc = 10
-        scaffold_top_n = int(frag_max_n/cand_max_n__rplc*2)
+        scaffold_top_n = int(frag_max_n/cand_max_n__rplc*3)
     elif not cand_max_n__rplc and scaffold_top_n:
-        cand_max_n__rplc = int(frag_max_n/scaffold_top_n*2)
+        cand_max_n__rplc = int(frag_max_n/scaffold_top_n*3)
     elif cand_max_n__rplc and not scaffold_top_n:
-        scaffold_top_n = int(frag_max_n/cand_max_n__rplc*2)
+        scaffold_top_n = int(frag_max_n/cand_max_n__rplc*3)
     return overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_
 
 
-# Determine threshold : including tanimoto, SA, QED and more
-def determine_thresholds(values:dict={'tanimoto':None},
-                         min_thresholds:dict={'tanimoto':0.5},
-                         max_thresholds:dict={'tanimoto':1.0},
-                         ignore_null_val:bool=False,
-                        ):
-    for term, val in values.items():
-        if type(val) in [int, float, bool]:
-            try:
-                _val_ = float(val)
-                if math.isnan(_val_):
-                    if ignore_null_val:
-                        continue
-                    else:
-                        return False
-                else:
-                    # min limit
-                    if term in min_thresholds:
-                        min_thr=float(min_thresholds[term])
-                        if val<min_thr:
-                            return False
-                    # max limit
-                    if term in min_thresholds:
-                        max_thr=float(max_thresholds[term])
-                        if val>max_thr:
-                            return False
-            except:
-                return False
-        else:
+#### Determination of properties for candidates ####
+
+# thresholds: {METRIC:(MIN_VAL,MAX_VAL)}
+def _default_thrs_(lipinski:bool=True):
+    thresholds = {
+#         'qed':(float('-inf'),float('inf')),
+#         'sa':(float('-inf'),float('inf')),
+#         'mw':(float('-inf'),float('inf')),
+#         'logp':(float('-inf'),float('inf')),
+#         'n_hdonor':(float('-inf'),float('inf')),
+#         'n_hacceptor':(float('-inf'),float('inf')),
+    }
+    if lipinski:
+        thresholds.update({
+            'mw':(0.0,500.0),
+            'logp':(float('-inf'),5),
+            'n_hdonor':(0,5),
+            'n_hacceptor':(0,10),
+        })
+    return thresholds
+
+
+# props (dict) : {METRIC:VAL}
+# thresholds (dict) : {METRTIC:(min,max)}
+def determ_props(props:dict,thresholds:dict,w_all_failed_reason:bool=False,ignore_null_val=False):
+    determ_results = []
+    for metric, (min_val, max_val) in thresholds.items():
+        # Not defined
+        if metric not in props:
+            determ_results.append(f"{metric}:undefined")
+            if not w_all_failed_reason:
+                return False, determ_results
+            continue
+        # property value is invalid: nan, None, or else
+        target_val = props[metric]
+        if type(target_val) not in [float,int]:
             if ignore_null_val:
                 continue
             else:
-                return False
-    return True
+                determ_results.append(f"{metric}:invalid_value:{target_val}")
+                if not w_all_failed_reason:
+                    return False, determ_results
+                continue
+        elif math.isnan(target_val):
+            if ignore_null_val:
+                continue
+            else:
+                determ_results.append(f"{metric}.nan_value:{target_val}")
+                if not w_all_failed_reason:
+                    return False, determ_results
+                continue
+        if type(min_val) in [int,float]:
+            if target_val<min_val:
+                determ_results.append(f"{metric}.under_minimum:{target_val}<{min_val}")
+                if not w_all_failed_reason:
+                    return False, determ_results
+        if type(max_val) in [int,float]:
+            if target_val>max_val:
+                determ_results.append(f"{metric}.upper_maximum:{target_val}>{max_val}")
+                if not w_all_failed_reason:
+                    return False, determ_results
+    if determ_results:
+        return False, determ_results
+    else:
+        return True, determ_results
+            
