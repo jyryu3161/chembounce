@@ -45,4 +45,9 @@ def argument_parser():
                         help="Specific fragment SMILES of the input structure to replace. For multiple fragment, repeatedly impose this option: e.g. --fragments SMILES_A --fragments SMILES_B")
     parser.add_argument('--replace_scaffold_files', required=False, action='append', default=[],
                         help="Replace scaffold file, for a specific fragment")
+#     parser.add_argument('--murcko_frag_itr_rnd', required=False, default=1, type=int,
+#                         help="Iteration number of input SMILES fragmentalization. Default is 1 (>=0).")
+#     parser.add_argument('--search_scf_thr', required=False, default=0.3, type=float,
+#                         help="Tanimoto treshold for drop replace scaffold. Replace scaffolds with less than the threshold for corresponding fragment are dropped. Default is 0.3 (0.0 ~ 1.0)")
+    
     return parser

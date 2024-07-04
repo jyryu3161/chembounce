@@ -13,7 +13,6 @@ import gc
 import numpy as np
 import pandas as pd
 
-# import scaffoldgraph as sg
 import scaffoldgraph_fragmenter as sg
 import itertools
 import copy
@@ -183,6 +182,7 @@ def read_fragments(target_smiles, fragment_file):
                     fragments.append(mol)
     return fragments
 
+
 def search_similar_scaffolds(original_scaffold, fragments_DB,
                              low_mem:bool=False, tqdm_quiet:bool=False,
                              scaffold_top_n:int=None, threshold:float=0.3, # In case to limit results
@@ -329,7 +329,6 @@ def make_scaffold_hopping(target_smiles:str,
         'Fragment_no','Original scaffold',
         'Replaced scaffold','Final structure','Standardized final structure',
         'Tanimoto Similarity','Electron shape Similarity',
-#         'CATS2D dist', 'QED', 'SAscore', 'logP']
         'CATS2D dist', 'QED', 'SAscore', 'logP', 'MW', 'H_Donors', 'H_Acceptors']
     fp = open(os.path.join(output_dir,'overall_result.txt'), 'wb')
     fp.write('\t'.join(result_features).encode())
@@ -386,7 +385,6 @@ def make_scaffold_hopping(target_smiles:str,
                         electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
                     except:
                         electron_shape_sim = float('nan')
-#                     sa_score, qed_score, _mw_, logp_score = utils._get_molecular_prop_(mol)
                     props = utils._get_molecular_prop_extd_(mol=cand_mol)
                     # Property determination
                     passed, determ_results = utils.determ_props(
@@ -407,7 +405,6 @@ def make_scaffold_hopping(target_smiles:str,
                         tanimoto_sim, electron_shape_sim,
                         cats_des_dist, props['qed'],props['sa'],props['logp'],
                         props['mw'],props['n_hdonor'],props['n_hacceptor'],
-#                         cats_des_dist, qed_score, sa_score, logp_score,
                     ]]).encode())
                     f_frag.write('\n'.encode())
                     _frag_cand_cnt_ += 1
@@ -418,7 +415,6 @@ def make_scaffold_hopping(target_smiles:str,
                             tanimoto_sim, electron_shape_sim,
                             cats_des_dist, props['qed'],props['sa'],props['logp'],
                             props['mw'],props['n_hdonor'],props['n_hacceptor'],
-#                             cats_des_dist, qed_score, sa_score, logp_score,
                         ]]).encode())
                         saved_results[each_candidate] = 1
                         fp.write('\n'.encode())
@@ -525,10 +521,6 @@ def main():
     
     os.makedirs(output_dir,exist_ok=True)
     
-#     if options.low_mem:
-#         _, fragments_DB = utils._call_frag_db_smi_()
-#     else:
-#         _, _, fragments_DB = utils.call_frag_db()
     # candidate threshold
     candidate_thresholds = utils._default_thrs_(lipinski=not options.wo_lipinski)
     user_thr = {
@@ -553,6 +545,7 @@ def main():
     print(f"Applied candidate thresholds (Lipinski\'s rule of five : {not options.wo_lipinski}):")
     print('\n'.join([
         f"\t{metric} :\tMin.:{min_val}\tMax.:{max_val}" for metric, (min_val,max_val) in candidate_thresholds.items()]))
+    print(f'Tanimoto Similarity :\t{options.tanimoto_threshold}')
     
     result_df = chembounce(
         target_smiles=target_smiles,
@@ -570,6 +563,9 @@ def main():
         candidate_thresholds=candidate_thresholds,
         murcko_frag_itr_rnd=1,
         _search_scf_thr_=0.3,
+#     )
+        #murcko_frag_itr_rnd:int=options.murcko_frag_itr_rnd,
+        #_search_scf_thr_:float=options.search_scf_thr,
     )
     end = datetime.datetime.now()
     print("Finished at\t",end)

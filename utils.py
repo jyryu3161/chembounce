@@ -256,14 +256,7 @@ def _scaffold_no_reassign_(overall_max_n:int=None, # recommend: ~ 10000
 
 # thresholds: {METRIC:(MIN_VAL,MAX_VAL)}
 def _default_thrs_(lipinski:bool=True):
-    thresholds = {
-#         'qed':(float('-inf'),float('inf')),
-#         'sa':(float('-inf'),float('inf')),
-#         'mw':(float('-inf'),float('inf')),
-#         'logp':(float('-inf'),float('inf')),
-#         'n_hdonor':(float('-inf'),float('inf')),
-#         'n_hacceptor':(float('-inf'),float('inf')),
-    }
+    thresholds = dict()
     if lipinski:
         thresholds.update({
             'mw':(0.0,500.0),

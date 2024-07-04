@@ -1,3 +1,22 @@
+#! usr/bin/env python3
+"""
+Modified module of scaffoldgraph
+github)
+https://github.com/UCLCheminformatics/ScaffoldGraph
+citation)
+@article{10.1093/bioinformatics/btaa219,
+    author = {Scott, Oliver B and Chan, A W Edith},
+    title = "{ScaffoldGraph: an open-source library for the generation and analysis of molecular scaffold networks and scaffold trees}",
+    journal = {Bioinformatics},
+    year = {2020},
+    month = {03},
+    issn = {1367-4803},
+    doi = {10.1093/bioinformatics/btaa219},
+    url = {https://doi.org/10.1093/bioinformatics/btaa219},
+    note = {btaa219}
+    eprint = {https://academic.oup.com/bioinformatics/advance-article-pdf/doi/10.1093/bioinformatics/btaa219/32984904/btaa219.pdf},
+}
+"""
 from scaffoldgraph import *
 from scaffoldgraph.core.fragment import *
 # from scaffoldgraph.core.scaffold import Scaffold
