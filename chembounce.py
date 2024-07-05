@@ -207,7 +207,7 @@ def search_similar_scaffolds(original_scaffold, fragments_DB,
             if sim != 1.0:
                 scaffold_scores[candidate_smiles] = sim
     scaffold_scores = pd.Series(scaffold_scores)
-    scaffold_scores.sort_values(ascending=False)
+    scaffold_scores = scaffold_scores.sort_values(ascending=False)
     # Limit
     if threshold:
         scaffold_scores = scaffold_scores.loc[scaffold_scores>threshold]
