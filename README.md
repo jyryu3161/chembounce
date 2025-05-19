@@ -2,6 +2,11 @@
 
 <!--<img src="./assets/graphical_abstract.png" width="450px"></img>-->
 
+
+## Using in Google Colaboratory
+
+ChemBounce is also available in [Google Colaboratory](https://colab.research.google.com/github/jyryu3161/chembounce/blob/main/chembounce_colab.ipynb)
+
 ## Dependencies
 
 Install conda environment as follows: 
