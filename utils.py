@@ -311,3 +311,12 @@ def determ_props(props:dict,thresholds:dict,w_all_failed_reason:bool=False,ignor
     else:
         return True, determ_results
             
+
+class SmilesInputError(Exception):
+    def __init__(self, value, message='Invalid SMILES input for rdkit'):
+        self.value = value
+        self.message = message
+        super().__init__(self.message)
+
+    def __str__(self):
+        return f'{self.message}\nReceived SMILES input: {self.value}'
