@@ -2,26 +2,31 @@
 """
 ChemBounce main functions and subfuctions
 """
-import logging
-import utils
-import cli
-from rdkit import RDLogger
-from rdkit import Chem
-from rdkit.Chem import AllChem
+
+import os
+import sys
 import tqdm
 import gc
 import numpy as np
 import pandas as pd
-
-import scaffoldgraph_fragmenter as sg
 import itertools
 import copy
-import os
-import sys
+import json
 import warnings
 import pickle
 import copy
 import datetime
+import logging
+sys.path.append(os.path.split(os.path.abspath(__file__))[0])
+
+from rdkit import RDLogger
+from rdkit import Chem
+from rdkit.Chem import AllChem
+
+import scaffoldgraph_fragmenter as sg
+import utils
+import cli
+import cost_estimation
 
 
 # Removal of substructures for given molecule
@@ -249,6 +254,7 @@ def get_frags_cands(target_smiles:str,
     frag_info.to_csv(os.path.join(output_dir,'fragment_info.tsv'),sep='\t')
     print(f"Fragments found\t: {len(frags)}")
     
+    # Organize how much tests and candidates to find
     overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_ = utils._scaffold_no_reassign_(
         overall_max_n=overall_max_n,
         frag_max_n=frag_max_n,
@@ -291,6 +297,8 @@ def get_frags_cands(target_smiles:str,
                     _scf_ser.to_csv(_scf_f_n_,sep='\t')
                 except:
                     predefined=False
+            else:
+                print(f"File not found: {curr_frag_f}")
         if not predefined:
             print(f"Finding alternatives for\t\t{Chem.MolToSmiles(pattern_mol)}")
             if not fragments_DB:
@@ -380,6 +388,7 @@ def make_scaffold_hopping(target_smiles:str,
                     continue
                 # Thresholds
                 if tanimoto_sim >= tanimoto_threshold:
+                    # TODO - Finding core smiles if imposed
                     # calculation of electron similarity and subscores
                     try: # Possible error in calculation of electron shape
                         electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
@@ -434,6 +443,7 @@ def make_scaffold_hopping(target_smiles:str,
 
 
 # Main function
+@cost_estimation.EstDecoMem
 def chembounce(target_smiles:str,
                fragments_DB:list=[],
                tanimoto_threshold:float=0.5,
@@ -453,7 +463,12 @@ def chembounce(target_smiles:str,
               ):
     if type(output_dir)==str:
         os.makedirs(output_dir,exist_ok=True)
-    target_mol, target_smiles = utils.init_mol(target_smiles)
+    
+    # target_mol, target_smiles = utils.init_mol(target_smiles)
+    try:
+        target_mol, target_smiles = utils.init_mol(target_smiles)
+    except Exception as e:
+        raise utils.SmilesInputError(value=target_smiles)
     
     frags, overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_ = get_frags_cands(
         target_smiles=target_smiles,
@@ -547,7 +562,7 @@ def main():
         f"\t{metric} :\tMin.:{min_val}\tMax.:{max_val}" for metric, (min_val,max_val) in candidate_thresholds.items()]))
     print(f'Tanimoto Similarity :\t{options.tanimoto_threshold}')
     
-    result_df = chembounce(
+    result_df, resource_cost = chembounce(
         target_smiles=target_smiles,
 #         fragments_DB=fragments_DB, # Requirement has been changed
         overall_max_n=options.overall_max_n,
@@ -567,6 +582,16 @@ def main():
         #murcko_frag_itr_rnd:int=options.murcko_frag_itr_rnd,
         #_search_scf_thr_:float=options.search_scf_thr,
     )
+    # if options.estimate_cost:
+    with open(os.path.join(output_dir,'resource_cost.json'),'wb') as f:
+        f.write(json.dumps(resource_cost).encode())
+    print(f"""#### Cost estimatation ####
+            Elapsed time:              {resource_cost['elapsed_time']}
+            Total CPU time:            {resource_cost['total_cpu_time']}
+            CPU usage percent:         {resource_cost['cpu_usage_percent']}
+            Maximal memory usage (MB): {resource_cost['max_memory_mb']}
+            Average memory usage (MB): {resource_cost['avg_memory_mb']}
+        """)
     end = datetime.datetime.now()
     print("Finished at\t",end)
     cost = end-start
