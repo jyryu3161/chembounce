@@ -4,6 +4,7 @@ input/
 output*
 data.zip
 *ipynb
+CALUDE.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
