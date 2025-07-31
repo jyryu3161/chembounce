@@ -27,6 +27,16 @@ import cost_estimation
 
 # Removal of substructures for given molecule
 def remove_substructures(mol, pattern_mol):
+    """
+    Remove a pattern substructure from molecule and return remaining fragments.
+    
+    Args:
+        mol: RDKit molecule object to remove substructure from
+        pattern_mol: RDKit molecule object representing the pattern to remove
+        
+    Returns:
+        list: List of SMILES strings representing the remaining fragments
+    """
     substructure_list = utils.get_substructure_info(mol, pattern_mol)
     candidate_structures = []
     
@@ -84,6 +94,18 @@ def remove_substructures(mol, pattern_mol):
 
 
 def merge_structures(template_mol, mol, frag_mol, top_n=3):
+    """
+    Merge molecule with fragment to create new structures.
+    
+    Args:
+        template_mol: RDKit molecule object used as template for similarity calculation
+        mol: RDKit molecule object to merge with fragment
+        frag_mol: RDKit molecule object representing the fragment to merge
+        top_n: Number of top candidates to return (default: 3)
+        
+    Returns:
+        list: List of [similarity_score, SMILES] pairs sorted by similarity
+    """
     template_smiles = Chem.MolToSmiles(template_mol)
     substitution_smiles = '[*]'
     substitution_mol = Chem.MolFromSmiles(substitution_smiles)
@@ -135,6 +157,19 @@ def merge_structures(template_mol, mol, frag_mol, top_n=3):
     return structure_candidates
 
 def replace_molecule(target_mol, pattern_mol, replace_mol, max_n, _merge_structure_top_n_):
+    """
+    Replace a pattern in target molecule with replacement molecule.
+    
+    Args:
+        target_mol: RDKit molecule object containing the pattern to replace
+        pattern_mol: RDKit molecule object representing the pattern to find
+        replace_mol: RDKit molecule object to replace the pattern with
+        max_n: Maximum number of candidates to return
+        _merge_structure_top_n_: Number of top structures to consider in merging
+        
+    Returns:
+        list: List of tuples (similarity_score, SMILES) for candidate molecules
+    """
     candidate_structures = remove_substructures(target_mol, pattern_mol)
     
     final_candidates = []
@@ -171,6 +206,16 @@ def replace_molecule(target_mol, pattern_mol, replace_mol, max_n, _merge_structu
 
 
 def read_fragments(target_smiles, fragment_file):
+    """
+    Read fragment structures from file.
+    
+    Args:
+        target_smiles: SMILES string of target molecule (used for length filtering)
+        fragment_file: Path to file containing fragment SMILES (one per line)
+        
+    Returns:
+        list: List of RDKit molecule objects for valid fragments
+    """
     fragments = []           
     num_lines = sum(1 for line in open(fragment_file,'r'))
     with open(fragment_file,'r') as f:
@@ -188,6 +233,20 @@ def search_similar_scaffolds(original_scaffold, fragments_DB,
                              low_mem:bool=False, tqdm_quiet:bool=False,
                              scaffold_top_n:int=None, threshold:float=0.3, # In case to limit results
                             ):
+    """
+    Search for similar scaffolds in fragment database using Tanimoto similarity.
+    
+    Args:
+        original_scaffold: RDKit molecule object to search similar scaffolds for
+        fragments_DB: List of molecule objects or SMILES strings to search in
+        low_mem: If True, fragments_DB contains SMILES strings; if False, molecule objects
+        tqdm_quiet: If True, suppress progress bar output
+        scaffold_top_n: Maximum number of results to return
+        threshold: Minimum similarity threshold (default: 0.3)
+        
+    Returns:
+        pd.Series: Series with scaffold SMILES as index and similarity scores as values
+    """
     original_scaffold_smiles = Chem.MolToSmiles(original_scaffold)
     
     scaffold_scores = dict()
@@ -239,6 +298,32 @@ def get_frags_cands(target_smiles:str,
                     scaffold_db_file:str=None,  # Custom scaffold database file
                     fingerprint_db_file:str=None,  # Custom fingerprint database file
                    ):
+    """
+    Get fragments from molecule and find candidate scaffolds for replacement.
+    
+    Args:
+        target_smiles: SMILES string of target molecule
+        target_mol: RDKit molecule object of target
+        fragments_DB: Pre-loaded fragment database (optional)
+        overall_max_n: Maximum total candidates across all fragments
+        frag_max_n: Maximum candidates per fragment
+        scaffold_top_n: Top N scaffolds to test per fragment
+        cand_max_n__rplc: Maximum candidates per scaffold replacement
+        _merge_structure_top_n_: Top N structures for merging
+        murcko_frag_itr_rnd: Iteration rounds for Murcko fragmentation
+        _search_scf_thr_: Tanimoto similarity threshold for scaffold search
+        fragments: Pre-defined fragments list (optional)
+        replace_scaffold_files: Pre-defined scaffold replacement files
+        output_dir: Directory to save output files
+        low_mem: Enable low memory mode
+        tqdm_quiet: Suppress progress bars
+        use_fingerprint_db: Use pre-computed fingerprints for fast search
+        scaffold_db_file: Custom scaffold database file path
+        fingerprint_db_file: Custom fingerprint database file path
+        
+    Returns:
+        tuple: (frags, overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_)
+    """
     # Fragment info
     if fragments:
         frags = [Chem.MolFromSmiles(i) for i in fragments]
@@ -388,6 +473,26 @@ def make_scaffold_hopping(target_smiles:str,
                           output_dir:str='./output',
                           candidate_thresholds:dict=dict(),
                          ):
+    """
+    Perform scaffold hopping to generate new molecular structures.
+    
+    Args:
+        target_smiles: SMILES string of target molecule
+        target_mol: RDKit molecule object of target
+        frags: List of fragment molecules to replace
+        core_mol: Core structure that must be preserved (optional)
+        tanimoto_threshold: Minimum Tanimoto similarity for candidates
+        overall_max_n: Maximum total candidates
+        frag_max_n: Maximum candidates per fragment
+        scaffold_top_n: Top N scaffolds to test
+        cand_max_n__rplc: Maximum candidates per replacement
+        _merge_structure_top_n_: Top N structures for merging
+        output_dir: Directory to save results
+        candidate_thresholds: Dictionary of property thresholds
+        
+    Returns:
+        str: Path to overall results file
+    """
     result_features = [
         'Fragment_no','Original scaffold',
         'Replaced scaffold','Final structure','Standardized final structure',
@@ -523,6 +628,34 @@ def chembounce(target_smiles:str,
                scaffold_db_file:str=None, # Custom scaffold database file
                fingerprint_db_file:str=None, # Custom fingerprint database file
               ):
+    """
+    Main ChemBounce function for scaffold hopping drug discovery.
+    
+    Args:
+        target_smiles: SMILES string of target molecule
+        fragments_DB: Pre-loaded fragment database (optional)
+        core_smiles: SMILES of core structure to preserve (optional)
+        tanimoto_threshold: Minimum Tanimoto similarity (default: 0.5)
+        overall_max_n: Maximum total candidates
+        frag_max_n: Maximum candidates per fragment
+        scaffold_top_n: Top N scaffolds to test
+        cand_max_n__rplc: Maximum candidates per replacement
+        _merge_structure_top_n_: Top N structures for merging
+        output_dir: Output directory (default: './output')
+        low_mem: Enable low memory mode
+        tqdm_quiet: Suppress progress bars
+        fragments: Pre-defined fragments list
+        replace_scaffold_files: Pre-defined scaffold files
+        candidate_thresholds: Property threshold dictionary
+        murcko_frag_itr_rnd: Murcko fragmentation iterations
+        _search_scf_thr_: Scaffold search similarity threshold
+        use_fingerprint_db: Use fingerprint database for fast search
+        scaffold_db_file: Custom scaffold database path
+        fingerprint_db_file: Custom fingerprint database path
+        
+    Returns:
+        tuple: (result_df, resource_cost) - DataFrame with results and resource usage dict
+    """
     # IO
     if type(output_dir)==str:
         os.makedirs(output_dir,exist_ok=True)
@@ -584,6 +717,14 @@ def chembounce(target_smiles:str,
 
 # Main function
 def main():
+    """
+    Main entry point for ChemBounce command line interface.
+    
+    Parses command line arguments, sets up environment, and executes ChemBounce.
+    
+    Returns:
+        None
+    """
     start = datetime.datetime.now()
     print(f"Started at: {start}")
     

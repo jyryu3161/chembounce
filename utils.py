@@ -48,6 +48,15 @@ PLF_LOC=os.path.split(os.path.abspath(__file__))[0]
 
 # Calling reference data
 def call_frag_db():
+    """
+    Load fragment database from pickle file.
+    
+    Returns:
+        tuple: (fragment_file_path, fragment_pkl_file_path, fragments_DB)
+            - fragment_file_path: Path to text file with scaffolds
+            - fragment_pkl_file_path: Path to pickle file
+            - fragments_DB: List of loaded fragment molecules
+    """
     fragment_file = os.path.join(PLF_LOC,'data','Scaffolds_processed.txt')
     fragment_pkl_file = os.path.join(PLF_LOC,'data','fragment_data.pickle')
     with open(fragment_pkl_file, 'rb') as f:
@@ -57,6 +66,17 @@ def call_frag_db():
 
 # Calling reference data
 def _call_frag_db_smi_(fragment_file:str=''):
+    """
+    Load fragment database as SMILES strings for low memory mode.
+    
+    Args:
+        fragment_file: Path to fragment file (optional, uses default if empty)
+        
+    Returns:
+        tuple: (fragment_file_path, fragments_DB)
+            - fragment_file_path: Path to the fragment file used
+            - fragments_DB: List of SMILES strings
+    """
     if not os.path.isfile(fragment_file):
         fragment_file = os.path.join(PLF_LOC,'data','fragment_data.smi.txt')
         if not os.path.isfile(fragment_file):
@@ -69,6 +89,16 @@ def _call_frag_db_smi_(fragment_file:str=''):
 #### Sub functions ####
 
 def calc_shape(smiles1, smiles2):
+    """
+    Calculate USR-CAT shape similarity between two molecules.
+    
+    Args:
+        smiles1: SMILES string of first molecule
+        smiles2: SMILES string of second molecule
+        
+    Returns:
+        float: Shape similarity score (0-1)
+    """
     query_mol = oddt.toolkit.readstring('smi', smiles1)
     query_mol2 = oddt.toolkit.readstring('smi', smiles2)
     query_mol.make3D()
@@ -81,6 +111,16 @@ def calc_shape(smiles1, smiles2):
     return similarity
 
 def calc_electron_shape(smiles1, smiles2):
+    """
+    Calculate electroshape similarity between two molecules.
+    
+    Args:
+        smiles1: SMILES string of first molecule
+        smiles2: SMILES string of second molecule
+        
+    Returns:
+        float: Electroshape similarity score (0-1)
+    """
     query_mol = oddt.toolkit.readstring('smi', smiles1)
     query_mol2 = oddt.toolkit.readstring('smi', smiles2)
     query_mol.make3D()
@@ -92,12 +132,32 @@ def calc_electron_shape(smiles1, smiles2):
     return similarity
 
 def calc_tanimoto_sim(mol1, mol2):
+    """
+    Calculate Tanimoto similarity between two molecules using Morgan fingerprints.
+    
+    Args:
+        mol1: RDKit molecule object
+        mol2: RDKit molecule object
+        
+    Returns:
+        float: Tanimoto similarity score (0-1)
+    """
     fp1 = AllChem.GetMorganFingerprint(mol1,2)
     fp2 = AllChem.GetMorganFingerprint(mol2,2)
     sim = DataStructs.TanimotoSimilarity(fp1, fp2)
     return sim
 
 def calculate_cats_des(mol1, mol2):
+    """
+    Calculate CATS (Chemically Advanced Template Search) descriptor distance.
+    
+    Args:
+        mol1: RDKit molecule object
+        mol2: RDKit molecule object
+        
+    Returns:
+        float: Euclidean distance between CATS descriptors
+    """
     cats = cats_module.CATS2D()
     cats1 = cats.getCATs2D(mol1)
     cats2 = cats.getCATs2D(mol2)
@@ -105,6 +165,15 @@ def calculate_cats_des(mol1, mol2):
     return euclidean(cats1, cats2)
 
 def get_cid_by_structure(smiles):
+    """
+    Get PubChem CID (Compound ID) from SMILES structure.
+    
+    Args:
+        smiles: SMILES string of molecule
+        
+    Returns:
+        str: PubChem CID or 'N/A' if not found
+    """
     try:
         compounds = pcp.get_compounds(smiles, 'smiles')
         if compounds:
@@ -116,12 +185,33 @@ def get_cid_by_structure(smiles):
         return 'N/A' 
 
 def get_atom_object_from_idx(mol, atom_idx_list):
+    """
+    Get atom objects from a list of atom indices.
+    
+    Args:
+        mol: RDKit molecule object
+        atom_idx_list: List of atom indices
+        
+    Returns:
+        list: List of RDKit atom objects
+    """
     atom_obj_list = []
     for each_idx in atom_idx_list:
         atom_obj_list.append(mol.GetAtomWithIdx(each_idx))
     return atom_obj_list
 
 def get_neighbor_atoms(mol, idx, max_len=1):
+    """
+    Get neighbor atoms within specified distance from a given atom.
+    
+    Args:
+        mol: RDKit molecule object
+        idx: Atom index to start from
+        max_len: Maximum distance in bonds (default: 1)
+        
+    Returns:
+        list: List of atom indices within max_len bonds
+    """
     neighbors = mol.GetAtomWithIdx(idx).GetNeighbors()
     idx_list = []
     for each_neighbor in neighbors:
@@ -140,6 +230,16 @@ def get_neighbor_atoms(mol, idx, max_len=1):
     return idx_list
 
 def get_atoms_from_bond(mol, bond_idx):
+    """
+    Get the begin and end atom indices of a bond.
+    
+    Args:
+        mol: RDKit molecule object
+        bond_idx: Bond index
+        
+    Returns:
+        tuple: (begin_atom_idx, end_atom_idx) or (None, None) if not found
+    """
     begin_atom = None
     end_atom = None
     for bond in mol.GetBonds():
@@ -149,6 +249,16 @@ def get_atoms_from_bond(mol, bond_idx):
     return begin_atom, end_atom
 
 def get_bonds_from_atom_list(mol, atom_list):
+    """
+    Get all bonds between atoms in the given list.
+    
+    Args:
+        mol: RDKit molecule object
+        atom_list: List of atom indices
+        
+    Returns:
+        list: List of bond indices
+    """
     bonds = []
     for bond in mol.GetBonds():
         begin_atom = bond.GetBeginAtomIdx()
@@ -158,6 +268,16 @@ def get_bonds_from_atom_list(mol, atom_list):
     return bonds
 
 def get_submol_from_atom_list(mol, atom_list):
+    """
+    Extract a submolecule from a list of atoms.
+    
+    Args:
+        mol: RDKit molecule object
+        atom_list: List of atom indices
+        
+    Returns:
+        RDKit molecule object: Submolecule containing specified atoms
+    """
     if len(atom_list) == 1:
         atom_idx = atom_list[0]
         symbol = get_symbol_from_atom(mol, atom_idx)
@@ -169,28 +289,75 @@ def get_submol_from_atom_list(mol, atom_list):
 
 
 def get_symbol_from_atom(mol, atom_idx):
+    """
+    Get atomic symbol from atom index.
+    
+    Args:
+        mol: RDKit molecule object
+        atom_idx: Atom index
+        
+    Returns:
+        str: Atomic symbol (e.g., 'C', 'N', 'O')
+    """
     symbol = mol.GetAtomWithIdx(atom_idx).GetSymbol()
     return symbol
 
 def get_substructure_info(mol, pattern):
+    """
+    Find all substructure matches of pattern in molecule.
+    
+    Args:
+        mol: RDKit molecule object to search in
+        pattern: RDKit molecule object representing the pattern
+        
+    Returns:
+        list: List of tuples containing atom indices for each match
+    """
     substructure_candidate_atom_list = []
     for each_substr in mol.GetSubstructMatches(pattern):
         substructure_candidate_atom_list.append(each_substr)
     return substructure_candidate_atom_list
 
 def init_mol(smiles):
+    """
+    Initialize molecule from SMILES with standardization.
+    
+    Args:
+        smiles: SMILES string
+        
+    Returns:
+        tuple: (RDKit molecule object, canonical SMILES string)
+    """
     mol = Chem.MolFromSmiles(smiles)
     submolblock = Chem.MolToMolBlock(mol)
     mol = Chem.MolFromMolBlock(submolblock)
     return mol, Chem.MolToSmiles(mol)
 
 def get_standard_smiles(smiles):
+    """
+    Standardize and validate SMILES string.
+    
+    Args:
+        smiles: SMILES string to standardize
+        
+    Returns:
+        tuple: (standardized_smiles, validation_results)
+    """
     std_smi = molvs.standardize_smiles(smiles)
     smi_val = molvs.validate_smiles(smiles)
     return std_smi, smi_val
 
 
 def _get_molecular_prop_(mol):
+    """
+    Calculate basic molecular properties.
+    
+    Args:
+        mol: RDKit molecule object
+        
+    Returns:
+        tuple: (SA_score, QED, molecular_weight, logP)
+    """
     sa = calc_SA(mol)
     qed = Chem.QED.default(mol)
     logp = Descriptors.MolLogP(mol)
@@ -199,6 +366,15 @@ def _get_molecular_prop_(mol):
 
 
 def _get_molecular_prop_extd_(mol):
+    """
+    Calculate extended molecular properties including H-bond donors/acceptors.
+    
+    Args:
+        mol: RDKit molecule object
+        
+    Returns:
+        dict: Dictionary with keys 'sa', 'qed', 'mw', 'logp', 'n_hdonor', 'n_hacceptor'
+    """
     sa, qed, mw, logp = _get_molecular_prop_(mol)
     props = {'sa':sa,'qed':qed,'mw':mw,'logp':logp}
     props['n_hdonor'] = Lipinski.NumHDonors(mol)
@@ -219,6 +395,20 @@ def _scaffold_no_reassign_(overall_max_n:int=None, # recommend: ~ 10000
                            _merge_structure_top_n_:int=100,
                            frag_n:int=1,
                           ):
+    """
+    Reassign iteration limits for scaffold search based on provided parameters.
+    
+    Args:
+        overall_max_n: Maximum total candidates (recommend: ~10000)
+        frag_max_n: Maximum candidates per fragment (recommend: ~1000)
+        scaffold_top_n: Top N scaffolds to test (recommend: ~200)
+        cand_max_n__rplc: Maximum candidates per replacement (recommend: <=10)
+        _merge_structure_top_n_: Top N structures for merging (default: 100)
+        frag_n: Number of fragments
+        
+    Returns:
+        tuple: (overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_)
+    """
     if not _merge_structure_top_n_:
         _merge_structure_top_n_ = 100
     # define overall_max_n and frag_max_n
@@ -257,6 +447,15 @@ def _scaffold_no_reassign_(overall_max_n:int=None, # recommend: ~ 10000
 
 # thresholds: {METRIC:(MIN_VAL,MAX_VAL)}
 def _default_thrs_(lipinski:bool=True):
+    """
+    Get default molecular property thresholds.
+    
+    Args:
+        lipinski: If True, apply Lipinski's rule of five thresholds
+        
+    Returns:
+        dict: Dictionary of thresholds {metric: (min_value, max_value)}
+    """
     thresholds = dict()
     if lipinski:
         thresholds.update({
@@ -271,6 +470,18 @@ def _default_thrs_(lipinski:bool=True):
 # props (dict) : {METRIC:VAL}
 # thresholds (dict) : {METRTIC:(min,max)}
 def determ_props(props:dict,thresholds:dict,w_all_failed_reason:bool=False,ignore_null_val=False):
+    """
+    Determine if molecular properties pass given thresholds.
+    
+    Args:
+        props: Dictionary of molecular properties {metric: value}
+        thresholds: Dictionary of thresholds {metric: (min, max)}
+        w_all_failed_reason: If True, return all failed reasons; if False, stop at first failure
+        ignore_null_val: If True, ignore invalid/NaN values
+        
+    Returns:
+        tuple: (passed: bool, failure_reasons: list)
+    """
     determ_results = []
     for metric, (min_val, max_val) in thresholds.items():
         # Not defined
@@ -404,18 +615,18 @@ def calculate_bulk_tanimoto(query_fp, db_fps, top_n=None, threshold=0.0):
 
 def search_similar_scaffolds_fast(query_mol, fp_db, scaffold_top_n=None, threshold=0.3, use_multiprocessing=False, n_jobs=None):
     """
-    Fast similarity search using pre-computed fingerprints
+    Fast similarity search using pre-computed fingerprints.
     
     Args:
-        query_mol: Query molecule (RDKit mol object)
-        fp_db: Fingerprint database (from load_fingerprint_db)
-        scaffold_top_n: Maximum number of results
-        threshold: Minimum similarity threshold
-        use_multiprocessing: Whether to use multiprocessing (default: False for backward compatibility)
-        n_jobs: Number of processes (None = use all CPUs, -1 = use all CPUs)
+        query_mol: RDKit molecule object to search for
+        fp_db: Fingerprint database from load_fingerprint_db()
+        scaffold_top_n: Maximum number of results to return
+        threshold: Minimum similarity threshold (default: 0.3)
+        use_multiprocessing: If True, use parallel processing
+        n_jobs: Number of parallel jobs (None = use all CPUs)
         
     Returns:
-        pandas Series with SMILES as index and similarity as values
+        pd.Series: Series with scaffold SMILES as index and similarity scores as values
     """
     # Generate fingerprint for query molecule
     query_fp = AllChem.GetMorganFingerprintAsBitVect(
@@ -584,18 +795,18 @@ def calculate_bulk_tanimoto_multiprocessing(query_fp, db_fps, top_n=None, thresh
 
 def search_similar_scaffolds_fast_mp(query_mol, fp_db, scaffold_top_n=None, threshold=0.3, use_multiprocessing=True, n_jobs=None):
     """
-    Fast similarity search using pre-computed fingerprints with optional multiprocessing
+    Fast similarity search using pre-computed fingerprints with optional multiprocessing.
     
     Args:
-        query_mol: Query molecule (RDKit mol object)
-        fp_db: Fingerprint database (from load_fingerprint_db)
-        scaffold_top_n: Maximum number of results
-        threshold: Minimum similarity threshold
-        use_multiprocessing: Whether to use multiprocessing (default: True)
-        n_jobs: Number of processes (None = use all CPUs, -1 = use all CPUs)
+        query_mol: RDKit molecule object to search for
+        fp_db: Fingerprint database from load_fingerprint_db()
+        scaffold_top_n: Maximum number of results to return
+        threshold: Minimum similarity threshold (default: 0.3)
+        use_multiprocessing: If True, use parallel processing (default: True)
+        n_jobs: Number of parallel jobs (None = use all CPUs)
         
     Returns:
-        pandas Series with SMILES as index and similarity as values
+        pd.Series: Series with scaffold SMILES as index and similarity scores as values
     """
     # Generate fingerprint for query molecule
     query_fp = AllChem.GetMorganFingerprintAsBitVect(
@@ -671,15 +882,15 @@ def search_similar_scaffolds_fast_mp(query_mol, fp_db, scaffold_top_n=None, thre
 
 def generate_query_fingerprint(mol, radius=2, fp_size=2048):
     """
-    Generate fingerprint for a query molecule
+    Generate fingerprint for a query molecule (compatible with fingerprint DB).
     
     Args:
-        mol: RDKit mol object
-        radius: Morgan fingerprint radius
-        fp_size: Size of fingerprint
+        mol: RDKit molecule object
+        radius: Morgan fingerprint radius (default: 2)
+        fp_size: Size of fingerprint bit vector (default: 2048)
         
     Returns:
-        numpy array of fingerprint
+        np.ndarray: Numpy array of fingerprint bits
     """
     fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits=fp_size)
     arr = np.zeros((fp_size,), dtype=np.uint8)

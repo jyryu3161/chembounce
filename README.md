@@ -57,7 +57,7 @@ Example usage:
 
 ```
 python chembounce.py \
-    -o ./test_output \
+    -o ./output_test \
     -i "CCCCC1=NC(=C(N1CC2=CC=C(C=C2)C3=CC=CC=C3C4=NNN=N4)CO)Cl" \
     -n 100 -t 0.5 \
     --cand_max_n__rplc 10
@@ -71,7 +71,7 @@ bash prepare_fingerprints.sh my_scaffolds.txt my_scaffolds_fingerprints.npz
 
 # Then use it with ChemBounce
 python chembounce.py \
-    -o ./test_output \
+    -o ./output_test \
     -i "CCCCC1=NC(=C(N1CC2=CC=C(C=C2)C3=CC=CC=C3C4=NNN=N4)CO)Cl" \
     -n 100 -t 0.5 \
     --scaffold-db my_scaffolds.txt \
