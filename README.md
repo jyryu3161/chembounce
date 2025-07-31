@@ -31,7 +31,7 @@ bash install.sh
 
 ### Performance Optimization
 
-ChemBounce uses pre-computed fingerprints for **100-1000x faster** similarity search. 
+ChemBounce uses pre-computed fingerprints forfaster similarity search. 
 
 **The default scaffold database already includes pre-computed fingerprints** (`data/scaffold_fingerprints.npz`), so you don't need to generate them.
 
