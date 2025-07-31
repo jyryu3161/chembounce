@@ -1,7 +1,7 @@
-import datetime
 """
 Cost estimation: time, memory, CPU
 """
+import datetime
     
 import time
 import psutil

@@ -17,10 +17,11 @@ citation)
     eprint = {https://academic.oup.com/bioinformatics/advance-article-pdf/doi/10.1093/bioinformatics/btaa219/32984904/btaa219.pdf},
 }
 """
-from scaffoldgraph import *
-from scaffoldgraph.core.fragment import *
-# from scaffoldgraph.core.scaffold import Scaffold
-# from scaffoldgraph.utils import suppress_rdlogger
+from scaffoldgraph import get_murcko_scaffold
+from scaffoldgraph.core.fragment import MurckoRingFragmenter, MurckoRingSystemFragmenter
+from scaffoldgraph.core.scaffold import Scaffold
+from scaffoldgraph.utils import suppress_rdlogger
+from rdkit.Chem import rdmolops
 
 @suppress_rdlogger()
 def get_all_murcko_fragments(mol, break_fused_rings=True,iteration_round:int=float('inf')):

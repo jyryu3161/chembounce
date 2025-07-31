@@ -43,6 +43,14 @@ def argument_parser():
     # Minor options for process
     parser.add_argument('-l', '--low_mem', required=False, action='store_true', default=False,
                         help="Low memory mode")
+    parser.add_argument('--use-fingerprint-db', dest='use_fingerprint_db', required=False, action='store_true', default=True,
+                        help="Use pre-computed fingerprint database for fast similarity search (default: True)")
+    parser.add_argument('--no-fingerprint-db', dest='use_fingerprint_db', required=False, action='store_false',
+                        help="Disable fingerprint database and use slow similarity search")
+    parser.add_argument('--scaffold-db', dest='scaffold_db_file', required=False, default=None,
+                        help="Path to custom scaffold database file (SMILES format)")
+    parser.add_argument('--fingerprint-db', dest='fingerprint_db_file', required=False, default=None,
+                        help="Path to custom fingerprint database file (NPZ format)")
     parser.add_argument('-f', '--fragments', required=False, action='append', default=[],
                         help="Specific fragment SMILES of the input structure to replace. For multiple fragment, repeatedly impose this option: e.g. --fragments SMILES_A --fragments SMILES_B")
     parser.add_argument('--replace_scaffold_files', required=False, action='append', default=[],

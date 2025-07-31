@@ -5,26 +5,25 @@ util codes for ChemBounce
 import copy
 import oddt
 from oddt import shape
-import itertools
 import logging
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import Lipinski
 from rdkit import DataStructs
-import scaffoldgraph as sg
 from rdkit import RDLogger
 import os
 import sys
 import warnings
 import cats_module
-from scipy.spatial.distance import euclidean, cosine
+from scipy.spatial.distance import euclidean
 import pubchempy as pcp
 import pickle
 import math
 from rdkit.Chem import Descriptors
+import numpy as np
+import pandas as pd
 # SA score calcualtion function - dependency of importing path by the rdkit version
 import rdkit.RDPaths as RDPaths
-import rdkit.RDConfig as RDConfig
 sys.path.append(RDPaths.RDContribDir)
 sys.path.append(os.environ['RDBASE'])
 try:
@@ -35,6 +34,8 @@ except:
     except:
         from moses.metrics import SA as calc_SA
 import molvs
+from multiprocessing import Pool, cpu_count
+from functools import partial
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 lg = RDLogger.logger()
@@ -320,3 +321,367 @@ class SmilesInputError(Exception):
 
     def __str__(self):
         return f'{self.message}\nReceived SMILES input: {self.value}'
+
+
+#### Fingerprint-based fast similarity search functions ####
+
+def load_fingerprint_db(fp_file=None):
+    """
+    Load pre-computed fingerprint database
+    
+    Args:
+        fp_file: Path to fingerprint file. If None, use default location.
+        
+    Returns:
+        dict containing fingerprints, smiles, and metadata
+    """
+    if fp_file is None:
+        fp_file = os.path.join(PLF_LOC, 'data', 'scaffold_fingerprints.npz')
+    
+    if not os.path.exists(fp_file):
+        raise FileNotFoundError(f"Fingerprint file not found: {fp_file}")
+    
+    print(f"Loading fingerprint database from {fp_file}...")
+    data = np.load(fp_file, allow_pickle=True)
+    
+    # Convert to proper format
+    fp_data = {
+        'fingerprints': data['fingerprints'],
+        'smiles': data['smiles'].tolist() if isinstance(data['smiles'], np.ndarray) else data['smiles'],
+        'fp_size': int(data['fp_size']),
+        'radius': int(data['radius'])
+    }
+    
+    print(f"Loaded {len(fp_data['fingerprints'])} fingerprints")
+    return fp_data
+
+
+def calculate_bulk_tanimoto(query_fp, db_fps, top_n=None, threshold=0.0):
+    """
+    Calculate Tanimoto similarity between query and database fingerprints using numpy
+    
+    Args:
+        query_fp: Query fingerprint (numpy array)
+        db_fps: Database fingerprints (numpy array)
+        top_n: Return only top N results
+        threshold: Minimum similarity threshold
+        
+    Returns:
+        indices and similarities of matching compounds
+    """
+    # Ensure query_fp is 1D
+    if query_fp.ndim > 1:
+        query_fp = query_fp.flatten()
+    
+    # Calculate Tanimoto similarity using numpy operations
+    # Tanimoto = intersection / union = (A & B) / (A | B)
+    intersection = np.sum(db_fps & query_fp, axis=1)
+    union = np.sum(db_fps | query_fp, axis=1)
+    
+    # Avoid division by zero
+    similarities = np.zeros(len(db_fps))
+    non_zero_union = union > 0
+    similarities[non_zero_union] = intersection[non_zero_union] / union[non_zero_union]
+    
+    # Apply threshold
+    valid_mask = similarities >= threshold
+    valid_indices = np.where(valid_mask)[0]
+    valid_similarities = similarities[valid_mask]
+    
+    # Sort by similarity (descending)
+    sorted_indices = np.argsort(valid_similarities)[::-1]
+    
+    # Apply top_n limit if specified
+    if top_n is not None and len(sorted_indices) > top_n:
+        sorted_indices = sorted_indices[:top_n]
+    
+    # Return indices and similarities
+    result_indices = valid_indices[sorted_indices]
+    result_similarities = valid_similarities[sorted_indices]
+    
+    return result_indices, result_similarities
+
+
+def search_similar_scaffolds_fast(query_mol, fp_db, scaffold_top_n=None, threshold=0.3, use_multiprocessing=False, n_jobs=None):
+    """
+    Fast similarity search using pre-computed fingerprints
+    
+    Args:
+        query_mol: Query molecule (RDKit mol object)
+        fp_db: Fingerprint database (from load_fingerprint_db)
+        scaffold_top_n: Maximum number of results
+        threshold: Minimum similarity threshold
+        use_multiprocessing: Whether to use multiprocessing (default: False for backward compatibility)
+        n_jobs: Number of processes (None = use all CPUs, -1 = use all CPUs)
+        
+    Returns:
+        pandas Series with SMILES as index and similarity as values
+    """
+    # Generate fingerprint for query molecule
+    query_fp = AllChem.GetMorganFingerprintAsBitVect(
+        query_mol, 
+        fp_db['radius'], 
+        nBits=fp_db['fp_size']
+    )
+    
+    # Convert to numpy array
+    query_fp_arr = np.zeros((fp_db['fp_size'],), dtype=np.uint8)
+    DataStructs.ConvertToNumpyArray(query_fp, query_fp_arr)
+    
+    # Get query SMILES for filtering
+    query_smiles = Chem.MolToSmiles(query_mol)
+    query_len = len(query_smiles)
+    
+    # Pre-filter by SMILES length (same logic as original)
+    db_fps = fp_db['fingerprints']
+    db_smiles = fp_db['smiles']
+    
+    # Create length filter mask
+    length_mask = np.ones(len(db_smiles), dtype=bool)
+    for i, smiles in enumerate(db_smiles):
+        smiles_len = len(smiles)
+        if smiles_len > query_len * 2 or query_len > smiles_len * 2:
+            length_mask[i] = False
+    
+    # Apply length filter
+    filtered_indices = np.where(length_mask)[0]
+    if len(filtered_indices) == 0:
+        return pd.Series(dtype=float)
+    
+    filtered_fps = db_fps[filtered_indices]
+    
+    # Calculate similarities
+    if use_multiprocessing:
+        indices, similarities = calculate_bulk_tanimoto_multiprocessing(
+            query_fp_arr, 
+            filtered_fps, 
+            top_n=scaffold_top_n,
+            threshold=max(threshold, 0.1),  # At least 0.1 as in original
+            n_jobs=n_jobs
+        )
+    else:
+        indices, similarities = calculate_bulk_tanimoto(
+            query_fp_arr, 
+            filtered_fps, 
+            top_n=scaffold_top_n,
+            threshold=max(threshold, 0.1)  # At least 0.1 as in original
+        )
+    
+    # Map back to original indices
+    original_indices = filtered_indices[indices]
+    
+    # Create result series
+    result_smiles = [db_smiles[i] for i in original_indices]
+    result_series = pd.Series(similarities, index=result_smiles)
+    
+    # Remove exact match (similarity = 1.0)
+    result_series = result_series[result_series < 1.0]
+    
+    # Apply final threshold
+    if threshold:
+        result_series = result_series[result_series > threshold]
+    
+    # Apply top_n limit
+    if scaffold_top_n and len(result_series) > scaffold_top_n:
+        result_series = result_series.iloc[:scaffold_top_n]
+    
+    result_series.name = 'Tanimoto Similarity'
+    return result_series
+
+
+def _calculate_tanimoto_chunk(args):
+    """Helper function for multiprocessing: calculates Tanimoto similarity for a chunk"""
+    query_fp, db_fps_chunk, start_idx, threshold = args
+    
+    # Calculate Tanimoto similarity using numpy operations
+    intersection = np.sum(db_fps_chunk & query_fp, axis=1)
+    union = np.sum(db_fps_chunk | query_fp, axis=1)
+    
+    # Avoid division by zero
+    similarities = np.zeros(len(db_fps_chunk))
+    non_zero_union = union > 0
+    similarities[non_zero_union] = intersection[non_zero_union] / union[non_zero_union]
+    
+    # Apply threshold and return valid results with adjusted indices
+    valid_mask = similarities >= threshold
+    valid_indices = np.where(valid_mask)[0]
+    
+    # Adjust indices to original position
+    adjusted_indices = valid_indices + start_idx
+    valid_similarities = similarities[valid_mask]
+    
+    return adjusted_indices, valid_similarities
+
+
+def calculate_bulk_tanimoto_multiprocessing(query_fp, db_fps, top_n=None, threshold=0.0, n_jobs=None):
+    """
+    Calculate Tanimoto similarity using multiprocessing
+    
+    Args:
+        query_fp: Query fingerprint (numpy array)
+        db_fps: Database fingerprints (numpy array)
+        top_n: Return only top N results
+        threshold: Minimum similarity threshold
+        n_jobs: Number of processes (None = use all CPUs)
+        
+    Returns:
+        indices and similarities of matching compounds
+    """
+    # Ensure query_fp is 1D
+    if query_fp.ndim > 1:
+        query_fp = query_fp.flatten()
+    
+    # Determine number of processes
+    if n_jobs is None:
+        n_jobs = cpu_count()
+    elif n_jobs == -1:
+        n_jobs = cpu_count()
+    else:
+        n_jobs = min(n_jobs, cpu_count())
+    
+    # For small datasets, use single process
+    if len(db_fps) < 1000 or n_jobs == 1:
+        return calculate_bulk_tanimoto(query_fp, db_fps, top_n, threshold)
+    
+    # Split data into chunks
+    chunk_size = max(1, len(db_fps) // n_jobs)
+    chunks = []
+    for i in range(0, len(db_fps), chunk_size):
+        end_idx = min(i + chunk_size, len(db_fps))
+        chunks.append((query_fp, db_fps[i:end_idx], i, threshold))
+    
+    # Process chunks in parallel
+    with Pool(n_jobs) as pool:
+        results = pool.map(_calculate_tanimoto_chunk, chunks)
+    
+    # Combine results
+    all_indices = []
+    all_similarities = []
+    for indices, similarities in results:
+        all_indices.extend(indices)
+        all_similarities.extend(similarities)
+    
+    if not all_indices:
+        return np.array([]), np.array([])
+    
+    # Convert to numpy arrays
+    all_indices = np.array(all_indices)
+    all_similarities = np.array(all_similarities)
+    
+    # Sort by similarity (descending)
+    sorted_idx = np.argsort(all_similarities)[::-1]
+    
+    # Apply top_n limit if specified
+    if top_n is not None and len(sorted_idx) > top_n:
+        sorted_idx = sorted_idx[:top_n]
+    
+    # Return sorted results
+    result_indices = all_indices[sorted_idx]
+    result_similarities = all_similarities[sorted_idx]
+    
+    return result_indices, result_similarities
+
+
+def search_similar_scaffolds_fast_mp(query_mol, fp_db, scaffold_top_n=None, threshold=0.3, use_multiprocessing=True, n_jobs=None):
+    """
+    Fast similarity search using pre-computed fingerprints with optional multiprocessing
+    
+    Args:
+        query_mol: Query molecule (RDKit mol object)
+        fp_db: Fingerprint database (from load_fingerprint_db)
+        scaffold_top_n: Maximum number of results
+        threshold: Minimum similarity threshold
+        use_multiprocessing: Whether to use multiprocessing (default: True)
+        n_jobs: Number of processes (None = use all CPUs, -1 = use all CPUs)
+        
+    Returns:
+        pandas Series with SMILES as index and similarity as values
+    """
+    # Generate fingerprint for query molecule
+    query_fp = AllChem.GetMorganFingerprintAsBitVect(
+        query_mol, 
+        fp_db['radius'], 
+        nBits=fp_db['fp_size']
+    )
+    
+    # Convert to numpy array
+    query_fp_arr = np.zeros((fp_db['fp_size'],), dtype=np.uint8)
+    DataStructs.ConvertToNumpyArray(query_fp, query_fp_arr)
+    
+    # Get query SMILES for filtering
+    query_smiles = Chem.MolToSmiles(query_mol)
+    query_len = len(query_smiles)
+    
+    # Pre-filter by SMILES length (same logic as original)
+    db_fps = fp_db['fingerprints']
+    db_smiles = fp_db['smiles']
+    
+    # Create length filter mask (can be parallelized for very large datasets)
+    length_mask = np.ones(len(db_smiles), dtype=bool)
+    for i, smiles in enumerate(db_smiles):
+        smiles_len = len(smiles)
+        if smiles_len > query_len * 2 or query_len > smiles_len * 2:
+            length_mask[i] = False
+    
+    # Apply length filter
+    filtered_indices = np.where(length_mask)[0]
+    if len(filtered_indices) == 0:
+        return pd.Series(dtype=float)
+    
+    filtered_fps = db_fps[filtered_indices]
+    
+    # Calculate similarities with or without multiprocessing
+    if use_multiprocessing:
+        indices, similarities = calculate_bulk_tanimoto_multiprocessing(
+            query_fp_arr, 
+            filtered_fps, 
+            top_n=scaffold_top_n,
+            threshold=max(threshold, 0.1),  # At least 0.1 as in original
+            n_jobs=n_jobs
+        )
+    else:
+        indices, similarities = calculate_bulk_tanimoto(
+            query_fp_arr, 
+            filtered_fps, 
+            top_n=scaffold_top_n,
+            threshold=max(threshold, 0.1)
+        )
+    
+    # Map back to original indices
+    original_indices = filtered_indices[indices]
+    
+    # Create result series
+    result_smiles = [db_smiles[i] for i in original_indices]
+    result_series = pd.Series(similarities, index=result_smiles)
+    
+    # Remove exact match (similarity = 1.0)
+    result_series = result_series[result_series < 1.0]
+    
+    # Apply final threshold
+    if threshold:
+        result_series = result_series[result_series > threshold]
+    
+    # Apply top_n limit
+    if scaffold_top_n and len(result_series) > scaffold_top_n:
+        result_series = result_series.iloc[:scaffold_top_n]
+    
+    result_series.name = 'Tanimoto Similarity'
+    return result_series
+
+
+def generate_query_fingerprint(mol, radius=2, fp_size=2048):
+    """
+    Generate fingerprint for a query molecule
+    
+    Args:
+        mol: RDKit mol object
+        radius: Morgan fingerprint radius
+        fp_size: Size of fingerprint
+        
+    Returns:
+        numpy array of fingerprint
+    """
+    fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits=fp_size)
+    arr = np.zeros((fp_size,), dtype=np.uint8)
+    DataStructs.ConvertToNumpyArray(fp, arr)
+    return arr

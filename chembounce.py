@@ -7,21 +7,17 @@ import os
 import sys
 import tqdm
 import gc
-import numpy as np
 import pandas as pd
 import itertools
 import copy
 import json
 import warnings
-import pickle
-import copy
 import datetime
 import logging
 sys.path.append(os.path.split(os.path.abspath(__file__))[0])
 
 from rdkit import RDLogger
 from rdkit import Chem
-from rdkit.Chem import AllChem
 
 import scaffoldgraph_fragmenter as sg
 import utils
@@ -45,7 +41,7 @@ def remove_substructures(mol, pattern_mol):
         rm_atom_idx_list = []
         for each_atom_idx in sorted(each_structure_atom_list, reverse=True):
             neighbor_atoms = utils.get_neighbor_atoms(mol, each_atom_idx)
-            if set(neighbor_atoms).issubset(set(each_structure_atom_list)) == False:
+            if not set(neighbor_atoms).issubset(set(each_structure_atom_list)):
                 linker_atom = list(set(neighbor_atoms).difference(set(each_structure_atom_list)))[0]
                 original_atom_info[linker_atom] = each_atom_idx
             else:
@@ -211,6 +207,7 @@ def search_similar_scaffolds(original_scaffold, fragments_DB,
         if sim > 0.1:
             if sim != 1.0:
                 scaffold_scores[candidate_smiles] = sim
+                
     scaffold_scores = pd.Series(scaffold_scores)
     scaffold_scores = scaffold_scores.sort_values(ascending=False)
     # Limit
@@ -238,6 +235,9 @@ def get_frags_cands(target_smiles:str,
                     output_dir:str='./output',
                     low_mem:bool=False,
                     tqdm_quiet:bool=False,
+                    use_fingerprint_db:bool=True,  # New parameter for fast search
+                    scaffold_db_file:str=None,  # Custom scaffold database file
+                    fingerprint_db_file:str=None,  # Custom fingerprint database file
                    ):
     # Fragment info
     if fragments:
@@ -250,9 +250,10 @@ def get_frags_cands(target_smiles:str,
             iteration_round=murcko_frag_itr_rnd)
     
     frag_info = pd.DataFrame([[Chem.MolToSmiles(i) for i in frags]],index=['SMILES']).T
+    frag_info.index = range(1, len(frags) + 1)
     frag_info.index.name = 'Fragment_no'
     frag_info.to_csv(os.path.join(output_dir,'fragment_info.tsv'),sep='\t')
-    print(f"Fragments found\t: {len(frags)}")
+    print(f"Fragments found: {len(frags)}")
     
     # Organize how much tests and candidates to find
     overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_ = utils._scaffold_no_reassign_(
@@ -275,7 +276,7 @@ def get_frags_cands(target_smiles:str,
         _search_scf_max_n_ = scaffold_top_n
     # Getting replace_mol_list
     print("Finding scaffolds for replacement...")
-    for frag_no, pattern_mol in tqdm.tqdm(enumerate(frags), desc='Fragments'):
+    for frag_no, pattern_mol in tqdm.tqdm(enumerate(frags, start=1), desc='Fragments'):
         # Pre-defined replace_scaffold_list for given fragment
         _scf_f_n_ = os.path.join(output_dir,f"replace_scaffold_list.fragment_{frag_no:04d}.tsv")
         predefined=False
@@ -285,8 +286,8 @@ def get_frags_cands(target_smiles:str,
                 curr_frag_f = replace_scaffold_files
             elif len(replace_scaffold_files)==1:
                 curr_frag_f = replace_scaffold_files[0]
-            curr_frag_f = replace_scaffold_files[frag_no]
-            print(f"Finding scaffolds for fragment {Chem.MolToSmiles(pattern_mol)} at {curr_frag_f}")
+            curr_frag_f = replace_scaffold_files[frag_no - 1]
+            print(f"Finding scaffolds for fragment {Chem.MolToSmiles(pattern_mol)} in {curr_frag_f}")
             if os.path.isfile(curr_frag_f):
                 try:
                     # pre-defined one
@@ -304,21 +305,70 @@ def get_frags_cands(target_smiles:str,
             else:
                 print(f"File not found: {curr_frag_f}")
         if not predefined:
-            print(f"Finding alternatives for\t\t{Chem.MolToSmiles(pattern_mol)}")
-            if not fragments_DB:
-                print("Calling fragment DB..")
-                if not low_mem:
-                    fragments_DB = utils.call_frag_db()[2]
-                else:
-                    fragments_DB = utils._call_frag_db_smi_()[1]
-            replace_scaffold_ser = search_similar_scaffolds(
-                original_scaffold=pattern_mol,
-                fragments_DB=fragments_DB,
-                low_mem=low_mem,
-                tqdm_quiet=tqdm_quiet,
-                scaffold_top_n=_search_scf_max_n_,
-                threshold=_search_scf_thr_,
-            )
+            print(f"Finding alternatives for {Chem.MolToSmiles(pattern_mol)}")
+            
+            # Use fingerprint database for fast search if enabled
+            if use_fingerprint_db:
+                try:
+                    # Load fingerprint database if not already loaded
+                    if not hasattr(get_frags_cands, '_fp_db'):
+                        print("Loading fingerprint database for fast search...")
+                        get_frags_cands._fp_db = utils.load_fingerprint_db(fingerprint_db_file)
+                    
+                    # Use fast fingerprint-based search
+                    replace_scaffold_ser = utils.search_similar_scaffolds_fast(
+                        query_mol=pattern_mol,
+                        fp_db=get_frags_cands._fp_db,
+                        scaffold_top_n=_search_scf_max_n_,
+                        threshold=_search_scf_thr_,
+                        use_multiprocessing=False,
+                    )
+                    print(f"Found {len(replace_scaffold_ser)} similar scaffolds using fast search")
+                    
+                except FileNotFoundError:
+                    print("Fingerprint database not found, falling back to slow search...")
+                    use_fingerprint_db = False
+                except Exception as e:
+                    print(f"Error using fingerprint database: {e}")
+                    print("Falling back to slow search...")
+                    use_fingerprint_db = False
+            
+            # Fallback to original slow search
+            if not use_fingerprint_db:
+                if not fragments_DB:
+                    print("Calling fragment DB...")
+                    if scaffold_db_file:
+                        # Use custom scaffold database
+                        print(f"Using custom scaffold database: {scaffold_db_file}")
+                        if not low_mem:
+                            # Load as mol objects
+                            fragments_DB = []
+                            with open(scaffold_db_file, 'r') as f:
+                                for line in f:
+                                    line = line.strip()
+                                    if line:
+                                        mol = Chem.MolFromSmiles(line)
+                                        if mol:
+                                            fragments_DB.append(mol)
+                        else:
+                            # Load as SMILES strings for low memory mode
+                            with open(scaffold_db_file, 'r') as f:
+                                fragments_DB = [line.strip() for line in f if line.strip()]
+                    else:
+                        # Use default database
+                        if not low_mem:
+                            fragments_DB = utils.call_frag_db()[2]
+                        else:
+                            fragments_DB = utils._call_frag_db_smi_()[1]
+                replace_scaffold_ser = search_similar_scaffolds(
+                    original_scaffold=pattern_mol,
+                    fragments_DB=fragments_DB,
+                    low_mem=low_mem,
+                    tqdm_quiet=tqdm_quiet,
+                    scaffold_top_n=_search_scf_max_n_,
+                    threshold=_search_scf_thr_,
+                )
+            
             replace_scaffold_ser.name='Tanimoto Similarity'
             replace_scaffold_ser.to_csv(_scf_f_n_,sep='\t')
     
@@ -350,7 +400,7 @@ def make_scaffold_hopping(target_smiles:str,
     saved_results = {target_smiles:1}
     # Finding candidates
     _overall_cand_cnt_ = 0
-    for frag_no, pattern_mol in enumerate(frags):
+    for frag_no, pattern_mol in enumerate(frags, start=1):
         print(f"Screening started for fragment_{frag_no:04d}: {Chem.MolToSmiles(pattern_mol)}")
         gc.collect()
         original_scaffold = Chem.MolToSmiles(pattern_mol)
@@ -371,6 +421,7 @@ def make_scaffold_hopping(target_smiles:str,
         
         # TODO - limit iteration of screening to satisfy overall_max_n
         replc_scf_it_obj = tqdm.tqdm(enumerate(list(replace_scaffold_df.index)[:scaffold_top_n]), desc='Scaffold')
+        
         for replc_scf_cnt, replace_scaffold in replc_scf_it_obj:
             gc.collect()
             replace_mol, replace_scaffold = utils.init_mol(replace_scaffold)
@@ -413,7 +464,7 @@ def make_scaffold_hopping(target_smiles:str,
                     try:
                         _fin_structure, valid_info = utils.get_standard_smiles(each_candidate)
                     except Exception as e:
-                        print(f'Failed to find the standard SMILES of {each_candidate}',e)
+                        print(f'Failed to find the standard SMILES for {each_candidate}: {e}')
                         _fin_structure = ''
                     f_frag.write('\t'.join([str(i) for i in [
                         frag_no, original_scaffold,
@@ -438,11 +489,11 @@ def make_scaffold_hopping(target_smiles:str,
             # Early stopping
             # 2-fold more iterations in case that number of candidates is less than max_n
             if _frag_cand_cnt_ > frag_max_n or replc_scf_cnt > scaffold_top_n:
-                print(_frag_cand_cnt_, "candidates have found")
+                print(_frag_cand_cnt_, "candidates found")
                 replc_scf_it_obj.close()
                 break
-        print(_frag_cand_cnt_, "candidates have found")
-        print("Time cost for fragment ",frag_no)
+        print(_frag_cand_cnt_, "candidates found")
+        print(f"Time taken for fragment {frag_no}:")
         print(datetime.datetime.now() - _frag_start)
         f_frag.close()
     fp.close()
@@ -468,6 +519,9 @@ def chembounce(target_smiles:str,
                candidate_thresholds:dict=dict(),
                murcko_frag_itr_rnd:int=1, # Iteration round limiation
                _search_scf_thr_:float=0.3, # Tanimoto similarity threshold for search_scaffold function
+               use_fingerprint_db:bool=True, # Use pre-computed fingerprints for fast search
+               scaffold_db_file:str=None, # Custom scaffold database file
+               fingerprint_db_file:str=None, # Custom fingerprint database file
               ):
     # IO
     if type(output_dir)==str:
@@ -505,6 +559,9 @@ def chembounce(target_smiles:str,
         replace_scaffold_files=replace_scaffold_files,
         murcko_frag_itr_rnd=murcko_frag_itr_rnd,
         _search_scf_thr_=_search_scf_thr_,
+        use_fingerprint_db=use_fingerprint_db,
+        scaffold_db_file=scaffold_db_file,
+        fingerprint_db_file=fingerprint_db_file,
     )
     
     o_f = make_scaffold_hopping(
@@ -522,13 +579,13 @@ def chembounce(target_smiles:str,
         candidate_thresholds=candidate_thresholds,
     )
     result_df = pd.read_csv(o_f,sep='\t')
-    print(f"Found hopped structures\t: {result_df.shape[0]}")
+    print(f"Found hopped structures: {result_df.shape[0]}")
     return result_df
 
 # Main function
 def main():
     start = datetime.datetime.now()
-    print("Started at \t",start)
+    print(f"Started at: {start}")
     
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     lg = RDLogger.logger()
@@ -580,7 +637,7 @@ def main():
     print(f"Applied candidate thresholds (Lipinski\'s rule of five : {not options.wo_lipinski}):")
     print('\n'.join([
         f"\t{metric} :\tMin.:{min_val}\tMax.:{max_val}" for metric, (min_val,max_val) in candidate_thresholds.items()]))
-    print(f'Tanimoto Similarity :\t{options.tanimoto_threshold}')
+    print(f'Tanimoto Similarity: {options.tanimoto_threshold}')
     
     result_df, resource_cost = chembounce(
         target_smiles=target_smiles,
@@ -599,6 +656,9 @@ def main():
         candidate_thresholds=candidate_thresholds,
         murcko_frag_itr_rnd=1,
         _search_scf_thr_=0.3,
+        use_fingerprint_db=options.use_fingerprint_db,
+        scaffold_db_file=options.scaffold_db_file,
+        fingerprint_db_file=options.fingerprint_db_file,
 #     )
         #murcko_frag_itr_rnd:int=options.murcko_frag_itr_rnd,
         #_search_scf_thr_:float=options.search_scf_thr,
@@ -606,7 +666,8 @@ def main():
     # if options.estimate_cost:
     with open(os.path.join(output_dir,'resource_cost.json'),'wb') as f:
         f.write(json.dumps(resource_cost).encode())
-    print(f"""#### Cost estimatation ####
+        
+    print(f"""#### Cost estimation ####
             Elapsed time:              {resource_cost['elapsed_time']}
             Total CPU time:            {resource_cost['total_cpu_time']}
             CPU usage percent:         {resource_cost['cpu_usage_percent']}
@@ -614,9 +675,9 @@ def main():
             Average memory usage (MB): {resource_cost['avg_memory_mb']}
         """)
     end = datetime.datetime.now()
-    print("Finished at\t",end)
+    print(f"Finished at: {end}")
     cost = end-start
-    print("Time cost: \t",end-start)
+    print(f"Time cost: {end-start}")
 
     
 if __name__ == '__main__':
