@@ -281,6 +281,10 @@ def get_frags_cands(target_smiles:str,
         predefined=False
         # pre-defined scaffold list
         if fragments and replace_scaffold_files:
+            if type(replace_scaffold_files)==str:
+                curr_frag_f = replace_scaffold_files
+            elif len(replace_scaffold_files)==1:
+                curr_frag_f = replace_scaffold_files[0]
             curr_frag_f = replace_scaffold_files[frag_no]
             print(f"Finding scaffolds for fragment {Chem.MolToSmiles(pattern_mol)} at {curr_frag_f}")
             if os.path.isfile(curr_frag_f):
@@ -324,6 +328,7 @@ def get_frags_cands(target_smiles:str,
 def make_scaffold_hopping(target_smiles:str,
                           target_mol,
                           frags:list,
+                          core_mol=None,
                           tanimoto_threshold:float=0.5,
                           overall_max_n:int=None,
                           frag_max_n:int=None,
@@ -388,7 +393,9 @@ def make_scaffold_hopping(target_smiles:str,
                     continue
                 # Thresholds
                 if tanimoto_sim >= tanimoto_threshold:
-                    # TODO - Finding core smiles if imposed
+                    if core_mol:
+                        if not target_mol.HasSubstructMatch(core_mol):
+                            continue
                     # calculation of electron similarity and subscores
                     try: # Possible error in calculation of electron shape
                         electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
@@ -446,6 +453,7 @@ def make_scaffold_hopping(target_smiles:str,
 @cost_estimation.EstDecoMem
 def chembounce(target_smiles:str,
                fragments_DB:list=[],
+               core_smiles:str=None,
                tanimoto_threshold:float=0.5,
                overall_max_n:int=None,
                frag_max_n:int=None,
@@ -461,14 +469,25 @@ def chembounce(target_smiles:str,
                murcko_frag_itr_rnd:int=1, # Iteration round limiation
                _search_scf_thr_:float=0.3, # Tanimoto similarity threshold for search_scaffold function
               ):
+    # IO
     if type(output_dir)==str:
         os.makedirs(output_dir,exist_ok=True)
-    
-    # target_mol, target_smiles = utils.init_mol(target_smiles)
     try:
         target_mol, target_smiles = utils.init_mol(target_smiles)
     except Exception as e:
         raise utils.SmilesInputError(value=target_smiles)
+    if core_smiles:
+        try:
+            core_mol, core_smiles = utils.init_mol(core_smiles)
+        except:
+            core_mol=None
+            core_smiles=None
+    else:
+        core_mol=None
+        core_smiles=None
+    if core_mol:
+        if not(target_mol.HasSubstructMatch(core_mol)):
+            raise utils.SmilesInputError(value=core_smiles, message='Core SMILES is not contained in the input SMILES')
     
     frags, overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_ = get_frags_cands(
         target_smiles=target_smiles,
@@ -492,6 +511,7 @@ def chembounce(target_smiles:str,
         target_smiles=target_smiles,
         target_mol=target_mol,
         frags=frags,
+        core_mol=core_mol,
         tanimoto_threshold=tanimoto_threshold,
         overall_max_n=overall_max_n,
         frag_max_n=frag_max_n,
@@ -566,6 +586,7 @@ def main():
         target_smiles=target_smiles,
 #         fragments_DB=fragments_DB, # Requirement has been changed
         overall_max_n=options.overall_max_n,
+        core_smiles=options.core_smiles,
         frag_max_n=options.frag_max_n,
         scaffold_top_n=options.scaffold_top_n,
         cand_max_n__rplc=options.cand_max_n__rplc,

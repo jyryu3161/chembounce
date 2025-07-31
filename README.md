@@ -34,10 +34,11 @@ See the example of `run.sh`
 ### Parameters
 
 
-- `-i INPUT_SMILES` : Input SMILES, the target molecular structure
+- `-i INPUT_SMILES` : Input SMILES, the target molecular structure.
 - `-o OUTPUT_DIRECTORY` : Output location
 - `-n FRAGMENT_MAX_N` : (`int`) "Maximal number of scaffold-hopped candidates for a fragment
 - `-t TANIMOTO_THRESHOLD` : (`float`; `0` to `1`) Threshold for Tanimoto simiarity between `INPUT_SMILES` and generated SMILES. (default is `0.5`)
+- `--core_smiles CORE_SMILES` : SMILES of core structure for the `INPUT_SMILES`, which should not be changed. If the `CORE_SMILES` is not in the `INPUT_SMILES`, it would raise an error.
 
 
 #### Options for iteration numbers
@@ -75,11 +76,10 @@ If one of the threhold category for this rule is additionally defined, the thres
 
 - `-l` : (Optional) Low memory mode
 - `--fragments` : Specific fragment SMILES of the input structure to replace. For multiple fragment, repeatedly impose this option: e.g. `--fragments SMILES_A --fragments SMILES_B`
-- `--replace_scaffold_files` :  Replace scaffold file, for the `fragments` option with tsv format, with or without priority score (the higher, with more priority).
+- `--replace_scaffold_files` : User-defiend library (if solely imposed). OR Replace scaffold file, for the `fragments` option with tsv format, with or without priority score (the higher, with more priority).
   * NOTE: One of the result files, `replace_scaffold_list.fragment_XXXX.tsv`, can be used for `replace_scaffold_files`.
   * NOTE: for multiple `fragments` and its corresponding `replace_scaffold_files`, the order of `fragments` and `replace_scaffold_files` should be matched:
       e.g.: `--fragments SMILES_A --replace_scaffold_files FILE_A --fragments SMILES_B --replace_scaffold_files FILE_B --fragments SMILES_C --replace_scaffold_files FILE_C`
-  * NOTE: For multiple 
 
 
 ## Results

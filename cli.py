@@ -6,10 +6,12 @@ import argparse
 
 # Argument of parser
 def argument_parser():
-    parser = argparse.ArgumentParser()    
+    parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--output_dir', required=True, help="Output location")
     parser.add_argument('-i', '--input_smiles', required=True, help="Input SMILES, the target molecular structure")
     # Max numbers to test
+    parser.add_argument('--core_smiles', required=False, default=None,
+                        help="A core structure SMILES that should be contained in the final structure")
     parser_cnt = parser.add_argument_group(title='iteration number options',description='Limit numbers of iterations')
     parser_cnt.add_argument('--overall_max_n', required=False, default=None, type=int,
                         help="Maximal number of scaffold-hopped candidates for overall fragments")
@@ -37,7 +39,7 @@ def argument_parser():
     parser_thr.add_argument('--h_acceptor_min', required=False, default=None, help="Minimal H acceptor limit", type=float)
     parser_thr.add_argument('--h_acceptor_max', required=False, default=None, help="Maximal H acceptor limit", type=float)
     parser_thr.add_argument('--wo_lipinski', required=False, action='store_true', default=False,
-                        help="Turn off  Lipinski\'s rule of five: logp_max=5, qed_max=500, h_donor_max=5, h_acceptor_max=10")
+                        help="Turn off Lipinski\'s rule of five: logp_max=5, qed_max=500, h_donor_max=5, h_acceptor_max=10")
     # Minor options for process
     parser.add_argument('-l', '--low_mem', required=False, action='store_true', default=False,
                         help="Low memory mode")
@@ -45,6 +47,7 @@ def argument_parser():
                         help="Specific fragment SMILES of the input structure to replace. For multiple fragment, repeatedly impose this option: e.g. --fragments SMILES_A --fragments SMILES_B")
     parser.add_argument('--replace_scaffold_files', required=False, action='append', default=[],
                         help="Replace scaffold file, for a specific fragment")
+    
 #     parser.add_argument('--murcko_frag_itr_rnd', required=False, default=1, type=int,
 #                         help="Iteration number of input SMILES fragmentalization. Default is 1 (>=0).")
 #     parser.add_argument('--search_scf_thr', required=False, default=0.3, type=float,
