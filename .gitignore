@@ -10,6 +10,7 @@ CALUDE.md
 __pycache__/
 *.py[cod]
 *$py.class
+wget*
 
 # C extensions
 *.so
