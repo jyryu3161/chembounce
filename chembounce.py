@@ -800,7 +800,7 @@ def main():
         use_fingerprint_db=options.use_fingerprint_db,
         scaffold_db_file=options.scaffold_db_file,
         fingerprint_db_file=options.fingerprint_db_file,
-#     )
+#     ) 
         #murcko_frag_itr_rnd:int=options.murcko_frag_itr_rnd,
         #_search_scf_thr_:float=options.search_scf_thr,
     )
