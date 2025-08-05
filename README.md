@@ -31,9 +31,11 @@ bash install.sh
 
 ### Performance Optimization
 
-ChemBounce uses pre-computed fingerprints forfaster similarity search. 
+ChemBounce uses pre-computed fingerprints for faster similarity search. 
 
-**The default scaffold database already includes pre-computed fingerprints** (`data/scaffold_fingerprints.npz`), so you don't need to generate them.
+**The default scaffold database already includes pre-computed fingerprints** (`data/scaffold_fingerprints_250mw.npz` and `data/scaffold_fingerprints.npz`), so you don't need to generate them. The default file (`data/scaffold_fingerprints_250mw.npz`) contains fingerprints for scaffolds with molecular weight ≤ 250. To use the complete scaffold library, specify `--fingerprint-db data/scaffold_fingerprints.npz`, but note that this file contains fingerprints for approximately 4 million scaffolds and requires significantly more memory.
+
+**Important Note**: The results presented in the paper were obtained using the complete scaffold database on a workstation with sufficient memory resources.
 
 #### Using Custom Scaffold Databases
 
@@ -117,6 +119,7 @@ Thresholds for candidates
 - `--wo_lipinski` : Turn off *Lipinski's rule of five*, which is `logp_max=5`, `mw_max=500`, `h_donor_max=5`, `h_acceptor_max=10`
 This option will turn off the limitation of candidates by Lipinski's rule of five.
 If one of the threshold categories for this rule is additionally defined, the threshold of Lipinski's rule is ignored and replaced by the user-defined threshold.
+**Note**: This option should be enabled when working with macromolecules or other large molecules that naturally exceed Lipinski's rule of five criteria.
 
 
 #### Optional parameters

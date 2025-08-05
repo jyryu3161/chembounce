@@ -13,8 +13,8 @@ echo "  output_file: Path to save fingerprints (default: data/scaffold_fingerpri
 echo ""
 
 # Parse command line arguments
-INPUT_FILE="${1:-data/Scaffolds_processed.txt}"
-OUTPUT_FILE="${2:-data/scaffold_fingerprints.npz}"
+INPUT_FILE="${1:-data/Scaffolds_processed_mw250.txt}"
+OUTPUT_FILE="${2:-data/scaffold_fingerprints_mw250.npz}"
 
 # If only one argument is provided, assume it's the input file and generate output name
 if [ $# -eq 1 ]; then

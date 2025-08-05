@@ -547,7 +547,7 @@ def load_fingerprint_db(fp_file=None):
         dict containing fingerprints, smiles, and metadata
     """
     if fp_file is None:
-        fp_file = os.path.join(PLF_LOC, 'data', 'scaffold_fingerprints.npz')
+        fp_file = os.path.join(PLF_LOC, 'data', 'scaffold_fingerprints_mw250.npz')
     
     if not os.path.exists(fp_file):
         raise FileNotFoundError(f"Fingerprint file not found: {fp_file}")

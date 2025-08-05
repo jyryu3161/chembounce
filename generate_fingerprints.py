@@ -12,16 +12,73 @@ import tqdm
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit import DataStructs
+from rdkit.SimDivFilters import MaxMinPicker
 import argparse
 import time
 
-def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch_size=10000):
+def sample_by_diversity(fps, percentages, seed=42):
     """
-    Generate Morgan fingerprints for all molecules in the input file
+    Selects diverse subsets of fingerprints using the MaxMinPicker algorithm.
+    Ensures that smaller percentage subsets are contained within larger ones.
+
+    Args:
+        fps: A list of RDKit fingerprint objects.
+        percentages: A list of percentages (e.g., [10, 25, 50]) for the subsets.
+        seed: Random seed for reproducibility.
+
+    Returns:
+        A dictionary mapping each percentage to a list of selected indices.
+    """
+    if not fps:
+        return {p: [] for p in percentages}
+
+    num_fps = len(fps)
+    picker = MaxMinPicker()
+    
+    def dist_func(i, j, fps=fps):
+        return 1 - DataStructs.TanimotoSimilarity(fps[i], fps[j])
+
+    results = {}
+    # Sort percentages to pick for the largest first, ensuring subsets are nested
+    sorted_percentages = sorted(percentages, reverse=True)
+    
+    # Find the largest percentage that results in at least one pick
+    p_max = 0
+    num_to_pick_max = 0
+    for p in sorted_percentages:
+        num_to_pick = int(num_fps * p / 100)
+        if num_to_pick > 0:
+            p_max = p
+            num_to_pick_max = num_to_pick
+            break
+    
+    if num_to_pick_max > 0:
+        # Pick indices for the largest valid percentage
+        last_picked_indices = list(picker.LazyPick(dist_func, num_fps, num_to_pick_max, seed=seed))
+        results[p_max] = last_picked_indices
+        
+        # Create subsets for smaller percentages from the largest set
+        for p in sorted_percentages:
+            if p == p_max:
+                continue
+            num_to_pick = int(num_fps * p / 100)
+            results[p] = last_picked_indices[:num_to_pick]
+
+    # Ensure all requested percentages are in the final dict
+    for p in percentages:
+        if p not in results:
+            results[p] = []
+            
+    return results
+
+def generate_fingerprints(input_file, output_file, fp_size=1024, radius=2, batch_size=10000):
+    """
+    Generate Morgan fingerprints for all molecules in the input file,
+    and create diversity-based subsets.
     
     Args:
         input_file: Path to scaffold SMILES file
-        output_file: Path to save fingerprint data
+        output_file: Path to save fingerprint data. This will be used as a base name.
         fp_size: Size of fingerprint bit vector
         radius: Morgan fingerprint radius
         batch_size: Number of molecules to process at once
@@ -80,6 +137,10 @@ def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch
     
     print(f"Generated {len(all_fps)} valid fingerprints out of {total_lines} scaffolds")
     
+    if not all_fps:
+        print("No valid fingerprints were generated. Exiting.")
+        return 0
+
     # Convert fingerprints to numpy array for faster operations
     print("Converting to numpy array...")
     fp_array = np.zeros((len(all_fps), fp_size), dtype=np.uint8)
@@ -89,24 +150,17 @@ def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch
         DataStructs.ConvertToNumpyArray(fp, arr)
         fp_array[i] = arr
     
-    # Save data
-    print(f"Saving to {output_file}")
+    # Save original full data (100%)
+    print(f"\nSaving full dataset (100%) to {output_file}")
     data = {
         'fingerprints': fp_array,
-        'smiles': all_smiles,
-        'valid_indices': valid_indices,
+        'smiles': np.array(all_smiles, dtype=object),
+        'valid_indices': np.array(valid_indices, dtype=int),
         'fp_size': fp_size,
         'radius': radius,
         'version': '1.0'
     }
-    
-    # Use numpy's compressed format for efficient storage
     np.savez_compressed(output_file, **data)
-    
-    # Print statistics
-    file_size = os.path.getsize(output_file) / (1024 * 1024)  # MB
-    print(f"Fingerprint file size: {file_size:.2f} MB")
-    print(f"Compression ratio: {file_size / (len(all_fps) * fp_size / 8 / 1024 / 1024):.2%}")
     
     return len(all_fps)
 
