@@ -419,40 +419,40 @@ def get_frags_cands(target_smiles:str,
                     use_fingerprint_db = False
             
             # Fallback to original slow search
-            if not use_fingerprint_db:
-                if not fragments_DB:
-                    print("Calling fragment DB...")
-                    if scaffold_db_file:
-                        # Use custom scaffold database
-                        print(f"Using custom scaffold database: {scaffold_db_file}")
-                        if not low_mem:
-                            # Load as mol objects
-                            fragments_DB = []
-                            with open(scaffold_db_file, 'r') as f:
-                                for line in f:
-                                    line = line.strip()
-                                    if line:
-                                        mol = Chem.MolFromSmiles(line)
-                                        if mol:
-                                            fragments_DB.append(mol)
-                        else:
-                            # Load as SMILES strings for low memory mode
-                            with open(scaffold_db_file, 'r') as f:
-                                fragments_DB = [line.strip() for line in f if line.strip()]
-                    else:
-                        # Use default database
-                        if not low_mem:
-                            fragments_DB = utils.call_frag_db()[2]
-                        else:
-                            fragments_DB = utils._call_frag_db_smi_()[1]
-                replace_scaffold_ser = search_similar_scaffolds(
-                    original_scaffold=pattern_mol,
-                    fragments_DB=fragments_DB,
-                    low_mem=low_mem,
-                    tqdm_quiet=tqdm_quiet,
-                    scaffold_top_n=_search_scf_max_n_,
-                    threshold=_search_scf_thr_,
-                )
+            # if not use_fingerprint_db:
+            #     if not fragments_DB:
+            #         print("Calling fragment DB...")
+            #         if scaffold_db_file:
+            #             # Use custom scaffold database
+            #             print(f"Using custom scaffold database: {scaffold_db_file}")
+            #             if not low_mem:
+            #                 # Load as mol objects
+            #                 fragments_DB = []
+            #                 with open(scaffold_db_file, 'r') as f:
+            #                     for line in f:
+            #                         line = line.strip()
+            #                         if line:
+            #                             mol = Chem.MolFromSmiles(line)
+            #                             if mol:
+            #                                 fragments_DB.append(mol)
+            #             else:
+            #                 # Load as SMILES strings for low memory mode
+            #                 with open(scaffold_db_file, 'r') as f:
+            #                     fragments_DB = [line.strip() for line in f if line.strip()]
+            #         else:
+            #             # Use default database
+            #             if not low_mem:
+            #                 fragments_DB = utils.call_frag_db()[2]
+            #             else:
+            #                 fragments_DB = utils._call_frag_db_smi_()[1]
+            #     replace_scaffold_ser = search_similar_scaffolds(
+            #         original_scaffold=pattern_mol,
+            #         fragments_DB=fragments_DB,
+            #         low_mem=low_mem,
+            #         tqdm_quiet=tqdm_quiet,
+            #         scaffold_top_n=_search_scf_max_n_,
+            #         threshold=_search_scf_thr_,
+            #     )
             
             replace_scaffold_ser.name='Tanimoto Similarity'
             replace_scaffold_ser.to_csv(_scf_f_n_,sep='\t')
