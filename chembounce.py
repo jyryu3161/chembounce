@@ -663,6 +663,13 @@ def chembounce(target_smiles:str,
         target_mol, target_smiles = utils.init_mol(target_smiles)
     except Exception as e:
         raise utils.SmilesInputError(value=target_smiles)
+    _target_mol_frags_ = Chem.GetMolFrags(target_mol)
+    print(f"Input SMILES : {len(_target_mol_frags_)} fragment component")
+    if len(_target_mol_frags_) > 1:
+        raise utils.SmilesInputError(
+            value=target_smiles,
+            message="Multi-component (mixture or salt form) detected - please separate into individual compounds",
+            )
     if core_smiles:
         try:
             core_mol, core_smiles = utils.init_mol(core_smiles)
