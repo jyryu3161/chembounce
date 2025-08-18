@@ -89,6 +89,13 @@ python chembounce.py \
 - `-t TANIMOTO_THRESHOLD` : (`float`; `0` to `1`) Threshold for Tanimoto similarity between `INPUT_SMILES` and generated SMILES. (default is `0.5`)
 - `--core_smiles CORE_SMILES` : SMILES of core structure for the `INPUT_SMILES`, which should not be changed. If the `CORE_SMILES` is not in the `INPUT_SMILES`, it would raise an error.
 
+**NOTE**: These `INPUT_SMILES` raise errors
+1) Invalid atomic symbol `[R]`, not present in the periodic table
+2) Multi-component, containing mixture
+3) Multi-component, containing salt
+4) Invalid atomic symbols not present in the periodic table, such as `[A]`, or else
+5) Invalid valence state and improper atomic connectivity
+6) Malformed SMILES syntax with incorrect ring closure notation
 
 #### Options for iteration numbers
 
@@ -138,11 +145,22 @@ If one of the threshold categories for this rule is additionally defined, the th
 
 ## Results
 
-The result file is saved as `OUTPUT_DIRECTORY/overall_result.txt` in tab-delimited format. The `Final structure` column contains the final result SMILES of scaffold hopping and `Standardized final structure` is the standardized SMILES format for the corresponding result. For sub-data:
+The result file is saved as `OUTPUT_DIRECTORY/overall_result.txt` in tab-delimited format. The report is structured as follows:
+- `Fragment_no`: The number of fragment, analyzed in fragmentation process and reported in the  `~/fragment_info.tsv`, or user-defiend fragment.
+- `Final structure`: the final result SMILES of scaffold hopping.
+- `Standardized final structure` is the standardized SMILES format for the corresponding result.
+- Two types of similarities between the original structure and hopped ones are examined: `Tanimoto` and `ElectroShape`, reported at the `Tanimoto Similarity` and `Electron shape Similarity` columns respectively.
 
+For sub-data:
 - Fragments of the input molecule are saved as `~/fragment_info.tsv`
 - Considered replacement scaffold lists for each fragment are saved as `~/replace_scaffold_list.fragment_XXXX.tsv`
 - Results for each fragment are saved as `~/fragment_result_XXXX.txt`
+
+
+## Developers's notes
+2025.08.18
+
+`ChemBounce` shows **robust scalability across different compound classes, from small molecules to complex peptide structures** with molecular weights ranging from 315 to 4,813 Da. However, ChemBounce does exhibit computational **limitations** with structurally complex molecules containing high molecular weights and multiple ring systems. **As the number of ring systems increases, the combinatorial complexity of scaffold generation and recombination grows exponentially**, leading to significantly increased processing times.
 
 ## Citation
 
