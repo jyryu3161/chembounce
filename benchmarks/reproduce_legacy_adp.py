@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run 1.0 attachment code in isolation; requires the legacy Python dependencies.
+"""Run original 1.0 attachment code; requires the legacy Python dependencies.
 
 The RDBASE compatibility shim permits the old module to import on pip RDKit.
 It does not modify the tagged source. No external scaffold database is required.
@@ -12,6 +12,7 @@ import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
+LEGACY_REF = "1.0-original"
 BOOTSTRAP = r"""
 import os, json, rdkit
 os.environ['RDBASE'] = os.path.dirname(rdkit.__file__)
@@ -38,16 +39,16 @@ print(json.dumps(report))
 def main():
     with tempfile.TemporaryDirectory() as directory:
         names = subprocess.check_output(
-            ["git", "ls-tree", "-r", "--name-only", "1.0"], cwd=ROOT, text=True
+            ["git", "ls-tree", "-r", "--name-only", LEGACY_REF], cwd=ROOT, text=True
         ).splitlines()
         for name in names:
             if name.endswith(".py") and "/" not in name:
-                content = subprocess.check_output(["git", "show", "1.0:" + name], cwd=ROOT)
+                content = subprocess.check_output(["git", "show", LEGACY_REF + ":" + name], cwd=ROOT)
                 (Path(directory) / name).write_bytes(content)
         output = subprocess.check_output([sys.executable, "-c", BOOTSTRAP], cwd=directory, text=True)
     report = json.loads(output)
     report["tag_commit"] = subprocess.check_output(
-        ["git", "rev-list", "-n", "1", "1.0"], cwd=ROOT, text=True
+        ["git", "rev-list", "-n", "1", LEGACY_REF], cwd=ROOT, text=True
     ).strip()
     path = Path(__file__).with_name("legacy_adp.json")
     path.write_text(json.dumps(report, indent=2) + "\n")

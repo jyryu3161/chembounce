@@ -4,11 +4,13 @@ ChemBounce generates scaffold-replacement candidates for a single molecular
 SMILES input. Candidates are computational hypotheses; similarity and property
 scores do not establish biological activity or synthetic feasibility.
 
-The **`1.0` tag** preserves the legacy implementation and its original environment
-files. Its only change from `eaadfa7` is a README version notice. Fixes and ongoing
-validation live on the **`2.0` branch**. Use 2.0 to evaluate these improvements;
-reproduce legacy published results with 1.0 and the original library. There is no
-stable 2.0 release tag yet. See [changes](CHANGELOG.md) and [methods](docs/METHODS.md).
+The **`1.0` tag** includes a narrow ADP blank-output hotfix on `release/1.x`, with
+updated environment files. The pre-fix implementation and original environment
+are preserved at **`1.0-original`** (`5780007`; only a README notice differs from
+`eaadfa7`). Use that archive and the original library for legacy reproduction.
+Broader fixes and ongoing validation live on the **`2.0` branch**; use 2.0 to
+evaluate these improvements. There is no stable 2.0 release tag yet.
+See [changes](CHANGELOG.md) and [methods](docs/METHODS.md).
 
 ## Install
 
@@ -176,7 +178,8 @@ remaining publication work.
 
 An additional [versioned panel](benchmarks/publication_molecules.json) contains the
 15 drugs named in the original publication plus ADP. Controlled attachment tests
-compare 1.0 with 2.0 and vary beam width. A separate 60-second-per-input workflow
+compare the original 1.0 snapshot (`1.0-original`) with 2.0 and vary beam width.
+A separate 60-second-per-input workflow
 evaluation on the smaller library returned candidates for 11 inputs, no candidates
 for tirzepatide, and timed out on four complex inputs. All outcomes, including
 incomplete runs, are [recorded](benchmarks/results/README.md). These engineering

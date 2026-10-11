@@ -34,5 +34,21 @@ These changes deliberately alter results; 2.0 is not a drop-in reproduction of
 
 ## 1.0
 
+ADP hotfix on `release/1.x`, also applied to the `1.0` tag at the user's request:
+
+- Backport boundary-bond scaffold assembly and preserve retained stereochemistry.
+- Preserve input stereo, remove the mandatory `RDBASE` variable, and explain
+  property-filter rejection and assembly errors in `run_summary.json`.
+- Update the legacy environment to Python 3.10 / RDKit 2023.09–2025 and point
+  the Colab notebook at the patched tag. Keep the legacy descriptor dependencies.
+- Add six ADP regression tests, including real CLI output and property rejection.
+
+This does not include the broader 2.0 search, descriptor and global-limit changes.
+The original benchmark artifacts retain their historical labels and source hashes;
+their baseline is now explicitly `1.0-original`.
+
+## 1.0-original
+
 Legacy implementation from `eaadfa7`, with only a README version notice added in
-`5780007`. Annotated tag `1.0`; preserved maintenance branch `release/1.x`.
+`5780007`. Preserved unchanged under annotated tag `1.0-original` before updating
+`1.0` with the ADP hotfix.

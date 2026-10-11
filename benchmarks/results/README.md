@@ -4,6 +4,10 @@ These are observed local results, not claims of biological activity or a
 statistically representative chemical benchmark. See [validation](../../docs/VALIDATION.md)
 for commands, conditions, and remaining manuscript work.
 
+The historical `1.0` labels refer to the pre-hotfix source at `5780007`, preserved
+as `1.0-original`. The current `1.0` tag includes an ADP fix. Recorded artifacts
+remain unchanged; reproduction scripts use `1.0-original` for this baseline.
+
 - `full/`: final full-library panel executed at clean commit `619de8a`. Each input
   has its manifest, diagnostics, tables and resource metrics. `summary.tsv` reports
   runtime/counts; `candidate_statistics.tsv` reports descriptive molecular metrics.
@@ -31,7 +35,7 @@ for commands, conditions, and remaining manuscript work.
   the versioned panel in `../publication_molecules.json` records retrieval URLs,
   CIDs, hashes and the tirzepatide name-resolution decision.
 - `attachment-beam-ablation.json` and `attachment-beam-summary.json`: 256 controlled
-  calls comparing tagged 1.0 and pre-capacity 2.0 at three beam widths. Full input,
+  calls comparing original 1.0 and pre-capacity 2.0 at three beam widths. Full input,
   fragment, replacement and candidate lists are retained, including empty/error/
   timeout outcomes. These are attachment tests without workflow filtering.
 - `attachment-final.json` and `attachment-final-summary.json`: 64 calls repeating
