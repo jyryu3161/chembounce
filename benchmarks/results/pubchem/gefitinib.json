@@ -1,0 +1,10 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 123631,
+        "SMILES": "COC1=C(C=C2C(=C1)N=CN=C2NC3=CC(=C(C=C3)F)Cl)OCCCN4CCOCC4"
+      }
+    ]
+  }
+}

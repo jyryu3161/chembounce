@@ -1,0 +1,10 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 9941444,
+        "SMILES": "C1[C@H](CN2[C@@H]1C(=O)N[C@H](C(=O)N[C@@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C2=O)CC3=CC=CC=C3)CC4=CC=C(C=C4)OCC5=CC=CC=C5)CCCCN)CC6=CNC7=CC=CC=C76)C8=CC=CC=C8)OC(=O)NCCN"
+      }
+    ]
+  }
+}

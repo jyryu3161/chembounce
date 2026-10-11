@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: "Cite the original ChemBounce paper and report the exact code commit, library hashes, and settings for 2.0 experiments."
+type: software
+title: "ChemBounce"
+version: "2.0.0.dev0"
+repository-code: "https://github.com/jyryu3161/chembounce"
+authors:
+  - family-names: Jang
+    given-names: Woo Dae
+  - family-names: Gu
+    given-names: Changdai
+  - family-names: Noh
+    given-names: Yumi
+  - family-names: Oh
+    given-names: Kwang-Seok
+  - family-names: Ryu
+    given-names: Jae Yong
+preferred-citation:
+  type: article
+  title: "ChemBounce: a computational framework for scaffold hopping in drug discovery"
+  authors:
+    - family-names: Jang
+      given-names: Woo Dae
+    - family-names: Gu
+      given-names: Changdai
+    - family-names: Noh
+      given-names: Yumi
+    - family-names: Oh
+      given-names: Kwang-Seok
+    - family-names: Ryu
+      given-names: Jae Yong
+  journal: Bioinformatics
+  volume: 41
+  issue: 9
+  year: 2025
+  doi: "10.1093/bioinformatics/btaf501"

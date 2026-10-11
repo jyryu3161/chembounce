@@ -175,6 +175,12 @@ remaining publication work.
 
 ## Attribution and contact
 
+Original publication: Jang et al., [ChemBounce: a computational framework for
+scaffold hopping in drug discovery](https://doi.org/10.1093/bioinformatics/btaf501),
+*Bioinformatics* 41(9), 2025. See [CITATION.cff](CITATION.cff). For 2.0 experiments,
+also report the commit, library hashes and settings from the run manifest;
+2.0 changes the implementation and does not reproduce every published result.
+
 ChemBounce uses RDKit and ScaffoldGraph. CATS2D originated from
 [iwatobipen/CATS2D](https://github.com/iwatobipen/CATS2D); local bug fixes and method
 conventions are documented in [methods](docs/METHODS.md). ElectroShape follows

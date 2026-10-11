@@ -1,0 +1,117 @@
+{
+  "retrieved_utc": "2026-10-11T03:53:32.464659+00:00",
+  "selection": "All 15 distinct drugs named in sections 2.3 and comparative analysis of doi:10.1093/bioinformatics/btaf501; brand names resolved to the active molecule. No salts or formulation components.",
+  "molecules": [
+    {
+      "name": "carfilzomib",
+      "smiles": "CC(C)C[C@@H](C(=O)[C@]1(CO1)C)NC(=O)[C@H](CC2=CC=CC=C2)NC(=O)[C@H](CC(C)C)NC(=O)[C@H](CCC3=CC=CC=C3)NC(=O)CN4CCOCC4",
+      "pubchem_cid": 11556711,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/carfilzomib/property/IsomericSMILES/JSON",
+      "response_sha256": "3bbc6c50b85e215713f997cf3b789afed737946e067039d307e4ea8c835d5b03"
+    },
+    {
+      "name": "trofinetide",
+      "smiles": "C[C@]1(CCCN1C(=O)CN)C(=O)N[C@@H](CCC(=O)O)C(=O)O",
+      "pubchem_cid": 11318905,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/trofinetide/property/IsomericSMILES/JSON",
+      "response_sha256": "6df8eb8379abe3a9cd869cde814a12e4297f126e781eea6eae0c372cc3f580cd"
+    },
+    {
+      "name": "tirzepatide",
+      "smiles": "CC[C@H](C)[C@@H](C(=O)N[C@@H](C)C(=O)N[C@@H](CCC(=O)N)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](C)C(=O)N[C@@H](CC1=CC=CC=C1)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](CCC(=O)N)C(=O)N[C@@H](CC2=CNC3=CC=CC=C32)C(=O)N[C@@H](CC(C)C)C(=O)N[C@@H]([C@@H](C)CC)C(=O)N[C@@H](C)C(=O)NCC(=O)NCC(=O)N4CCC[C@H]4C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)NCC(=O)N[C@@H](C)C(=O)N5CCC[C@H]5C(=O)N6CCC[C@H]6C(=O)N7CCC[C@H]7C(=O)N[C@@H](CO)C(=O)N)NC(=O)[C@H](CCCCNC(=O)CCCCCCCCCCCCCCCCCCC(=O)N[C@@H](CCC(=O)NCCOCCOCC(=O)NCCOCCOCC(=O)O)C(=O)O)NC(=O)[C@H](CC(=O)O)NC(=O)[C@H](CC(C)C)NC(=O)C(C)(C)NC(=O)[C@H]([C@@H](C)CC)NC(=O)[C@H](CO)NC(=O)[C@H](CC8=CC=C(C=C8)O)NC(=O)[C@H](CC(=O)O)NC(=O)[C@H](CO)NC(=O)[C@H]([C@@H](C)O)NC(=O)[C@H](CC9=CC=CC=C9)NC(=O)[C@H]([C@@H](C)O)NC(=O)CNC(=O)[C@H](CCC(=O)O)NC(=O)C(C)(C)NC(=O)[C@H](CC1=CC=C(C=C1)O)N",
+      "pubchem_cid": 156588324,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/156588324/property/IsomericSMILES/JSON",
+      "response_sha256": "cf5289ad05efe8c15a7e025ff36260b9a4b646af9776b5410f2b666fbcadb42c",
+      "resolution_note": "Name endpoint returned five CIDs; used CID 156588324 identified by the PubChem Tirzepatide record, not the first name-search result."
+    },
+    {
+      "name": "pasireotide",
+      "smiles": "C1[C@H](CN2[C@@H]1C(=O)N[C@H](C(=O)N[C@@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C2=O)CC3=CC=CC=C3)CC4=CC=C(C=C4)OCC5=CC=CC=C5)CCCCN)CC6=CNC7=CC=CC=C76)C8=CC=CC=C8)OC(=O)NCCN",
+      "pubchem_cid": 9941444,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/pasireotide/property/IsomericSMILES/JSON",
+      "response_sha256": "a49f44ed8f487d0e2468309c5e7fc6941ae76b76c2e609c27dbaf83c7c9c0845"
+    },
+    {
+      "name": "motixafortide",
+      "smiles": "C1C[C@H]2C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@@H](CSSC[C@@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N2C1)CCCCN)CCCCN)CCCNC(=O)N)CC3=CC=C(C=C3)O)NC(=O)[C@H](CC4=CC5=CC=CC=C5C=C4)NC(=O)[C@H](CCCNC(=N)N)NC(=O)[C@H](CCCNC(=N)N)NC(=O)C6=CC=C(C=C6)F)C(=O)N[C@@H](CCCNC(=N)N)C(=O)N)CCCNC(=O)N)CCCNC(=N)N)CC7=CC=C(C=C7)O",
+      "pubchem_cid": 91865076,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/motixafortide/property/IsomericSMILES/JSON",
+      "response_sha256": "89b26414e2721db617d017f411ea9c53f5569d2bfb17f217f89cfe192f1e6aa1"
+    },
+    {
+      "name": "celecoxib",
+      "smiles": "CC1=CC=C(C=C1)C2=CC(=NN2C3=CC=C(C=C3)S(=O)(=O)N)C(F)(F)F",
+      "pubchem_cid": 2662,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/celecoxib/property/IsomericSMILES/JSON",
+      "response_sha256": "c43b078bc4ae9f3cfdd9ecaf172318c2febb11487e2115a90e9bbf518b8b702e"
+    },
+    {
+      "name": "rimonabant",
+      "smiles": "CC1=C(N(N=C1C(=O)NN2CCCCC2)C3=C(C=C(C=C3)Cl)Cl)C4=CC=C(C=C4)Cl",
+      "pubchem_cid": 104850,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/rimonabant/property/IsomericSMILES/JSON",
+      "response_sha256": "0f8e72b544c00e38d8c307d9035f178701ca653792eed70cd7552a3d0a0ac1d8"
+    },
+    {
+      "name": "lapatinib",
+      "smiles": "CS(=O)(=O)CCNCC1=CC=C(O1)C2=CC3=C(C=C2)N=CN=C3NC4=CC(=C(C=C4)OCC5=CC(=CC=C5)F)Cl",
+      "pubchem_cid": 208908,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/lapatinib/property/IsomericSMILES/JSON",
+      "response_sha256": "43bd3a4ee832f99f8f7200912abfd7f62441e2eb027b75763aece8b2e221d934"
+    },
+    {
+      "name": "trametinib",
+      "smiles": "CC1=C2C(=C(N(C1=O)C)NC3=C(C=C(C=C3)I)F)C(=O)N(C(=O)N2C4=CC=CC(=C4)NC(=O)C)C5CC5",
+      "pubchem_cid": 11707110,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/trametinib/property/IsomericSMILES/JSON",
+      "response_sha256": "2a6de1fbf529c2cec1d23261559b3767638595e78e7967ad7fcec363051bf72a"
+    },
+    {
+      "name": "venetoclax",
+      "smiles": "CC1(CCC(=C(C1)C2=CC=C(C=C2)Cl)CN3CCN(CC3)C4=CC(=C(C=C4)C(=O)NS(=O)(=O)C5=CC(=C(C=C5)NCC6CCOCC6)[N+](=O)[O-])OC7=CN=C8C(=C7)C=CN8)C",
+      "pubchem_cid": 49846579,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/venetoclax/property/IsomericSMILES/JSON",
+      "response_sha256": "6a61fca65a4419e59a07479baccc28628503d96a31935668e1fcc6154e7facd5"
+    },
+    {
+      "name": "losartan",
+      "smiles": "CCCCC1=NC(=C(N1CC2=CC=C(C=C2)C3=CC=CC=C3C4=NNN=N4)CO)Cl",
+      "pubchem_cid": 3961,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/losartan/property/IsomericSMILES/JSON",
+      "response_sha256": "3a815ddc1161e32cade5f6af31e506b19255cd012bc05c9a13ad9094515faedf"
+    },
+    {
+      "name": "gefitinib",
+      "smiles": "COC1=C(C=C2C(=C1)N=CN=C2NC3=CC(=C(C=C3)F)Cl)OCCCN4CCOCC4",
+      "pubchem_cid": 123631,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/gefitinib/property/IsomericSMILES/JSON",
+      "response_sha256": "ccc7dfa3f8cd96bf74b70e8e4d1ca20144121a4c282041abe03eaf610e2954c0"
+    },
+    {
+      "name": "fostamatinib",
+      "smiles": "CC1(C(=O)N(C2=C(O1)C=CC(=N2)NC3=NC(=NC=C3F)NC4=CC(=C(C(=C4)OC)OC)OC)COP(=O)(O)O)C",
+      "pubchem_cid": 11671467,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/fostamatinib/property/IsomericSMILES/JSON",
+      "response_sha256": "b94a65889f67f602feb4bcbc26a52e4a379aaedfaed1110ff21b040de9ec00ad"
+    },
+    {
+      "name": "darunavir",
+      "smiles": "CC(C)CN(C[C@H]([C@H](CC1=CC=CC=C1)NC(=O)O[C@H]2CO[C@@H]3[C@H]2CCO3)O)S(=O)(=O)C4=CC=C(C=C4)N",
+      "pubchem_cid": 213039,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/darunavir/property/IsomericSMILES/JSON",
+      "response_sha256": "e8d4fcd0f0c121bd27587901564961b38a772de50991c22098bda5c7af924f1e"
+    },
+    {
+      "name": "ritonavir",
+      "smiles": "CC(C)C1=NC(=CS1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](CC2=CC=CC=C2)C[C@@H]([C@H](CC3=CC=CC=C3)NC(=O)OCC4=CN=CS4)O",
+      "pubchem_cid": 392622,
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ritonavir/property/IsomericSMILES/JSON",
+      "response_sha256": "8732eddff23b0df9d8de252f4defc7012594cdb29fedad5d957e501b1c1df27c"
+    },
+    {
+      "name": "ADP",
+      "smiles": "C1=NC(=C2C(=N1)N(C=N2)[C@H]3[C@@H]([C@@H]([C@H](O3)COP(=O)(O)OP(=O)(O)O)O)O)N",
+      "source": "User-reported ADP, retained verbatim."
+    }
+  ]
+}

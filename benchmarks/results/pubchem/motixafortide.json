@@ -1,0 +1,10 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 91865076,
+        "SMILES": "C1C[C@H]2C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@@H](CSSC[C@@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N2C1)CCCCN)CCCCN)CCCNC(=O)N)CC3=CC=C(C=C3)O)NC(=O)[C@H](CC4=CC5=CC=CC=C5C=C4)NC(=O)[C@H](CCCNC(=N)N)NC(=O)[C@H](CCCNC(=N)N)NC(=O)C6=CC=C(C=C6)F)C(=O)N[C@@H](CCCNC(=N)N)C(=O)N)CCCNC(=O)N)CCCNC(=N)N)CC7=CC=C(C=C7)O"
+      }
+    ]
+  }
+}
