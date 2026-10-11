@@ -362,3 +362,63 @@ def test_carried_routes_are_not_trusted_and_hit_must_match(tmp_path, assets, pro
     assert all(r["selection_status"] == "verification_rejected" for r in records if r.get("carried_from"))
     with pytest.raises(ValueError, match="different original hit"):
         run("CCC(=O)Nc1ccccc1", designs, config, tmp_path / "wrong-hit")
+
+
+def test_continuation_can_score_previously_unscored_routes_and_override_refinement(
+    tmp_path, assets, proposal
+):
+    config = config_for(tmp_path, assets, proposal)
+    config["max_scored_products"] = 1
+    first = tmp_path / "limited"
+    assert len(run(HIT, [DESIGN], config, first)) == 1
+    second = tmp_path / "larger"
+    assert (
+        main(
+            [
+                "--continue-from",
+                str(first),
+                "--output",
+                str(second),
+                "--expansion-rounds",
+                "0",
+                "--synthesis-max-scored",
+                "10",
+                "--refine-top-n",
+                "4",
+                "--refine-conformers",
+                "3",
+                "--refine-seeds",
+                "43",
+                "44",
+            ]
+        )
+        == 0
+    )
+    manifest = json.loads((second / "manifest.json").read_text())
+    assert manifest["effective_workflow"]["refinement"] == {
+        "top_n": 4,
+        "num_conformers": 3,
+        "seeds": [43, 44],
+    }
+    summary = json.loads((second / "summary.json").read_text())
+    assert summary["returned_products"] == 4
+    assert summary["carried_screened_products"] > 1
+
+
+def test_refinement_failure_keeps_screening_pool_without_falling_back(
+    tmp_path, assets, proposal, monkeypatch
+):
+    monkeypatch.setattr(
+        "chembounce_synthesis.workflow.refine_candidate",
+        lambda *a: (None, {"status": "failed", "trials": []}),
+    )
+    config = config_for(tmp_path, assets, proposal)
+    config["refinement"] = {"top_n": 1}
+    out = tmp_path / "refinement-failed"
+    assert run(HIT, [DESIGN], config, out) == []
+    summary = json.loads((out / "summary.json").read_text())
+    assert summary["screened_products"] > 0
+    assert summary["status"] == "no_candidates"
+    assert summary["route_rejections"]["refinement_failed"] == 1
+    assert len((out / "results.tsv").read_text().splitlines()) == 1
+    assert len((out / "screening.tsv").read_text().splitlines()) > 1
