@@ -5,6 +5,7 @@ import csv
 import logging
 
 from .workflow import load_config, run
+from .options import add_expansion_options, apply_expansion_options
 
 
 def main(argv=None):
@@ -15,6 +16,7 @@ def main(argv=None):
     source.add_argument("--designs-tsv", help="ChemBounce overall_result.txt or TSV with a smiles column")
     parser.add_argument("--config", required=True, help="Synthesis workflow JSON configuration")
     parser.add_argument("--output", required=True, help="Fresh output directory")
+    add_expansion_options(parser)
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     try:
@@ -28,7 +30,7 @@ def main(argv=None):
                 if column is None:
                     raise ValueError("Design TSV requires a 'Final structure' or 'smiles' column")
                 designs = [row[column] for row in reader]
-        rows = run(args.hit, designs, load_config(args.config), args.output)
+        rows = run(args.hit, designs, apply_expansion_options(load_config(args.config), args), args.output)
     except (ValueError, OSError, KeyError, TypeError) as exc:
         logging.error("%s", exc)
         return 2

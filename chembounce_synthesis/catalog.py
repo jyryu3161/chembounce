@@ -2,6 +2,7 @@
 
 import csv
 import json
+import math
 from dataclasses import asdict, dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -77,6 +78,7 @@ class Catalog:
         # A cache on the class method would keep entire discarded catalogs alive
         # through its self keys. Own the bounded cache within each instance.
         self.compatible = lru_cache(maxsize=512)(self.compatible)
+        self.nearest = lru_cache(maxsize=1024)(self.nearest)
 
     def get(self, ident):
         block = self.blocks.get(ident)
@@ -90,21 +92,34 @@ class Catalog:
             raise ValueError("Invalid reaction-role SMARTS")
         return tuple(s for s, m in self.mols.items() if m.HasSubstructMatch(query, useChirality=True))
 
-    def nearest(self, smiles, role_smarts, k=8):
+    def nearest(self, smiles, role_smarts, k=8, min_tanimoto=0.0, required_roles=()):
         """Reactant-role filtering then Morgan search with a diverse tail.
 
         This is a bounded shortlist, not a global 3D nearest-neighbour claim.
         Exact matches are always first; duplicate vendor SKUs do not occupy slots.
         """
         positive(k, "building_block_top_k")
+        if (
+            isinstance(min_tanimoto, bool)
+            or not isinstance(min_tanimoto, (int, float))
+            or not math.isfinite(min_tanimoto)
+            or not 0 <= min_tanimoto <= 1
+        ):
+            raise ValueError("Building-block min_tanimoto must be in [0, 1]")
         query = canonical(smiles)
         eligible = self.compatible(role_smarts)
+        for role in required_roles:
+            compatible = set(self.compatible(role))
+            eligible = tuple(s for s in eligible if s in compatible)
         if not eligible:
             return []
         sims = DataStructs.BulkTanimotoSimilarity(
             FP.GetFingerprint(molecule(query)), [self.fps[s] for s in eligible]
         )
-        ordered = sorted(zip(eligible, sims), key=lambda x: (x[0] != query, -x[1], x[0]))
+        ordered = sorted(
+            ((s, sim) for s, sim in zip(eligible, sims) if sim >= min_tanimoto),
+            key=lambda x: (x[0] != query, -x[1], x[0]),
+        )
         close_count = max(1, (3 * k) // 4)
         chosen = [s for s, _ in ordered[:close_count]]
         pool = [s for s, _ in ordered[close_count : max(256, 8 * k)]]

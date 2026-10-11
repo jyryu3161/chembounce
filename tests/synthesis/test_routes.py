@@ -127,6 +127,47 @@ def test_catalog_locks_do_not_depend_on_route_node_names(assets, route):
         assert next(n for n in item["route"]["nodes"] if n["id"] == "b1")["building_block_id"] == "pyridyl"
 
 
+def test_expansion_reserves_later_rounds_and_records_substitution_similarity(assets, route):
+    from rdkit import DataStructs
+    from chembounce_synthesis.common import FP, molecule
+
+    items, report = expand_route(
+        route,
+        *assets,
+        SearchLimits(building_block_top_k=1, max_combinations=100),
+        building_block_top_k=4,
+        rounds=2,
+        max_routes=12,
+    )
+    assert len(items) <= 12
+    assert report.rounds_completed == 2
+    assert all(r["retained_routes"] for r in report.round_reports)
+    assert any({s["node_id"] for s in item["substitutions"]} == {"b0", "b1"} for item in items), (
+        "A two-round expansion must be able to replace both reactants"
+    )
+    for item in items:
+        verify_route(item["route"], *assets)
+        for substitution in item["substitutions"]:
+            expected = DataStructs.TanimotoSimilarity(
+                FP.GetFingerprint(molecule(substitution["from_smiles"])),
+                FP.GetFingerprint(molecule(substitution["to_smiles"])),
+            )
+            assert substitution["tanimoto"] == pytest.approx(expected)
+
+
+def test_expansion_neighbour_count_and_optional_tanimoto_cutoff(assets, route):
+    small, _ = expand_route(route, *assets, building_block_top_k=1, locked_nodes=["b1"])
+    large, _ = expand_route(route, *assets, building_block_top_k=4, locked_nodes=["b1"])
+    assert len(large) > len(small)
+    assert expand_route(route, *assets, min_tanimoto=1.0)[0] == []
+
+
+def test_catalog_all_reaction_roles_are_applied_before_shortlisting(assets):
+    blocks = assets[0].nearest("CCN", "[N]", k=1, required_roles=("C(=O)O",))
+    assert blocks
+    assert blocks[0].id in {"glycine", "alanine_s", "alanine_r"}
+
+
 def test_implicit_reagent_atoms_are_exposed_in_evidence(assets, tmp_path):
     from chembounce_synthesis.reactions import Rules
 

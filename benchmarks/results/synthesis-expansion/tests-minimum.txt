@@ -1,0 +1,42 @@
+....................................................................s... [ 62%]
+............................................                             [100%]
+=============================== warnings summary ===============================
+.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/__init__.py:20
+  /data2/home/jyryu/chembounce/.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/__init__.py:20: DeprecationWarning: The module rdkit.Chem.MolStandardize.standardize is deprecated and will be removed in the next release.
+    from .standardize import (Standardizer, canonicalize_tautomer_smiles,
+
+.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/standardize.py:23
+  /data2/home/jyryu/chembounce/.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/standardize.py:23: DeprecationWarning: The module rdkit.Chem.MolStandardize.charge is deprecated and will be removed in the next release.
+    from .charge import ACID_BASE_PAIRS, CHARGE_CORRECTIONS, Reionizer, Uncharger
+
+.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/standardize.py:24
+  /data2/home/jyryu/chembounce/.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/standardize.py:24: DeprecationWarning: The module rdkit.Chem.MolStandardize.fragment is deprecated and will be removed in the next release.
+    from .fragment import PREFER_ORGANIC, FragmentRemover, LargestFragmentChooser
+
+.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/standardize.py:25
+  /data2/home/jyryu/chembounce/.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/standardize.py:25: DeprecationWarning: The module rdkit.Chem.MolStandardize.metal is deprecated and will be removed in the next release.
+    from .metal import MetalDisconnector
+
+.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/standardize.py:26
+  /data2/home/jyryu/chembounce/.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/standardize.py:26: DeprecationWarning: The module rdkit.Chem.MolStandardize.normalize is deprecated and will be removed in the next release.
+    from .normalize import MAX_RESTARTS, NORMALIZATIONS, Normalizer
+
+.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/standardize.py:27
+  /data2/home/jyryu/chembounce/.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/standardize.py:27: DeprecationWarning: The module rdkit.Chem.MolStandardize.tautomer is deprecated and will be removed in the next release.
+    from .tautomer import (MAX_TAUTOMERS, TAUTOMER_SCORES, TAUTOMER_TRANSFORMS, TautomerCanonicalizer,
+
+.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/__init__.py:22
+  /data2/home/jyryu/chembounce/.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/__init__.py:22: DeprecationWarning: The module rdkit.Chem.MolStandardize.validate is deprecated and will be removed in the next release.
+    from .validate import Validator, validate_smiles
+
+.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/validate.py:24
+  /data2/home/jyryu/chembounce/.venv-min/lib/python3.10/site-packages/rdkit/Chem/MolStandardize/validate.py:24: DeprecationWarning: The module rdkit.Chem.MolStandardize.validations is deprecated and will be removed in the next release.
+    from .validations import VALIDATIONS
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/synthesis/test_conformers.py:7: Optional synthesis alignment requires a newer RDKit wheel
+SKIPPED [1] tests/synthesis/test_synllama_provider.py:7: Optional local model runtime
+SKIPPED [1] tests/synthesis/test_workflow.py:6: Optional synthesis alignment requires a newer RDKit wheel
+SKIPPED [1] tests/test_descriptors.py:43: could not import 'oddt': No module named 'oddt'
+115 passed, 4 skipped, 8 warnings in 18.67s

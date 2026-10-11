@@ -1,0 +1,449 @@
+{
+  "scope": "Single-case expansion ablation with fixed saved proposals; not a held-out benchmark",
+  "input_config_sha256": "4496e9f7b848b4243b6242d3cb6b37b2801463076b15c019c1c6a8deac08d3d1",
+  "hit": "Cc1coc(NC(=O)c2cccnc2N2CCOCC2)n1",
+  "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+  "cases": {
+    "small": {
+      "expansion": {
+        "building_block_top_k": 3,
+        "rounds": 1,
+        "max_routes": 12
+      },
+      "code_revision": "f9fdd2d86eea457cafce4f203ce1cbeb7e1143fa",
+      "code_sha256": {
+        "__init__.py": "8d5968b9f40381dafd4b5b491c0d09f0f3536f08ba3bf56503a96df3df459435",
+        "assets.py": "0f513372fee6211d6af0c134e4b2e9adc590d1d8499e1072013628f7f18c51df",
+        "catalog.py": "81cacefa665595f32231fc03f0d35b8e0d76acf1584ed8fcc91b3dbdc837517c",
+        "cli.py": "04b364cd2b8ffb01b304c462815687d7e5d37c34bbfb7df673afba0d1f38e1b1",
+        "common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+        "conformers.py": "245c020b394c8d9e67a15fbc470e317b9b95302fa0599ed6c9b75948a28c8af0",
+        "options.py": "bc8b60c5dbe43788f3c47af967a2826e921e78041ebb7e9aa24a783219e0a137",
+        "reactions.py": "f46b30e65528543788d5ae70e368899719fd338adcfc0f7585ad711883129c8e",
+        "routes.py": "6ec3fa5caa421355e0f420fad6e040b64e7dc3c86676e35133b202b73e1c7d42",
+        "synllama.py": "007868b44f3c91689b5fd2e3f9946798ed39c78c2d158d9ebecbee8fc7d84e1f",
+        "workflow.py": "5573c7e12b6c2486745d26203d7fe0b506a0638e915855f0fa9ef97da316b000"
+      },
+      "catalog_sha256": "37af647fa52b1e224bd1baf171a1e062b3e2840ef0af61cfb8b3af05d4188765",
+      "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "proposals_sha256": "6b56ac91beaec08b6943621d713480f199f85b079b7328a8193768de57c15c78",
+      "conformers": {
+        "num_conformers": 6,
+        "seed": 42,
+        "energy_window": 5.0,
+        "strain_penalty": 0.05,
+        "max_iterations": 500,
+        "pharmacophore_sigma": 1.0,
+        "reject_unspecified_stereo": true
+      },
+      "returned_products": 4,
+      "nonisotopic_analogues": 4,
+      "all_preserve_core": true,
+      "scored_products": 4,
+      "limits_reached": [],
+      "elapsed_seconds": 78.45727168116719,
+      "top_rows": [
+        {
+          "smiles": "CCOC(=O)c1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "score": 0.6222716551566949,
+          "hit_shape": 0.8847423844274631,
+          "hit_pharmacophore": 0.7577824870111509,
+          "design_shape": 0.6311983902254912,
+          "design_pharmacophore": 0.3543176578352755,
+          "hit_tanimoto": 0.5538461538461539,
+          "design_tanimoto": 0.7288135593220338,
+          "hit_morgan": 0.5538461538461539,
+          "relative_energy": 0.0,
+          "reaction_steps": 1,
+          "route_id": "route_000013",
+          "alternative_route_ids": [
+            "route_000057",
+            "route_000101",
+            "route_000145"
+          ],
+          "pareto_front": 0,
+          "rank": 1
+        },
+        {
+          "smiles": "CCN(C(=O)c1cccnc1N1CCOCC1)c1nc(C)cs1",
+          "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "score": 0.4767797692209367,
+          "hit_shape": 0.7872759572451374,
+          "hit_pharmacophore": 0.44897902788819244,
+          "design_shape": 0.6938016979944541,
+          "design_pharmacophore": 0.30586671009490773,
+          "hit_tanimoto": 0.49230769230769234,
+          "design_tanimoto": 0.6065573770491803,
+          "hit_morgan": 0.49230769230769234,
+          "relative_energy": 1.8633593629600966,
+          "reaction_steps": 1,
+          "route_id": "route_000032",
+          "alternative_route_ids": [
+            "route_000076",
+            "route_000120",
+            "route_000164"
+          ],
+          "pareto_front": 0,
+          "rank": 2
+        },
+        {
+          "smiles": "COC(=O)CN(C(=O)c1cccnc1N1CCOCC1)c1nc(C)cs1",
+          "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "score": 0.45562277558339354,
+          "hit_shape": 0.612676326222072,
+          "hit_pharmacophore": 0.3250111446124276,
+          "design_shape": 0.645321033271135,
+          "design_pharmacophore": 0.33536406742489555,
+          "hit_tanimoto": 0.4782608695652174,
+          "design_tanimoto": 0.5846153846153846,
+          "hit_morgan": 0.4782608695652174,
+          "relative_energy": 0.0,
+          "reaction_steps": 1,
+          "route_id": "route_000033",
+          "alternative_route_ids": [
+            "route_000077",
+            "route_000121",
+            "route_000165"
+          ],
+          "pareto_front": 0,
+          "rank": 3
+        },
+        {
+          "smiles": "Cc1csc(N(CC(=O)O)C(=O)c2cccnc2N2CCOCC2)n1",
+          "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "score": 0.4329073640098928,
+          "hit_shape": 0.6475703802749898,
+          "hit_pharmacophore": 0.34840952355056204,
+          "design_shape": 0.6172176835145234,
+          "design_pharmacophore": 0.27821933363128387,
+          "hit_tanimoto": 0.47761194029850745,
+          "design_tanimoto": 0.5873015873015873,
+          "hit_morgan": 0.47761194029850745,
+          "relative_energy": 0.49071272916128805,
+          "reaction_steps": 1,
+          "route_id": "route_000004",
+          "alternative_route_ids": [
+            "route_000048",
+            "route_000092",
+            "route_000136"
+          ],
+          "pareto_front": 1,
+          "rank": 4
+        }
+      ],
+      "best_design_shape_row": {
+        "smiles": "CCN(C(=O)c1cccnc1N1CCOCC1)c1nc(C)cs1",
+        "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+        "score": 0.4767797692209367,
+        "hit_shape": 0.7872759572451374,
+        "hit_pharmacophore": 0.44897902788819244,
+        "design_shape": 0.6938016979944541,
+        "design_pharmacophore": 0.30586671009490773,
+        "hit_tanimoto": 0.49230769230769234,
+        "design_tanimoto": 0.6065573770491803,
+        "hit_morgan": 0.49230769230769234,
+        "relative_energy": 1.8633593629600966,
+        "reaction_steps": 1,
+        "route_id": "route_000032",
+        "alternative_route_ids": [
+          "route_000076",
+          "route_000120",
+          "route_000164"
+        ],
+        "pareto_front": 0,
+        "rank": 2
+      },
+      "best_joint_3d_row": {
+        "smiles": "CCOC(=O)c1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+        "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+        "score": 0.6222716551566949,
+        "hit_shape": 0.8847423844274631,
+        "hit_pharmacophore": 0.7577824870111509,
+        "design_shape": 0.6311983902254912,
+        "design_pharmacophore": 0.3543176578352755,
+        "hit_tanimoto": 0.5538461538461539,
+        "design_tanimoto": 0.7288135593220338,
+        "hit_morgan": 0.5538461538461539,
+        "relative_energy": 0.0,
+        "reaction_steps": 1,
+        "route_id": "route_000013",
+        "alternative_route_ids": [
+          "route_000057",
+          "route_000101",
+          "route_000145"
+        ],
+        "pareto_front": 0,
+        "rank": 1
+      },
+      "route_rejections": {
+        "accepted": 16,
+        "constraint_rejected": 160
+      },
+      "verified_route_instances": 176,
+      "independent_export_audit": {
+        "case": "small",
+        "rows": 4,
+        "identities_match": true,
+        "max_tanimoto_error": 0.0,
+        "max_exported_pharmacophore_error": 7.939549891478048e-06,
+        "max_pair_distance_error": 0.00017433338777017582,
+        "artifact_sha256": {
+          "references_hit.sdf": "128fad8bd27569e2b454b607edbee4840e0c276d7e2c88475c881587938cd8d4",
+          "scores.json": "535b38b349cdadf6a8511b484442753e87ec5547dee699aad25270c8307039f6",
+          "manifest.json": "c0070e8e5efd0cf976eed7e1f673c95850cafed98532736049fc598b53f4a07b",
+          "poses_design.sdf": "b016e281d985e60ae130c45c03a73ace2cf8eccce928ecccefd12f2a5217b592",
+          "references_design.sdf": "ec1c539afa72b4fed27ca401af85e17bb2572a966bf0fcf0419b8a8e9b85af2e",
+          "summary.json": "7c686eb379190224179c0b27cdd6c3fbf791d9b019665d132b57af3eadcb8a5e",
+          "results.tsv": "1d983d6d58943196441200b8cf0f23d82bf24091422b023ba933c027cc1258d4",
+          "routes.json": "75d6fb051a7a4757a4d7f4eeba1a743abaeac21932199a6efa9ebcab9a5be19b",
+          "proposals.json": "eaee1cda0eaff773de0ba56dc48262bbccf5f1c20f8b05fec8b66983d5cea8dd",
+          "poses_hit.sdf": "d6fc502406c27d328ed2f56b3681814ab911fa77cd5cb180947fd9a968ca5ecd"
+        },
+        "independent_selected_route_replay": true,
+        "selected_routes_replayed": 4,
+        "selected_blocks_joined_to_actual_catalog": 5
+      }
+    },
+    "broader": {
+      "expansion": {
+        "building_block_top_k": 16,
+        "rounds": 2,
+        "max_routes": 128
+      },
+      "code_revision": "f9fdd2d86eea457cafce4f203ce1cbeb7e1143fa",
+      "code_sha256": {
+        "__init__.py": "8d5968b9f40381dafd4b5b491c0d09f0f3536f08ba3bf56503a96df3df459435",
+        "assets.py": "0f513372fee6211d6af0c134e4b2e9adc590d1d8499e1072013628f7f18c51df",
+        "catalog.py": "81cacefa665595f32231fc03f0d35b8e0d76acf1584ed8fcc91b3dbdc837517c",
+        "cli.py": "04b364cd2b8ffb01b304c462815687d7e5d37c34bbfb7df673afba0d1f38e1b1",
+        "common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+        "conformers.py": "245c020b394c8d9e67a15fbc470e317b9b95302fa0599ed6c9b75948a28c8af0",
+        "options.py": "bc8b60c5dbe43788f3c47af967a2826e921e78041ebb7e9aa24a783219e0a137",
+        "reactions.py": "f46b30e65528543788d5ae70e368899719fd338adcfc0f7585ad711883129c8e",
+        "routes.py": "6ec3fa5caa421355e0f420fad6e040b64e7dc3c86676e35133b202b73e1c7d42",
+        "synllama.py": "007868b44f3c91689b5fd2e3f9946798ed39c78c2d158d9ebecbee8fc7d84e1f",
+        "workflow.py": "5573c7e12b6c2486745d26203d7fe0b506a0638e915855f0fa9ef97da316b000"
+      },
+      "catalog_sha256": "37af647fa52b1e224bd1baf171a1e062b3e2840ef0af61cfb8b3af05d4188765",
+      "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "proposals_sha256": "6b56ac91beaec08b6943621d713480f199f85b079b7328a8193768de57c15c78",
+      "conformers": {
+        "num_conformers": 6,
+        "seed": 42,
+        "energy_window": 5.0,
+        "strain_penalty": 0.05,
+        "max_iterations": 500,
+        "pharmacophore_sigma": 1.0,
+        "reject_unspecified_stereo": true
+      },
+      "returned_products": 35,
+      "nonisotopic_analogues": 35,
+      "all_preserve_core": true,
+      "scored_products": 38,
+      "limits_reached": [],
+      "elapsed_seconds": 129.5256329663098,
+      "top_rows": [
+        {
+          "smiles": "O=C(Nc1nc(Br)cs1)c1cccnc1N1CCOCC1",
+          "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "score": 0.709399679768113,
+          "hit_shape": 0.7124790008438825,
+          "hit_pharmacophore": 0.3569330550598244,
+          "design_shape": 0.99635461175209,
+          "design_pharmacophore": 0.9995192876277871,
+          "hit_tanimoto": 0.576271186440678,
+          "design_tanimoto": 0.7735849056603774,
+          "hit_morgan": 0.576271186440678,
+          "relative_energy": 0.0,
+          "reaction_steps": 1,
+          "route_id": "route_000135",
+          "alternative_route_ids": [
+            "route_000424",
+            "route_000909",
+            "route_001198",
+            "route_001683",
+            "route_001972",
+            "route_002457",
+            "route_002746"
+          ],
+          "pareto_front": 0,
+          "rank": 1
+        },
+        {
+          "smiles": "O=C(Nc1nc(I)cs1)c1cccnc1N1CCOCC1",
+          "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "score": 0.6813637260848611,
+          "hit_shape": 0.917028929892618,
+          "hit_pharmacophore": 0.8402229703386024,
+          "design_shape": 0.7386034513149358,
+          "design_pharmacophore": 0.3987651992261822,
+          "hit_tanimoto": 0.5862068965517241,
+          "design_tanimoto": 0.7884615384615384,
+          "hit_morgan": 0.5862068965517241,
+          "relative_energy": 0.25777592867673604,
+          "reaction_steps": 1,
+          "route_id": "route_000134",
+          "alternative_route_ids": [
+            "route_000423",
+            "route_000908",
+            "route_001197",
+            "route_001682",
+            "route_001971",
+            "route_002456",
+            "route_002745"
+          ],
+          "pareto_front": 0,
+          "rank": 2
+        },
+        {
+          "smiles": "CC(=O)c1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "score": 0.6168151225055081,
+          "hit_shape": 0.7322859491594865,
+          "hit_pharmacophore": 0.33202435187038765,
+          "design_shape": 0.8459726406526414,
+          "design_pharmacophore": 0.7037413902282693,
+          "hit_tanimoto": 0.5833333333333334,
+          "design_tanimoto": 0.7777777777777778,
+          "hit_morgan": 0.5833333333333334,
+          "relative_energy": 0.0,
+          "reaction_steps": 1,
+          "route_id": "route_000167",
+          "alternative_route_ids": [
+            "route_000941",
+            "route_001715",
+            "route_002489"
+          ],
+          "pareto_front": 0,
+          "rank": 3
+        },
+        {
+          "smiles": "CN(C)Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "score": 0.616126046569203,
+          "hit_shape": 0.8988538669617265,
+          "hit_pharmacophore": 0.7726445437056176,
+          "design_shape": 0.6406162225312039,
+          "design_pharmacophore": 0.3239004191786496,
+          "hit_tanimoto": 0.546875,
+          "design_tanimoto": 0.7241379310344828,
+          "hit_morgan": 0.546875,
+          "relative_energy": 0.0,
+          "reaction_steps": 1,
+          "route_id": "route_000172",
+          "alternative_route_ids": [
+            "route_000946",
+            "route_001720",
+            "route_002494"
+          ],
+          "pareto_front": 0,
+          "rank": 4
+        },
+        {
+          "smiles": "NC(=O)c1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+          "score": 0.5931871949865282,
+          "hit_shape": 0.8728516839847971,
+          "hit_pharmacophore": 0.6144089868755688,
+          "design_shape": 0.6923983793128566,
+          "design_pharmacophore": 0.3334364039277556,
+          "hit_tanimoto": 0.5573770491803278,
+          "design_tanimoto": 0.7454545454545455,
+          "hit_morgan": 0.5573770491803278,
+          "relative_energy": 0.0,
+          "reaction_steps": 1,
+          "route_id": "route_000169",
+          "alternative_route_ids": [
+            "route_000943",
+            "route_001717",
+            "route_002491"
+          ],
+          "pareto_front": 0,
+          "rank": 5
+        }
+      ],
+      "best_design_shape_row": {
+        "smiles": "O=C(Nc1nc(Br)cs1)c1cccnc1N1CCOCC1",
+        "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+        "score": 0.709399679768113,
+        "hit_shape": 0.7124790008438825,
+        "hit_pharmacophore": 0.3569330550598244,
+        "design_shape": 0.99635461175209,
+        "design_pharmacophore": 0.9995192876277871,
+        "hit_tanimoto": 0.576271186440678,
+        "design_tanimoto": 0.7735849056603774,
+        "hit_morgan": 0.576271186440678,
+        "relative_energy": 0.0,
+        "reaction_steps": 1,
+        "route_id": "route_000135",
+        "alternative_route_ids": [
+          "route_000424",
+          "route_000909",
+          "route_001198",
+          "route_001683",
+          "route_001972",
+          "route_002457",
+          "route_002746"
+        ],
+        "pareto_front": 0,
+        "rank": 1
+      },
+      "best_joint_3d_row": {
+        "smiles": "O=C(Nc1nc(Br)cs1)c1cccnc1N1CCOCC1",
+        "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+        "score": 0.709399679768113,
+        "hit_shape": 0.7124790008438825,
+        "hit_pharmacophore": 0.3569330550598244,
+        "design_shape": 0.99635461175209,
+        "design_pharmacophore": 0.9995192876277871,
+        "hit_tanimoto": 0.576271186440678,
+        "design_tanimoto": 0.7735849056603774,
+        "hit_morgan": 0.576271186440678,
+        "relative_energy": 0.0,
+        "reaction_steps": 1,
+        "route_id": "route_000135",
+        "alternative_route_ids": [
+          "route_000424",
+          "route_000909",
+          "route_001198",
+          "route_001683",
+          "route_001972",
+          "route_002457",
+          "route_002746"
+        ],
+        "pareto_front": 0,
+        "rank": 1
+      },
+      "route_rejections": {
+        "3d_failed": 16,
+        "accepted": 152,
+        "constraint_rejected": 2928
+      },
+      "verified_route_instances": 3096,
+      "independent_export_audit": {
+        "case": "broader",
+        "rows": 35,
+        "identities_match": true,
+        "max_tanimoto_error": 0.0,
+        "max_exported_pharmacophore_error": 1.727766300452238e-05,
+        "max_pair_distance_error": 0.00021474074744709526,
+        "artifact_sha256": {
+          "references_hit.sdf": "3778f13466805bfecb47e32d331895db908494d1fd93064076c55fa97ebb4404",
+          "scores.json": "5b654204014fefb8d3c9f4efddf3557f8d82e8c660bfde9b1136ecce83310945",
+          "manifest.json": "83f418a32a18291eb23c52e06c23034493694a7adef986b4c2fe622428d4facd",
+          "poses_design.sdf": "2db92d94d8d1aa76b136c9a17f03f19d6797f72ac761e602d25d63747a9df540",
+          "references_design.sdf": "4616b1fe77a5c037e6bef6ca17fa04beb2367b07b0fe044f14aa300868e256df",
+          "summary.json": "94aa59e2f8ea35244e3923a8803b514876874b4d94ddd3db1c657a4b09b8ec61",
+          "results.tsv": "202b990997f307c2af74ed8550adaabc20dfdd8e570e655f7da9a923153b16fb",
+          "routes.json": "3a59a373cf2e5f3474f62d460180b1dca460b67134ed5c1b7700fea08a737b1f",
+          "proposals.json": "eaee1cda0eaff773de0ba56dc48262bbccf5f1c20f8b05fec8b66983d5cea8dd",
+          "poses_hit.sdf": "3cec2f59ef1fce605bb70acd4370e2a3a0ad5dd996580e9a239b12f07b6ed7cc"
+        },
+        "independent_selected_route_replay": true,
+        "selected_routes_replayed": 35,
+        "selected_blocks_joined_to_actual_catalog": 31
+      }
+    }
+  }
+}
