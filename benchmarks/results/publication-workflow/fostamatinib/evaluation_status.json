@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "candidates": 20,
+  "seconds": 19.739117745310068,
+  "sampled_peak_rss_mb": 582.421875,
+  "shape_failures": 0,
+  "worker_wall_seconds_including_import": 20.987977563403547,
+  "name": "fostamatinib",
+  "manifest": "benchmark-results/publication-workflow-bounded/fostamatinib/run_manifest.json"
+}

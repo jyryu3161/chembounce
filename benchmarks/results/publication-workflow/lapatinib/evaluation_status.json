@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "candidates": 20,
+  "seconds": 5.374915040098131,
+  "sampled_peak_rss_mb": 582.02734375,
+  "shape_failures": 0,
+  "worker_wall_seconds_including_import": 6.672052489593625,
+  "name": "lapatinib",
+  "manifest": "benchmark-results/publication-workflow-bounded/lapatinib/run_manifest.json"
+}

@@ -1,0 +1,5 @@
+Fragment_no	SMILES
+1	O=c1cc2[nH]c(=O)n(C3CC3)c(=O)c2c(Nc2ccccc2)[nH]1
+2	O=c1cc2c(c(Nc3ccccc3)[nH]1)c(=O)[nH]c(=O)n2-c1ccccc1
+3	O=c1cc2c(c(Nc3ccccc3)[nH]1)c(=O)n(C1CC1)c(=O)n2-c1ccccc1
+4	O=c1cc2c(c[nH]1)c(=O)n(C1CC1)c(=O)n2-c1ccccc1

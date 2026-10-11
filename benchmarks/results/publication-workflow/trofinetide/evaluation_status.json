@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "candidates": 10,
+  "seconds": 3.7686014510691166,
+  "sampled_peak_rss_mb": 580.21875,
+  "shape_failures": 0,
+  "worker_wall_seconds_including_import": 5.01765036676079,
+  "name": "trofinetide",
+  "manifest": "benchmark-results/publication-workflow-bounded/trofinetide/run_manifest.json"
+}

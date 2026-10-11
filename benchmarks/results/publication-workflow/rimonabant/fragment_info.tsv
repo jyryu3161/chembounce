@@ -1,0 +1,5 @@
+Fragment_no	SMILES
+1	O=C(NN1CCCCC1)c1cc(-c2ccccc2)[nH]n1
+2	O=C(NN1CCCCC1)c1cc(-c2ccccc2)n(-c2ccccc2)n1
+3	O=C(NN1CCCCC1)c1ccn(-c2ccccc2)n1
+4	c1ccc(-c2ccnn2-c2ccccc2)cc1

@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "candidates": 20,
+  "seconds": 5.408737484365702,
+  "sampled_peak_rss_mb": 581.9375,
+  "shape_failures": 0,
+  "worker_wall_seconds_including_import": 6.644645683467388,
+  "name": "celecoxib",
+  "manifest": "benchmark-results/publication-workflow-bounded/celecoxib/run_manifest.json"
+}

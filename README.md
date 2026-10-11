@@ -160,8 +160,9 @@ python benchmarks/benchmark_search.py --rows 100000 --repeats 5
 
 Regression tests cover ADP attachments, retained stereochemistry, identity
 reconstruction, core preservation, limits, diagnostics, deterministic 3D scores,
-CATS descriptors, and packed-search equivalence to RDKit. Clean environments on Python 3.10, 3.11 and 3.12 each passed 73 tests; a separate
-environment also passed the optional ODDT comparison (74 total). The minimum
+CATS descriptors, and packed-search equivalence to RDKit. Clean environments on
+Python 3.10, 3.11 and 3.12 each passed 81 tests; a separate environment also passed
+the optional ODDT comparison (82 total). The minimum
 RDKit 2023.09 dependency combination passed as well. CI mirrors these checks.
 
 The recorded [100,000-row kernel benchmark](benchmarks/search_100k.json) found
@@ -172,6 +173,14 @@ of improved molecular quality. End-to-end runs on both cleaned public libraries
 (522,959 and 3,267,123 unique scaffolds) succeeded on six ring-containing inputs,
 including ADP; [results and provenance are included](benchmarks/results/README.md). See [validation](docs/VALIDATION.md) for evidence and
 remaining publication work.
+
+An additional [versioned panel](benchmarks/publication_molecules.json) contains the
+15 drugs named in the original publication plus ADP. Controlled attachment tests
+compare 1.0 with 2.0 and vary beam width. A separate 60-second-per-input workflow
+evaluation on the smaller library returned candidates for 11 inputs, no candidates
+for tirzepatide, and timed out on four complex inputs. All outcomes, including
+incomplete runs, are [recorded](benchmarks/results/README.md). These engineering
+checks do not establish retained activity or superiority over other design methods.
 
 ## Attribution and contact
 

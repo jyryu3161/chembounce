@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "input_smiles": "Nc1ncnc2c1ncn2[C@@H]1O[C@H](COP(=O)(O)OP(=O)(O)O)[C@@H](O)[C@H]1O",
+  "input_properties": {
+    "sa": 4.125297661526227,
+    "qed": 0.28079075856620234,
+    "mw": 427.2030000000001,
+    "logp": -1.7460000000000004,
+    "n_hdonor": 6,
+    "n_hacceptor": 11
+  },
+  "input_filter_failures": [],
+  "database": {
+    "mode": "fingerprints",
+    "path": "/data2/home/jyryu/chembounce/data/fingerprints_mw250_v2",
+    "radius": 2,
+    "fp_size": 2048,
+    "excluded_legacy_records": 0
+  },
+  "fragments": [
+    {
+      "number": 1,
+      "smiles": "C1CCOC1",
+      "available_scaffolds": 20,
+      "counts": {
+        "scaffolds_tested": 1,
+        "generated": 10,
+        "accepted": 10
+      }
+    },
+    {
+      "number": 2,
+      "smiles": "c1ncc2nc[nH]c2n1",
+      "available_scaffolds": 20,
+      "counts": {
+        "scaffolds_tested": 1,
+        "generated": 10,
+        "accepted": 10
+      }
+    }
+  ],
+  "source_files_changed_after_import": [],
+  "fragment_count_total": 3,
+  "fragment_count_screened": 2,
+  "global_limit_reached": true,
+  "counts": {
+    "accepted": 20,
+    "scaffolds_tested": 2,
+    "generated": 20
+  },
+  "status": "success"
+}

@@ -1,0 +1,5 @@
+..................................s..................................... [ 87%]
+..........                                                               [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_descriptors.py:43: could not import 'oddt': No module named 'oddt'
+81 passed, 1 skipped in 13.17s

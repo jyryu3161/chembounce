@@ -36,19 +36,20 @@ small-database fingerprint verification, seeded 3D repeatability, and CATS fixes
 The ODDT reference-comparison test is optional and runs when that legacy dependency
 is installed; the production implementation does not require it.
 
-Five local dependency combinations passed on the implementation through `619de8a`:
+Five local dependency combinations passed again with the application code in
+`d7d4d61`, including the capacity-pruning and benchmark-check regressions:
 
 | Python | RDKit | NumPy | Result |
 | --- | --- | --- | --- |
-| 3.10.12 | 2023.09.6 | 1.24.4 | 73 passed, 1 optional ODDT test skipped |
-| 3.10.12 | 2025.09.6 | 1.26.4 | 74 passed, including ODDT comparison |
-| 3.10.12 | 2026.09.1 | 2.2.6 | 73 passed, 1 optional test skipped |
-| 3.11.13 | 2026.09.1 | 2.4.6 | 73 passed, 1 optional test skipped |
-| 3.12.13 | 2026.09.1 | 2.5.4 | 73 passed, 1 optional test skipped |
+| 3.10.12 | 2023.09.6 | 1.24.4 | 81 passed, 1 optional ODDT test skipped |
+| 3.10.12 | 2025.09.6 | 1.26.4 | 82 passed, including ODDT comparison |
+| 3.10.12 | 2026.09.1 | 2.2.6 | 81 passed, 1 optional test skipped |
+| 3.11.13 | 2026.09.1 | 2.4.6 | 81 passed, 1 optional test skipped |
+| 3.12.13 | 2026.09.1 | 2.5.4 | 81 passed, 1 optional test skipped |
 
 The minimum-version test exposed a real RDKit version difference in empty-vector
 Tanimoto. The implementation now follows the installed reference convention.
-See [environment records](../benchmarks/results/test-matrix.json) and the accompanying
+See [environment records](../benchmarks/results/test-matrix-capacity.json) and the accompanying
 logs. `requirements-lock.txt` captures the clean Linux/Python 3.10 environment.
 Package installation, `pip check`, wheel building, CLI entrypoint, shell syntax and
 notebook code-cell syntax also passed locally. CI includes the Python matrix and
@@ -129,6 +130,88 @@ a valid distinct molecule is not necessarily a new topological scaffold. These
 metrics do not establish novelty against known compounds or biological usefulness.
 Run `python benchmarks/summarize_results.py RUN_DIRECTORY` to reproduce the tables.
 
+## Controlled comparison and published-drug stress panel
+
+The [original paper](https://doi.org/10.1093/bioinformatics/btaf501) names 15 drugs
+across its performance and comparison examples. `benchmarks/publication_molecules.json`
+pins their PubChem structures, CIDs, retrieval URLs and response hashes, plus the
+verbatim reported ADP. Raw structure responses are retained under `results/pubchem`.
+The ambiguous tirzepatide name lookup was resolved to the explicitly identified
+PubChem CID 156588324. This is a selected stress panel, not a random or held-out
+activity benchmark, and these inputs are not asserted to be identical to the
+original supplementary study's protonation states or configurations.
+
+```bash
+python benchmarks/benchmark_attachment.py \
+  --output benchmark-results/attachment.json --beams 10 50 100 --timeout 10
+python benchmarks/summarize_attachment.py benchmark-results/attachment.json
+python benchmarks/benchmark_workflow.py \
+  --panel benchmarks/publication_molecules.json \
+  --fingerprint-db data/fingerprints_mw250_v2 \
+  --output benchmark-results/publication-workflow --timeout 60
+```
+
+The isolated attachment comparison bypasses library search and property/3D filters.
+Both versions receive the same canonical input, stereo-free full Murcko fragment,
+and four replacements: that same fragment as an identity control, pyridine,
+piperidine and morpholine. There are 64 calls per condition, each capped at ten
+returned structures. Tagged 1.0 source runs unchanged with only the documented
+`RDBASE` import shim. It receives the legacy beam argument of 50, but its internal
+search does not honor the same pruning bound. A worker wall limit of ten seconds
+after imports provides the common external budget; timed-out workers are terminated.
+
+The [ablation record](../benchmarks/results/attachment-beam-ablation.json) used the
+pre-capacity implementation at `086ce58`, Python 3.10.12 and RDKit 2025.09.6:
+
+| Condition | Calls with candidates | Empty | Exception | Timeout |
+| --- | ---: | ---: | ---: | ---: |
+| 1.0, legacy argument 50 | 0 | 0 | 64 | 0 |
+| 2.0, beam 10 | 56 | 6 | 0 | 2 |
+| 2.0, beam 50 | 56 | 6 | 0 | 2 |
+| 2.0, beam 100 | 55 | 5 | 0 | 4 |
+
+Table values count calls, not molecules. Legacy errors comprised 52 aromatic
+kekulization errors, eight attachment argument errors and four index errors. This
+isolates defects in the captured source; it does not invalidate every historical
+published run or measure superiority over other scaffold-hopping methods.
+
+After capacity pruning, a [repeat at beam 50](../benchmarks/results/attachment-final.json)
+on clean commit `d7d4d61` returned exactly the same ordered candidate lists for all
+mutually completed calls. It again had 56 successful calls, six empty and two
+timeouts. All 560 returned entries passed sanitization, connectivity, heavy-atom /
+isotope accounting, uniqueness, caps, score agreement and retained-fragment stereo
+checks. The retention queries constrain atom degrees and have negative controls
+for inverted stereo and lost isotopes. They are necessary substructure checks,
+not a unique atom-mapping proof for repeated identical substituents.
+
+Of these entries, 140 came from identity controls and 420 from the three alternative
+replacements. All 420 latter entries changed the stereo-free Murcko scaffold, but
+only 20 met a final count-Tanimoto threshold of 0.5 (median 0.151). Thus structural
+validity in this assembly experiment is not equivalent to useful workflow output.
+Larger beams also increased timeouts; no monotonic quality or speed claim follows.
+
+The [whole-workflow record](../benchmarks/results/publication-workflow/summary.tsv)
+uses the cleaned 522,959-scaffold library, filters/3D off, beam 50, search threshold
+0.3, final threshold 0.5, 20 replacement scaffolds per fragment, and caps of 10
+results per fragment / 20 overall. Its separate 60-second budget includes worker
+startup. Eleven of the sixteen inputs returned candidates (210 total); tirzepatide
+completed with zero candidates; pasireotide, motixafortide, venetoclax and ritonavir
+timed out. A timeout has unknown final yield, not zero yield. Partial files are
+preserved but excluded from candidate statistics, and the harness exits nonzero.
+ADP produced 20 results in 4.41 seconds. These single-run times are observations
+on a shared host, not hardware-independent speed estimates.
+
+One diagnosed bottleneck was 26 retained attachment bonds competing for insufficient
+replacement valence in tirzepatide. The [fixed-case comparison](../benchmarks/results/capacity-comparison.json)
+returned the same empty result in 44.26 seconds before the precheck and 0.025 seconds
+after it. This is a narrow impossible-attachment example, not a general speedup:
+
+```bash
+python benchmarks/benchmark_attachment.py \
+  --cases-file benchmarks/capacity_cases.json --legacy-tag 0f14a8f \
+  --beams 50 --timeout 120 --output benchmark-results/capacity.json
+```
+
 ## Evidence still required for a journal manuscript
 
 The repository now supports reproducible software experiments. A claim of novel or
@@ -137,7 +220,7 @@ evidence. Before manuscript submission:
 
 1. Establish a licensed, versioned multi-class evaluation set and preregistered
    inclusion criteria; control overlap with the scaffold library and known actives.
-2. Compare against appropriate scaffold-hopping baselines under matched libraries,
+2. Add independent scaffold-hopping baselines beyond the legacy assembly comparison, under matched libraries,
    compute budgets and output counts. Include per-input failures and confidence
    intervals, not only aggregate successful cases.
 3. Measure diversity, scaffold novelty, preserved pharmacophores and chemical

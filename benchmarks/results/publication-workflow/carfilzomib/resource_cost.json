@@ -1,0 +1,16 @@
+{
+  "elapsed_time": 19.083037745207548,
+  "user_cpu_time": 20.62,
+  "system_cpu_time": 0.3899999999999997,
+  "total_cpu_time": 21.01,
+  "cpu_usage_percent": 110.09777521021978,
+  "cpu_count": 64,
+  "initial_memory_mb": 211.578125,
+  "final_memory_mb": 290.9921875,
+  "max_memory_mb": 582.83984375,
+  "avg_memory_mb": 413.3376449742268,
+  "memory_delta_mb": 79.4140625,
+  "memory_samples_count": 970,
+  "memory_sampling_interval_seconds": 0.01,
+  "memory_scope": "process RSS; sampled peak"
+}

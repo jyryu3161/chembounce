@@ -1,0 +1,37 @@
+{
+  "scope": "Fixed selected panel; counts are descriptive, not population success estimates. No search, property filters, 3D, activity or synthesis validation. Timeouts remain in denominators; completed-call timing excludes imports and cannot substitute for censored runtime analysis.",
+  "groups": [
+    {
+      "version": "2.0",
+      "beam_width": 50,
+      "kind": "identity_control",
+      "cases": 16,
+      "statuses": {
+        "success": 14,
+        "timeout": 2
+      },
+      "cases_with_failed_checks": 0,
+      "returned_candidates": 140,
+      "candidates_meeting_tanimoto_0_5": 140,
+      "changed_murcko": 0,
+      "median_tanimoto": 0.8427304531771215,
+      "median_completed_call_seconds": 1.5122245331294835
+    },
+    {
+      "version": "2.0",
+      "beam_width": 50,
+      "kind": "replacement",
+      "cases": 48,
+      "statuses": {
+        "success": 42,
+        "empty": 6
+      },
+      "cases_with_failed_checks": 0,
+      "returned_candidates": 420,
+      "candidates_meeting_tanimoto_0_5": 20,
+      "changed_murcko": 420,
+      "median_tanimoto": 0.15126050420168066,
+      "median_completed_call_seconds": 0.07462546741589904
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+Fragment_no	SMILES
+1	O=C(CNC(=O)NCc1cscn1)NC(CCC(Cc1ccccc1)NC(=O)OCc1cncs1)Cc1ccccc1
+2	O=C(CNC(=O)NCc1cscn1)NC(CCCCc1ccccc1)Cc1ccccc1
+3	O=C(CNC(=O)NCc1cscn1)NC(CCCNC(=O)OCc1cncs1)Cc1ccccc1
+4	O=C(CNC(=O)NCc1cscn1)NCCCC(Cc1ccccc1)NC(=O)OCc1cncs1
+5	O=C(NC(CCCCc1ccccc1)Cc1ccccc1)OCc1cncs1

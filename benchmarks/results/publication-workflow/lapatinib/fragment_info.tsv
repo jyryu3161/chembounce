@@ -1,0 +1,4 @@
+Fragment_no	SMILES
+1	c1ccc(COc2ccc(Nc3ncnc4ccc(-c5ccco5)cc34)cc2)cc1
+2	c1ccc(COc2ccc(Nc3ncnc4ccccc34)cc2)cc1
+3	c1ccc(Nc2ncnc3ccc(-c4ccco4)cc23)cc1

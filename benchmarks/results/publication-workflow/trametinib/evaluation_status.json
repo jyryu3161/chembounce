@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "candidates": 20,
+  "seconds": 8.236321909353137,
+  "sampled_peak_rss_mb": 583.44921875,
+  "shape_failures": 0,
+  "worker_wall_seconds_including_import": 9.482872607186437,
+  "name": "trametinib",
+  "manifest": "benchmark-results/publication-workflow-bounded/trametinib/run_manifest.json"
+}

@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "candidates": 20,
+  "seconds": 24.461421315558255,
+  "sampled_peak_rss_mb": 583.77734375,
+  "shape_failures": 0,
+  "worker_wall_seconds_including_import": 25.77316885162145,
+  "name": "rimonabant",
+  "manifest": "benchmark-results/publication-workflow-bounded/rimonabant/run_manifest.json"
+}

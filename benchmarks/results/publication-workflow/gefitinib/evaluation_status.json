@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "candidates": 20,
+  "seconds": 5.5372180249542,
+  "sampled_peak_rss_mb": 581.0703125,
+  "shape_failures": 0,
+  "worker_wall_seconds_including_import": 7.196562809869647,
+  "name": "gefitinib",
+  "manifest": "benchmark-results/publication-workflow-bounded/gefitinib/run_manifest.json"
+}

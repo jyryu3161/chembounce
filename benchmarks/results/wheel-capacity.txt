@@ -1,0 +1,16 @@
+Processing /data2/home/jyryu/chembounce
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: chembounce
+  Building wheel for chembounce (pyproject.toml): started
+  Building wheel for chembounce (pyproject.toml): finished with status 'done'
+  Created wheel for chembounce: filename=chembounce-2.0.0.dev0-py3-none-any.whl size=34736 sha256=7bf1a480e47740da74f856b5d87f6e86db3f1e1fc67c05322c5448851d2f8248
+  Stored in directory: /tmp/pip-ephem-wheel-cache-wjqfxhd0/wheels/54/01/27/8c450aaf80da513a7cfa59df7e6089ffeff3c8c006042a55e3
+Successfully built chembounce
+
+[notice] A new release of pip is available: 23.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip

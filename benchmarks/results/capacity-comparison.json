@@ -1,0 +1,62 @@
+{
+  "created_utc": "2026-10-11T04:13:12.178952+00:00",
+  "python": "3.10.12",
+  "rdkit": "2025.09.6",
+  "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+  "panel_sha256": "53bbffe264ce3209ecf7ebae9f1f795543b50c5bbb92c46c31545588925ff9c5",
+  "cases_file_sha256": "5f97785bd5f322d046186e3074b4fee0a7e0ec5b877f1d55321eb07b5dcb990a",
+  "script_sha256": "20dd2d87467ab4adeb05d40f2e2d8454bb3bb6d434238375283450778cd295de",
+  "max_n": 10,
+  "timeout_seconds_after_import": 120.0,
+  "cases": [
+    {
+      "name": "tirzepatide",
+      "choice": "capacity_regression",
+      "input": "CC[C@H](C)[C@@H](C(=O)N[C@@H](C)C(=O)N[C@@H](CCC(=O)N)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](C)C(=O)N[C@@H](CC1=CC=CC=C1)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](CCC(=O)N)C(=O)N[C@@H](CC2=CNC3=CC=CC=C32)C(=O)N[C@@H](CC(C)C)C(=O)N[C@@H]([C@@H](C)CC)C(=O)N[C@@H](C)C(=O)NCC(=O)NCC(=O)N4CCC[C@H]4C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)NCC(=O)N[C@@H](C)C(=O)N5CCC[C@H]5C(=O)N6CCC[C@H]6C(=O)N7CCC[C@H]7C(=O)N[C@@H](CO)C(=O)N)NC(=O)[C@H](CCCCNC(=O)CCCCCCCCCCCCCCCCCCC(=O)N[C@@H](CCC(=O)NCCOCCOCC(=O)NCCOCCOCC(=O)O)C(=O)O)NC(=O)[C@H](CC(=O)O)NC(=O)[C@H](CC(C)C)NC(=O)C(C)(C)NC(=O)[C@H]([C@@H](C)CC)NC(=O)[C@H](CO)NC(=O)[C@H](CC8=CC=C(C=C8)O)NC(=O)[C@H](CC(=O)O)NC(=O)[C@H](CO)NC(=O)[C@H]([C@@H](C)O)NC(=O)[C@H](CC9=CC=CC=C9)NC(=O)[C@H]([C@@H](C)O)NC(=O)CNC(=O)[C@H](CCC(=O)O)NC(=O)C(C)(C)NC(=O)[C@H](CC1=CC=C(C=C1)O)N",
+      "fragment": "O=C(CCc1ccccc1)NCC(=O)NCC(=O)NCC(=O)NC(Cc1ccccc1)C(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)NC(Cc1ccccc1)C(=O)NCC(=O)NCC(=O)NC(Cc1c[nH]c2ccccc12)C(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)N1CCCC1C(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)N1CCCC1C(=O)N1CCCC1C(=O)N1CCCC1",
+      "replacement": "O=C(CCc1c[nH]c2ccccc12)N1CCCC1"
+    }
+  ],
+  "current_commit": "d7d4d61543c7aef6d5ec1aa89bd763c98d2f2fbe",
+  "git_dirty": false,
+  "source_sha256": {
+    "cats_module.py": "cd90d5ef199e126070bd1f55918a12844763c1fa9ba1b232f1b5f4cc071e634a",
+    "chembounce.py": "4627ca81a5c9303dfeca07e0ffa6b9a8aa80cee69cc17d8e74d913611fbec902",
+    "chemistry.py": "52e0698f3c24bc6303ef69733d2c147689c3d3d0528549e9eae92ef0d2d38d5c",
+    "cli.py": "e5d0507ad72cbdae76c4466ec4279e71a17cce799c2c23e676f3c21a3405ecdc",
+    "cost_estimation.py": "4a416388ec4e210f9eb61f532d9b4650ee80ecd5808756d3ae04c48ba56d483f",
+    "fingerprint_db.py": "2901db6fadb90aa886d7d194f9ed38ac86f962f74fecfa6ea391a5d9cb97068e",
+    "generate_fingerprints.py": "57781998a33d33c7d81941de80a7100dbcddffd7791290bbc24fb991de4f7640",
+    "scaffoldgraph_fragmenter.py": "17787d5666155ec748a7136ee9b2351cfac0c7bd9557c4f52bd505d9a21698bc",
+    "shape_descriptors.py": "fd7f5a42e87e7b9987abf3c6536ffff08a18b5a1b05d1c097e5c1701d12a3b5e",
+    "utils.py": "197f32d92deb299a709383116fbd8f0651991069512a4c78860403eef2f42a81"
+  },
+  "results": [
+    {
+      "status": "empty",
+      "candidates": [],
+      "seconds": 44.259270852431655,
+      "checks_failed": {},
+      "valid_unique": 0,
+      "changed_murcko": 0,
+      "input_recovered": false,
+      "version": "0f14a8f",
+      "beam_width": 50,
+      "case": 0
+    },
+    {
+      "status": "empty",
+      "candidates": [],
+      "seconds": 0.024975725449621677,
+      "checks_failed": {},
+      "valid_unique": 0,
+      "changed_murcko": 0,
+      "input_recovered": false,
+      "version": "2.0",
+      "beam_width": 50,
+      "case": 0
+    }
+  ],
+  "legacy_commit": "0f14a8fd15f887fdc9cbd09877fe0d2a245d93b6",
+  "legacy_compatibility_shim": "RDBASE set to installed pip RDKit; tagged source unchanged"
+}

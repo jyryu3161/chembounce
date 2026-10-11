@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "input_smiles": "C[C@@]1(C(=O)N[C@@H](CCC(=O)O)C(=O)O)CCCN1C(=O)CN",
+  "input_properties": {
+    "sa": 3.3094705586818858,
+    "qed": 0.45858644718516034,
+    "mw": 315.326,
+    "logp": -1.2395999999999971,
+    "n_hdonor": 4,
+    "n_hacceptor": 5
+  },
+  "input_filter_failures": [],
+  "database": {
+    "mode": "fingerprints",
+    "path": "/data2/home/jyryu/chembounce/data/fingerprints_mw250_v2",
+    "radius": 2,
+    "fp_size": 2048,
+    "excluded_legacy_records": 0
+  },
+  "fragments": [
+    {
+      "number": 1,
+      "smiles": "C1CCNC1",
+      "available_scaffolds": 20,
+      "counts": {
+        "scaffolds_tested": 2,
+        "generated": 12,
+        "accepted": 10,
+        "similarity_rejected": 2
+      }
+    }
+  ],
+  "source_files_changed_after_import": [],
+  "fragment_count_total": 1,
+  "fragment_count_screened": 1,
+  "global_limit_reached": false,
+  "counts": {
+    "accepted": 10,
+    "scaffolds_tested": 2,
+    "generated": 12,
+    "similarity_rejected": 2
+  },
+  "status": "success"
+}

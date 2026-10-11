@@ -1,0 +1,1 @@
+Fragment_no	Original scaffold	Replaced scaffold	Final structure	Standardized final structure	Tanimoto Similarity	Electron shape Similarity	CATS2D dist	QED	SAscore	logP	MW	H_Donors	H_Acceptors

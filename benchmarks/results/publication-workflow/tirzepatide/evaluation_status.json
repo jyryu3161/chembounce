@@ -1,0 +1,10 @@
+{
+  "status": "no_candidates",
+  "candidates": 0,
+  "seconds": 7.706305539235473,
+  "sampled_peak_rss_mb": 586.08203125,
+  "shape_failures": 0,
+  "worker_wall_seconds_including_import": 9.002885790541768,
+  "name": "tirzepatide",
+  "manifest": "benchmark-results/publication-workflow-bounded/tirzepatide/run_manifest.json"
+}

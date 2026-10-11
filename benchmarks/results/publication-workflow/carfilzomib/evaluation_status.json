@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "candidates": 20,
+  "seconds": 19.083037745207548,
+  "sampled_peak_rss_mb": 582.83984375,
+  "shape_failures": 0,
+  "worker_wall_seconds_including_import": 20.349701105616987,
+  "name": "carfilzomib",
+  "manifest": "benchmark-results/publication-workflow-bounded/carfilzomib/run_manifest.json"
+}

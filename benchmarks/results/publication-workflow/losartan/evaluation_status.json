@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "candidates": 20,
+  "seconds": 4.9281420996412635,
+  "sampled_peak_rss_mb": 581.16015625,
+  "shape_failures": 0,
+  "worker_wall_seconds_including_import": 6.172428293153644,
+  "name": "losartan",
+  "manifest": "benchmark-results/publication-workflow-bounded/losartan/run_manifest.json"
+}

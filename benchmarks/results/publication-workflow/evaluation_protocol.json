@@ -1,0 +1,23 @@
+{
+  "panel_sha256": "53bbffe264ce3209ecf7ebae9f1f795543b50c5bbb92c46c31545588925ff9c5",
+  "script_sha256": "b0ad34baa6f56630f74f131b4f4cb5c05e5b7c4a8b59456259c66bced45f7a15",
+  "names": [
+    "carfilzomib",
+    "trofinetide",
+    "tirzepatide",
+    "pasireotide",
+    "motixafortide",
+    "celecoxib",
+    "rimonabant",
+    "lapatinib",
+    "trametinib",
+    "venetoclax",
+    "losartan",
+    "gefitinib",
+    "fostamatinib",
+    "darunavir",
+    "ritonavir",
+    "ADP"
+  ],
+  "timeout_seconds_including_import": 60.0
+}

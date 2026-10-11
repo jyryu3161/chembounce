@@ -1,0 +1,6 @@
+Fragment_no	SMILES
+1	O=C1CNC(=O)C(Cc2c[nH]c3ccccc23)NC(=O)C(c2ccccc2)NC(=O)C2CCCN2C(=O)C(Cc2ccccc2)NC(=O)C(Cc2ccc(OCc3ccccc3)cc2)N1
+2	O=C1CNC(=O)C(Cc2c[nH]c3ccccc23)NC(=O)C(c2ccccc2)NC(=O)C2CCCN2C(=O)C(Cc2ccccc2)NC(=O)C(Cc2ccccc2)N1
+3	O=C1CNC(=O)C(Cc2c[nH]c3ccccc23)NC(=O)C(c2ccccc2)NC(=O)C2CCCN2C(=O)CNC(=O)C(Cc2ccc(OCc3ccccc3)cc2)N1
+4	O=C1CNC(=O)C(c2ccccc2)NC(=O)C2CCCN2C(=O)C(Cc2ccccc2)NC(=O)C(Cc2ccc(OCc3ccccc3)cc2)NC(=O)CN1
+5	O=C1CNC(=O)C2CCCN2C(=O)C(Cc2ccccc2)NC(=O)C(Cc2ccc(OCc3ccccc3)cc2)NC(=O)CNC(=O)C(Cc2c[nH]c3ccccc23)N1

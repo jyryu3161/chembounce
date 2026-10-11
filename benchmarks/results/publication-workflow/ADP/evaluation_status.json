@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "candidates": 20,
+  "seconds": 4.406849035993218,
+  "sampled_peak_rss_mb": 581.0078125,
+  "shape_failures": 0,
+  "worker_wall_seconds_including_import": 5.723870372399688,
+  "name": "ADP",
+  "manifest": "benchmark-results/publication-workflow-bounded/ADP/run_manifest.json"
+}

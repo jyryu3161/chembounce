@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "input_smiles": "COc1cc(Nc2ncc(F)c(Nc3ccc4c(n3)N(COP(=O)(O)O)C(=O)C(C)(C)O4)n2)cc(OC)c1OC",
+  "input_properties": {
+    "sa": 3.1780068717453247,
+    "qed": 0.2562259896707899,
+    "mw": 580.4660000000005,
+    "logp": 3.094500000000002,
+    "n_hdonor": 4,
+    "n_hacceptor": 12
+  },
+  "input_filter_failures": [],
+  "database": {
+    "mode": "fingerprints",
+    "path": "/data2/home/jyryu/chembounce/data/fingerprints_mw250_v2",
+    "radius": 2,
+    "fp_size": 2048,
+    "excluded_legacy_records": 0
+  },
+  "fragments": [
+    {
+      "number": 1,
+      "smiles": "O=C1COc2ccc(Nc3ccnc(Nc4ccccc4)n3)nc2N1",
+      "available_scaffolds": 20,
+      "counts": {
+        "scaffolds_tested": 4,
+        "generated": 32,
+        "accepted": 10,
+        "similarity_rejected": 22
+      }
+    },
+    {
+      "number": 2,
+      "smiles": "O=C1COc2ccc(Nc3ccncn3)nc2N1",
+      "available_scaffolds": 20,
+      "counts": {
+        "scaffolds_tested": 1,
+        "generated": 10,
+        "accepted": 10
+      }
+    }
+  ],
+  "source_files_changed_after_import": [],
+  "fragment_count_total": 3,
+  "fragment_count_screened": 2,
+  "global_limit_reached": true,
+  "counts": {
+    "accepted": 20,
+    "scaffolds_tested": 5,
+    "generated": 42,
+    "similarity_rejected": 22
+  },
+  "status": "success"
+}

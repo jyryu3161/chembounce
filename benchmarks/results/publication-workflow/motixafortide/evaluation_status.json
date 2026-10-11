@@ -1,0 +1,8 @@
+{
+  "status": "timeout",
+  "timeout_seconds": 60.0,
+  "message": "Incomplete files are preserved for diagnosis; they are not final candidates.",
+  "worker_wall_seconds_including_import": 60.08908903878182,
+  "name": "motixafortide",
+  "manifest": "benchmark-results/publication-workflow-bounded/motixafortide/run_manifest.json"
+}

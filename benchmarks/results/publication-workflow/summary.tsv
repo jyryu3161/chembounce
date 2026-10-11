@@ -1,0 +1,17 @@
+status	candidates	seconds	sampled_peak_rss_mb	shape_failures	worker_wall_seconds_including_import	name	manifest	timeout_seconds	message
+success	20.0	19.083037745207548	582.83984375	0.0	20.349701105616987	carfilzomib	carfilzomib/run_manifest.json		
+success	10.0	3.7686014510691166	580.21875	0.0	5.01765036676079	trofinetide	trofinetide/run_manifest.json		
+no_candidates	0.0	7.706305539235473	586.08203125	0.0	9.002885790541768	tirzepatide	tirzepatide/run_manifest.json		
+timeout					60.101939521729946	pasireotide	pasireotide/run_manifest.json	60.0	Incomplete files are preserved for diagnosis; they are not final candidates.
+timeout					60.08908903878182	motixafortide	motixafortide/run_manifest.json	60.0	Incomplete files are preserved for diagnosis; they are not final candidates.
+success	20.0	5.408737484365702	581.9375	0.0	6.644645683467388	celecoxib	celecoxib/run_manifest.json		
+success	20.0	24.46142131555825	583.77734375	0.0	25.77316885162145	rimonabant	rimonabant/run_manifest.json		
+success	20.0	5.374915040098131	582.02734375	0.0	6.672052489593625	lapatinib	lapatinib/run_manifest.json		
+success	20.0	8.236321909353137	583.44921875	0.0	9.482872607186437	trametinib	trametinib/run_manifest.json		
+timeout					60.067668749019504	venetoclax	venetoclax/run_manifest.json	60.0	Incomplete files are preserved for diagnosis; they are not final candidates.
+success	20.0	4.928142099641264	581.16015625	0.0	6.172428293153644	losartan	losartan/run_manifest.json		
+success	20.0	5.5372180249542	581.0703125	0.0	7.196562809869647	gefitinib	gefitinib/run_manifest.json		
+success	20.0	19.739117745310068	582.421875	0.0	20.987977563403547	fostamatinib	fostamatinib/run_manifest.json		
+success	20.0	18.194965161383152	581.328125	0.0	19.45904215611517	darunavir	darunavir/run_manifest.json		
+timeout					60.101014180108905	ritonavir	ritonavir/run_manifest.json	60.0	Incomplete files are preserved for diagnosis; they are not final candidates.
+success	20.0	4.406849035993218	581.0078125	0.0	5.723870372399688	ADP	ADP/run_manifest.json		

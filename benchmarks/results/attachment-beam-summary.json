@@ -1,0 +1,132 @@
+{
+  "scope": "Fixed selected panel; counts are descriptive, not population success estimates. No search, property filters, 3D, activity or synthesis validation. Timeouts remain in denominators; completed-call timing excludes imports and cannot substitute for censored runtime analysis.",
+  "groups": [
+    {
+      "version": "1.0",
+      "beam_width": 50,
+      "kind": "identity_control",
+      "cases": 16,
+      "statuses": {
+        "error": 16
+      },
+      "cases_with_failed_checks": 0,
+      "returned_candidates": 0,
+      "candidates_meeting_tanimoto_0_5": 0,
+      "changed_murcko": 0,
+      "median_tanimoto": null,
+      "median_completed_call_seconds": 0.0021230299025774
+    },
+    {
+      "version": "1.0",
+      "beam_width": 50,
+      "kind": "replacement",
+      "cases": 48,
+      "statuses": {
+        "error": 48
+      },
+      "cases_with_failed_checks": 0,
+      "returned_candidates": 0,
+      "candidates_meeting_tanimoto_0_5": 0,
+      "changed_murcko": 0,
+      "median_tanimoto": null,
+      "median_completed_call_seconds": 0.0022731428034603596
+    },
+    {
+      "version": "2.0",
+      "beam_width": 10,
+      "kind": "identity_control",
+      "cases": 16,
+      "statuses": {
+        "success": 14,
+        "timeout": 2
+      },
+      "cases_with_failed_checks": 0,
+      "returned_candidates": 140,
+      "candidates_meeting_tanimoto_0_5": 140,
+      "changed_murcko": 0,
+      "median_tanimoto": 0.8313738892686262,
+      "median_completed_call_seconds": 0.5816681561991572
+    },
+    {
+      "version": "2.0",
+      "beam_width": 10,
+      "kind": "replacement",
+      "cases": 48,
+      "statuses": {
+        "success": 42,
+        "empty": 6
+      },
+      "cases_with_failed_checks": 0,
+      "returned_candidates": 417,
+      "candidates_meeting_tanimoto_0_5": 20,
+      "changed_murcko": 417,
+      "median_tanimoto": 0.14705882352941177,
+      "median_completed_call_seconds": 0.059150433633476496
+    },
+    {
+      "version": "2.0",
+      "beam_width": 50,
+      "kind": "identity_control",
+      "cases": 16,
+      "statuses": {
+        "success": 14,
+        "timeout": 2
+      },
+      "cases_with_failed_checks": 0,
+      "returned_candidates": 140,
+      "candidates_meeting_tanimoto_0_5": 140,
+      "changed_murcko": 0,
+      "median_tanimoto": 0.8427304531771215,
+      "median_completed_call_seconds": 1.5130229108035564
+    },
+    {
+      "version": "2.0",
+      "beam_width": 50,
+      "kind": "replacement",
+      "cases": 48,
+      "statuses": {
+        "success": 42,
+        "empty": 6
+      },
+      "cases_with_failed_checks": 0,
+      "returned_candidates": 420,
+      "candidates_meeting_tanimoto_0_5": 20,
+      "changed_murcko": 420,
+      "median_tanimoto": 0.15126050420168066,
+      "median_completed_call_seconds": 0.0832155654206872
+    },
+    {
+      "version": "2.0",
+      "beam_width": 100,
+      "kind": "identity_control",
+      "cases": 16,
+      "statuses": {
+        "success": 13,
+        "timeout": 3
+      },
+      "cases_with_failed_checks": 0,
+      "returned_candidates": 130,
+      "candidates_meeting_tanimoto_0_5": 130,
+      "changed_murcko": 0,
+      "median_tanimoto": 0.8383673469387756,
+      "median_completed_call_seconds": 2.6004969980567694
+    },
+    {
+      "version": "2.0",
+      "beam_width": 100,
+      "kind": "replacement",
+      "cases": 48,
+      "statuses": {
+        "success": 42,
+        "empty": 5,
+        "timeout": 1
+      },
+      "cases_with_failed_checks": 0,
+      "returned_candidates": 420,
+      "candidates_meeting_tanimoto_0_5": 20,
+      "changed_murcko": 420,
+      "median_tanimoto": 0.15126050420168066,
+      "median_completed_call_seconds": 0.0717415101826191
+    }
+  ]
+}

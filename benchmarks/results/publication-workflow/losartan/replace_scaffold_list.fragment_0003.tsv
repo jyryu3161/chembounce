@@ -1,0 +1,21 @@
+SMILES	Tanimoto Similarity
+c1cn(Cc2ccc(-c3nn[nH]n3)cc2)cn1	0.7674418604651163
+c1ccc(-c2nn[nH]n2)c(Cn2ccnc2)c1	0.6956521739130435
+c1ccc(-c2ccc(Cn3ccnc3)cc2)cc1	0.5681818181818182
+c1ccn(Cc2ccc(-c3nn[nH]n3)cc2)c1	0.5652173913043478
+c1ccc(-c2ccccc2-c2nn[nH]n2)cc1	0.5348837209302325
+c1cn(Cc2ccc(-c3c[nH]nn3)cc2)cn1	0.52
+c1cn(Cc2ccc(-c3nnn[nH]3)cc2)cn1	0.52
+c1cn(Cc2ccc(Cn3ccnc3)cc2)cn1	0.5121951219512195
+c1ccc(Cn2ccnc2)cc1	0.5116279069767442
+c1cc(-c2ccc(Cn3ccnc3)cc2)ccn1	0.5111111111111111
+c1cn(Cc2nn[nH]n2)cn1	0.5111111111111111
+c1ccc(-c2ccc(Cn3ccnc3)cc2)nc1	0.5102040816326531
+c1ccc(Cc2ccc(Cn3ccnc3)cc2)cc1	0.5
+c1cn(Cc2ccc(-c3cc[nH]n3)cc2)cn1	0.5
+c1cncc(-c2ccccc2-c2nn[nH]n2)c1	0.5
+c1cn(Cc2ccc(-c3cnn[nH]3)cc2)cn1	0.49019607843137253
+c1cncc(-c2ccc(Cn3ccnc3)cc2)c1	0.4897959183673469
+c1ccc(-c2ccccc2Cn2ccnc2)cc1	0.4791666666666667
+c1ccc(Nc2ccc(Cn3ccnc3)cc2)cc1	0.4791666666666667
+c1cn(Cc2ccc(-c3cncnc3)cc2)cn1	0.4791666666666667

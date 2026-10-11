@@ -1,0 +1,8 @@
+{
+  "status": "timeout",
+  "timeout_seconds": 60.0,
+  "message": "Incomplete files are preserved for diagnosis; they are not final candidates.",
+  "worker_wall_seconds_including_import": 60.101939521729946,
+  "name": "pasireotide",
+  "manifest": "benchmark-results/publication-workflow-bounded/pasireotide/run_manifest.json"
+}

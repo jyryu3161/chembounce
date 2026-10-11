@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "candidates": 20,
+  "seconds": 18.194965161383152,
+  "sampled_peak_rss_mb": 581.328125,
+  "shape_failures": 0,
+  "worker_wall_seconds_including_import": 19.459042156115174,
+  "name": "darunavir",
+  "manifest": "benchmark-results/publication-workflow-bounded/darunavir/run_manifest.json"
+}
