@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "catalog": "demo-catalog.tsv",
+  "rules": "demo-rules.json",
+  "provider": {"kind": "saved", "path": "demo-proposals.json"},
+  "mode": "hop",
+  "core_smiles": "CC(=O)N",
+  "preserve_design_scaffold": true,
+  "search": {"building_block_top_k": 4, "beam_width": 12},
+  "conformers": {"num_conformers": 8, "seed": 42},
+  "expansion": {"rounds": 1, "max_routes": 24},
+  "max_scored_products": 32,
+  "max_results": 10
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "provider": {"name": "handwritten workflow fixture; not a SynLlama prediction"},
+  "proposals": [
+    {
+      "design": "CC(=O)Nc1ccncc1",
+      "response": {
+        "reactions": [
+          {
+            "reaction_number": 1,
+            "reaction_template": "fixture-amidation",
+            "reactants": ["Nc1ccncc1", "CC(=O)O"],
+            "product": "CC(=O)Nc1ccncc1"
+          }
+        ],
+        "building_blocks": ["<bb>CC(=O)O</bb>", "<bb>Nc1ccncc1</bb>"]
+      }
+    }
+  ]
+}

@@ -1,5 +1,10 @@
 # Methods and reproducibility
 
+This document describes the base scaffold-hopping workflow. The optional
+[synthesis workflow](SYNTHESIS.md) independently verifies catalog reaction routes
+and adds multi-conformer joint shape/pharmacophore ranking. Its scores and
+verification status are separate from the base single-conformer descriptors.
+
 ## Scope and representation
 
 ChemBounce proposes scaffold replacements. The input is sanitized as a single

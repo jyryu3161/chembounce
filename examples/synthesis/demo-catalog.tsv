@@ -1,0 +1,6 @@
+id	smiles	source	snapshot
+fixture-acetic	CC(=O)O	workflow test fixture; not supplier inventory	fixture-v1
+fixture-propionic	CCC(=O)O	workflow test fixture; not supplier inventory	fixture-v1
+fixture-butyric	CCCC(=O)O	workflow test fixture; not supplier inventory	fixture-v1
+fixture-aminopyridine	Nc1ccncc1	workflow test fixture; not supplier inventory	fixture-v1
+fixture-aniline	Nc1ccccc1	workflow test fixture; not supplier inventory	fixture-v1

@@ -20,6 +20,15 @@ incorporated into both the stable and development lines. Python development vers
 [PEP 440 format](https://packaging.python.org/en/latest/specifications/version-specifiers/).
 See [changes](CHANGELOG.md) and [methods](docs/METHODS.md).
 
+The optional [synthesis workflow](docs/SYNTHESIS.md) connects SynLlama proposals
+to a dated building-block catalog and an explicit reaction registry. It independently
+replays routes, expands compatible building blocks, reapplies scaffold/core constraints,
+and ranks regenerated molecules by joint multi-conformer 3D shape/pharmacophore
+similarity to the original hit and the proposed design. Run the offline fixture with
+`python -m chembounce_synthesis.cli`; use `.[synthesis,synllama]` and external model/catalog
+assets for actual SynLlama inference. Verified reaction replay is computational evidence,
+not an experimental synthesis guarantee.
+
 ## Install
 
 Python 3.10 or newer:
@@ -109,6 +118,7 @@ Run `python chembounce.py --help` for the full interface. Key settings:
 | `--h_donor_min/max`, `--h_acceptor_min/max` | Explicit donor/acceptor bounds |
 | `--seed` | Deterministic conformer seed; default 42 |
 | `--no-shape` | Skip the optional 3D score; write NaN in its column |
+| `--synthesis-config FILE` | Project hopping designs onto catalog reaction space and rank with joint 3D/pharmacophore scoring; see [setup](docs/SYNTHESIS.md) |
 | `--overwrite` | Explicitly replace prior run artifacts in an output directory |
 
 Single connected molecules are required. Salts/mixtures, invalid SMILES, dummy

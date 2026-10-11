@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "rules": [
+    {
+      "id": "fixture-amidation",
+      "smarts": "[C:1](=[O:2])[O;H1:3].[N;H1,H2:4]>>[C:1](=[O:2])[N:4]",
+      "source": "Workflow test fixture; abstract amidation without experimental conditions"
+    }
+  ]
+}
