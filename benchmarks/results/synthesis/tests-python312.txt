@@ -1,0 +1,6 @@
+........................................................................ [ 54%]
+...........s...............................................              [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/synthesis/test_synllama_provider.py:7: Optional local model runtime
+SKIPPED [1] tests/test_descriptors.py:43: could not import 'oddt': No module named 'oddt'
+130 passed, 2 skipped in 15.97s

@@ -117,7 +117,7 @@ Run `python chembounce.py --help` for the full interface. Key settings:
 | `--qed_min/max`, `--sa_min/max`, `--logp_min/max`, `--mw_min/max` | Explicit property bounds |
 | `--h_donor_min/max`, `--h_acceptor_min/max` | Explicit donor/acceptor bounds |
 | `--seed` | Deterministic conformer seed; default 42 |
-| `--no-shape` | Skip the optional 3D score; write NaN in its column |
+| `--no-shape` | Skip the base 3D descriptor; the optional synthesis stage uses its own conformer ensemble |
 | `--synthesis-config FILE` | Project hopping designs onto catalog reaction space and rank with joint 3D/pharmacophore scoring; see [setup](docs/SYNTHESIS.md) |
 | `--overwrite` | Explicitly replace prior run artifacts in an output directory |
 

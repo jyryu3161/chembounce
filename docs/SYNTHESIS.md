@@ -282,3 +282,8 @@ accuracy and experimental synthesis success require separate held-out and
 laboratory evaluation. For publication, compare projection-only, 2D, shape-only
 and joint ranking on the same catalog/rule/model budgets, report failed as well
 as successful targets, and use scaffold/time separated evaluation sets.
+
+An actual local-model/full-catalog integration run and exported-coordinate audit
+are recorded in [the validation artifacts](../benchmarks/results/synthesis/README.md).
+The small case produced five scaffold-hopping products and four expansion products;
+these are integration results, not an estimate of general success rate.
