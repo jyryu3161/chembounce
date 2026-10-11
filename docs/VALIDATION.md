@@ -51,7 +51,7 @@ or performance measurements below to the patched 1.x version.
 
 ## Integration checks
 
-The `main` integration retains the 2.0 implementation and all six maintenance
+The integration at `bcb12a4`, preserved on `develop`, retains the 2.0 implementation and all six maintenance
 regressions, adapted to the packed database and explicit error propagation.
 Python 3.10.12 / RDKit 2025.09.6 passed 88 tests; RDKit 2023.09.6 passed 87 and
 skipped the optional ODDT comparison. The original measurements below remain
@@ -267,5 +267,5 @@ evidence. Before manuscript submission:
    archive an executable environment and deposit the exact experiment outputs.
 
 These are manuscript-level requirements, not claims that this patch has already
-completed comparative or experimental validation. Version 2.0 on `main` remains a
+completed comparative or experimental validation. Version 2.0 on `develop` remains a
 publicly identifiable development version until release criteria are satisfied.

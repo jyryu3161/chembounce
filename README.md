@@ -4,17 +4,19 @@ ChemBounce generates scaffold-replacement candidates for a single molecular
 SMILES input. Candidates are computational hypotheses; similarity and property
 scores do not establish biological activity or synthetic feasibility.
 
-Development takes place on **`main`**; the current Python package version is
-**`2.0.0.dev0`**. The **`release/1.x`** branch carries maintenance fixes.
+Development takes place on **`develop`**; the current Python package version is
+**`2.0.0.dev0`**. The **`main`** branch contains the stable 1.x version, with
+maintenance fixes carried on **`release/1.x`**.
 Release tags follow [Semantic Versioning](https://semver.org/):
 
 - **`v1.0.0`**: original legacy baseline and environment (`5780007`).
 - **`v1.0.1`**: scaffold-assembly fixes and updated legacy environment.
 
-Use `main` for the latest improvements and `v1.0.0` with the original library for
-legacy reproduction. There is no stable 2.0 release yet. Published `vX.Y.Z` tags
+Use `main` for stable use, `develop` to evaluate the latest improvements, and
+`v1.0.0` with the original library for legacy reproduction. There is no stable 2.0 release yet. Published `vX.Y.Z` tags
 are immutable; subsequent fixes get a new patch version. Short-lived `feat/...`
-and `fix/...` branches merge into `main`. Python development versions use the
+branches merge into `develop`; stable fixes use `fix/...` branches and are
+incorporated into both the stable and development lines. Python development versions use the
 [PEP 440 format](https://packaging.python.org/en/latest/specifications/version-specifiers/).
 See [changes](CHANGELOG.md) and [methods](docs/METHODS.md).
 
@@ -23,7 +25,7 @@ See [changes](CHANGELOG.md) and [methods](docs/METHODS.md).
 Python 3.10 or newer:
 
 ```bash
-git clone --branch main https://github.com/jyryu3161/chembounce.git
+git clone --branch develop https://github.com/jyryu3161/chembounce.git
 cd chembounce
 python -m venv .venv
 source .venv/bin/activate
@@ -36,7 +38,7 @@ this same environment. `requirements-lock.txt` records the tested clean Linux /
 Python 3.10 environment; install it with `pip install -r requirements-lock.txt`
 before `pip install -e . --no-deps` for the recorded dependency versions.
 
-[Google Colab notebook](https://colab.research.google.com/github/jyryu3161/chembounce/blob/main/chembounce_colab.ipynb)
+[Google Colab notebook](https://colab.research.google.com/github/jyryu3161/chembounce/blob/develop/chembounce_colab.ipynb)
 uses a small demo library by default and bundles diagnostics with the download.
 
 ## Quick start

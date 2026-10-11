@@ -2,7 +2,8 @@
 
 ## 2.0.0.dev0
 
-- Integrate the 2.0 development work and 1.x maintenance history into `main`.
+- Preserve the integrated 2.0 development work and 1.x maintenance history on
+  `develop`; keep `main` on the stable 1.x line.
   Retain the six backport regressions with current database and error-reporting
   behavior; use general examples in README and Colab.
 - Replace the aromatic-atom removal/recombination code with explicit boundary
@@ -60,5 +61,6 @@ Legacy implementation from `eaadfa7`, with only a README version notice added in
 Releases use immutable `vMAJOR.MINOR.PATCH` tags. The original `1.0-original` and
 `1.0` names remain as compatibility aliases for `v1.0.0` and `v1.0.1`, respectively;
 new documentation and reproduction scripts use the semantic tags. The numeric
-`2.0` branch is integrated into `main` and retired. Python package metadata uses
+`2.0` branch is retired; its integrated history is preserved on `develop`.
+`main` and `release/1.x` contain the stable 1.x code. Python package metadata uses
 `2.0.0.dev0` until a versioned prerelease or stable release is cut.
