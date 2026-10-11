@@ -1,5 +1,12 @@
 # ChemBounce
 
+> **Version notice:** The `1.0` tag preserves the legacy ChemBounce implementation
+> for reproducibility. Improvements and fixes are maintained on the
+> [2.0 development branch](https://github.com/jyryu3161/chembounce/tree/2.0).
+> Use that branch to evaluate the latest improvements; it remains a development
+> version until its validation and release are complete. Published 1.0 results
+> should be reproduced with the `1.0` tag and the original reference data.
+
 <!--<img src="./assets/graphical_abstract.png" width="450px"></img>-->
 
 
