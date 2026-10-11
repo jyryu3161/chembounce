@@ -346,5 +346,10 @@ as successful targets, and use scaffold/time separated evaluation sets.
 
 An actual local-model/full-catalog integration run and exported-coordinate audit
 are recorded in [the validation artifacts](../benchmarks/results/synthesis/README.md).
-The small case produced five scaffold-hopping products and four expansion products;
-these are integration results, not an estimate of general success rate.
+The small case produced five scaffold-hopping products and four expansion products.
+The later [expansion comparison](../benchmarks/results/synthesis-expansion/README.md)
+withholds the exact precursor, protects a specified core, and increases returned
+analogues from 4 to 35 by widening the neighbour and round budgets under the updated
+algorithm. It reports both Tanimotos and all 3D components, including the tradeoff
+between design and original-hit pharmacophore similarity.
+These are integration results, not an estimate of general success rate.

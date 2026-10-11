@@ -1,0 +1,48 @@
+[
+  {
+    "case": "small",
+    "rows": 4,
+    "identities_match": true,
+    "max_tanimoto_error": 0.0,
+    "max_exported_pharmacophore_error": 7.939549891478048e-06,
+    "max_pair_distance_error": 0.00017433338777017582,
+    "artifact_sha256": {
+      "references_hit.sdf": "128fad8bd27569e2b454b607edbee4840e0c276d7e2c88475c881587938cd8d4",
+      "scores.json": "535b38b349cdadf6a8511b484442753e87ec5547dee699aad25270c8307039f6",
+      "manifest.json": "c0070e8e5efd0cf976eed7e1f673c95850cafed98532736049fc598b53f4a07b",
+      "poses_design.sdf": "b016e281d985e60ae130c45c03a73ace2cf8eccce928ecccefd12f2a5217b592",
+      "references_design.sdf": "ec1c539afa72b4fed27ca401af85e17bb2572a966bf0fcf0419b8a8e9b85af2e",
+      "summary.json": "7c686eb379190224179c0b27cdd6c3fbf791d9b019665d132b57af3eadcb8a5e",
+      "results.tsv": "1d983d6d58943196441200b8cf0f23d82bf24091422b023ba933c027cc1258d4",
+      "routes.json": "75d6fb051a7a4757a4d7f4eeba1a743abaeac21932199a6efa9ebcab9a5be19b",
+      "proposals.json": "eaee1cda0eaff773de0ba56dc48262bbccf5f1c20f8b05fec8b66983d5cea8dd",
+      "poses_hit.sdf": "d6fc502406c27d328ed2f56b3681814ab911fa77cd5cb180947fd9a968ca5ecd"
+    },
+    "independent_selected_route_replay": true,
+    "selected_routes_replayed": 4,
+    "selected_blocks_joined_to_actual_catalog": 5
+  },
+  {
+    "case": "broader",
+    "rows": 35,
+    "identities_match": true,
+    "max_tanimoto_error": 0.0,
+    "max_exported_pharmacophore_error": 1.727766300452238e-05,
+    "max_pair_distance_error": 0.00021474074744709526,
+    "artifact_sha256": {
+      "references_hit.sdf": "3778f13466805bfecb47e32d331895db908494d1fd93064076c55fa97ebb4404",
+      "scores.json": "5b654204014fefb8d3c9f4efddf3557f8d82e8c660bfde9b1136ecce83310945",
+      "manifest.json": "83f418a32a18291eb23c52e06c23034493694a7adef986b4c2fe622428d4facd",
+      "poses_design.sdf": "2db92d94d8d1aa76b136c9a17f03f19d6797f72ac761e602d25d63747a9df540",
+      "references_design.sdf": "4616b1fe77a5c037e6bef6ca17fa04beb2367b07b0fe044f14aa300868e256df",
+      "summary.json": "94aa59e2f8ea35244e3923a8803b514876874b4d94ddd3db1c657a4b09b8ec61",
+      "results.tsv": "202b990997f307c2af74ed8550adaabc20dfdd8e570e655f7da9a923153b16fb",
+      "routes.json": "3a59a373cf2e5f3474f62d460180b1dca460b67134ed5c1b7700fea08a737b1f",
+      "proposals.json": "eaee1cda0eaff773de0ba56dc48262bbccf5f1c20f8b05fec8b66983d5cea8dd",
+      "poses_hit.sdf": "3cec2f59ef1fce605bb70acd4370e2a3a0ad5dd996580e9a239b12f07b6ed7cc"
+    },
+    "independent_selected_route_replay": true,
+    "selected_routes_replayed": 35,
+    "selected_blocks_joined_to_actual_catalog": 31
+  }
+]
