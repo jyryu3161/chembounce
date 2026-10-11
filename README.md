@@ -1,48 +1,25 @@
 # ChemBounce
 
-> **Version notice:** The `1.0` tag includes the ADP blank-output hotfix.
+> **Version notice:** The `1.0` tag includes the scaffold-assembly hotfix.
 > The pre-fix code and original environment are preserved as
 > [`1.0-original`](https://github.com/jyryu3161/chembounce/tree/1.0-original).
 > Broader improvements are maintained on the
 > [2.0 development branch](https://github.com/jyryu3161/chembounce/tree/2.0).
 > Use `1.0-original` and the original reference data to reproduce pre-fix behavior.
 
-## ADP blank-output hotfix
+## Maintenance fixes
 
-The reported ADP SMILES triggered aromatic scaffold-removal and attachment errors.
-This 1.x patch backports the verified attachment implementation from 2.0, preserving
-stereochemistry on retained ribose/phosphate fragments. It also removes the lossy
-MolBlock input conversion and reports rejected candidates and assembly failures
-in `run_summary.json` instead of leaving an unexplained header-only table.
-
-ADP has six hydrogen-bond donors and eleven acceptors. Candidates retaining these
-groups can fail the default Lipinski limits (five and ten). For a nucleotide-oriented
-exercise, explicitly turn off those filters; they are never relaxed automatically:
-
-```bash
-python chembounce.py \
-  -i 'C1=NC(=C2C(=N1)N(C=N2)[C@H]3[C@@H]([C@@H]([C@H](O3)COP(=O)(O)OP(=O)(O)O)O)O)N' \
-  -o output_adp \
-  --fingerprint-db data/scaffold_fingerprints_mw250.npz \
-  --wo_lipinski --scaffold_top_n 10 -n 10
-```
+This 1.x patch backports corrected scaffold attachment and preserves stereochemistry
+on retained fragments. Rejected candidates and assembly failures are reported in
+`run_summary.json` so an empty result has an explanation.
 
 Use **Python 3.10 and RDKit 2023.09–2025** for this hotfix. The old RDKit 2020
 build lacks the required assembly API; recreate the environment from the updated
-files below. Both environment files now describe the same compatible 1.x environment,
+files below. Both environment files describe the same compatible 1.x environment,
 including the legacy ODDT/MolVS dependencies. Other 2.0 changes to search, descriptors
-and global result limits are not part of this narrowly scoped backport.
+and global result limits are not part of this backport.
 
-Regression tests: `python -m pytest tests/test_adp_hotfix.py -q` (requires pytest).
-The six tests cover automatic ADP scaffolds, retained stereo, a generated fingerprint
-library workflow and real CLI, property rejection, and visible assembly errors.
-
-Local validation passed all six tests on Python 3.10.12 / RDKit 2025.09.6.
-An additional CLI run against the public MW≤250 library returned ten candidates
-with filters disabled (`--scaffold_top_n 2 -n 2 --cand_max_n__rplc 2`); one
-disconnected library entry was rejected and recorded in `run_summary.json`.
-The legacy `-n` behavior is unchanged; use 2.0 for corrected global result limits.
-
+Run the regression tests with `python -m pytest tests -q` (requires pytest).
 
 <!--<img src="./assets/graphical_abstract.png" width="450px"></img>-->
 
