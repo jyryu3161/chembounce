@@ -1,0 +1,3 @@
+# Recorded TSV/CSV outputs use CSV line endings and may end in empty fields.
+# Preserve their bytes; these are data delimiters, not source-code whitespace.
+benchmarks/results/** whitespace=-blank-at-eol,cr-at-eol
