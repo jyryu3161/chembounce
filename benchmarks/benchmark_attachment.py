@@ -124,6 +124,11 @@ def assess(case, result, max_n):
     outside = chemistry.cut_scaffold(target, Chem.MolFromSmiles(case["fragment"]))
     params = Chem.AdjustQueryParameters.NoAdjustments()
     params.makeDummiesQueries = True
+    # Without degree constraints a terminal methyl query can match an aromatic
+    # ipso carbon and the wildcard can match that methyl, falsely accepting an
+    # inverted stereocenter by swapping the two neighbours.
+    params.adjustDegree = True
+    params.adjustDegreeFlags = Chem.ADJUST_IGNOREDUMMIES
     queries = []
 
     def atoms(mol):
