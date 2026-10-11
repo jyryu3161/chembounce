@@ -2,6 +2,9 @@
 
 ## 2.0.0.dev0
 
+- Integrate the 2.0 development work and 1.x maintenance history into `main`.
+  Retain the six backport regressions with current database and error-reporting
+  behavior; use general examples in README and Colab.
 - Replace the aromatic-atom removal/recombination code with explicit boundary
   bonds and stereo-aware molzip assembly. Bound intermediate search with a
   deterministic beam instead of factorial remnant permutations.
@@ -32,9 +35,9 @@
 These changes deliberately alter results; 2.0 is not a drop-in reproduction of
 1.0 rankings, CATS values, 3D scores, or candidate enumeration.
 
-## 1.0
+## 1.0.1
 
-ADP hotfix on `release/1.x`, also applied to the `1.0` tag at the user's request:
+Maintenance fixes on `release/1.x`, tagged `v1.0.1`:
 
 - Backport boundary-bond scaffold assembly and preserve retained stereochemistry.
 - Preserve input stereo, remove the mandatory `RDBASE` variable, and explain
@@ -45,10 +48,17 @@ ADP hotfix on `release/1.x`, also applied to the `1.0` tag at the user's request
 
 This does not include the broader 2.0 search, descriptor and global-limit changes.
 The original benchmark artifacts retain their historical labels and source hashes;
-their baseline is now explicitly `1.0-original`.
+their baseline is now explicitly `v1.0.0`.
 
-## 1.0-original
+## 1.0.0
 
 Legacy implementation from `eaadfa7`, with only a README version notice added in
-`5780007`. Preserved unchanged under annotated tag `1.0-original` before updating
-`1.0` with the ADP hotfix.
+`5780007`. Preserved unchanged under annotated tag `v1.0.0`.
+
+## Version-label migration
+
+Releases use immutable `vMAJOR.MINOR.PATCH` tags. The original `1.0-original` and
+`1.0` names remain as compatibility aliases for `v1.0.0` and `v1.0.1`, respectively;
+new documentation and reproduction scripts use the semantic tags. The numeric
+`2.0` branch is integrated into `main` and retired. Python package metadata uses
+`2.0.0.dev0` until a versioned prerelease or stable release is cut.

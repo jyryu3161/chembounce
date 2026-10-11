@@ -12,7 +12,7 @@ import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
-LEGACY_REF = "1.0-original"
+LEGACY_REF = "v1.0.0"
 BOOTSTRAP = r"""
 import os, json, rdkit
 os.environ['RDBASE'] = os.path.dirname(rdkit.__file__)

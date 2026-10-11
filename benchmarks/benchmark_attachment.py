@@ -187,7 +187,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--panel", type=Path, default=Path(__file__).with_name("publication_molecules.json"))
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--legacy-tag", default="1.0-original")
+    parser.add_argument("--legacy-tag", default="v1.0.0")
     parser.add_argument(
         "--cases-file", type=Path, help="Exact input/fragment/replacement cases instead of a panel"
     )

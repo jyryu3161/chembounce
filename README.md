@@ -4,12 +4,18 @@ ChemBounce generates scaffold-replacement candidates for a single molecular
 SMILES input. Candidates are computational hypotheses; similarity and property
 scores do not establish biological activity or synthetic feasibility.
 
-The **`1.0` tag** includes a narrow ADP blank-output hotfix on `release/1.x`, with
-updated environment files. The pre-fix implementation and original environment
-are preserved at **`1.0-original`** (`5780007`; only a README notice differs from
-`eaadfa7`). Use that archive and the original library for legacy reproduction.
-Broader fixes and ongoing validation live on the **`2.0` branch**; use 2.0 to
-evaluate these improvements. There is no stable 2.0 release tag yet.
+Development takes place on **`main`**; the current Python package version is
+**`2.0.0.dev0`**. The **`release/1.x`** branch carries maintenance fixes.
+Release tags follow [Semantic Versioning](https://semver.org/):
+
+- **`v1.0.0`**: original legacy baseline and environment (`5780007`).
+- **`v1.0.1`**: scaffold-assembly fixes and updated legacy environment.
+
+Use `main` for the latest improvements and `v1.0.0` with the original library for
+legacy reproduction. There is no stable 2.0 release yet. Published `vX.Y.Z` tags
+are immutable; subsequent fixes get a new patch version. Short-lived `feat/...`
+and `fix/...` branches merge into `main`. Python development versions use the
+[PEP 440 format](https://packaging.python.org/en/latest/specifications/version-specifiers/).
 See [changes](CHANGELOG.md) and [methods](docs/METHODS.md).
 
 ## Install
@@ -17,7 +23,7 @@ See [changes](CHANGELOG.md) and [methods](docs/METHODS.md).
 Python 3.10 or newer:
 
 ```bash
-git clone --branch 2.0 https://github.com/jyryu3161/chembounce.git
+git clone --branch main https://github.com/jyryu3161/chembounce.git
 cd chembounce
 python -m venv .venv
 source .venv/bin/activate
@@ -30,23 +36,19 @@ this same environment. `requirements-lock.txt` records the tested clean Linux /
 Python 3.10 environment; install it with `pip install -r requirements-lock.txt`
 before `pip install -e . --no-deps` for the recorded dependency versions.
 
-[Google Colab notebook](https://colab.research.google.com/github/jyryu3161/chembounce/blob/2.0/chembounce_colab.ipynb)
+[Google Colab notebook](https://colab.research.google.com/github/jyryu3161/chembounce/blob/main/chembounce_colab.ipynb)
 uses a small demo library by default and bundles diagnostics with the download.
 
-## ADP example
+## Quick start
 
-The reported ADP blank-output defect involved broken aromatic scaffold removal
-and unidentified attachment atoms. 2.0 replaces boundary bonds explicitly and
-preserves stereochemistry on retained fragments. Separately, ADP has **6 H-bond
-donors and 11 acceptors**, exceeding the default candidate limits of 5 and 10.
-For a nucleotide-oriented exploration, disable those filters explicitly:
+Run a small example using the included scaffold library:
 
 ```bash
 python chembounce.py \
-  -i 'C1=NC(=C2C(=N1)N(C=N2)[C@H]3[C@@H]([C@@H]([C@H](O3)COP(=O)(O)OP(=O)(O)O)O)O)N' \
-  -o output_adp \
+  -i 'CC(=O)NCCc1ccccc1' \
+  -o output_example \
   --scaffold-db tests/fixtures/scaffolds.smi \
-  --wo_lipinski --overall_max_n 20
+  --overall_max_n 20
 ```
 
 The included library verifies operation without downloading external data; it is
@@ -141,7 +143,7 @@ Python API:
 from chembounce import chembounce
 
 results, costs = chembounce(
-    "CCc1ccncc1",
+    "CC(=O)NCCc1ccccc1",
     output_dir="output_api",
     scaffold_db_file="tests/fixtures/scaffolds.smi",
     candidate_thresholds={},  # explicitly disable property filters
@@ -160,25 +162,26 @@ ruff check .
 python benchmarks/benchmark_search.py --rows 100000 --repeats 5
 ```
 
-Regression tests cover ADP attachments, retained stereochemistry, identity
+Regression tests cover scaffold attachments, retained stereochemistry, identity
 reconstruction, core preservation, limits, diagnostics, deterministic 3D scores,
 CATS descriptors, and packed-search equivalence to RDKit. Clean environments on
 Python 3.10, 3.11 and 3.12 each passed 81 tests; a separate environment also passed
 the optional ODDT comparison (82 total). The minimum
-RDKit 2023.09 dependency combination passed as well. CI mirrors these checks.
+RDKit 2023.09 dependency combination passed as well. After integration, 88 tests
+passed with the optional comparison installed; the minimum environment passed 87
+and skipped that optional check. CI mirrors these checks.
 
 The recorded [100,000-row kernel benchmark](benchmarks/search_100k.json) found
 identical top-100 scores, **2.24×** lower median search time, **8×** smaller fingerprint
 arrays, and sampled process RSS of about **162 vs 528 MiB** on the recorded machine.
 This is a synthetic search-kernel measurement, not an end-to-end speedup or a claim
 of improved molecular quality. End-to-end runs on both cleaned public libraries
-(522,959 and 3,267,123 unique scaffolds) succeeded on six ring-containing inputs,
-including ADP; [results and provenance are included](benchmarks/results/README.md). See [validation](docs/VALIDATION.md) for evidence and
+(522,959 and 3,267,123 unique scaffolds) succeeded on six ring-containing inputs; [results and provenance are included](benchmarks/results/README.md). See [validation](docs/VALIDATION.md) for evidence and
 remaining publication work.
 
 An additional [versioned panel](benchmarks/publication_molecules.json) contains the
-15 drugs named in the original publication plus ADP. Controlled attachment tests
-compare the original 1.0 snapshot (`1.0-original`) with 2.0 and vary beam width.
+15 drugs named in the original publication plus a reported regression case. Controlled attachment tests
+compare the original 1.0 snapshot (`v1.0.0`) with 2.0 and vary beam width.
 A separate 60-second-per-input workflow
 evaluation on the smaller library returned candidates for 11 inputs, no candidates
 for tirzepatide, and timed out on four complex inputs. All outcomes, including

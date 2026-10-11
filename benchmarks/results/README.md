@@ -5,8 +5,8 @@ statistically representative chemical benchmark. See [validation](../../docs/VAL
 for commands, conditions, and remaining manuscript work.
 
 The historical `1.0` labels refer to the pre-hotfix source at `5780007`, preserved
-as `1.0-original`. The current `1.0` tag includes an ADP fix. Recorded artifacts
-remain unchanged; reproduction scripts use `1.0-original` for this baseline.
+as `v1.0.0`. The `v1.0.1` tag includes a scaffold-assembly fix. Recorded artifacts
+remain unchanged; reproduction scripts use `v1.0.0` for this baseline.
 
 - `full/`: final full-library panel executed at clean commit `619de8a`. Each input
   has its manifest, diagnostics, tables and resource metrics. `summary.tsv` reports
@@ -14,10 +14,6 @@ remain unchanged; reproduction scripts use `1.0-original` for this baseline.
 - `mw250/`: corresponding smaller-library panel at clean commit `b5040e9`, before
   the empty-vector compatibility patch; the generated molecular fingerprints are
   nonempty. Its source hashes identify the exact implementation.
-- `adp_shape/`: ADP with ten accepted candidates, seeded 3D scoring and filters off.
-- `adp_default_filters/`: ADP with 43 property-rejected candidates and explicit
-  `no_candidates` status. This demonstrates the filter issue independently of the
-  repaired attachment code.
 - `text_lowmem/`: successful streaming search of the public MW≤250 text library.
 - `test-matrix.json` and original test logs: five tested dependency combinations
   through `619de8a`. `test-matrix-capacity.json` and `tests-capacity-*.txt` record
