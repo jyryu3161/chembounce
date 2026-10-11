@@ -215,7 +215,12 @@ For every retained candidate conformer, align separately to hit and design
 reference conformers with [RDKit `rdShapeAlign`](https://www.rdkit.org/docs/source/rdkit.Chem.rdShapeAlign.html)
 and `opt_param=0.5` (joint shape
 and color optimization). On each aligned pose, compute typed pharmacophore
-features from RDKit `BaseFeatures.fdef`: donor, acceptor, aromatic, positive/
+features on a heavy-atom view; explicit ordinary or isotopic hydrogens are excluded
+from shape/color and pharmacophore perception. The rigid transform is transferred
+to the full candidate for SDF export, preserving isotope-labelled chemical identity.
+This avoids extra features caused solely by explicit D/T atom representation;
+isotope-specific kinetic or quantum effects are not modelled. The features use
+RDKit `BaseFeatures.fdef`: donor, acceptor, aromatic, positive/
 negative ionizable and hydrophobic groups. One-to-one feature assignment uses
 Gaussian position weights with configurable sigma (default 1 Å). Aromatic plane
 normal agreement multiplies that weight; its sign is ignored. Grouped hydrophobes

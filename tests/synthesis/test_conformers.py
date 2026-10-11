@@ -101,3 +101,39 @@ def test_both_references_must_use_one_candidate_conformation(monkeypatch):
     monkeypatch.setattr(module, "_overlay", overlay)
     result, _, _ = module.score_candidate("CCC", "CCO", "CCN", SETTINGS)
     assert result["score"] == pytest.approx(0.5)
+
+
+@pytest.mark.parametrize("isotope", [0, 2])
+def test_explicit_hydrogens_do_not_create_features_and_isotopes_survive_export(monkeypatch, isotope):
+    import chembounce_synthesis.conformers as module
+    from chembounce_synthesis.common import canonical
+
+    smiles = "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1"
+    reference = ensemble(smiles, ConformerSettings(num_conformers=2))
+    full = Chem.AddHs(reference.mol, addCoords=True)
+    for neighbor in full.GetAtomWithIdx(0).GetNeighbors():
+        if neighbor.GetAtomicNum() == 1:
+            neighbor.SetIsotope(isotope)
+    identity = canonical(Chem.MolToSmiles(full))
+    cid = next(iter(reference.relative_energies))
+    overlap, counts = pharmacophore_overlap(reference.mol, full, cid, cid)
+    assert counts["candidate_features"] == counts["reference_features"]
+    assert overlap == pytest.approx(1.0)
+    candidate = module.Ensemble(
+        full, reference.energies, reference.relative_energies, reference.force_field, {}
+    )
+    info, aligned = module._overlay(reference, candidate, cid, SETTINGS)
+    assert info["shape"] > 0.999 and info["pharmacophore"] > 0.999
+    assert canonical(Chem.MolToSmiles(aligned)) == identity
+    assert aligned.GetNumAtoms() == full.GetNumAtoms()
+    before = full.GetConformer(cid).GetPositions()
+    after = aligned.GetConformer(cid).GetPositions()
+    assert (
+        np.max(
+            np.abs(
+                np.linalg.norm(before[:, None] - before[None, :], axis=-1)
+                - np.linalg.norm(after[:, None] - after[None, :], axis=-1)
+            )
+        )
+        < 1e-4
+    )

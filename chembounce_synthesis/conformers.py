@@ -7,7 +7,7 @@ from pathlib import Path
 
 import numpy as np
 from rdkit import Chem, RDConfig
-from rdkit.Chem import AllChem, ChemicalFeatures
+from rdkit.Chem import AllChem, ChemicalFeatures, rdMolAlign, rdMolTransforms
 
 try:
     from rdkit.Chem import rdShapeAlign
@@ -142,7 +142,20 @@ def reference_from_sdf(filename, expected_smiles, settings=ConformerSettings()):
     return Ensemble(mol, {cid: None}, {cid: 0.0}, "supplied_pose_not_minimized", {}, True)
 
 
+def _heavy_view(mol):
+    # Ordinary Hs are already removed from optimized ensembles, but RDKit keeps
+    # isotopic Hs by default. Explicit D/T must not create extra pharmacophore
+    # features or alter shape/color perception solely through graph degree.
+    if not any(a.GetAtomicNum() == 1 for a in mol.GetAtoms()):
+        return mol
+    heavy = Chem.RemoveAllHs(mol)
+    if not heavy.GetNumAtoms():
+        raise ValueError("3D comparison requires at least one heavy atom")
+    return heavy
+
+
 def _features(mol, cid):
+    mol = _heavy_view(mol)
     positions = mol.GetConformer(cid).GetPositions()
     result = []
     raw = [f for f in FEATURES.GetFeaturesForMol(mol, confId=cid) if f.GetFamily() in FAMILIES]
@@ -194,11 +207,13 @@ def pharmacophore_overlap(reference, probe, ref_cid, probe_cid, sigma=1.0):
 
 def _overlay(reference, candidate, cid, settings):
     best = None
+    reference_view = _heavy_view(reference.mol)
     for rid in reference.relative_energies:
         probe = Chem.Mol(candidate.mol)
+        probe_view = _heavy_view(probe)
         shape, color = rdShapeAlign.AlignMol(
-            reference.mol,
-            probe,
+            reference_view,
+            probe_view,
             refConfId=rid,
             probeConfId=cid,
             useColors=True,
@@ -206,7 +221,24 @@ def _overlay(reference, candidate, cid, settings):
             max_preiters=20,
             max_postiters=50,
         )
-        pharm, counts = pharmacophore_overlap(reference.mol, probe, rid, cid, settings.pharmacophore_sigma)
+        pharm, counts = pharmacophore_overlap(
+            reference_view, probe_view, rid, cid, settings.pharmacophore_sigma
+        )
+        if probe_view is not probe:
+            # Transfer the rigid alignment to every original atom, including D/T,
+            # so exported coordinates retain the actual candidate's identity.
+            indices = [a.GetIdx() for a in probe.GetAtoms() if a.GetAtomicNum() != 1]
+            rmsd, transform = rdMolAlign.GetAlignmentTransform(
+                probe,
+                probe_view,
+                prbCid=cid,
+                refCid=cid,
+                atomMap=[(old, new) for new, old in enumerate(indices)],
+                reflect=False,
+            )
+            if rmsd > 1e-3:
+                raise ValueError("Could not transfer the heavy-atom alignment to the full molecule")
+            rdMolTransforms.TransformConformer(probe.GetConformer(cid), transform)
         if not all(math.isfinite(x) for x in (shape, color, pharm)):
             continue
         joint = math.sqrt(max(0.0, shape * pharm))
