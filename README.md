@@ -32,6 +32,13 @@ no minimum synthesis-stage similarity is imposed unless configured. Run the offl
 assets for actual SynLlama inference. Verified reaction replay is computational evidence,
 not an experimental synthesis guarantee.
 
+The model configuration starts with 16 alternative blocks and one substitution
+round, then reevaluates the top 10 products with 24 conformers at three seeds.
+Use `chembounce-synthesis --continue-from PREVIOUS_RUN --output NEW_RUN` to
+reuse saved model proposals and retain previous routes while expanding the search.
+See [refinement and continuation](docs/SYNTHESIS.md#refinement-and-continuation)
+for adjustable budgets and output interpretation.
+
 ## Install
 
 Python 3.10 or newer:
@@ -126,6 +133,10 @@ Run `python chembounce.py --help` for the full interface. Key settings:
 | `--expansion-top-k N` | Number of alternative building blocks per mutable reaction leaf |
 | `--expansion-rounds N` | Building-block substitution rounds; 0 disables expansion |
 | `--expansion-max-routes N` | Maximum retained expansion routes per starting route, shared across rounds |
+| `--refine-top-n N` | Reevaluate the top N screened synthesis products; 0 disables refinement |
+| `--refine-conformers N` / `--refine-seeds S ...` | Conformer count per seed and seeds for reevaluation |
+| `--synthesis-max-scored N` / `--synthesis-max-results N` | Synthesis screening and final output budgets |
+| `--include-run DIR` | Reverify and retain previous synthesis routes; repeat to combine runs |
 | `--overwrite` | Explicitly replace prior run artifacts in an output directory |
 
 Single connected molecules are required. Salts/mixtures, invalid SMILES, dummy

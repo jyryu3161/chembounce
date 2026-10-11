@@ -259,3 +259,166 @@ def test_standalone_cli_expansion_overrides(tmp_path, assets, proposal):
     assert effective["building_block_top_k"] == 6
     assert effective["rounds"] == 2
     assert effective["max_routes"] == 20
+
+
+def test_refined_outputs_are_actual_median_seed_poses(tmp_path, assets, proposal):
+    from chembounce_synthesis.conformers import pharmacophore_overlap
+
+    config = config_for(tmp_path, assets, proposal)
+    config["refinement"] = {"top_n": 2, "num_conformers": 4, "seeds": [43, 44, 45]}
+    out = tmp_path / "refined"
+    rows = run(HIT, [DESIGN], config, out)
+    assert len(rows) == 2
+    reports = json.loads((out / "refinement.json").read_text())["candidates"]
+    by_id = {r["route_id"]: r for r in reports}
+    for role in ("hit", "design"):
+        poses = list(Chem.SDMolSupplier(str(out / f"poses_{role}.sdf")))
+        references = list(Chem.SDMolSupplier(str(out / f"references_{role}.sdf")))
+        for row, pose, reference in zip(rows, poses, references):
+            assert row["scoring_stage"] == "refined"
+            assert row["seed_count"] == row["seed_successes"] == 3
+            assert row["pose_seed"] in (43, 44, 45)
+            trials = by_id[row["route_id"]]["trials"]
+            assert row["score"] == row["seed_score_median"] == sorted(r["score"] for r in trials)[1]
+            assert pose.GetIntProp("pose_seed") == row["pose_seed"]
+            overlap, _ = pharmacophore_overlap(reference, pose, 0, 0)
+            assert overlap == pytest.approx(row[f"{role}_pharmacophore"], abs=1e-4)
+    assert len((out / "screening.tsv").read_text().splitlines()) > len(rows) + 1
+
+
+def test_refinement_defers_3d_thresholds_until_reevaluation(tmp_path, assets, proposal, monkeypatch):
+    import chembounce_synthesis.workflow as workflow
+
+    real_score = workflow.score_candidate
+
+    def poor_screen(*args, **kwargs):
+        info, *poses = real_score(*args, **kwargs)
+        info["hit"]["shape"] = 0.0
+        return info, *poses
+
+    monkeypatch.setattr(workflow, "score_candidate", poor_screen)
+    config = config_for(tmp_path, assets, proposal)
+    config["minimum_scores"] = {"hit_shape": 0.1}
+    config["refinement"] = {"top_n": 1, "num_conformers": 3, "seeds": [42, 43, 44]}
+    rows = run(HIT, [DESIGN], config, tmp_path / "rescue")
+    assert rows and rows[0]["hit_shape"] > 0.1
+
+
+def test_continuation_retains_candidates_without_model_and_rechecks_core(
+    tmp_path, assets, proposal, monkeypatch
+):
+    from chembounce_synthesis.common import digest
+    from chembounce_synthesis.continuation import continuation_inputs
+
+    config = config_for(tmp_path, assets, proposal)
+    first = tmp_path / "first"
+    old_rows = run(HIT, [DESIGN], config, first)
+    before = {p.name: digest(p) for p in first.iterdir()}
+    # Continuing must use saved responses even when the recorded run used a model.
+    manifest_path = first / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["config"]["provider"] = {"kind": "synllama", "model_path": "not-installed"}
+    manifest_path.write_text(json.dumps(manifest))
+    before["manifest.json"] = digest(manifest_path)
+    monkeypatch.setattr(
+        "chembounce_synthesis.workflow.SynLlama", lambda **kwargs: pytest.fail("model loaded")
+    )
+    second = tmp_path / "second"
+    assert main(["--continue-from", str(first), "--output", str(second), "--expansion-rounds", "0"]) == 0
+    import csv
+
+    with (second / "screening.tsv").open() as stream:
+        retained = {r["smiles"] for r in csv.DictReader(stream, delimiter="\t")}
+    assert {r["smiles"] for r in old_rows} <= retained
+    assert {p.name: digest(p) for p in first.iterdir()} == before
+    assert json.loads((second / "manifest.json").read_text())["provider"]["provider"] == "saved_proposals"
+    hit, designs, resumed = continuation_inputs(second)
+    resumed["core_smiles"] = "c1ccccc1"  # Present in hit; only some expanded products retain a phenyl ring.
+    third = tmp_path / "third"
+    rows = run(hit, designs, resumed, third)
+    assert len(rows) < len(retained)
+    assert all(molecule(row["smiles"]).HasSubstructMatch(molecule(resumed["core_smiles"])) for row in rows)
+    records = json.loads((third / "routes.json").read_text())["routes"]
+    assert any(r.get("carried_from") and r["selection_status"] == "constraint_rejected" for r in records)
+
+
+def test_carried_routes_are_not_trusted_and_hit_must_match(tmp_path, assets, proposal):
+    from chembounce_synthesis.continuation import continuation_inputs
+
+    first = tmp_path / "first"
+    run(HIT, [DESIGN], config_for(tmp_path, assets, proposal), first)
+    path = first / "routes.json"
+    data = json.loads(path.read_text())
+    # A saved verification claim cannot authorize an unregistered reaction.
+    for record in data["routes"]:
+        for node in record["route"]["nodes"]:
+            if "rule_id" in node:
+                node["rule_id"] = "invented"
+    path.write_text(json.dumps(data))
+    hit, designs, config = continuation_inputs(first)
+    second = tmp_path / "second"
+    assert run(hit, designs, config, second)
+    records = json.loads((second / "routes.json").read_text())["routes"]
+    assert all(r["selection_status"] == "verification_rejected" for r in records if r.get("carried_from"))
+    with pytest.raises(ValueError, match="different original hit"):
+        run("CCC(=O)Nc1ccccc1", designs, config, tmp_path / "wrong-hit")
+
+
+def test_continuation_can_score_previously_unscored_routes_and_override_refinement(
+    tmp_path, assets, proposal
+):
+    config = config_for(tmp_path, assets, proposal)
+    config["max_scored_products"] = 1
+    first = tmp_path / "limited"
+    assert len(run(HIT, [DESIGN], config, first)) == 1
+    second = tmp_path / "larger"
+    assert (
+        main(
+            [
+                "--continue-from",
+                str(first),
+                "--output",
+                str(second),
+                "--expansion-rounds",
+                "0",
+                "--synthesis-max-scored",
+                "10",
+                "--refine-top-n",
+                "4",
+                "--refine-conformers",
+                "3",
+                "--refine-seeds",
+                "43",
+                "44",
+            ]
+        )
+        == 0
+    )
+    manifest = json.loads((second / "manifest.json").read_text())
+    assert manifest["effective_workflow"]["refinement"] == {
+        "top_n": 4,
+        "num_conformers": 3,
+        "seeds": [43, 44],
+    }
+    summary = json.loads((second / "summary.json").read_text())
+    assert summary["returned_products"] == 4
+    assert summary["carried_screened_products"] > 1
+
+
+def test_refinement_failure_keeps_screening_pool_without_falling_back(
+    tmp_path, assets, proposal, monkeypatch
+):
+    monkeypatch.setattr(
+        "chembounce_synthesis.workflow.refine_candidate",
+        lambda *a: (None, {"status": "failed", "trials": []}),
+    )
+    config = config_for(tmp_path, assets, proposal)
+    config["refinement"] = {"top_n": 1}
+    out = tmp_path / "refinement-failed"
+    assert run(HIT, [DESIGN], config, out) == []
+    summary = json.loads((out / "summary.json").read_text())
+    assert summary["screened_products"] > 0
+    assert summary["status"] == "no_candidates"
+    assert summary["route_rejections"]["refinement_failed"] == 1
+    assert len((out / "results.tsv").read_text().splitlines()) == 1
+    assert len((out / "screening.tsv").read_text().splitlines()) > 1

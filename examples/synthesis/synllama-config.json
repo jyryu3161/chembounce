@@ -27,7 +27,8 @@
     "pharmacophore_sigma": 1.0,
     "reject_unspecified_stereo": true
   },
-  "expansion": {"building_block_top_k": 16, "rounds": 2, "max_routes": 128, "min_tanimoto": 0.0},
+  "expansion": {"building_block_top_k": 16, "rounds": 1, "max_routes": 128, "min_tanimoto": 0.0},
+  "refinement": {"top_n": 10, "num_conformers": 24, "seeds": [42, 43, 44]},
   "minimum_scores": {},
   "max_designs": 20,
   "max_scored_products": 256,

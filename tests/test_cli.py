@@ -79,3 +79,11 @@ def test_explicit_synllama_requires_config_before_hopping(tmp_path):
     assert result.returncode == 2
     assert "requires --synthesis-config" in result.stderr
     assert not (tmp_path / "overall_result.txt").exists()
+
+
+@pytest.mark.parametrize("args", [("--refine-top-n", "10"), ("--include-run", "prior-run")])
+def test_synthesis_overrides_require_config_before_hopping(tmp_path, args):
+    result = invoke(tmp_path, "-i", "CCO", *args)
+    assert result.returncode == 2
+    assert "require --synthesis-config" in result.stderr
+    assert not (tmp_path / "overall_result.txt").exists()

@@ -141,7 +141,7 @@ chembounce -i 'CC(=O)Nc1ccccc1' -o output_hopping --no-synllama
 # Enable the actual local model, then expand compatible building blocks.
 chembounce -i 'CC(=O)Nc1ccccc1' -o output_with_synthesis \
   --synllama --synthesis-config examples/synthesis/synllama-config.json \
-  --expansion-top-k 16 --expansion-rounds 2 --expansion-max-routes 128
+  --expansion-top-k 16 --expansion-rounds 1 --expansion-max-routes 128
 ```
 
 `--synllama` requires a config with `provider.kind: "synllama"`; conflicting or
@@ -179,11 +179,12 @@ For example, an exploratory configuration is:
 ```json
 "expansion": {
   "building_block_top_k": 16,
-  "rounds": 2,
+  "rounds": 1,
   "max_routes": 128,
   "min_tanimoto": 0.0,
   "locked_building_block_ids": []
 },
+"refinement": {"top_n": 10, "num_conformers": 24, "seeds": [42, 43, 44]},
 "minimum_scores": {}
 ```
 
@@ -201,11 +202,90 @@ increase candidates but cannot guarantee better 3D matches. Explicit
 beam/combination/product caps prevent combinatorial growth; reports identify
 truncation per round. Repeated neighbour searches and identical starting-route
 expansions are cached. `max_routes` and combination bounds apply per starting route;
-`max_scored_products` bounds expensive 3D comparisons across the workflow.
+`max_scored_products` bounds initial product/design comparisons. Refinement has
+its own budget: at most `top_n` products times the number of seeds.
 
 The Python interfaces are `workflow.run(hit, designs, config, output_dir)`,
 `routes.resolve_proposal(...)`, `routes.verify_route(...)`, and
 `routes.expand_route(...)`. The original ChemBounce Python API remains compatible.
+
+## Refinement and continuation
+
+The supplied **model configuration** starts with 16 alternative blocks per leaf,
+one substitution round and 12 conformers at seed 42 for screening. The top 10
+unique products are then reevaluated with 24 conformers at seeds 42, 43 and 44.
+This is an adjustable starting protocol, not a universal optimum. Historical
+configurations without a `refinement` object retain their previous single-seed
+behavior (`top_n=0`); configurations without `expansion` still disable expansion.
+
+Screening uses the existing Pareto ranking. Refinement reevaluates each shortlisted
+product against its selected design and the original hit. Every requested seed
+must produce a valid score; numerical failures are recorded and that candidate
+is excluded from refined results. Each seed independently builds candidate and
+reference ensembles; a supplied reference SDF remains fixed. Scoring and core
+rules are unchanged. Raising conformer counts does not produce nested ensembles.
+
+The **median-score seed** supplies one representative candidate conformer and both
+reference comparisons. With an even seed count, the lower middle trial supplies
+the pose. The six similarity components and `score` always belong to that actual
+trial; they are never assembled from different seeds. `seed_score_median`,
+`seed_score_min` and `seed_score_max` expose sampling sensitivity. Refined products
+are ranked by Pareto fronts of their representative components, then median seed
+score, route length and SMILES. The median is a heuristic summary, not a confidence
+interval or activity probability. At the default odd seed count, `score` equals
+`seed_score_median`; they can differ for even counts.
+
+`results.tsv` and the four SDF files contain **only successfully refined shortlisted
+products** when refinement is enabled. All scored products remain in
+`screening.tsv`; all route evidence, including candidates beyond scoring/output
+budgets, remains in `routes.json`. This avoids mixing screening and refinement
+scores in one final ranking. `refinement.json` contains every seed's components,
+settings, diagnostics and failures. The reference SDFs use the representative
+seed's exact conformers. Optional 3D cutoffs apply after refinement, so a poor
+initial pose alone cannot trigger premature rejection. 2D, core and property
+constraints still apply before scoring. No similarity cutoff is enabled by default.
+Shortlisting can miss candidates; increase `--refine-top-n` to reevaluate more.
+
+Continue an existing synthesis run without loading SynLlama again:
+
+```bash
+chembounce-synthesis --continue-from output_with_synthesis/synthesis \
+  --output output_expanded \
+  --expansion-top-k 32 --expansion-rounds 2 --expansion-max-routes 256 \
+  --synthesis-max-scored 512 --synthesis-max-results 100 \
+  --refine-top-n 30 --refine-conformers 24 --refine-seeds 42 43 44
+```
+
+`--continue-from` is a standalone synthesis CLI option. It inherits the original
+hit, designs, absolute asset paths and settings from `manifest.json`, reuses
+`proposals.json` through the saved provider, and carries all previous routes
+forward. `--expansion-rounds 2` means two total rounds from projected proposals,
+not two additional rounds on every carried route. Save a new output directory;
+the earlier run is never overwritten. `--config FILE` can explicitly replace
+inherited settings, including the provider; a model provider in that replacement
+config will perform new inference. For multiple earlier runs, add
+`--include-run DIR` repeatedly (available on both CLIs), or set the config's
+`carry_forward` list. Config-relative paths resolve beside the config file.
+
+Increasing neighbour counts or search limits alone does **not** guarantee a
+superset, because diverse-tail selection and pruning can change earlier choices.
+Carrying routes forward retains that evidence independently of the new search.
+Every carried route is replayed against the current catalog and registered rules,
+then rechecked for core, scaffold and property constraints. Old scores and
+verification claims are never trusted. Ineligible routes are retained with
+explicit rejection reasons; eligible products are rescored with current settings.
+Within each design, carried routes receive scoring priority. Finite scoring and
+shortlist budgets can still exclude products from final results; increase those
+budgets to compare more of the accumulated pool. A changed hit is rejected;
+routes for designs omitted from the current run are counted as excluded in the
+manifest. `summary.json` distinguishes carried and new eligible products, initial
+screening counts, refinement counts and active limits.
+
+The same refinement and budget flags work in the integrated `chembounce` command.
+Use `--refine-top-n 0` for a screening-only run, or increase conformer counts and
+seeds for a more expensive sampling check. Users can also provide their own
+catalog snapshots and registered reaction SMARTS through the asset formats above;
+route verification and core constraints apply to those extensions too.
 
 ## Verification and search semantics
 
@@ -314,7 +394,9 @@ arbitrary weighted scalar sum.
 ## Artifacts and evaluation
 
 - `results.tsv`: unique selected products, 3D components, 2D diagnostic similarity,
-  relative energy, route IDs and alternative route IDs.
+  relative energy, route IDs, scoring stage, representative seed and seed-score range.
+- `screening.tsv`: all accepted initial scores before refinement and `max_results` truncation.
+- `refinement.json`: every reevaluated candidate and all requested seed trials.
 - `routes.json`: actual blocks, catalog hash, rule IDs/SMARTS/source, all actual
   reactants/intermediates/products, projection or expansion provenance, final
   constraint/scoring acceptance or rejection reasons.
@@ -353,3 +435,11 @@ analogues from 4 to 35 by widening the neighbour and round budgets under the upd
 algorithm. It reports both Tanimotos and all 3D components, including the tradeoff
 between design and original-hit pharmacophore similarity.
 These are integration results, not an estimate of general success rate.
+
+The [multi-seed refinement and continuation validation](../benchmarks/results/synthesis-refinement/README.md)
+uses the same withheld-precursor case with 12-conformer screening and 24-conformer
+reevaluation at three seeds. It retains all four earlier candidates, screens 14
+products in the first stage and 36 after continuation, and refines the top 10 in
+each stage. All 14 first-stage products remain in the continued pool. Seed ranges
+and independently checked exported coordinates accompany the results; increasing
+conformer sampling changes earlier low-budget 3D conclusions.
