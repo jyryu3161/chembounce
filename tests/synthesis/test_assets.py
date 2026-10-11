@@ -89,3 +89,17 @@ def test_extension_opcode_is_rejected_before_unpickling(tmp_path):
     path.write_bytes(b"\x80\x02\x82\x01.")
     with pytest.raises(ValueError, match="opcode: EXT1"):
         list(read_index_smiles(path))
+
+
+def test_search_caches_release_discarded_catalogs_and_rule_sets(assets):
+    import gc
+    import weakref
+
+    catalog = Catalog(assets[0].path)
+    rules = Rules(assets[1].path)
+    catalog.compatible(rules.get("amide").roles[0])
+    rules.apply("amide", ("CC(=O)O", "CCN"))
+    refs = [weakref.ref(catalog), weakref.ref(rules)]
+    del catalog, rules
+    gc.collect()
+    assert [ref() is None for ref in refs] == [True, True]

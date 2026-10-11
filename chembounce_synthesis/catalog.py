@@ -6,7 +6,7 @@ from dataclasses import asdict, dataclass
 from functools import lru_cache
 from pathlib import Path
 
-from rdkit import DataStructs
+from rdkit import Chem, DataStructs
 
 from .common import FP, canonical, digest, molecule, positive
 
@@ -55,7 +55,8 @@ class Catalog:
                 ident = row["id"].strip()
                 if ident in self.blocks:
                     raise ValueError(f"Duplicate building-block ID: {ident}")
-                smiles = canonical(row["smiles"])
+                mol = molecule(row["smiles"])
+                smiles = Chem.MolToSmiles(mol, isomericSmiles=True)
                 status = (row.get("availability") or "catalogued").strip()
                 if status not in {"catalogued", "in_stock", "unavailable"}:
                     raise ValueError(f"Unknown availability: {status}")
@@ -64,11 +65,18 @@ class Catalog:
                 if status != "unavailable":
                     self.by_smiles.setdefault(smiles, []).append(ident)
                     if smiles not in self.mols:
-                        mol = molecule(smiles)
+                        # Converted snapshots already use canonical atom order.
+                        # Reparse only noncanonical input; avoid parsing every
+                        # molecule twice for a large, normalized catalog.
+                        if row["smiles"] != smiles:
+                            mol = molecule(smiles)
                         self.mols[smiles] = mol
                         self.fps[smiles] = FP.GetFingerprint(mol)
         if not self.mols:
             raise ValueError("Catalog contains no eligible building blocks")
+        # A cache on the class method would keep entire discarded catalogs alive
+        # through its self keys. Own the bounded cache within each instance.
+        self.compatible = lru_cache(maxsize=512)(self.compatible)
 
     def get(self, ident):
         block = self.blocks.get(ident)
@@ -76,10 +84,7 @@ class Catalog:
             raise ValueError(f"Building block is absent or unavailable: {ident}")
         return block
 
-    @lru_cache(maxsize=512)
     def compatible(self, role_smarts):
-        from rdkit import Chem
-
         query = Chem.MolFromSmarts(role_smarts)
         if query is None:
             raise ValueError("Invalid reaction-role SMARTS")

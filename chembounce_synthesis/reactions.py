@@ -69,6 +69,7 @@ class Rules:
             self.by_smarts[smarts] = ident
         if not self.rules:
             raise ValueError("Reaction allowlist is empty")
+        self.apply = lru_cache(maxsize=8192)(self.apply)
 
     def get(self, ident):
         if ident not in self.rules:
@@ -83,7 +84,6 @@ class Rules:
             raise ValueError("Model proposed a reaction outside the allowlist")
         return self.by_smarts[text]
 
-    @lru_cache(maxsize=8192)
     def apply(self, ident, reactants, product_limit=64):
         """Reactants are in rule-slot order; return all unique valid products up to cap.
 
