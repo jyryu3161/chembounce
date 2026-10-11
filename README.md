@@ -23,8 +23,11 @@ See [changes](CHANGELOG.md) and [methods](docs/METHODS.md).
 The optional [synthesis workflow](docs/SYNTHESIS.md) connects SynLlama proposals
 to a dated building-block catalog and an explicit reaction registry. It independently
 replays routes, expands compatible building blocks, reapplies scaffold/core constraints,
-and ranks regenerated molecules by joint multi-conformer 3D shape/pharmacophore
-similarity to the original hit and the proposed design. Run the offline fixture with
+and ranks regenerated molecules using Morgan-bit Tanimoto and joint multi-conformer
+3D shape/pharmacophore similarity to both the original hit and the proposed design.
+Use `--synllama --synthesis-config FILE` to enable inference, or `--no-synllama`
+to run hopping alone. Expansion neighbour counts and rounds are configurable;
+no minimum synthesis-stage similarity is imposed unless configured. Run the offline fixture with
 `python -m chembounce_synthesis.cli`; use `.[synthesis,synllama]` and external model/catalog
 assets for actual SynLlama inference. Verified reaction replay is computational evidence,
 not an experimental synthesis guarantee.
@@ -119,6 +122,10 @@ Run `python chembounce.py --help` for the full interface. Key settings:
 | `--seed` | Deterministic conformer seed; default 42 |
 | `--no-shape` | Skip the base 3D descriptor; the optional synthesis stage uses its own conformer ensemble |
 | `--synthesis-config FILE` | Project hopping designs onto catalog reaction space and rank with joint 3D/pharmacophore scoring; see [setup](docs/SYNTHESIS.md) |
+| `--synllama` / `--no-synllama` | Explicitly enable model inference with its config, or skip the synthesis stage; without either flag, supplying a config retains the existing opt-in behavior |
+| `--expansion-top-k N` | Number of alternative building blocks per mutable reaction leaf |
+| `--expansion-rounds N` | Building-block substitution rounds; 0 disables expansion |
+| `--expansion-max-routes N` | Maximum retained expansion routes per starting route, shared across rounds |
 | `--overwrite` | Explicitly replace prior run artifacts in an output directory |
 
 Single connected molecules are required. Salts/mixtures, invalid SMILES, dummy

@@ -650,6 +650,33 @@ def main(argv=None):
     parser = cli.argument_parser()
     options = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+    from chembounce_synthesis.options import apply_expansion_options, expansion_overrides
+
+    synthesis_config = None
+    if options.synllama is True and not options.synthesis_config:
+        LOGGER.error("--synllama requires --synthesis-config with provider.kind='synllama'")
+        return 2
+    if options.synllama is not False and options.synthesis_config:
+        from chembounce_synthesis.workflow import _config, load_config
+
+        try:
+            synthesis_config = _config(
+                apply_expansion_options(load_config(options.synthesis_config), options)
+            )
+            if options.synllama is True and synthesis_config["provider"].get("kind") != "synllama":
+                raise ValueError(
+                    "--synllama requires provider.kind='synllama'; omit it to replay saved proposals"
+                )
+            if options.core_smiles:
+                if synthesis_config.get("core_smiles") not in (None, options.core_smiles):
+                    raise ValueError("core_smiles conflicts with the synthesis configuration")
+                synthesis_config["core_smiles"] = options.core_smiles
+        except (ValueError, OSError, KeyError, TypeError) as exc:
+            LOGGER.error("Synthesis configuration: %s", exc)
+            return 2
+    elif options.synllama is not False and expansion_overrides(options):
+        LOGGER.error("Expansion options require --synthesis-config")
+        return 2
     thresholds = utils._default_thrs_(not options.wo_lipinski)
     for metric, prefix in (
         ("qed", "qed"),
@@ -695,15 +722,11 @@ def main(argv=None):
         LOGGER.error("%s", exc)
         return 2
     _json_write(Path(options.output_dir) / "resource_cost.json", cost)
-    if options.synthesis_config:
-        from chembounce_synthesis.workflow import load_config, run
+    if synthesis_config is not None:
+        from chembounce_synthesis.workflow import run
 
         try:
-            config = load_config(options.synthesis_config)
-            if options.core_smiles:
-                if config.get("core_smiles") not in (None, options.core_smiles):
-                    raise ValueError("core_smiles conflicts with the synthesis configuration")
-                config["core_smiles"] = options.core_smiles
+            config = synthesis_config
             # Projection can change molecular properties. Reapply the intersection
             # of hopping and synthesis bounds to the regenerated final products.
             bounds = dict(config.get("property_thresholds", {}))

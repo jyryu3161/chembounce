@@ -98,6 +98,7 @@ def test_search_caches_release_discarded_catalogs_and_rule_sets(assets):
     catalog = Catalog(assets[0].path)
     rules = Rules(assets[1].path)
     catalog.compatible(rules.get("amide").roles[0])
+    catalog.nearest("CC(=O)O", rules.get("amide").roles[0])
     rules.apply("amide", ("CC(=O)O", "CCN"))
     refs = [weakref.ref(catalog), weakref.ref(rules)]
     del catalog, rules

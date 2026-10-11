@@ -3,6 +3,8 @@
 
 import argparse
 
+from chembounce_synthesis.options import add_expansion_options
+
 #### CLI options ####
 
 
@@ -157,6 +159,13 @@ def argument_parser():
         "--synthesis-config",
         help="Run catalog/reaction verification and 3D ranking after hopping; JSON config",
     )
+    parser.add_argument(
+        "--synllama",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="Explicitly enable SynLlama (requires its synthesis config), or --no-synllama to skip the synthesis stage",
+    )
+    add_expansion_options(parser)
     parser.add_argument("--beam-width", type=int, default=100, help="Maximum intermediate attachment states")
     parser.add_argument(
         "--search-threshold", type=float, default=0.3, help="Scaffold Morgan-bit similarity cutoff"

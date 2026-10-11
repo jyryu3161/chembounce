@@ -132,6 +132,27 @@ reflects the synthesis stage. The original property bounds and required core
 are applied again after reconstruction, intersected with synthesis-specific
 bounds. Existing hopping results remain available for auditing.
 
+The main script also accepts an explicit switch:
+
+```bash
+# Hopping alone; no synthesis/model/catalog configuration is loaded.
+chembounce -i 'CC(=O)Nc1ccccc1' -o output_hopping --no-synllama
+
+# Enable the actual local model, then expand compatible building blocks.
+chembounce -i 'CC(=O)Nc1ccccc1' -o output_with_synthesis \
+  --synllama --synthesis-config examples/synthesis/synllama-config.json \
+  --expansion-top-k 16 --expansion-rounds 2 --expansion-max-routes 128
+```
+
+`--synllama` requires a config with `provider.kind: "synllama"`; conflicting or
+missing configuration is rejected before hopping. `--no-synllama` skips the entire
+synthesis stage even if a config is supplied, which allows one shell script to
+toggle the stage. With neither flag, no config means hopping alone; supplying a
+config runs its configured provider, preserving the previous behavior. A
+`provider.kind: "saved"` config replays stored model proposals without inference;
+omit `--synllama` in that case. The three expansion override options also work with
+`chembounce-synthesis`. Existing base hopping 2D cutoffs remain separate.
+
 The normal hopping search still uses its configured 2D cutoffs. For exploration
 of substantially different cores, choose appropriate `-t` and
 `--search-threshold` explicitly; a downstream 3D method cannot recover designs
@@ -146,16 +167,41 @@ LLM proposals. Acyclic scaffolds are empty Murcko scaffolds: hop mode cannot
 certify an acyclic-to-acyclic scaffold change; use explicit cores and expansion
 mode for that case.
 
-`expansion` accepts `rounds` (0 disables it), `max_routes`, and
+`expansion` accepts `rounds` (0 disables it), `max_routes`,
+`building_block_top_k` (alternative blocks per mutable leaf), `min_tanimoto`
+(optional block-to-block cutoff, default 0), and
 `locked_building_block_ids` (catalog IDs; equivalent structures under other SKUs
 are protected too). For a single known route, the Python `expand_route` API also
 accepts `locked_nodes` with route-local building-block node IDs. These local IDs
 must not be reused as global selectors across different proposals.
+For example, an exploratory configuration is:
+
+```json
+"expansion": {
+  "building_block_top_k": 16,
+  "rounds": 2,
+  "max_routes": 128,
+  "min_tanimoto": 0.0,
+  "locked_building_block_ids": []
+},
+"minimum_scores": {}
+```
+
 Each round substitutes one leaf
 of each parent route using catalog blocks matching its consuming reaction roles.
 All steps are replayed, including changed intermediates. Multiple rounds permit
-combinations of substitutions. Explicit beam/combination/product caps prevent
-combinatorial growth; reports identify when a search was truncated.
+combinations of substitutions. Neighbours satisfy all consuming reaction roles
+before shortlisting. Search uses Morgan-bit Tanimoto with a diverse shortlist tail,
+and final core/scaffold checks still apply. Each retained substitution records the
+old/new catalog IDs and structures, its Tanimoto and its round. Search/result
+capacity is shared across rounds so the first round does not consume the whole
+budget. Parent routes and mutable leaves are visited in turn; each frontier prefers
+distinct products and higher Tanimoto to the design. Increasing these limits can
+increase candidates but cannot guarantee better 3D matches. Explicit
+beam/combination/product caps prevent combinatorial growth; reports identify
+truncation per round. Repeated neighbour searches and identical starting-route
+expansions are cached. `max_routes` and combination bounds apply per starting route;
+`max_scored_products` bounds expensive 3D comparisons across the workflow.
 
 The Python interfaces are `workflow.run(hit, designs, config, output_dir)`,
 `routes.resolve_proposal(...)`, `routes.verify_route(...)`, and
@@ -242,13 +288,28 @@ joint score. A supplied `reference_sdf` replaces the hit ensemble with one exact
 3D pose of the same chemical state; its coordinates are preserved without
 minimization or a force-field strain estimate.
 
-Final results receive Pareto fronts over hit/design shape and pharmacophore,
-relative conformer energy and reaction count. Within a front they are ordered by
+Final results report `hit_tanimoto` and `design_tanimoto`: Tanimoto similarity of
+binary Morgan fingerprints (radius 2, 2048 bits, specified chirality included).
+`hit_morgan` remains an alias for `hit_tanimoto` for compatibility. These are
+different from the base hopping output's legacy Morgan-count similarity; do not
+interpret them as interchangeable scores. The six similarity components are
+exported in both the table and candidate SDFs, with 2D scores also in `scores.json`.
+
+Final results receive Pareto fronts over both Tanimotos, hit/design shape and
+pharmacophore, relative conformer energy and reaction count. Within a front they are ordered by
 the recorded heuristic score, route length and canonical SMILES. These defaults
 are transparent ranking choices, not experimentally calibrated thresholds. Use
-`minimum_scores` for explicit hit/design shape/pharmacophore cutoffs and
+`minimum_scores` for explicit `hit_tanimoto`, `design_tanimoto`, `hit_shape`,
+`design_shape`, `hit_pharmacophore`, `design_pharmacophore` cutoffs and
 `property_thresholds` for the existing `mw`, `logp`, `qed`, `sa`, `n_hdonor`,
 `n_hacceptor` bounds. SA is an optional property filter, not route verification.
+The default `minimum_scores: {}` applies **no hard similarity cutoff**. Earlier
+illustrative shape 0.70/pharmacophore 0.50 comparisons are not defaults or validated
+quality thresholds. Core retention and catalog/rule replay remain mandatory when
+specified regardless of similarity. Optional Tanimoto cutoffs are applied before
+3D scoring; 3D cutoffs use the selected joint pose. The scalar `score` remains the
+3D/energy heuristic above; Tanimoto contributes to Pareto ranking rather than an
+arbitrary weighted scalar sum.
 
 ## Artifacts and evaluation
 

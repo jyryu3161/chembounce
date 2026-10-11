@@ -3,9 +3,10 @@
 import copy
 import itertools
 import json
+import math
 from dataclasses import dataclass, field
 
-from rdkit import Chem, DataStructs
+from rdkit import DataStructs
 
 from .common import FP, canonical, molecule, positive
 
@@ -29,6 +30,8 @@ class SearchReport:
     reaction_truncations: int = 0
     combination_truncations: int = 0
     beam_truncations: int = 0
+    rounds_completed: int = 0
+    round_reports: list = field(default_factory=list)
     failures: list = field(default_factory=list)
 
 
@@ -352,28 +355,69 @@ def _rebuild(route, catalog, rules, target, limits, report):
     return [{"schema_version": 1, "root": route["root"], "nodes": list(s["nodes"].values())} for s in states]
 
 
+def _expansion_frontier(items, width):
+    """Bound retained route evidence while preferring distinct products."""
+    items.sort(key=lambda item: (-item["target_tanimoto"], json.dumps(item["route"], sort_keys=True)))
+    unique, alternatives = {}, []
+    for item in items:
+        product = item["verification"]["product"]
+        if product in unique:
+            alternatives.append(item)
+        else:
+            unique[product] = item
+    return (list(unique.values()) + alternatives)[:width]
+
+
 def expand_route(
-    route, catalog, rules, limits=None, rounds=1, max_routes=64, locked_nodes=(), locked_building_block_ids=()
+    route,
+    catalog,
+    rules,
+    limits=None,
+    rounds=1,
+    max_routes=64,
+    locked_nodes=(),
+    locked_building_block_ids=(),
+    building_block_top_k=None,
+    min_tanimoto=0.0,
+    target_smiles=None,
 ):
     """Replace compatible catalog blocks and replay the entire affected DAG.
 
     Each round changes one leaf per parent, allowing bounded combinatorial expansion.
-    All returned pathways pass the independent verifier; protected leaves stay fixed.
+    Reserve search/result capacity for later rounds and rank each frontier against
+    the design. All returned pathways pass replay; protected leaves stay fixed.
     """
     limits = limits or SearchLimits()
     positive(rounds, "expansion_rounds")
     positive(max_routes, "expansion_max_routes")
+    top_k = limits.building_block_top_k if building_block_top_k is None else building_block_top_k
+    positive(top_k, "expansion.building_block_top_k")
+    if (
+        isinstance(min_tanimoto, bool)
+        or not isinstance(min_tanimoto, (int, float))
+        or not math.isfinite(min_tanimoto)
+        or not 0 <= min_tanimoto <= 1
+    ):
+        raise ValueError("expansion.min_tanimoto must be in [0, 1]")
     initial = verify_route(route, catalog, rules, limits.reaction_product_limit)
     leaves = {n["id"] for n in route["nodes"] if "building_block_id" in n}
     if not set(locked_nodes) <= leaves:
         raise ValueError("Locked expansion nodes must be building-block node IDs")
     locked_smiles = {catalog.get(ident).smiles for ident in locked_building_block_ids}
     report, results = SearchReport(), []
-    frontier = [route]
+    target = canonical(target_smiles) if target_smiles is not None else initial["product"]
+    target_fp = FP.GetFingerprint(molecule(target))
+    frontier = [(route, [])]
     seen = {json.dumps(route, sort_keys=True)}
-    for _ in range(rounds):
-        next_frontier = []
-        for parent in frontier:
+    product_scores = {}
+    for round_index in range(1, rounds + 1):
+        remaining_rounds = rounds - round_index + 1
+        quota = math.ceil((max_routes - len(results)) / remaining_rounds)
+        combination_quota = math.ceil((limits.max_combinations - report.combinations) / remaining_rounds)
+        if quota <= 0 or combination_quota <= 0:
+            break
+        choices = []
+        for parent, history in frontier:
             nodes = {n["id"]: n for n in parent["nodes"]}
             for node in parent["nodes"]:
                 if "building_block_id" not in node or node["id"] in locked_nodes:
@@ -387,36 +431,91 @@ def expand_route(
                 old = catalog.get(node["building_block_id"])
                 if old.smiles in locked_smiles:
                     continue
-                role_queries = [Chem.MolFromSmarts(role) for role in requirements]
-                for bb in catalog.nearest(old.smiles, requirements[0], limits.building_block_top_k):
-                    if bb.smiles == old.smiles or not all(
-                        catalog.mols[bb.smiles].HasSubstructMatch(query, useChirality=True)
-                        for query in role_queries
-                    ):
+                alternatives = [
+                    bb
+                    for bb in catalog.nearest(
+                        old.smiles,
+                        requirements[0],
+                        top_k + 1,
+                        min_tanimoto,
+                        tuple(requirements[1:]),
+                    )
+                    if bb.smiles != old.smiles
+                ][:top_k]
+                choices.append((parent, history, nodes, node, old, alternatives))
+        generated = []
+        generated_count = 0
+        used = 0
+        capped = False
+        # Visit all mutable leaves/parents before consuming their next neighbour.
+        for neighbour in range(top_k):
+            for parent, history, nodes, node, old, alternatives in choices:
+                if neighbour >= len(alternatives):
+                    continue
+                if used >= combination_quota:
+                    capped = True
+                    break
+                bb = alternatives[neighbour]
+                used += 1
+                report.combinations += 1
+                substituted = {
+                    "schema_version": 1,
+                    "root": parent["root"],
+                    "nodes": list((nodes | {node["id"]: node | {"building_block_id": bb.id}}).values()),
+                }
+                substitution = {
+                    "round": round_index,
+                    "node_id": node["id"],
+                    "from_id": old.id,
+                    "to_id": bb.id,
+                    "from_smiles": old.smiles,
+                    "to_smiles": bb.smiles,
+                    "tanimoto": DataStructs.TanimotoSimilarity(
+                        catalog.fps[old.smiles], catalog.fps[bb.smiles]
+                    ),
+                }
+                for rebuilt in _rebuild(substituted, catalog, rules, target, limits, report):
+                    key = json.dumps(rebuilt, sort_keys=True)
+                    if key in seen:
                         continue
-                    if report.combinations >= limits.max_combinations:
-                        report.combination_truncations += 1
-                        return results, report
-                    report.combinations += 1
-                    substituted = {
-                        "schema_version": 1,
-                        "root": parent["root"],
-                        "nodes": list((nodes | {node["id"]: node | {"building_block_id": bb.id}}).values()),
-                    }
-                    for rebuilt in _rebuild(substituted, catalog, rules, initial["product"], limits, report):
-                        key = json.dumps(rebuilt, sort_keys=True)
-                        if key in seen:
-                            continue
-                        seen.add(key)
-                        evidence = verify_route(rebuilt, catalog, rules, limits.reaction_product_limit)
-                        results.append(
-                            {"route": rebuilt, "verification": evidence, "expanded_from": initial["product"]}
+                    seen.add(key)
+                    evidence = verify_route(rebuilt, catalog, rules, limits.reaction_product_limit)
+                    product = evidence["product"]
+                    if product not in product_scores:
+                        product_scores[product] = DataStructs.TanimotoSimilarity(
+                            target_fp, FP.GetFingerprint(molecule(product))
                         )
-                        next_frontier.append(rebuilt)
-                        if len(results) >= max_routes:
-                            report.beam_truncations += 1
-                            return results, report
-        frontier = next_frontier
+                    generated.append(
+                        {
+                            "route": rebuilt,
+                            "verification": evidence,
+                            "expanded_from": initial["product"],
+                            "expansion_round": round_index,
+                            "substitutions": history + [substitution],
+                            "target_tanimoto": product_scores[product],
+                        }
+                    )
+                    generated_count += 1
+                    if len(generated) >= 4 * quota:
+                        generated = _expansion_frontier(generated, quota)
+                        report.beam_truncations += 1
+            if capped:
+                break
+        report.combination_truncations += int(capped)
+        selected = _expansion_frontier(generated, quota)
+        report.beam_truncations += int(len(generated) > quota)
+        report.rounds_completed += 1
+        report.round_reports.append(
+            {
+                "round": round_index,
+                "combinations": used,
+                "generated_routes": generated_count,
+                "retained_routes": len(selected),
+                "combination_limit_reached": capped,
+            }
+        )
+        results.extend(selected)
+        frontier = [(item["route"], item["substitutions"]) for item in selected]
         if not frontier:
             break
     return results, report

@@ -2,6 +2,14 @@
 
 ## 2.0.0.dev0
 
+- Report hit/design Morgan-bit Tanimoto alongside shape/pharmacophore, include both
+  in Pareto ranking, and export them in TSV, JSON and SDF. Similarity cutoffs remain
+  opt-in. Preserve the legacy `hit_morgan` output alias.
+- Add separate building-block expansion neighbour counts, optional block similarity
+  bounds and substitution evidence. Reserve budgets across multiple rounds, apply
+  all reaction roles before shortlisting and cache repeated route/neighbor searches.
+- Add `--synllama` / `--no-synllama` to explicitly control the optional synthesis
+  stage, plus expansion count/round/route overrides in both command-line tools.
 - Add optional local SynLlama inference, catalog/registered-reaction projection,
   independent stereochemistry-aware route replay and bounded building-block hit
   expansion. Record actual blocks, intermediate products, failed proposals and

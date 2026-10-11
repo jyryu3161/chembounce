@@ -1,14 +1,14 @@
 import json
 
 import pytest
-from rdkit import Chem
+from rdkit import Chem, DataStructs
 
 pytest.importorskip(
     "rdkit.Chem.rdShapeAlign", reason="Optional synthesis alignment requires a newer RDKit wheel"
 )
 
 from chembounce_synthesis.cli import main
-from chembounce_synthesis.common import canonical
+from chembounce_synthesis.common import FP, canonical, molecule
 from chembounce_synthesis.routes import verify_route
 from chembounce_synthesis.synllama import load_prompt
 from chembounce_synthesis.workflow import check_constraints, run
@@ -49,9 +49,16 @@ def test_pipeline_outputs_replayable_routes_and_actual_poses(tmp_path, assets, p
     lookup = {r["route_id"]: r for r in routes}
     for row in rows:
         assert verify_route(lookup[row["route_id"]]["route"], *assets)["product"] == row["smiles"]
+        product_fp = FP.GetFingerprint(molecule(row["smiles"]))
+        for ref, reference in (("hit", HIT), ("design", DESIGN)):
+            expected = DataStructs.TanimotoSimilarity(product_fp, FP.GetFingerprint(molecule(reference)))
+            assert row[f"{ref}_tanimoto"] == pytest.approx(expected)
+        assert row["hit_morgan"] == row["hit_tanimoto"]
     poses = list(Chem.SDMolSupplier(str(out / "poses_hit.sdf")))
     assert len(poses) == len(rows)
     assert all(m is not None and m.GetConformer().Is3D() for m in poses)
+    for pose, row in zip(poses, rows):
+        assert pose.GetDoubleProp("design_tanimoto") == pytest.approx(row["design_tanimoto"])
     references = list(Chem.SDMolSupplier(str(out / "references_hit.sdf")))
     assert len(references) == len(poses)
     from chembounce_synthesis.conformers import pharmacophore_overlap
@@ -191,3 +198,64 @@ def test_main_cli_connects_real_hopping_and_reapplies_filters(tmp_path, assets, 
     assert any(
         r["selection_status"] == "constraint_rejected" and "property filter" in r["reason"] for r in routes
     )
+
+
+def test_tanimoto_filter_is_opt_in_and_applied_before_3d(tmp_path, assets, proposal):
+    config = config_for(tmp_path, assets, proposal)
+    config["minimum_scores"] = {"design_tanimoto": 1.0}
+    out = tmp_path / "tanimoto-filter"
+    rows = run(HIT, [DESIGN], config, out)
+    assert rows and all(row["design_tanimoto"] == 1.0 for row in rows)
+    summary = json.loads((out / "summary.json").read_text())
+    assert summary["route_rejections"]["2d_threshold_rejected"] > 0
+    assert summary["scored_products"] == 1
+
+
+def test_pareto_uses_tanimoto_alongside_3d():
+    from chembounce_synthesis.workflow import _pareto
+
+    reference = dict(
+        hit_shape=0.8,
+        hit_pharmacophore=0.6,
+        design_shape=0.8,
+        design_pharmacophore=0.6,
+        relative_energy=0,
+        reaction_steps=1,
+        hit_tanimoto=0.5,
+        design_tanimoto=0.5,
+    )
+    rows = [reference.copy(), reference | {"design_tanimoto": 0.8}]
+    _pareto(rows)
+    assert [r["pareto_front"] for r in rows] == [1, 0]
+
+
+def test_standalone_cli_expansion_overrides(tmp_path, assets, proposal):
+    config = config_for(tmp_path, assets, proposal)
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps(config))
+    out = tmp_path / "expanded-cli"
+    assert (
+        main(
+            [
+                "--hit",
+                HIT,
+                "--design",
+                DESIGN,
+                "--config",
+                str(path),
+                "--output",
+                str(out),
+                "--expansion-top-k",
+                "6",
+                "--expansion-rounds",
+                "2",
+                "--expansion-max-routes",
+                "20",
+            ]
+        )
+        == 0
+    )
+    effective = json.loads((out / "manifest.json").read_text())["effective_workflow"]["expansion"]
+    assert effective["building_block_top_k"] == 6
+    assert effective["rounds"] == 2
+    assert effective["max_routes"] == 20

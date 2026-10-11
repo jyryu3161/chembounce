@@ -31,6 +31,8 @@ COLUMNS = [
     "hit_pharmacophore",
     "design_shape",
     "design_pharmacophore",
+    "hit_tanimoto",
+    "design_tanimoto",
     "hit_morgan",
     "relative_energy",
     "reaction_steps",
@@ -103,7 +105,15 @@ def _config(config):
     minimum = config.get("minimum_scores", {})
     for key, value in minimum.items():
         if (
-            key not in {"hit_shape", "hit_pharmacophore", "design_shape", "design_pharmacophore"}
+            key
+            not in {
+                "hit_shape",
+                "hit_pharmacophore",
+                "design_shape",
+                "design_pharmacophore",
+                "hit_tanimoto",
+                "design_tanimoto",
+            }
             or not isinstance(value, (int, float))
             or isinstance(value, bool)
             or not math.isfinite(value)
@@ -111,7 +121,13 @@ def _config(config):
         ):
             raise ValueError("minimum_scores must contain known score names with values in [0, 1]")
     exp = config.get("expansion", {})
-    if set(exp) - {"rounds", "max_routes", "locked_building_block_ids"}:
+    if set(exp) - {
+        "rounds",
+        "max_routes",
+        "locked_building_block_ids",
+        "building_block_top_k",
+        "min_tanimoto",
+    }:
         raise ValueError("Unknown expansion configuration key")
     if (
         isinstance(exp.get("rounds", 0), bool)
@@ -120,6 +136,16 @@ def _config(config):
     ):
         raise ValueError("expansion rounds must be a nonnegative integer")
     positive(exp.get("max_routes", 64), "expansion.max_routes")
+    if "building_block_top_k" in exp:
+        positive(exp["building_block_top_k"], "expansion.building_block_top_k")
+    minimum_bb = exp.get("min_tanimoto", 0.0)
+    if (
+        isinstance(minimum_bb, bool)
+        or not isinstance(minimum_bb, (int, float))
+        or not math.isfinite(minimum_bb)
+        or not 0 <= minimum_bb <= 1
+    ):
+        raise ValueError("expansion.min_tanimoto must be in [0, 1]")
     locks = exp.get("locked_building_block_ids", [])
     if not isinstance(locks, list) or not all(isinstance(value, str) and value for value in locks):
         raise ValueError("locked_building_block_ids must be a list of nonempty catalog IDs")
@@ -191,6 +217,24 @@ def _manifest(config, hit, designs):
         "chemical_state_policy": "Explicit input states; no implicit protonation, tautomer, or stereoisomer enumeration",
         "verification_scope": "Catalog snapshot membership and registered reaction replay; no experimental synthesis or current-stock guarantee",
         "ranking_scope": "Heuristic, bounded search; joint shape/pharmacophore scores are not calibrated activity probabilities",
+        "fingerprint": {
+            "algorithm": "Morgan",
+            "radius": 2,
+            "bits": 2048,
+            "include_chirality": True,
+            "similarity": "Tanimoto",
+            "hit_morgan_alias": "hit_tanimoto",
+        },
+        "ranking_metrics": [
+            "hit_tanimoto",
+            "design_tanimoto",
+            "hit_shape",
+            "hit_pharmacophore",
+            "design_shape",
+            "design_pharmacophore",
+            "relative_energy",
+            "reaction_steps",
+        ],
     }
 
 
@@ -203,6 +247,8 @@ def _pareto(rows):
             r["hit_pharmacophore"],
             r["design_shape"],
             r["design_pharmacophore"],
+            r["hit_tanimoto"],
+            r["design_tanimoto"],
             -r["relative_energy"],
             -r["reaction_steps"],
         )
@@ -250,10 +296,11 @@ def run(hit, designs, config, output_dir):
     }
     write_json(out / "summary.json", summary)
     route_records, score_records, raw_records = [], [], []
-    rows, poses, score_cache = {}, {}, {}
+    rows, poses, score_cache, similarity_cache = {}, {}, {}, {}
     try:
         config = _config(config)
         hit = canonical(hit)
+        hit_fp = FP.GetFingerprint(molecule(hit))
         all_designs = list(dict.fromkeys(canonical(s) for s in designs))
         designs = all_designs[: config.get("max_designs", 20)]
         if len(designs) < len(all_designs):
@@ -282,6 +329,8 @@ def run(hit, designs, config, output_dir):
             "expansion": {
                 "rounds": 0,
                 "max_routes": 64,
+                "building_block_top_k": limits.building_block_top_k,
+                "min_tanimoto": 0.0,
                 "locked_building_block_ids": [],
                 **config.get("expansion", {}),
             },
@@ -303,6 +352,8 @@ def run(hit, designs, config, output_dir):
         for design in designs:
             LOGGER.info("Projecting design %s onto catalog reaction space", design)
             proposals = provider.propose(design)
+            design_fp = FP.GetFingerprint(molecule(design))
+            expansion_cache = {}
             for proposal in proposals:
                 proposal_id = len(raw_records)
                 raw_records.append({"design": design, **proposal})
@@ -333,10 +384,21 @@ def run(hit, designs, config, output_dir):
                 expansion = config.get("expansion", {})
                 if expansion.get("rounds", 0):
                     for item in projected:
-                        expanded, report = expand_route(item["route"], catalog, rules, limits, **expansion)
+                        route_key = json.dumps(item["route"], sort_keys=True)
+                        cached = route_key in expansion_cache
+                        if not cached:
+                            expansion_cache[route_key] = expand_route(
+                                item["route"], catalog, rules, limits, target_smiles=design, **expansion
+                            )
+                        expanded, report = expansion_cache[route_key]
                         candidates.extend(expanded)
                         summary["search_reports"].append(
-                            {"proposal_id": proposal_id, "stage": "expansion", **asdict(report)}
+                            {
+                                "proposal_id": proposal_id,
+                                "stage": "expansion",
+                                "cached": cached,
+                                **asdict(report),
+                            }
                         )
                 for item in candidates:
                     route_id = f"route_{len(route_records):06d}"
@@ -372,6 +434,19 @@ def run(hit, designs, config, output_dir):
                         record.update(selection_status="constraint_rejected", reason=str(exc))
                         continue
                     key = (product, design)
+                    if key not in similarity_cache:
+                        product_fp = FP.GetFingerprint(molecule(product))
+                        similarity_cache[key] = {
+                            "hit_tanimoto": DataStructs.TanimotoSimilarity(hit_fp, product_fp),
+                            "design_tanimoto": DataStructs.TanimotoSimilarity(design_fp, product_fp),
+                        }
+                    tanimoto = similarity_cache[key]
+                    record["tanimoto"] = tanimoto
+                    if any(
+                        tanimoto[k] < v for k, v in config.get("minimum_scores", {}).items() if k in tanimoto
+                    ):
+                        record.update(selection_status="2d_threshold_rejected", scores=tanimoto)
+                        continue
                     if key not in score_cache:
                         if summary["scored_products"] >= config.get("max_scored_products", 256):
                             record["selection_status"] = "not_scored_budget"
@@ -393,6 +468,7 @@ def run(hit, designs, config, output_dir):
                         for ref in ("hit", "design")
                         for metric in ("shape", "pharmacophore")
                     }
+                    scores.update(tanimoto)
                     if any(scores[k] < v for k, v in config.get("minimum_scores", {}).items()):
                         record.update(selection_status="3d_threshold_rejected", scores=scores)
                         continue
@@ -403,6 +479,7 @@ def run(hit, designs, config, output_dir):
                             "product": product,
                             "design": design,
                             "properties": props,
+                            "tanimoto": tanimoto,
                             **info,
                         }
                     )
@@ -411,9 +488,7 @@ def run(hit, designs, config, output_dir):
                         "design": design,
                         "score": info["score"],
                         **scores,
-                        "hit_morgan": DataStructs.TanimotoSimilarity(
-                            FP.GetFingerprint(molecule(hit)), FP.GetFingerprint(molecule(product))
-                        ),
+                        "hit_morgan": tanimoto["hit_tanimoto"],
                         "relative_energy": info["candidate_relative_energy"],
                         "reaction_steps": len(verification["steps"]),
                         "route_id": route_id,
@@ -458,6 +533,15 @@ def run(hit, designs, config, output_dir):
                     mol.SetProp("_Name", row["route_id"])
                     mol.SetProp("smiles", row["smiles"])
                     mol.SetProp("score", str(row["score"]))
+                    for metric in (
+                        "hit_tanimoto",
+                        "design_tanimoto",
+                        "hit_shape",
+                        "design_shape",
+                        "hit_pharmacophore",
+                        "design_pharmacophore",
+                    ):
+                        mol.SetDoubleProp(metric, row[metric])
                     mol.SetProp("verification", "catalog_and_rule_verified; experimental_validation=false")
                     sdf.write(mol, confId=info["candidate_conformer_id"])
                 for role, reference, sdf in (
