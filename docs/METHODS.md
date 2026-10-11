@@ -43,7 +43,9 @@ fingerprint database is provided. Threshold comparisons are inclusive. Identical
 canonical SMILES are excluded, but a different structure with Tanimoto=1 remains
 eligible because fingerprints can collide. Generated databases are canonical,
 sorted and unique; ties use database row order, which is canonical SMILES order
-for these databases. Legacy databases retain their stored row order at score ties.
+for these databases. Empty-vector similarity follows the installed RDKit convention
+(1 for two empty vectors in 2023.09; 0 in the tested 2025.09/2026.09 releases).
+Legacy databases retain their stored row order at score ties.
 The text path uses canonical SMILES tie ordering.
 
 Final candidate Tanimoto uses unfolded Morgan radius-2 **counts**, retaining the

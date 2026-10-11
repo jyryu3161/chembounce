@@ -5,10 +5,15 @@ from functools import lru_cache
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from rdkit import Chem, rdBase
+from rdkit import Chem, rdBase, DataStructs
 from rdkit.Chem import rdFingerprintGenerator
 
 POPCOUNT = np.array([i.bit_count() for i in range(256)], dtype=np.uint8)
+# The empty/empty convention changed between supported RDKit releases. Derive
+# the reference value from the installed version instead of silently disagreeing.
+EMPTY_TANIMOTO = DataStructs.TanimotoSimilarity(
+    DataStructs.ExplicitBitVect(1), DataStructs.ExplicitBitVect(1)
+)
 
 
 @lru_cache(maxsize=32)
@@ -109,8 +114,10 @@ def calculate_bulk_tanimoto(
             intersection = np.bitwise_and(chunk, query).sum(axis=1)
             counts = chunk.sum(axis=1)
         union = counts + query_sum - intersection
-        # Match RDKit binary Tanimoto: two empty bit vectors score zero.
-        similarities = np.divide(intersection, union, out=np.zeros(len(chunk)), where=union != 0)
+        # Match the installed RDKit convention when both vectors are empty.
+        similarities = np.divide(
+            intersection, union, out=np.full(len(chunk), EMPTY_TANIMOTO), where=union != 0
+        )
         valid = similarities >= threshold
         if exclude is not None:
             valid &= ~exclude[start : start + len(chunk)]
