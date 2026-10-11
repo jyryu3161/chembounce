@@ -1,0 +1,37 @@
+{
+  "description": "Compare the 1.0 dense search kernel with 2.0 packed chunked search.\n\nSynthetic sparse binary fingerprints isolate search cost. This is not a\nmolecular-quality or end-to-end scaffold-hopping benchmark. Each mode runs in\nits own process; timed searches exclude fixture construction and disk loading.\n",
+  "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+  "python": "3.10.12",
+  "numpy": "1.26.4",
+  "rows": 100000,
+  "bits": 2048,
+  "seed": 42,
+  "results_equal": true,
+  "results": {
+    "legacy": {
+      "seconds": [
+        0.3696066550910473,
+        0.37641188129782677,
+        0.42245760187506676,
+        0.49051746167242527,
+        0.3615869488567114
+      ],
+      "median_seconds": 0.37641188129782677,
+      "sampled_peak_rss_mb": 527.94140625,
+      "fingerprint_bytes": 204800000
+    },
+    "packed": {
+      "seconds": [
+        0.17803826462477446,
+        0.17419096920639277,
+        0.1664978824555874,
+        0.16755257174372673,
+        0.16772395092993975
+      ],
+      "median_seconds": 0.16772395092993975,
+      "sampled_peak_rss_mb": 161.8671875,
+      "fingerprint_bytes": 25600000
+    }
+  },
+  "speedup": 2.244234524710537
+}

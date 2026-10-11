@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chembounce"
+version = "2.0.0.dev0"
+description = "Reproducible and diagnosable molecular scaffold hopping"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "rdkit>=2023.9,<2027", "numpy>=1.24,<3", "pandas>=2,<3",
+  "scipy>=1.10,<2", "scaffoldgraph==1.1.2", "psutil>=5.9,<8",
+]
+
+[project.optional-dependencies]
+shape = []
+dev = ["pytest>=8,<10", "pytest-cov>=5,<8", "ruff>=0.9"]
+pubchem = ["pubchempy>=1.0.4"]
+
+[project.scripts]
+chembounce = "chembounce:main"
+chembounce-fingerprints = "generate_fingerprints:main"
+
+[tool.setuptools]
+py-modules = ["chembounce", "chemistry", "cli", "utils", "cats_module", "fingerprint_db", "generate_fingerprints", "scaffoldgraph_fragmenter", "cost_estimation", "shape_descriptors"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 110
+
+[tool.ruff.lint]
+select = ["E9", "F"]

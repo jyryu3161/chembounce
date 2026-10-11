@@ -1,0 +1,35 @@
+{
+  "rdkit": "2025.09.6",
+  "input": "C1=NC(=C2C(=N1)N(C=N2)[C@H]3[C@@H]([C@@H]([C@H](O3)COP(=O)(O)OP(=O)(O)O)O)O)N",
+  "compatibility_shim": "RDBASE set to pip rdkit location",
+  "fragments": [
+    {
+      "scaffold": "C1CCOC1",
+      "error_type": "ArgumentError",
+      "message": "Python argument types in\n    EditableMol.ReplaceAtom(EditableMol, NoneType, Atom)\ndid not match C++ signature:\n    ReplaceAtom(RDKit::(anonymous namespace)::EditableMol {lvalue} self, unsigned int index, RDKit::Atom* newAtom, bool updateLabel=False, bool preserveProps=False)"
+    },
+    {
+      "scaffold": "c1ncc2nc[nH]c2n1",
+      "error_type": "AtomKekulizeException",
+      "message": "non-ring atom 0 marked aromatic"
+    },
+    {
+      "scaffold": "c1ncc2ncn(C3CCCO3)c2n1",
+      "error_type": "AtomKekulizeException",
+      "message": "non-ring atom 0 marked aromatic"
+    }
+  ],
+  "properties": {
+    "sa": 4.125297661526227,
+    "qed": 0.28079075856620234,
+    "mw": 427.2030000000001,
+    "logp": -1.7460000000000004,
+    "n_hdonor": 6,
+    "n_hacceptor": 11
+  },
+  "default_filter_failures": [
+    "n_hdonor.upper_maximum:6>5",
+    "n_hacceptor.upper_maximum:11>10"
+  ],
+  "tag_commit": "57800071f3c1858c10ee60d378ec6d1d325399fd"
+}

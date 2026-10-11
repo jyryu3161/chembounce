@@ -1,0 +1,9 @@
+[
+  {"name":"ADP","smiles":"C1=NC(=C2C(=N1)N(C=N2)[C@H]3[C@@H]([C@@H]([C@H](O3)COP(=O)(O)OP(=O)(O)O)O)O)N"},
+  {"name":"README_example","smiles":"CCCCC1=NC(=C(N1CC2=CC=C(C=C2)C3=CC=CC=C3C4=NNN=N4)CO)Cl"},
+  {"name":"heteroaromatic_ether","smiles":"COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCCCN1CCOCC1"},
+  {"name":"stereogenic_sidechain","smiles":"C[C@H](O)c1ccccc1"},
+  {"name":"fused_bicyclic","smiles":"CC1CC2CCCCC2C1O"},
+  {"name":"macrocycle","smiles":"O=C1NCCOCCOCCOCCOCCN1"},
+  {"name":"acyclic_control","smiles":"CC(O)CCN"}
+]
