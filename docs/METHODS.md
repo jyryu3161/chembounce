@@ -24,6 +24,16 @@ RDKit molzip preserves stereo on retained atoms. Explicit fragments that cut an 
 rejected with a request to select the whole aromatic system. Invalid valences are
 expected attachment rejections. Unexpected exceptions propagate into the run error report.
 
+A conservative capacity precheck skips enumeration when retained bond-order demand
+exceeds the total available valence of a neutral C/N/O replacement, after allowing
+all removable hydrogens to be substituted. The upper bounds are C=4, N=5 and O=2;
+N=5 deliberately allows sanitization of hypervalent nitro-like forms. This check
+applies only to retained C/N/O/H components and ordinary single/double/triple
+boundary bonds. Charged replacements, other elements and unusual bonds fall back
+to normal assembly. It rejects some provably impossible cases; passing the bound
+does not establish that attachment is possible. See RDKit's
+[sanitization and valence rules](https://www.rdkit.org/docs/RDKit_Book.html#molecular-sanitization).
+
 At each attachment step only `beam_width` highest-scoring intermediate states are
 kept. Scores use the entire partial molecule, including not-yet-connected outside
 components and remaining dummies. Ties use canonical SMILES. This is an explicit

@@ -25,7 +25,18 @@ def scaffold(smiles):
 
 def summarize(root):
     rows = []
-    for manifest in sorted(Path(root).glob("*/run_manifest.json")):
+    for directory in sorted(Path(root).iterdir()):
+        if not directory.is_dir():
+            continue
+        manifest = directory / "run_manifest.json"
+        evaluation = directory / "evaluation_status.json"
+        if evaluation.exists():
+            status = json.loads(evaluation.read_text())["status"]
+            if status not in ("success", "no_candidates"):
+                rows.append({"input": directory.name, "status": status, "candidates": None})
+                continue
+        if not manifest.exists():
+            continue
         info = json.loads(manifest.read_text())
         results = pd.read_csv(manifest.parent / "overall_result.txt", sep="\t")
         original = info["parameters"]["target_smiles"]
@@ -34,6 +45,7 @@ def summarize(root):
         rows.append(
             {
                 "input": manifest.parent.name,
+                "status": json.loads((directory / "run_summary.json").read_text())["status"],
                 "candidates": len(results),
                 "unique_murcko_scaffolds": len(set(cores)),
                 "fraction_changed_murcko": sum(c != original_core for c in cores) / len(cores)

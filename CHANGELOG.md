@@ -5,6 +5,8 @@
 - Replace the aromatic-atom removal/recombination code with explicit boundary
   bonds and stereo-aware molzip assembly. Bound intermediate search with a
   deterministic beam instead of factorial remnant permutations.
+- Reject provably over-capacity neutral C/N/O replacements before enumeration;
+  preserve normal assembly for charged scaffolds, other elements and unusual bonds.
 - Fix core preservation checks, ignored global limits, off-by-one fragment limits,
   shared replacement-file indexing, stale global database caching, disabled text
   fallback, and zero-fragment division.
@@ -23,6 +25,9 @@
   and mandatory MolVS, ODDT, PubChemPy dependencies. Standardize with RDKit Cleanup.
 - Add installation metadata, a tested dependency lock, CI, regression tests,
   benchmark artifacts, safer data installation, and a revised Colab notebook.
+- Add the original publication citation, a versioned PubChem drug panel, isolated
+  1.0/2.0 attachment comparisons, beam ablations, negative stereo-check controls,
+  and per-input evaluation time budgets that retain failures in reported results.
 
 These changes deliberately alter results; 2.0 is not a drop-in reproduction of
 1.0 rankings, CATS values, 3D scores, or candidate enumeration.

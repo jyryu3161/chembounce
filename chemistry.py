@@ -67,6 +67,38 @@ def prepare_replacement(target, pattern):
     return tuple(cut_scaffold(target, pattern)), count_fingerprint(target)
 
 
+def _insufficient_capacity(replacement, outside):
+    """Conservatively reject impossible neutral C/N/O replacements before search.
+
+    Count bond-order demand against an upper bound after replacing all removable
+    hydrogens. N receives a deliberately generous valence bound of five because
+    sanitization can convert hypervalent nitro-like representations to charged
+    forms. Other elements, charged scaffolds and unusual bonds use normal assembly;
+    no capacity assumption is made for them. Restrict retained atoms to C/N/O/H
+    too, avoiding metal/dative-bond cleanup that could change the bond-order demand.
+    """
+    maximum = {6: 4, 7: 5, 8: 2}
+    capacity = 0
+    for atom in replacement.GetAtoms():
+        if atom.GetAtomicNum() not in maximum or atom.GetFormalCharge():
+            return False
+        capacity += maximum[atom.GetAtomicNum()] - atom.GetTotalValence() + atom.GetTotalNumHs()
+    ordinary = {Chem.BondType.SINGLE, Chem.BondType.DOUBLE, Chem.BondType.TRIPLE}
+    if any(b.GetBondType() not in ordinary | {Chem.BondType.AROMATIC} for b in replacement.GetBonds()):
+        return False
+    demand = 0
+    for part in outside:
+        for atom in part.GetAtoms():
+            if atom.GetAtomicNum() not in (0, 1, 6, 7, 8):
+                return False
+            if atom.GetAtomicNum() == 0:
+                bond = atom.GetBonds()[0]
+                if bond.GetBondType() not in ordinary:
+                    return False
+                demand += bond.GetBondTypeAsDouble()
+    return demand > capacity
+
+
 def replace(target, pattern, replacement, max_n=10, beam_width=100, *, prepared=None):
     if max_n < 1 or beam_width < 1:
         raise ValueError("Candidate and beam limits must be positive")
@@ -75,6 +107,8 @@ def replace(target, pattern, replacement, max_n=10, beam_width=100, *, prepared=
     if len(Chem.GetMolFrags(replacement)) != 1 or any(a.GetAtomicNum() == 0 for a in replacement.GetAtoms()):
         raise ValueError("Replacement scaffold must be connected and contain no dummy atoms")
     outside, query_fp = prepared if prepared is not None else prepare_replacement(target, pattern)
+    if _insufficient_capacity(replacement, outside):
+        return []
     seed = Chem.Mol(replacement)
     for atom in seed.GetAtoms():
         atom.SetAtomMapNum(0)

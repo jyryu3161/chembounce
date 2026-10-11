@@ -188,6 +188,9 @@ def main():
     parser.add_argument("--panel", type=Path, default=Path(__file__).with_name("publication_molecules.json"))
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--legacy-tag", default="1.0")
+    parser.add_argument(
+        "--cases-file", type=Path, help="Exact input/fragment/replacement cases instead of a panel"
+    )
     parser.add_argument("--beams", type=int, nargs="+", default=[10, 50, 100])
     parser.add_argument("--max-n", type=int, default=10)
     parser.add_argument("--timeout", type=float, default=10)
@@ -205,13 +208,14 @@ def main():
         panel = [row for row in panel if row["name"] in args.names]
         if {row["name"] for row in panel} != set(args.names):
             parser.error("Unknown panel name")
-    cases = build_cases(panel)
+    cases = json.loads(args.cases_file.read_text()) if args.cases_file else build_cases(panel)
     report = {
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "python": platform.python_version(),
         "rdkit": rdkit.__version__,
         "platform": platform.platform(),
         "panel_sha256": digest(args.panel),
+        "cases_file_sha256": digest(args.cases_file) if args.cases_file else None,
         "script_sha256": digest(__file__),
         "max_n": args.max_n,
         "timeout_seconds_after_import": args.timeout,
@@ -238,7 +242,7 @@ def main():
                     )
             report["legacy_commit"] = commit
             report["legacy_compatibility_shim"] = "RDBASE set to installed pip RDKit; tagged source unchanged"
-            configurations.append(("1.0", directory, 50))
+            configurations.append((args.legacy_tag, directory, 50))
         configurations.extend(("2.0", str(ROOT), beam) for beam in args.beams)
         for version, code, beam in configurations:
             for index, case in enumerate(cases):

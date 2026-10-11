@@ -89,3 +89,32 @@ def test_bond_order_double_bond_stereo_and_isotopes_survive(smiles, pattern):
 def test_partial_fused_aromatic_cut_has_actionable_error():
     with pytest.raises(ValueError, match="entire aromatic ring system"):
         chemistry.replace(mol("Cc1cccc2ccccc12"), mol("c1ccccc1"), mol("c1ccncc1"))
+
+
+def test_impossible_attachment_capacity_stops_before_enumeration(monkeypatch):
+    # Twelve retained methyl groups cannot attach to six aromatic carbon atoms.
+    target = mol("CC1(C)C(C)(C)C(C)(C)C(C)(C)C(C)(C)C1(C)C")
+
+    def unexpected(*args):
+        pytest.fail("Impossible replacement entered expensive attachment enumeration")
+
+    monkeypatch.setattr(chemistry, "_attach", unexpected)
+    assert chemistry.replace(target, mol("C1CCCCC1"), mol("c1ccccc1")) == []
+
+
+@pytest.mark.parametrize(
+    "smiles,pattern,replacement",
+    [
+        ("Cc1c(C)c(O)c(N)c(C)c1F", "c1ccccc1", "C1CCNCC1"),
+        ("CC1(C)CCCCC1", "C1CCCCC1", "C1CCCC1"),
+        ("Cn1cncc1C", "c1c[nH]cn1", "c1cc[nH]c1"),
+        ("COc1ccccc1", "c1ccccc1", "[NH2+]1CCCCC1"),
+        ("COc1ccccc1", "c1ccccc1", "C1CSCC1"),
+    ],
+)
+def test_capacity_pruning_preserves_feasible_products(monkeypatch, smiles, pattern, replacement):
+    args = (mol(smiles), mol(pattern), mol(replacement), 20, 50)
+    bounded = chemistry.replace(*args)
+    assert bounded
+    monkeypatch.setattr(chemistry, "_insufficient_capacity", lambda *args: False)
+    assert chemistry.replace(*args) == bounded
