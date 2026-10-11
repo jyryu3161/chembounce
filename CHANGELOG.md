@@ -2,6 +2,15 @@
 
 ## 2.0.0.dev0
 
+- Add optional local SynLlama inference, catalog/registered-reaction projection,
+  independent stereochemistry-aware route replay and bounded building-block hit
+  expansion. Record actual blocks, intermediate products, failed proposals and
+  search limits; retain the model's untrusted claims separately.
+- Add multi-conformer, energy-filtered 3D shape/pharmacophore ranking against both
+  the hit and design, optional bound reference poses, final scaffold/core/property
+  checks, Pareto ranking and aligned SDF evidence. See [synthesis methods](docs/SYNTHESIS.md).
+- Add declarative catalog/rule converters, external-asset checksums, an offline
+  fixture, synthesis CLI/API and optional dependency groups. Keep stable 1.x unchanged.
 - Preserve the integrated 2.0 development work and 1.x maintenance history on
   `develop`; keep `main` on the stable 1.x line.
   Retain the six backport regressions with current database and error-reporting

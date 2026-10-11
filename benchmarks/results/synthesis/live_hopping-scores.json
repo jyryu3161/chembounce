@@ -1,0 +1,367 @@
+[
+  {
+    "route_id": "route_000000",
+    "product": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+    "design": {
+      "shape": 1.0,
+      "alignment_color": 1.0,
+      "pharmacophore": 1.0,
+      "joint": 1.0,
+      "reference_adjusted_joint": 1.0,
+      "reference_conformer_id": 2,
+      "reference_relative_energy": 0.0,
+      "reference_features": 8,
+      "candidate_features": 8,
+      "matched_weight": 8.0
+    },
+    "properties": {
+      "sa": 2.162028235816784,
+      "qed": 0.9383125419337824,
+      "mw": 304.3750000000001,
+      "logp": 1.9354199999999997,
+      "n_hdonor": 1,
+      "n_hacceptor": 6
+    },
+    "score": 0.7084851932190126,
+    "candidate_conformer_id": 2,
+    "candidate_energy": 48.45651617456174,
+    "candidate_relative_energy": 0.0,
+    "force_field": "MMFF94s",
+    "hit": {
+      "shape": 0.7112936073096027,
+      "alignment_color": 0.31161300507569845,
+      "pharmacophore": 0.3542209206888957,
+      "joint": 0.5019512690105816,
+      "reference_adjusted_joint": 0.5019512690105816,
+      "reference_conformer_id": 3,
+      "reference_relative_energy": 0.0,
+      "reference_features": 8,
+      "candidate_features": 8,
+      "matched_weight": 4.185088743230493
+    },
+    "ensemble_diagnostics": {
+      "candidate": {
+        "requested": 6,
+        "embedded": 5,
+        "optimization_failed": 0,
+        "outside_energy_window": 4,
+        "unspecified_stereo": 0
+      },
+      "hit": {
+        "requested": 6,
+        "embedded": 6,
+        "optimization_failed": 0,
+        "outside_energy_window": 5,
+        "unspecified_stereo": 0
+      },
+      "design": {
+        "requested": 6,
+        "embedded": 5,
+        "optimization_failed": 0,
+        "outside_energy_window": 4,
+        "unspecified_stereo": 0
+      }
+    },
+    "settings": {
+      "num_conformers": 6,
+      "seed": 42,
+      "energy_window": 5.0,
+      "strain_penalty": 0.05,
+      "max_iterations": 500,
+      "pharmacophore_sigma": 1.0,
+      "reject_unspecified_stereo": true
+    }
+  },
+  {
+    "route_id": "route_000001",
+    "product": "[2H]C([2H])([2H])c1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+    "design": {
+      "shape": 0.7802476556914634,
+      "alignment_color": 0.48801259005117475,
+      "pharmacophore": 0.49727870624668413,
+      "joint": 0.6228968973869264,
+      "reference_adjusted_joint": 0.6228968973869264,
+      "reference_conformer_id": 2,
+      "reference_relative_energy": 0.0,
+      "reference_features": 8,
+      "candidate_features": 8,
+      "matched_weight": 5.31394674001066
+    },
+    "properties": {
+      "sa": 3.271650224804498,
+      "qed": 0.938324831454971,
+      "mw": 307.3933053340001,
+      "logp": 1.93542,
+      "n_hdonor": 1,
+      "n_hacceptor": 6
+    },
+    "score": 0.7036320025604578,
+    "candidate_conformer_id": 4,
+    "candidate_energy": 48.45651616662282,
+    "candidate_relative_energy": 0.0,
+    "force_field": "MMFF94s",
+    "hit": {
+      "shape": 0.8603174153445909,
+      "alignment_color": 0.593412462099823,
+      "pharmacophore": 0.7343300243329444,
+      "joint": 0.7948313711373308,
+      "reference_adjusted_joint": 0.7948313711373308,
+      "reference_conformer_id": 3,
+      "reference_relative_energy": 0.0,
+      "reference_features": 8,
+      "candidate_features": 8,
+      "matched_weight": 6.774535540804065
+    },
+    "ensemble_diagnostics": {
+      "candidate": {
+        "requested": 6,
+        "embedded": 6,
+        "optimization_failed": 0,
+        "outside_energy_window": 5,
+        "unspecified_stereo": 0
+      },
+      "hit": {
+        "requested": 6,
+        "embedded": 6,
+        "optimization_failed": 0,
+        "outside_energy_window": 5,
+        "unspecified_stereo": 0
+      },
+      "design": {
+        "requested": 6,
+        "embedded": 5,
+        "optimization_failed": 0,
+        "outside_energy_window": 4,
+        "unspecified_stereo": 0
+      }
+    },
+    "settings": {
+      "num_conformers": 6,
+      "seed": 42,
+      "energy_window": 5.0,
+      "strain_penalty": 0.05,
+      "max_iterations": 500,
+      "pharmacophore_sigma": 1.0,
+      "reject_unspecified_stereo": true
+    }
+  },
+  {
+    "route_id": "route_000004",
+    "product": "CO/N=C(\\C(=O)O)c1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+    "design": {
+      "shape": 0.5999157284994066,
+      "alignment_color": 0.2504461416773443,
+      "pharmacophore": 0.29318496211848816,
+      "joint": 0.41938797089852703,
+      "reference_adjusted_joint": 0.41938797089852703,
+      "reference_conformer_id": 2,
+      "reference_relative_energy": 0.0,
+      "reference_features": 8,
+      "candidate_features": 13,
+      "matched_weight": 4.7610236623862985
+    },
+    "properties": {
+      "sa": 2.588069018781079,
+      "qed": 0.552936698098591,
+      "mw": 391.4090000000002,
+      "logp": 1.0621,
+      "n_hdonor": 2,
+      "n_hacceptor": 9
+    },
+    "score": 0.5405696808207398,
+    "candidate_conformer_id": 1,
+    "candidate_energy": 118.76154520111805,
+    "candidate_relative_energy": 0.0,
+    "force_field": "MMFF94s",
+    "hit": {
+      "shape": 0.8370555625285803,
+      "alignment_color": 0.574458950306659,
+      "pharmacophore": 0.579990003393552,
+      "joint": 0.696766717453943,
+      "reference_adjusted_joint": 0.696766717453943,
+      "reference_conformer_id": 3,
+      "reference_relative_energy": 0.0,
+      "reference_features": 8,
+      "candidate_features": 13,
+      "matched_weight": 7.708776666374127
+    },
+    "ensemble_diagnostics": {
+      "candidate": {
+        "requested": 6,
+        "embedded": 5,
+        "optimization_failed": 0,
+        "outside_energy_window": 3,
+        "unspecified_stereo": 0
+      },
+      "hit": {
+        "requested": 6,
+        "embedded": 6,
+        "optimization_failed": 0,
+        "outside_energy_window": 5,
+        "unspecified_stereo": 0
+      },
+      "design": {
+        "requested": 6,
+        "embedded": 5,
+        "optimization_failed": 0,
+        "outside_energy_window": 4,
+        "unspecified_stereo": 0
+      }
+    },
+    "settings": {
+      "num_conformers": 6,
+      "seed": 42,
+      "energy_window": 5.0,
+      "strain_penalty": 0.05,
+      "max_iterations": 500,
+      "pharmacophore_sigma": 1.0,
+      "reject_unspecified_stereo": true
+    }
+  },
+  {
+    "route_id": "route_000013",
+    "product": "CC(C)(C)OC(=O)NCCc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+    "design": {
+      "shape": 0.5313741319491361,
+      "alignment_color": 0.2651036321383559,
+      "pharmacophore": 0.2635452827158607,
+      "joint": 0.3742207180694705,
+      "reference_adjusted_joint": 0.3742207180694705,
+      "reference_conformer_id": 2,
+      "reference_relative_energy": 0.0,
+      "reference_features": 8,
+      "candidate_features": 13,
+      "matched_weight": 4.380097027577311
+    },
+    "properties": {
+      "sa": 2.4309623585300457,
+      "qed": 0.7214172019484347,
+      "mw": 433.5340000000003,
+      "logp": 2.6942000000000013,
+      "n_hdonor": 2,
+      "n_hacceptor": 8
+    },
+    "score": 0.4954907423812841,
+    "candidate_conformer_id": 4,
+    "candidate_energy": -1.0895030023546752,
+    "candidate_relative_energy": 0.0,
+    "force_field": "MMFF94s",
+    "hit": {
+      "shape": 0.7238775617558265,
+      "alignment_color": 0.705606590888613,
+      "pharmacophore": 0.5945952126355097,
+      "joint": 0.6560595497013056,
+      "reference_adjusted_joint": 0.6560595497013056,
+      "reference_conformer_id": 3,
+      "reference_relative_energy": 0.0,
+      "reference_features": 8,
+      "candidate_features": 13,
+      "matched_weight": 7.830513578871411
+    },
+    "ensemble_diagnostics": {
+      "candidate": {
+        "requested": 6,
+        "embedded": 6,
+        "optimization_failed": 1,
+        "outside_energy_window": 3,
+        "unspecified_stereo": 0
+      },
+      "hit": {
+        "requested": 6,
+        "embedded": 6,
+        "optimization_failed": 0,
+        "outside_energy_window": 5,
+        "unspecified_stereo": 0
+      },
+      "design": {
+        "requested": 6,
+        "embedded": 5,
+        "optimization_failed": 0,
+        "outside_energy_window": 4,
+        "unspecified_stereo": 0
+      }
+    },
+    "settings": {
+      "num_conformers": 6,
+      "seed": 42,
+      "energy_window": 5.0,
+      "strain_penalty": 0.05,
+      "max_iterations": 500,
+      "pharmacophore_sigma": 1.0,
+      "reject_unspecified_stereo": true
+    }
+  },
+  {
+    "route_id": "route_000024",
+    "product": "COC(=O)c1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+    "design": {
+      "shape": 0.6515956522875613,
+      "alignment_color": 0.2975121035439001,
+      "pharmacophore": 0.34753824290646934,
+      "joint": 0.47587226025637785,
+      "reference_adjusted_joint": 0.47587226025637785,
+      "reference_conformer_id": 2,
+      "reference_relative_energy": 0.0,
+      "reference_features": 8,
+      "candidate_features": 10,
+      "matched_weight": 4.642308598844453
+    },
+    "properties": {
+      "sa": 2.2403003625184468,
+      "qed": 0.8350749831769309,
+      "mw": 348.3840000000002,
+      "logp": 1.4136,
+      "n_hdonor": 1,
+      "n_hacceptor": 8
+    },
+    "score": 0.6309777474317599,
+    "candidate_conformer_id": 0,
+    "candidate_energy": 73.00948454379207,
+    "candidate_relative_energy": 0.0,
+    "force_field": "MMFF94s",
+    "hit": {
+      "shape": 0.9226690543194357,
+      "alignment_color": 0.7519718050818077,
+      "pharmacophore": 0.7586289984358373,
+      "joint": 0.8366382136659158,
+      "reference_adjusted_joint": 0.8366382136659158,
+      "reference_conformer_id": 3,
+      "reference_relative_energy": 0.0,
+      "reference_features": 8,
+      "candidate_features": 10,
+      "matched_weight": 7.764754239802944
+    },
+    "ensemble_diagnostics": {
+      "candidate": {
+        "requested": 6,
+        "embedded": 6,
+        "optimization_failed": 0,
+        "outside_energy_window": 4,
+        "unspecified_stereo": 0
+      },
+      "hit": {
+        "requested": 6,
+        "embedded": 6,
+        "optimization_failed": 0,
+        "outside_energy_window": 5,
+        "unspecified_stereo": 0
+      },
+      "design": {
+        "requested": 6,
+        "embedded": 5,
+        "optimization_failed": 0,
+        "outside_energy_window": 4,
+        "unspecified_stereo": 0
+      }
+    },
+    "settings": {
+      "num_conformers": 6,
+      "seed": 42,
+      "energy_window": 5.0,
+      "strain_penalty": 0.05,
+      "max_iterations": 500,
+      "pharmacophore_sigma": 1.0,
+      "reject_unspecified_stereo": true
+    }
+  }
+]

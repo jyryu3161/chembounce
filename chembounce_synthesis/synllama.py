@@ -1,0 +1,180 @@
+"""Optional local SynLlama inference; never execute upstream Python code.
+
+Official .bin weights use Torch's restricted weights-only loader (Torch >=2.6).
+General-purpose pickle objects and remote model code are never loaded.
+"""
+
+import ast
+import importlib.metadata
+import json
+import logging
+from pathlib import Path
+
+from .common import canonical, digest, positive
+
+LOGGER = logging.getLogger(__name__)
+
+
+def load_prompt(filename):
+    """Read an upstream vars.py TEMPLATE literal or a user-supplied JSON template."""
+    path = Path(filename)
+    if path.suffix == ".json":
+        template = json.loads(path.read_text())
+    else:
+        tree = ast.parse(path.read_text())
+        assignments = [
+            n
+            for n in tree.body
+            if isinstance(n, ast.Assign)
+            and any(isinstance(t, ast.Name) and t.id == "TEMPLATE" for t in n.targets)
+        ]
+        if len(assignments) != 1:
+            raise ValueError("Prompt source must contain one literal TEMPLATE assignment")
+        template = ast.literal_eval(assignments[0].value)
+    if (
+        not isinstance(template, dict)
+        or not all(isinstance(template.get(k), str) for k in ("instruction", "input"))
+        or "SMILES_STRING" not in template["input"]
+    ):
+        raise ValueError("Prompt requires instruction and input containing SMILES_STRING")
+    return template
+
+
+class SynLlama:
+    def __init__(self, model_path, prompt_path, device="cpu", samples=4, max_new_tokens=1600, seed=42):
+        positive(samples, "samples")
+        positive(max_new_tokens, "max_new_tokens")
+        if not isinstance(seed, int) or not 0 <= seed <= 2**31 - 1:
+            raise ValueError("Invalid inference seed")
+        self.model_path = Path(model_path).resolve()
+        self.prompt_path = Path(prompt_path).resolve()
+        self.template = load_prompt(self.prompt_path)
+        safe_weights = sorted(self.model_path.glob("*.safetensors"))
+        weights = safe_weights or sorted(self.model_path.glob("pytorch_model*.bin"))
+        if not weights or not (self.model_path / "config.json").is_file():
+            raise ValueError("SynLlama requires local Hugging Face weights and config.json")
+        self.samples, self.max_new_tokens, self.seed, self.device = samples, max_new_tokens, seed, device
+        self.provenance = {
+            "provider": "synllama_local",
+            "model_path": str(self.model_path),
+            "model_files_sha256": {
+                p.name: digest(p) for p in sorted(self.model_path.iterdir()) if p.is_file()
+            },
+            "prompt_path": str(self.prompt_path),
+            "prompt_sha256": digest(self.prompt_path),
+            "device": device,
+            "samples": samples,
+            "max_new_tokens": max_new_tokens,
+            "seed": seed,
+            "use_cache": True,
+        }
+        try:
+            import torch
+            from transformers import AutoModelForCausalLM, AutoTokenizer
+        except ImportError as exc:
+            raise RuntimeError(
+                "Install the synllama optional dependency group to run model inference"
+            ) from exc
+        self.torch = torch
+        if not safe_weights and tuple(int(p) for p in torch.__version__.split(".")[:2]) < (2, 6):
+            raise RuntimeError(
+                "Official .bin weights require Torch >=2.6 for restricted weights-only loading"
+            )
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            str(self.model_path), local_files_only=True, trust_remote_code=False
+        )
+        dtype = torch.float16 if device.startswith("cuda") else torch.float32
+        self.model = (
+            AutoModelForCausalLM.from_pretrained(
+                str(self.model_path),
+                torch_dtype=dtype,
+                local_files_only=True,
+                trust_remote_code=False,
+                use_safetensors=bool(safe_weights),
+                weights_only=True,
+            )
+            .to(device)
+            .eval()
+        )
+        if self.tokenizer.pad_token_id is None:
+            self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
+        for package in ("torch", "transformers", "safetensors"):
+            self.provenance[package + "_version"] = importlib.metadata.version(package)
+        self.provenance["dtype"] = str(dtype)
+        self.provenance["hardware"] = (
+            torch.cuda.get_device_name(torch.device(device)) if device.startswith("cuda") else "cpu"
+        )
+
+    def propose(self, smiles):
+        smiles = canonical(smiles)
+        prompt = f"### Instruction:\n{self.template['instruction']}\n\n### Input:\n{self.template['input'].replace('SMILES_STRING', smiles)}\n\n### Response: \n"
+        inputs = self.tokenizer(prompt, return_tensors="pt", return_token_type_ids=False).to(self.device)
+        if inputs.input_ids.shape[1] + self.max_new_tokens > self.model.config.max_position_embeddings:
+            raise ValueError("Prompt plus output budget exceeds model context length")
+        modes = [(0.1, 0.1), (0.6, 0.5), (1.0, 0.7), (1.5, 0.9)]
+        eos = [self.tokenizer.eos_token_id]
+        eot = self.tokenizer.convert_tokens_to_ids("<|eot_id|>")
+        if eot is not None and eot != self.tokenizer.unk_token_id and eot not in eos:
+            eos.append(eot)
+        responses = []
+        devices = [self.torch.device(self.device).index or 0] if self.device.startswith("cuda") else []
+        for index in range(self.samples):
+            temperature, top_p = modes[index % len(modes)]
+            LOGGER.info("SynLlama sample %s/%s for %s", index + 1, self.samples, smiles)
+            with self.torch.random.fork_rng(devices=devices), self.torch.inference_mode():
+                self.torch.random.default_generator.manual_seed(self.seed + index)
+                if devices:
+                    with self.torch.cuda.device(self.device):
+                        self.torch.cuda.manual_seed(self.seed + index)
+                generated = self.model.generate(
+                    **inputs,
+                    use_cache=True,
+                    do_sample=True,
+                    temperature=temperature,
+                    top_p=top_p,
+                    max_new_tokens=self.max_new_tokens,
+                    eos_token_id=eos,
+                    pad_token_id=self.tokenizer.pad_token_id,
+                )
+            tokens = generated[0, inputs.input_ids.shape[1] :]
+            response = self.tokenizer.decode(tokens, skip_special_tokens=True)
+            responses.append(
+                {
+                    "response": response,
+                    "sampling": {
+                        "temperature": temperature,
+                        "top_p": top_p,
+                        "seed": self.seed + index,
+                        "generated_tokens": len(tokens),
+                        "ended_with_eos": int(tokens[-1]) in eos if len(tokens) else False,
+                    },
+                }
+            )
+        return responses
+
+
+class SavedProposals:
+    """Replay auditable JSON model outputs without installing an LLM runtime."""
+
+    def __init__(self, filename):
+        path = Path(filename).resolve()
+        data = json.loads(path.read_text())
+        if data.get("schema_version") != 1 or not isinstance(data.get("proposals"), list):
+            raise ValueError("Saved proposals require schema_version=1 and a proposals list")
+        self.proposals = {}
+        for row in data["proposals"]:
+            self.proposals.setdefault(canonical(row["design"]), []).append(
+                {"response": row["response"], "sampling": row.get("sampling", {})}
+            )
+        self.provenance = {
+            "provider": "saved_proposals",
+            "path": str(path),
+            "sha256": digest(path),
+            "recorded_provider": data.get("provider", {}),
+        }
+
+    def propose(self, smiles):
+        key = canonical(smiles)
+        if key not in self.proposals:
+            raise ValueError(f"No saved proposals for design {key}")
+        return self.proposals[key]

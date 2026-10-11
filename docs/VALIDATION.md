@@ -269,3 +269,11 @@ evidence. Before manuscript submission:
 These are manuscript-level requirements, not claims that this patch has already
 completed comparative or experimental validation. Version 2.0 on `develop` remains a
 publicly identifiable development version until release criteria are satisfied.
+
+## Synthesis-aware workflow
+
+The optional SynLlama/catalog/reaction/3D pipeline has a separate
+[integration validation record](../benchmarks/results/synthesis/README.md), including
+actual GPU inference, a 238,542-structure catalog snapshot, independent route replay,
+exported-coordinate checks, isotope-preserving scoring and Python/dependency tests.
+This is a small retrospective workflow check, not experimental or held-out validation.

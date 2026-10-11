@@ -153,6 +153,10 @@ def argument_parser():
     #                         help="Tanimoto treshold for drop replace scaffold. Replace scaffolds with less than the threshold for corresponding fragment are dropped. Default is 0.3 (0.0 ~ 1.0)")
 
     parser.add_argument("--seed", type=int, default=42, help="Deterministic 3D conformer seed")
+    parser.add_argument(
+        "--synthesis-config",
+        help="Run catalog/reaction verification and 3D ranking after hopping; JSON config",
+    )
     parser.add_argument("--beam-width", type=int, default=100, help="Maximum intermediate attachment states")
     parser.add_argument(
         "--search-threshold", type=float, default=0.3, help="Scaffold Morgan-bit similarity cutoff"

@@ -1,0 +1,265 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "scope": "One preselected retrospective integration smoke case; not held-out accuracy or experimental synthesis validation",
+  "python_version": "3.10.12",
+  "synllama_source_commit": "57a98b658eae8ba4f6f1d04aa99c4f91da566fb0",
+  "archive": {
+    "url": "https://api.figshare.com/v2/file/download/53625473",
+    "bytes": 7773956257,
+    "sha256": "d46ceb49c3e2949c6e65386187d07c8866852de93f20d710daebb57597acebed",
+    "gzip_crc_verified": true
+  },
+  "catalog": {
+    "records": 238542,
+    "rejected_records": 1,
+    "rejection_reason": "One record has uninstantiated dummy atoms",
+    "input_index_sha256": "7cb1fd0d1a8b531fc0f8c69e8f6a4ebbd30b54d2185940d5bc30bf9523dad482",
+    "output_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "id_policy": "Preserve input ID when present, otherwise structure-sha256 (not a supplier SKU)",
+    "availability_policy": "Snapshot membership only; live stock is not checked"
+  },
+  "cases": {
+    "live_hopping": {
+      "code_revision": "98bef874628a47b984cd1c9b5c05081e403a5333",
+      "code_dirty": false,
+      "hit": "Cc1coc(NC(=O)c2cccnc2N2CCOCC2)n1",
+      "designs": [
+        "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1"
+      ],
+      "provider": "synllama_local",
+      "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "effective_search": {
+        "building_block_top_k": 3,
+        "beam_width": 6,
+        "max_combinations": 256,
+        "reaction_product_limit": 64,
+        "max_steps": 12
+      },
+      "effective_conformers": {
+        "num_conformers": 6,
+        "seed": 42,
+        "energy_window": 5.0,
+        "strain_penalty": 0.05,
+        "max_iterations": 500,
+        "pharmacophore_sigma": 1.0,
+        "reject_unspecified_stereo": true
+      },
+      "effective_workflow": {
+        "mode": "hop",
+        "core_smiles": null,
+        "preserve_design_scaffold": true,
+        "max_designs": 1,
+        "max_scored_products": 32,
+        "max_results": 12,
+        "expansion": {
+          "rounds": 1,
+          "max_routes": 12,
+          "locked_building_block_ids": []
+        },
+        "minimum_scores": {},
+        "property_thresholds": {}
+      },
+      "summary": {
+        "status": "success",
+        "proposals": 4,
+        "verified_routes": 120,
+        "scored_products": 5,
+        "accepted_products": 5,
+        "returned_products": 5,
+        "failures": [],
+        "route_rejections": {
+          "accepted": 32,
+          "constraint_rejected": 88
+        },
+        "limits_reached": [],
+        "elapsed_seconds": 110.51935561653227
+      },
+      "files_sha256": {
+        "manifest.json": "60af50a2be3e28c9162ee3e3d1cd0ea5a6200a753e0eaa60bec8d8e19a34663b",
+        "poses_design.sdf": "e3f9938f51a43a528f005d52b230145b26ed773e56a1aa29ba17ae6262b9e260",
+        "poses_hit.sdf": "59e812049997d36e785b682eb190d290f18baf86b1190ad28d1de6749b4a7e63",
+        "proposals.json": "6b56ac91beaec08b6943621d713480f199f85b079b7328a8193768de57c15c78",
+        "references_design.sdf": "7c33e974fc241d4d90be7087d0cf0eb80d32e1d32d4bc4c67655385dfc5cc7ed",
+        "references_hit.sdf": "13b4d9f967eef1c32b2672efc86a36db65055947520765cf60ab80a3db4c6013",
+        "results.tsv": "90c8a2eae8fb06298d9a5e187c587f1a9cb61b5fc24407652cc57c07e9ea7c2a",
+        "routes.json": "42d0f81741813bd24f18f9ba14484846b2aa6e421e874316056b0e360593165f",
+        "scores.json": "138a11b425afdf7d88b1eb876aba8a4c259ef54a42dbe1dd1723c4c83975d219",
+        "summary.json": "e4a0641f6357e37839984afc5ccae20bea07109ba249b2d03431f3056fa49b37"
+      },
+      "sampling": [
+        {
+          "temperature": 0.1,
+          "top_p": 0.1,
+          "seed": 42,
+          "generated_tokens": 201,
+          "ended_with_eos": true
+        },
+        {
+          "temperature": 0.6,
+          "top_p": 0.5,
+          "seed": 43,
+          "generated_tokens": 201,
+          "ended_with_eos": true
+        },
+        {
+          "temperature": 1.0,
+          "top_p": 0.7,
+          "seed": 44,
+          "generated_tokens": 201,
+          "ended_with_eos": true
+        },
+        {
+          "temperature": 1.5,
+          "top_p": 0.9,
+          "seed": 45,
+          "generated_tokens": 201,
+          "ended_with_eos": true
+        }
+      ],
+      "model": {
+        "provider": "synllama_local",
+        "model_files_sha256": {
+          "config.json": "d7913dc91c529be21728f9e6dcd52632ee7f7d464d48d2e30c8d23a0048d99e6",
+          "generation_config.json": "8c1b048a14a28895a3ea0e2adaec429f53ef0df35cc676ad95b77ae4a755490d",
+          "pytorch_model.bin": "4c85cf6e568b66f299cf235a3196a326fc7bebd41b8fb90be4c018ed5ea79781",
+          "pytorch_model.bin.crswap": "8b535047308e01c6ce1022e1311b426f6887d6ee87fa116a2297c517bbec7ebc",
+          "special_tokens_map.json": "94e708c3f5e64acf85bbe5ad01467a1248faadb73e83b41793087ecced586e8f",
+          "tokenizer.json": "79e3e522635f3171300913bb421464a87de6222182a0570b9b2ccba2a964b2b4",
+          "tokenizer_config.json": "d1d263d3721a550f921ddddda0369872a54a13d322461513a621e13d1d913fa7"
+        },
+        "prompt_sha256": "10dc20cf9c1f6af3522aa51fb5b3d9a2f121668c70ca4f92819feb96a3bbae6a",
+        "device": "cuda:0",
+        "samples": 4,
+        "max_new_tokens": 1600,
+        "seed": 42,
+        "use_cache": true,
+        "torch_version": "2.8.0+cu128",
+        "transformers_version": "5.0.0",
+        "safetensors_version": "0.6.2",
+        "dtype": "torch.float16",
+        "hardware": "NVIDIA L40"
+      }
+    },
+    "hit_expansion": {
+      "code_revision": "98bef874628a47b984cd1c9b5c05081e403a5333",
+      "code_dirty": false,
+      "hit": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+      "designs": [
+        "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1"
+      ],
+      "provider": "saved_proposals",
+      "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "effective_search": {
+        "building_block_top_k": 3,
+        "beam_width": 6,
+        "max_combinations": 256,
+        "reaction_product_limit": 64,
+        "max_steps": 12
+      },
+      "effective_conformers": {
+        "num_conformers": 6,
+        "seed": 42,
+        "energy_window": 5.0,
+        "strain_penalty": 0.05,
+        "max_iterations": 500,
+        "pharmacophore_sigma": 1.0,
+        "reject_unspecified_stereo": true
+      },
+      "effective_workflow": {
+        "mode": "expand",
+        "core_smiles": null,
+        "preserve_design_scaffold": true,
+        "max_designs": 1,
+        "max_scored_products": 32,
+        "max_results": 12,
+        "expansion": {
+          "rounds": 1,
+          "max_routes": 12,
+          "locked_building_block_ids": []
+        },
+        "minimum_scores": {},
+        "property_thresholds": {}
+      },
+      "summary": {
+        "status": "success",
+        "proposals": 4,
+        "verified_routes": 120,
+        "scored_products": 4,
+        "accepted_products": 4,
+        "returned_products": 4,
+        "failures": [],
+        "route_rejections": {
+          "accepted": 24,
+          "constraint_rejected": 96
+        },
+        "limits_reached": [],
+        "elapsed_seconds": 84.46612674370408
+      },
+      "files_sha256": {
+        "manifest.json": "f3fe427b1a808f1ca0b1b6760a1c90f42872789bc255ffeda031ab7f6495c89d",
+        "poses_design.sdf": "5df3df6d81f0f10483d047001a3bf747f75870e09662bbd7066760d782f8d7f6",
+        "poses_hit.sdf": "5df3df6d81f0f10483d047001a3bf747f75870e09662bbd7066760d782f8d7f6",
+        "proposals.json": "eaee1cda0eaff773de0ba56dc48262bbccf5f1c20f8b05fec8b66983d5cea8dd",
+        "references_design.sdf": "1fc53ab9fbeb3f6fd2ee81ef2c30c6abd15ffdec8846dc3e71b56e744d4b7e96",
+        "references_hit.sdf": "638ffcbf6739eb986d93975e301b3c98a28b08e7f5e5262b3cd8e174b5616530",
+        "results.tsv": "1ed663e3c8d979f6d67064274f14b690a275de8359d0937f3466a324f7d2e42c",
+        "routes.json": "facc907219f1c105300c40cb223f95cbd4219befa51417935684f1693cb61556",
+        "scores.json": "d72422909535587ff7796a417f12c34cca10b60fc77adfba3484c356729c328e",
+        "summary.json": "96c3a2f279cf67c7bd3498004f0d6398a490040b4697e29d9a8c608dc756b698"
+      },
+      "sampling": [
+        {
+          "temperature": 0.1,
+          "top_p": 0.1,
+          "seed": 42,
+          "generated_tokens": 201,
+          "ended_with_eos": true
+        },
+        {
+          "temperature": 0.6,
+          "top_p": 0.5,
+          "seed": 43,
+          "generated_tokens": 201,
+          "ended_with_eos": true
+        },
+        {
+          "temperature": 1.0,
+          "top_p": 0.7,
+          "seed": 44,
+          "generated_tokens": 201,
+          "ended_with_eos": true
+        },
+        {
+          "temperature": 1.5,
+          "top_p": 0.9,
+          "seed": 45,
+          "generated_tokens": 201,
+          "ended_with_eos": true
+        }
+      ]
+    }
+  },
+  "export_audit": [
+    {
+      "run": "synthesis-live-hop-final",
+      "rows": 5,
+      "catalog_membership_checked": true,
+      "independent_route_replay": true,
+      "sdf_identities_match": true,
+      "same_conformation_for_both_references": true,
+      "max_exported_pharmacophore_error": 1.078249750091631e-05
+    },
+    {
+      "run": "synthesis-live-expansion-final",
+      "rows": 4,
+      "catalog_membership_checked": true,
+      "independent_route_replay": true,
+      "sdf_identities_match": true,
+      "same_conformation_for_both_references": true,
+      "max_exported_pharmacophore_error": 2.5059091363077712e-06
+    }
+  ]
+}

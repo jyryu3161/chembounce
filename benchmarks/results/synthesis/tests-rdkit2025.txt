@@ -1,0 +1,12 @@
+........................................................................ [ 54%]
+.............................................................            [100%]
+=============================== warnings summary ===============================
+tests/synthesis/test_synllama_provider.py::test_local_inference_formats_capture_raw_outputs_and_restore_rng[safetensors]
+  <frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+tests/synthesis/test_synllama_provider.py::test_local_inference_formats_capture_raw_outputs_and_restore_rng[safetensors]
+  <frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+133 passed, 2 warnings in 21.93s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

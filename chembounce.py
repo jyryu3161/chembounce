@@ -159,11 +159,17 @@ def _hash_file(path):
 
 # Snapshot source files when this module is loaded, so later edits to an active
 # notebook/server checkout cannot silently replace the recorded implementation.
-_SOURCE_HASHES = {p.name: _hash_file(p) for p in sorted(Path(__file__).parent.glob("*.py"))}
+def _source_hashes():
+    root = Path(__file__).parent
+    paths = sorted(root.glob("*.py")) + sorted((root / "chembounce_synthesis").glob("*.py"))
+    return {str(p.relative_to(root)): _hash_file(p) for p in paths}
+
+
+_SOURCE_HASHES = _source_hashes()
 
 
 def _changed_sources():
-    current = {p.name: _hash_file(p) for p in Path(__file__).parent.glob("*.py")}
+    current = _source_hashes()
     return sorted(
         name
         for name in current.keys() | _SOURCE_HASHES.keys()
@@ -689,6 +695,37 @@ def main(argv=None):
         LOGGER.error("%s", exc)
         return 2
     _json_write(Path(options.output_dir) / "resource_cost.json", cost)
+    if options.synthesis_config:
+        from chembounce_synthesis.workflow import load_config, run
+
+        try:
+            config = load_config(options.synthesis_config)
+            if options.core_smiles:
+                if config.get("core_smiles") not in (None, options.core_smiles):
+                    raise ValueError("core_smiles conflicts with the synthesis configuration")
+                config["core_smiles"] = options.core_smiles
+            # Projection can change molecular properties. Reapply the intersection
+            # of hopping and synthesis bounds to the regenerated final products.
+            bounds = dict(config.get("property_thresholds", {}))
+            for key, (lo, hi) in thresholds.items():
+                extra_lo, extra_hi = bounds.get(key, (None, None))
+                lows = [v for v in (lo, extra_lo) if v is not None and math.isfinite(v)]
+                highs = [v for v in (hi, extra_hi) if v is not None and math.isfinite(v)]
+                bounds[key] = [max(lows) if lows else None, min(highs) if highs else None]
+            config["property_thresholds"] = bounds
+            verified = run(
+                options.input_smiles,
+                results["Final structure"].tolist(),
+                config,
+                Path(options.output_dir) / "synthesis",
+            )
+        except (ValueError, OSError, KeyError, TypeError) as exc:
+            LOGGER.error("Synthesis workflow: %s", exc)
+            return 2
+        print(
+            f"Verified synthesis products: {len(verified)}; results: {Path(options.output_dir) / 'synthesis/results.tsv'}"
+        )
+        return 0 if verified else 3
     print(
         f"Found hopped structures: {len(results)}; results: {Path(options.output_dir) / 'overall_result.txt'}"
     )
