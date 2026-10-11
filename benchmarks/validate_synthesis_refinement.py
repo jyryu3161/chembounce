@@ -56,6 +56,7 @@ def main():
     hit, designs, continued = continuation_inputs(out / "first")
     continued["expansion"]["rounds"] = 2
     second = run(hit, designs, continued, out / "continued")
+    assert first and second, "Both stages must return refined products for this validation"
     assert before == {p.name: digest(p) for p in (out / "first").iterdir()}
     first_pool = {r["smiles"] for r in read_table(out / "first/screening.tsv")}
     second_pool = {r["smiles"] for r in read_table(out / "continued/screening.tsv")}

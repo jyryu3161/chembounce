@@ -435,3 +435,11 @@ analogues from 4 to 35 by widening the neighbour and round budgets under the upd
 algorithm. It reports both Tanimotos and all 3D components, including the tradeoff
 between design and original-hit pharmacophore similarity.
 These are integration results, not an estimate of general success rate.
+
+The [multi-seed refinement and continuation validation](../benchmarks/results/synthesis-refinement/README.md)
+uses the same withheld-precursor case with 12-conformer screening and 24-conformer
+reevaluation at three seeds. It retains all four earlier candidates, screens 14
+products in the first stage and 36 after continuation, and refines the top 10 in
+each stage. All 14 first-stage products remain in the continued pool. Seed ranges
+and independently checked exported coordinates accompany the results; increasing
+conformer sampling changes earlier low-budget 3D conclusions.
