@@ -1,11 +1,14 @@
 # ChemBounce
 
-> **Version notice:** The `1.0` tag includes the scaffold-assembly hotfix.
+> **Version notice:** The `v1.0.1` tag includes the scaffold-assembly hotfix.
 > The pre-fix code and original environment are preserved as
-> [`1.0-original`](https://github.com/jyryu3161/chembounce/tree/1.0-original).
+> [`v1.0.0`](https://github.com/jyryu3161/chembounce/tree/v1.0.0).
 > Broader improvements are maintained on the
-> [2.0 development branch](https://github.com/jyryu3161/chembounce/tree/2.0).
-> Use `1.0-original` and the original reference data to reproduce pre-fix behavior.
+> [main development branch](https://github.com/jyryu3161/chembounce/tree/main).
+> Use `v1.0.0` and the original reference data to reproduce pre-fix behavior.
+
+Releases use `vMAJOR.MINOR.PATCH` tags; `release/1.x` maintains this series.
+Use `main` for the latest development code.
 
 ## Maintenance fixes
 
@@ -26,7 +29,7 @@ Run the regression tests with `python -m pytest tests -q` (requires pytest).
 
 ## Using in Google Colaboratory
 
-ChemBounce is also available in [Google Colaboratory](https://colab.research.google.com/github/jyryu3161/chembounce/blob/1.0/chembounce_colab.ipynb)
+ChemBounce is also available in [Google Colaboratory](https://colab.research.google.com/github/jyryu3161/chembounce/blob/v1.0.1/chembounce_colab.ipynb)
 
 ## Dependencies
 
@@ -42,7 +45,7 @@ conda env create -f environment_simple.yml
 ```
 
 **Environment files:** Both files specify the compatible 1.x hotfix environment.
-The original frozen environment is available at `1.0-original`.
+The original frozen environment is available at `v1.0.0`.
 
 To download reference files:
 ```bash

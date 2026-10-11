@@ -526,7 +526,7 @@ def make_scaffold_hopping(target_smiles:str,
             message = 'No candidates passed the selected scaffold, similarity and search limits.'
         logging.getLogger(__name__).warning(message)
     with open(os.path.join(output_dir, 'run_summary.json'), 'w') as stream:
-        json.dump({'version': '1.0-adp-hotfix', 'status': status, 'message': message,
+        json.dump({'version': '1.0.1', 'status': status, 'message': message,
                    'counts': dict(counts), 'assembly_errors': assembly_errors}, stream, indent=2)
         stream.write('\n')
     return os.path.join(output_dir,'overall_result.txt')
