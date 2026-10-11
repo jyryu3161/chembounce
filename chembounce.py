@@ -21,76 +21,16 @@ from rdkit import Chem
 
 import scaffoldgraph_fragmenter as sg
 import utils
+import chemistry
+from collections import Counter
 import cli
 import cost_estimation
 
 
 # Removal of substructures for given molecule
 def remove_substructures(mol, pattern_mol):
-    """
-    Remove a pattern substructure from molecule and return remaining fragments.
-    
-    Args:
-        mol: RDKit molecule object to remove substructure from
-        pattern_mol: RDKit molecule object representing the pattern to remove
-        
-    Returns:
-        list: List of SMILES strings representing the remaining fragments
-    """
-    substructure_list = utils.get_substructure_info(mol, pattern_mol)
-    candidate_structures = []
-    
-    for each_structure_atom_list in substructure_list:
-        temp_mol = copy.deepcopy(mol)
-        temp_mol2 = copy.deepcopy(mol)
-        
-        edit_mol = Chem.EditableMol(temp_mol)
-        edit_mol2 = Chem.EditableMol(temp_mol2)
-        
-        original_atom_info = {}
-        rm_atom_idx_list = []
-        for each_atom_idx in sorted(each_structure_atom_list, reverse=True):
-            neighbor_atoms = utils.get_neighbor_atoms(mol, each_atom_idx)
-            if not set(neighbor_atoms).issubset(set(each_structure_atom_list)):
-                linker_atom = list(set(neighbor_atoms).difference(set(each_structure_atom_list)))[0]
-                original_atom_info[linker_atom] = each_atom_idx
-            else:
-                rm_atom_idx_list.append(each_atom_idx)
-        
-        for i in each_structure_atom_list:
-            for j in each_structure_atom_list:
-                if i != j:
-                    if temp_mol.GetBondBetweenAtoms(i, j) != None:
-                        edit_mol.RemoveBond(i, j)
-        
-        for each_atom_idx in rm_atom_idx_list:
-            edit_mol.RemoveAtom(each_atom_idx)
-        
-        temp_mol = edit_mol.GetMol()
-        Chem.Kekulize(temp_mol)
-        smiles = Chem.MolToSmiles(temp_mol, False, kekuleSmiles=True)
-        smiles_list = smiles.split('.')
-        for each_frag in smiles_list:
-            temp_pattern_mol = Chem.MolFromSmiles(each_frag)
-            
-            temp_substructure_list = utils.get_substructure_info(mol, temp_pattern_mol)
-            temp_substructure_list = list(temp_substructure_list[0])
-            target_idx = None
-            for each_atom in temp_substructure_list:
-                if each_atom in original_atom_info:
-                    temp_substructure_list.append(original_atom_info[each_atom])
-                    target_idx = original_atom_info[each_atom]
-            
-            edit_mol = Chem.EditableMol(mol)
-            edit_mol.ReplaceAtom(target_idx, Chem.Atom(0))
-            submol = edit_mol.GetMol()
-
-            submol = utils.get_submol_from_atom_list(submol, temp_substructure_list)  
-            frag_smiles = Chem.MolToSmiles(submol)
-            candidate_structures.append(frag_smiles)
-            
-        break
-    return candidate_structures
+    """Return retained fragments with labelled attachment dummies (ADP hotfix)."""
+    return [Chem.MolToSmiles(part) for part in chemistry.cut_scaffold(mol, pattern_mol)]
 
 
 def merge_structures(template_mol, mol, frag_mol, top_n=3):
@@ -157,52 +97,10 @@ def merge_structures(template_mol, mol, frag_mol, top_n=3):
     return structure_candidates
 
 def replace_molecule(target_mol, pattern_mol, replace_mol, max_n, _merge_structure_top_n_):
-    """
-    Replace a pattern in target molecule with replacement molecule.
-    
-    Args:
-        target_mol: RDKit molecule object containing the pattern to replace
-        pattern_mol: RDKit molecule object representing the pattern to find
-        replace_mol: RDKit molecule object to replace the pattern with
-        max_n: Maximum number of candidates to return
-        _merge_structure_top_n_: Number of top structures to consider in merging
-        
-    Returns:
-        list: List of tuples (similarity_score, SMILES) for candidate molecules
-    """
-    candidate_structures = remove_substructures(target_mol, pattern_mol)
-    
-    final_candidates = []
-    saved_structures = {}
-    # Permutation for merge order for fragment remnants
-    candidate_sets = itertools.permutations(candidate_structures)
-
-    # code_ rearr. : unlimit ub/ 
-    for each_set in candidate_sets: # permut round
-        candidate_set = list(each_set)
-        start_replace_scaffold_list = [(1.,replace_mol)] # seed mol : reset for each_set
-        for each_structure in candidate_set: # frag round
-            frag_mol = Chem.MolFromSmiles(each_structure)
-            tmp_replace_scaffold_list = []
-            for _score_,each_replace_mol in start_replace_scaffold_list[:max_n]:
-                structure_candidates = merge_structures(
-                    target_mol, each_replace_mol, frag_mol, _merge_structure_top_n_)
-                for each_candidate in structure_candidates:
-                    each_score = each_candidate[0]
-                    each_str = each_candidate[1]
-                    if each_str not in saved_structures:
-                        saved_structures[each_str] = True
-                        each_str_mol, each_str = utils.init_mol(each_str)
-                        tmp_replace_scaffold_list.append(tuple([each_score,each_str_mol]))
-            tmp_replace_scaffold_list = list(set(tmp_replace_scaffold_list))
-            tmp_replace_scaffold_list.sort(reverse=True,key=lambda x: x[0])
-            start_replace_scaffold_list = tmp_replace_scaffold_list # update seed mole
-        final_candidates.extend(
-            [tuple([score,Chem.MolToSmiles(mol)]) for (score, mol) in start_replace_scaffold_list])
-    
-    final_candidates.sort(reverse=True)
-    final_candidates = final_candidates[0:max_n]
-    return final_candidates
+    """Backport boundary-bond assembly, preserving retained ADP stereochemistry."""
+    return chemistry.replace(
+        target_mol, pattern_mol, replace_mol, max_n or 10, _merge_structure_top_n_ or 100
+    )
 
 
 def read_fragments(target_smiles, fragment_file):
@@ -505,6 +403,8 @@ def make_scaffold_hopping(target_smiles:str,
     saved_results = {target_smiles:1}
     # Finding candidates
     _overall_cand_cnt_ = 0
+    counts = Counter()
+    assembly_errors = []
     for frag_no, pattern_mol in enumerate(frags, start=1):
         print(f"Screening started for fragment_{frag_no:04d}: {Chem.MolToSmiles(pattern_mol)}")
         gc.collect()
@@ -536,7 +436,14 @@ def make_scaffold_hopping(target_smiles:str,
                     max_n=cand_max_n__rplc,
                     _merge_structure_top_n_=_merge_structure_top_n_)
             except Exception as e:
+                counts['assembly_failed'] += 1
+                if len(assembly_errors) < 5:
+                    assembly_errors.append({'fragment': original_scaffold,
+                                            'replacement': replace_scaffold, 'reason': str(e)})
                 continue
+            if not final_candidates:
+                counts['no_valid_attachments'] += 1
+            counts['generated'] += len(final_candidates)
             for cand_cnt, [_, each_candidate] in enumerate(final_candidates):
                 if each_candidate in frag_saved_results:
                     continue
@@ -552,18 +459,21 @@ def make_scaffold_hopping(target_smiles:str,
                     if core_mol:
                         if not target_mol.HasSubstructMatch(core_mol):
                             continue
-                    # calculation of electron similarity and subscores
-                    try: # Possible error in calculation of electron shape
-                        electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
-                    except:
-                        electron_shape_sim = float('nan')
+                    # Reject properties before optional, expensive shape calculation.
                     props = utils._get_molecular_prop_extd_(mol=cand_mol)
-                    # Property determination
                     passed, determ_results = utils.determ_props(
-                        props=props,thresholds=candidate_thresholds,
-                        w_all_failed_reason=False,ignore_null_val=False)
+                        props=props, thresholds=candidate_thresholds,
+                        w_all_failed_reason=True, ignore_null_val=False)
                     if not passed:
+                        counts['property_rejected'] += 1
+                        for reason in determ_results:
+                            counts['filter:' + reason.split(':')[0]] += 1
                         continue
+                    try:
+                        electron_shape_sim = utils.calc_electron_shape(target_smiles, each_candidate)
+                    except Exception:
+                        electron_shape_sim = float('nan')
+                        counts['shape_failed'] += 1
                     cats_des_dist = utils.calculate_cats_des(target_mol, cand_mol)
                     # Standardization of smiles structure
                     try:
@@ -602,6 +512,23 @@ def make_scaffold_hopping(target_smiles:str,
         print(datetime.datetime.now() - _frag_start)
         f_frag.close()
     fp.close()
+    counts['accepted'] = _overall_cand_cnt_
+    status = 'success' if _overall_cand_cnt_ else 'no_candidates'
+    message = 'Candidates written to overall_result.txt.'
+    if not _overall_cand_cnt_:
+        if counts['property_rejected']:
+            message = ('Candidates failed property filters. ADP has 6 H-bond donors and '
+                       '11 acceptors, above the default limits. For nucleotide exploration, '
+                       'use --wo_lipinski or explicit property limits; filters are not relaxed automatically.')
+        elif counts['assembly_failed']:
+            message = 'Scaffold assembly failed; inspect assembly_errors in run_summary.json.'
+        else:
+            message = 'No candidates passed the selected scaffold, similarity and search limits.'
+        logging.getLogger(__name__).warning(message)
+    with open(os.path.join(output_dir, 'run_summary.json'), 'w') as stream:
+        json.dump({'version': '1.0-adp-hotfix', 'status': status, 'message': message,
+                   'counts': dict(counts), 'assembly_errors': assembly_errors}, stream, indent=2)
+        stream.write('\n')
     return os.path.join(output_dir,'overall_result.txt')
 
 

@@ -25,7 +25,8 @@ import pandas as pd
 # SA score calcualtion function - dependency of importing path by the rdkit version
 import rdkit.RDPaths as RDPaths
 sys.path.append(RDPaths.RDContribDir)
-sys.path.append(os.environ['RDBASE'])
+if os.environ.get('RDBASE'):
+    sys.path.append(os.environ['RDBASE'])
 try:
     from Contrib.SA_Score.sascorer import calculateScore as calc_SA
 except:
@@ -329,9 +330,13 @@ def init_mol(smiles):
         tuple: (RDKit molecule object, canonical SMILES string)
     """
     mol = Chem.MolFromSmiles(smiles)
-    submolblock = Chem.MolToMolBlock(mol)
-    mol = Chem.MolFromMolBlock(submolblock)
-    return mol, Chem.MolToSmiles(mol)
+    if mol is None or not mol.GetNumAtoms():
+        raise SmilesInputError(smiles)
+    for atom in mol.GetAtoms():
+        atom.SetAtomMapNum(0)
+    Chem.AssignStereochemistry(mol, cleanIt=True, force=True)
+    canonical = Chem.MolToSmiles(mol, isomericSmiles=True)
+    return Chem.MolFromSmiles(canonical), canonical
 
 def get_standard_smiles(smiles):
     """
