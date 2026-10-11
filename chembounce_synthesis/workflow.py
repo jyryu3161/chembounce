@@ -1,6 +1,7 @@
 """End-to-end synthesis-aware scaffold hopping and hit expansion."""
 
 import csv
+import copy
 import importlib.metadata
 import json
 import logging
@@ -16,7 +17,9 @@ from rdkit.Chem.Scaffolds import MurckoScaffold
 from .catalog import Catalog
 from .common import FP, canonical, digest, molecule, positive, write_json
 from .conformers import ConformerSettings, ensemble, reference_from_sdf, require_alignment, score_candidate
+from .continuation import load_carried_routes
 from .reactions import Rules
+from .refinement import RefinementSettings, refine_candidate
 from .routes import SearchLimits, expand_route, resolve_proposal, verify_route
 from .synllama import SavedProposals, SynLlama
 
@@ -38,6 +41,13 @@ COLUMNS = [
     "reaction_steps",
     "route_id",
     "alternative_route_ids",
+    "scoring_stage",
+    "pose_seed",
+    "seed_score_median",
+    "seed_score_min",
+    "seed_score_max",
+    "seed_successes",
+    "seed_count",
 ]
 
 
@@ -85,17 +95,31 @@ def _config(config):
         "reference_sdf",
         "minimum_scores",
         "property_thresholds",
+        "refinement",
+        "carry_forward",
     }
     if set(config) - permitted:
         raise ValueError(f"Unknown synthesis configuration keys: {sorted(set(config) - permitted)}")
     for required in ("catalog", "rules", "provider"):
         if required not in config:
             raise ValueError(f"Missing synthesis configuration: {required}")
-    for key in ("provider", "search", "conformers", "expansion", "minimum_scores", "property_thresholds"):
+    for key in (
+        "provider",
+        "search",
+        "conformers",
+        "expansion",
+        "minimum_scores",
+        "property_thresholds",
+        "refinement",
+    ):
         if key in config and not isinstance(config[key], dict):
             raise ValueError(f"{key} must be a JSON object")
     if "preserve_design_scaffold" in config and not isinstance(config["preserve_design_scaffold"], bool):
         raise ValueError("preserve_design_scaffold must be true or false")
+    RefinementSettings(**config.get("refinement", {}))
+    carried = config.get("carry_forward", [])
+    if not isinstance(carried, list) or not all(isinstance(p, str) and p for p in carried):
+        raise ValueError("carry_forward must be a list of run directories")
     if config.get("core_smiles") is not None:
         canonical(config["core_smiles"])
     for key, default in (("max_designs", 20), ("max_scored_products", 256), ("max_results", 50)):
@@ -158,14 +182,20 @@ def _config(config):
 
 def load_config(filename):
     path = Path(filename).resolve()
-    config = _config(json.loads(path.read_text()))
+    return _resolve_paths(_config(json.loads(path.read_text())), path.parent)
+
+
+def _resolve_paths(config, base):
+    config = copy.deepcopy(config)
     for key in ("catalog", "rules", "reference_sdf"):
         if config.get(key):
-            config[key] = str((path.parent / config[key]).resolve())
+            config[key] = str((base / config[key]).resolve())
+    if "carry_forward" in config:
+        config["carry_forward"] = [str((base / p).resolve()) for p in config["carry_forward"]]
     provider = config["provider"] = dict(config["provider"])
     for key in ("model_path", "prompt_path", "path"):
         if provider.get(key):
-            provider[key] = str((path.parent / provider[key]).resolve())
+            provider[key] = str((base / provider[key]).resolve())
     return config
 
 
@@ -217,6 +247,7 @@ def _manifest(config, hit, designs):
         "chemical_state_policy": "Explicit input states; no implicit protonation, tautomer, or stereoisomer enumeration",
         "verification_scope": "Catalog snapshot membership and registered reaction replay; no experimental synthesis or current-stock guarantee",
         "ranking_scope": "Heuristic, bounded search; joint shape/pharmacophore scores are not calibrated activity probabilities",
+        "refinement_policy": "All requested seeds must succeed; median-score seed supplies all pose components (lower middle for even counts); Pareto then median seed score; refined shortlist exported separately from screening pool",
         "fingerprint": {
             "algorithm": "Morgan",
             "radius": 2,
@@ -272,6 +303,22 @@ def _pareto(rows):
         level += 1
 
 
+def _rank(rows):
+    _pareto(rows)
+    rows.sort(key=lambda r: (r["pareto_front"], -r["seed_score_median"], r["reaction_steps"], r["smiles"]))
+    for rank, row in enumerate(rows, 1):
+        row["rank"] = rank
+    return rows
+
+
+def _write_table(path, rows):
+    with path.open("w", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=COLUMNS, delimiter="\t")
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row | {"alternative_route_ids": json.dumps(row["alternative_route_ids"])})
+
+
 def run(hit, designs, config, output_dir):
     """Write complete evidence for each verified route, failure, and accepted pose.
 
@@ -295,10 +342,10 @@ def run(hit, designs, config, output_dir):
         "limits_reached": [],
     }
     write_json(out / "summary.json", summary)
-    route_records, score_records, raw_records = [], [], []
+    route_records, score_records, raw_records, refinement_records = [], [], [], []
     rows, poses, score_cache, similarity_cache = {}, {}, {}, {}
     try:
-        config = _config(config)
+        config = _resolve_paths(_config(config), Path.cwd())
         hit = canonical(hit)
         hit_fp = FP.GetFingerprint(molecule(hit))
         all_designs = list(dict.fromkeys(canonical(s) for s in designs))
@@ -312,12 +359,16 @@ def run(hit, designs, config, output_dir):
             raise ValueError("The original hit does not contain core_smiles")
         limits = SearchLimits(**config.get("search", {}))
         settings = ConformerSettings(**config.get("conformers", {}))
+        refinement = RefinementSettings(**config.get("refinement", {}))
+        carried, carry_sources = load_carried_routes(config.get("carry_forward", []), hit, designs)
+        summary["carried_routes_loaded"] = sum(len(items) for items in carried.values())
         if designs:
             require_alignment()
         catalog, rules = Catalog(config["catalog"]), Rules(config["rules"])
         manifest = _manifest(config, hit, designs)
         manifest["catalog_sha256"], manifest["rules_sha256"] = catalog.sha256, rules.sha256
         manifest["catalog_import"] = catalog.import_provenance
+        manifest["carry_forward"] = carry_sources
         manifest["effective_search"], manifest["effective_conformers"] = asdict(limits), asdict(settings)
         manifest["effective_workflow"] = {
             "mode": config.get("mode", "hop"),
@@ -336,6 +387,7 @@ def run(hit, designs, config, output_dir):
             },
             "minimum_scores": config.get("minimum_scores", {}),
             "property_thresholds": config.get("property_thresholds", {}),
+            "refinement": asdict(refinement),
         }
         hit_pose = (
             reference_from_sdf(config["reference_sdf"], hit, settings)
@@ -347,6 +399,9 @@ def run(hit, designs, config, output_dir):
         provider = _provider(config["provider"]) if designs else None
         manifest["provider"] = provider.provenance if provider else None
         write_json(out / "manifest.json", manifest)
+        write_json(
+            out / "proposals.json", {"schema_version": 1, "provider": manifest["provider"], "proposals": []}
+        )
         from utils import _get_molecular_prop_extd_, determ_props
 
         for design in designs:
@@ -354,33 +409,38 @@ def run(hit, designs, config, output_dir):
             proposals = provider.propose(design)
             design_fp = FP.GetFingerprint(molecule(design))
             expansion_cache = {}
-            for proposal in proposals:
-                proposal_id = len(raw_records)
-                raw_records.append({"design": design, **proposal})
-                write_json(
-                    out / "proposals.json",
-                    {"schema_version": 1, "provider": provider.provenance, "proposals": raw_records},
-                )
-                summary["proposals"] += 1
-                try:
-                    projected, report = resolve_proposal(proposal["response"], catalog, rules, limits)
-                    summary["search_reports"].append(
-                        {"proposal_id": proposal_id, "stage": "projection", **asdict(report)}
+            # Carry evidence first, before the fresh search can consume the scoring budget.
+            for proposal in [None, *proposals]:
+                if proposal is None:
+                    proposal_id, projected = None, []
+                    candidates = carried[design]
+                else:
+                    proposal_id = len(raw_records)
+                    raw_records.append({"design": design, **proposal})
+                    write_json(
+                        out / "proposals.json",
+                        {"schema_version": 1, "provider": provider.provenance, "proposals": raw_records},
                     )
-                    if not projected:
-                        summary["failures"].append(
-                            {
-                                "stage": "projection",
-                                "proposal_id": proposal_id,
-                                "reason": "No catalog-supported reaction route survived",
-                            }
+                    summary["proposals"] += 1
+                    try:
+                        projected, report = resolve_proposal(proposal["response"], catalog, rules, limits)
+                        summary["search_reports"].append(
+                            {"proposal_id": proposal_id, "stage": "projection", **asdict(report)}
                         )
-                except (ValueError, KeyError, TypeError) as exc:
-                    summary["failures"].append(
-                        {"stage": "proposal", "proposal_id": proposal_id, "reason": str(exc)}
-                    )
-                    continue
-                candidates = list(projected)
+                        if not projected:
+                            summary["failures"].append(
+                                {
+                                    "stage": "projection",
+                                    "proposal_id": proposal_id,
+                                    "reason": "No catalog-supported reaction route survived",
+                                }
+                            )
+                    except (ValueError, KeyError, TypeError) as exc:
+                        summary["failures"].append(
+                            {"stage": "proposal", "proposal_id": proposal_id, "reason": str(exc)}
+                        )
+                        continue
+                    candidates = list(projected)
                 expansion = config.get("expansion", {})
                 if expansion.get("rounds", 0):
                     for item in projected:
@@ -402,18 +462,26 @@ def run(hit, designs, config, output_dir):
                         )
                 for item in candidates:
                     route_id = f"route_{len(route_records):06d}"
-                    # Final independent verification includes expansion products.
-                    verification = verify_route(item["route"], catalog, rules, limits.reaction_product_limit)
-                    product = verification["product"]
                     record = {
                         "route_id": route_id,
                         "proposal_id": proposal_id,
                         "design": design,
                         **item,
-                        "verification": verification,
                         "selection_status": "pending",
                     }
                     route_records.append(record)
+                    # Recheck carried routes against today's catalog and rules as well.
+                    try:
+                        verification = verify_route(
+                            item["route"], catalog, rules, limits.reaction_product_limit
+                        )
+                        if len(verification["steps"]) > limits.max_steps:
+                            raise ValueError("Route exceeds search.max_steps")
+                    except (ValueError, KeyError, TypeError) as exc:
+                        record.update(selection_status="verification_rejected", reason=str(exc))
+                        continue
+                    record["verification"] = verification
+                    product = verification["product"]
                     summary["verified_routes"] += 1
                     try:
                         check_constraints(
@@ -447,6 +515,7 @@ def run(hit, designs, config, output_dir):
                     ):
                         record.update(selection_status="2d_threshold_rejected", scores=tanimoto)
                         continue
+                    record["eligible_for_scoring"] = True
                     if key not in score_cache:
                         if summary["scored_products"] >= config.get("max_scored_products", 256):
                             record["selection_status"] = "not_scored_budget"
@@ -469,10 +538,13 @@ def run(hit, designs, config, output_dir):
                         for metric in ("shape", "pharmacophore")
                     }
                     scores.update(tanimoto)
-                    if any(scores[k] < v for k, v in config.get("minimum_scores", {}).items()):
+                    # Coarse poses must not prematurely exclude a candidate that refinement can rescue.
+                    if not refinement.top_n and any(
+                        scores[k] < v for k, v in config.get("minimum_scores", {}).items()
+                    ):
                         record.update(selection_status="3d_threshold_rejected", scores=scores)
                         continue
-                    record["selection_status"] = "accepted"
+                    record["selection_status"] = "screened" if refinement.top_n else "accepted"
                     score_records.append(
                         {
                             "route_id": route_id,
@@ -480,6 +552,7 @@ def run(hit, designs, config, output_dir):
                             "design": design,
                             "properties": props,
                             "tanimoto": tanimoto,
+                            "scoring_stage": "screening",
                             **info,
                         }
                     )
@@ -493,6 +566,13 @@ def run(hit, designs, config, output_dir):
                         "reaction_steps": len(verification["steps"]),
                         "route_id": route_id,
                         "alternative_route_ids": [],
+                        "scoring_stage": "screening",
+                        "pose_seed": settings.seed,
+                        "seed_score_median": info["score"],
+                        "seed_score_min": info["score"],
+                        "seed_score_max": info["score"],
+                        "seed_successes": 1,
+                        "seed_count": 1,
                     }
                     if product in rows:
                         previous = rows[product]
@@ -509,9 +589,79 @@ def run(hit, designs, config, output_dir):
                             continue
                     rows[product] = row
                     poses[product] = (info, hit_aligned, design_aligned)
-        ranked = list(rows.values())
-        _pareto(ranked)
-        ranked.sort(key=lambda r: (r["pareto_front"], -r["score"], r["reaction_steps"], r["smiles"]))
+        ranked = _rank(list(rows.values()))
+        _write_table(out / "screening.tsv", ranked)
+        summary["screened_products"] = len(ranked)
+        if refinement.top_n:
+            shortlist = ranked[: refinement.top_n]
+            if len(shortlist) < len(ranked):
+                summary["limits_reached"].append("refinement.top_n")
+            ranked = []
+            records_by_id = {record["route_id"]: record for record in route_records}
+            for coarse in shortlist:
+                LOGGER.info(
+                    "Refining %s with %s conformers and seeds %s",
+                    coarse["smiles"],
+                    refinement.num_conformers,
+                    refinement.seeds,
+                )
+                result, report = refine_candidate(
+                    coarse["smiles"], hit, coarse["design"], settings, refinement, hit_pose
+                )
+                evidence = {
+                    "route_id": coarse["route_id"],
+                    "product": coarse["smiles"],
+                    "design": coarse["design"],
+                    **report,
+                }
+                refinement_records.append(evidence)
+                record = records_by_id[coarse["route_id"]]
+                if result is None:
+                    record["selection_status"] = "refinement_failed"
+                    continue
+                info, _, _ = result
+                scores = {
+                    f"{ref}_{metric}": info[ref][metric]
+                    for ref in ("hit", "design")
+                    for metric in ("shape", "pharmacophore")
+                }
+                row = {
+                    **coarse,
+                    **scores,
+                    "score": info["score"],
+                    "relative_energy": info["candidate_relative_energy"],
+                    "scoring_stage": "refined",
+                    **{
+                        key: report[key]
+                        for key in (
+                            "pose_seed",
+                            "seed_score_median",
+                            "seed_score_min",
+                            "seed_score_max",
+                            "seed_successes",
+                            "seed_count",
+                        )
+                    },
+                }
+                if any(row[k] < v for k, v in config.get("minimum_scores", {}).items()):
+                    evidence["status"] = "3d_threshold_rejected"
+                    record.update(selection_status="3d_threshold_rejected", scores=scores)
+                    continue
+                record["selection_status"] = "accepted"
+                ranked.append(row)
+                poses[row["smiles"]] = result
+                score_records.append(
+                    {
+                        "route_id": row["route_id"],
+                        "product": row["smiles"],
+                        "design": row["design"],
+                        "scoring_stage": "refined",
+                        **info,
+                    }
+                )
+            ranked = _rank(ranked)
+            summary["refinement_attempted"] = len(shortlist)
+            summary["refinement_accepted"] = len(ranked)
         if len(ranked) > config.get("max_results", 50):
             summary["limits_reached"].append("max_results")
         selected = ranked[: config.get("max_results", 50)]
@@ -528,11 +678,16 @@ def run(hit, designs, config, output_dir):
                 row["rank"] = rank
                 writer.writerow(row | {"alternative_route_ids": json.dumps(row["alternative_route_ids"])})
                 info, hit_aligned, design_aligned = poses[row["smiles"]]
+                pose_settings = ConformerSettings(**info["settings"])
                 for mol, sdf in ((hit_aligned, hit_writer), (design_aligned, design_writer)):
                     mol = Chem.Mol(mol)
                     mol.SetProp("_Name", row["route_id"])
                     mol.SetProp("smiles", row["smiles"])
                     mol.SetProp("score", str(row["score"]))
+                    mol.SetProp("scoring_stage", row["scoring_stage"])
+                    mol.SetIntProp("pose_seed", row["pose_seed"])
+                    for metric in ("seed_score_median", "seed_score_min", "seed_score_max"):
+                        mol.SetDoubleProp(metric, row[metric])
                     for metric in (
                         "hit_tanimoto",
                         "design_tanimoto",
@@ -545,19 +700,36 @@ def run(hit, designs, config, output_dir):
                     mol.SetProp("verification", "catalog_and_rule_verified; experimental_validation=false")
                     sdf.write(mol, confId=info["candidate_conformer_id"])
                 for role, reference, sdf in (
-                    ("hit", hit_pose if hit_pose is not None else ensemble(hit, settings), hit_ref_writer),
-                    ("design", ensemble(row["design"], settings), design_ref_writer),
+                    (
+                        "hit",
+                        hit_pose if hit_pose is not None else ensemble(hit, pose_settings),
+                        hit_ref_writer,
+                    ),
+                    ("design", ensemble(row["design"], pose_settings), design_ref_writer),
                 ):
                     mol = Chem.Mol(reference.mol)
                     mol.SetProp("_Name", row["route_id"])
                     mol.SetProp("reference_role", role)
                     cid = info[role]["reference_conformer_id"]
                     mol.SetIntProp("source_conformer_id", cid)
+                    mol.SetIntProp("pose_seed", row["pose_seed"])
                     sdf.write(mol, confId=cid)
         summary.update(
             status="success" if selected else "no_candidates",
-            accepted_products=len(rows),
+            accepted_products=len(ranked),
             returned_products=len(selected),
+        )
+        eligible = {r["verification"]["product"] for r in route_records if r.get("eligible_for_scoring")}
+        carried_eligible = {
+            r["verification"]["product"]
+            for r in route_records
+            if r.get("eligible_for_scoring") and r.get("carried_from")
+        }
+        summary.update(
+            eligible_products=len(eligible),
+            carried_eligible_products=len(carried_eligible),
+            new_eligible_products=len(eligible - carried_eligible),
+            carried_screened_products=len(carried_eligible & rows.keys()),
         )
         return selected
     except Exception as exc:
@@ -571,4 +743,5 @@ def run(hit, designs, config, output_dir):
         }
         write_json(out / "routes.json", {"schema_version": 1, "routes": route_records})
         write_json(out / "scores.json", {"schema_version": 1, "scores": score_records})
+        write_json(out / "refinement.json", {"schema_version": 1, "candidates": refinement_records})
         write_json(out / "summary.json", summary)

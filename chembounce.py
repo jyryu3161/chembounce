@@ -650,7 +650,7 @@ def main(argv=None):
     parser = cli.argument_parser()
     options = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
-    from chembounce_synthesis.options import apply_expansion_options, expansion_overrides
+    from chembounce_synthesis.options import apply_expansion_options, has_synthesis_overrides
 
     synthesis_config = None
     if options.synllama is True and not options.synthesis_config:
@@ -674,8 +674,8 @@ def main(argv=None):
         except (ValueError, OSError, KeyError, TypeError) as exc:
             LOGGER.error("Synthesis configuration: %s", exc)
             return 2
-    elif options.synllama is not False and expansion_overrides(options):
-        LOGGER.error("Expansion options require --synthesis-config")
+    elif options.synllama is not False and has_synthesis_overrides(options):
+        LOGGER.error("Synthesis search/refinement options require --synthesis-config")
         return 2
     thresholds = utils._default_thrs_(not options.wo_lipinski)
     for metric, prefix in (
