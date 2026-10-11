@@ -1,0 +1,17 @@
+SMILES	Tanimoto Similarity
+[13cH]1[13cH][13cH][13cH][13cH][13cH]1	1.0
+c1cc[11cH]cc1	1.0
+c1cc[nH+]cc1	0.3333333333333333
+c1cc[o+]cc1	0.3333333333333333
+c1cc[s+]cc1	0.3333333333333333
+c1cc[se+]cc1	0.3333333333333333
+c1cc[te+]cc1	0.3333333333333333
+c1ccc(-c2ccccc2)cc1	0.3333333333333333
+c1ccc[cH+]cc1	0.3333333333333333
+c1ccncc1	0.3333333333333333
+c1ccpcc1	0.3333333333333333
+c1ccc(-c2ccc(-c3ccc(-c4ccc(-c5ccc(-c6ccccc6)cc5)cc4)cc3)cc2)cc1	0.3
+c1ccc(-c2ccc(-c3ccc(-c4ccc(-c5ccccc5)cc4)cc3)cc2)cc1	0.3
+c1ccc(-c2ccc(-c3ccc(-c4ccccc4)cc3)cc2)cc1	0.3
+c1ccc(-c2ccc(-c3ccccc3)cc2)cc1	0.3
+c1ccc2cccc-2cc1	0.3

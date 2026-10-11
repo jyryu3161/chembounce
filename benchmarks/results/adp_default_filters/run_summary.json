@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "input_smiles": "Nc1ncnc2c1ncn2[C@@H]1O[C@H](COP(=O)(O)OP(=O)(O)O)[C@@H](O)[C@H]1O",
+  "input_properties": {
+    "sa": 4.125297661526227,
+    "qed": 0.28079075856620234,
+    "mw": 427.2030000000001,
+    "logp": -1.7460000000000004,
+    "n_hdonor": 6,
+    "n_hacceptor": 11
+  },
+  "input_filter_failures": [
+    "n_hdonor.upper_maximum:6>5",
+    "n_hacceptor.upper_maximum:11>10"
+  ],
+  "database": {
+    "mode": "fingerprints",
+    "path": "/data2/home/jyryu/chembounce/data/fingerprints_mw250_v2",
+    "radius": 2,
+    "fp_size": 2048,
+    "excluded_legacy_records": 0
+  },
+  "fragments": [
+    {
+      "number": 1,
+      "smiles": "C1CCOC1",
+      "available_scaffolds": 5,
+      "counts": {
+        "scaffolds_tested": 5,
+        "generated": 15,
+        "property_rejected": 15,
+        "filter:n_hdonor.upper_maximum": 15,
+        "filter:n_hacceptor.upper_maximum": 15
+      }
+    },
+    {
+      "number": 2,
+      "smiles": "c1ncc2nc[nH]c2n1",
+      "available_scaffolds": 5,
+      "counts": {
+        "scaffolds_tested": 5,
+        "generated": 15,
+        "property_rejected": 15,
+        "filter:mw.upper_maximum": 6,
+        "filter:n_hdonor.upper_maximum": 15,
+        "filter:n_hacceptor.upper_maximum": 15
+      }
+    },
+    {
+      "number": 3,
+      "smiles": "c1ncc2ncn(C3CCCO3)c2n1",
+      "available_scaffolds": 5,
+      "counts": {
+        "scaffolds_tested": 5,
+        "generated": 15,
+        "property_rejected": 13,
+        "filter:n_hdonor.upper_maximum": 13,
+        "filter:n_hacceptor.upper_maximum": 13,
+        "duplicate_or_input": 2
+      }
+    }
+  ],
+  "source_files_changed_after_import": [],
+  "fragment_count_total": 3,
+  "fragment_count_screened": 3,
+  "global_limit_reached": false,
+  "counts": {
+    "scaffolds_tested": 15,
+    "generated": 45,
+    "property_rejected": 43,
+    "filter:n_hdonor.upper_maximum": 43,
+    "filter:n_hacceptor.upper_maximum": 43,
+    "filter:mw.upper_maximum": 6,
+    "duplicate_or_input": 2
+  },
+  "status": "no_candidates",
+  "message": "Candidates failed property filters. For nucleotide-like inputs consider --wo_lipinski or explicit limits; filters are never relaxed automatically."
+}

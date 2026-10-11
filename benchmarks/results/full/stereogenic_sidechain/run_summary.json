@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "input_smiles": "C[C@H](O)c1ccccc1",
+  "input_properties": {
+    "sa": 1.8064504627602993,
+    "qed": 0.6011560814583125,
+    "mw": 122.16699999999996,
+    "logp": 1.7399,
+    "n_hdonor": 1,
+    "n_hacceptor": 1
+  },
+  "input_filter_failures": [],
+  "database": {
+    "mode": "fingerprints",
+    "path": "/data2/home/jyryu/chembounce/data/fingerprints_full_v2",
+    "radius": 2,
+    "fp_size": 2048,
+    "excluded_legacy_records": 0
+  },
+  "fragments": [
+    {
+      "number": 1,
+      "smiles": "c1ccccc1",
+      "available_scaffolds": 16,
+      "counts": {
+        "scaffolds_tested": 9,
+        "generated": 27,
+        "accepted": 10,
+        "similarity_rejected": 17
+      }
+    }
+  ],
+  "source_files_changed_after_import": [],
+  "fragment_count_total": 1,
+  "fragment_count_screened": 1,
+  "global_limit_reached": false,
+  "counts": {
+    "accepted": 10,
+    "scaffolds_tested": 9,
+    "generated": 27,
+    "similarity_rejected": 17
+  },
+  "status": "success"
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "chembounce_version": "2.0.0.dev0",
+  "started_utc": "2026-10-11T03:36:31.073863+00:00",
+  "git_revision": "619de8a3e05ff5f54c75844ab8fb3dfff351cd78",
+  "git_dirty": false,
+  "python": "3.10.12",
+  "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+  "dependencies": {
+    "rdkit": "2026.9.1",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "scipy": "1.15.3",
+    "scaffoldgraph": "1.1.2",
+    "oddt": null
+  },
+  "parameters": {
+    "target_smiles": "COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCCCN1CCOCC1",
+    "overall_max_n": 20,
+    "frag_max_n": 10,
+    "scaffold_top_n": 20,
+    "cand_max_n__rplc": null,
+    "_merge_structure_top_n_": 50,
+    "murcko_frag_itr_rnd": 1,
+    "_search_scf_thr_": 0.3,
+    "fragments": null,
+    "replace_scaffold_files": null,
+    "low_mem": false,
+    "tqdm_quiet": false,
+    "use_fingerprint_db": true,
+    "scaffold_db_file": null,
+    "fingerprint_db_file": "data/fingerprints_full_v2",
+    "trust_legacy_db": false,
+    "input_smiles": "COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCCCN1CCOCC1",
+    "core_smiles": null,
+    "seed": 42,
+    "calculate_shape": false,
+    "tanimoto_threshold": 0.5,
+    "candidate_thresholds": {},
+    "effective_limits": {
+      "overall": 20,
+      "per_fragment": 10,
+      "scaffolds": 20,
+      "per_replacement": 10,
+      "beam": 50
+    }
+  },
+  "sources": {
+    "/data2/home/jyryu/chembounce/data/fingerprints_full_v2": {
+      "fingerprints.npy": "05560aa262b184dbb16c3674171755c1baef0529851f3aabbeb434604e058beb",
+      "metadata.json": "0b47c99af6c12dc55b6ae8078aa8f0b7ab1c2157d7f1bed6924b5453c21e5361",
+      "smiles.npy": "4d8a7edb36a4cb57c03da668086e016f9c51f463b38a771c4ce660fb026800b7"
+    }
+  },
+  "source_code_sha256": {
+    "cats_module.py": "cd90d5ef199e126070bd1f55918a12844763c1fa9ba1b232f1b5f4cc071e634a",
+    "chembounce.py": "4627ca81a5c9303dfeca07e0ffa6b9a8aa80cee69cc17d8e74d913611fbec902",
+    "chemistry.py": "96439178b348d6e7b8e81934c95eba79d1c8d61a844c6ff6e5dac77489e91aac",
+    "cli.py": "e5d0507ad72cbdae76c4466ec4279e71a17cce799c2c23e676f3c21a3405ecdc",
+    "cost_estimation.py": "4a416388ec4e210f9eb61f532d9b4650ee80ecd5808756d3ae04c48ba56d483f",
+    "fingerprint_db.py": "2901db6fadb90aa886d7d194f9ed38ac86f962f74fecfa6ea391a5d9cb97068e",
+    "generate_fingerprints.py": "57781998a33d33c7d81941de80a7100dbcddffd7791290bbc24fb991de4f7640",
+    "scaffoldgraph_fragmenter.py": "17787d5666155ec748a7136ee9b2351cfac0c7bd9557c4f52bd505d9a21698bc",
+    "shape_descriptors.py": "fd7f5a42e87e7b9987abf3c6536ffff08a18b5a1b05d1c097e5c1701d12a3b5e",
+    "utils.py": "197f32d92deb299a709383116fbd8f0651991069512a4c78860403eef2f42a81"
+  },
+  "source_files_changed_after_import": [],
+  "methods": {
+    "scaffold_search": "Morgan binary radius=2 bits=2048 unless database metadata overrides",
+    "candidate_similarity": "Morgan sparse counts radius=2; chirality disabled",
+    "replacement": "first substructure match, deterministic bounded beam",
+    "shape": "ETKDGv3 seed; UFF maxIters=1000; heavy-atom ElectroShape with Gasteiger charges",
+    "standardization": "RDKit Cleanup; input protonation retained during search"
+  }
+}

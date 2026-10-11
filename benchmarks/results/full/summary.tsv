@@ -1,0 +1,8 @@
+name	status	candidates	seconds	sampled_peak_rss_mb	shape_failures	manifest
+ADP	success	20	25.84969619382173	2570.62109375	0	ADP/run_manifest.json
+README_example	success	20	24.764153415337205	2603.00390625	0	README_example/run_manifest.json
+heteroaromatic_ether	success	20	25.548868080601096	2603.12109375	0	heteroaromatic_ether/run_manifest.json
+stereogenic_sidechain	success	10	13.369528126902878	2603.15234375	0	stereogenic_sidechain/run_manifest.json
+fused_bicyclic	success	10	13.600989959202709	2603.15625	0	fused_bicyclic/run_manifest.json
+macrocycle	success	10	13.314011558890344	2603.16015625	0	macrocycle/run_manifest.json
+acyclic_control	no_candidates	0	0.0301291216164827	297.53125	0	acyclic_control/run_manifest.json

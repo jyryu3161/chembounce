@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "input_smiles": "O=C1NCCOCCOCCOCCOCCN1",
+  "input_properties": {
+    "sa": 3.2462027300003076,
+    "qed": 0.6073080515310858,
+    "mw": 262.30599999999987,
+    "logp": -0.6343999999999981,
+    "n_hdonor": 2,
+    "n_hacceptor": 5
+  },
+  "input_filter_failures": [],
+  "database": {
+    "mode": "fingerprints",
+    "path": "/data2/home/jyryu/chembounce/data/fingerprints_mw250_v2",
+    "radius": 2,
+    "fp_size": 2048,
+    "excluded_legacy_records": 0
+  },
+  "fragments": [
+    {
+      "number": 1,
+      "smiles": "O=C1NCCOCCOCCOCCOCCN1",
+      "available_scaffolds": 20,
+      "counts": {
+        "scaffolds_tested": 20,
+        "generated": 20,
+        "accepted": 5,
+        "similarity_rejected": 15
+      }
+    }
+  ],
+  "source_files_changed_after_import": [],
+  "fragment_count_total": 1,
+  "fragment_count_screened": 1,
+  "global_limit_reached": false,
+  "counts": {
+    "accepted": 5,
+    "scaffolds_tested": 20,
+    "generated": 20,
+    "similarity_rejected": 15
+  },
+  "status": "success"
+}

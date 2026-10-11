@@ -1,0 +1,77 @@
+[
+  {
+    "python": "3.10.12",
+    "versions": {
+      "rdkit": "2026.9.1",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "scipy": "1.15.3",
+      "psutil": "7.2.2",
+      "scaffoldgraph": "1.1.2",
+      "oddt": null,
+      "pytest": "9.1.1"
+    },
+    "log": "verified-tests-final.txt",
+    "result": "73 passed, 1 skipped in 10.13s"
+  },
+  {
+    "python": "3.11.13",
+    "versions": {
+      "rdkit": "2026.9.1",
+      "numpy": "2.4.6",
+      "pandas": "2.3.3",
+      "scipy": "1.17.1",
+      "psutil": "7.2.2",
+      "scaffoldgraph": "1.1.2",
+      "oddt": null,
+      "pytest": "9.1.1"
+    },
+    "log": "tests-py311.txt",
+    "result": "73 passed, 1 skipped in 10.91s"
+  },
+  {
+    "python": "3.12.13",
+    "versions": {
+      "rdkit": "2026.9.1",
+      "numpy": "2.5.4",
+      "pandas": "2.3.3",
+      "scipy": "1.18.1",
+      "psutil": "7.2.2",
+      "scaffoldgraph": "1.1.2",
+      "oddt": null,
+      "pytest": "9.1.1"
+    },
+    "log": "tests-py312.txt",
+    "result": "73 passed, 1 skipped in 10.54s"
+  },
+  {
+    "python": "3.10.12",
+    "versions": {
+      "rdkit": "2023.9.6",
+      "numpy": "1.24.4",
+      "pandas": "2.0.3",
+      "scipy": "1.10.1",
+      "psutil": "5.9.8",
+      "scaffoldgraph": "1.1.2",
+      "oddt": null,
+      "pytest": "9.1.1"
+    },
+    "log": "tests-minimum.txt",
+    "result": "73 passed, 1 skipped, 8 warnings in 9.59s"
+  },
+  {
+    "python": "3.10.12",
+    "versions": {
+      "rdkit": "2025.9.6",
+      "numpy": "1.26.4",
+      "pandas": "2.3.3",
+      "scipy": "1.13.1",
+      "psutil": "7.2.2",
+      "scaffoldgraph": "1.1.2",
+      "oddt": "0.7",
+      "pytest": "9.0.2"
+    },
+    "log": "tests-rdkit2025.txt",
+    "result": "74 passed in 11.36s"
+  }
+]

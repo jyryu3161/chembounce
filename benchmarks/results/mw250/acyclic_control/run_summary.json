@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "input_smiles": "CC(O)CCN",
+  "input_properties": {
+    "sa": 2.926941311513213,
+    "qed": 0.48829600866503814,
+    "mw": 89.13800000000002,
+    "logp": -0.2839999999999999,
+    "n_hdonor": 2,
+    "n_hacceptor": 2
+  },
+  "input_filter_failures": [],
+  "database": {
+    "mode": "text",
+    "path": null,
+    "radius": 2,
+    "fp_size": 2048
+  },
+  "fragments": [],
+  "source_files_changed_after_import": [],
+  "fragment_count_total": 0,
+  "fragment_count_screened": 0,
+  "global_limit_reached": false,
+  "counts": {},
+  "status": "no_candidates",
+  "message": "No ring scaffolds found. Supply --fragments for an acyclic input."
+}

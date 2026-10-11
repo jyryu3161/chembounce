@@ -1,0 +1,2 @@
+data/scaffold_fingerprints_mw250.npz verified 1000 rows
+data/scaffold_fingerprints.npz verified 1000 rows

@@ -1,0 +1,3 @@
+Fragment_no	Original scaffold	Replaced scaffold	Final structure	Standardized final structure	Tanimoto Similarity	Electron shape Similarity	CATS2D dist	QED	SAscore	logP	MW	H_Donors	H_Acceptors
+1	c1ccccc1	[13cH]1[13cH][13cH][13cH][13cH][13cH]1	CC[13c]1[13cH][13cH][13cH][13cH][13cH]1	CC[13c]1[13cH][13cH][13cH][13cH][13cH]1	1.0	nan	0.0	0.522296983299386	1.0	2.2490000000000006	112.12212903999999	0	0
+1	c1ccccc1	c1cc[11cH]cc1	CC[11c]1ccccc1	CC[11c]1ccccc1	1.0	nan	0.0	0.5135173757561058	1.0	2.2490000000000006	105.16843359999997	0	0

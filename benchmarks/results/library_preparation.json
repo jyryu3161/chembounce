@@ -1,0 +1,36 @@
+[
+  {
+    "schema_version": 2,
+    "packed": true,
+    "bitorder": "big",
+    "fp_size": 2048,
+    "radius": 2,
+    "include_chirality": false,
+    "canonical_sorted_unique": true,
+    "source_sha256": "19d159ffacbef87a026a85c13d00a15867cd58336650fd24246693921da545ac",
+    "rdkit_version": "2026.09.1",
+    "input_lines": 848180,
+    "rejected_lines": 39862,
+    "rows": 522959,
+    "source_file": "Scaffolds_processed_mw250.txt",
+    "blank_lines": 0,
+    "duplicate_valid_rows": 285359
+  },
+  {
+    "schema_version": 2,
+    "packed": true,
+    "bitorder": "big",
+    "fp_size": 2048,
+    "radius": 2,
+    "include_chirality": false,
+    "canonical_sorted_unique": true,
+    "source_sha256": "b69016ce9d2f32cfefb0f5da3c55df6b108e10d7918abdf07fb3074cace76dd5",
+    "rdkit_version": "2026.09.1",
+    "input_lines": 4975036,
+    "rejected_lines": 132570,
+    "rows": 3267123,
+    "source_file": "Scaffolds_processed.txt",
+    "blank_lines": 1,
+    "duplicate_valid_rows": 1575342
+  }
+]

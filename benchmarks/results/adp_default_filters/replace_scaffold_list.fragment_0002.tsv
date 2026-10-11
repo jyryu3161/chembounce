@@ -1,0 +1,6 @@
+SMILES	Tanimoto Similarity
+c1ncc(-c2cnc3[nH]cnc3c2)cn1	0.5483870967741935
+N=c1[nH]cnc2cncnc12	0.5333333333333333
+O=c1[nH]cnc2cncnc12	0.5333333333333333
+c1ncc(-c2ncc3nc[nH]c3n2)cn1	0.53125
+O=c1cnc2cncnc2[nH]1	0.5

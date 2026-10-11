@@ -1,0 +1,13 @@
+Processing /data2/home/jyryu/chembounce
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: chembounce
+  Building wheel for chembounce (pyproject.toml): started
+  Building wheel for chembounce (pyproject.toml): finished with status 'done'
+  Created wheel for chembounce: filename=chembounce-2.0.0.dev0-py3-none-any.whl size=33836 sha256=44c919dde3b541b4eee5ea55d7ce5939d6c762a79dff65cc19b6af8480a720a2
+  Stored in directory: /tmp/pip-ephem-wheel-cache-kr6x7dbi/wheels/54/01/27/8c450aaf80da513a7cfa59df7e6089ffeff3c8c006042a55e3
+Successfully built chembounce

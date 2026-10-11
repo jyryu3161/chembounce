@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "input_smiles": "CCc1ccccc1",
+  "input_properties": {
+    "sa": 1.0,
+    "qed": 0.5147578217927745,
+    "mw": 106.16799999999996,
+    "logp": 2.2490000000000006,
+    "n_hdonor": 0,
+    "n_hacceptor": 0
+  },
+  "input_filter_failures": [],
+  "database": {
+    "mode": "text",
+    "path": "data/Scaffolds_processed_mw250.txt",
+    "radius": 2,
+    "fp_size": 2048
+  },
+  "text_library": {
+    "path": "data/Scaffolds_processed_mw250.txt",
+    "valid_records": 808318,
+    "rejected_records": 39862,
+    "examples": [
+      {
+        "line": 4,
+        "smiles": "C1([2*+])C=C1",
+        "reason": "Dummy atoms are not supported in input structures\nReceived SMILES input: C1([2*+])C=C1"
+      },
+      {
+        "line": 16,
+        "smiles": "[1*+][C@@H]1C[C@H]1",
+        "reason": "Dummy atoms are not supported in input structures\nReceived SMILES input: [1*+][C@@H]1C[C@H]1"
+      },
+      {
+        "line": 18,
+        "smiles": "[C@@H]1C[C@H]1[2*+]",
+        "reason": "Dummy atoms are not supported in input structures\nReceived SMILES input: [C@@H]1C[C@H]1[2*+]"
+      },
+      {
+        "line": 19,
+        "smiles": "[1*+][C@H]1C[C@@H]1",
+        "reason": "Dummy atoms are not supported in input structures\nReceived SMILES input: [1*+][C@H]1C[C@@H]1"
+      },
+      {
+        "line": 20,
+        "smiles": "[C@H]1C[C@@H]1[2*+]",
+        "reason": "Dummy atoms are not supported in input structures\nReceived SMILES input: [C@H]1C[C@@H]1[2*+]"
+      },
+      {
+        "line": 28,
+        "smiles": "[1*+]C1CC1",
+        "reason": "Dummy atoms are not supported in input structures\nReceived SMILES input: [1*+]C1CC1"
+      },
+      {
+        "line": 29,
+        "smiles": "C1CC1[2*+]",
+        "reason": "Dummy atoms are not supported in input structures\nReceived SMILES input: C1CC1[2*+]"
+      },
+      {
+        "line": 34,
+        "smiles": "C1([2*+])CC1",
+        "reason": "Dummy atoms are not supported in input structures\nReceived SMILES input: C1([2*+])CC1"
+      },
+      {
+        "line": 47,
+        "smiles": "[1*+]N1CC1",
+        "reason": "Dummy atoms are not supported in input structures\nReceived SMILES input: [1*+]N1CC1"
+      },
+      {
+        "line": 48,
+        "smiles": "[N+]1([2*-])CC1",
+        "reason": "Dummy atoms are not supported in input structures\nReceived SMILES input: [N+]1([2*-])CC1"
+      }
+    ]
+  },
+  "fragments": [
+    {
+      "number": 1,
+      "smiles": "c1ccccc1",
+      "available_scaffolds": 10,
+      "counts": {
+        "scaffolds_tested": 2,
+        "generated": 2,
+        "accepted": 2
+      }
+    }
+  ],
+  "source_files_changed_after_import": [],
+  "fragment_count_total": 1,
+  "fragment_count_screened": 1,
+  "global_limit_reached": true,
+  "counts": {
+    "accepted": 2,
+    "scaffolds_tested": 2,
+    "generated": 2
+  },
+  "status": "success"
+}

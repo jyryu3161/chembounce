@@ -1,0 +1,2 @@
+data/fingerprints_mw250_v2 verified 1000 rows
+data/fingerprints_full_v2 verified 1000 rows

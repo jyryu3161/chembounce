@@ -36,12 +36,23 @@ small-database fingerprint verification, seeded 3D repeatability, and CATS fixes
 The ODDT reference-comparison test is optional and runs when that legacy dependency
 is installed; the production implementation does not require it.
 
-Two local environments were used: Python 3.10.12 with RDKit 2025.09.6 / NumPy 1.26.4,
-and a clean installation with RDKit 2026.9.1 / NumPy 2.2.6. The clean environment's
-complete dependency snapshot is `requirements-lock.txt`. Package installation,
-`pip check`, wheel building, CLI entrypoint, shell syntax and notebook code-cell
-syntax are checked locally. The GitHub Actions matrix targets Python 3.10–3.12;
-remote CI status and interactive Colab execution are not inferred from local tests.
+Five local dependency combinations passed on the implementation through `619de8a`:
+
+| Python | RDKit | NumPy | Result |
+| --- | --- | --- | --- |
+| 3.10.12 | 2023.09.6 | 1.24.4 | 73 passed, 1 optional ODDT test skipped |
+| 3.10.12 | 2025.09.6 | 1.26.4 | 74 passed, including ODDT comparison |
+| 3.10.12 | 2026.09.1 | 2.2.6 | 73 passed, 1 optional test skipped |
+| 3.11.13 | 2026.09.1 | 2.4.6 | 73 passed, 1 optional test skipped |
+| 3.12.13 | 2026.09.1 | 2.5.4 | 73 passed, 1 optional test skipped |
+
+The minimum-version test exposed a real RDKit version difference in empty-vector
+Tanimoto. The implementation now follows the installed reference convention.
+See [environment records](../benchmarks/results/test-matrix.json) and the accompanying
+logs. `requirements-lock.txt` captures the clean Linux/Python 3.10 environment.
+Package installation, `pip check`, wheel building, CLI entrypoint, shell syntax and
+notebook code-cell syntax also passed locally. CI includes the Python matrix and
+minimum dependencies. Remote CI and interactive Colab execution have not been run.
 
 ## Search-kernel benchmark
 
@@ -79,6 +90,44 @@ Use the full database as a separate experimental condition. Keep all individual
 manifests, summaries, generated candidates and resource reports. The script checks
 sanitization/connectivity, uniqueness, caps and similarity thresholds and records
 zero-result inputs rather than dropping them from the denominator.
+
+## Recorded public-library results
+
+The reference archive was downloaded from Zenodo record 16741967 and matched its
+published MD5 (`f4e0439e44da841d822099c10766d099`). The download SHA-256, source
+hashes, deduplication counts and per-run library hashes are preserved under
+[`benchmarks/results`](../benchmarks/results/README.md).
+
+| Source library | Input rows | Valid unique scaffolds | Rejected rows | Duplicate valid rows |
+| --- | ---: | ---: | ---: | ---: |
+| MW≤250 | 848,180 | 522,959 | 39,862 | 285,359 |
+| Full | 4,975,036 | 3,267,123 | 132,570 | 1,575,342 |
+
+The full source contained one blank line; the MW≤250 source contained none.
+Rejected records include dummy atoms, multiple
+components and invalid SMILES. These cleaned libraries are distinct experimental
+conditions from the legacy arrays. Both newly generated databases, and both trusted
+legacy NPZs, passed 1,000-row fingerprint recomputation checks against RDKit.
+
+With filters explicitly disabled, both cleaned libraries generated candidates for
+all six ring-containing inputs in the stress panel. The acyclic control correctly
+returned `no_candidates`. ADP reached the configured 20-result cap in both libraries.
+On the full cleaned library the recorded ADP run took 25.85 s with sampled peak RSS
+of 2,571 MiB, including loading, search, assembly, properties and provenance hashing;
+3D scoring was disabled for this panel. This is a single observed run, not a speedup
+estimate or representative chemical benchmark. See the [full summary](../benchmarks/results/full/summary.tsv).
+
+A separate ADP run on the cleaned MW≤250 library produced ten candidates with ten
+finite 3D scores and no shape failures. An ADP run with the default Lipinski limits
+instead rejected 43 distinct candidates on property grounds and wrote an explicit
+`no_candidates` explanation. The low-memory text path also succeeded on the actual
+848,180-row source, reporting 39,862 excluded library records.
+
+Candidate-statistics tables report stereo-free Murcko diversity and changes from
+the input scaffold. The fused-ring example had only 70% changed Murcko scaffolds:
+a valid distinct molecule is not necessarily a new topological scaffold. These
+metrics do not establish novelty against known compounds or biological usefulness.
+Run `python benchmarks/summarize_results.py RUN_DIRECTORY` to reproduce the tables.
 
 ## Evidence still required for a journal manuscript
 
