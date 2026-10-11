@@ -1,0 +1,3 @@
+# ODDT 0.7 imports six while evaluating setup.py but omits it from build requirements.
+[extra-build-dependencies]
+oddt = ["six==1.17.0", "numpy==1.26.4"]

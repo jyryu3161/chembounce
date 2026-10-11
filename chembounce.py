@@ -517,16 +517,16 @@ def make_scaffold_hopping(target_smiles:str,
     message = 'Candidates written to overall_result.txt.'
     if not _overall_cand_cnt_:
         if counts['property_rejected']:
-            message = ('Candidates failed property filters. ADP has 6 H-bond donors and '
-                       '11 acceptors, above the default limits. For nucleotide exploration, '
-                       'use --wo_lipinski or explicit property limits; filters are not relaxed automatically.')
+            message = ('Candidates failed property filters; inspect filter counts in run_summary.json. '
+                       'If appropriate for your application, use --wo_lipinski or explicit property limits; '
+                       'filters are not relaxed automatically.')
         elif counts['assembly_failed']:
             message = 'Scaffold assembly failed; inspect assembly_errors in run_summary.json.'
         else:
             message = 'No candidates passed the selected scaffold, similarity and search limits.'
         logging.getLogger(__name__).warning(message)
     with open(os.path.join(output_dir, 'run_summary.json'), 'w') as stream:
-        json.dump({'version': '1.0.1', 'status': status, 'message': message,
+        json.dump({'version': '1.0.2', 'status': status, 'message': message,
                    'counts': dict(counts), 'assembly_errors': assembly_errors}, stream, indent=2)
         stream.write('\n')
     return os.path.join(output_dir,'overall_result.txt')

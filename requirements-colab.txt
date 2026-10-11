@@ -1,0 +1,16 @@
+# Tested 1.x runtime, installed in a separate Python 3.10 environment.
+rdkit==2025.9.6
+numpy==1.26.4
+pandas==2.3.3
+scipy==1.13.1
+psutil==7.2.2
+scikit-learn==1.6.1
+matplotlib==3.10.8
+oddt==0.7
+molvs==0.1.1
+pubchempy==1.0.4
+scaffoldgraph==1.1.2
+networkx==3.4.2
+joblib==1.5.3
+requests==2.32.3
+tqdm==4.67.3

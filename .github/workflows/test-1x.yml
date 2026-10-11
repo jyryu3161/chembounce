@@ -1,0 +1,33 @@
+name: Stable 1.x regression tests
+
+on:
+  push:
+    branches: [main, release/1.x]
+    tags: ['v1.*']
+  pull_request:
+    branches: [main, release/1.x]
+
+permissions:
+  contents: read
+
+jobs:
+  stable-notebook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install the notebook runtime from a clean host
+        run: |
+          python -m pip install uv==0.9.0
+          python - <<'PY'
+          import os, shutil
+          from pathlib import Path
+          from colab_support import setup_environment
+          setup_environment(Path.cwd(), Path(os.environ['RUNNER_TEMP']) / 'chembounce-1x', shutil.which('uv'))
+          PY
+      - name: Test chemistry regressions and notebook failure handling
+        run: |
+          uv pip install --python "$RUNNER_TEMP/chembounce-1x/bin/python" pytest==8.4.2
+          "$RUNNER_TEMP/chembounce-1x/bin/python" -m pytest tests -q

@@ -1,6 +1,7 @@
 # ChemBounce
 
-> **Version notice:** The `v1.0.1` tag includes the scaffold-assembly hotfix.
+> **Version notice:** `v1.0.2` fixes the stable Colab setup and empty-archive failure.
+> It also includes the scaffold-assembly hotfix from `v1.0.1`.
 > The pre-fix code and original environment are preserved as
 > [`v1.0.0`](https://github.com/jyryu3161/chembounce/tree/v1.0.0).
 > Broader improvements are maintained on the
@@ -9,7 +10,7 @@
 
 The `main` branch contains the stable 1.x version; `release/1.x` maintains this
 series. New features and the upcoming 2.0 version are developed on `develop`.
-Releases use immutable `vMAJOR.MINOR.PATCH` tags; `v1.0.1` is the current stable
+Releases use immutable `vMAJOR.MINOR.PATCH` tags; `v1.0.2` is the current stable
 release. Use `main` for normal use and `develop` to evaluate upcoming changes.
 
 ## Maintenance fixes
@@ -26,12 +27,29 @@ and global result limits are not part of this backport.
 
 Run the regression tests with `python -m pytest tests -q` (requires pytest).
 
+The `v1.0.2` notebook checks installation and process exit codes, validates the
+result table and summary, and includes `run.log` and `notebook_run.json` in successful
+downloads. A failed calculation stops with diagnostics instead of downloading an
+empty archive. A completed search with zero candidates still provides a result-table
+header and an explicit `no_candidates` summary. Repeated runs preserve earlier outputs.
+
 <!--<img src="./assets/graphical_abstract.png" width="450px"></img>-->
 
 
 ## Using in Google Colaboratory
 
-ChemBounce is also available in [Google Colaboratory](https://colab.research.google.com/github/jyryu3161/chembounce/blob/v1.0.1/chembounce_colab.ipynb)
+Open the [stable v1.0.2 Google Colab notebook](https://colab.research.google.com/github/jyryu3161/chembounce/blob/v1.0.2/chembounce_colab.ipynb).
+Run Checkout, Environment and reference data, Basic input parameters, and Run in order.
+All optional cells can be skipped. Setup creates an isolated Python 3.10 environment
+with the tested dependencies in `requirements-colab.txt`; it does not replace Colab's
+Python. The reference download is checked against the published Zenodo checksum.
+
+If you previously ran the old Anaconda installation cell, select **Runtime → Disconnect
+and delete runtime** first. Previously saved notebooks and old release tags retain the
+old cells; use the new link above. If any cell fails, stop and inspect the displayed
+error. Calculation failures also leave `run.log` and `notebook_run.json` in the printed
+output directory; these distinguish an environment error from a completed search
+with no accepted candidates.
 
 ## Dependencies
 
@@ -58,7 +76,7 @@ bash install.sh
 
 ChemBounce uses pre-computed fingerprints for faster similarity search. 
 
-**The default scaffold database already includes pre-computed fingerprints** (`data/scaffold_fingerprints_250mw.npz` and `data/scaffold_fingerprints.npz`), so you don't need to generate them. The default file (`data/scaffold_fingerprints_250mw.npz`) contains fingerprints for scaffolds with molecular weight ≤ 250. To use the complete scaffold library, specify `--fingerprint-db data/scaffold_fingerprints.npz`, but note that this file contains fingerprints for approximately 4 million scaffolds and requires significantly more memory.
+**The default scaffold database already includes pre-computed fingerprints** (`data/scaffold_fingerprints_mw250.npz` and `data/scaffold_fingerprints.npz`), so you don't need to generate them. The default file (`data/scaffold_fingerprints_mw250.npz`) contains fingerprints for scaffolds with molecular weight ≤ 250. To use the complete scaffold library, specify `--fingerprint-db data/scaffold_fingerprints.npz`, but note that this file contains fingerprints for approximately 4 million scaffolds and requires significantly more memory.
 
 **Important Note**: The results presented in the paper were obtained using the complete scaffold database on a workstation with sufficient memory resources.
 
