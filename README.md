@@ -4,11 +4,13 @@
 > The pre-fix code and original environment are preserved as
 > [`v1.0.0`](https://github.com/jyryu3161/chembounce/tree/v1.0.0).
 > Broader improvements are maintained on the
-> [main development branch](https://github.com/jyryu3161/chembounce/tree/main).
+> [develop branch](https://github.com/jyryu3161/chembounce/tree/develop).
 > Use `v1.0.0` and the original reference data to reproduce pre-fix behavior.
 
-Releases use `vMAJOR.MINOR.PATCH` tags; `release/1.x` maintains this series.
-Use `main` for the latest development code.
+The `main` branch contains the stable 1.x version; `release/1.x` maintains this
+series. New features and the upcoming 2.0 version are developed on `develop`.
+Releases use immutable `vMAJOR.MINOR.PATCH` tags; `v1.0.1` is the current stable
+release. Use `main` for normal use and `develop` to evaluate upcoming changes.
 
 ## Maintenance fixes
 
