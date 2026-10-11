@@ -19,10 +19,18 @@ def main():
     parser.add_argument("--trust-legacy-db", action="store_true")
     parser.add_argument("--output", default="benchmark-results/workflow")
     parser.add_argument("--shape", action="store_true")
+    parser.add_argument("--panel", type=Path, default=Path(__file__).with_name("molecules.json"))
+    parser.add_argument("--names", nargs="+", help="Optional subset of panel names")
     args = parser.parse_args()
     root = Path(args.output)
     root.mkdir(parents=True, exist_ok=True)
-    panel = json.loads(Path(__file__).with_name("molecules.json").read_text())
+    panel = json.loads(args.panel.read_text())
+    if isinstance(panel, dict):
+        panel = panel["molecules"]
+    if args.names:
+        panel = [record for record in panel if record["name"] in args.names]
+        if {record["name"] for record in panel} != set(args.names):
+            parser.error("Unknown panel name")
     reports = []
     for record in panel:
         out = root / record["name"]
