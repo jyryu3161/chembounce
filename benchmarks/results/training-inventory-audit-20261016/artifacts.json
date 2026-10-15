@@ -1,0 +1,61 @@
+{
+  "artifacts": [
+    {
+      "bytes": 11058,
+      "path": "EVIDENCE.md",
+      "sha256": "523d126eec8e48e4c226e8fd3d2942aecc133f2a474586e072f38be180bf4965"
+    },
+    {
+      "bytes": 5852,
+      "path": "README.md",
+      "sha256": "d5306382d2780a5d50518ea893dd056a34696f3d27f7ef187074a34faa729afd"
+    },
+    {
+      "bytes": 35445,
+      "path": "aggregate.json",
+      "sha256": "8a629181ad23558d52ffef2400a069969f1f06d1f263f370f5186de78509a560"
+    },
+    {
+      "bytes": 2755,
+      "path": "audit-sources.local-example.json",
+      "sha256": "588b4cb82731d7ab968605e61966f1da7c55934b9ce1e782db2a1e4c62d3fb9b"
+    },
+    {
+      "bytes": 12623,
+      "path": "fetch-manifest.json",
+      "sha256": "51d0356b0866a1737c5f7067ad589e923206153f9a79e7583927de23ebd4a5a8"
+    },
+    {
+      "bytes": 8154,
+      "path": "inventory-evidence.json",
+      "sha256": "5331e6bbeda5974414848ad12364f13bf23adacf772565dd48110cb89b7856a0"
+    },
+    {
+      "bytes": 1234,
+      "path": "numerical-validation.json",
+      "sha256": "3463f7e82ec5d2b77b42c96a1dc99e17519e376ec8dcecaf245dfe40ebf79d8f"
+    },
+    {
+      "bytes": 2916,
+      "path": "projection-validation.json",
+      "sha256": "d838157f01f4945c5fabe7c8cf06536b4b9e6cd4275c2413ebe5cf14743f0b1d"
+    },
+    {
+      "bytes": 15162,
+      "path": "sample_overlap_audit.py",
+      "sha256": "a378a73b52b4724fcd9aabc0144a1dedbcb777a1df18a92fb4579322da3760b8"
+    },
+    {
+      "bytes": 4436,
+      "path": "test_sample_overlap_audit.py",
+      "sha256": "03191eab30770653870126e525b9a66f7291bc4b0cf63f289d87c8f4257eedf1"
+    },
+    {
+      "bytes": 1891,
+      "path": "validation.json",
+      "sha256": "8988d98fbb2198b4c419fd0bd4567caacdd66bc0dda1a9c4033eb799f0ee1fe5"
+    }
+  ],
+  "schema": "training_inventory_publication_artifacts_v1",
+  "scope": "Aggregate/provenance/procedure only; no source molecular sample, row snapshot, match detail or full fetched publication bodies."
+}

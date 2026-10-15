@@ -1,0 +1,1311 @@
+{
+  "code_sha256": {
+    "/data2/home/jyryu/chembounce/benchmark-results/research-validation/training-inventory-audit/sample_overlap_audit.py": "a378a73b52b4724fcd9aabc0144a1dedbcb777a1df18a92fb4579322da3760b8",
+    "/data2/home/jyryu/chembounce/chembounce_synthesis/common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+    "/data2/home/jyryu/chembounce/chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da"
+  },
+  "completed_utc": "2026-10-15T18:38:33.951776+00:00",
+  "groups": [
+    {
+      "exact": {
+        "assessed_rows": 19387,
+        "distinct": 5618,
+        "duplicate_rows": 13769,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 19387,
+        "distinct": 5616,
+        "duplicate_rows": 13771,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 5618,
+      "role": "ALL",
+      "rows": 19387,
+      "source": "ALL"
+    },
+    {
+      "exact": {
+        "assessed_rows": 522,
+        "distinct": 288,
+        "duplicate_rows": 234,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 522,
+        "distinct": 288,
+        "duplicate_rows": 234,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 288,
+      "role": "control_active",
+      "rows": 522,
+      "source": "ALL"
+    },
+    {
+      "exact": {
+        "assessed_rows": 472,
+        "distinct": 217,
+        "duplicate_rows": 255,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 472,
+        "distinct": 217,
+        "duplicate_rows": 255,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 217,
+      "role": "control_inactive",
+      "rows": 472,
+      "source": "ALL"
+    },
+    {
+      "exact": {
+        "assessed_rows": 285,
+        "distinct": 146,
+        "duplicate_rows": 139,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 285,
+        "distinct": 146,
+        "duplicate_rows": 139,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 146,
+      "role": "evaluated_candidate",
+      "rows": 285,
+      "source": "ALL"
+    },
+    {
+      "exact": {
+        "assessed_rows": 6,
+        "distinct": 6,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 6,
+        "distinct": 6,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 6,
+      "role": "panel_query_active",
+      "rows": 6,
+      "source": "ALL"
+    },
+    {
+      "exact": {
+        "assessed_rows": 5559,
+        "distinct": 3496,
+        "duplicate_rows": 2063,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 5559,
+        "distinct": 3496,
+        "duplicate_rows": 2063,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 3496,
+      "role": "panel_test_active",
+      "rows": 5559,
+      "source": "ALL"
+    },
+    {
+      "exact": {
+        "assessed_rows": 1503,
+        "distinct": 879,
+        "duplicate_rows": 624,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 1503,
+        "distinct": 879,
+        "duplicate_rows": 624,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 879,
+      "role": "panel_test_inactive",
+      "rows": 1503,
+      "source": "ALL"
+    },
+    {
+      "exact": {
+        "assessed_rows": 7690,
+        "distinct": 4065,
+        "duplicate_rows": 3625,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 7690,
+        "distinct": 4064,
+        "duplicate_rows": 3626,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 4065,
+      "role": "panel_train_active",
+      "rows": 7690,
+      "source": "ALL"
+    },
+    {
+      "exact": {
+        "assessed_rows": 1941,
+        "distinct": 1032,
+        "duplicate_rows": 909,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 1941,
+        "distinct": 1032,
+        "duplicate_rows": 909,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 1032,
+      "role": "panel_train_inactive",
+      "rows": 1941,
+      "source": "ALL"
+    },
+    {
+      "exact": {
+        "assessed_rows": 839,
+        "distinct": 42,
+        "duplicate_rows": 797,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 839,
+        "distinct": 42,
+        "duplicate_rows": 797,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 42,
+      "role": "query",
+      "rows": 839,
+      "source": "ALL"
+    },
+    {
+      "exact": {
+        "assessed_rows": 285,
+        "distinct": 146,
+        "duplicate_rows": 139,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 285,
+        "distinct": 146,
+        "duplicate_rows": 139,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 146,
+      "role": "rescored_generated_candidate",
+      "rows": 285,
+      "source": "ALL"
+    },
+    {
+      "exact": {
+        "assessed_rows": 285,
+        "distinct": 146,
+        "duplicate_rows": 139,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 285,
+        "distinct": 146,
+        "duplicate_rows": 139,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 146,
+      "role": "returned_candidate",
+      "rows": 285,
+      "source": "ALL"
+    },
+    {
+      "exact": {
+        "assessed_rows": 111,
+        "distinct": 111,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 111,
+        "distinct": 111,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 111,
+      "role": "control_active",
+      "rows": 111,
+      "source": "assay-matched-pairs"
+    },
+    {
+      "exact": {
+        "assessed_rows": 86,
+        "distinct": 86,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 86,
+        "distinct": 86,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 86,
+      "role": "control_inactive",
+      "rows": 86,
+      "source": "assay-matched-pairs"
+    },
+    {
+      "exact": {
+        "assessed_rows": 197,
+        "distinct": 12,
+        "duplicate_rows": 185,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 197,
+        "distinct": 12,
+        "duplicate_rows": 185,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 12,
+      "role": "query",
+      "rows": 197,
+      "source": "assay-matched-pairs"
+    },
+    {
+      "exact": {
+        "assessed_rows": 111,
+        "distinct": 111,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 111,
+        "distinct": 111,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 111,
+      "role": "control_active",
+      "rows": 111,
+      "source": "assay-matched-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 86,
+        "distinct": 86,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 86,
+        "distinct": 86,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 86,
+      "role": "control_inactive",
+      "rows": 86,
+      "source": "assay-matched-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 12,
+        "distinct": 12,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 12,
+        "distinct": 12,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 12,
+      "role": "query",
+      "rows": 12,
+      "source": "assay-matched-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 174,
+        "distinct": 93,
+        "duplicate_rows": 81,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 174,
+        "distinct": 93,
+        "duplicate_rows": 81,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 93,
+      "role": "evaluated_candidate",
+      "rows": 174,
+      "source": "live-comparison-baselines"
+    },
+    {
+      "exact": {
+        "assessed_rows": 174,
+        "distinct": 93,
+        "duplicate_rows": 81,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 174,
+        "distinct": 93,
+        "duplicate_rows": 81,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 93,
+      "role": "returned_candidate",
+      "rows": 174,
+      "source": "live-comparison-baselines"
+    },
+    {
+      "exact": {
+        "assessed_rows": 15,
+        "distinct": 11,
+        "duplicate_rows": 4,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 15,
+        "distinct": 11,
+        "duplicate_rows": 4,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 11,
+      "role": "evaluated_candidate",
+      "rows": 15,
+      "source": "live-comparison-gpu0"
+    },
+    {
+      "exact": {
+        "assessed_rows": 15,
+        "distinct": 11,
+        "duplicate_rows": 4,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 15,
+        "distinct": 11,
+        "duplicate_rows": 4,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 11,
+      "role": "returned_candidate",
+      "rows": 15,
+      "source": "live-comparison-gpu0"
+    },
+    {
+      "exact": {
+        "assessed_rows": 96,
+        "distinct": 48,
+        "duplicate_rows": 48,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 96,
+        "distinct": 48,
+        "duplicate_rows": 48,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 48,
+      "role": "evaluated_candidate",
+      "rows": 96,
+      "source": "live-comparison-gpu1"
+    },
+    {
+      "exact": {
+        "assessed_rows": 96,
+        "distinct": 48,
+        "duplicate_rows": 48,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 96,
+        "distinct": 48,
+        "duplicate_rows": 48,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 48,
+      "role": "returned_candidate",
+      "rows": 96,
+      "source": "live-comparison-gpu1"
+    },
+    {
+      "exact": {
+        "assessed_rows": 285,
+        "distinct": 146,
+        "duplicate_rows": 139,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 285,
+        "distinct": 146,
+        "duplicate_rows": 139,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 146,
+      "role": "rescored_generated_candidate",
+      "rows": 285,
+      "source": "scaffold-rescored-generated"
+    },
+    {
+      "exact": {
+        "assessed_rows": 1226,
+        "distinct": 1224,
+        "duplicate_rows": 2,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 1226,
+        "distinct": 1224,
+        "duplicate_rows": 2,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 1224,
+      "role": "panel_test_active",
+      "rows": 1226,
+      "source": "strict-scaffold-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 336,
+        "distinct": 333,
+        "duplicate_rows": 3,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 336,
+        "distinct": 333,
+        "duplicate_rows": 3,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 333,
+      "role": "panel_test_inactive",
+      "rows": 336,
+      "source": "strict-scaffold-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 3192,
+        "distinct": 3187,
+        "duplicate_rows": 5,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 3192,
+        "distinct": 3186,
+        "duplicate_rows": 6,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 3187,
+      "role": "panel_train_active",
+      "rows": 3192,
+      "source": "strict-scaffold-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 813,
+        "distinct": 812,
+        "duplicate_rows": 1,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 813,
+        "distinct": 812,
+        "duplicate_rows": 1,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 812,
+      "role": "panel_train_inactive",
+      "rows": 813,
+      "source": "strict-scaffold-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 12,
+        "distinct": 12,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 12,
+        "distinct": 12,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 12,
+      "role": "query",
+      "rows": 12,
+      "source": "strict-scaffold-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 120,
+        "distinct": 60,
+        "duplicate_rows": 60,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 120,
+        "distinct": 60,
+        "duplicate_rows": 60,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 60,
+      "role": "control_active",
+      "rows": 120,
+      "source": "strict-scaffold-scored-controls"
+    },
+    {
+      "exact": {
+        "assessed_rows": 120,
+        "distinct": 59,
+        "duplicate_rows": 61,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 120,
+        "distinct": 59,
+        "duplicate_rows": 61,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 59,
+      "role": "control_inactive",
+      "rows": 120,
+      "source": "strict-scaffold-scored-controls"
+    },
+    {
+      "exact": {
+        "assessed_rows": 240,
+        "distinct": 12,
+        "duplicate_rows": 228,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 240,
+        "distinct": 12,
+        "duplicate_rows": 228,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 12,
+      "role": "query",
+      "rows": 240,
+      "source": "strict-scaffold-scored-controls"
+    },
+    {
+      "exact": {
+        "assessed_rows": 6,
+        "distinct": 6,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 6,
+        "distinct": 6,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 6,
+      "role": "panel_query_active",
+      "rows": 6,
+      "source": "strict-target-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 1952,
+        "distinct": 1952,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 1952,
+        "distinct": 1952,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 1952,
+      "role": "panel_test_active",
+      "rows": 1952,
+      "source": "strict-target-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 692,
+        "distinct": 692,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 692,
+        "distinct": 692,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 692,
+      "role": "panel_test_inactive",
+      "rows": 692,
+      "source": "strict-target-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 2453,
+        "distinct": 2449,
+        "duplicate_rows": 4,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 2453,
+        "distinct": 2449,
+        "duplicate_rows": 4,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 2449,
+      "role": "panel_train_active",
+      "rows": 2453,
+      "source": "strict-target-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 454,
+        "distinct": 453,
+        "duplicate_rows": 1,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 454,
+        "distinct": 453,
+        "duplicate_rows": 1,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 453,
+      "role": "panel_train_inactive",
+      "rows": 454,
+      "source": "strict-target-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 6,
+        "distinct": 6,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 6,
+        "distinct": 6,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 6,
+      "role": "query",
+      "rows": 6,
+      "source": "strict-target-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 60,
+        "distinct": 57,
+        "duplicate_rows": 3,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 60,
+        "distinct": 57,
+        "duplicate_rows": 3,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 57,
+      "role": "control_active",
+      "rows": 60,
+      "source": "strict-target-scored-controls"
+    },
+    {
+      "exact": {
+        "assessed_rows": 60,
+        "distinct": 42,
+        "duplicate_rows": 18,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 60,
+        "distinct": 42,
+        "duplicate_rows": 18,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 42,
+      "role": "control_inactive",
+      "rows": 60,
+      "source": "strict-target-scored-controls"
+    },
+    {
+      "exact": {
+        "assessed_rows": 120,
+        "distinct": 6,
+        "duplicate_rows": 114,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 120,
+        "distinct": 6,
+        "duplicate_rows": 114,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 6,
+      "role": "query",
+      "rows": 120,
+      "source": "strict-target-scored-controls"
+    },
+    {
+      "exact": {
+        "assessed_rows": 2381,
+        "distinct": 2375,
+        "duplicate_rows": 6,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 2381,
+        "distinct": 2375,
+        "duplicate_rows": 6,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 2375,
+      "role": "panel_test_active",
+      "rows": 2381,
+      "source": "strict-time-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 475,
+        "distinct": 475,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 475,
+        "distinct": 475,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 475,
+      "role": "panel_test_inactive",
+      "rows": 475,
+      "source": "strict-time-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 2045,
+        "distinct": 2045,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 2045,
+        "distinct": 2045,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 2045,
+      "role": "panel_train_active",
+      "rows": 2045,
+      "source": "strict-time-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 674,
+        "distinct": 670,
+        "duplicate_rows": 4,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 674,
+        "distinct": 670,
+        "duplicate_rows": 4,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 670,
+      "role": "panel_train_inactive",
+      "rows": 674,
+      "source": "strict-time-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 12,
+        "distinct": 12,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 12,
+        "distinct": 12,
+        "duplicate_rows": 0,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 12,
+      "role": "query",
+      "rows": 12,
+      "source": "strict-time-panel"
+    },
+    {
+      "exact": {
+        "assessed_rows": 120,
+        "distinct": 70,
+        "duplicate_rows": 50,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 120,
+        "distinct": 70,
+        "duplicate_rows": 50,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 70,
+      "role": "control_active",
+      "rows": 120,
+      "source": "strict-time-scored-controls"
+    },
+    {
+      "exact": {
+        "assessed_rows": 120,
+        "distinct": 60,
+        "duplicate_rows": 60,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 120,
+        "distinct": 60,
+        "duplicate_rows": 60,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 60,
+      "role": "control_inactive",
+      "rows": 120,
+      "source": "strict-time-scored-controls"
+    },
+    {
+      "exact": {
+        "assessed_rows": 240,
+        "distinct": 12,
+        "duplicate_rows": 228,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 240,
+        "distinct": 12,
+        "duplicate_rows": 228,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 12,
+      "role": "query",
+      "rows": 240,
+      "source": "strict-time-scored-controls"
+    }
+  ],
+  "identity_policy": "protonation-tautomer-family-v1",
+  "interpretation": [
+    "Post hoc audit against an upstream train-labelled evaluation sample only.",
+    "Exact SynLlama-1B-2M-91rxns checkpoint training membership remains unverified.",
+    "Nonmembership in this small sample does not establish a clean holdout.",
+    "No molecular similarity or activity scores influenced source or membership selection.",
+    "Groups count appearances; ALL/ALL distinct identities remove repeated roles/targets/seeds/panels.",
+    "Live campaign inputs are bounded by each retained source read_utc and SHA256; later runs are not included."
+  ],
+  "license_scope": "Private review artifact; no source molecule redistribution permission inferred.",
+  "matched_appearance_count": 0,
+  "panel_normalization_failure_count": 0,
+  "rdkit_version": "2025.09.6",
+  "sample": {
+    "empty_lines": 0,
+    "exact": {
+      "assessed_rows": 1000,
+      "distinct": 1000,
+      "duplicate_rows": 0,
+      "unassessed_rows": 0
+    },
+    "family": {
+      "assessed_rows": 928,
+      "distinct": 928,
+      "duplicate_rows": 0,
+      "unassessed_rows": 72
+    },
+    "lines": 1000,
+    "nonempty_rows": 1000,
+    "raw_distinct": 1000
+  },
+  "sample_bytes": 111240,
+  "sample_normalization_failure_count": 72,
+  "sample_sha256": "fa00401f509a4b77d121f22824400aae63ecba48c665f9c46d4e9fbe9b7940ac",
+  "schema": "partial_train_labelled_sample_overlap_v1",
+  "snapshot_sha256": "0d555f7b71b2041c7e4baae9b0357ac965ae9a9cfd5214ed21fd6835f56fa30a",
+  "sources": [
+    {
+      "bytes": 25557607,
+      "id": "strict-scaffold-panel",
+      "kind": "panel",
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/panels/direct-human-scaffold/panel.json",
+      "projected_rows": 5579,
+      "read_utc": "2026-10-15T18:27:40.504155+00:00",
+      "sha256": "e87a3b539b8c41dde4887a7d52ec67b29a7a63f688584b579272398ef6522204"
+    },
+    {
+      "bytes": 462901,
+      "id": "strict-scaffold-scored-controls",
+      "kind": "controls",
+      "linked_panel": {
+        "bytes": 25557607,
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/panels/direct-human-scaffold/panel.json",
+        "read_utc": "2026-10-15T18:27:40.504155+00:00",
+        "sha256": "e87a3b539b8c41dde4887a7d52ec67b29a7a63f688584b579272398ef6522204"
+      },
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/direct-human-common-controls-8c/control_scores.json",
+      "projected_rows": 480,
+      "read_utc": "2026-10-15T18:27:40.523675+00:00",
+      "sha256": "4c1496c8391dd3440094dea672b63db5446f12e5e42d9183a2533a72e3481c87"
+    },
+    {
+      "bytes": 605963,
+      "id": "scaffold-rescored-generated",
+      "kind": "generated_scores",
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/common-generated-scores-8c/generated_scores.json",
+      "projected_rows": 285,
+      "read_utc": "2026-10-15T18:27:40.534823+00:00",
+      "sha256": "533f00e5ae194035323e0ec83ea3e42c4d618d9f25887c8811420ea96361cd65"
+    },
+    {
+      "bytes": 25595486,
+      "id": "strict-time-panel",
+      "kind": "panel",
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/panels/direct-human-time/panel.json",
+      "projected_rows": 5587,
+      "read_utc": "2026-10-15T18:27:40.766724+00:00",
+      "sha256": "5402b98837c4abba4ab85606f8354736ec2ef20e23e1e0e8c6dadfbd0c8f7269"
+    },
+    {
+      "bytes": 486951,
+      "id": "strict-time-scored-controls",
+      "kind": "controls",
+      "linked_panel": {
+        "bytes": 25595486,
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/panels/direct-human-time/panel.json",
+        "read_utc": "2026-10-15T18:27:40.766724+00:00",
+        "sha256": "5402b98837c4abba4ab85606f8354736ec2ef20e23e1e0e8c6dadfbd0c8f7269"
+      },
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/direct-human-time-common-controls-8c/control_scores.json",
+      "projected_rows": 480,
+      "read_utc": "2026-10-15T18:27:40.786490+00:00",
+      "sha256": "f1847507ca25f54cf56f875b6d52162925fcb929fb215d59607b8426277a60d1"
+    },
+    {
+      "bytes": 3,
+      "id": "time-rescored-generated",
+      "kind": "generated_scores",
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/common-generated-time-scores-8c/generated_scores.json",
+      "projected_rows": 0,
+      "read_utc": "2026-10-15T18:27:40.789775+00:00",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "bytes": 25511840,
+      "id": "strict-target-panel",
+      "kind": "panel",
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/panels/direct-human-target/panel.json",
+      "projected_rows": 5563,
+      "read_utc": "2026-10-15T18:27:41.068202+00:00",
+      "sha256": "8d87129ebc096d122fb581eb1721b9893243cec958434b5720a94df83c2d074e"
+    },
+    {
+      "bytes": 221854,
+      "id": "strict-target-scored-controls",
+      "kind": "controls",
+      "linked_panel": {
+        "bytes": 25511840,
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/panels/direct-human-target/panel.json",
+        "read_utc": "2026-10-15T18:27:41.068202+00:00",
+        "sha256": "8d87129ebc096d122fb581eb1721b9893243cec958434b5720a94df83c2d074e"
+      },
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/direct-human-target-common-controls-8c/control_scores.json",
+      "projected_rows": 240,
+      "read_utc": "2026-10-15T18:27:41.083194+00:00",
+      "sha256": "e281294d1d5653f363339ea60f2fc1fc460fb6e0fe32403eb40047691dfbcf18"
+    },
+    {
+      "bytes": 3,
+      "id": "target-rescored-generated",
+      "kind": "generated_scores",
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/common-generated-target-scores-8c/generated_scores.json",
+      "projected_rows": 0,
+      "read_utc": "2026-10-15T18:27:41.085844+00:00",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "bytes": 3073449,
+      "id": "assay-matched-panel",
+      "kind": "matched_panel",
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/assay-matched-scores-8c/panel.json",
+      "projected_rows": 209,
+      "read_utc": "2026-10-15T18:27:41.112348+00:00",
+      "sha256": "464e71b8bc54ad9002a8ff02e08b249272ae43ce17a4aee3d53c394642439d33"
+    },
+    {
+      "bytes": 201904,
+      "id": "assay-matched-pairs",
+      "kind": "matched_pairs",
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/assay-matched-scores-8c/control_pairs.json",
+      "projected_rows": 394,
+      "read_utc": "2026-10-15T18:27:41.114867+00:00",
+      "sha256": "d38fc2f555c07f2cc14d1203ce76221f90384825d2ce9a7c92f22e230fcbfa95"
+    },
+    {
+      "bytes": 873749,
+      "id": "live-comparison-baselines",
+      "kind": "runs",
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparison-baselines/runs.json",
+      "projected_rows": 348,
+      "read_utc": "2026-10-15T18:27:41.123967+00:00",
+      "run_count": 67,
+      "run_status_counts": {
+        "no_candidates": 3,
+        "success": 58,
+        "timeout": 6
+      },
+      "sha256": "23173831efffaa7101d9739ec00d63334c5e64b5ac844aeda8a9f8d63d9a1087"
+    },
+    {
+      "bytes": 986502,
+      "id": "live-comparison-gpu0",
+      "kind": "runs",
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparison-gpu0/runs.json",
+      "projected_rows": 30,
+      "read_utc": "2026-10-15T18:27:41.137480+00:00",
+      "run_count": 28,
+      "run_status_counts": {
+        "infrastructure_interruption": 1,
+        "no_candidates": 10,
+        "success": 6,
+        "timeout": 11
+      },
+      "sha256": "d2e0516257ad3f1a1710521fc3fcaf2f24ecf0bb1077a46e36db47025c343c1a"
+    },
+    {
+      "bytes": 689648,
+      "id": "live-comparison-gpu1",
+      "kind": "runs",
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparison-gpu1/runs.json",
+      "projected_rows": 192,
+      "read_utc": "2026-10-15T18:27:41.143681+00:00",
+      "run_count": 42,
+      "run_status_counts": {
+        "no_candidates": 3,
+        "success": 32,
+        "timeout": 7
+      },
+      "sha256": "94e7e3643cfd2e6ee309b93dc1f001af4029818e5e5d93804dfe9965da9ca9fe"
+    }
+  ]
+}

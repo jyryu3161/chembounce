@@ -1,0 +1,274 @@
+{
+  "original_manifest_sha256": "8642eefeed43fa1cc87920cbd4019e33859e4572385ddc7e1df4b89133461753",
+  "scope": "Fetch provenance only; no fetched document bodies are included. Canonical source URLs replace temporary redirected URLs.",
+  "sources": [
+    {
+      "bytes": 5054,
+      "contents_bundled": false,
+      "retained_filename": "synllama-figshare-28719125.json",
+      "retrieved_utc": "2026-10-15T18:03:47.496326+00:00",
+      "sha256": "cf7cf2ed06a09bce9934e6fe7022761eb36665fdd6bb26eced450b217260ad2b",
+      "url": "https://api.figshare.com/v2/articles/28719125"
+    },
+    {
+      "bytes": 9219,
+      "contents_bundled": false,
+      "retained_filename": "synllama-github-tree.json",
+      "retrieved_utc": "2026-10-15T18:03:47.498080+00:00",
+      "sha256": "fac606b9ea12180984a4914b3cf2cd98b098259365720707aa0495bd93789e2a",
+      "url": "https://api.github.com/repos/THGLab/SynLlama/git/trees/main?recursive=1"
+    },
+    {
+      "bytes": 2,
+      "contents_bundled": false,
+      "retained_filename": "synllama-releases.json",
+      "retrieved_utc": "2026-10-15T18:03:47.498506+00:00",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "url": "https://api.github.com/repos/THGLab/SynLlama/releases"
+    },
+    {
+      "bytes": 7066,
+      "contents_bundled": false,
+      "retained_filename": "synllama-issues.json",
+      "retrieved_utc": "2026-10-15T18:03:47.498979+00:00",
+      "sha256": "c32317c6d9e30019f1ce6b77ab07f296fa01b0afc77a0f27f0ce17576f06335c",
+      "url": "https://api.github.com/repos/THGLab/SynLlama/issues?state=all&per_page=100"
+    },
+    {
+      "bytes": 12417,
+      "contents_bundled": false,
+      "retained_filename": "reactiont5-github-tree.json",
+      "retrieved_utc": "2026-10-15T18:03:49.029183+00:00",
+      "sha256": "50921e705c5f3faf614f351261d8da0dbe030bace9cbd770e164d74f88c22c94",
+      "url": "https://api.github.com/repos/sagawatatsuya/ReactionT5v2/git/trees/main?recursive=1"
+    },
+    {
+      "bytes": 2379,
+      "contents_bundled": false,
+      "retained_filename": "reactiont5-checkpoint.json",
+      "retrieved_utc": "2026-10-15T18:03:49.079280+00:00",
+      "sha256": "b898bc6cb95970df823faee6eefcc3c7d32c50f15648347327154aa336f57f10",
+      "url": "https://huggingface.co/api/models/sagawa/ReactionT5v2-forward/revision/933114058cb2604dc1bf536dbebdfcefbe83d4fc?blobs=true"
+    },
+    {
+      "bytes": 4822,
+      "contents_bundled": false,
+      "retained_filename": "reactiont5-model-card.md",
+      "retrieved_utc": "2026-10-15T18:03:49.169679+00:00",
+      "sha256": "1a689168cf12a60fb49166cdc5245308f6ef18d28d8fec165295edf7404449c2",
+      "url": "https://huggingface.co/sagawa/ReactionT5v2-forward/raw/933114058cb2604dc1bf536dbebdfcefbe83d4fc/README.md"
+    },
+    {
+      "bytes": 12188,
+      "contents_bundled": false,
+      "retained_filename": "reactiont5-repository-readme.md",
+      "retrieved_utc": "2026-10-15T18:03:49.537587+00:00",
+      "sha256": "7e03326292c50090f69e2ceefc5ab8ef78e07f13c6f76fa6a58975f11d4142e9",
+      "url": "https://raw.githubusercontent.com/sagawatatsuya/ReactionT5v2/main/README.md"
+    },
+    {
+      "bytes": 1987,
+      "contents_bundled": false,
+      "retained_filename": "reactiont5-compound-readme.md",
+      "retrieved_utc": "2026-10-15T18:03:49.600736+00:00",
+      "sha256": "ba63d829af5ad835478832c56c20034ae23eaf97a87f77d5ee8f4dd4526d542c",
+      "url": "https://raw.githubusercontent.com/sagawatatsuya/ReactionT5v2/main/CompoundT5/README.md"
+    },
+    {
+      "bytes": 5383,
+      "contents_bundled": false,
+      "retained_filename": "synllama-community-mirror-card.md",
+      "retrieved_utc": "2026-10-15T18:03:49.621478+00:00",
+      "sha256": "8ed9ebf15d0dfd1326fa28574e0b97256fefe468745edaf8aa5d5260d651e908",
+      "url": "https://huggingface.co/datasets/lukaskim/cadd-instruct-raw/raw/main/README.md",
+      "use": "discovery only; not original-checkpoint training evidence"
+    },
+    {
+      "bytes": 82927,
+      "contents_bundled": false,
+      "retained_filename": "reactiont5-ord-drive-preview.html",
+      "retrieved_utc": "2026-10-15T18:03:49.649026+00:00",
+      "sha256": "36d7a8c2dcb79b11f49648233b580f90a701762fe3d583dc3b3a1c7776fac896",
+      "url": "https://drive.google.com/file/d/1JozA2OlByfZ-ILt5H5YrTjLJvSvD8xdL/view"
+    },
+    {
+      "bytes": 401257,
+      "contents_bundled": false,
+      "retained_filename": "reactiont5-paper.html",
+      "retrieved_utc": "2026-10-15T18:03:50.045971+00:00",
+      "sha256": "47c0c7d989754ea344ac9ce7f7e9389da273b03eea44976f50039e7fc38188c3",
+      "url": "https://link.springer.com/article/10.1186/s13321-025-01075-4"
+    },
+    {
+      "bytes": 236388,
+      "contents_bundled": false,
+      "retained_filename": "synllama-paper.html",
+      "retrieved_utc": "2026-10-15T18:03:50.065770+00:00",
+      "sha256": "3e5afc5dfe0e2bbbc78574d4cae781e8f224f5a97b5cc6892222b2c98965bbe2",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12670306/"
+    },
+    {
+      "bytes": 2028,
+      "contents_bundled": false,
+      "retained_filename": "synllama-issue1-comments.json",
+      "retrieved_utc": "2026-10-15T18:05:17.049973+00:00",
+      "sha256": "64fa8b0f029b1f94ea8ebaacfd99f3c9719a359a6b59a2e71d5dadd07c252790",
+      "url": "https://api.github.com/repos/THGLab/SynLlama/issues/1/comments"
+    },
+    {
+      "bytes": 3131,
+      "contents_bundled": false,
+      "retained_filename": "synllama-issue2-comments.json",
+      "retrieved_utc": "2026-10-15T18:05:17.052082+00:00",
+      "sha256": "0a29efe285719720e6da46ccbc2bc7bf1ff27524ef5ad7fa2b49bc6df180b7a7",
+      "url": "https://api.github.com/repos/THGLab/SynLlama/issues/2/comments"
+    },
+    {
+      "bytes": 1167,
+      "contents_bundled": false,
+      "retained_filename": "hf-thglab-datasets.json",
+      "retrieved_utc": "2026-10-15T18:05:17.052597+00:00",
+      "sha256": "1c4cd74e09257078e1b3c0a3538d3dcb2343ce26fc7ea824d10a35ce2e11a030",
+      "url": "https://huggingface.co/api/datasets?author=THGLab&limit=100&full=true"
+    },
+    {
+      "bytes": 2,
+      "contents_bundled": false,
+      "retained_filename": "hf-kysun63-datasets.json",
+      "retrieved_utc": "2026-10-15T18:05:17.052939+00:00",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "url": "https://huggingface.co/api/datasets?author=kysun63&limit=100&full=true"
+    },
+    {
+      "bytes": 5254,
+      "contents_bundled": false,
+      "retained_filename": "hf-sagawa-datasets.json",
+      "retrieved_utc": "2026-10-15T18:05:17.553784+00:00",
+      "sha256": "6e1f5fb2bfad0d6681eddf137f6c0a7efc0d6562247996c22aa1e3552c200754",
+      "url": "https://huggingface.co/api/datasets?author=sagawa&limit=100&full=true"
+    },
+    {
+      "bytes": 5759,
+      "contents_bundled": false,
+      "retained_filename": "synllama-reproduced-model.json",
+      "retrieved_utc": "2026-10-15T18:05:17.559728+00:00",
+      "sha256": "108cc2d9d6af0747a45868dda2607b2ddd8c9c5706fad627d5ed6924bd8b7bfa",
+      "url": "https://huggingface.co/api/models/kysun63/synllama-1b-reproduced?blobs=true",
+      "use": "discovery only; not original-checkpoint training evidence"
+    },
+    {
+      "bytes": 72,
+      "contents_bundled": false,
+      "retained_filename": "synllama-reproduced-card.md",
+      "retrieved_utc": "2026-10-15T18:05:17.572551+00:00",
+      "sha256": "32aa70e40d8af32f62369009f1dc77eaaa9f14ca0913936e385d675e817e6804",
+      "url": "https://huggingface.co/kysun63/synllama-1b-reproduced/raw/main/README.md",
+      "use": "discovery only; not original-checkpoint training evidence"
+    },
+    {
+      "bytes": 5000,
+      "contents_bundled": false,
+      "retained_filename": "reactiont5-compound-preprocess.py.txt",
+      "retrieved_utc": "2026-10-15T18:05:17.593556+00:00",
+      "sha256": "5cadf0d4050df1f834be51f5155966a34f84d01031d4e35c20e548e59495f859",
+      "url": "https://raw.githubusercontent.com/sagawatatsuya/ReactionT5v2/76eb08068e10fe255cae5d563a91e1c1e9abac54/CompoundT5/preprocess_data.py"
+    },
+    {
+      "bytes": 10015,
+      "contents_bundled": false,
+      "retained_filename": "reactiont5-forward-train.py.txt",
+      "retrieved_utc": "2026-10-15T18:05:18.017785+00:00",
+      "sha256": "df41d5ab3f97d2bac2668b3feef5a7e66015c22d239443e573b361f9794f021f",
+      "url": "https://raw.githubusercontent.com/sagawatatsuya/ReactionT5v2/76eb08068e10fe255cae5d563a91e1c1e9abac54/task_forward/train.py"
+    },
+    {
+      "bytes": 1071,
+      "contents_bundled": false,
+      "retained_filename": "reactiont5-license.txt",
+      "retrieved_utc": "2026-10-15T18:05:18.172830+00:00",
+      "sha256": "3d4dc7cd14e0c54788a357430cb3deb8295f881fc6ef852d8ba1409adf87c274",
+      "url": "https://raw.githubusercontent.com/sagawatatsuya/ReactionT5v2/76eb08068e10fe255cae5d563a91e1c1e9abac54/LICENSE.txt"
+    },
+    {
+      "bytes": 2680,
+      "contents_bundled": false,
+      "retained_filename": "compoundt5-model.json",
+      "retrieved_utc": "2026-10-15T18:05:18.179290+00:00",
+      "sha256": "338588bacbdfe91cb8e9c488e08dae9b8fc86393fee00055cbdaa573e8bf6d63",
+      "url": "https://huggingface.co/api/models/sagawa/CompoundT5?blobs=true"
+    },
+    {
+      "bytes": 3335,
+      "contents_bundled": false,
+      "retained_filename": "compoundt5-model-card.md",
+      "retrieved_utc": "2026-10-15T18:05:18.498008+00:00",
+      "sha256": "7f484ae12f13fc745c61d39efb0f77c2eb9b7727b95891e62a259c8d1f8ebece",
+      "url": "https://huggingface.co/sagawa/CompoundT5/raw/main/README.md"
+    },
+    {
+      "bytes": 2704,
+      "contents_bundled": false,
+      "retained_filename": "zinc-canonicalized-metadata.json",
+      "retrieved_utc": "2026-10-15T18:07:22.562794+00:00",
+      "sha256": "347f8304b6b0ea863f03923c91932e2a40121102f370e9a955287a0e106a7adf",
+      "url": "https://huggingface.co/api/datasets/sagawa/ZINC-canonicalized/revision/5497e797c551617bc1d94a859e4f3429f3d0b32d?blobs=true"
+    },
+    {
+      "bytes": 744,
+      "contents_bundled": false,
+      "retained_filename": "zinc-canonicalized-card.md",
+      "retrieved_utc": "2026-10-15T18:07:22.574759+00:00",
+      "sha256": "9597f0c1b1670020562bdab0ba9fa1706412fb2437d1ecc113e13d665340aa99",
+      "url": "https://huggingface.co/datasets/sagawa/ZINC-canonicalized/raw/5497e797c551617bc1d94a859e4f3429f3d0b32d/README.md"
+    },
+    {
+      "bytes": 786,
+      "contents_bundled": false,
+      "retained_filename": "zinc-canonicalized-dataset-infos.json",
+      "retrieved_utc": "2026-10-15T18:07:22.590811+00:00",
+      "sha256": "8a80e13e98a9064c8dd64e299386e9a94fbe97a6963a496626b37d9de7244599",
+      "url": "https://huggingface.co/datasets/sagawa/ZINC-canonicalized/raw/5497e797c551617bc1d94a859e4f3429f3d0b32d/dataset_infos.json"
+    },
+    {
+      "bytes": 5112,
+      "contents_bundled": false,
+      "retained_filename": "reactiont5-training_args.bin",
+      "retrieved_utc": "2026-10-15T18:07:22.602899+00:00",
+      "sha256": "0d40cc65896c8c30098177fdb6440c4900ea381e1fc01b3348193f689f02c9ba",
+      "url": "https://huggingface.co/sagawa/ReactionT5v2-forward/resolve/933114058cb2604dc1bf536dbebdfcefbe83d4fc/training_args.bin"
+    },
+    {
+      "bytes": 47164,
+      "contents_bundled": false,
+      "retained_filename": "reactiont5-forward-training-history.json",
+      "retrieved_utc": "2026-10-15T18:07:23.423472+00:00",
+      "sha256": "6a90d9ecfabc92108785fc2ada1109ee6b9e8e00b7311b74762e8cbb71125217",
+      "url": "https://api.github.com/repos/sagawatatsuya/ReactionT5v2/commits?path=task_forward/train.py&until=2025-08-22T23:59:59Z&per_page=100"
+    },
+    {
+      "bytes": 2141,
+      "contents_bundled": false,
+      "retained_filename": "figshare-search-synllama.json",
+      "retrieved_utc": "2026-10-15T18:07:23.603166+00:00",
+      "sha256": "dcecf2858ea8f62f1b0b94701e979604c19bf5d48e76805e319f14842ab29501",
+      "url": "https://api.figshare.com/v2/articles/search"
+    },
+    {
+      "bytes": 7447,
+      "contents_bundled": false,
+      "retained_filename": "synllama-supporting-info-figshare.json",
+      "retrieved_utc": "2026-10-15T18:16:03.368569+00:00",
+      "sha256": "1a22b3b0218b23457aca05e26c8f995ba55816207e5ef0b5073754535ea3864e",
+      "url": "https://api.figshare.com/v2/articles/30149271"
+    },
+    {
+      "bytes": 9654317,
+      "contents_bundled": false,
+      "license": "CC BY-NC 4.0 as declared by ACS figshare metadata",
+      "retained_filename": "synllama-supporting-info.pdf",
+      "retrieved_utc": "2026-10-15T18:21:04.215900+00:00",
+      "sha256": "741f7e5a2ebf0ac2dd63e7d5a141ac1230e73879887b950ada127d211ddb4eef",
+      "url": "https://ndownloader.figshare.com/files/58041987"
+    }
+  ]
+}

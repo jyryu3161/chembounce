@@ -1,0 +1,75 @@
+[
+  {
+    "id": "strict-scaffold-panel",
+    "kind": "panel",
+    "path": "../../../benchmark-results/research-validation/panels/direct-human-scaffold/panel.json"
+  },
+  {
+    "id": "strict-scaffold-scored-controls",
+    "kind": "controls",
+    "panel": "../../../benchmark-results/research-validation/panels/direct-human-scaffold/panel.json",
+    "path": "../../../benchmark-results/research-validation/direct-human-common-controls-8c/control_scores.json"
+  },
+  {
+    "id": "scaffold-rescored-generated",
+    "kind": "generated_scores",
+    "path": "../../../benchmark-results/research-validation/common-generated-scores-8c/generated_scores.json"
+  },
+  {
+    "id": "strict-time-panel",
+    "kind": "panel",
+    "path": "../../../benchmark-results/research-validation/panels/direct-human-time/panel.json"
+  },
+  {
+    "id": "strict-time-scored-controls",
+    "kind": "controls",
+    "panel": "../../../benchmark-results/research-validation/panels/direct-human-time/panel.json",
+    "path": "../../../benchmark-results/research-validation/direct-human-time-common-controls-8c/control_scores.json"
+  },
+  {
+    "id": "time-rescored-generated",
+    "kind": "generated_scores",
+    "path": "../../../benchmark-results/research-validation/common-generated-time-scores-8c/generated_scores.json"
+  },
+  {
+    "id": "strict-target-panel",
+    "kind": "panel",
+    "path": "../../../benchmark-results/research-validation/panels/direct-human-target/panel.json"
+  },
+  {
+    "id": "strict-target-scored-controls",
+    "kind": "controls",
+    "panel": "../../../benchmark-results/research-validation/panels/direct-human-target/panel.json",
+    "path": "../../../benchmark-results/research-validation/direct-human-target-common-controls-8c/control_scores.json"
+  },
+  {
+    "id": "target-rescored-generated",
+    "kind": "generated_scores",
+    "path": "../../../benchmark-results/research-validation/common-generated-target-scores-8c/generated_scores.json"
+  },
+  {
+    "id": "assay-matched-panel",
+    "kind": "matched_panel",
+    "path": "../../../benchmark-results/research-validation/assay-matched-scores-8c/panel.json"
+  },
+  {
+    "id": "assay-matched-pairs",
+    "kind": "matched_pairs",
+    "path": "../../../benchmark-results/research-validation/assay-matched-scores-8c/control_pairs.json"
+  },
+  {
+    "id": "live-comparison-baselines",
+    "kind": "runs",
+    "path": "../../../benchmark-results/research-validation/comparison-baselines/runs.json"
+  },
+  {
+    "id": "live-comparison-gpu0",
+    "kind": "runs",
+    "path": "../../../benchmark-results/research-validation/comparison-gpu0/runs.json"
+  },
+  {
+    "id": "live-comparison-gpu1",
+    "kind": "runs",
+    "path": "../../../benchmark-results/research-validation/comparison-gpu1/runs.json"
+  }
+]
