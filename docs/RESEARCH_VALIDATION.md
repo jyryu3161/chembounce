@@ -138,3 +138,5 @@ A subsequent [assay-context audit](../benchmarks/results/research-validation-202
 ## Publication interpretation
 
 [SynLlama](https://pubs.acs.org/doi/10.1021/acscentsci.5c01285) and [RuSH](https://pubs.acs.org/doi/10.1021/acs.jcim.5c00029) already address synthesis-aware generation and/or combined 2D/3D scaffold hopping. A new paper needs a defensible improvement under a stated setting, supported by independent comparisons and ablations. Known active scaffold recovery remains a structural proxy; activity of a new candidate and chemical reaction yield remain unmeasured without additional evidence. Experimental collaboration can strengthen an application claim, but the computational-method evaluation should stand on its own with declared limits and reproducible artifacts.
+
+For a separate same-assay evaluation, use the [assay-matched control protocol](ASSAY_MATCHED_CONTROLS.md). It audits all retained activities before score-blind selection and preserves assay-local labels; it does not replace the frozen generation benchmark.
