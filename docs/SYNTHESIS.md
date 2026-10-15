@@ -101,6 +101,16 @@ live query. Invalid/disconnected molecules are reported during conversion, never
 silently desalted. Multiple SKUs for one isomeric structure remain in the catalog;
 shortlists use one deterministic representative.
 
+The Python `Catalog` API validates every row and creates its canonical molecular
+snapshot during construction. `catalog.fps` is a mutable mapping with the complete
+eligible structure key set; length, key iteration and membership checks do not
+calculate fingerprints. Each value is computed on first lookup using the
+fingerprint generator captured at construction, then cached within that catalog
+instance. Reading all values or copying the mapping computes any remaining
+fingerprints. Route replay without similarity search does not require them.
+There is no disk cache. Callers should treat `catalog.mols` as a fixed snapshot
+and use the mapping API for `fps`, without relying on it being a concrete `dict`.
+
 Edit [the model configuration](../examples/synthesis/synllama-config.json) for
 your asset paths, model/reaction set, device, and limits. Paths inside a JSON
 configuration are relative to that file. Run:

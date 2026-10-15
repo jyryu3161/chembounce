@@ -3,6 +3,7 @@
 import csv
 import json
 import math
+from collections.abc import MutableMapping
 from dataclasses import asdict, dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -21,7 +22,66 @@ class BuildingBlock:
     availability: str = "catalogued"
 
 
+class _FingerprintMapping(MutableMapping):
+    """Full eligible key space; calculate each fingerprint only when read.
+
+    Catalog molecules form a fixed snapshot. The fingerprint policy is captured
+    on construction, and the computed values/cache belong only to this instance.
+    Normal mapping writes affect fingerprints, never the molecular snapshot.
+    """
+
+    _PENDING = object()
+
+    def __init__(self, mols, fingerprint):
+        self._mols = mols
+        self._fingerprint = fingerprint
+        self._values = dict.fromkeys(mols, self._PENDING)
+
+    def __getitem__(self, key):
+        value = self._values[key]
+        if value is self._PENDING:
+            value = self._fingerprint(self._mols[key])
+            self._values[key] = value
+        return value
+
+    def __setitem__(self, key, value):
+        self._values[key] = value
+
+    def __delitem__(self, key):
+        del self._values[key]
+
+    def __iter__(self):
+        return iter(self._values)
+
+    def __reversed__(self):
+        return reversed(self._values)
+
+    def __len__(self):
+        return len(self._values)
+
+    def __contains__(self, key):
+        return key in self._values
+
+    def clear(self):
+        self._values.clear()
+
+    def popitem(self):
+        if not self._values:
+            raise KeyError("popitem(): mapping is empty")
+        key = next(reversed(self._values))
+        return key, self.pop(key)
+
+    def copy(self):
+        return dict(self.items())
+
+
 class Catalog:
+    """Eagerly validate the entire catalog; ``fps`` is a lazy mutable mapping.
+
+    ``mols`` is a fixed molecular snapshot: post-load molecular mutation and
+    concrete ``dict`` identity for ``fps`` are not part of this API.
+    """
+
     def __init__(self, filename):
         self.path = Path(filename).resolve()
         self.sha256 = digest(self.path)
@@ -42,7 +102,7 @@ class Catalog:
             }
         self.blocks = {}
         self.by_smiles = {}
-        self.mols, self.fps = {}, {}
+        self.mols = {}
         with self.path.open(newline="", encoding="utf-8-sig") as stream:
             reader = csv.DictReader(stream, delimiter="\t")
             if not {"id", "smiles", "source", "snapshot"}.issubset(reader.fieldnames or []):
@@ -72,9 +132,9 @@ class Catalog:
                         if row["smiles"] != smiles:
                             mol = molecule(smiles)
                         self.mols[smiles] = mol
-                        self.fps[smiles] = FP.GetFingerprint(mol)
         if not self.mols:
             raise ValueError("Catalog contains no eligible building blocks")
+        self.fps = _FingerprintMapping(self.mols, FP.GetFingerprint)
         # A cache on the class method would keep entire discarded catalogs alive
         # through its self keys. Own the bounded cache within each instance.
         self.compatible = lru_cache(maxsize=512)(self.compatible)
