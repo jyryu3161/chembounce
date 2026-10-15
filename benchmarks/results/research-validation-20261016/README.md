@@ -125,6 +125,21 @@ At plan creation, 116 generator-complete historical snapshots covered 72 conditi
 
 Across all returned candidate rows in each arm, diverse exploration had **90/270** count similarities below 0.5 (range 0–1), while legacy had **0/108** (range 0.5–0.96748). These are all-row exploration summaries, not the similarity distribution of the configured downstream first two; a fingerprint score of 1 does not establish molecular identity. No model inference, synthesis reconstruction or 3D scoring was repeated. The observed generator equality does not establish current develop behavior, full-pipeline equality under its wall budget, biological activity, synthesis probability or method superiority.
 
+### Generator scaffold-change follow-up
+
+The later [scaffold-change assessment](generator_scaffold_change_validation.json) examines the corrected-index arm only: **378 raw candidate rows in 126 conditions**, without double counting the equal old arm. Eight hand-specified graph controls passed, and 169 input-file pins were checked before and after this post hoc evaluation. Independent heavy-atom graph 2-core comparisons use direct leaf pruning and NetworkX isomorphism, ignoring bond order, charge, stereo and isotope, with or without element labels; they share RDKit parsing. All 378 rows separately qualify as scaffold hops under the production family/Murcko policy, with zero exact input copies, empty candidate cores or unassessed rows. That policy observation uses project code and does not independently validate chemical normalization.
+
+These descriptive counts use different input cohorts and do not compare policy superiority:
+
+| Policy and observation unit | Count | Changed core topology | Changed element-labelled core |
+| --- | ---: | ---: | ---: |
+| Diverse, raw rows | 270 | 192 | 243 |
+| Diverse, unique exact query-design pairs | 150 | 124 | 141 |
+| Legacy, raw rows | 108 | 93 | 108 |
+| Legacy, unique exact query-design pairs | 36 | 31 | 36 |
+
+The configured downstream first two contain **90/180** diverse rows below count similarity 0.5 and **0/72** legacy rows, compared with **90/270** and **0/108** across all raw rows. Six diverse raw rows score 1.0, representing two exact query-design pairs; neither pair is an exact input copy. Equal topology can still accompany heteroatom or bond-order scaffold changes. Repeated seeds are not independent biological observations, and neither raw nor selected generator rows are final synthesis-qualified outputs. The original 630-attempt campaign remained pending; this follow-up makes no activity, synthesis-success or current-develop efficacy claim.
+
 ### Assay-context sensitivity
 
 The later [assay-context audit](assay_heterogeneity.json) is explicitly post hoc. Of 5,567 records, 1,103 have a representative assay annotated as cell-based and 1,229 have representative descriptions containing “unknown origin” or “unspecified origin.” Across all retained supporting assays, 1,250 records have that origin ambiguity and 79 span multiple assay-format annotations. The text flags do not prove a non-human experiment; they expose unresolved ambiguity despite the structured human assignment. A null variant annotation is not experimental proof of wild-type sequence. ChEMBL's [confidence score concerns assay-to-target assignment](https://chembl.gitbook.io/chembl-interface-documentation/frequently-asked-questions/chembl-data-questions), not equivalent experimental conditions.
