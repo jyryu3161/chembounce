@@ -23,7 +23,7 @@
     ]
   },
   "live": {
-    "scope": "Single preselected retrospective integration case; design occurs in upstream prompt; not held-out accuracy or experimental synthesis evidence",
+    "scope": "Single preselected retrospective integration case; pretrained chemical inventory unknown; not held-out accuracy or experimental synthesis evidence; no molecule-specific examples in the pinned prompt",
     "catalog_rows": 238542,
     "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
     "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",

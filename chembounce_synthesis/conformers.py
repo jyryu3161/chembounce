@@ -266,7 +266,7 @@ def _overlay(reference, candidate, cid, settings):
     return best
 
 
-def score_candidate(smiles, hit, design, settings=ConformerSettings(), hit_pose=None):
+def score_candidate(smiles, hit, design, settings=ConformerSettings(), hit_pose=None, pose_constraints=None):
     """Select one candidate conformer using both references, with strain penalty.
 
     Each reference overlay computes shape and pharmacophore on one common pose.
@@ -274,12 +274,18 @@ def score_candidate(smiles, hit, design, settings=ConformerSettings(), hit_pose=
     rigid-body orientation can differ. Scores are heuristics, not probabilities.
     """
     require_alignment()
+    if pose_constraints is not None:
+        pose_constraints.validate_reference(hit_pose)
     candidate = ensemble(canonical(smiles), settings)
     hit_ref = hit_pose if hit_pose is not None else ensemble(canonical(hit), settings)
     design_ref = ensemble(canonical(design), settings)
-    best = None
+    best, rejected_poses = None, []
     for cid in candidate.relative_energies:
         hit_info, hit_aligned = _overlay(hit_ref, candidate, cid, settings)
+        pocket = pose_constraints.evaluate(hit_aligned, cid) if pose_constraints is not None else None
+        if pocket is not None and not pocket["passed"]:
+            rejected_poses.append({"candidate_conformer_id": cid, **pocket})
+            continue
         design_info, design_aligned = _overlay(design_ref, candidate, cid, settings)
         relative_energy = candidate.relative_energies[cid]
         score = math.sqrt(
@@ -300,6 +306,18 @@ def score_candidate(smiles, hit, design, settings=ConformerSettings(), hit_pose=
             },
             "settings": asdict(settings),
         }
+        if pocket is not None:
+            info["pocket"] = pocket
         if best is None or score > best[0]["score"]:
             best = (info, hit_aligned, design_aligned)
+    if best is None and pose_constraints is not None:
+        raise ValueError(
+            f"No candidate conformation satisfies bound-pocket constraints ({len(rejected_poses)} rejected)"
+        )
+    if pose_constraints is not None:
+        best[0]["pocket_selection"] = {
+            "candidate_conformations_evaluated": len(candidate.relative_energies),
+            "rejected_conformations": rejected_poses,
+            "provenance": pose_constraints.provenance,
+        }
     return best

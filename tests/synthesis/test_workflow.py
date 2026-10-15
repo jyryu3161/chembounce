@@ -407,22 +407,24 @@ def test_continuation_can_score_previously_unscored_routes_and_override_refineme
         == 0
     )
     manifest = json.loads((second / "manifest.json").read_text())
-    assert manifest["effective_workflow"]["refinement"] == {
+    effective_refinement = manifest["effective_workflow"]["refinement"]
+    assert {key: effective_refinement[key] for key in ("top_n", "num_conformers", "seeds")} == {
         "top_n": 4,
         "num_conformers": 3,
         "seeds": [43, 44],
     }
+    assert effective_refinement["threshold_policy"] == "all_seeds"
     summary = json.loads((second / "summary.json").read_text())
     assert summary["returned_products"] == 4
     assert summary["carried_screened_products"] > 1
 
 
-def test_refinement_failure_keeps_screening_pool_without_falling_back(
+def test_refinement_failure_keeps_screening_pool_without_exporting_coarse_pose(
     tmp_path, assets, proposal, monkeypatch
 ):
     monkeypatch.setattr(
         "chembounce_synthesis.workflow.refine_candidate",
-        lambda *a: (None, {"status": "failed", "trials": []}),
+        lambda *a, **kw: (None, {"status": "failed", "trials": []}),
     )
     config = config_for(tmp_path, assets, proposal)
     config["refinement"] = {"top_n": 1}
@@ -431,7 +433,8 @@ def test_refinement_failure_keeps_screening_pool_without_falling_back(
     summary = json.loads((out / "summary.json").read_text())
     assert summary["screened_products"] > 0
     assert summary["status"] == "no_candidates"
-    assert summary["route_rejections"]["refinement_failed"] == 1
+    assert summary["refinement_attempted"] == 1
+    assert summary["route_rejections"]["refinement_failed"] >= 1
     assert len((out / "results.tsv").read_text().splitlines()) == 1
     assert len((out / "screening.tsv").read_text().splitlines()) > 1
 

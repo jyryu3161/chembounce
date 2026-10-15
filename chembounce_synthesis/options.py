@@ -4,6 +4,11 @@ import copy
 
 
 def add_expansion_options(parser):
+    parser.add_argument(
+        "--protocol",
+        choices=("legacy", "research-v1"),
+        help="Versioned computational defaults; explicit settings override them. research-v1 enables diverse search and uncertainty-aware bounded refinement",
+    )
     group = parser.add_argument_group("building-block expansion")
     group.add_argument(
         "--expansion-top-k", type=int, help="Alternative blocks per mutable leaf (overrides config)"
@@ -43,6 +48,8 @@ def expansion_overrides(args):
 
 def apply_expansion_options(config, args):
     config = copy.deepcopy(config)
+    if getattr(args, "protocol", None) is not None:
+        config["protocol"] = args.protocol
     overrides = expansion_overrides(args)
     if overrides:
         config.setdefault("expansion", {}).update(overrides)
@@ -67,4 +74,4 @@ def apply_expansion_options(config, args):
 
 
 def has_synthesis_overrides(args):
-    return bool(apply_expansion_options({}, args))
+    return bool({key: value for key, value in apply_expansion_options({}, args).items() if key != "protocol"})

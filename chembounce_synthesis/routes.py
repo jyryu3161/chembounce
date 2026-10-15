@@ -1,4 +1,4 @@
-"""Resolve LLM proposals to catalog routes, then verify by independent replay."""
+"""Resolve LLM proposals to catalog routes, then verify by exact rule replay."""
 
 import copy
 import itertools
@@ -33,6 +33,9 @@ class SearchReport:
     rounds_completed: int = 0
     round_reports: list = field(default_factory=list)
     failures: list = field(default_factory=list)
+    combination_budget_scope: str = "unspecified"
+    combination_limit: int | None = None
+    budget_exhausted_nodes: list = field(default_factory=list)
 
 
 def _untag(value, tag):
@@ -231,9 +234,16 @@ def resolve_proposal(proposal, catalog, rules, limits=None):
 
     Invalid rules/SMILES are rejected. Reactant permutations are enumerated rather
     than trusting LLM slot order. Shared intermediates/blocks must remain consistent.
+    ``max_combinations`` bounds total reactant combinations across the entire
+    proposal, including unsuccessful/structurally inconsistent combinations.
+    Reusing a memoized intermediate does not spend the budget again. Exact route
+    verification is separate from this projection-search budget.
     """
     limits = limits or SearchLimits()
-    report = SearchReport()
+    report = SearchReport(
+        combination_budget_scope="proposal_reactant_combinations",
+        combination_limit=limits.max_combinations,
+    )
     graph, bbs, root = _proposal_graph(proposal, rules, limits)
     bb_ids = {s: f"b{i}" for i, s in enumerate(sorted(bbs))}
     memo = {}
@@ -244,7 +254,6 @@ def resolve_proposal(proposal, catalog, rules, limits=None):
         step = graph[smiles]
         rule = rules.get(step["rule_id"])
         states = []
-        count = 0
         stop = False
         for reactants in sorted(set(itertools.permutations(step["reactants"]))):
             options = []
@@ -265,11 +274,11 @@ def resolve_proposal(proposal, catalog, rules, limits=None):
                         ]
                     )
             for combination in itertools.product(*options):
-                if count >= limits.max_combinations:
+                if report.combinations >= limits.max_combinations:
                     report.combination_truncations += 1
+                    report.budget_exhausted_nodes.append(step["id"])
                     stop = True
                     break
-                count += 1
                 report.combinations += 1
                 nodes, consistent = {}, True
                 for item in combination:
@@ -303,7 +312,12 @@ def resolve_proposal(proposal, catalog, rules, limits=None):
                 {
                     "model_intermediate": smiles,
                     "rule_id": rule.id,
-                    "reason": "No valid regenerated products within catalog and search limits",
+                    "node_id": step["id"],
+                    "reason": (
+                        "Global proposal combination budget exhausted before this intermediate was resolved"
+                        if report.budget_exhausted_nodes
+                        else "No valid regenerated products within catalog and search limits"
+                    ),
                 }
             )
         return memo[smiles]
@@ -404,7 +418,13 @@ def expand_route(
     if not set(locked_nodes) <= leaves:
         raise ValueError("Locked expansion nodes must be building-block node IDs")
     locked_smiles = {catalog.get(ident).smiles for ident in locked_building_block_ids}
-    report, results = SearchReport(), []
+    report, results = (
+        SearchReport(
+            combination_budget_scope="starting_route_leaf_substitutions",
+            combination_limit=limits.max_combinations,
+        ),
+        [],
+    )
     target = canonical(target_smiles) if target_smiles is not None else initial["product"]
     target_fp = FP.GetFingerprint(molecule(target))
     frontier = [(route, [])]

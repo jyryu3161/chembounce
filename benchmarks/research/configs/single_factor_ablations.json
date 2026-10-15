@@ -1,0 +1,26 @@
+[
+  {
+    "id": "pipeline_legacy_search",
+    "parent": "pipeline",
+    "description": "Only restore strict legacy 2D prefilter/search; keep generation seed, route rules, 3D scoring and budgets.",
+    "settings": {"generator_options": {"search_policy": "legacy"}}
+  },
+  {
+    "id": "pipeline_no_3d",
+    "parent": "pipeline",
+    "description": "Keep generated designs, catalog/rule reconstruction and synthesis evidence gates; rank by 2D query/design similarity without conformer generation.",
+    "settings": {"disable_3d": true}
+  },
+  {
+    "id": "pipeline_no_refinement",
+    "parent": "pipeline",
+    "description": "Keep initial 3D screening and synthesis; disable multi-seed refinement.",
+    "settings": {"synthesis_overrides": {"refinement": {"top_n": 0}}}
+  },
+  {
+    "id": "pipeline_encounter_allocation",
+    "parent": "pipeline",
+    "description": "Only replace balanced scaffold/design allocation with encounter order.",
+    "settings": {"synthesis_overrides": {"allocation_policy": "encounter"}}
+  }
+]

@@ -21,7 +21,7 @@ incorporated into both the stable and development lines. Python development vers
 See [changes](CHANGELOG.md) and [methods](docs/METHODS.md).
 
 The optional [synthesis workflow](docs/SYNTHESIS.md) connects SynLlama proposals
-to a dated building-block catalog and an explicit reaction registry. It independently
+to a dated building-block catalog and an explicit reaction registry. It
 replays routes, expands compatible building blocks, reapplies scaffold/core constraints,
 and ranks regenerated molecules using Morgan-bit Tanimoto and joint multi-conformer
 3D shape/pharmacophore similarity to both the original hit and the proposed design.
@@ -32,8 +32,19 @@ no minimum synthesis-stage similarity is imposed unless configured. Run the offl
 assets for actual SynLlama inference. Verified reaction replay is computational evidence,
 not an experimental synthesis guarantee.
 
-The model configuration starts with 16 alternative blocks and one substitution
-round, then reevaluates the top 10 products with 24 conformers at three seeds.
+The explicit `--protocol research-v1` preset reserves bounded search capacity for
+diverse, lower-2D-similarity scaffolds and balances synthesis work across scaffold
+families. It checks three refinement seeds, increases conformer effort for unstable
+or borderline candidates, and ranks using conservative seed summaries while
+exporting one actual representative pose. Similarity cutoffs remain opt-in;
+stability tolerances are engineering criteria, not activity probabilities.
+Exact reaction products remain separate from chemical families used to avoid
+counting tautomer, protonation, isotope or stereo variants as novel scaffolds.
+Optional independent ReactionT5 evidence and bound-pose receptor/anchor checks
+have explicit configuration and provenance; they are not enabled merely by
+selecting the preset. See [research setup](docs/SYNTHESIS.md#research-preset-and-bounded-2d-exploration)
+and the [research validation protocol](docs/RESEARCH_VALIDATION.md).
+
 Use `chembounce-synthesis --continue-from PREVIOUS_RUN --output NEW_RUN` to
 reuse saved model proposals and retain previous routes while expanding the search.
 See [refinement and continuation](docs/SYNTHESIS.md#refinement-and-continuation)
@@ -74,7 +85,21 @@ python chembounce.py \
 
 The included library verifies operation without downloading external data; it is
 **not the publication library**. Results depend on library, thresholds, search
-limits, and RDKit version. Filters are never relaxed automatically to produce rows.
+limits, and RDKit version. The default `legacy` policy applies mandatory 2D
+cutoffs. To explicitly select bounded diversity exploration without synthesis:
+
+```bash
+chembounce -i 'CC(=O)NCCc1ccccc1' -o output_research_hopping \
+  --scaffold-db tests/fixtures/scaffolds.smi --overall_max_n 20 \
+  --protocol research-v1 --no-synllama
+```
+
+In this preset, 2D cutoffs prioritize one search lane; a reserved diversity lane
+can admit candidates below them. Core/property constraints remain mandatory.
+The selected policy, effective budgets and exclusions are recorded, so a change
+of search policy is explicit rather than an automatic response to an empty run.
+For integrated hopping, model projection and adaptive refinement, follow the
+[local-asset example](docs/SYNTHESIS.md#research-preset-and-bounded-2d-exploration).
 
 ## Reference data and fast search
 
@@ -112,8 +137,12 @@ Run `python chembounce.py --help` for the full interface. Key settings:
 | Option | Meaning |
 | --- | --- |
 | `-i`, `-o` | Input SMILES and output directory |
-| `-t` | Minimum final Morgan **count** Tanimoto; default 0.5 |
-| `--search-threshold` | Minimum scaffold Morgan **bit** Tanimoto; default 0.3 |
+| `--protocol legacy\|research-v1` | Named defaults for hopping and synthesis; explicit overrides take precedence |
+| `--search-policy legacy\|diverse` | Mandatory 2D gates or bounded 2D-priority/diversity lanes |
+| `-t` | Final Morgan **count** Tanimoto cutoff in legacy mode, priority boundary in diverse mode; default 0.5 |
+| `--search-threshold` | Scaffold Morgan **bit** Tanimoto cutoff in legacy mode, priority boundary in diverse mode; default 0.3 |
+| `--exploration-fraction` | Reserved diversity fraction in diverse mode; default 0.25; zero disables lower-2D admission |
+| `--search-candidate-budget` | Global requested candidate slots in diverse mode, including unsuccessful assembly requests; default 4096 |
 | `--core_smiles` | Substructure required in both input and every accepted candidate, including specified stereo |
 | `--overall_max_n` | Hard cap on unique results across fragments |
 | `-n`, `--frag_max_n` | Hard cap per fragment; default 1000 |
@@ -133,7 +162,7 @@ Run `python chembounce.py --help` for the full interface. Key settings:
 | `--expansion-top-k N` | Number of alternative building blocks per mutable reaction leaf |
 | `--expansion-rounds N` | Building-block substitution rounds; 0 disables expansion |
 | `--expansion-max-routes N` | Maximum retained expansion routes per starting route, shared across rounds |
-| `--refine-top-n N` | Reevaluate the top N screened synthesis products; 0 disables refinement |
+| `--refine-top-n N` | Reevaluate up to N screened chemical families under the configured allocation policy; 0 disables refinement |
 | `--refine-conformers N` / `--refine-seeds S ...` | Conformer count per seed and seeds for reevaluation |
 | `--synthesis-max-scored N` / `--synthesis-max-results N` | Synthesis screening and final output budgets |
 | `--include-run DIR` | Reverify and retain previous synthesis routes; repeat to combine runs |
@@ -153,6 +182,8 @@ heuristic and does not enumerate all substitution isomers or all stereoisomers.
   `fragment_result_XXXX.txt`: fragment-level search evidence.
 - `run_summary.json`: status, input filter violations, generation/acceptance counts,
   rejected properties, and optional 3D failures.
+- `search_decisions.json`: diverse-policy candidate admissions, exclusions and
+  bounded attachment/search decisions, including identity failures.
 - `run_manifest.json`: inputs, effective limits, seeds, dependency versions, source
   code hashes, Git revision/dirty state, and actual library checksums.
 - `resource_cost.json`: CLI wall time, process CPU time, and sampled process RSS.
@@ -162,6 +193,14 @@ A shape failure is recorded as NaN and explained in the summary; it does not dis
 an otherwise valid candidate. New 3D scores use a seeded conformer and can differ
 from 1.0. `Standardized final structure` uses RDKit Cleanup, without tautomer or
 protonation-state enumeration. Details and limitations are in [methods](docs/METHODS.md).
+
+Synthesis outputs are separate under `OUTPUT/synthesis/`. `results.tsv` selects
+one accepted exact product/design per chemical family; `screening_alternatives.tsv`
+retains scored alternatives so a failed preferred design need not erase the family.
+`alternative_route_ids` always refers to the selected exact product; different
+state/design alternatives are labelled separately. Seed trials, adaptive budgets,
+independent synthesis evidence and optional pocket geometry are preserved in the
+[synthesis artifacts](docs/SYNTHESIS.md#artifacts-and-evaluation).
 
 Exit codes: **0** candidates found; **3** valid run with no passing candidates;
 **2** invalid request/data. Unexpected programming failures remain visible.
@@ -192,14 +231,13 @@ ruff check .
 python benchmarks/benchmark_search.py --rows 100000 --repeats 5
 ```
 
-Regression tests cover scaffold attachments, retained stereochemistry, identity
-reconstruction, core preservation, limits, diagnostics, deterministic 3D scores,
-CATS descriptors, and packed-search equivalence to RDKit. Clean environments on
-Python 3.10, 3.11 and 3.12 each passed 81 tests; a separate environment also passed
-the optional ODDT comparison (82 total). The minimum
-RDKit 2023.09 dependency combination passed as well. After integration, 88 tests
-passed with the optional comparison installed; the minimum environment passed 87
-and skipped that optional check. CI mirrors these checks.
+Regression tests cover scaffold attachments, retained stereochemistry, chemical
+families, core preservation, limits, diagnostics, deterministic 3D scores,
+CATS descriptors, packed-search equivalence to RDKit, route alternatives,
+multi-seed/adaptive refinement, independent reaction evidence and bound-pose
+constraints. Historical environment checks and their scope are recorded in
+[validation](docs/VALIDATION.md); optional 3D and model runtimes have additional
+requirements described in [synthesis setup](docs/SYNTHESIS.md).
 
 The recorded [100,000-row kernel benchmark](benchmarks/search_100k.json) found
 identical top-100 scores, **2.24×** lower median search time, **8×** smaller fingerprint

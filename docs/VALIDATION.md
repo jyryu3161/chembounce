@@ -354,7 +354,8 @@ microbenchmark on 256 candidates preserved every front:
 | Fully ordered dominance chain | 1510.92 ms | 9.02 ms | 167.45x |
 
 These are isolated ranking timings on a shared host, not whole-workflow speedups.
-The integration design appears in the upstream prompt, so this case does not
-measure model generalization. Catalog membership and reaction replay do not
+This is a single integration example without independent held-out generalization
+evidence; the pretrained chemical inventory is unknown. The pinned upstream
+prompt contains no molecule-specific examples, so no prompt overlap is claimed. Catalog membership and reaction replay do not
 establish yield, selectivity, reagent/condition completeness, current stock or
 biological activity. Refinement scores remain sampling-sensitive heuristics.

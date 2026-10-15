@@ -1,0 +1,342 @@
+{
+  "additional_test_environments": {
+    "minimum": {
+      "packages": {
+        "numpy": "1.24.4",
+        "psutil": "5.9.8",
+        "rdkit": "2023.9.6",
+        "scipy": "1.10.1"
+      },
+      "passed": 298,
+      "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]",
+      "seconds": 51.89,
+      "skip_scope": "Optional 3D alignment, local model runtime and ODDT unavailable; module-level skips may represent multiple tests",
+      "skipped": 18,
+      "warning_scope": "Eight upstream deprecated Python MolStandardize imports in RDKit 2023.09.6",
+      "warnings": 8
+    },
+    "python312": {
+      "packages": {
+        "numpy": "2.5.4",
+        "psutil": "7.2.2",
+        "rdkit": "2026.9.1",
+        "scipy": "1.18.1"
+      },
+      "passed": 357,
+      "python": "3.12.13 (main, Apr 14 2026, 14:29:00) [Clang 22.1.3 ]",
+      "seconds": 76.26,
+      "skip_scope": "Optional local model runtime and ODDT unavailable; module-level skips may represent multiple tests",
+      "skipped": 2
+    }
+  },
+  "base_commit": "4ccb1e02549790eb1d0d5bed98214b73c5b58a24",
+  "date": "2026-10-16",
+  "dependency_audit": {
+    "global_pip_check": "Fails on unrelated inherited host package requirements; active closure checked separately",
+    "inherits_system_site_packages": true,
+    "packages": 63,
+    "problems": [
+      {
+        "installed": "3.1.0",
+        "parent": "torch",
+        "requirement": "triton==3.4.0; platform_system == \"Linux\" and platform_machine == \"x86_64\""
+      }
+    ],
+    "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]",
+    "resolution_status": "Separate isolated environment installation in progress; active comparison environment remains unchanged and its conflict is disclosed",
+    "scope": "Active dependency closure of chembounce[synllama,reactiont5,synthesis]; unrelated inherited host packages are not runtime requirements",
+    "versions": {
+      "certifi": "2026.2.25",
+      "charset-normalizer": "3.4.7",
+      "chembounce": "2.0.0.dev0",
+      "contourpy": "1.3.2",
+      "cycler": "0.12.1",
+      "exceptiongroup": "1.3.0",
+      "filelock": "3.25.2",
+      "fonttools": "4.43.1",
+      "fsspec": "2026.3.0",
+      "hf-xet": "1.2.0",
+      "huggingface-hub": "0.36.2",
+      "idna": "3.11",
+      "iniconfig": "2.3.0",
+      "jinja2": "3.1.6",
+      "kiwisolver": "1.4.5",
+      "loguru": "0.7.3",
+      "markupsafe": "3.0.3",
+      "matplotlib": "3.10.8",
+      "mpmath": "1.3.0",
+      "networkx": "3.4.2",
+      "numpy": "1.26.4",
+      "nvidia-cublas-cu12": "12.8.4.1",
+      "nvidia-cuda-cupti-cu12": "12.8.90",
+      "nvidia-cuda-nvrtc-cu12": "12.8.93",
+      "nvidia-cuda-runtime-cu12": "12.8.90",
+      "nvidia-cudnn-cu12": "9.10.2.21",
+      "nvidia-cufft-cu12": "11.3.3.83",
+      "nvidia-cufile-cu12": "1.13.1.3",
+      "nvidia-curand-cu12": "10.3.9.90",
+      "nvidia-cusolver-cu12": "11.7.3.90",
+      "nvidia-cusparse-cu12": "12.5.8.93",
+      "nvidia-cusparselt-cu12": "0.7.1",
+      "nvidia-nccl-cu12": "2.27.3",
+      "nvidia-nvjitlink-cu12": "12.8.93",
+      "nvidia-nvtx-cu12": "12.8.90",
+      "packaging": "26.0",
+      "pandas": "2.3.3",
+      "pillow": "12.2.0",
+      "pluggy": "1.6.0",
+      "psutil": "7.2.2",
+      "pygments": "2.18.0",
+      "pyparsing": "3.1.1",
+      "pytest": "9.0.2",
+      "python-dateutil": "2.9.0.post0",
+      "pytz": "2026.1.post1",
+      "pyyaml": "6.0.2",
+      "rdkit": "2025.9.6",
+      "regex": "2024.11.6",
+      "requests": "2.32.3",
+      "safetensors": "0.6.2",
+      "scaffoldgraph": "1.1.2",
+      "scipy": "1.13.1",
+      "six": "1.17.0",
+      "sympy": "1.14.0",
+      "tokenizers": "0.21.4",
+      "tomli": "2.0.1",
+      "torch": "2.8.0+cu128",
+      "tqdm": "4.67.3",
+      "transformers": "4.51.3",
+      "triton": "3.1.0",
+      "typing-extensions": "4.15.0",
+      "tzdata": "2026.1",
+      "urllib3": "2.6.3"
+    }
+  },
+  "export_consistency": {
+    "original_catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "results": [
+      {
+        "checks": {
+          "design_pharmacophore_abs_error": 0.0,
+          "design_tanimoto_abs_error": 0.0,
+          "hit_pharmacophore_abs_error": 1.0287884874005115e-06,
+          "hit_tanimoto_abs_error": 0.0,
+          "route_exact_product": true,
+          "same_conformer_pair_distance_max_error_A": 0.00016487764557338025
+        },
+        "route_id": "route_000000",
+        "smiles": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1"
+      },
+      {
+        "checks": {
+          "design_pharmacophore_abs_error": 5.852815175844128e-07,
+          "design_tanimoto_abs_error": 0.0,
+          "hit_pharmacophore_abs_error": 1.8195661627418147e-06,
+          "hit_tanimoto_abs_error": 0.0,
+          "route_exact_product": true,
+          "same_conformer_pair_distance_max_error_A": 0.00013743663090615144
+        },
+        "route_id": "route_000030",
+        "smiles": "O=C(O)c1csc(NC(=O)c2cccnc2N2CCOCC2)n1"
+      },
+      {
+        "checks": {
+          "design_pharmacophore_abs_error": 2.658768871288686e-06,
+          "design_tanimoto_abs_error": 0.0,
+          "hit_pharmacophore_abs_error": 4.262120146591997e-06,
+          "hit_tanimoto_abs_error": 0.0,
+          "route_exact_product": true,
+          "same_conformer_pair_distance_max_error_A": 0.00014331892658869805
+        },
+        "route_id": "route_000031",
+        "smiles": "COC(=O)c1csc(NC(=O)c2cccnc2N2CCOCC2)n1"
+      }
+    ],
+    "scope": "Independent rerun of exact route replay, both query/design bit Morgan similarities, and scoring of exported poses; structural consistency not activity or synthesis-yield validation",
+    "verified_original_catalog_ids": [
+      "structure-sha256:1b6fd46a6232d011c8aab15eecd8017406c003b51c7370bc426d66bf8d2980c3",
+      "structure-sha256:1f935c4bec49ea48661ef432f54c7afbf7cd7f085099bf1c82d1cc7eff537c78",
+      "structure-sha256:72affa9bef006c34d9dce515db4aa0ced73b064f0bb000ab59e482d5026c063c",
+      "structure-sha256:ff494b548b4406a6e853d8bb37db029f885cbc54962ba5dd259312de1fca62c4"
+    ]
+  },
+  "forward_model": {
+    "model_revision": "933114058cb2604dc1bf536dbebdfcefbe83d4fc",
+    "negative_control": {
+      "passed": false,
+      "reasons": [
+        "r0: require_forward_agreement not satisfied"
+      ]
+    },
+    "route_evidence_levels": [
+      {
+        "eligibility": {
+          "passed": true,
+          "reasons": []
+        },
+        "evidence_level": "catalog_rule_replay_with_separately_reported_external_evidence",
+        "route_id": "route_000000"
+      },
+      {
+        "eligibility": {
+          "passed": false,
+          "reasons": [
+            "r0: require_forward_agreement not satisfied"
+          ]
+        },
+        "evidence_level": "catalog_rule_replay_with_separately_reported_external_evidence",
+        "route_id": "route_000001"
+      },
+      {
+        "eligibility": {
+          "passed": true,
+          "reasons": []
+        },
+        "evidence_level": "catalog_rule_replay_with_separately_reported_external_evidence",
+        "route_id": "route_000031"
+      }
+    ],
+    "scope": "Conditional independent model agreement on previously selected integration routes. Missing reagents/conditions remain incomplete. Mismatch control intentionally mutates evidence boundary, not a replay-verified route.",
+    "source": {
+      "artifact": "benchmark-results/research-validation/forward-route-v4-audit.json",
+      "sha256": "627e5009ec05bf1432c0c5ef97a2375805d566f1b57c47952c2f5b33094f119d"
+    },
+    "transformers_version": "4.51.3",
+    "usage": {
+      "cache_hits": 1,
+      "input_tokens": 105,
+      "output_tokens": 282,
+      "predictor_calls": 3
+    }
+  },
+  "identity_cache_microbenchmark": {
+    "after_seconds": {
+      "first": 20.017767686396837,
+      "repeat": 0.003512253053486347
+    },
+    "all_identity_fields_and_errors_unchanged": true,
+    "before_seconds": {
+      "first": 28.3212985182181,
+      "repeat": 20.006160181947052
+    },
+    "count": 100,
+    "errors": 16,
+    "normalization_bounds": {
+      "tautomers": 1000,
+      "transforms": 1000
+    },
+    "sample": "First 100 distinct nonempty canonical_smiles in fixed source order",
+    "scope": "Identity normalization microbenchmark only; not whole workflow speedup",
+    "source": "benchmark-results/research-validation/sources/chembl/CHEMBL203-early.json",
+    "source_sha256": "931d28ba990a3743ab125757d212a68a2e24ec2eb1ebbfc296163126be558b4f"
+  },
+  "identity_controls": {
+    "catalog_sample": 250,
+    "failures": [],
+    "idempotent": 250,
+    "independent_controls": [
+      {
+        "a": "c1ncc[nH]1",
+        "b": "c1[nH]ccn1",
+        "expected": "unchanged",
+        "observed": "unchanged"
+      },
+      {
+        "a": "NCCc1c[nH]cn1",
+        "b": "[NH3+]CCc1c[nH]cn1",
+        "expected": "state_only",
+        "observed": "state_only"
+      },
+      {
+        "a": "Nc1ncnc2[nH]cnc12",
+        "b": "Nc1[nH]cnc2ncnc12",
+        "expected": "state_only",
+        "observed": "state_only"
+      },
+      {
+        "a": "O=P(O)(O)Oc1ccccc1",
+        "b": "O=P([O-])([O-])Oc1ccccc1",
+        "expected": "state_only",
+        "observed": "state_only"
+      },
+      {
+        "a": "N[C@@H](Cc1ccccc1)C(=O)O",
+        "b": "[NH3+][C@@H](Cc1ccccc1)C(=O)[O-]",
+        "expected": "state_only",
+        "observed": "state_only"
+      }
+    ]
+  },
+  "limits": [
+    "No experimental activity or synthesis-yield validation",
+    "Model training chemical inventory remains unknown",
+    "Forward-model agreement is conditional and missing conditions remain explicit",
+    "Seed dispersion is not a probability confidence interval",
+    "Retained full raw artifacts are local, hash-pinned; compact validation records alone are not the complete reproducibility package"
+  ],
+  "pocket_checks": {
+    "all_translated_references_rejected": true,
+    "known_pair_source": {
+      "artifact": "benchmark-results/research-validation/pocket-known-pair-audit.json",
+      "sha256": "fc45072486e8b3cef4251d0ed5665b230a25aec24d7ab1823ee2db935d1236fd"
+    },
+    "known_pair_targets": [
+      "PIM1",
+      "JNK3",
+      "ADCY10"
+    ],
+    "pdb_count": 6,
+    "source": {
+      "artifact": "benchmark-results/research-validation/pocket-parent-audit.json",
+      "sha256": "d1a8f4523dfad6d18162eb1f3b5b3b5bd2fd5ed1a7bba3ab62ee377ce1b54435"
+    }
+  },
+  "prompt_inventory": {
+    "coverage": "complete for static instruction/input template; supplied query intentionally omitted",
+    "inventory_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "method": "Manual inspection of exact AST-loaded TEMPLATE fields used by SynLlama.propose; contains procedural instructions and SMILES_STRING placeholder, no molecular exemplar",
+    "molecular_examples": 0,
+    "pretraining_inventory": "unknown; empty prompt inventory does not imply absent model-training overlap",
+    "prior_documentation_correction": "The earlier unsupported statement of a molecule appearing in the upstream prompt is withdrawn; a single integration case still does not establish generalization",
+    "sha256": "10dc20cf9c1f6af3522aa51fb5b3d9a2f121668c70ca4f92819feb96a3bbae6a",
+    "source": "/data2/home/jyryu/chembounce/backup/synllama-reference/source/synllama/llm/vars.py",
+    "used_fields": [
+      "instruction",
+      "input"
+    ]
+  },
+  "runtime": {
+    "packages": {
+      "numpy": "1.26.4",
+      "pandas": "2.3.3",
+      "psutil": "7.2.2",
+      "rdkit": "2025.9.6",
+      "safetensors": "0.6.2",
+      "scaffoldgraph": "1.1.2",
+      "scipy": "1.13.1",
+      "torch": "2.8.0+cu128",
+      "transformers": "4.51.3"
+    },
+    "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+    "python": "3.10.12",
+    "scope": "Runtime installed from project synllama,reactiont5,synthesis extras; core/model evaluation uses this Python3.10 environment"
+  },
+  "schema_version": 1,
+  "scope": "Independent engineering validation of research functionality; held-out campaign is separate and was not complete at this record",
+  "tests": {
+    "full_suite": {
+      "log": {
+        "artifact": "benchmark-results/research-validation/parent-final-full-tests.log",
+        "sha256": "5aa74e7b8ef46f23f638977234828dedcb65608e5676749f4b8715c92ce6c297"
+      },
+      "passed": 360,
+      "seconds": 52.03
+    },
+    "git_diff_check": "passed",
+    "model_runtime_focused": {
+      "passed": 240,
+      "seconds": 31.44
+    },
+    "ruff_check": "passed",
+    "ruff_format_check": "65 files already formatted"
+  }
+}

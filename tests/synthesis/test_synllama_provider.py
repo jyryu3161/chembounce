@@ -1,6 +1,7 @@
 """Optional local-runtime contract tests; these tiny weights are not SynLlama."""
 
 import json
+import time
 
 import pytest
 
@@ -61,3 +62,7 @@ def test_local_inference_formats_capture_raw_outputs_and_restore_rng(tmp_path, w
     assert provider.provenance["provider"] == "synllama_local"
     assert provider.provenance["use_cache"] is True
     assert provider.provenance["model_files_sha256"]
+    assert provider.propose("CCO", deadline_monotonic=time.monotonic() - 1) == []
+    timed = provider.propose("CCO", deadline_monotonic=time.monotonic() + 10)
+    assert len(timed) == 1 and timed[0]["sampling"]["elapsed_seconds"] >= 0
+    assert TORCH.equal(before, TORCH.random.get_rng_state())

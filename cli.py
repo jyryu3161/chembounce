@@ -154,7 +154,27 @@ def argument_parser():
     #     parser.add_argument('--search_scf_thr', required=False, default=0.3, type=float,
     #                         help="Tanimoto treshold for drop replace scaffold. Replace scaffolds with less than the threshold for corresponding fragment are dropped. Default is 0.3 (0.0 ~ 1.0)")
 
-    parser.add_argument("--seed", type=int, default=42, help="Deterministic 3D conformer seed")
+    parser.add_argument(
+        "--seed", type=int, default=42, help="Deterministic 3D conformer and exploration seed"
+    )
+    parser.add_argument(
+        "--search-policy",
+        choices=("legacy", "diverse"),
+        default=None,
+        help="legacy enforces 2D cutoffs; diverse reserves bounded exploration below cutoffs",
+    )
+    parser.add_argument(
+        "--exploration-fraction",
+        type=float,
+        default=None,
+        help="Fraction of scaffold, beam and final budgets reserved for diverse exploration (default .25)",
+    )
+    parser.add_argument(
+        "--search-candidate-budget",
+        type=int,
+        default=None,
+        help="Global requested attachment products in diverse policy, charged even when attachment fails",
+    )
     parser.add_argument(
         "--synthesis-config",
         help="Run catalog/reaction verification and 3D ranking after hopping; JSON config",

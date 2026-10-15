@@ -2,8 +2,10 @@
 
 This is one integration case using **saved actual SynLlama outputs**, a historical
 catalog snapshot and independent registered-rule replay. It is not a held-out
-success-rate benchmark or experimental synthesis evidence. The target occurs in
-the upstream prompt examples; model generalization cannot be inferred here.
+success-rate benchmark or experimental synthesis evidence. The pretrained
+chemical inventory is unknown; model generalization cannot be inferred here.
+The pinned upstream prompt contains no molecule-specific examples, so no prompt
+overlap is claimed.
 
 The case and withheld-precursor setup are the same as the earlier
 [expansion comparison](../synthesis-expansion/README.md). The exact target precursor

@@ -8,7 +8,9 @@ import logging
 import math
 import subprocess
 import time
-from dataclasses import asdict
+from collections import deque
+from contextlib import ExitStack
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import numpy as np
@@ -19,8 +21,12 @@ from .catalog import Catalog
 from .common import FP, canonical, digest, molecule, positive, write_json
 from .conformers import ConformerSettings, ensemble, reference_from_sdf, require_alignment, score_candidate
 from .continuation import load_carried_routes
+from .evidence import evaluator_from_config, validate_evidence_config
+from .identity import classify_change, family_key, scaffold_family_key
+from .pocket import constraints_from_config, validate_pocket_config
+from .protocols import apply_synthesis_protocol, protocol_provenance
 from .reactions import Rules
-from .refinement import RefinementSettings, refine_candidate
+from .refinement import RefinementBudget, RefinementSettings, refine_candidate
 from .routes import SearchLimits, expand_route, resolve_proposal, verify_route
 from .synllama import SavedProposals, SynLlama
 
@@ -42,6 +48,7 @@ COLUMNS = [
     "reaction_steps",
     "route_id",
     "alternative_route_ids",
+    "alternative_family_candidates",
     "scoring_stage",
     "pose_seed",
     "seed_score_median",
@@ -49,6 +56,14 @@ COLUMNS = [
     "seed_score_max",
     "seed_successes",
     "seed_count",
+    "family_smiles",
+    "scaffold_family_smiles",
+    "ranking_score",
+    "ranking_metrics",
+    "seed_score_range",
+    "seed_score_std",
+    "convergence_status",
+    "refinement_conformers",
 ]
 
 
@@ -61,13 +76,16 @@ def check_constraints(product, hit, design, mode="hop", core_smiles=None, preser
     if canonical(product) == canonical(hit) and mode == "hop":
         raise ValueError("Reconstruction returned the original hit")
     if mode == "hop":
-        # Isotope labels or stereoisomers alone do not constitute a scaffold hop.
-        # Exact chemical-state checks remain in replay and scaffold/core preservation.
-        if scaffold(product, isomeric=False) == scaffold(hit, isomeric=False):
+        change = classify_change(hit, product)
+        if change == "state_only":
+            raise ValueError(
+                "Reconstructed product changed only chemical state, not the original Murcko scaffold"
+            )
+        if change != "scaffold":
             raise ValueError("Reconstructed product did not change the original Murcko scaffold")
     elif mode == "expand":
-        if canonical(product) == canonical(design):
-            raise ValueError("Hit expansion returned the unchanged design")
+        if classify_change(design, product) in {"unchanged", "state_only"}:
+            raise ValueError("Hit expansion returned the unchanged design chemical family")
         if scaffold(product) != scaffold(design):
             raise ValueError("Hit expansion changed the selected design's Murcko scaffold")
     else:
@@ -81,8 +99,10 @@ def check_constraints(product, hit, design, mode="hop", core_smiles=None, preser
 def _config(config):
     if not isinstance(config, dict) or config.get("schema_version") != 1:
         raise ValueError("Synthesis configuration requires schema_version=1")
+    config = apply_synthesis_protocol(config)
     permitted = {
         "schema_version",
+        "protocol",
         "catalog",
         "rules",
         "provider",
@@ -100,6 +120,9 @@ def _config(config):
         "property_thresholds",
         "refinement",
         "carry_forward",
+        "allocation_policy",
+        "synthesis_evidence",
+        "pocket",
     }
     if set(config) - permitted:
         raise ValueError(f"Unknown synthesis configuration keys: {sorted(set(config) - permitted)}")
@@ -119,9 +142,18 @@ def _config(config):
             raise ValueError(f"{key} must be a JSON object")
     if "preserve_design_scaffold" in config and not isinstance(config["preserve_design_scaffold"], bool):
         raise ValueError("preserve_design_scaffold must be true or false")
+    if not isinstance(config.get("allocation_policy", "balanced"), str) or config.get(
+        "allocation_policy", "balanced"
+    ) not in {"balanced", "encounter"}:
+        raise ValueError("allocation_policy must be balanced or encounter")
     SearchLimits(**config.get("search", {}))
     ConformerSettings(**config.get("conformers", {}))
     RefinementSettings(**config.get("refinement", {}))
+    validate_evidence_config(config.get("synthesis_evidence", {}))
+    if "pocket" in config:
+        validate_pocket_config(config["pocket"])
+        if not config.get("reference_sdf"):
+            raise ValueError("pocket requires an explicit reference_sdf")
     carried = config.get("carry_forward", [])
     if not isinstance(carried, list) or not all(isinstance(p, str) and p for p in carried):
         raise ValueError("carry_forward must be a list of run directories")
@@ -197,6 +229,11 @@ def _resolve_paths(config, base):
             config[key] = str((base / config[key]).resolve())
     if "carry_forward" in config:
         config["carry_forward"] = [str((base / p).resolve()) for p in config["carry_forward"]]
+    if config.get("pocket", {}).get("receptor_pdb"):
+        config["pocket"]["receptor_pdb"] = str((base / config["pocket"]["receptor_pdb"]).resolve())
+    evidence_predictor = config.get("synthesis_evidence", {}).get("predictor")
+    if evidence_predictor is not None:
+        evidence_predictor["model_path"] = str((base / evidence_predictor["model_path"]).resolve())
     provider = config["provider"] = dict(config["provider"])
     for key in ("model_path", "prompt_path", "path"):
         if provider.get(key):
@@ -216,6 +253,10 @@ def _provider(config):
             raise ValueError("Unknown SynLlama provider option")
         return SynLlama(**config)
     raise ValueError("Provider kind must be synllama or saved")
+
+
+def _evidence_evaluator(config):
+    return evaluator_from_config(config.get("synthesis_evidence", {}))
 
 
 def _source_snapshot():
@@ -244,6 +285,7 @@ def _manifest(config, hit, designs):
         "hit": hit,
         "designs": designs,
         "config": config,
+        "protocol": protocol_provenance(config.get("protocol", "legacy")),
         "code_sha256": _SOURCE_HASHES,
         "sources_changed_since_import": _source_snapshot() != _SOURCE_HASHES,
         "git_revision": revision,
@@ -252,7 +294,7 @@ def _manifest(config, hit, designs):
         "chemical_state_policy": "Explicit input states; no implicit protonation, tautomer, or stereoisomer enumeration",
         "verification_scope": "Catalog snapshot membership and registered reaction replay; no experimental synthesis or current-stock guarantee",
         "ranking_scope": "Heuristic, bounded search; joint shape/pharmacophore scores are not calibrated activity probabilities",
-        "refinement_policy": "All requested seeds must succeed; median-score seed supplies all pose components (lower middle for even counts); Pareto then median seed score; refined shortlist exported separately from screening pool",
+        "refinement_policy": "Every seed must succeed at the final ensemble size; median-score seed supplies the exported pose. Threshold acceptance defaults to every seed. Optional seed-range convergence and adaptive stages are budgeted globally in requested candidate conformers, excluding reference ensembles. Ranking diagnostics are separate from pose components; failed primary designs permit bounded alternative-design fallback.",
         "fingerprint": {
             "algorithm": "Morgan",
             "radius": 2,
@@ -277,21 +319,27 @@ def _manifest(config, hit, designs):
 def _pareto(rows):
     if not rows:
         return
-    points = np.asarray(
-        [
-            (
-                r["hit_shape"],
-                r["hit_pharmacophore"],
-                r["design_shape"],
-                r["design_pharmacophore"],
-                r["hit_tanimoto"],
-                r["design_tanimoto"],
-                -r["relative_energy"],
-                -r["reaction_steps"],
-            )
-            for r in rows
-        ]
-    )
+    modes = {r.get("scoring_stage") == "2d_screening" for r in rows}
+    if len(modes) > 1:
+        raise ValueError("Cannot mix 2D and 3D candidates in one ranking")
+    if modes == {True}:
+        points = np.asarray([(r["hit_tanimoto"], r["design_tanimoto"], -r["reaction_steps"]) for r in rows])
+    else:
+        points = np.asarray(
+            [
+                (
+                    r.get("ranking_metrics", {}).get("hit_shape", r["hit_shape"]),
+                    r.get("ranking_metrics", {}).get("hit_pharmacophore", r["hit_pharmacophore"]),
+                    r.get("ranking_metrics", {}).get("design_shape", r["design_shape"]),
+                    r.get("ranking_metrics", {}).get("design_pharmacophore", r["design_pharmacophore"]),
+                    r["hit_tanimoto"],
+                    r["design_tanimoto"],
+                    -r.get("ranking_metrics", {}).get("relative_energy", r["relative_energy"]),
+                    -r["reaction_steps"],
+                )
+                for r in rows
+            ]
+        )
     if not np.isfinite(points).all():
         raise ValueError("Pareto ranking requires finite metrics")
     # Compute dominance once. Rechecking every remaining pair on every front
@@ -313,7 +361,15 @@ def _pareto(rows):
 
 def _rank(rows):
     _pareto(rows)
-    rows.sort(key=lambda r: (r["pareto_front"], -r["seed_score_median"], r["reaction_steps"], r["smiles"]))
+    rows.sort(
+        key=lambda r: (
+            r["pareto_front"],
+            -r.get("ranking_score", r["seed_score_median"]),
+            r["reaction_steps"],
+            r["smiles"],
+            r["design"],
+        )
+    )
     for rank, row in enumerate(rows, 1):
         row["rank"] = rank
     return rows
@@ -321,22 +377,107 @@ def _rank(rows):
 
 def _write_table(path, rows):
     with path.open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=COLUMNS, delimiter="\t")
+        writer = csv.DictWriter(stream, fieldnames=COLUMNS, delimiter="\t", extrasaction="ignore")
         writer.writeheader()
         for row in rows:
-            writer.writerow(row | {"alternative_route_ids": json.dumps(row["alternative_route_ids"])})
+            writer.writerow(
+                row
+                | {
+                    "alternative_route_ids": json.dumps(row["alternative_route_ids"]),
+                    "alternative_family_candidates": json.dumps(row.get("alternative_family_candidates", [])),
+                    "ranking_metrics": json.dumps(row.get("ranking_metrics", {}), sort_keys=True),
+                }
+            )
 
 
-def _design_batches(designs, provider):
+def _balanced_order(items, *, product, design):
+    """Round-robin scaffold families and designs, preserving within-group order."""
+    groups = {}
+    for item in items:
+        scaffold_id = scaffold_family_key(product(item))
+        groups.setdefault(scaffold_id, {}).setdefault(design(item), deque()).append(item)
+    queue = deque(deque(group.values()) for group in groups.values())
+    ordered = []
+    while queue:
+        designs = queue.popleft()
+        bucket = designs.popleft()
+        ordered.append(bucket.popleft())
+        if bucket:
+            designs.append(bucket)
+        if designs:
+            queue.append(designs)
+    return ordered
+
+
+def _candidate_order(candidates, policy):
+    # Existing carried evidence has priority, but all eligible designs share
+    # each priority tier's compute budget instead of first-design exhaustion.
+    ordered = []
+    for carried in (True, False):
+        tier = [item for item in candidates if any(r.get("carried_from") for r in item["records"]) == carried]
+        if policy == "balanced":
+            tier = _balanced_order(
+                tier, product=lambda item: item["product"], design=lambda item: item["design"]
+            )
+        ordered.extend(tier)
+    return ordered
+
+
+def _family_groups(rows):
+    groups = {}
+    for row in rows:
+        groups.setdefault(row["family_smiles"], []).append(row)
+    for alternatives in groups.values():
+        alternatives.sort(
+            key=lambda row: (
+                row["pareto_front"],
+                -row["score"],
+                row["reaction_steps"],
+                row["design"],
+                row["smiles"],
+            )
+        )
+    return groups
+
+
+def _with_alternative_routes(row, alternatives):
+    route_ids = dict.fromkeys(
+        route_id
+        for alternative in alternatives
+        if alternative["smiles"] == row["smiles"]
+        for route_id in [alternative["route_id"], *alternative["alternative_route_ids"]]
+        if route_id != row["route_id"]
+    )
+    family_alternatives = [
+        {"smiles": alternative["smiles"], "design": alternative["design"], "route_id": route_id}
+        for alternative in alternatives
+        if alternative["smiles"] != row["smiles"]
+        for route_id in [alternative["route_id"], *alternative["alternative_route_ids"]]
+    ]
+    return {
+        **row,
+        "alternative_route_ids": list(route_ids),
+        "alternative_family_candidates": family_alternatives,
+    }
+
+
+def _design_batches(designs, provider, deadline_monotonic=None):
     # The scoring budget is global: carry every design before starting any new
     # projection. Otherwise early designs can displace later designs' old hits.
     for design in designs:
         yield design, [None]
     for design in designs:
-        yield design, provider.propose(design)
+        if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
+            return
+        proposals = (
+            provider.propose(design, deadline_monotonic=deadline_monotonic)
+            if deadline_monotonic is not None
+            else provider.propose(design)
+        )
+        yield design, proposals
 
 
-def run(hit, designs, config, output_dir):
+def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mode="3d"):
     """Write complete evidence for each verified route, failure, and accepted pose.
 
     A fresh output directory is required. Configuration paths passed directly to
@@ -357,12 +498,40 @@ def run(hit, designs, config, output_dir):
         "failures": [],
         "search_reports": [],
         "limits_reached": [],
+        "deadline_reached": False,
+        "scoring_mode": scoring_mode,
+        "screening_allocation": [],
     }
+
+    def deadline_reached():
+        expired = deadline_monotonic is not None and time.monotonic() >= deadline_monotonic
+        if expired:
+            summary["deadline_reached"] = True
+            if "deadline_monotonic" not in summary["limits_reached"]:
+                summary["limits_reached"].append("deadline_monotonic")
+        return expired
+
     write_json(out / "summary.json", summary)
     route_records, score_records, raw_records, refinement_records = [], [], [], []
-    rows, poses, score_cache, similarity_cache = {}, {}, {}, {}
+    rows, poses, similarity_cache, candidates_by_key = {}, {}, {}, {}
+    evidence_evaluator = None
+    projected_designs = set()
     try:
+        if deadline_monotonic is not None and (
+            isinstance(deadline_monotonic, bool)
+            or not isinstance(deadline_monotonic, (int, float))
+            or not math.isfinite(deadline_monotonic)
+        ):
+            raise ValueError("deadline_monotonic must be a finite monotonic-clock timestamp")
+        if scoring_mode not in {"3d", "2d"}:
+            raise ValueError("scoring_mode must be 3d or 2d")
         config = _resolve_paths(_config(config), Path.cwd())
+        if scoring_mode == "2d":
+            forbidden = set(config.get("minimum_scores", {})) - {"hit_tanimoto", "design_tanimoto"}
+            if "pocket" in config or forbidden:
+                raise ValueError(
+                    "2D scoring cannot enforce pocket constraints or 3D minimum_scores; remove those explicitly for this ablation"
+                )
         hit = canonical(hit)
         hit_fp = FP.GetFingerprint(molecule(hit))
         all_designs = list(dict.fromkeys(canonical(s) for s in designs))
@@ -376,18 +545,55 @@ def run(hit, designs, config, output_dir):
             raise ValueError("The original hit does not contain core_smiles")
         limits = SearchLimits(**config.get("search", {}))
         settings = ConformerSettings(**config.get("conformers", {}))
-        refinement = RefinementSettings(**config.get("refinement", {}))
+        requested_refinement = RefinementSettings(**config.get("refinement", {}))
+        refinement = replace(requested_refinement, top_n=0) if scoring_mode == "2d" else requested_refinement
         carried, carry_sources = load_carried_routes(config.get("carry_forward", []), hit, designs)
         summary["carried_routes_loaded"] = sum(len(items) for items in carried.values())
-        if designs:
+        if designs and scoring_mode == "3d":
             require_alignment()
         catalog, rules = Catalog(config["catalog"]), Rules(config["rules"])
+        if deadline_reached():
+            evidence_settings = {
+                key: value
+                for key, value in config.get("synthesis_evidence", {}).items()
+                if key != "predictor"
+            }
+            evidence_evaluator = evaluator_from_config(evidence_settings)
+            summary["evidence_model_not_loaded_deadline"] = True
+        else:
+            evidence_evaluator = _evidence_evaluator(config)
         manifest = _manifest(config, hit, designs)
+        manifest["scoring_backend"] = {
+            "mode": scoring_mode,
+            "shared_candidate_path": "route collection, chemical/property constraints, synthesis evidence, allocation and screening cap are identical",
+            "requested_refinement": asdict(requested_refinement),
+            "effective_refinement": asdict(refinement),
+            "missing_3d_values": "null; no conformers or poses generated" if scoring_mode == "2d" else None,
+        }
+        if scoring_mode == "2d":
+            manifest["ranking_scope"] = (
+                "2D ablation: Pareto hit/design Morgan Tanimoto and reaction steps, then geometric mean similarity"
+            )
+            manifest["ranking_metrics"] = ["hit_tanimoto", "design_tanimoto", "reaction_steps"]
+            manifest["refinement_policy"] = "Disabled because the complete 3D evaluation component is removed"
+        manifest["deadline_policy"] = {
+            "enabled": deadline_monotonic is not None,
+            "clock": "time.monotonic",
+            "seconds_available_at_start": max(0.0, deadline_monotonic - start)
+            if deadline_monotonic is not None
+            else None,
+            "scope": "Cooperative boundary checks; complete evaluated candidates retained, incomplete seed blocks rejected; single long calls still require an outer hard timeout",
+        }
+        manifest["synthesis_evidence"] = {
+            **evidence_evaluator.provenance,
+            "allocation": "One whole route per balanced product/design round before alternate routes; shared input-only prediction cache and explicit global call/token budgets",
+        }
         manifest["catalog_sha256"], manifest["rules_sha256"] = catalog.sha256, rules.sha256
         manifest["catalog_import"] = catalog.import_provenance
         manifest["carry_forward"] = carry_sources
         manifest["effective_search"], manifest["effective_conformers"] = asdict(limits), asdict(settings)
         manifest["effective_workflow"] = {
+            "allocation_policy": config.get("allocation_policy", "balanced"),
             "mode": config.get("mode", "hop"),
             "core_smiles": config.get("core_smiles"),
             "preserve_design_scaffold": config.get("preserve_design_scaffold", False),
@@ -408,12 +614,19 @@ def run(hit, designs, config, output_dir):
         }
         hit_pose = (
             reference_from_sdf(config["reference_sdf"], hit, settings)
-            if config.get("reference_sdf")
+            if config.get("reference_sdf") and scoring_mode == "3d"
             else None
         )
+        pose_constraints = (
+            constraints_from_config(config["pocket"], hit_pose, config.get("reference_sdf"))
+            if "pocket" in config
+            else None
+        )
+        scoring_options = {"pose_constraints": pose_constraints} if pose_constraints is not None else {}
+        manifest["pocket"] = pose_constraints.provenance if pose_constraints is not None else None
         if config.get("reference_sdf"):
             manifest["reference_sdf_sha256"] = digest(config["reference_sdf"])
-        provider = _provider(config["provider"]) if designs else None
+        provider = _provider(config["provider"]) if designs and not deadline_reached() else None
         manifest["provider"] = provider.provenance if provider else None
         write_json(out / "manifest.json", manifest)
         write_json(
@@ -421,7 +634,7 @@ def run(hit, designs, config, output_dir):
         )
         from utils import _get_molecular_prop_extd_, determ_props
 
-        for design, proposals in _design_batches(designs, provider):
+        for design, proposals in _design_batches(designs, provider, deadline_monotonic):
             LOGGER.info("Projecting design %s onto catalog reaction space", design)
             design_fp = FP.GetFingerprint(molecule(design))
             expansion_cache = {}
@@ -431,6 +644,7 @@ def run(hit, designs, config, output_dir):
                     proposal_id, projected = None, []
                     candidates = carried[design]
                 else:
+                    projected_designs.add(design)
                     proposal_id = len(raw_records)
                     raw_records.append({"design": design, **proposal})
                     write_json(
@@ -438,6 +652,16 @@ def run(hit, designs, config, output_dir):
                         {"schema_version": 1, "provider": provider.provenance, "proposals": raw_records},
                     )
                     summary["proposals"] += 1
+                    if deadline_reached():
+                        summary["failures"].append(
+                            {
+                                "stage": "projection",
+                                "proposal_id": proposal_id,
+                                "status": "not_evaluated_deadline",
+                                "reason": "Deadline reached before route projection",
+                            }
+                        )
+                        continue
                     try:
                         projected, report = resolve_proposal(proposal["response"], catalog, rules, limits)
                         summary["search_reports"].append(
@@ -458,8 +682,10 @@ def run(hit, designs, config, output_dir):
                         continue
                     candidates = list(projected)
                 expansion = config.get("expansion", {})
-                if expansion.get("rounds", 0):
+                if expansion.get("rounds", 0) and not deadline_reached():
                     for item in projected:
+                        if deadline_reached():
+                            break
                         route_key = json.dumps(item["route"], sort_keys=True)
                         cached = route_key in expansion_cache
                         if not cached:
@@ -486,6 +712,12 @@ def run(hit, designs, config, output_dir):
                         "selection_status": "pending",
                     }
                     route_records.append(record)
+                    if deadline_reached():
+                        record.update(
+                            selection_status="not_verified_deadline",
+                            reason="Deadline reached before route verification",
+                        )
+                        continue
                     # Recheck carried routes against today's catalog and rules as well.
                     try:
                         verification = verify_route(
@@ -531,169 +763,367 @@ def run(hit, designs, config, output_dir):
                     ):
                         record.update(selection_status="2d_threshold_rejected", scores=tanimoto)
                         continue
-                    record["eligible_for_scoring"] = True
-                    if key not in score_cache:
-                        if summary["scored_products"] >= config.get("max_scored_products", 256):
-                            record["selection_status"] = "not_scored_budget"
-                            if "max_scored_products" not in summary["limits_reached"]:
-                                summary["limits_reached"].append("max_scored_products")
-                            continue
-                        summary["scored_products"] += 1
-                        try:
-                            score_cache[key] = score_candidate(product, hit, design, settings, hit_pose)
-                        except (ValueError, RuntimeError) as exc:
-                            score_cache[key] = str(exc)
-                    result = score_cache[key]
-                    if isinstance(result, str):
-                        record.update(selection_status="3d_failed", reason=result)
-                        continue
-                    info, hit_aligned, design_aligned = result
-                    scores = {
-                        f"{ref}_{metric}": info[ref][metric]
-                        for ref in ("hit", "design")
-                        for metric in ("shape", "pharmacophore")
-                    }
-                    scores.update(tanimoto)
-                    # Coarse poses must not prematurely exclude a candidate that refinement can rescue.
-                    if not refinement.top_n and any(
-                        scores[k] < v for k, v in config.get("minimum_scores", {}).items()
-                    ):
-                        record.update(selection_status="3d_threshold_rejected", scores=scores)
-                        continue
-                    record["selection_status"] = "screened" if refinement.top_n else "accepted"
-                    score_records.append(
+                    record["eligible_for_evidence"] = True
+                    entry = candidates_by_key.setdefault(
+                        key,
                         {
-                            "route_id": route_id,
                             "product": product,
                             "design": design,
                             "properties": props,
                             "tanimoto": tanimoto,
-                            "scoring_stage": "screening",
-                            **info,
-                        }
+                            "records": [],
+                        },
                     )
-                    row = {
-                        "smiles": product,
-                        "design": design,
-                        "score": info["score"],
-                        **scores,
-                        "hit_morgan": tanimoto["hit_tanimoto"],
-                        "relative_energy": info["candidate_relative_energy"],
-                        "reaction_steps": len(verification["steps"]),
-                        "route_id": route_id,
-                        "alternative_route_ids": [],
-                        "scoring_stage": "screening",
-                        "pose_seed": settings.seed,
-                        "seed_score_median": info["score"],
-                        "seed_score_min": info["score"],
-                        "seed_score_max": info["score"],
-                        "seed_successes": 1,
-                        "seed_count": 1,
-                    }
-                    if product in rows:
-                        previous = rows[product]
-                        if (row["score"], -row["reaction_steps"]) > (
-                            previous["score"],
-                            -previous["reaction_steps"],
-                        ):
-                            row["alternative_route_ids"] = [
-                                previous["route_id"],
-                                *previous["alternative_route_ids"],
-                            ]
-                        else:
-                            previous["alternative_route_ids"].append(route_id)
-                            continue
-                    rows[product] = row
-                    poses[product] = (info, hit_aligned, design_aligned)
-        ranked = _rank(list(rows.values()))
-        _write_table(out / "screening.tsv", ranked)
-        summary["screened_products"] = len(ranked)
-        if refinement.top_n:
-            shortlist = ranked[: refinement.top_n]
-            if len(shortlist) < len(ranked):
-                summary["limits_reached"].append("refinement.top_n")
-            ranked = []
-            records_by_id = {record["route_id"]: record for record in route_records}
-            for coarse in shortlist:
-                LOGGER.info(
-                    "Refining %s with %s conformers and seeds %s",
-                    coarse["smiles"],
-                    refinement.num_conformers,
-                    refinement.seeds,
+                    entry["records"].append(record)
+        # Collect before allocating expensive 3D work so one early design cannot
+        # exhaust the global budget. Routes remain fully auditable when unscored.
+        ordered = _candidate_order(
+            list(candidates_by_key.values()), config.get("allocation_policy", "balanced")
+        )
+        # Independent model work is also shared fairly: try one route per
+        # product/design before a prolific early candidate's alternative routes.
+        evidence_queue = deque(
+            (
+                entry,
+                deque(
+                    sorted(
+                        entry["records"],
+                        key=lambda record: (len(record["verification"]["steps"]), record["route_id"]),
+                    )
+                ),
+            )
+            for entry in ordered
+        )
+        while evidence_queue:
+            entry, pending_routes = evidence_queue.popleft()
+            record = pending_routes.popleft()
+            if deadline_reached():
+                record.update(
+                    selection_status="not_evaluated_deadline",
+                    reason="Deadline reached before independent evidence evaluation",
                 )
-                result, report = refine_candidate(
-                    coarse["smiles"], hit, coarse["design"], settings, refinement, hit_pose
-                )
-                evidence = {
-                    "route_id": coarse["route_id"],
-                    "product": coarse["smiles"],
-                    "design": coarse["design"],
-                    **report,
+                record["synthesis_evidence"] = {
+                    "schema_version": 1,
+                    "status": "not_evaluated",
+                    "reason": "Deadline reached",
+                    "eligibility": {
+                        "passed": False,
+                        "reasons": ["Independent evidence was not evaluated before deadline"],
+                    },
                 }
-                refinement_records.append(evidence)
-                record = records_by_id[coarse["route_id"]]
-                if result is None:
-                    record["selection_status"] = "refinement_failed"
+                if pending_routes:
+                    evidence_queue.append((entry, pending_routes))
+                continue
+            evidence = evidence_evaluator.evaluate(
+                record["verification"],
+                **({"deadline_monotonic": deadline_monotonic} if deadline_monotonic is not None else {}),
+            )
+            record["synthesis_evidence"] = evidence
+            if evidence["eligibility"]["passed"]:
+                record["eligible_for_scoring"] = True
+            else:
+                record.update(
+                    selection_status="evidence_rejected", reasons=evidence["eligibility"]["reasons"]
+                )
+            if pending_routes:
+                evidence_queue.append((entry, pending_routes))
+        for entry in ordered:
+            product, design = entry["product"], entry["design"]
+            records = [record for record in entry["records"] if record.get("eligible_for_scoring")]
+            tanimoto = entry["tanimoto"]
+            if not records:
+                continue
+            if deadline_reached():
+                for record in records:
+                    record.update(
+                        selection_status="not_scored_deadline",
+                        reason="Deadline reached before candidate screening",
+                    )
+                continue
+            if summary["scored_products"] >= config.get("max_scored_products", 256):
+                for record in records:
+                    record["selection_status"] = "not_scored_budget"
+                if "max_scored_products" not in summary["limits_reached"]:
+                    summary["limits_reached"].append("max_scored_products")
+                continue
+            summary["scored_products"] += 1
+            summary["screening_allocation"].append(
+                {
+                    "product": product,
+                    "design": design,
+                    "route_ids": [record["route_id"] for record in records],
+                }
+            )
+            if scoring_mode == "3d":
+                try:
+                    result = score_candidate(product, hit, design, settings, hit_pose, **scoring_options)
+                except (ValueError, RuntimeError) as exc:
+                    for record in records:
+                        record.update(selection_status="3d_failed", reason=str(exc))
                     continue
-                info, _, _ = result
+                info, hit_aligned, design_aligned = result
                 scores = {
                     f"{ref}_{metric}": info[ref][metric]
                     for ref in ("hit", "design")
                     for metric in ("shape", "pharmacophore")
                 }
-                row = {
-                    **coarse,
-                    **scores,
-                    "score": info["score"],
-                    "relative_energy": info["candidate_relative_energy"],
-                    "scoring_stage": "refined",
-                    **{
-                        key: report[key]
-                        for key in (
-                            "pose_seed",
-                            "seed_score_median",
-                            "seed_score_min",
-                            "seed_score_max",
-                            "seed_successes",
-                            "seed_count",
-                        )
-                    },
+            else:
+                info = {
+                    "score": math.sqrt(tanimoto["hit_tanimoto"] * tanimoto["design_tanimoto"]),
+                    "scoring_mode": "2d",
+                    "candidate_relative_energy": None,
                 }
-                if any(row[k] < v for k, v in config.get("minimum_scores", {}).items()):
-                    evidence["status"] = "3d_threshold_rejected"
+                hit_aligned = design_aligned = None
+                scores = {
+                    f"{ref}_{metric}": None
+                    for ref in ("hit", "design")
+                    for metric in ("shape", "pharmacophore")
+                }
+            scores.update(tanimoto)
+            if not refinement.top_n and any(
+                scores[k] < v for k, v in config.get("minimum_scores", {}).items()
+            ):
+                for record in records:
                     record.update(selection_status="3d_threshold_rejected", scores=scores)
-                    continue
-                record["selection_status"] = "accepted"
-                ranked.append(row)
-                poses[row["smiles"]] = result
+                continue
+            for record in records:
+                record["selection_status"] = "screened" if refinement.top_n else "accepted"
                 score_records.append(
                     {
-                        "route_id": row["route_id"],
-                        "product": row["smiles"],
-                        "design": row["design"],
-                        "scoring_stage": "refined",
+                        "route_id": record["route_id"],
+                        "product": product,
+                        "design": design,
+                        "properties": entry["properties"],
+                        "tanimoto": tanimoto,
+                        "scoring_stage": "screening" if scoring_mode == "3d" else "2d_screening",
                         **info,
                     }
                 )
+            primary = min(
+                records, key=lambda record: (len(record["verification"]["steps"]), record["route_id"])
+            )
+            row = {
+                "smiles": product,
+                "design": design,
+                "score": info["score"],
+                **scores,
+                "hit_morgan": tanimoto["hit_tanimoto"],
+                "relative_energy": info["candidate_relative_energy"],
+                "reaction_steps": len(primary["verification"]["steps"]),
+                "route_id": primary["route_id"],
+                "alternative_route_ids": [record["route_id"] for record in records if record is not primary],
+                "scoring_stage": "screening" if scoring_mode == "3d" else "2d_screening",
+                "pose_seed": settings.seed if scoring_mode == "3d" else None,
+                "seed_score_median": info["score"] if scoring_mode == "3d" else None,
+                "seed_score_min": info["score"] if scoring_mode == "3d" else None,
+                "seed_score_max": info["score"] if scoring_mode == "3d" else None,
+                "seed_successes": 1 if scoring_mode == "3d" else 0,
+                "seed_count": 1 if scoring_mode == "3d" else 0,
+                "family_smiles": family_key(product),
+                "scaffold_family_smiles": scaffold_family_key(product),
+                "ranking_score": info["score"],
+                "seed_score_range": 0.0 if scoring_mode == "3d" else None,
+                "seed_score_std": 0.0 if scoring_mode == "3d" else None,
+                "convergence_status": "not_assessed" if scoring_mode == "3d" else "not_applicable_2d",
+                "refinement_conformers": settings.num_conformers if scoring_mode == "3d" else 0,
+            }
+            rows[(product, design)] = row
+            if scoring_mode == "3d":
+                poses[(product, design)] = (info, hit_aligned, design_aligned)
+        all_screened = _rank(list(rows.values()))
+        _write_table(out / "screening_alternatives.tsv", all_screened)
+        groups = _family_groups(all_screened)
+        ranked = _rank(
+            [_with_alternative_routes(alternatives[0], alternatives) for alternatives in groups.values()]
+        )
+        _write_table(out / "screening.tsv", ranked)
+        summary["screened_products"] = len(ranked)
+        summary["screened_product_design_pairs"] = len(all_screened)
+        summary["screened_scaffold_families"] = len({row["scaffold_family_smiles"] for row in ranked})
+        if refinement.top_n:
+            shortlist = ranked
+            if config.get("allocation_policy", "balanced") == "balanced":
+                shortlist = _balanced_order(
+                    shortlist, product=lambda row: row["smiles"], design=lambda row: row["design"]
+                )
+            shortlist = shortlist[: refinement.top_n]
+            if len(shortlist) < len(ranked):
+                summary["limits_reached"].append("refinement.top_n")
+            ranked = []
+            records_by_id = {record["route_id"]: record for record in route_records}
+            budget = RefinementBudget(refinement.max_total_conformers)
+            attempted = 0
+            base_cost = refinement.num_conformers * len(refinement.seeds)
+            requested_shortlist_count = len(shortlist)
+            if budget.limit is not None and len(shortlist) * base_cost > budget.limit:
+                # Budget permits a balanced prefix only; record every omitted family.
+                eligible_count = budget.limit // base_cost
+                for omitted in shortlist[eligible_count:]:
+                    for coarse in groups[omitted["family_smiles"]]:
+                        refinement_records.append(
+                            {
+                                "route_id": coarse["route_id"],
+                                "product": coarse["smiles"],
+                                "design": coarse["design"],
+                                "family_smiles": coarse["family_smiles"],
+                                "status": "budget_exhausted",
+                                "convergence_status": "not_evaluated",
+                                "reason": "Global budget cannot fund a complete initial seed block",
+                                "trials": [],
+                                "candidate_conformer_requests": 0,
+                            }
+                        )
+                        for route_id in [coarse["route_id"], *coarse["alternative_route_ids"]]:
+                            records_by_id[route_id]["selection_status"] = "not_refined_budget"
+                shortlist = shortlist[:eligible_count]
+                summary["limits_reached"].append("refinement.max_total_conformers")
+            for family_index, primary in enumerate(shortlist):
+                # Reserve a complete initial block for every remaining family.
+                # Adaptive escalation and fallbacks can only spend unreserved work.
+                budget.reserved_for_others = (len(shortlist) - family_index - 1) * base_cost
+                alternatives = groups[primary["family_smiles"]]
+                # A failed/threshold-rejected design cannot erase another valid
+                # route to the same chemical family. Try alternatives deterministically.
+                for alternative_index, coarse in enumerate(alternatives):
+                    attempted += 1
+                    LOGGER.info(
+                        "Refining %s against %s (alternative %s)",
+                        coarse["smiles"],
+                        coarse["design"],
+                        alternative_index,
+                    )
+                    result, report = refine_candidate(
+                        coarse["smiles"],
+                        hit,
+                        coarse["design"],
+                        settings,
+                        refinement,
+                        hit_pose,
+                        minimum_scores=config.get("minimum_scores", {}),
+                        budget=budget,
+                        **scoring_options,
+                        **(
+                            {"deadline_monotonic": deadline_monotonic}
+                            if deadline_monotonic is not None
+                            else {}
+                        ),
+                    )
+                    if report["status"] == "deadline_exhausted":
+                        deadline_reached()
+                    evidence = {
+                        "route_id": coarse["route_id"],
+                        "product": coarse["smiles"],
+                        "design": coarse["design"],
+                        "family_smiles": coarse["family_smiles"],
+                        "alternative_index": alternative_index,
+                        **report,
+                    }
+                    refinement_records.append(evidence)
+                    related = [
+                        records_by_id[route_id]
+                        for route_id in [coarse["route_id"], *coarse["alternative_route_ids"]]
+                    ]
+                    if result is None:
+                        status = {
+                            "threshold_rejected": "3d_threshold_rejected",
+                            "unstable": "refinement_unstable",
+                            "budget_exhausted": "not_refined_budget",
+                            "deadline_exhausted": "not_refined_deadline",
+                        }.get(report["status"], "refinement_failed")
+                        for record in related:
+                            record.update(selection_status=status, refinement_status=report["status"])
+                        if (
+                            report["status"] == "budget_exhausted"
+                            and "refinement.max_total_conformers" not in summary["limits_reached"]
+                        ):
+                            summary["limits_reached"].append("refinement.max_total_conformers")
+                        continue
+                    info, _, _ = result
+                    scores = {
+                        f"{ref}_{metric}": info[ref][metric]
+                        for ref in ("hit", "design")
+                        for metric in ("shape", "pharmacophore")
+                    }
+                    row = {
+                        **_with_alternative_routes(coarse, alternatives),
+                        **scores,
+                        "score": info["score"],
+                        "relative_energy": info["candidate_relative_energy"],
+                        "scoring_stage": "refined",
+                        "refinement_conformers": info["settings"]["num_conformers"],
+                        **{
+                            key: report[key]
+                            for key in (
+                                "pose_seed",
+                                "seed_score_median",
+                                "seed_score_min",
+                                "seed_score_max",
+                                "seed_successes",
+                                "seed_count",
+                                "seed_score_range",
+                                "seed_score_std",
+                                "ranking_score",
+                                "convergence_status",
+                            )
+                        },
+                    }
+                    if refinement.ranking_statistic == "minimum":
+                        row["ranking_metrics"] = {
+                            key: values["max" if key == "relative_energy" else "min"]
+                            for key, values in report["metric_ranges"].items()
+                        }
+                    if any(row[k] < v for k, v in config.get("minimum_scores", {}).items()):
+                        evidence["status"] = "3d_threshold_rejected"
+                        for record in related:
+                            record.update(selection_status="3d_threshold_rejected", scores=scores)
+                        continue
+                    for record in related:
+                        record["selection_status"] = "accepted"
+                    ranked.append(row)
+                    poses[(row["smiles"], row["design"])] = result
+                    score_records.append(
+                        {
+                            "route_id": row["route_id"],
+                            "product": row["smiles"],
+                            "design": row["design"],
+                            "scoring_stage": "refined",
+                            **info,
+                        }
+                    )
+                    break
             ranked = _rank(ranked)
-            summary["refinement_attempted"] = len(shortlist)
+            summary["refinement_shortlisted_families"] = requested_shortlist_count
+            summary["refinement_budgeted_families"] = len(shortlist)
+            summary["refinement_attempted"] = attempted
             summary["refinement_accepted"] = len(ranked)
+            summary["refinement_budget"] = budget.snapshot()
         if len(ranked) > config.get("max_results", 50):
             summary["limits_reached"].append("max_results")
         selected = ranked[: config.get("max_results", 50)]
-        with (
-            (out / "results.tsv").open("w", newline="") as stream,
-            Chem.SDWriter(str(out / "poses_hit.sdf")) as hit_writer,
-            Chem.SDWriter(str(out / "poses_design.sdf")) as design_writer,
-            Chem.SDWriter(str(out / "references_hit.sdf")) as hit_ref_writer,
-            Chem.SDWriter(str(out / "references_design.sdf")) as design_ref_writer,
-        ):
-            writer = csv.DictWriter(stream, fieldnames=COLUMNS, delimiter="\t")
+        with ExitStack() as stack:
+            stream = stack.enter_context((out / "results.tsv").open("w", newline=""))
+            if scoring_mode == "3d":
+                hit_writer = stack.enter_context(Chem.SDWriter(str(out / "poses_hit.sdf")))
+                design_writer = stack.enter_context(Chem.SDWriter(str(out / "poses_design.sdf")))
+                hit_ref_writer = stack.enter_context(Chem.SDWriter(str(out / "references_hit.sdf")))
+                design_ref_writer = stack.enter_context(Chem.SDWriter(str(out / "references_design.sdf")))
+            writer = csv.DictWriter(stream, fieldnames=COLUMNS, delimiter="\t", extrasaction="ignore")
             writer.writeheader()
             for rank, row in enumerate(selected, 1):
                 row["rank"] = rank
-                writer.writerow(row | {"alternative_route_ids": json.dumps(row["alternative_route_ids"])})
-                info, hit_aligned, design_aligned = poses[row["smiles"]]
+                writer.writerow(
+                    row
+                    | {
+                        "alternative_route_ids": json.dumps(row["alternative_route_ids"]),
+                        "alternative_family_candidates": json.dumps(
+                            row.get("alternative_family_candidates", [])
+                        ),
+                        "ranking_metrics": json.dumps(row.get("ranking_metrics", {}), sort_keys=True),
+                    }
+                )
+                if scoring_mode == "2d":
+                    continue
+                info, hit_aligned, design_aligned = poses[(row["smiles"], row["design"])]
                 pose_settings = ConformerSettings(**info["settings"])
                 for mol, sdf in ((hit_aligned, hit_writer), (design_aligned, design_writer)):
                     mol = Chem.Mol(mol)
@@ -730,6 +1160,8 @@ def run(hit, designs, config, output_dir):
                     mol.SetIntProp("source_conformer_id", cid)
                     mol.SetIntProp("pose_seed", row["pose_seed"])
                     sdf.write(mol, confId=cid)
+        deadline_reached()
+        summary["designs_not_projected"] = [design for design in designs if design not in projected_designs]
         summary.update(
             status="success" if selected else "no_candidates",
             accepted_products=len(ranked),
@@ -745,7 +1177,9 @@ def run(hit, designs, config, output_dir):
             eligible_products=len(eligible),
             carried_eligible_products=len(carried_eligible),
             new_eligible_products=len(eligible - carried_eligible),
-            carried_screened_products=len(carried_eligible & rows.keys()),
+            carried_screened_products=len(carried_eligible & {key[0] for key in rows}),
+            accepted_scaffold_families=len({row["scaffold_family_smiles"] for row in ranked}),
+            returned_scaffold_families=len({row["scaffold_family_smiles"] for row in selected}),
         )
         return selected
     except Exception as exc:
@@ -753,6 +1187,11 @@ def run(hit, designs, config, output_dir):
         raise
     finally:
         summary["elapsed_seconds"] = time.monotonic() - start
+        if evidence_evaluator is not None:
+            summary["synthesis_evidence_usage"] = evidence_evaluator.usage
+            summary["synthesis_evidence_evaluated_routes"] = sum(
+                "synthesis_evidence" in record for record in route_records
+            )
         summary["route_rejections"] = {
             status: sum(r["selection_status"] == status for r in route_records)
             for status in sorted({r["selection_status"] for r in route_records})
