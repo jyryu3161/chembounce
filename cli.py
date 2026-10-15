@@ -62,7 +62,7 @@ def argument_parser():
         required=False,
         default=0.5,
         type=float,
-        help="Similarity threshold, between 0 and 1: used to exclude irrelated molecular structure, based on the similarity between the original structure and scaffold-hopped one. Default is 0.5",
+        help="Final input/candidate Tanimoto boundary using radius-2 sparse-count Morgan fingerprints (0 to 1, default 0.5): inclusive cutoff in legacy; priority boundary in diverse, whose reserved exploration may admit lower values",
     )
     # Thresholds on molecular properties
     parser_thr.add_argument("--qed_min", required=False, default=None, help="Minimal QED score", type=float)
@@ -161,13 +161,13 @@ def argument_parser():
         "--search-policy",
         choices=("legacy", "diverse"),
         default=None,
-        help="legacy enforces 2D cutoffs; diverse reserves bounded exploration below cutoffs",
+        help="legacy uses inclusive 2D similarity cutoffs (default policy); diverse uses priority boundaries and reserves exploration capacity below them (research-v1 default)",
     )
     parser.add_argument(
         "--exploration-fraction",
         type=float,
         default=None,
-        help="Fraction of scaffold, beam and final budgets reserved for diverse exploration (default .25)",
+        help="Capacity fraction reserved for exploration in diverse scaffold, beam and final budgets (default 0.25); rounded up for small budgets, not a guaranteed returned fraction; 0 disables below-threshold admission",
     )
     parser.add_argument(
         "--search-candidate-budget",
@@ -188,7 +188,10 @@ def argument_parser():
     add_expansion_options(parser)
     parser.add_argument("--beam-width", type=int, default=100, help="Maximum intermediate attachment states")
     parser.add_argument(
-        "--search-threshold", type=float, default=0.3, help="Scaffold Morgan-bit similarity cutoff"
+        "--search-threshold",
+        type=float,
+        default=0.3,
+        help="Scaffold Tanimoto boundary using binary Morgan fingerprints (0 to 1, default 0.3): inclusive cutoff in legacy; priority boundary in diverse, whose reserved exploration may admit lower values",
     )
     parser.add_argument("--fragment-depth", type=int, default=1, help="Maximum scaffold-removal depth")
     parser.add_argument("--no-shape", action="store_true", help="Skip the optional 3D descriptor")
