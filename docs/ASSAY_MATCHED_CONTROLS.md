@@ -44,7 +44,30 @@ Replace `REVIEWED_POOL_SHA256` with `artifacts.json["pool_sha256"]` from the rev
 
 `control_pairs.json` contains evaluator-only rows with stable pair ID, query/control SMILES, label, family/scaffold, context, assay, target, endpoint, units and source IDs. `public_queries.json` exposes only query ID, SMILES, target and context; it omits labels and control structures. Context/family repeats are retained rather than presented as new independent compounds.
 
-The curator and selector calculate **no similarity or activity-performance scores**. An independent evaluator can call the existing `controls.similarity_scores(query_smiles, control_smiles, seeds, conformers)` on each fixed pair and return one object per `pair_id`:
+The curator and selector calculate **no similarity or activity-performance scores**. The separate [scoring CLI](../benchmarks/research/assay_control_scoring.py) validates the selected panel and every retained source payload before calling the existing `controls.similarity_scores` unchanged. It does not select new pairs or tune thresholds:
+
+```bash
+python -m benchmarks.research.assay_control_scoring \
+  --panel benchmark-results/assay-matched-selected/panel.json \
+  --output benchmark-results/assay-matched-scores \
+  --conformers benchmarks/results/research-validation-20261016/common-conformers.json \
+  --seeds 42 43 44 --workers 3 \
+  --bootstrap-seed 20261016 --resamples 10000
+```
+
+The referenced conformer file specifies eight conformers and the previously fixed common scoring settings. Other assessments may supply another `ConformerSettings` JSON object, declared before scoring. Requested seeds override the JSON's optional `seed` field. The default worker count is three; workers use separate spawned processes. An existing output path is rejected, including incomplete earlier runs; there is no restart/overwrite mode. Source artifacts referenced by the panel must still be accessible. Recreate the audit/selection from the portable snapshot above when relocating retained sources.
+
+The output preserves the input panel and conformer file, regenerated `control_pairs.json` and `public_queries.json`, and these evaluation records:
+
+- `protocol.json`: exact input, selected-pair, source, scoring-code and effective-settings hashes, runtime versions, and status/aggregation meanings. This records the executed configuration; it does not establish that an external analysis plan was preregistered.
+- `scores.json`: every pair ID with its label/context/source fields, per-seed trials, metric aggregates and duration. Atomic snapshots are written after each result in the panel's original pair order.
+- `progress.json`: completed pair records, unsuccessful 3D pairs, unexpected errors and stage. `complete: true` means all pairs and both summaries were recorded, even if some or all scoring failed.
+- `framework-summary.json`: five metric-specific summaries (bit/count Tanimoto, shape, pharmacophore and joint score). Valid 2D scores remain available after a 3D seed failure.
+- `framework-paired-summary.json`: the same metrics restricted to pairs where every requested 3D seed succeeded. Success-conditional estimates compare the same complete cases; missing-score bounds still include **every selected pair**.
+
+Pair `status: success` means the common scorer returned. It does **not** imply that 3D scoring succeeded: inspect `all_3d_seeds_succeeded` and each trial. If any requested 3D seed fails, no 3D aggregate is exported, while valid 2D scores are kept. Unexpected scorer/worker exceptions produce `status: error`; requested seeds without returned results are marked `unreported`, because their execution/outcome is unknown. Such pairs remain in all denominators and bounds. No score is an activity probability, and this control assessment does not replace generation performance evaluation.
+
+An external evaluator can alternatively return one object per `pair_id`:
 
 ```json
 {"pair_id": "pair-...", "scores": {"score": 0.4}, "status": "success"}
