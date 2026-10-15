@@ -54,7 +54,7 @@
     "status": "partial_sample_audit_independently_recomputed"
   },
   "published_compact_artifacts": {
-    "README.md": "b862d4f101e9a4a459eae34b7345775bee8b94d18245af8860efbaeeceb1c5ea",
+    "README.md": "43ef447c5f6f5b8d04ef0c281aace5b6f1ca20f9fe40937ea1ec22a75c061452",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
@@ -79,6 +79,7 @@
     "preflight_validation.json": "c810853f907c579fd858e3fa823671ccb11a17071ea25e62bab3c0134818e59c",
     "query_scope.json": "72c97730f9f76906bc1afcbd88a3f19009862f79af51f7ef18662f0e01fa972b",
     "runner_signal_validation.json": "9bb69fed7c8d56f472df74ca4036640e3b85b96e595452d6370021fe4dada5f1",
+    "score_reference_validation.json": "672789e41fafcbc364665946512c11e49b3c0d626e2eebd1d3ace9f5f2e97989",
     "secondary_controls.json": "a6e5b8cb1574847260638a8a839fae22e33ff2f364e99499e19994f0d3c49109",
     "secondary_panels_roundtrip.json": "d32eeb84539a5cf7f8eb71bfeefc6968055886a8d351a519c0fadd473d952460",
     "snapshot_roundtrip.json": "10cfe393189025ad87e6e428659080d42db76abfd3adab2fa45b8e5fb7b2c9a3",
@@ -89,6 +90,16 @@
     "time_control_analysis.json": "4c3fdb7ee09a0e63ddccdfbce4a6e4e379bd99056cf260b90ce9ddedfc8a9fa7",
     "time_control_scores.json": "f1847507ca25f54cf56f875b6d52162925fcb929fb215d59607b8426277a60d1",
     "time_control_summary.json": "8f3ae79fae5ed76b634773e130608b2e6e8375d4656bd9380440fcf7b22a9d5c"
+  },
+  "score_reference_validation": {
+    "byte_identical_artifact_pairs": 23,
+    "commit": "d209009982d4f185c374866f3d69dbc20479fc2d",
+    "develop_merge_commit": "7ad3ed59c1dd14699fef322e0bb714f45fc5fa17",
+    "frozen_campaign_changed": false,
+    "independent_new_regressions_passed": 3,
+    "results": "score_reference_validation.json",
+    "scope": "Explicit identity-field fix, bounded real before/after replay and read-time export consistency; not full-suite revalidation, independent shape-kernel validation or a method comparison.",
+    "score_records_compared": 13
   },
   "secondary_controls": {
     "reproduction": "Every numerical estimate reproduced; both source panels reconstructed with identical biological records, assay metadata and partitions",
