@@ -385,6 +385,7 @@ def pipeline(request):
     documented feature ablations; each method/configuration has its own hash.
     """
     from chembounce import chembounce
+    from chembounce_synthesis.conformers import ConformerSettings, prepare_reference
     from chembounce_synthesis.workflow import load_config, run
 
     settings = request["settings"]
@@ -394,6 +395,26 @@ def pipeline(request):
         raise ValueError(
             "disable_3d requires generator_options.calculate_shape=false in the paired parent and variant; otherwise generation still performs 3D work"
         )
+    config = None
+    if not settings.get("disable_synthesis", False):
+        config = load_config(request["assets"]["synthesis_config"])
+        config.update(settings.get("synthesis_overrides", {}))
+        config["catalog"], config["rules"] = request["assets"]["catalog"], request["assets"]["rules"]
+        if request["query"].get("reference_sdf"):
+            config["reference_sdf"] = request["query"]["reference_sdf"]
+        config["max_scored_products"] = budget["max_evaluations"]
+        config["max_results"] = budget["max_candidates"]
+        config.setdefault("conformers", {})["seed"] = request["seed"]
+        if config["provider"].get("kind") == "synllama":
+            config["provider"]["seed"] = request["seed"]
+        if not settings.get("disable_3d", False):
+            # An invalid fixed reference cannot be rescued by generating designs.
+            # Fail as an adapter error before paying for the upstream search.
+            prepare_reference(
+                request["query"]["smiles"],
+                ConformerSettings(**config.get("conformers", {})),
+                config.get("reference_sdf"),
+            )
     options.update(
         output_dir=Path(request["output_dir"]) / "designs",
         seed=request["seed"],
@@ -427,16 +448,6 @@ def pipeline(request):
                 "budget_accounting": "partial",
             },
         }
-    config = load_config(request["assets"]["synthesis_config"])
-    config.update(settings.get("synthesis_overrides", {}))
-    config["catalog"], config["rules"] = request["assets"]["catalog"], request["assets"]["rules"]
-    if request["query"].get("reference_sdf"):
-        config["reference_sdf"] = request["query"]["reference_sdf"]
-    config["max_scored_products"] = budget["max_evaluations"]
-    config["max_results"] = budget["max_candidates"]
-    config.setdefault("conformers", {})["seed"] = request["seed"]
-    if config["provider"].get("kind") == "synllama":
-        config["provider"]["seed"] = request["seed"]
     out = Path(request["output_dir"]) / "synthesis"
     rows = run(
         request["query"]["smiles"],

@@ -19,7 +19,7 @@ from rdkit.Chem.Scaffolds import MurckoScaffold
 
 from .catalog import Catalog
 from .common import FP, canonical, digest, molecule, positive, write_json
-from .conformers import ConformerSettings, ensemble, reference_from_sdf, require_alignment, score_candidate
+from .conformers import ConformerSettings, ensemble, prepare_reference, reference_from_sdf, score_candidate
 from .continuation import load_carried_routes
 from .evidence import evaluator_from_config, validate_evidence_config
 from .identity import classify_change, family_key, scaffold_family_key
@@ -547,10 +547,16 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         settings = ConformerSettings(**config.get("conformers", {}))
         requested_refinement = RefinementSettings(**config.get("refinement", {}))
         refinement = replace(requested_refinement, top_n=0) if scoring_mode == "2d" else requested_refinement
+        hit_pose = None
+        if scoring_mode == "3d":
+            if designs:
+                hit_pose = prepare_reference(hit, settings, config.get("reference_sdf"))
+            elif config.get("reference_sdf"):
+                # Preserve the existing bound-reference validation for empty runs,
+                # which have no alignment or generated-reference requirement.
+                hit_pose = reference_from_sdf(config["reference_sdf"], hit, settings)
         carried, carry_sources = load_carried_routes(config.get("carry_forward", []), hit, designs)
         summary["carried_routes_loaded"] = sum(len(items) for items in carried.values())
-        if designs and scoring_mode == "3d":
-            require_alignment()
         catalog, rules = Catalog(config["catalog"]), Rules(config["rules"])
         if deadline_reached():
             evidence_settings = {
@@ -612,11 +618,6 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             "property_thresholds": config.get("property_thresholds", {}),
             "refinement": asdict(refinement),
         }
-        hit_pose = (
-            reference_from_sdf(config["reference_sdf"], hit, settings)
-            if config.get("reference_sdf") and scoring_mode == "3d"
-            else None
-        )
         pose_constraints = (
             constraints_from_config(config["pocket"], hit_pose, config.get("reference_sdf"))
             if "pocket" in config
