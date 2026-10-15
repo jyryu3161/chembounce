@@ -1,0 +1,244 @@
+{
+  "assessment_complete": true,
+  "attribution": {
+    "documentation": "Aggregate projection and file-hash/arithmetic checks only; no reaction rerun, model inference or campaign execution.",
+    "evaluator": "Parent reviewer; direct catalog/registry lookup, route-graph traversal and RDKit reaction replay without project imports.",
+    "shared_kernel": "Uses the same RDKit reaction execution, parsing and stereochemistry kernel; not independent physical or experimental chemistry validation."
+  },
+  "limitations": [
+    "Post hoc completed-primary snapshot; not the full 630-attempt campaign or an efficacy comparison.",
+    "Only returned successful-attempt candidates are replayed; timeouts and other failures remain outside candidate replay and retain their attempt statuses.",
+    "Direct route traversal and registry/catalog lookups do not import project modules, but use the same RDKit reaction execution and stereochemistry kernel.",
+    "Reaction match proves consistency with supplied templates and catalog snapshot, not current stock, reagent/condition completeness, yield, selectivity, activity, or experimental synthesis success.",
+    "Repeated route occurrences are not independent syntheses; missing routes are reported separately rather than treated as successful or failed reaction replay.",
+    "Matched routes include the reported atom-map provenance gaps; replay agreement does not establish fully atom-sourced synthesis. Omitted mapping and unrepresented reagents remain possible explanations, without fabricated reagent attribution.",
+    "Forward-model agreement is not experimental yield. No complete reagent/condition, current-stock, selectivity, activity-retention or experimental synthesis-success claim is made.",
+    "The original 630-attempt comparison was pending at this snapshot; incomplete method counts must not be ranked as method performance. No confidence interval, significance or superiority inference is added."
+  ],
+  "mapping_assessment_completed_utc": "2026-10-15T22:03:39.105433+00:00",
+  "method_snapshot_coverage": {
+    "nearest_3d": {
+      "attempt_no_candidates": 3,
+      "attempt_success": 26,
+      "attempt_timeout": 7,
+      "attempts": 36,
+      "no_route_supplied": 78,
+      "returned_candidate_occurrences": 78
+    },
+    "nearest_catalog": {
+      "attempt_success": 36,
+      "attempts": 36,
+      "no_route_supplied": 108,
+      "returned_candidate_occurrences": 108
+    },
+    "pipeline": {
+      "attempt_infrastructure_interruption": 1,
+      "attempt_no_candidates": 10,
+      "attempt_success": 6,
+      "attempt_timeout": 19,
+      "attempts": 36,
+      "matched": 15,
+      "returned_candidate_occurrences": 15
+    },
+    "pipeline_encounter_allocation": {
+      "attempt_no_candidates": 18,
+      "attempt_success": 13,
+      "attempts": 31,
+      "matched": 30,
+      "returned_candidate_occurrences": 30
+    },
+    "pipeline_legacy_search": {
+      "attempt_no_candidates": 9,
+      "attempt_success": 13,
+      "attempt_timeout": 14,
+      "attempts": 36,
+      "matched": 37,
+      "returned_candidate_occurrences": 37
+    },
+    "pipeline_no_3d": {
+      "attempt_no_candidates": 7,
+      "attempt_success": 29,
+      "attempts": 36,
+      "matched": 82,
+      "returned_candidate_occurrences": 82
+    },
+    "pipeline_no_refinement": {
+      "attempt_no_candidates": 17,
+      "attempt_success": 10,
+      "attempts": 27,
+      "matched": 27,
+      "returned_candidate_occurrences": 27
+    },
+    "reaction_enumeration": {
+      "attempt_success": 25,
+      "attempt_timeout": 6,
+      "attempts": 31,
+      "matched": 75,
+      "returned_candidate_occurrences": 75
+    },
+    "synllama_only": {
+      "attempt_no_candidates": 3,
+      "attempt_success": 30,
+      "attempt_timeout": 3,
+      "attempts": 36,
+      "matched": 90,
+      "returned_candidate_occurrences": 90
+    }
+  },
+  "observation_units": {
+    "attempt_statuses": {
+      "infrastructure_interruption": 1,
+      "no_candidates": 67,
+      "success": 188,
+      "timeout": 49
+    },
+    "campaign_complete_at_assessment": false,
+    "campaign_planned_attempts": 630,
+    "candidate_statuses": {
+      "matched": 356,
+      "no_route_supplied": 186
+    },
+    "distinct_input_definition": "SHA256 of canonical JSON serialization of [route graph, returned product string]. This is not a count of independent syntheses or chemically unique routes.",
+    "distinct_serialized_route_product_inputs": 208,
+    "failed_attempt_handling": "Timeout, no-candidate and infrastructure-interruption attempts retain their original statuses; no returned candidates are invented for them. Infrastructure interruption is not a chemistry failure.",
+    "matched_catalog_leaf_occurrences": 727,
+    "matched_route_step_occurrences": 382,
+    "method_counts_interpretation": "Incomplete method cohorts in a read-time snapshot; descriptive coverage only, not a ranking or efficacy comparison.",
+    "no_route_handling": "Reported separately; neither a successful nor a failed reaction replay.",
+    "primary_attempts_in_snapshot": 305,
+    "returned_candidate_occurrences": 542,
+    "scope": "All candidate occurrences returned by successful completed primary attempts visible in these three snapshots; failed attempts retained in coverage counts; post hoc software-consistency assessment"
+  },
+  "passed_software_consistency_checks": true,
+  "provenance": {
+    "frozen_campaign_changed": false,
+    "local_evaluator_scripts": {
+      "route_replay": {
+        "path": "/tmp/audit-selected-route-replay.py",
+        "sha256": "28c5c20cbbcdcf21cab2245ef61448b65ed75e09ec43fc686c4f89f388504268"
+      },
+      "template_mapping": {
+        "path": "/tmp/audit-route-template-mappings.py",
+        "sha256": "f278be9fbe84adf7680f108e300d1d20e9ad891bc0f3f027995c525664e3a6c5"
+      }
+    },
+    "local_evidence": {
+      "response-provenance-check.json": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/selected-route-replay-parent-20261016/response-provenance-check.json",
+        "sha256": "a544843d86d3c0c34b8d0a7990fc12f1ea3db6894db92064d71677ec8431a41f"
+      },
+      "template-mapping-assessment.json": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/selected-route-replay-parent-20261016/template-mapping-assessment.json",
+        "sha256": "dcf1005a315bf3f265b7f8732ad9caea527cf78cbdef51b9f689120112fe6c92"
+      },
+      "validation.json": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/selected-route-replay-parent-20261016/validation.json",
+        "sha256": "df61e12b6d838750814a088897cf9c63ed831a038d0e9adf8d169175c37efb43"
+      }
+    },
+    "local_evidence_bundled": false,
+    "parent_input_sha256": {
+      "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/catalog.tsv": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/rules.json": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "/data2/home/jyryu/chembounce/benchmark-results/research-validation/main-protocol-baselines.json": "714e9265f1c89659d7c90441aba6086234518f00f149587a7d2bac1e9886abdf",
+      "/data2/home/jyryu/chembounce/benchmark-results/research-validation/main-protocol-gpu0.json": "6b8ee2ad718e23fe95f370679755e8202687f8d36059c2e58e2dee6f3b3ba7c7",
+      "/data2/home/jyryu/chembounce/benchmark-results/research-validation/main-protocol-gpu1.json": "e9cdbb08d69916801a6ff5263dd4e39e7485bf0142d867df23bc12e23127737f",
+      "/data2/home/jyryu/chembounce/benchmark-results/research-validation/selected-route-replay-parent-20261016/baselines-runs.json": "3b02e185d6fd05c6fae404f007441d0c521ce3d9a930aaed3c41d6399651cf66",
+      "/data2/home/jyryu/chembounce/benchmark-results/research-validation/selected-route-replay-parent-20261016/gpu0-runs.json": "0a499fbbb798a932a619b3bd5498e1be0cb5bd6bc5311286657f860b02b1c526",
+      "/data2/home/jyryu/chembounce/benchmark-results/research-validation/selected-route-replay-parent-20261016/gpu1-runs.json": "b2537d36395c5477caa7457b283e9f19e14a017c22c014947bf9c9c8336f5b29",
+      "/data2/home/jyryu/chembounce/benchmark-results/research-validation/selected-route-replay-parent-20261016/snapshot.json": "29f3434f7af782cd2bff196ef53fb505a418e4012c27bcfeea840cfc1ec35281"
+    },
+    "public_payload": "Aggregate counts, named control scenarios and local hash provenance only; no raw molecular strings, per-candidate arrays or source reaction templates.",
+    "source_assets_live_helpers_changed": false
+  },
+  "provenance_checks": {
+    "input_pin_timing": "Before and after the parent post hoc assessment; not before and after the original experiment.",
+    "parent_input_pins_checked_before_and_after_assessment": 9,
+    "response_check_scope": "After-assessment cross-check of immutable successful-attempt response files against the snapshotted hash and parsed response; no model inference or reaction rerun.",
+    "response_check_utc": "2026-10-15T22:01:57.950541+00:00",
+    "response_checks_before_and_after_original_experiment": false,
+    "response_hash_and_parsed_content_checked": true,
+    "successful_response_files_checked_after_assessment": 188
+  },
+  "replay_checks": {
+    "catalog_rows_loaded": 238542,
+    "controls": [
+      {
+        "case": "amide_positive",
+        "passed": true
+      },
+      {
+        "case": "wrong_intermediate",
+        "passed": true,
+        "rejection": "Declared intermediate not reproduced within replay cap"
+      },
+      {
+        "case": "wrong_returned_product",
+        "passed": true,
+        "rejection": "Returned candidate differs from replayed root"
+      },
+      {
+        "case": "unknown_catalog_id",
+        "passed": true,
+        "rejection": "Unknown catalog building block"
+      },
+      {
+        "case": "cycle",
+        "passed": true,
+        "rejection": "Route cycle"
+      },
+      {
+        "case": "unreachable_node",
+        "passed": true,
+        "rejection": "Unreachable route nodes"
+      },
+      {
+        "case": "chirality_positive_and_inverted_substrate_negative",
+        "passed": true
+      }
+    ],
+    "controls_passed": 7,
+    "interpretation": "Consistency with the pinned catalog and supplied templates within the explicit enumeration bounds; not an exhaustive chemistry proof.",
+    "loaded_asset_scope": "Loading 238542 catalog rows and 91 registered rules does not independently chemically validate every molecule or rule.",
+    "matched_route_occurrences_without_enumeration_truncation": 356,
+    "method": "Resolve catalog and registered-rule IDs directly; traverse the route graph; check graph integrity, ordered reactants, declared intermediates and exact returned/evaluated product identities by direct RDKit reaction enumeration; compare supplied route-evidence fields when present.",
+    "project_modules_imported": [],
+    "raw_product_cap_per_step": 4096,
+    "registered_rules_loaded": 91,
+    "runtime": {
+      "nice": 19,
+      "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]",
+      "python_executable": "/data2/home/jyryu/chembounce/.venv-synllama-min/bin/python",
+      "rdkit": "2025.09.6"
+    },
+    "step_occurrences_with_enumeration_truncation": 0,
+    "unresolved_records": 0
+  },
+  "route_replay_completed_utc": "2026-10-15T22:01:15.051872+00:00",
+  "schema": "selected-route-replay-publication-v1",
+  "snapshot_completed_utc": "2026-10-15T21:59:12.621210+00:00",
+  "status": "completed_post_hoc_selected_route_snapshot_assessment",
+  "template_atom_map_provenance": {
+    "affected_external_eligibility_passes_requiring_explicit_atom_sources": 0,
+    "affected_registered_rules": 17,
+    "declared_flag_disagreements": 0,
+    "declared_implicit_source_flags_checked": 3,
+    "distinct_serialized_route_product_inputs_with_mapping_gaps": 30,
+    "explicit_policy_detail": "All 3 affected pipeline_no_3d candidates had external-evidence eligibility true, declared implicit sources and require_explicit_atom_sources=false; 28 reaction_enumeration occurrences supplied no external-evidence eligibility.",
+    "external_evidence_eligibility": {
+      "not_supplied": 28,
+      "passed": 3
+    },
+    "interpretation": "Missing explicit reactant atom-map provenance can reflect omitted mapping or an unrepresented reagent source. It does not by itself prove an impossible reaction or physically invented atoms.",
+    "mapping_gap_definition": "Reaction-product template heavy atoms without an explicit map to any reactant-template atom.",
+    "method_occurrences": {
+      "pipeline_no_3d": 3,
+      "reaction_enumeration": 28
+    },
+    "policy_observation": "All affected pipeline candidates supplied an implicit-source flag and used a policy that did not require explicit atom sources. Bare reaction-enumeration candidates supplied no external-evidence eligibility claim.",
+    "policy_or_frozen_experiment_changed": false,
+    "reagent_attribution_inferred": false,
+    "route_occurrences_with_mapping_gaps": 31,
+    "step_occurrences_with_mapping_gaps": 31
+  }
+}

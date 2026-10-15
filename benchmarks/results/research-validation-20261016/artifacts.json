@@ -123,7 +123,7 @@
     "status": "partial_sample_audit_independently_recomputed"
   },
   "published_compact_artifacts": {
-    "README.md": "658965bbdbd44b150c8c21c0e22bfab651c079143d38c58dae9e056d848e2c36",
+    "README.md": "117c2c63ac4adc5fe2ed9cdfe54061edb75b9789b0d6e52bfcfc78ea724f4b17",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
@@ -157,6 +157,7 @@
     "search_space_inventory_scope.json": "1a4cbb951030f8aa69ae98b63ba078350ce1e9b73102e505d794ef774e6f07d8",
     "secondary_controls.json": "a6e5b8cb1574847260638a8a839fae22e33ff2f364e99499e19994f0d3c49109",
     "secondary_panels_roundtrip.json": "d32eeb84539a5cf7f8eb71bfeefc6968055886a8d351a519c0fadd473d952460",
+    "selected_route_replay_validation.json": "89fc0bdcd3a655f558bb00d665b327faad1313ea51f982c804a22c731bc71b66",
     "snapshot_roundtrip.json": "10cfe393189025ad87e6e428659080d42db76abfd3adab2fa45b8e5fb7b2c9a3",
     "source_provenance.json": "5d680d5dad8a273989d3548035d1e3352453e4939bd6fa22f041c7ad0da5f94b",
     "target_control_analysis.json": "2e5273ce81829e9818766adc4571edbd98827bb4786d69fc53149a01084a8ac4",
@@ -188,6 +189,25 @@
     "results": "secondary_controls.json",
     "scope": "Alternative partitions of the same sources; assay heterogeneity retained; not independent new target cohorts",
     "script": "analyze_secondary_controls.py"
+  },
+  "selected_route_replay_validation": {
+    "campaign_complete_at_assessment": false,
+    "declared_flag_disagreements": 0,
+    "declared_implicit_source_flags_checked": 3,
+    "distinct_serialized_route_product_inputs": 208,
+    "frozen_campaign_changed": false,
+    "local_evidence_bundled": false,
+    "matched_route_occurrences": 356,
+    "no_route_supplied_occurrences": 186,
+    "parent_input_pins_checked_before_and_after_assessment": 9,
+    "primary_attempts_in_snapshot": 305,
+    "results": "selected_route_replay_validation.json",
+    "returned_candidate_occurrences": 542,
+    "route_occurrences_with_atom_map_provenance_gaps": 31,
+    "scope": "Post hoc immutable primary-attempt snapshot: direct catalog/registry lookup, graph traversal and bounded RDKit reaction replay, sharing the chemistry kernel. Matched routes include reported atom-map gaps; no complete atom-source, experimental synthesis-success or method-ranking claim.",
+    "snapshot_completed_utc": "2026-10-15T21:59:12.621210+00:00",
+    "status": "completed_post_hoc_selected_route_snapshot_assessment",
+    "successful_response_files_checked_after_assessment": 188
   },
   "source_snapshot": {
     "artifact": "chembl-source-snapshot.zip",
