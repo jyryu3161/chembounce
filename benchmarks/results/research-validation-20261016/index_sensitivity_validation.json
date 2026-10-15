@@ -1,0 +1,264 @@
+{
+  "attribution": {
+    "documentation": "implementation agent; projection and hash checks of retained evidence only; no new experiment",
+    "execution_helper_implementation": "implementation agent",
+    "execution_launch_and_review": "parent reviewer",
+    "independent_evaluation": "parent reviewer, separate retained evaluator script; no project modules imported"
+  },
+  "complete": true,
+  "completed_utc": "2026-10-15T21:32:08.571310+00:00",
+  "fixed_design": {
+    "condition_counts_by_policy": {
+      "diverse": 90,
+      "legacy": 36
+    },
+    "covered_planned_pipeline_attempts": 270,
+    "environment": {
+      "CUDA_VISIBLE_DEVICES": "",
+      "LANG": "ko_KR.UTF-8",
+      "LC_ALL": "C.UTF-8",
+      "MKL_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONHASHSEED": "0",
+      "PYTHONPATH": "/data2/home/jyryu/chembounce",
+      "TZ": null,
+      "USE_TF": "0"
+    },
+    "execution_limits": {
+      "max_memory_mb": 24000,
+      "memory_sample_seconds": 0.05,
+      "pair_order": "job-id hash parity in dispatch queue; fresh subprocess per arm; parallel dispatch may overlap paired arms",
+      "parallelism": 2,
+      "wall_seconds": 360.0
+    },
+    "execution_started_utc": "2026-10-15T20:52:16.171922+00:00",
+    "frozen_implementation_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+    "frozen_source_file_count": 39,
+    "frozen_source_mapping_sha256": "c3a926f289accdbea57c84923b82ba5863e9bbb0a5b87a73f2081e798b5cfe07",
+    "historical_runtime_caveats": [
+      "Original references did not record a fixed Python hash seed; this diagnostic fixed PYTHONHASHSEED=0 before worker startup and explicitly checked old-arm replay.",
+      "Secondary protocols omit direct thread declarations. Both diagnostic arms use the matched explicit primary CPU settings; historical secondary settings are not invented."
+    ],
+    "mapping_digest_encoding": "SHA-256 of UTF-8 json.dumps(source_sha256, sort_keys=True, separators=(\",\", \":\"))",
+    "plan_created_utc": "2026-10-15T20:49:01Z",
+    "planned_arm_calls": 252,
+    "planned_conditions": 126,
+    "query_scope": "Diverse: 30 distinct public input strings across scaffold/time/target panels. Legacy: 12 main-panel public input strings. Identical generator inputs across pipeline members are deduplicated.",
+    "runtime": {
+      "dependencies": {
+        "numpy": "1.26.4",
+        "oddt": "0.7",
+        "pandas": "2.3.3",
+        "psutil": "7.2.2",
+        "rdkit": "2025.9.6",
+        "scaffoldgraph": "1.1.2",
+        "scipy": "1.13.1"
+      },
+      "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+      "process_niceness": 19,
+      "python": "3.10.12",
+      "rdkit_runtime": "2025.09.6"
+    },
+    "runtime_python_executable": "/data2/home/jyryu/chembounce/.venv-synllama-min/bin/python",
+    "seeds": [
+      42,
+      43,
+      44
+    ]
+  },
+  "historical_reference_replay": {
+    "conditions_without_complete_reference": 54,
+    "generator_complete_reference_snapshots": 116,
+    "matched_conditions": 72,
+    "original_630_campaign_status_at_this_evaluation": "Still in progress; original affected asset and all historical outcomes retained. Generator-call success does not replace an original pipeline status.",
+    "original_failed_or_incomplete_outcomes_promoted": false,
+    "original_pipeline_statuses_among_116_snapshots": {
+      "infrastructure_interruption": 1,
+      "no_candidates": 28,
+      "not_observed": 2,
+      "success": 52,
+      "timeout": 33
+    },
+    "snapshot_scope": "Generator-complete snapshots available at plan creation, not final full-pipeline outcomes."
+  },
+  "independent_parent_checks": {
+    "candidate_count_tanimoto_checks": 756,
+    "canonical_roundtrip_unstable_rows": 0,
+    "independence_limit": "Independent project-score implementation and output reconstruction; the same RDKit chemistry/perception kernel is shared.",
+    "input_pin_check_scope": "The 58 input pins were checked before and after the independent parent evaluation, after the generator experiment completed. These are separate from the execution helper's experiment-time verify_plan checks.",
+    "input_pins_checked_before_and_after": 58,
+    "maximum_absolute_score_error": 0.0,
+    "output_and_snapshot_file_checks": 3772,
+    "project_modules_imported": false,
+    "raw_noncanonical_rows": 0,
+    "score_or_identity_issues": 0,
+    "score_recalculation": "Legacy RDKit AllChem.GetMorganFingerprint radius 2, useChirality=False, useBondTypes=True, useFeatures=False; sparse counts and separate integer sum(min)/sum(max) arithmetic."
+  },
+  "limitations": [
+    "No SynLlama or ReactionT5 inference, synthesis reconstruction, 3D scoring, experimental synthesis or biological validation was rerun. Structural similarity is not activity or synthesis probability.",
+    "Equality is observed for the fixed frozen-generator conditions only. It does not establish current develop behavior or full-pipeline equivalence under the 360-second budget.",
+    "Old-arm archived replay is supported for 72 conditions; the other 54 lack complete historical references. Neither absent references nor original failed/incomplete pipeline outcomes are recast as successes.",
+    "All 126 conditions and 252 calls remain in the denominator. The output observations are dependent across shared inputs, seeds and arms; no inferential superiority estimate is made.",
+    "A repaired index can alter candidate reservoirs and tie ordering elsewhere. These equal outputs do not establish equivalence for untested inputs or eliminate the original index defects.",
+    "Shared-host wall time and memory are descriptive; this record makes no speedup, full-pipeline wall-budget, global optimality or efficacy claim.",
+    "The separate 630-attempt campaign remains historical and incomplete at this evaluation. This record does not certify a corrected full campaign or publication readiness."
+  ],
+  "observed_execution": {
+    "all_planned_conditions_retained": true,
+    "arm_statuses": {
+      "success": 252
+    },
+    "asset_attribution": "Conditional on the pinned frozen implementation, runtime, inputs, settings and index bytes; no detected output difference on these conditions.",
+    "comparison_denominator_conditions": 126,
+    "comparison_equal_condition_counts": {
+      "canonical_ordered_designs_equal": 126,
+      "downstream_first_two_equal": 126,
+      "full_table_cells_equal": 126,
+      "intermediate_files_equal": 126,
+      "raw_ordered_designs_equal": 126,
+      "raw_table_bytes_equal": 126,
+      "summary_excluding_index_path_equal": 126
+    },
+    "condition_statuses": {
+      "assessed": 126
+    },
+    "first_two_scope": "Equality of the ordered design identities that the frozen configuration would pass downstream. Synthesis, model inference and 3D scoring were not executed in this diagnostic.",
+    "recorded_arm_calls": 252,
+    "unattempted_arm_calls": 0
+  },
+  "passed": true,
+  "provenance": {
+    "index_assets": {
+      "new": {
+        "files_sha256": {
+          "fingerprints.npy": "f5480d82d0fdf28d457a6c12dc6e5ef9db6371047c7652f7ce9b6132d62efbf0",
+          "metadata.json": "649c3ae37f0ee0a2b98a2ff6dee2a6e80e4fe7d9e718b134c17899e3b8380383",
+          "smiles.npy": "230abcb0192d360fc132a34326a7ba26162ad23498452e70ad12b973343db641"
+        },
+        "path": "/data2/home/jyryu/chembounce/data/fingerprints_mw250_rdkit_2025.09.6_fixedpoint_staging"
+      },
+      "old": {
+        "files_sha256": {
+          "fingerprints.npy": "383db5047079a41c17689074c10e165532ef7cfd8c9a1fe8e6517ffabf1fa7d5",
+          "metadata.json": "893267f49646a236d16fb2d0be69b0aa02260fb79e5286c352bdea3347e17684",
+          "smiles.npy": "45636028bc4c8ef09c42b75164381bd6793c5d68f50f401b4395e53323c8c1cb"
+        },
+        "path": "/data2/home/jyryu/chembounce/data/fingerprints_mw250_v2"
+      }
+    },
+    "local_evidence": {
+      "corrected_index_exhaustive_validation": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-plan-hashseed0/index-validation.json",
+        "sha256": "0e1d23766337b5874aae8bb2554175b3b6ee11c09c031dcccacc9fe785fb6769"
+      },
+      "execution_helper": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/fingerprint-index-sensitivity-tool/sensitivity.py",
+        "sha256": "db04fac3f57fd82b978442477bc8eef9627e62a6934461d8c7484040a9e726a5"
+      },
+      "frozen_source_manifest": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-plan-hashseed0/frozen-source-manifest.json",
+        "sha256": "8c8d9a883fe29acc8ffc1d6c3826a0056def13a93fa852508617069f3d48075e"
+      },
+      "launch": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-launch.json",
+        "sha256": "534c540954c988d15fd49c9ffc359277e3df9a8ffd7e294ba162421fc639b3e9"
+      },
+      "outcome_progress": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-run/progress.json",
+        "sha256": "bef8aec138af01457c32549d580c8a490eb50c17549d4db6ca61d59da636533b"
+      },
+      "outcome_run_manifest": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-run/run-manifest.json",
+        "sha256": "08812ab7e859091fdcae0f7cb68a96278763aecbb0d769b218a188dff593b7f1"
+      },
+      "outcome_runs": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-run/runs.json",
+        "sha256": "ceac90e83be5d57d0da93c361d4a1e15116adff95cce51341d72b6415b46b43b"
+      },
+      "outcome_summary": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-run/summary.json",
+        "sha256": "a037ead47d1dded837e0349d5b5d75a0c172c8c324083c3994bc81259d9079d4"
+      },
+      "parent_evaluator": {
+        "path": "/tmp/audit-index-sensitivity-parent.py",
+        "sha256": "e67c194ac5126df47e52f9ea2aa8e6cbe63d7d688be515939f7cb09ccbbfc269"
+      },
+      "parent_validation": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-parent-validation.json",
+        "sha256": "b7e2a2204c52cda74a51adf7f46f8ac00b64e08bda2686696cd84b9e613f6bd7"
+      },
+      "plan": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-plan-hashseed0/plan.json",
+        "sha256": "3e993a6a9e8504e24d998d97d9105d5f4a4a0fb1c0f71452a442192d040057b1"
+      },
+      "scaffold_text": {
+        "path": "/data2/home/jyryu/chembounce/data/Scaffolds_processed_mw250.txt",
+        "sha256": "19d159ffacbef87a026a85c13d00a15867cd58336650fd24246693921da545ac"
+      },
+      "verifier_readiness": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-parent-verifier-readiness.json",
+        "sha256": "034d812295b0c175f4fc2e94811a5822fa2c477776e547f6fce4861ba75d23f9"
+      }
+    },
+    "local_evidence_bundled": false,
+    "panel_and_protocol_sha256": {
+      "benchmark-results/research-validation/main-protocol-gpu0.json": "6b8ee2ad718e23fe95f370679755e8202687f8d36059c2e58e2dee6f3b3ba7c7",
+      "benchmark-results/research-validation/main-protocol-gpu1.json": "e9cdbb08d69916801a6ff5263dd4e39e7485bf0142d867df23bc12e23127737f",
+      "benchmark-results/research-validation/panels/direct-human-scaffold/panel.json": "e87a3b539b8c41dde4887a7d52ec67b29a7a63f688584b579272398ef6522204",
+      "benchmark-results/research-validation/panels/direct-human-target/panel.json": "8d87129ebc096d122fb581eb1721b9893243cec958434b5720a94df83c2d074e",
+      "benchmark-results/research-validation/panels/direct-human-time/panel.json": "5402b98837c4abba4ab85606f8354736ec2ef20e23e1e0e8c6dadfbd0c8f7269",
+      "benchmark-results/research-validation/secondary-target-protocol-gpu0.json": "02665eb636361a5c3e4a43b614a5a850cb405b57c45321b573c406a00918fb34",
+      "benchmark-results/research-validation/secondary-target-protocol-gpu1.json": "3cd3327cc684c76692afcc5bd00cf7d620afb9e731b62fb62b73f5cc94e81f32",
+      "benchmark-results/research-validation/secondary-time-protocol-gpu0.json": "28909a8f7bf8f8c38cc2f6548eabe663b787d3b6cd28e05dd78353080ed55840",
+      "benchmark-results/research-validation/secondary-time-protocol-gpu1.json": "59f1ef33f980d69fc4c9e8f4668011b35160d09fe8abc431608677ba289eafd1"
+    },
+    "public_bundle_excludes": "Raw molecules, full plan/job/member records, output tables, reference snapshots and fingerprint arrays. Absolute local paths identify retained evidence, not publicly downloadable artifacts.",
+    "public_helper": {
+      "path": "../../diagnostics/index_sensitivity/sensitivity.py",
+      "sha256": "db04fac3f57fd82b978442477bc8eef9627e62a6934461d8c7484040a9e726a5"
+    },
+    "public_helper_documentation": "../../diagnostics/index_sensitivity/README.md"
+  },
+  "returned_generator_count_similarity": {
+    "by_policy_and_arm": {
+      "diverse:new": {
+        "below_0_5": 90,
+        "candidate_rows": 270,
+        "max": 1.0,
+        "min": 0.0
+      },
+      "diverse:old": {
+        "below_0_5": 90,
+        "candidate_rows": 270,
+        "max": 1.0,
+        "min": 0.0
+      },
+      "legacy:new": {
+        "below_0_5": 0,
+        "candidate_rows": 108,
+        "max": 0.967479674796748,
+        "min": 0.5
+      },
+      "legacy:old": {
+        "below_0_5": 0,
+        "candidate_rows": 108,
+        "max": 0.967479674796748,
+        "min": 0.5
+      }
+    },
+    "denominator": "All returned generator candidate rows in each policy/arm, including repeated observations across seeds and arms; not distinct molecules or independent biological replicates.",
+    "interpretation": "Diverse exploration permits scores below 0.5; legacy uses a 0.5 floor. These summaries are not the similarity distribution of the configured downstream first two. Fingerprint Tanimoto 1.0 does not establish exact molecular identity."
+  },
+  "schema": "public-frozen-generator-index-sensitivity-validation-v1",
+  "scope": "Paired old-index versus corrected-index calls using the original frozen generator and pinned campaign runtime. This is a local asset-substitution diagnostic, not a rerun of the current develop pipeline or a method efficacy comparison.",
+  "status": "completed_generator_only_comparison_independently_evaluated",
+  "verifier_preparation_note": {
+    "corrected_script_sha256": "e67c194ac5126df47e52f9ea2aa8e6cbe63d7d688be515939f7cb09ccbbfc269",
+    "correction_before_final_evaluation": "The worker request intentionally redacts campaign members. The parent verifier was corrected to compare the retained public job fields, while separately checking full member coverage in the plan.",
+    "generator_plan_assets_or_outcomes_changed_by_correction": false,
+    "readiness_record_is_historical": true,
+    "superseded_script_sha256": "4fd0629a700cbf2f0636221a6d8eb2098b3190d978e28ff0d7b691fe04386dac"
+  }
+}
