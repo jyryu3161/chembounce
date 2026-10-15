@@ -43,9 +43,16 @@
     "implementation_agent_optional_skips": 1,
     "independent_full_index_rows": 522957,
     "independent_parent_full_suite_rerun": false,
+    "later_followup": {
+      "completed_utc": "2026-10-15T21:32:08.571310+00:00",
+      "historical_pending_status_preserved": true,
+      "record": "index_sensitivity_validation.json",
+      "scope": "Subsequent frozen-generator index substitution: 126 paired conditions / 252 successful calls, all seven output-equality checks 126/126. The prior pending fields describe the engineering record at its original time; this follow-up does not establish full-pipeline or efficacy equivalence.",
+      "sha256": "e953155f54f48f0d53baa18d5b9c5270fa01b451b9cda27c827582f51f6982e5"
+    },
     "local_activation_independently_checked": true,
     "results": "fingerprint_runtime_identity_validation.json",
-    "scope": "Full 522957-row fixed-point index validation and narrow search/fragment input checks; implementation-agent 525-test suite parent-reviewed. Original 630 attempts remain historical; corrected-index sensitivity across 252 generator attempts is pending.",
+    "scope": "Full 522957-row fixed-point index validation and narrow search/fragment input checks; implementation-agent 525-test suite parent-reviewed. Original 630 attempts remain historical. Sensitivity-pending status is retained from this engineering record; see the later generator-only follow-up.",
     "status": "engineering_validation_and_local_activation_complete_sensitivity_pending"
   },
   "fixed_pose_score_validation": {
@@ -64,6 +71,18 @@
     "frozen_campaign_changed": false,
     "independent_full_suite_passed": 452,
     "results": "runner_signal_validation.json"
+  },
+  "index_sensitivity_validation": {
+    "completed_utc": "2026-10-15T21:32:08.571310+00:00",
+    "equal_conditions_for_each_of_seven_output_checks": 126,
+    "frozen_campaign_changed": false,
+    "generator_calls": 252,
+    "independent_candidate_score_checks": 756,
+    "local_evidence_bundled": false,
+    "paired_conditions": 126,
+    "results": "index_sensitivity_validation.json",
+    "scope": "Completed frozen-generator index-substitution diagnostic; all planned calls retained. No models, synthesis reconstruction or 3D rerun, full-pipeline wall-budget equivalence, or efficacy/superiority claim.",
+    "status": "completed_generator_only_comparison_independently_evaluated"
   },
   "isolated_runtime_validation": {
     "actual_gpu_execution_assessed": false,
@@ -90,7 +109,7 @@
     "status": "partial_sample_audit_independently_recomputed"
   },
   "published_compact_artifacts": {
-    "README.md": "db965471c576aef9b458fc3efd6ac81b20ee0752278141b86da056a0d24882e7",
+    "README.md": "d6b8667fc2a67a27f49e0aac0566791c0e6ef41206b69c1447664143b97071dc",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
@@ -110,10 +129,11 @@
     "controls_time.png": "11c761dd1972226c08120547a7ca949026074022a671bb51de1400214bf5f185",
     "design_preflight_validation.json": "1450a5f20dc703f5eb4176421582d242800768f0621c8f759aaac04d96057e83",
     "engineering.json": "0774f9a6c07d4b763742fa6c7b35695b8c6deafd1c08074bab4cf8d7fbcf69c0",
-    "fingerprint_runtime_identity_validation.json": "b1d4271431c78d1fb3d108c1b722033afda0cde774b0276c128768db4e267856",
+    "fingerprint_runtime_identity_validation.json": "0805c19896782634704a075d4594077376d22084e827b8610b1c8478a8af2b77",
     "fixed_pose_score_validation.json": "4af182632b449d441c414cc41edd297b5a501f490210cc88770bde15396211b8",
     "forward_analysis_plan.json": "385be03fee3d2df6cfc04975cb63b42717088eabe62077bdbd3c6db9ca5db529",
     "forward_audit_validation.json": "c0e12e44a60702008806415ad23c8914fe58ac451e837bc32f3b9fb1d357b504",
+    "index_sensitivity_validation.json": "e953155f54f48f0d53baa18d5b9c5270fa01b451b9cda27c827582f51f6982e5",
     "isolated_runtime_validation.json": "7bf5c6c837191c64d7e277b91c021ea0dab6a9ebf236c74935bc7dca595f58e5",
     "preflight_validation.json": "c810853f907c579fd858e3fa823671ccb11a17071ea25e62bab3c0134818e59c",
     "query_scope.json": "72c97730f9f76906bc1afcbd88a3f19009862f79af51f7ef18662f0e01fa972b",

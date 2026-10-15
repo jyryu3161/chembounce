@@ -204,6 +204,13 @@
     "sensitivity_evaluation": "pending",
     "status": "Historical campaigns retain the affected original asset and frozen code. They are not retroactively corrected by this engineering work."
   },
+  "later_followup": {
+    "completed_utc": "2026-10-15T21:32:08.571310+00:00",
+    "historical_pending_status_preserved": true,
+    "record": "index_sensitivity_validation.json",
+    "scope": "Subsequent frozen-generator index substitution: 126 paired conditions / 252 successful calls, all seven output-equality checks 126/126. The prior pending fields describe the engineering record at its original time; this follow-up does not establish full-pipeline or efficacy equivalence.",
+    "sha256": "e953155f54f48f0d53baa18d5b9c5270fa01b451b9cda27c827582f51f6982e5"
+  },
   "limitations": [
     "Sampled bit verification does not certify every index row or cross-version runtime compatibility.",
     "Matching binary vectors does not establish parse/serialize identity stability or chemical-family uniqueness.",
