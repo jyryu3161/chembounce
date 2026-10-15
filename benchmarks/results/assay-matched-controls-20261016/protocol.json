@@ -1,0 +1,28 @@
+{
+  "conformers": {
+    "energy_window": 5.0,
+    "max_iterations": 500,
+    "num_conformers": 8,
+    "pharmacophore_sigma": 1.0,
+    "reject_unspecified_stereo": true,
+    "strain_penalty": 0.05
+  },
+  "module_sha256": "f65f7973c4c37f85b3e71b481c83dabb4ca0cadb4ed3c06897af9bbd74b9c00f",
+  "pairs_sha256": "d38fc2f555c07f2cc14d1203ce76221f90384825d2ce9a7c92f22e230fcbfa95",
+  "panel_sha256": "464e71b8bc54ad9002a8ff02e08b249272ae43ce17a4aee3d53c394642439d33",
+  "plan_sha256": "1764f3d41c5a75ed1537bc6c3fa00c18c35153d40364dabca3570881d8fe0c40",
+  "scope": "Follow-up specified after heterogeneous-control results; same fixed scoring, no threshold tuning, no replacement of frozen generation controls",
+  "scoring_code_sha256": {
+    "benchmarks/research/controls.py": "eb409cb4198348ced6c49d444d0ab2148122e8729fcefde9e386b804ce039fd8",
+    "chembounce_synthesis/conformers.py": "8f289778a7056d728a4115fdf934626f80f19448853c55b9d971260fc991634b",
+    "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+    "chemistry.py": "bdd598d1255ce827fb6843e3d95f8ceb4a5cdafe33335086f0b270b04940f462"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "status_semantics": "status success means scorer returned; metric-specific missing values and all_3d_seeds_succeeded retain any failed seeds; 2D scores remain available after 3D failure",
+  "workers": 3
+}

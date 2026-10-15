@@ -1,0 +1,26 @@
+{
+  "chemical_scoring_commit": "3c8ad2b619d8168e061d63467b6b9391e2464d2d",
+  "observation_unit": "197 pairs (111 active, 86 inactive), 12 queries and assays, six target groups; 194 complete 3D pairs",
+  "published_artifacts": {
+    "README.md": "6bb709e362d01130662a36bd9a371ba34ac932fc4a2f108ea105e80f98e72b44",
+    "analysis-requirements.txt": "0cb7e18bdbf2560f295073a21bfb12591dfbd081bafd60b0b09dbb80e2123b3f",
+    "analysis.json": "d9de26e3f84f360cb70666f2e57701072a4f1d3b97d16f17f572db8d81232403",
+    "analyze.py": "e8b894ec7462eddbeb5f4096ea516c2fdae0c12d49c9836db456d5bd9f87a7c6",
+    "assessment_plan.json": "1764f3d41c5a75ed1537bc6c3fa00c18c35153d40364dabca3570881d8fe0c40",
+    "control_pairs.json": "d38fc2f555c07f2cc14d1203ce76221f90384825d2ce9a7c92f22e230fcbfa95",
+    "controls.pdf": "4e103c222734dbe473b7733701c6ccff454bc2a88fb090b74d657a0ad9ef8a72",
+    "controls.png": "48f539a03aea72563da5e9951009f0feadeaca3f3f05a82d62b912f793e6ac6e",
+    "framework-paired-summary.json": "366784df40499b18fe1a3994b8024cec127cd3feb922ab83170ed29625c0e7be",
+    "framework-summary.json": "12df8628f993758d53e9354d6bc44b7c4516d6c2e50c542847e51746d66af44d",
+    "input_audit.json": "daf1c272b18d319c5af728e40f4e731de116890c74ba3014632a11adec99c77d",
+    "overlay_reuse_validation.json": "a7262eb4d0322071b3a422dcfa9be1faa0507f7b2d0dda5a025c08bc2d199560",
+    "panel.json": "464e71b8bc54ad9002a8ff02e08b249272ae43ce17a4aee3d53c394642439d33",
+    "progress.json": "8740712ea75c31335b1a316995289cc2b66ea0128895da89cd7fa7a879508d8a",
+    "protocol.json": "27f756cd71e4c7e3e75d9ecf704925dca2e4ef2cbdf09c47266fdb5727679f71",
+    "public_queries.json": "df9690fcff2be5a83cf1f2015f03a087a20c5dc33c3a0b99dcf6b4f351600431",
+    "scores.json": "f026e8fb080dce8b5560b764f86cbacb13472e506fab8870056ba0d5375eb795",
+    "source_roundtrip.json": "1a3f3e776496521d4f98fc259b106914d91b8f1903a39662a7ec4e69726bd569",
+    "validation.json": "ed174d3271a0e9d65926e76b3ebf3d6badcd6958e535981b96362d1295551747"
+  },
+  "scope": "Follow-up same-assay control analysis; no generation superiority or experimental activity claim"
+}

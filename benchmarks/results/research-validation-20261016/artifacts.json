@@ -15,7 +15,7 @@
   },
   "observation_unit": "240 query-control pairs; 120 distinct target-family compound IDs, 119 distinct exact structures, reused across queries; 6 independent target groups",
   "published_compact_artifacts": {
-    "README.md": "5c4ea5a90e4cbb972c579044b1585650c8e493752ab51d492eb3bda499ecf9d5",
+    "README.md": "c32780e919a0a311c3db5383e12311a16e96ca96f82f01de70ab028a4eb40a9b",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
