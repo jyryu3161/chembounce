@@ -1,0 +1,3822 @@
+{
+  "assay_source_count": 16,
+  "compound_records": 5567,
+  "design": "Post hoc descriptive sensitivity audit specified after the primary labelled-control results were seen; not pre-registered or used to select thresholds/methods. Frozen generation and source panels remain unchanged.",
+  "documentation": "https://chembl.gitbook.io/chembl-interface-documentation/frequently-asked-questions/chembl-data-questions",
+  "interpretation": [
+    "Confidence 9 measures assay-to-target assignment, not assay-condition equivalence.",
+    "A null variant_sequence is absence of a variant annotation, not experimental proof of wild-type sequence.",
+    "Unknown-origin text is an unresolved conflict/ambiguity with structured human metadata, not proof of a non-human assay.",
+    "BAO format may itself be incomplete or inconsistent with assay prose. Format matching does not equal matched experimental conditions.",
+    "Shared assay-ID filters can leave too few active/inactive controls. Unestimable query/target groups remain explicit.",
+    "All-support counts refer to the retained supporting measurements, not every publication on each molecule."
+  ],
+  "per_target_context": {
+    "CHEMBL203": {
+      "any_support_unknown_origin_text": 214,
+      "any_support_variant_text": 0,
+      "compound_records": 553,
+      "multiple_support_formats": 7,
+      "representative_bao_formats": {
+        "assay format": 49,
+        "cell membrane format": 4,
+        "cell-based format": 162,
+        "single protein format": 338
+      },
+      "representative_unknown_origin_text": 213
+    },
+    "CHEMBL205": {
+      "any_support_unknown_origin_text": 4,
+      "any_support_variant_text": 0,
+      "compound_records": 1069,
+      "multiple_support_formats": 1,
+      "representative_bao_formats": {
+        "assay format": 2,
+        "single protein format": 1067
+      },
+      "representative_unknown_origin_text": 3
+    },
+    "CHEMBL2147": {
+      "any_support_unknown_origin_text": 249,
+      "any_support_variant_text": 0,
+      "compound_records": 659,
+      "multiple_support_formats": 23,
+      "representative_bao_formats": {
+        "assay format": 102,
+        "cell-based format": 38,
+        "single protein format": 519
+      },
+      "representative_unknown_origin_text": 247
+    },
+    "CHEMBL220": {
+      "any_support_unknown_origin_text": 237,
+      "any_support_variant_text": 0,
+      "compound_records": 932,
+      "multiple_support_formats": 13,
+      "representative_bao_formats": {
+        "assay format": 13,
+        "cell membrane format": 1,
+        "cell-based format": 87,
+        "cell-free format": 6,
+        "single protein format": 810,
+        "tissue-based format": 15
+      },
+      "representative_unknown_origin_text": 231
+    },
+    "CHEMBL251": {
+      "any_support_unknown_origin_text": 53,
+      "any_support_variant_text": 0,
+      "compound_records": 1577,
+      "multiple_support_formats": 24,
+      "representative_bao_formats": {
+        "assay format": 443,
+        "cell membrane format": 226,
+        "cell-based format": 805,
+        "single protein format": 103
+      },
+      "representative_unknown_origin_text": 51
+    },
+    "CHEMBL2637": {
+      "any_support_unknown_origin_text": 493,
+      "any_support_variant_text": 0,
+      "compound_records": 777,
+      "multiple_support_formats": 11,
+      "representative_bao_formats": {
+        "assay format": 65,
+        "cell-based format": 11,
+        "single protein format": 701
+      },
+      "representative_unknown_origin_text": 484
+    }
+  },
+  "query_annotations": [
+    {
+      "all_support_single_protein_format": false,
+      "all_supporting_bao_formats": [
+        "cell-based format"
+      ],
+      "any_support_unknown_origin_text": false,
+      "any_support_variant_text": false,
+      "compound_id": "CHEMBL203-5214b5c2abe49bbc",
+      "query_id": "CHEMBL203-query-1",
+      "representative_bao_format": "cell-based format",
+      "representative_unknown_origin_text": false,
+      "supporting_assay_ids": [
+        "CHEMBL4714413"
+      ],
+      "target_id": "CHEMBL203"
+    },
+    {
+      "all_support_single_protein_format": false,
+      "all_supporting_bao_formats": [
+        "cell-based format"
+      ],
+      "any_support_unknown_origin_text": false,
+      "any_support_variant_text": false,
+      "compound_id": "CHEMBL203-0527f086731c780b",
+      "query_id": "CHEMBL203-query-2",
+      "representative_bao_format": "cell-based format",
+      "representative_unknown_origin_text": false,
+      "supporting_assay_ids": [
+        "CHEMBL677386"
+      ],
+      "target_id": "CHEMBL203"
+    },
+    {
+      "all_support_single_protein_format": true,
+      "all_supporting_bao_formats": [
+        "single protein format"
+      ],
+      "any_support_unknown_origin_text": false,
+      "any_support_variant_text": false,
+      "compound_id": "CHEMBL205-8d8e214dac330e0a",
+      "query_id": "CHEMBL205-query-1",
+      "representative_bao_format": "single protein format",
+      "representative_unknown_origin_text": false,
+      "supporting_assay_ids": [
+        "CHEMBL4825837"
+      ],
+      "target_id": "CHEMBL205"
+    },
+    {
+      "all_support_single_protein_format": true,
+      "all_supporting_bao_formats": [
+        "single protein format"
+      ],
+      "any_support_unknown_origin_text": false,
+      "any_support_variant_text": false,
+      "compound_id": "CHEMBL205-6470b6e170c5252f",
+      "query_id": "CHEMBL205-query-2",
+      "representative_bao_format": "single protein format",
+      "representative_unknown_origin_text": false,
+      "supporting_assay_ids": [
+        "CHEMBL2051272"
+      ],
+      "target_id": "CHEMBL205"
+    },
+    {
+      "all_support_single_protein_format": true,
+      "all_supporting_bao_formats": [
+        "single protein format"
+      ],
+      "any_support_unknown_origin_text": false,
+      "any_support_variant_text": false,
+      "compound_id": "CHEMBL2147-252c287f9888fd34",
+      "query_id": "CHEMBL2147-query-1",
+      "representative_bao_format": "single protein format",
+      "representative_unknown_origin_text": false,
+      "supporting_assay_ids": [
+        "CHEMBL2378600"
+      ],
+      "target_id": "CHEMBL2147"
+    },
+    {
+      "all_support_single_protein_format": false,
+      "all_supporting_bao_formats": [
+        "assay format"
+      ],
+      "any_support_unknown_origin_text": false,
+      "any_support_variant_text": false,
+      "compound_id": "CHEMBL2147-1e28a06f6e5b3ea3",
+      "query_id": "CHEMBL2147-query-2",
+      "representative_bao_format": "assay format",
+      "representative_unknown_origin_text": false,
+      "supporting_assay_ids": [
+        "CHEMBL2038008"
+      ],
+      "target_id": "CHEMBL2147"
+    },
+    {
+      "all_support_single_protein_format": false,
+      "all_supporting_bao_formats": [
+        "cell-based format"
+      ],
+      "any_support_unknown_origin_text": false,
+      "any_support_variant_text": false,
+      "compound_id": "CHEMBL220-8bc32672075a4f3a",
+      "query_id": "CHEMBL220-query-1",
+      "representative_bao_format": "cell-based format",
+      "representative_unknown_origin_text": false,
+      "supporting_assay_ids": [
+        "CHEMBL4825142"
+      ],
+      "target_id": "CHEMBL220"
+    },
+    {
+      "all_support_single_protein_format": true,
+      "all_supporting_bao_formats": [
+        "single protein format"
+      ],
+      "any_support_unknown_origin_text": false,
+      "any_support_variant_text": false,
+      "compound_id": "CHEMBL220-c6b3da53dd29da62",
+      "query_id": "CHEMBL220-query-2",
+      "representative_bao_format": "single protein format",
+      "representative_unknown_origin_text": false,
+      "supporting_assay_ids": [
+        "CHEMBL3094808"
+      ],
+      "target_id": "CHEMBL220"
+    },
+    {
+      "all_support_single_protein_format": false,
+      "all_supporting_bao_formats": [
+        "assay format"
+      ],
+      "any_support_unknown_origin_text": false,
+      "any_support_variant_text": false,
+      "compound_id": "CHEMBL251-aa28b3463be04c57",
+      "query_id": "CHEMBL251-query-1",
+      "representative_bao_format": "assay format",
+      "representative_unknown_origin_text": false,
+      "supporting_assay_ids": [
+        "CHEMBL5737048"
+      ],
+      "target_id": "CHEMBL251"
+    },
+    {
+      "all_support_single_protein_format": false,
+      "all_supporting_bao_formats": [
+        "cell-based format"
+      ],
+      "any_support_unknown_origin_text": false,
+      "any_support_variant_text": false,
+      "compound_id": "CHEMBL251-76008f4effe766a4",
+      "query_id": "CHEMBL251-query-2",
+      "representative_bao_format": "cell-based format",
+      "representative_unknown_origin_text": false,
+      "supporting_assay_ids": [
+        "CHEMBL2188179"
+      ],
+      "target_id": "CHEMBL251"
+    },
+    {
+      "all_support_single_protein_format": true,
+      "all_supporting_bao_formats": [
+        "single protein format"
+      ],
+      "any_support_unknown_origin_text": false,
+      "any_support_variant_text": false,
+      "compound_id": "CHEMBL2637-af8cffd33437e965",
+      "query_id": "CHEMBL2637-query-1",
+      "representative_bao_format": "single protein format",
+      "representative_unknown_origin_text": false,
+      "supporting_assay_ids": [
+        "CHEMBL5732897"
+      ],
+      "target_id": "CHEMBL2637"
+    },
+    {
+      "all_support_single_protein_format": true,
+      "all_supporting_bao_formats": [
+        "single protein format"
+      ],
+      "any_support_unknown_origin_text": true,
+      "any_support_variant_text": false,
+      "compound_id": "CHEMBL2637-ab7a56591b3db990",
+      "query_id": "CHEMBL2637-query-2",
+      "representative_bao_format": "single protein format",
+      "representative_unknown_origin_text": true,
+      "supporting_assay_ids": [
+        "CHEMBL6120191"
+      ],
+      "target_id": "CHEMBL2637"
+    }
+  ],
+  "sensitivity": {
+    "matched_single_format_no_unknown_origin_text": {
+      "paired_complete_pairs": 66,
+      "query_results": [
+        {
+          "active_controls_retained": 1,
+          "controls_before_filter": 20,
+          "controls_retained": 2,
+          "inactive_controls_retained": 1,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 0.0,
+              "roc_auc_bounds": [
+                0.0,
+                0.0
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 0.0,
+              "roc_auc_bounds": [
+                0.0,
+                0.0
+              ]
+            },
+            "hit_shape": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 0.0,
+              "roc_auc_bounds": [
+                0.0,
+                0.0
+              ]
+            },
+            "score": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 0.0,
+              "roc_auc_bounds": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "paired_complete_cases": 2,
+          "paired_complete_compound_ids": [
+            "CHEMBL203-151a759aa6b3b6e4",
+            "CHEMBL203-67aaf005851c3098"
+          ],
+          "query_id": "CHEMBL203-query-1",
+          "retained_compound_ids": [
+            "CHEMBL203-151a759aa6b3b6e4",
+            "CHEMBL203-67aaf005851c3098"
+          ],
+          "target_id": "CHEMBL203"
+        },
+        {
+          "active_controls_retained": 1,
+          "controls_before_filter": 20,
+          "controls_retained": 2,
+          "inactive_controls_retained": 1,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 0.0,
+              "roc_auc_bounds": [
+                0.0,
+                0.0
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 0.0,
+              "roc_auc_bounds": [
+                0.0,
+                0.0
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            },
+            "hit_shape": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 0.0,
+              "roc_auc_bounds": [
+                0.0,
+                0.0
+              ]
+            },
+            "score": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            }
+          },
+          "paired_complete_cases": 2,
+          "paired_complete_compound_ids": [
+            "CHEMBL203-151a759aa6b3b6e4",
+            "CHEMBL203-67aaf005851c3098"
+          ],
+          "query_id": "CHEMBL203-query-2",
+          "retained_compound_ids": [
+            "CHEMBL203-151a759aa6b3b6e4",
+            "CHEMBL203-67aaf005851c3098"
+          ],
+          "target_id": "CHEMBL203"
+        },
+        {
+          "active_controls_retained": 10,
+          "controls_before_filter": 20,
+          "controls_retained": 20,
+          "inactive_controls_retained": 10,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": 0.7037037037037036,
+              "average_precision_bounds": [
+                0.7037037037037036,
+                0.7037037037037036
+              ],
+              "missing": 0,
+              "observed": 16,
+              "roc_auc": 0.7333333333333333,
+              "roc_auc_bounds": [
+                0.7333333333333333,
+                0.7333333333333333
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": 0.7450396825396826,
+              "average_precision_bounds": [
+                0.7450396825396826,
+                0.7450396825396826
+              ],
+              "missing": 0,
+              "observed": 16,
+              "roc_auc": 0.7666666666666666,
+              "roc_auc_bounds": [
+                0.7666666666666666,
+                0.7666666666666666
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": 0.7583333333333333,
+              "average_precision_bounds": [
+                0.7583333333333333,
+                0.7583333333333333
+              ],
+              "missing": 0,
+              "observed": 16,
+              "roc_auc": 0.75,
+              "roc_auc_bounds": [
+                0.75,
+                0.75
+              ]
+            },
+            "hit_shape": {
+              "average_precision": 0.5877136752136752,
+              "average_precision_bounds": [
+                0.5877136752136752,
+                0.5877136752136752
+              ],
+              "missing": 0,
+              "observed": 16,
+              "roc_auc": 0.6,
+              "roc_auc_bounds": [
+                0.6,
+                0.6
+              ]
+            },
+            "score": {
+              "average_precision": 0.666880341880342,
+              "average_precision_bounds": [
+                0.666880341880342,
+                0.666880341880342
+              ],
+              "missing": 0,
+              "observed": 16,
+              "roc_auc": 0.6666666666666666,
+              "roc_auc_bounds": [
+                0.6666666666666666,
+                0.6666666666666666
+              ]
+            }
+          },
+          "paired_complete_cases": 16,
+          "paired_complete_compound_ids": [
+            "CHEMBL205-ab954d1db187dac1",
+            "CHEMBL205-84800bc09a57d96a",
+            "CHEMBL205-b93e52840b43aea1",
+            "CHEMBL205-223a896950e808c9",
+            "CHEMBL205-ec949ec57bb2b3cf",
+            "CHEMBL205-f2abbe93be7da9ff",
+            "CHEMBL205-89c62f8e0ef48fbc",
+            "CHEMBL205-7e236939b5fe97fc",
+            "CHEMBL205-6e9b1bfa87d65133",
+            "CHEMBL205-496e6911910b7fb5",
+            "CHEMBL205-28377e38ecbd6438",
+            "CHEMBL205-e9264c39e4347580",
+            "CHEMBL205-8bd9f580b264c600",
+            "CHEMBL205-42ec8f2db84fa5b9",
+            "CHEMBL205-934e78967fbbdd9d",
+            "CHEMBL205-644104ab09f40547"
+          ],
+          "query_id": "CHEMBL205-query-1",
+          "retained_compound_ids": [
+            "CHEMBL205-cc2f0fbac7a76d7f",
+            "CHEMBL205-ab954d1db187dac1",
+            "CHEMBL205-84800bc09a57d96a",
+            "CHEMBL205-b93e52840b43aea1",
+            "CHEMBL205-223a896950e808c9",
+            "CHEMBL205-ec949ec57bb2b3cf",
+            "CHEMBL205-f2abbe93be7da9ff",
+            "CHEMBL205-93fcf7c7ba4338ad",
+            "CHEMBL205-dc79f9a1c8959b97",
+            "CHEMBL205-d9b7a39ec691de72",
+            "CHEMBL205-89c62f8e0ef48fbc",
+            "CHEMBL205-7e236939b5fe97fc",
+            "CHEMBL205-6e9b1bfa87d65133",
+            "CHEMBL205-496e6911910b7fb5",
+            "CHEMBL205-28377e38ecbd6438",
+            "CHEMBL205-e9264c39e4347580",
+            "CHEMBL205-8bd9f580b264c600",
+            "CHEMBL205-42ec8f2db84fa5b9",
+            "CHEMBL205-934e78967fbbdd9d",
+            "CHEMBL205-644104ab09f40547"
+          ],
+          "target_id": "CHEMBL205"
+        },
+        {
+          "active_controls_retained": 10,
+          "controls_before_filter": 20,
+          "controls_retained": 20,
+          "inactive_controls_retained": 10,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL205-query-2",
+          "retained_compound_ids": [
+            "CHEMBL205-cc2f0fbac7a76d7f",
+            "CHEMBL205-ab954d1db187dac1",
+            "CHEMBL205-84800bc09a57d96a",
+            "CHEMBL205-b93e52840b43aea1",
+            "CHEMBL205-223a896950e808c9",
+            "CHEMBL205-ec949ec57bb2b3cf",
+            "CHEMBL205-f2abbe93be7da9ff",
+            "CHEMBL205-93fcf7c7ba4338ad",
+            "CHEMBL205-dc79f9a1c8959b97",
+            "CHEMBL205-d9b7a39ec691de72",
+            "CHEMBL205-89c62f8e0ef48fbc",
+            "CHEMBL205-7e236939b5fe97fc",
+            "CHEMBL205-6e9b1bfa87d65133",
+            "CHEMBL205-496e6911910b7fb5",
+            "CHEMBL205-28377e38ecbd6438",
+            "CHEMBL205-e9264c39e4347580",
+            "CHEMBL205-8bd9f580b264c600",
+            "CHEMBL205-42ec8f2db84fa5b9",
+            "CHEMBL205-934e78967fbbdd9d",
+            "CHEMBL205-644104ab09f40547"
+          ],
+          "target_id": "CHEMBL205"
+        },
+        {
+          "active_controls_retained": 3,
+          "controls_before_filter": 20,
+          "controls_retained": 10,
+          "inactive_controls_retained": 7,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": 0.33134920634920634,
+              "average_precision_bounds": [
+                0.33134920634920634,
+                0.33134920634920634
+              ],
+              "missing": 0,
+              "observed": 10,
+              "roc_auc": 0.42857142857142855,
+              "roc_auc_bounds": [
+                0.42857142857142855,
+                0.42857142857142855
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": 0.3416666666666667,
+              "average_precision_bounds": [
+                0.3416666666666667,
+                0.3416666666666667
+              ],
+              "missing": 0,
+              "observed": 10,
+              "roc_auc": 0.47619047619047616,
+              "roc_auc_bounds": [
+                0.47619047619047616,
+                0.47619047619047616
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": 0.5535714285714286,
+              "average_precision_bounds": [
+                0.5535714285714286,
+                0.5535714285714286
+              ],
+              "missing": 0,
+              "observed": 10,
+              "roc_auc": 0.5238095238095237,
+              "roc_auc_bounds": [
+                0.5238095238095237,
+                0.5238095238095237
+              ]
+            },
+            "hit_shape": {
+              "average_precision": 0.34444444444444444,
+              "average_precision_bounds": [
+                0.34444444444444444,
+                0.34444444444444444
+              ],
+              "missing": 0,
+              "observed": 10,
+              "roc_auc": 0.42857142857142855,
+              "roc_auc_bounds": [
+                0.42857142857142855,
+                0.42857142857142855
+              ]
+            },
+            "score": {
+              "average_precision": 0.6111111111111112,
+              "average_precision_bounds": [
+                0.6111111111111112,
+                0.6111111111111112
+              ],
+              "missing": 0,
+              "observed": 10,
+              "roc_auc": 0.6190476190476191,
+              "roc_auc_bounds": [
+                0.6190476190476191,
+                0.6190476190476191
+              ]
+            }
+          },
+          "paired_complete_cases": 10,
+          "paired_complete_compound_ids": [
+            "CHEMBL2147-4d82d130c1fd64b1",
+            "CHEMBL2147-de81a37a3ddc1aed",
+            "CHEMBL2147-6a9d27f1d8a833bf",
+            "CHEMBL2147-95443add7d866d0e",
+            "CHEMBL2147-dcca923713226b90",
+            "CHEMBL2147-1d666eb9c443d8a1",
+            "CHEMBL2147-3cac7fe9a46ba59a",
+            "CHEMBL2147-f285187321e5d687",
+            "CHEMBL2147-d4d57e8eceaada52",
+            "CHEMBL2147-d568f2019d5872ff"
+          ],
+          "query_id": "CHEMBL2147-query-1",
+          "retained_compound_ids": [
+            "CHEMBL2147-4d82d130c1fd64b1",
+            "CHEMBL2147-de81a37a3ddc1aed",
+            "CHEMBL2147-6a9d27f1d8a833bf",
+            "CHEMBL2147-95443add7d866d0e",
+            "CHEMBL2147-dcca923713226b90",
+            "CHEMBL2147-1d666eb9c443d8a1",
+            "CHEMBL2147-3cac7fe9a46ba59a",
+            "CHEMBL2147-f285187321e5d687",
+            "CHEMBL2147-d4d57e8eceaada52",
+            "CHEMBL2147-d568f2019d5872ff"
+          ],
+          "target_id": "CHEMBL2147"
+        },
+        {
+          "active_controls_retained": 2,
+          "controls_before_filter": 20,
+          "controls_retained": 2,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 2,
+          "paired_complete_compound_ids": [
+            "CHEMBL2147-21b9cbc898e91e57",
+            "CHEMBL2147-d527744113e4e098"
+          ],
+          "query_id": "CHEMBL2147-query-2",
+          "retained_compound_ids": [
+            "CHEMBL2147-21b9cbc898e91e57",
+            "CHEMBL2147-d527744113e4e098"
+          ],
+          "target_id": "CHEMBL2147"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 2,
+          "inactive_controls_retained": 2,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 2,
+          "paired_complete_compound_ids": [
+            "CHEMBL220-602dfd5d78708c88",
+            "CHEMBL220-afe854fd7b7a131a"
+          ],
+          "query_id": "CHEMBL220-query-1",
+          "retained_compound_ids": [
+            "CHEMBL220-602dfd5d78708c88",
+            "CHEMBL220-afe854fd7b7a131a"
+          ],
+          "target_id": "CHEMBL220"
+        },
+        {
+          "active_controls_retained": 6,
+          "controls_before_filter": 20,
+          "controls_retained": 13,
+          "inactive_controls_retained": 7,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": 0.9761904761904762,
+              "average_precision_bounds": [
+                0.9761904761904762,
+                0.9761904761904762
+              ],
+              "missing": 0,
+              "observed": 8,
+              "roc_auc": 0.9166666666666667,
+              "roc_auc_bounds": [
+                0.9166666666666667,
+                0.9166666666666667
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": 0.9305555555555556,
+              "average_precision_bounds": [
+                0.9305555555555556,
+                0.9305555555555556
+              ],
+              "missing": 0,
+              "observed": 8,
+              "roc_auc": 0.75,
+              "roc_auc_bounds": [
+                0.75,
+                0.75
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 8,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            },
+            "hit_shape": {
+              "average_precision": 0.9761904761904762,
+              "average_precision_bounds": [
+                0.9761904761904762,
+                0.9761904761904762
+              ],
+              "missing": 0,
+              "observed": 8,
+              "roc_auc": 0.9166666666666667,
+              "roc_auc_bounds": [
+                0.9166666666666667,
+                0.9166666666666667
+              ]
+            },
+            "score": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 8,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            }
+          },
+          "paired_complete_cases": 8,
+          "paired_complete_compound_ids": [
+            "CHEMBL220-1179fbd229a7b843",
+            "CHEMBL220-8bdd12b87ad15d11",
+            "CHEMBL220-b056471d181d49e5",
+            "CHEMBL220-4c6a08f14a405aa5",
+            "CHEMBL220-e07cdc1ce2d5742a",
+            "CHEMBL220-e21c796b8d759e53",
+            "CHEMBL220-d83b9db6ca36237e",
+            "CHEMBL220-91a1baa642cb0537"
+          ],
+          "query_id": "CHEMBL220-query-2",
+          "retained_compound_ids": [
+            "CHEMBL220-1179fbd229a7b843",
+            "CHEMBL220-8bdd12b87ad15d11",
+            "CHEMBL220-b056471d181d49e5",
+            "CHEMBL220-4c6a08f14a405aa5",
+            "CHEMBL220-e07cdc1ce2d5742a",
+            "CHEMBL220-e21c796b8d759e53",
+            "CHEMBL220-d0f86f1fb0188bf7",
+            "CHEMBL220-d94595df5c5464b2",
+            "CHEMBL220-d83b9db6ca36237e",
+            "CHEMBL220-91a1baa642cb0537",
+            "CHEMBL220-2285e1555a1d8766",
+            "CHEMBL220-7c54008c0280c96b",
+            "CHEMBL220-dcfaf776c5cf6de5"
+          ],
+          "target_id": "CHEMBL220"
+        },
+        {
+          "active_controls_retained": 4,
+          "controls_before_filter": 20,
+          "controls_retained": 4,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 3,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 3,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 3,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 3,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 3,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 3,
+          "paired_complete_compound_ids": [
+            "CHEMBL251-7678b9c882a6f898",
+            "CHEMBL251-e33587543d125eed",
+            "CHEMBL251-88118b457d7678c3"
+          ],
+          "query_id": "CHEMBL251-query-1",
+          "retained_compound_ids": [
+            "CHEMBL251-7678b9c882a6f898",
+            "CHEMBL251-e33587543d125eed",
+            "CHEMBL251-88118b457d7678c3",
+            "CHEMBL251-5957650660cd8d5b"
+          ],
+          "target_id": "CHEMBL251"
+        },
+        {
+          "active_controls_retained": 5,
+          "controls_before_filter": 20,
+          "controls_retained": 14,
+          "inactive_controls_retained": 9,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": 0.4658119658119658,
+              "average_precision_bounds": [
+                0.4658119658119658,
+                0.4658119658119658
+              ],
+              "missing": 0,
+              "observed": 14,
+              "roc_auc": 0.5777777777777778,
+              "roc_auc_bounds": [
+                0.5777777777777778,
+                0.5777777777777778
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": 0.6245421245421245,
+              "average_precision_bounds": [
+                0.6245421245421245,
+                0.6245421245421245
+              ],
+              "missing": 0,
+              "observed": 14,
+              "roc_auc": 0.6666666666666667,
+              "roc_auc_bounds": [
+                0.6666666666666667,
+                0.6666666666666667
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": 0.4619047619047619,
+              "average_precision_bounds": [
+                0.4619047619047619,
+                0.4619047619047619
+              ],
+              "missing": 0,
+              "observed": 14,
+              "roc_auc": 0.3777777777777778,
+              "roc_auc_bounds": [
+                0.3777777777777778,
+                0.3777777777777778
+              ]
+            },
+            "hit_shape": {
+              "average_precision": 0.4275124875124875,
+              "average_precision_bounds": [
+                0.4275124875124875,
+                0.4275124875124875
+              ],
+              "missing": 0,
+              "observed": 14,
+              "roc_auc": 0.24444444444444446,
+              "roc_auc_bounds": [
+                0.24444444444444446,
+                0.24444444444444446
+              ]
+            },
+            "score": {
+              "average_precision": 0.43195693195693197,
+              "average_precision_bounds": [
+                0.43195693195693197,
+                0.43195693195693197
+              ],
+              "missing": 0,
+              "observed": 14,
+              "roc_auc": 0.26666666666666666,
+              "roc_auc_bounds": [
+                0.26666666666666666,
+                0.26666666666666666
+              ]
+            }
+          },
+          "paired_complete_cases": 14,
+          "paired_complete_compound_ids": [
+            "CHEMBL251-407e243b5e180152",
+            "CHEMBL251-eddb80c63e774ce5",
+            "CHEMBL251-8bb031e1ded6d8ad",
+            "CHEMBL251-90baf67b17989d62",
+            "CHEMBL251-2fff6bdc4ef7fbcf",
+            "CHEMBL251-be56e56d000fd4e1",
+            "CHEMBL251-ad986419af3812b2",
+            "CHEMBL251-85dd383d7c9a97df",
+            "CHEMBL251-d86e5c0480ba5490",
+            "CHEMBL251-754b059a5155cdc8",
+            "CHEMBL251-542defd850366b2c",
+            "CHEMBL251-a055e2d655dd6841",
+            "CHEMBL251-916093e17a368533",
+            "CHEMBL251-aee949367127665d"
+          ],
+          "query_id": "CHEMBL251-query-2",
+          "retained_compound_ids": [
+            "CHEMBL251-407e243b5e180152",
+            "CHEMBL251-eddb80c63e774ce5",
+            "CHEMBL251-8bb031e1ded6d8ad",
+            "CHEMBL251-90baf67b17989d62",
+            "CHEMBL251-2fff6bdc4ef7fbcf",
+            "CHEMBL251-be56e56d000fd4e1",
+            "CHEMBL251-ad986419af3812b2",
+            "CHEMBL251-85dd383d7c9a97df",
+            "CHEMBL251-d86e5c0480ba5490",
+            "CHEMBL251-754b059a5155cdc8",
+            "CHEMBL251-542defd850366b2c",
+            "CHEMBL251-a055e2d655dd6841",
+            "CHEMBL251-916093e17a368533",
+            "CHEMBL251-aee949367127665d"
+          ],
+          "target_id": "CHEMBL251"
+        },
+        {
+          "active_controls_retained": 1,
+          "controls_before_filter": 20,
+          "controls_retained": 7,
+          "inactive_controls_retained": 6,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 7,
+              "roc_auc": 0.8333333333333334,
+              "roc_auc_bounds": [
+                0.8333333333333334,
+                0.8333333333333334
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 7,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 7,
+              "roc_auc": 0.8333333333333334,
+              "roc_auc_bounds": [
+                0.8333333333333334,
+                0.8333333333333334
+              ]
+            },
+            "hit_shape": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 7,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            },
+            "score": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 7,
+              "roc_auc": 0.8333333333333334,
+              "roc_auc_bounds": [
+                0.8333333333333334,
+                0.8333333333333334
+              ]
+            }
+          },
+          "paired_complete_cases": 7,
+          "paired_complete_compound_ids": [
+            "CHEMBL2637-c74af0e7e686b532",
+            "CHEMBL2637-34473ef0265632a4",
+            "CHEMBL2637-917c2bbd606aa794",
+            "CHEMBL2637-c17be51a7eda448a",
+            "CHEMBL2637-da15fee568d27471",
+            "CHEMBL2637-67bd368afe1ad88f",
+            "CHEMBL2637-8eb402b1834862fa"
+          ],
+          "query_id": "CHEMBL2637-query-1",
+          "retained_compound_ids": [
+            "CHEMBL2637-c74af0e7e686b532",
+            "CHEMBL2637-34473ef0265632a4",
+            "CHEMBL2637-917c2bbd606aa794",
+            "CHEMBL2637-c17be51a7eda448a",
+            "CHEMBL2637-da15fee568d27471",
+            "CHEMBL2637-67bd368afe1ad88f",
+            "CHEMBL2637-8eb402b1834862fa"
+          ],
+          "target_id": "CHEMBL2637"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL2637-query-2",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL2637"
+        }
+      ],
+      "retained_pairs": 96,
+      "target_macro_paired_roc": {
+        "bit_tanimoto": {
+          "ci95": [
+            0.526984126984127,
+            0.8055555555555555
+          ],
+          "mean": 0.6649470899470901,
+          "targets": 6
+        },
+        "count_tanimoto": {
+          "ci95": [
+            0.33214285714285713,
+            0.8321428571428572
+          ],
+          "mean": 0.609920634920635,
+          "targets": 6
+        },
+        "hit_pharmacophore": {
+          "ci95": [
+            0.4984126984126984,
+            0.8407407407407407
+          ],
+          "mean": 0.6641534391534392,
+          "targets": 6
+        },
+        "hit_shape": {
+          "ci95": [
+            0.24074074074074073,
+            0.8103174603174604
+          ],
+          "mean": 0.5316137566137566,
+          "targets": 6
+        },
+        "score": {
+          "ci95": [
+            0.4611111111111111,
+            0.8333333333333334
+          ],
+          "mean": 0.6476190476190476,
+          "targets": 6
+        }
+      },
+      "target_paired_roc": {
+        "bit_tanimoto": {
+          "CHEMBL203": 0.5,
+          "CHEMBL205": 0.7333333333333333,
+          "CHEMBL2147": 0.42857142857142855,
+          "CHEMBL220": 0.9166666666666667,
+          "CHEMBL251": 0.5777777777777778,
+          "CHEMBL2637": 0.8333333333333334
+        },
+        "count_tanimoto": {
+          "CHEMBL203": 0.0,
+          "CHEMBL205": 0.7666666666666666,
+          "CHEMBL2147": 0.47619047619047616,
+          "CHEMBL220": 0.75,
+          "CHEMBL251": 0.6666666666666667,
+          "CHEMBL2637": 1.0
+        },
+        "hit_pharmacophore": {
+          "CHEMBL203": 0.5,
+          "CHEMBL205": 0.75,
+          "CHEMBL2147": 0.5238095238095237,
+          "CHEMBL220": 1.0,
+          "CHEMBL251": 0.3777777777777778,
+          "CHEMBL2637": 0.8333333333333334
+        },
+        "hit_shape": {
+          "CHEMBL203": 0.0,
+          "CHEMBL205": 0.6,
+          "CHEMBL2147": 0.42857142857142855,
+          "CHEMBL220": 0.9166666666666667,
+          "CHEMBL251": 0.24444444444444446,
+          "CHEMBL2637": 1.0
+        },
+        "score": {
+          "CHEMBL203": 0.5,
+          "CHEMBL205": 0.6666666666666666,
+          "CHEMBL2147": 0.6190476190476191,
+          "CHEMBL220": 1.0,
+          "CHEMBL251": 0.26666666666666666,
+          "CHEMBL2637": 0.8333333333333334
+        }
+      }
+    },
+    "shared_assay_id": {
+      "paired_complete_pairs": 4,
+      "query_results": [
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL203-query-1",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL203"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL203-query-2",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL203"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL205-query-1",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL205"
+        },
+        {
+          "active_controls_retained": 2,
+          "controls_before_filter": 20,
+          "controls_retained": 2,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL205-query-2",
+          "retained_compound_ids": [
+            "CHEMBL205-ec949ec57bb2b3cf",
+            "CHEMBL205-f2abbe93be7da9ff"
+          ],
+          "target_id": "CHEMBL205"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL2147-query-1",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL2147"
+        },
+        {
+          "active_controls_retained": 1,
+          "controls_before_filter": 20,
+          "controls_retained": 1,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 1,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 1,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 1,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 1,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 1,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 1,
+          "paired_complete_compound_ids": [
+            "CHEMBL2147-21b9cbc898e91e57"
+          ],
+          "query_id": "CHEMBL2147-query-2",
+          "retained_compound_ids": [
+            "CHEMBL2147-21b9cbc898e91e57"
+          ],
+          "target_id": "CHEMBL2147"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 1,
+          "inactive_controls_retained": 1,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 1,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 1,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 1,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 1,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 1,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 1,
+          "paired_complete_compound_ids": [
+            "CHEMBL220-602dfd5d78708c88"
+          ],
+          "query_id": "CHEMBL220-query-1",
+          "retained_compound_ids": [
+            "CHEMBL220-602dfd5d78708c88"
+          ],
+          "target_id": "CHEMBL220"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL220-query-2",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL220"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL251-query-1",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL251"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL251-query-2",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL251"
+        },
+        {
+          "active_controls_retained": 1,
+          "controls_before_filter": 20,
+          "controls_retained": 2,
+          "inactive_controls_retained": 1,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 0.0,
+              "roc_auc_bounds": [
+                0.0,
+                0.0
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 0.0,
+              "roc_auc_bounds": [
+                0.0,
+                0.0
+              ]
+            },
+            "hit_shape": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            },
+            "score": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 2,
+              "roc_auc": 0.0,
+              "roc_auc_bounds": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "paired_complete_cases": 2,
+          "paired_complete_compound_ids": [
+            "CHEMBL2637-c74af0e7e686b532",
+            "CHEMBL2637-917c2bbd606aa794"
+          ],
+          "query_id": "CHEMBL2637-query-1",
+          "retained_compound_ids": [
+            "CHEMBL2637-c74af0e7e686b532",
+            "CHEMBL2637-917c2bbd606aa794"
+          ],
+          "target_id": "CHEMBL2637"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL2637-query-2",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL2637"
+        }
+      ],
+      "retained_pairs": 6,
+      "target_macro_paired_roc": {
+        "bit_tanimoto": {
+          "ci95": null,
+          "mean": 0.0,
+          "targets": 1
+        },
+        "count_tanimoto": {
+          "ci95": null,
+          "mean": 1.0,
+          "targets": 1
+        },
+        "hit_pharmacophore": {
+          "ci95": null,
+          "mean": 0.0,
+          "targets": 1
+        },
+        "hit_shape": {
+          "ci95": null,
+          "mean": 1.0,
+          "targets": 1
+        },
+        "score": {
+          "ci95": null,
+          "mean": 0.0,
+          "targets": 1
+        }
+      },
+      "target_paired_roc": {
+        "bit_tanimoto": {
+          "CHEMBL2637": 0.0
+        },
+        "count_tanimoto": {
+          "CHEMBL2637": 1.0
+        },
+        "hit_pharmacophore": {
+          "CHEMBL2637": 0.0
+        },
+        "hit_shape": {
+          "CHEMBL2637": 1.0
+        },
+        "score": {
+          "CHEMBL2637": 0.0
+        }
+      }
+    },
+    "single_protein_no_unknown_origin_text": {
+      "paired_complete_pairs": 41,
+      "query_results": [
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL203-query-1",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL203"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL203-query-2",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL203"
+        },
+        {
+          "active_controls_retained": 10,
+          "controls_before_filter": 20,
+          "controls_retained": 20,
+          "inactive_controls_retained": 10,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": 0.7037037037037036,
+              "average_precision_bounds": [
+                0.7037037037037036,
+                0.7037037037037036
+              ],
+              "missing": 0,
+              "observed": 16,
+              "roc_auc": 0.7333333333333333,
+              "roc_auc_bounds": [
+                0.7333333333333333,
+                0.7333333333333333
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": 0.7450396825396826,
+              "average_precision_bounds": [
+                0.7450396825396826,
+                0.7450396825396826
+              ],
+              "missing": 0,
+              "observed": 16,
+              "roc_auc": 0.7666666666666666,
+              "roc_auc_bounds": [
+                0.7666666666666666,
+                0.7666666666666666
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": 0.7583333333333333,
+              "average_precision_bounds": [
+                0.7583333333333333,
+                0.7583333333333333
+              ],
+              "missing": 0,
+              "observed": 16,
+              "roc_auc": 0.75,
+              "roc_auc_bounds": [
+                0.75,
+                0.75
+              ]
+            },
+            "hit_shape": {
+              "average_precision": 0.5877136752136752,
+              "average_precision_bounds": [
+                0.5877136752136752,
+                0.5877136752136752
+              ],
+              "missing": 0,
+              "observed": 16,
+              "roc_auc": 0.6,
+              "roc_auc_bounds": [
+                0.6,
+                0.6
+              ]
+            },
+            "score": {
+              "average_precision": 0.666880341880342,
+              "average_precision_bounds": [
+                0.666880341880342,
+                0.666880341880342
+              ],
+              "missing": 0,
+              "observed": 16,
+              "roc_auc": 0.6666666666666666,
+              "roc_auc_bounds": [
+                0.6666666666666666,
+                0.6666666666666666
+              ]
+            }
+          },
+          "paired_complete_cases": 16,
+          "paired_complete_compound_ids": [
+            "CHEMBL205-ab954d1db187dac1",
+            "CHEMBL205-84800bc09a57d96a",
+            "CHEMBL205-b93e52840b43aea1",
+            "CHEMBL205-223a896950e808c9",
+            "CHEMBL205-ec949ec57bb2b3cf",
+            "CHEMBL205-f2abbe93be7da9ff",
+            "CHEMBL205-89c62f8e0ef48fbc",
+            "CHEMBL205-7e236939b5fe97fc",
+            "CHEMBL205-6e9b1bfa87d65133",
+            "CHEMBL205-496e6911910b7fb5",
+            "CHEMBL205-28377e38ecbd6438",
+            "CHEMBL205-e9264c39e4347580",
+            "CHEMBL205-8bd9f580b264c600",
+            "CHEMBL205-42ec8f2db84fa5b9",
+            "CHEMBL205-934e78967fbbdd9d",
+            "CHEMBL205-644104ab09f40547"
+          ],
+          "query_id": "CHEMBL205-query-1",
+          "retained_compound_ids": [
+            "CHEMBL205-cc2f0fbac7a76d7f",
+            "CHEMBL205-ab954d1db187dac1",
+            "CHEMBL205-84800bc09a57d96a",
+            "CHEMBL205-b93e52840b43aea1",
+            "CHEMBL205-223a896950e808c9",
+            "CHEMBL205-ec949ec57bb2b3cf",
+            "CHEMBL205-f2abbe93be7da9ff",
+            "CHEMBL205-93fcf7c7ba4338ad",
+            "CHEMBL205-dc79f9a1c8959b97",
+            "CHEMBL205-d9b7a39ec691de72",
+            "CHEMBL205-89c62f8e0ef48fbc",
+            "CHEMBL205-7e236939b5fe97fc",
+            "CHEMBL205-6e9b1bfa87d65133",
+            "CHEMBL205-496e6911910b7fb5",
+            "CHEMBL205-28377e38ecbd6438",
+            "CHEMBL205-e9264c39e4347580",
+            "CHEMBL205-8bd9f580b264c600",
+            "CHEMBL205-42ec8f2db84fa5b9",
+            "CHEMBL205-934e78967fbbdd9d",
+            "CHEMBL205-644104ab09f40547"
+          ],
+          "target_id": "CHEMBL205"
+        },
+        {
+          "active_controls_retained": 10,
+          "controls_before_filter": 20,
+          "controls_retained": 20,
+          "inactive_controls_retained": 10,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL205-query-2",
+          "retained_compound_ids": [
+            "CHEMBL205-cc2f0fbac7a76d7f",
+            "CHEMBL205-ab954d1db187dac1",
+            "CHEMBL205-84800bc09a57d96a",
+            "CHEMBL205-b93e52840b43aea1",
+            "CHEMBL205-223a896950e808c9",
+            "CHEMBL205-ec949ec57bb2b3cf",
+            "CHEMBL205-f2abbe93be7da9ff",
+            "CHEMBL205-93fcf7c7ba4338ad",
+            "CHEMBL205-dc79f9a1c8959b97",
+            "CHEMBL205-d9b7a39ec691de72",
+            "CHEMBL205-89c62f8e0ef48fbc",
+            "CHEMBL205-7e236939b5fe97fc",
+            "CHEMBL205-6e9b1bfa87d65133",
+            "CHEMBL205-496e6911910b7fb5",
+            "CHEMBL205-28377e38ecbd6438",
+            "CHEMBL205-e9264c39e4347580",
+            "CHEMBL205-8bd9f580b264c600",
+            "CHEMBL205-42ec8f2db84fa5b9",
+            "CHEMBL205-934e78967fbbdd9d",
+            "CHEMBL205-644104ab09f40547"
+          ],
+          "target_id": "CHEMBL205"
+        },
+        {
+          "active_controls_retained": 3,
+          "controls_before_filter": 20,
+          "controls_retained": 10,
+          "inactive_controls_retained": 7,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": 0.33134920634920634,
+              "average_precision_bounds": [
+                0.33134920634920634,
+                0.33134920634920634
+              ],
+              "missing": 0,
+              "observed": 10,
+              "roc_auc": 0.42857142857142855,
+              "roc_auc_bounds": [
+                0.42857142857142855,
+                0.42857142857142855
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": 0.3416666666666667,
+              "average_precision_bounds": [
+                0.3416666666666667,
+                0.3416666666666667
+              ],
+              "missing": 0,
+              "observed": 10,
+              "roc_auc": 0.47619047619047616,
+              "roc_auc_bounds": [
+                0.47619047619047616,
+                0.47619047619047616
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": 0.5535714285714286,
+              "average_precision_bounds": [
+                0.5535714285714286,
+                0.5535714285714286
+              ],
+              "missing": 0,
+              "observed": 10,
+              "roc_auc": 0.5238095238095237,
+              "roc_auc_bounds": [
+                0.5238095238095237,
+                0.5238095238095237
+              ]
+            },
+            "hit_shape": {
+              "average_precision": 0.34444444444444444,
+              "average_precision_bounds": [
+                0.34444444444444444,
+                0.34444444444444444
+              ],
+              "missing": 0,
+              "observed": 10,
+              "roc_auc": 0.42857142857142855,
+              "roc_auc_bounds": [
+                0.42857142857142855,
+                0.42857142857142855
+              ]
+            },
+            "score": {
+              "average_precision": 0.6111111111111112,
+              "average_precision_bounds": [
+                0.6111111111111112,
+                0.6111111111111112
+              ],
+              "missing": 0,
+              "observed": 10,
+              "roc_auc": 0.6190476190476191,
+              "roc_auc_bounds": [
+                0.6190476190476191,
+                0.6190476190476191
+              ]
+            }
+          },
+          "paired_complete_cases": 10,
+          "paired_complete_compound_ids": [
+            "CHEMBL2147-4d82d130c1fd64b1",
+            "CHEMBL2147-de81a37a3ddc1aed",
+            "CHEMBL2147-6a9d27f1d8a833bf",
+            "CHEMBL2147-95443add7d866d0e",
+            "CHEMBL2147-dcca923713226b90",
+            "CHEMBL2147-1d666eb9c443d8a1",
+            "CHEMBL2147-3cac7fe9a46ba59a",
+            "CHEMBL2147-f285187321e5d687",
+            "CHEMBL2147-d4d57e8eceaada52",
+            "CHEMBL2147-d568f2019d5872ff"
+          ],
+          "query_id": "CHEMBL2147-query-1",
+          "retained_compound_ids": [
+            "CHEMBL2147-4d82d130c1fd64b1",
+            "CHEMBL2147-de81a37a3ddc1aed",
+            "CHEMBL2147-6a9d27f1d8a833bf",
+            "CHEMBL2147-95443add7d866d0e",
+            "CHEMBL2147-dcca923713226b90",
+            "CHEMBL2147-1d666eb9c443d8a1",
+            "CHEMBL2147-3cac7fe9a46ba59a",
+            "CHEMBL2147-f285187321e5d687",
+            "CHEMBL2147-d4d57e8eceaada52",
+            "CHEMBL2147-d568f2019d5872ff"
+          ],
+          "target_id": "CHEMBL2147"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL2147-query-2",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL2147"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL220-query-1",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL220"
+        },
+        {
+          "active_controls_retained": 6,
+          "controls_before_filter": 20,
+          "controls_retained": 13,
+          "inactive_controls_retained": 7,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": 0.9761904761904762,
+              "average_precision_bounds": [
+                0.9761904761904762,
+                0.9761904761904762
+              ],
+              "missing": 0,
+              "observed": 8,
+              "roc_auc": 0.9166666666666667,
+              "roc_auc_bounds": [
+                0.9166666666666667,
+                0.9166666666666667
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": 0.9305555555555556,
+              "average_precision_bounds": [
+                0.9305555555555556,
+                0.9305555555555556
+              ],
+              "missing": 0,
+              "observed": 8,
+              "roc_auc": 0.75,
+              "roc_auc_bounds": [
+                0.75,
+                0.75
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 8,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            },
+            "hit_shape": {
+              "average_precision": 0.9761904761904762,
+              "average_precision_bounds": [
+                0.9761904761904762,
+                0.9761904761904762
+              ],
+              "missing": 0,
+              "observed": 8,
+              "roc_auc": 0.9166666666666667,
+              "roc_auc_bounds": [
+                0.9166666666666667,
+                0.9166666666666667
+              ]
+            },
+            "score": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 8,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            }
+          },
+          "paired_complete_cases": 8,
+          "paired_complete_compound_ids": [
+            "CHEMBL220-1179fbd229a7b843",
+            "CHEMBL220-8bdd12b87ad15d11",
+            "CHEMBL220-b056471d181d49e5",
+            "CHEMBL220-4c6a08f14a405aa5",
+            "CHEMBL220-e07cdc1ce2d5742a",
+            "CHEMBL220-e21c796b8d759e53",
+            "CHEMBL220-d83b9db6ca36237e",
+            "CHEMBL220-91a1baa642cb0537"
+          ],
+          "query_id": "CHEMBL220-query-2",
+          "retained_compound_ids": [
+            "CHEMBL220-1179fbd229a7b843",
+            "CHEMBL220-8bdd12b87ad15d11",
+            "CHEMBL220-b056471d181d49e5",
+            "CHEMBL220-4c6a08f14a405aa5",
+            "CHEMBL220-e07cdc1ce2d5742a",
+            "CHEMBL220-e21c796b8d759e53",
+            "CHEMBL220-d0f86f1fb0188bf7",
+            "CHEMBL220-d94595df5c5464b2",
+            "CHEMBL220-d83b9db6ca36237e",
+            "CHEMBL220-91a1baa642cb0537",
+            "CHEMBL220-2285e1555a1d8766",
+            "CHEMBL220-7c54008c0280c96b",
+            "CHEMBL220-dcfaf776c5cf6de5"
+          ],
+          "target_id": "CHEMBL220"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL251-query-1",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL251"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL251-query-2",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL251"
+        },
+        {
+          "active_controls_retained": 1,
+          "controls_before_filter": 20,
+          "controls_retained": 7,
+          "inactive_controls_retained": 6,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 7,
+              "roc_auc": 0.8333333333333334,
+              "roc_auc_bounds": [
+                0.8333333333333334,
+                0.8333333333333334
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 7,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 7,
+              "roc_auc": 0.8333333333333334,
+              "roc_auc_bounds": [
+                0.8333333333333334,
+                0.8333333333333334
+              ]
+            },
+            "hit_shape": {
+              "average_precision": 1.0,
+              "average_precision_bounds": [
+                1.0,
+                1.0
+              ],
+              "missing": 0,
+              "observed": 7,
+              "roc_auc": 1.0,
+              "roc_auc_bounds": [
+                1.0,
+                1.0
+              ]
+            },
+            "score": {
+              "average_precision": 0.5,
+              "average_precision_bounds": [
+                0.5,
+                0.5
+              ],
+              "missing": 0,
+              "observed": 7,
+              "roc_auc": 0.8333333333333334,
+              "roc_auc_bounds": [
+                0.8333333333333334,
+                0.8333333333333334
+              ]
+            }
+          },
+          "paired_complete_cases": 7,
+          "paired_complete_compound_ids": [
+            "CHEMBL2637-c74af0e7e686b532",
+            "CHEMBL2637-34473ef0265632a4",
+            "CHEMBL2637-917c2bbd606aa794",
+            "CHEMBL2637-c17be51a7eda448a",
+            "CHEMBL2637-da15fee568d27471",
+            "CHEMBL2637-67bd368afe1ad88f",
+            "CHEMBL2637-8eb402b1834862fa"
+          ],
+          "query_id": "CHEMBL2637-query-1",
+          "retained_compound_ids": [
+            "CHEMBL2637-c74af0e7e686b532",
+            "CHEMBL2637-34473ef0265632a4",
+            "CHEMBL2637-917c2bbd606aa794",
+            "CHEMBL2637-c17be51a7eda448a",
+            "CHEMBL2637-da15fee568d27471",
+            "CHEMBL2637-67bd368afe1ad88f",
+            "CHEMBL2637-8eb402b1834862fa"
+          ],
+          "target_id": "CHEMBL2637"
+        },
+        {
+          "active_controls_retained": 0,
+          "controls_before_filter": 20,
+          "controls_retained": 0,
+          "inactive_controls_retained": 0,
+          "metrics": {
+            "bit_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "count_tanimoto": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_pharmacophore": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "hit_shape": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            },
+            "score": {
+              "average_precision": null,
+              "average_precision_bounds": [
+                null,
+                null
+              ],
+              "missing": 0,
+              "observed": 0,
+              "roc_auc": null,
+              "roc_auc_bounds": [
+                null,
+                null
+              ]
+            }
+          },
+          "paired_complete_cases": 0,
+          "paired_complete_compound_ids": [],
+          "query_id": "CHEMBL2637-query-2",
+          "retained_compound_ids": [],
+          "target_id": "CHEMBL2637"
+        }
+      ],
+      "retained_pairs": 70,
+      "target_macro_paired_roc": {
+        "bit_tanimoto": {
+          "ci95": [
+            0.5297619047619048,
+            0.8750000000000001
+          ],
+          "mean": 0.7279761904761904,
+          "targets": 4
+        },
+        "count_tanimoto": {
+          "ci95": [
+            0.5488095238095237,
+            0.9375
+          ],
+          "mean": 0.7482142857142857,
+          "targets": 4
+        },
+        "hit_pharmacophore": {
+          "ci95": [
+            0.6011904761904762,
+            0.9375
+          ],
+          "mean": 0.7767857142857143,
+          "targets": 4
+        },
+        "hit_shape": {
+          "ci95": [
+            0.5142857142857142,
+            0.9583333333333335
+          ],
+          "mean": 0.7363095238095239,
+          "targets": 4
+        },
+        "score": {
+          "ci95": [
+            0.6428571428571428,
+            0.9166666666666667
+          ],
+          "mean": 0.7797619047619048,
+          "targets": 4
+        }
+      },
+      "target_paired_roc": {
+        "bit_tanimoto": {
+          "CHEMBL205": 0.7333333333333333,
+          "CHEMBL2147": 0.42857142857142855,
+          "CHEMBL220": 0.9166666666666667,
+          "CHEMBL2637": 0.8333333333333334
+        },
+        "count_tanimoto": {
+          "CHEMBL205": 0.7666666666666666,
+          "CHEMBL2147": 0.47619047619047616,
+          "CHEMBL220": 0.75,
+          "CHEMBL2637": 1.0
+        },
+        "hit_pharmacophore": {
+          "CHEMBL205": 0.75,
+          "CHEMBL2147": 0.5238095238095237,
+          "CHEMBL220": 1.0,
+          "CHEMBL2637": 0.8333333333333334
+        },
+        "hit_shape": {
+          "CHEMBL205": 0.6,
+          "CHEMBL2147": 0.42857142857142855,
+          "CHEMBL220": 0.9166666666666667,
+          "CHEMBL2637": 1.0
+        },
+        "score": {
+          "CHEMBL205": 0.6666666666666666,
+          "CHEMBL2147": 0.6190476190476191,
+          "CHEMBL220": 1.0,
+          "CHEMBL2637": 0.8333333333333334
+        }
+      }
+    }
+  },
+  "source_sha256": {
+    "/data2/home/jyryu/chembounce/benchmarks/results/research-validation-20261016/audit_assay_heterogeneity.py": "ce9eabd824201812c52038f379414672a438683a7a265330de6edbcff3c99bcd",
+    "/data2/home/jyryu/chembounce/benchmarks/results/research-validation-20261016/control_scores.json": "4c1496c8391dd3440094dea672b63db5446f12e5e42d9183a2533a72e3481c87",
+    "benchmark-results/research-validation/panels/direct-human-scaffold/panel.json": "e87a3b539b8c41dde4887a7d52ec67b29a7a63f688584b579272398ef6522204",
+    "benchmark-results/research-validation/sources/chembl/manifest-with-assays.json": "66ed4314c12be5e2b912c6239392a9094aa0e7767babfd188001c73457263988"
+  }
+}
