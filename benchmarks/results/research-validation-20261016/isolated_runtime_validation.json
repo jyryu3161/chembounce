@@ -1,0 +1,274 @@
+{
+  "checked_utc": "2026-10-15T19:38:46.393751+00:00",
+  "code_under_test": {
+    "checkout_scope": "Root frozen scientific source files, not the newer develop implementation or its later test count.",
+    "frozen_implementation_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+    "frozen_source_files_matching": 39
+  },
+  "execution": {
+    "actual_gpu_execution_assessed": false,
+    "cuda_visible_devices": "",
+    "device": "cpu",
+    "torch_cuda_build": "12.8",
+    "torch_distribution_version": "2.8.0",
+    "torch_runtime_version": "2.8.0+cu128",
+    "triton_version": "3.4.0"
+  },
+  "frozen_regressions": {
+    "elapsed_seconds": 65.87,
+    "exit_code": 0,
+    "passed": 359,
+    "scope": "Frozen d972124 scientific implementation in the newly installed isolated environment; not a full-suite rerun of current develop.",
+    "skip_reason": "Optional oddt unavailable: tests/test_descriptors.py:43",
+    "skipped": 1
+  },
+  "historical_record": {
+    "path": "forward_audit_validation.json",
+    "preserved_unchanged": true,
+    "recorded_utc": "2026-10-15T18:55:02.200786+00:00",
+    "relationship": "Its then-pending CUDA-package-environment status is historical. This later record completes package/CPU checks only; actual GPU execution remains unassessed.",
+    "sha256": "c0e12e44a60702008806415ad23c8914fe58ac451e837bc32f3b9fb1d357b504"
+  },
+  "installation": {
+    "additional_distribution_scope": "Editable project plus setuptools build dependency. Setuptools was resolved during editable installation and is recorded here; it was not pinned by the original 62-line dependency input.",
+    "additional_distributions": {
+      "chembounce": "2.0.0.dev0",
+      "setuptools": "84.0.0"
+    },
+    "all_original_pins_match": true,
+    "dependency_consistency": "All 64 installed packages passed the recorded dependency compatibility check.",
+    "installed_distribution_versions": {
+      "Jinja2": "3.1.6",
+      "MarkupSafe": "3.0.3",
+      "PyYAML": "6.0.2",
+      "Pygments": "2.18.0",
+      "ScaffoldGraph": "1.1.2",
+      "certifi": "2026.2.25",
+      "charset-normalizer": "3.4.7",
+      "chembounce": "2.0.0.dev0",
+      "contourpy": "1.3.2",
+      "cycler": "0.12.1",
+      "exceptiongroup": "1.3.0",
+      "filelock": "3.25.2",
+      "fonttools": "4.43.1",
+      "fsspec": "2026.3.0",
+      "hf-xet": "1.2.0",
+      "huggingface_hub": "0.36.2",
+      "idna": "3.11",
+      "iniconfig": "2.3.0",
+      "kiwisolver": "1.4.5",
+      "loguru": "0.7.3",
+      "matplotlib": "3.10.8",
+      "mpmath": "1.3.0",
+      "networkx": "3.4.2",
+      "numpy": "1.26.4",
+      "nvidia-cublas-cu12": "12.8.4.1",
+      "nvidia-cuda-cupti-cu12": "12.8.90",
+      "nvidia-cuda-nvrtc-cu12": "12.8.93",
+      "nvidia-cuda-runtime-cu12": "12.8.90",
+      "nvidia-cudnn-cu12": "9.10.2.21",
+      "nvidia-cufft-cu12": "11.3.3.83",
+      "nvidia-cufile-cu12": "1.13.1.3",
+      "nvidia-curand-cu12": "10.3.9.90",
+      "nvidia-cusolver-cu12": "11.7.3.90",
+      "nvidia-cusparse-cu12": "12.5.8.93",
+      "nvidia-cusparselt-cu12": "0.7.1",
+      "nvidia-nccl-cu12": "2.27.3",
+      "nvidia-nvjitlink-cu12": "12.8.93",
+      "nvidia-nvtx-cu12": "12.8.90",
+      "packaging": "26.0",
+      "pandas": "2.3.3",
+      "pillow": "12.2.0",
+      "pluggy": "1.6.0",
+      "psutil": "7.2.2",
+      "pyparsing": "3.1.1",
+      "pytest": "9.0.2",
+      "python-dateutil": "2.9.0.post0",
+      "pytz": "2026.1.post1",
+      "rdkit": "2025.9.6",
+      "regex": "2024.11.6",
+      "requests": "2.32.3",
+      "safetensors": "0.6.2",
+      "scipy": "1.13.1",
+      "setuptools": "84.0.0",
+      "six": "1.17.0",
+      "sympy": "1.14.0",
+      "tokenizers": "0.21.4",
+      "tomli": "2.0.1",
+      "torch": "2.8.0",
+      "tqdm": "4.67.3",
+      "transformers": "4.51.3",
+      "triton": "3.4.0",
+      "typing_extensions": "4.15.0",
+      "tzdata": "2026.1",
+      "urllib3": "2.6.3"
+    },
+    "installed_distributions": 64,
+    "original_installer_completed": true,
+    "original_pinned_distributions": 62,
+    "queue_status": "complete",
+    "steps": [
+      {
+        "returncode": 0,
+        "seconds": 3.7902937410399318,
+        "step": "editable"
+      },
+      {
+        "returncode": 0,
+        "seconds": 0.02433211449533701,
+        "step": "dependencies"
+      },
+      {
+        "returncode": 0,
+        "seconds": 68.264439961873,
+        "step": "tests"
+      },
+      {
+        "returncode": 0,
+        "seconds": 9.402330433949828,
+        "step": "actual-model"
+      }
+    ],
+    "version_manifest_scope": "Complete installed distribution versions at validation time; this is not a claim that all 64 were pinned before installation or an artifact-hash lockfile."
+  },
+  "isolation": {
+    "checked_module_origins_relative_to_environment": {
+      "numpy": "lib/python3.10/site-packages/numpy/__init__.py",
+      "pandas": "lib/python3.10/site-packages/pandas/__init__.py",
+      "rdkit": "lib/python3.10/site-packages/rdkit/__init__.py",
+      "scipy": "lib/python3.10/site-packages/scipy/__init__.py",
+      "torch": "lib/python3.10/site-packages/torch/__init__.py",
+      "transformers": "lib/python3.10/site-packages/transformers/__init__.py",
+      "triton": "lib/python3.10/site-packages/triton/__init__.py"
+    },
+    "foreign_site_packages_found": false,
+    "include_system_site_packages": false,
+    "python": "3.10.12",
+    "scope": "Parent verified pyvenv.cfg, site-package search paths and the seven listed module origins; standard-library files come from the base Python installation."
+  },
+  "limitations": [
+    "Existing generation campaigns retain their original environment and observations; this separate installation does not retroactively validate that environment.",
+    "No raw reaction molecules or model predictions are published in this record.",
+    "Local reports/scripts/logs are hash-bound but not bundled, so this compact record is not a self-contained inference replay.",
+    "No full-model accuracy, general CPU/GPU equivalence or performance-superiority claim follows."
+  ],
+  "retained_evidence": [
+    {
+      "bundled": false,
+      "bytes": 3046,
+      "retained_filename": "parent-isolated-runtime-validation.json",
+      "role": "parent_independent_validation",
+      "sha256": "5981a7492cd898ef29c3181d65eb526027e44f2707ad6b0013e0302e9050fb72"
+    },
+    {
+      "bundled": false,
+      "bytes": 3046,
+      "retained_filename": "parent-isolated-runtime-validation.log",
+      "role": "parent_validation_log",
+      "sha256": "e2410dc2704981174a8ecb57aed31f21e9cfcf13204708549d6ead0faf6823f4"
+    },
+    {
+      "bundled": false,
+      "bytes": 4099,
+      "retained_filename": "verify-isolated-closure-parent.py",
+      "role": "parent_validation_script",
+      "sha256": "de3d15bdea9a99e677f70d6a1e73c6ea0369a142631fdbc4c3500f59829430bc"
+    },
+    {
+      "bundled": false,
+      "bytes": 47,
+      "retained_filename": "isolated-actual-model.log",
+      "role": "isolated-actual-model.log",
+      "sha256": "c7015464fdf1cecacfa8879516ee0ef3a970b74d64fec0e9553cdbc13b51ee2e"
+    },
+    {
+      "bundled": false,
+      "bytes": 117,
+      "retained_filename": "isolated-dependencies.log",
+      "role": "isolated-dependencies.log",
+      "sha256": "ab7686b4cea4f5a8741dce77e1154574cbaa9f078871910210bef801db25c68b"
+    },
+    {
+      "bundled": false,
+      "bytes": 1226,
+      "retained_filename": "isolated-dependency-pins.txt",
+      "role": "isolated-dependency-pins.txt",
+      "sha256": "e9c391387b1791b2e898b01fe0058dc96fee9d1300fbd12b4a18e576b4cb5a6c"
+    },
+    {
+      "bundled": false,
+      "bytes": 3556,
+      "retained_filename": "isolated-environment-install.log",
+      "role": "isolated-environment-install.log",
+      "sha256": "45939e1e49be93feb544c7d55a55cb24fe65c7503e14009fbb76e056c6febb67"
+    },
+    {
+      "bundled": false,
+      "bytes": 5753,
+      "retained_filename": "isolated-runtime-validation.json",
+      "role": "isolated-runtime-validation.json",
+      "sha256": "d97698c151058050ad5014f3a3814a7bf3260498623d508bfd7b8831785646c0"
+    },
+    {
+      "bundled": false,
+      "bytes": 613,
+      "retained_filename": "isolated-tests.log",
+      "role": "isolated-tests.log",
+      "sha256": "0d4990b40ebf94ea5953a205a9a8a6ff98901a9b1bc03c75dd69f43fa148e64c"
+    },
+    {
+      "bundled": false,
+      "bytes": 440,
+      "retained_filename": "isolated-validation-queue.json",
+      "role": "isolated-validation-queue.json",
+      "sha256": "5c7c3d1a921dd63c157016ebc1cb0b8c8590dcd536ee0740260c2031ff8cd832"
+    },
+    {
+      "bundled": false,
+      "bytes": 4214,
+      "retained_filename": "verify-isolated-runtime.py",
+      "role": "verify-isolated-runtime.py",
+      "sha256": "34a7d8aa9f36cc659e260b50171a0e7de9072a796a9bdb3b4c6de9ab2e283ea9"
+    },
+    {
+      "bundled": false,
+      "bytes": 1960,
+      "retained_filename": "run-isolated-validation-queue.py",
+      "role": "queue_implementation",
+      "sha256": "338463941b8de7da98ed363f72fa95c07d75f031a652872a0695116dad6f743f"
+    },
+    {
+      "bundled": false,
+      "bytes": 651,
+      "retained_filename": "isolated-editable.log",
+      "role": "editable_install_log",
+      "sha256": "bf6502bca03b3aa5a837bd2bdb7fc01f13b0f505a4d52a509e0df9b75b2f9f45"
+    },
+    {
+      "bundled": false,
+      "bytes": 130,
+      "retained_filename": "pyvenv.cfg",
+      "role": "virtual_environment_configuration",
+      "sha256": "dccc2e51d6594402e9fc7afdf86e3baa0e9aa5c7d2dfb5bbe54cd5b6530edc01"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Completed isolated package installation and CPU-only validation of the frozen scientific implementation. No actual GPU execution, new method comparison or change to the ongoing campaign environment.",
+  "selected_model_diagnostics": {
+    "both_match_previously_retained_prediction_records": true,
+    "execution_device": "cpu",
+    "interpretation": "Two selected compatibility diagnostics against retained prior prediction records, including GPU-origin records; no GPU inference was run in this isolated validation. They do not establish held-out accuracy or general CPU/GPU equivalence.",
+    "model": "sagawa/ReactionT5v2-forward",
+    "model_card_top1_matches_public_example": true,
+    "model_revision": "933114058cb2604dc1bf536dbebdfcefbe83d4fc",
+    "model_weights_sha256": "69c23ca364e63e0e2be22d114652aad9f3df4e161d43936eee0dc3ce74a87fb7",
+    "probes": 2,
+    "route_expected_product_supported": true,
+    "route_known_wrong_product_supported": false,
+    "selection": [
+      "Published model-card example",
+      "One previously returned reaction"
+    ]
+  },
+  "status": "isolated_cuda_enabled_package_environment_passed_cpu_checks"
+}

@@ -42,6 +42,19 @@
     "independent_full_suite_passed": 452,
     "results": "runner_signal_validation.json"
   },
+  "isolated_runtime_validation": {
+    "actual_gpu_execution_assessed": false,
+    "campaign_environment_changed": false,
+    "checked_utc": "2026-10-15T19:38:46.393751+00:00",
+    "frozen_implementation_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+    "frozen_tests_passed": 359,
+    "installed_distributions": 64,
+    "optional_tests_skipped": 1,
+    "original_pins_matched": 62,
+    "results": "isolated_runtime_validation.json",
+    "scope": "Completed isolated CUDA-enabled package environment, exercised on CPU; frozen d972124 scientific code, not current develop; historical forward report preserved.",
+    "selected_cpu_probes": 2
+  },
   "observation_unit": "240 query-control pairs; 120 distinct target-family compound IDs, 119 distinct exact structures, reused across queries; 6 independent target groups",
   "partial_training_sample_audit": {
     "aggregate_sha256": "8a629181ad23558d52ffef2400a069969f1f06d1f263f370f5186de78509a560",
@@ -54,7 +67,7 @@
     "status": "partial_sample_audit_independently_recomputed"
   },
   "published_compact_artifacts": {
-    "README.md": "43ef447c5f6f5b8d04ef0c281aace5b6f1ca20f9fe40937ea1ec22a75c061452",
+    "README.md": "1c03ea2204c20681aa6f25fbcc5d2be580b07956dbb8fdbe97d3bd0226b4b039",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
@@ -76,6 +89,7 @@
     "engineering.json": "0774f9a6c07d4b763742fa6c7b35695b8c6deafd1c08074bab4cf8d7fbcf69c0",
     "forward_analysis_plan.json": "385be03fee3d2df6cfc04975cb63b42717088eabe62077bdbd3c6db9ca5db529",
     "forward_audit_validation.json": "c0e12e44a60702008806415ad23c8914fe58ac451e837bc32f3b9fb1d357b504",
+    "isolated_runtime_validation.json": "7bf5c6c837191c64d7e277b91c021ea0dab6a9ebf236c74935bc7dca595f58e5",
     "preflight_validation.json": "c810853f907c579fd858e3fa823671ccb11a17071ea25e62bab3c0134818e59c",
     "query_scope.json": "72c97730f9f76906bc1afcbd88a3f19009862f79af51f7ef18662f0e01fa972b",
     "runner_signal_validation.json": "9bb69fed7c8d56f472df74ca4036640e3b85b96e595452d6370021fe4dada5f1",
