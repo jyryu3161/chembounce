@@ -1,0 +1,280 @@
+{
+  "frozen_campaign": {
+    "implementation_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+    "original_observations_rewritten": false,
+    "source_files_checked": 39,
+    "source_files_unchanged": true
+  },
+  "frozen_output_consistency_audit": {
+    "arithmetic_and_statistics": "Independent arithmetic reproduced joint/strain-adjusted/composite scores, 2D geometric means, final-seed medians/minima/maxima/ranges/population standard deviations, representative seed, ranking statistics and convergence limits from retained components and 72 successful final seed trials.",
+    "bound_input_artifacts": 106,
+    "checked_utc": "2026-10-15T19:30:26.147244+00:00",
+    "coordinate_roundtrip_check": "Pose/reference chemical identities, route and seed attribution, and candidate intramolecular distances were checked after SDF export. Pharmacophore overlap was recomputed on exported coordinates using the project function, not an independent kernel.",
+    "coordinate_roundtrip_tolerances": {
+      "pharmacophore_absolute": 0.0001,
+      "same_candidate_intramolecular_distance_A": 0.0005
+    },
+    "counts": {
+      "2d_candidates": 15,
+      "3d_candidates": 24,
+      "candidates": 39,
+      "legacy_2d_score_records": 248,
+      "legacy_3d_score_records_missing_design_smiles": 296,
+      "refined_candidates": 24,
+      "runs": 14,
+      "successful_final_trials": 72
+    },
+    "direct_2d_check": "Independent RDKit chiral Morgan fingerprints (radius 2, 2048 bits) and Tanimoto against each hit/design; exact numerical agreement in this snapshot.",
+    "input_snapshots": [
+      {
+        "read_utc": "2026-10-15T19:28:54.916570+00:00",
+        "runs": 41,
+        "sha256": "c5cd13c1173ac364a01a86b8da873948d8a479b1d7e725be751deffb9219d8cb",
+        "source": "comparison-gpu0/runs.json"
+      },
+      {
+        "read_utc": "2026-10-15T19:28:54.933319+00:00",
+        "runs": 56,
+        "sha256": "cab8f1f405c55f174ab044c5a79a69945197bd4189a82ba7007c2307441e5369",
+        "source": "comparison-gpu1/runs.json"
+      }
+    ],
+    "legacy_export_limitation": "296 legacy 3D score records lack explicit design_smiles; matching route metadata recovers design attribution for this audit. The 248 legacy 2D records retain a design string. Frozen files are not rewritten.",
+    "limitations": [
+      "Candidate counts are returned records, not distinct compounds or independent scientific observations.",
+      "Shape components were not independently recomputed from coordinates; alignment global optimality is not tested.",
+      "The coordinate roundtrip and score arithmetic do not establish biological activity, synthesis success or superiority of any method.",
+      "Read-time successful-output consistency is not a complete-campaign performance estimate."
+    ],
+    "maximum_observed_roundtrip_errors": {
+      "design_pharmacophore": 7.780260161904806e-06,
+      "design_tanimoto": 0.0,
+      "hit_pharmacophore": 8.435324610811534e-06,
+      "hit_tanimoto": 0.0,
+      "same_conformation_distances_A": 0.00017693686620745552
+    },
+    "recorded_attempts_in_snapshots": 97,
+    "reported_failures": 0,
+    "scalar_numeric_absolute_tolerance": 1e-12,
+    "scalar_numeric_checks": 1269,
+    "selection": "Successful pipeline-prefixed runs present in the two read-time GPU snapshots; 14 successful runs with available output artifacts. Incomplete/failed attempts and later results are outside this output consistency audit.",
+    "status": "passed"
+  },
+  "implementation": {
+    "before_commit": "588d2e00a93d17bc160c82177ebdf69157df4e61",
+    "bug": "In scores.json, expanding 3D score information replaced the design SMILES field with the design metric dictionary, leaving no explicit design structure in that record.",
+    "change": "Screening, 2D screening and refined score records now append canonical hit_smiles and design_smiles after score information is expanded. Existing metric dictionaries and the legacy 2D design string remain unchanged.",
+    "commit": "d209009982d4f185c374866f3d69dbc20479fc2d",
+    "develop_merge_commit": "7ad3ed59c1dd14699fef322e0bb714f45fc5fa17",
+    "policy": "No change to score calculation, reference selection, generated structures, conformers, ranking or scientific thresholds.",
+    "production_lines_added": 4,
+    "test_source": "tests/synthesis/test_score_reference_identities.py",
+    "test_source_sha256": "11b3c04f68d583e42995e3a237235c362a751190c47681079ce499831ca1539c",
+    "workflow_sha256": "93d4ee581181701f2c6300b4ed59199c58ebaf6a95b9aaa8984cd3161582e2eb",
+    "workflow_source": "chembounce_synthesis/workflow.py"
+  },
+  "independent_actual_before_after": {
+    "byte_identical_artifact_pairs": 23,
+    "cases": [
+      {
+        "mode": "2d",
+        "old_new_artifacts_identical": 5,
+        "only_added_score_fields": [
+          "hit_smiles",
+          "design_smiles"
+        ],
+        "returned_candidates": 2,
+        "score_records": 4
+      },
+      {
+        "mode": "3d_screening",
+        "old_new_artifacts_identical": 9,
+        "only_added_score_fields": [
+          "hit_smiles",
+          "design_smiles"
+        ],
+        "returned_candidates": 2,
+        "score_records": 4
+      },
+      {
+        "mode": "3d_refined",
+        "old_new_artifacts_identical": 9,
+        "only_added_score_fields": [
+          "hit_smiles",
+          "design_smiles"
+        ],
+        "returned_candidates": 1,
+        "score_records": 5
+      }
+    ],
+    "checked_utc": "2026-10-15T19:34:15.607885+00:00",
+    "checks": "Every score record differs only by the two new fields. Structures agree with manifest/route/TSV/SDF references; direct Morgan Tanimoto agrees within 1e-12. Non-score artifacts are byte-identical in each mode; 2D exports no poses.",
+    "implementations_per_mode": 2,
+    "input_design_references": 2,
+    "input_provenance_sha256": "c09bd0fcd53302467c642647bf810e5d97e7d2f86efbfa30206da86f707d0aed",
+    "limitation": "Diagnostic consistency check, not a rerun of the frozen campaign or a broad throughput/accuracy comparison.",
+    "modes": [
+      "2d",
+      "3d_screening",
+      "3d_refined"
+    ],
+    "retained_building_blocks": 19,
+    "scope": "One retained successful proposal set replayed in separate interpreters for each implementation, with 19 actual route-leaf blocks, two input designs, reduced search/scoring/conformer budgets and no forward model. Neither Torch nor Transformers was imported.",
+    "score_record_changes": [
+      "hit_smiles",
+      "design_smiles"
+    ],
+    "score_records_compared": 13,
+    "status": "passed",
+    "subruns": 6,
+    "unchanged_artifact_types": [
+      "results.tsv",
+      "screening.tsv",
+      "screening_alternatives.tsv",
+      "routes.json",
+      "refinement.json",
+      "poses_hit.sdf",
+      "poses_design.sdf",
+      "references_hit.sdf",
+      "references_design.sdf"
+    ]
+  },
+  "publication_limits": [
+    "No private molecular structures, route graphs, catalog subsets or coordinates are included.",
+    "Local reports, input snapshots, scripts and logs are hash-bound but not bundled; this record alone is not a complete public replay."
+  ],
+  "regressions": {
+    "agent_reported_related": {
+      "elapsed_seconds": 13.82,
+      "evidence": "Agent tool transcript; no separate log retained in this bundle.",
+      "passed": 39
+    },
+    "full_suite_after_this_fix": "Not rerun; the earlier 488-test catalog result belongs to the preceding implementation and is not evidence of a full-suite run after this fix.",
+    "parent": {
+      "elapsed_seconds": 1.7,
+      "environment": "Isolated CPU environment",
+      "exit_code": 0,
+      "log_sha256": "0e36896a973bff9595ccb474180400b516ba214aba2f60e650c9328907711253",
+      "passed": 3,
+      "scope": "Actual 2D screening, 3D screening and refinement, with one product assessed against two design references; reference identity and original metrics/exports checked.",
+      "test_source": "tests/synthesis/test_score_reference_identities.py"
+    }
+  },
+  "retained_evidence": [
+    {
+      "bundled": false,
+      "bytes": 4760,
+      "retained_filename": "validation.json",
+      "role": "before_after_validation",
+      "sha256": "a581062fef01a559af503dd80f637a0db22cabcc530554c783f740d842928661"
+    },
+    {
+      "bundled": false,
+      "bytes": 1636,
+      "retained_filename": "comparison.log",
+      "role": "before_after_comparison_log",
+      "sha256": "f4ee2d459026655f6ebe2f0928a257a0d7bd20c066881ecf9a35e7204479f26d"
+    },
+    {
+      "bundled": false,
+      "bytes": 1187,
+      "retained_filename": "input-provenance.json",
+      "role": "diagnostic_input_provenance",
+      "sha256": "c09bd0fcd53302467c642647bf810e5d97e7d2f86efbfa30206da86f707d0aed"
+    },
+    {
+      "bundled": false,
+      "bytes": 69,
+      "retained_filename": "before.log",
+      "role": "before_replay_log",
+      "sha256": "000fd534b2d37e61d6f2ae0977add12d56eabba83071c4ace303b0068d3af705"
+    },
+    {
+      "bundled": false,
+      "bytes": 66,
+      "retained_filename": "after.log",
+      "role": "after_replay_log",
+      "sha256": "7998e2beb24c3100a47035bdf70ff0569fd178be9257987d51e40f3837989482"
+    },
+    {
+      "bundled": false,
+      "bytes": 98,
+      "retained_filename": "parent-tests.log",
+      "role": "parent_regression_log",
+      "sha256": "0e36896a973bff9595ccb474180400b516ba214aba2f60e650c9328907711253"
+    },
+    {
+      "bundled": false,
+      "bytes": 405,
+      "retained_filename": "input-snapshot-manifest.json",
+      "role": "frozen_output_snapshot_manifest",
+      "sha256": "2356e0a888cdfbf4e321ee92f66d3a4361727031e25f895493bb694e06e3bb94"
+    },
+    {
+      "bundled": false,
+      "bytes": 16510,
+      "retained_filename": "generated-export-audit.json",
+      "role": "frozen_output_roundtrip_audit",
+      "sha256": "b1e54e9740df464e78e8430c5fd8309823ad39b477d0b9a0f574d26c77ce4b1f"
+    },
+    {
+      "bundled": false,
+      "bytes": 16889,
+      "retained_filename": "ranking-validation.json",
+      "role": "frozen_output_ranking_validation",
+      "sha256": "64433a3666cf9bf409d8e101d94ca660fe4e782c13ad0d9250bb2d8e59ed1fc0"
+    },
+    {
+      "bundled": false,
+      "bytes": 63,
+      "retained_filename": "generated-export-recheck-20261016.log",
+      "role": "roundtrip_audit_log",
+      "sha256": "09481d19295f93d1f09314e2b399d467aa179681b0b526c7eb554cc1953e3fa7"
+    },
+    {
+      "bundled": false,
+      "bytes": 1081,
+      "retained_filename": "generated-export-ranking-validation.log",
+      "role": "ranking_validation_log",
+      "sha256": "8685f8e8d196e6ebcf38676b706671be9723489fde828bfbec36c866e0cb5c5a"
+    },
+    {
+      "bundled": false,
+      "bytes": 1067,
+      "retained_filename": "recheck-generated-exports-parent.py",
+      "role": "roundtrip_snapshot_wrapper",
+      "sha256": "738b47f0853e69970af044ae192e1f92a1422274f58dd528dd8cfc79cddcb660"
+    },
+    {
+      "bundled": false,
+      "bytes": 6755,
+      "retained_filename": "audit-generated-exports.py",
+      "role": "roundtrip_audit_implementation",
+      "sha256": "6b0fed19b7bd0e1b7e958e225a9a5d26907316f5115a268118656f55353f29f4"
+    },
+    {
+      "bundled": false,
+      "bytes": 6619,
+      "retained_filename": "validate-exported-ranking-parent.py",
+      "role": "ranking_validation_implementation",
+      "sha256": "18da272051a8287072dfb487a9e179b30291280c90e65c617c45c9f92eb1f982"
+    },
+    {
+      "bundled": false,
+      "bytes": 921,
+      "retained_filename": "replay-score-identities-parent.py",
+      "role": "actual_replay_implementation",
+      "sha256": "04451b5663ecb4240efdf9a80c33866d748bb81c2f1a10eb6e9487bb8543bfe9"
+    },
+    {
+      "bundled": false,
+      "bytes": 4234,
+      "retained_filename": "compare-score-identities-parent.py",
+      "role": "actual_comparison_implementation",
+      "sha256": "43464521b6b0aee20fd7f9a49b249acdf214f9ae38ad9fe90e64472c554def3e"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Explicit score-reference identities, bounded before/after real-data replay and a read-time consistency audit of already exported campaign outputs; not a method-performance comparison.",
+  "status": "engineering_validated"
+}
