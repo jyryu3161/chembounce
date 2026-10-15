@@ -1,0 +1,55 @@
+{
+  "actual_failure_replay": {
+    "checks": [
+      {
+        "no_partial_3d_aggregate": true,
+        "pair_id": "pair-30b0a673b8865797c4f7e95c",
+        "same_2d_scores": true,
+        "same_seed_failures": true
+      },
+      {
+        "no_partial_3d_aggregate": true,
+        "pair_id": "pair-ff1d22cba2844d1c4a9f36fc",
+        "same_2d_scores": true,
+        "same_seed_failures": true
+      },
+      {
+        "no_partial_3d_aggregate": true,
+        "pair_id": "pair-f6d7856639ee6a3bd0e1b8f4",
+        "same_2d_scores": true,
+        "same_seed_failures": true
+      }
+    ],
+    "pairs": 3,
+    "scope": "All three known stereo-policy failures replayed through portable score_pair; diagnostic failure-preservation check, not new sampling"
+  },
+  "cli_actual_equivalence": {
+    "exact_pair_metadata_match": true,
+    "exact_scores_match": true,
+    "exact_seed_outcomes_match_excluding_durations": true,
+    "input_panel_sha256": "4a4b027edb89aba092bd36def8a933bd8573b0ff78c920c51ac5993219db19cb",
+    "mismatches": [],
+    "pairs": 16,
+    "protocol_sha256": "eff4d521b5fc19962812c9fd69c041265332cbd1bd02355aaf61a5e4dfee4701",
+    "scope": "First query of the frozen panel (diagnostic subset, not a new scientific cohort); same three seeds and eight-conformer settings",
+    "scores_sha256": "ccd83fbfb7f1b95e15781d45231e9f5257a4d7af86395c77bdf44df99321ee8b",
+    "seconds": 121.73254496604204
+  },
+  "independent_2d_fingerprint_recalculation": {
+    "implementation": "Direct RDKit Morgan radius2; bit2048 with chirality, sparse count without chirality, matching the declared separate conventions",
+    "maximum_absolute_error": {
+      "bit_tanimoto": 0.0,
+      "count_tanimoto": 0.0
+    },
+    "pairs": 197
+  },
+  "integrated_commit": "4719eef61ddc7dd24dc2009518d3a1d653a0c5d9",
+  "interpretation": "Checks numerical/software reproduction; no additional activity, synthesis or method-superiority evidence",
+  "portable_cli_commit": "f3aebcbea82faf928e4f420e733dd1b2aa344391",
+  "regression": {
+    "failed": 0,
+    "log_sha256": "caa7e696ce2f5b960e882e720a8373a50fc61ed20f9fbb61978c55f81af1d6be",
+    "passed": 436,
+    "seconds": 99.6
+  }
+}

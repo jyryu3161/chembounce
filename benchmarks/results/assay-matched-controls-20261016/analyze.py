@@ -300,7 +300,9 @@ def main():
         )
     fail.set(ylabel="Pairs with a failed 3D seed", title="All selected controls retained")
     fail.set_ylim(0, max([counts[k]["failed_3d_pairs"] for k in keys] + [1]) + 5)
-    fig.suptitle("Same-assay follow-up controls: 12 queries, 197 pairs, six targets")
+    fig.suptitle(
+        f"Same-assay follow-up controls: {len(panel['queries'])} queries, {len(rows)} pairs, {len(counts)} targets"
+    )
     fig.tight_layout()
     for ext in ["png", "pdf"]:
         fig.savefig(args.output / f"controls.{ext}", dpi=180)
