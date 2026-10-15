@@ -1,0 +1,373 @@
+{
+  "bounded_before_after_search_checks": {
+    "after_direct_tanimoto_checks": 160,
+    "after_full_library_rank_checks": 8,
+    "after_returned_query_count": 0,
+    "before_direct_tanimoto_checks": 160,
+    "before_returned_query_count": 8,
+    "cases": 8,
+    "known_foreign_version_rejected": true,
+    "mapped_query_caller_unchanged": true,
+    "mapped_query_ranking_equal": true,
+    "provisional_fix_commit": "a0eaa041e78f7b170d1b89aefcf95ae0f6e5f42d",
+    "scope": "Eight selected actual cross-version identity cases using the provisional rebuilt index, 20 returned neighbors per case. Full-library rank checks concern these eight queries only; they do not certify every database row, all query identities, end-to-end generation, speed or campaign sensitivity."
+  },
+  "campaign_runtime_fragment_boundary_checks": {
+    "archived_complete_generator_tables_checked": 110,
+    "changed_fingerprint_occurrences": 0,
+    "changed_identity_occurrences": 0,
+    "checked_utc": "2026-10-15T20:38:57.019301+00:00",
+    "dependency_versions_checked_per_archived_manifest": 6,
+    "executor": "independent parent",
+    "fragment_occurrences": 81,
+    "input_panel_sha256": {
+      "scaffold": "e87a3b539b8c41dde4887a7d52ec67b29a7a63f688584b579272398ef6522204",
+      "target": "8d87129ebc096d122fb581eb1721b9893243cec958434b5720a94df83c2d074e",
+      "time": "5402b98837c4abba4ab85606f8354736ec2ef20e23e1e0e8c6dadfbd0c8f7269"
+    },
+    "limitations": [
+      "Fragment derivation shares the frozen implementation; this is a search-input equivalence check, not independent fragmentation chemistry validation.",
+      "Archived comparisons cover only completed generator artifacts present at this snapshot; pipeline failures are not promoted to successes.",
+      "On a fully certified fixed-point index and unchanged rank operations these observations support matching search inputs; index-change sensitivity and full-pipeline timing/performance remain separate."
+    ],
+    "ordered_fragments_match": true,
+    "passed": true,
+    "query_occurrences": 30,
+    "runtime_dependency_versions": {
+      "numpy": "1.26.4",
+      "oddt": "0.7",
+      "pandas": "2.3.3",
+      "rdkit": "2025.9.6",
+      "scaffoldgraph": "1.1.2",
+      "scipy": "1.13.1"
+    },
+    "runtime_python_executable": "/data2/home/jyryu/chembounce/.venv-synllama-min/bin/python",
+    "scope": "Exact campaign interpreter and frozen fragmenter; actual fragment Mol inputs retain identity and Morgan bits through corrected search-boundary handling. Archived completed generator tables preserve exact fragment order; failures are not promoted. No generator/model/synthesis/3D rerun. This does not measure corrected-index candidate or ranking sensitivity.",
+    "snapshot_files_hash_bound": 550,
+    "source_hashes_checked_per_archived_manifest": 28,
+    "unique_original_fragment_strings": 71
+  },
+  "drafted_utc": "2026-10-15T20:29:07.244878+00:00",
+  "final_corrected_asset": {
+    "activation": {
+      "asset_bytes_unchanged": true,
+      "implementation_agent_loader_probe": {
+        "data_root_binding": "Temporarily set imported isolated module __file__ to frozen-root fingerprint_db.py in this process only; restored after default loader call. No file edits.",
+        "passed": true,
+        "rows": 522957,
+        "scope": "Earlier isolated-module probe, followed by the actual merged-module parent check below."
+      },
+      "implementation_agent_record": {
+        "finished_utc": "2026-10-15T20:47:14.789257+00:00",
+        "path": "/data2/home/jyryu/chembounce-fingerprint-identity/benchmark-results/research-validation/fingerprint-runtime-identity/activation.json",
+        "sha256": "71ecfa293a7ed18c1b162be5933727bbd887d1785bb785322fba86984dad407c"
+      },
+      "independent_merged_module_loader": {
+        "checked_utc": "2026-10-15T20:49:41.328575+00:00",
+        "data_directory_symlink": "/data2/home/jyryu/chembounce-research-merge/data",
+        "default_resolved_asset": "/data2/home/jyryu/chembounce/data/fingerprints_mw250_rdkit_2025.09.6_fixedpoint_staging",
+        "implementation_module": "/data2/home/jyryu/chembounce-research-merge/fingerprint_db.py",
+        "implementation_sha256": "3831ab3f05aafdb1f683a3edb6fcd0e1eb5e748c1b9e8c0e6f88e9d16a83285f",
+        "merge_commit": "9d8a0380a4ccf0c08bc7056b9bb47bb81e204d43",
+        "passed": true,
+        "rows": 522957,
+        "scope": "Actual merged develop module default loader using shared data-directory symlink; no in-memory module path replacement and no explicit database path. Frozen campaign source remains in a separate checkout."
+      },
+      "parent_filesystem_check": {
+        "asset_hash_checks_including_alias": 12,
+        "checked_utc": "2026-10-15T20:48:54.985406+00:00",
+        "frozen_sources_unchanged": 39,
+        "passed": true,
+        "path_bindings": 4
+      },
+      "provisional_archive_path": "/data2/home/jyryu/chembounce/data/fingerprints_mw250_rdkit_2025.09.6_provisional_20261016",
+      "runtime_alias": {
+        "path": "/data2/home/jyryu/chembounce/data/fingerprints_mw250_rdkit_2025.09.6",
+        "relative_target": "fingerprints_mw250_rdkit_2025.09.6_fixedpoint_staging",
+        "resolved_path": "/data2/home/jyryu/chembounce/data/fingerprints_mw250_rdkit_2025.09.6_fixedpoint_staging"
+      },
+      "scope": "Local runtime-alias activation retains immutable corrected-stage contents, archives provisional contents and preserves the original campaign asset. No frozen campaign source or observations were changed.",
+      "status": "complete_independently_checked"
+    },
+    "asset_files_sha256": {
+      "fingerprints.npy": "f5480d82d0fdf28d457a6c12dc6e5ef9db6371047c7652f7ce9b6132d62efbf0",
+      "metadata.json": "649c3ae37f0ee0a2b98a2ff6dee2a6e80e4fe7d9e718b134c17899e3b8380383",
+      "smiles.npy": "230abcb0192d360fc132a34326a7ba26162ad23498452e70ad12b973343db641"
+    },
+    "build_rejection_counts": {
+      "canonicalization_unstable": 3,
+      "dummy_atoms": 39552,
+      "multiple_components": 310
+    },
+    "build_report": {
+      "builder_verify_scope": "At most 100 sampled rows; full validation below is a separate independent parent audit.",
+      "executor": "implementation agent",
+      "finished_utc": "2026-10-15T20:37:26.926492+00:00",
+      "path": "/data2/home/jyryu/chembounce-fingerprint-identity/benchmark-results/fingerprint-runtime-identity/build-fixedpoint.json",
+      "return_code": 0,
+      "sha256": "b4ce64f10831fd72bba130807b4c74b132708b34030db7ff2d5d678ddb6a2ff3",
+      "source_code_sha256": {
+        "fingerprint_db.py": "3831ab3f05aafdb1f683a3edb6fcd0e1eb5e748c1b9e8c0e6f88e9d16a83285f",
+        "generate_fingerprints.py": "92bbd8e440a81eed653806580352e9bf8fb9e732b2c0f2d6474b69417ea8d2e7"
+      }
+    },
+    "build_summary": {
+      "blank_lines": 0,
+      "canonicalization_adjusted_lines": 2,
+      "canonicalization_max_roundtrips": 8,
+      "canonicalization_policy": "rdkit-roundtrip-fixed-point-v1",
+      "duplicate_lines": 285358,
+      "input_lines": 848180,
+      "rdkit_version": "2025.09.6",
+      "rejected_lines": 39865,
+      "rows": 522957
+    },
+    "certification": {
+      "scope": "Exhaustive direct bit agreement, valid connected exact-state strings, sorted uniqueness, and unchanged fixed-point serialization for these 522957 rows under RDKit 2025.09.6. Not chemical-family uniqueness, stereochemical truth or cross-version certification.",
+      "status": "passed_for_pinned_index_and_runtime"
+    },
+    "develop_merge_commit": "9d8a0380a4ccf0c08bc7056b9bb47bb81e204d43",
+    "final_implementation_commit": "1990b4f8b799b05be494cda50773df2097a45b47",
+    "full_runtime_audit": {
+      "canonical_duplicate_rows": 0,
+      "canonical_string_changed_rows": 0,
+      "checked_utc": "2026-10-15T20:41:33.767277+00:00",
+      "executor": "independent parent",
+      "fingerprint_parameters": {
+        "bitorder": "big",
+        "fp_size": 2048,
+        "include_chirality": false,
+        "radius": 2
+      },
+      "fingerprints_checked": 522957,
+      "invalid_rows": 0,
+      "passed": true,
+      "report_sha256": "0e1d23766337b5874aae8bb2554175b3b6ee11c09c031dcccacc9fe785fb6769",
+      "rows": 522957,
+      "runtime_rdkit_version": "2025.09.6",
+      "stored_bit_mismatch_rows": 0
+    },
+    "immutable_asset_path": "/data2/home/jyryu/chembounce/data/fingerprints_mw250_rdkit_2025.09.6_fixedpoint_staging",
+    "implementation_agent_tests": {
+      "before_fix_regression_failures": 10,
+      "executor": "implementation agent",
+      "focused_suite": {
+        "passed": 54,
+        "seconds": 1.36
+      },
+      "full_suite": {
+        "passed": 525,
+        "seconds": 50.94,
+        "skip_reason": "Optional oddt package absent",
+        "skipped": 1
+      },
+      "independent_parent_full_suite_rerun": false,
+      "log_sha256": {
+        "/data2/home/jyryu/chembounce-fingerprint-identity/benchmark-results/fingerprint-runtime-identity/builder-after.log": "13d4b2fa952701b01edf822f2977ea768c0ccd869349deb467d6cdb7c4c5d596",
+        "/data2/home/jyryu/chembounce-fingerprint-identity/benchmark-results/fingerprint-runtime-identity/builder-before.log": "71ca9fb914c90a154df8c096307571d4fe70aeca02989a6bd554dd07d3fc152f",
+        "/data2/home/jyryu/chembounce-fingerprint-identity/benchmark-results/fingerprint-runtime-identity/full-regression-fixedpoint.log": "e294d2d11bb03c5ea872e25d0260c3d30389d5f9ebca7a55ee9b098382fbd68c"
+      },
+      "parent_reviewed": true
+    },
+    "stable_inventory_check": {
+      "actual_strings": 522957,
+      "excluded_provisional_cycle_rows": 3,
+      "executor": "independent parent",
+      "expected_stable_strings": 522957,
+      "missing_expected_strings": 0,
+      "passed": true,
+      "scope": "Direct inventory equality against bounded-stabilized provisional rows, with original source-line checks for all3 newly rejected inputs. No independent adjudication of stereochemical truth.",
+      "source_failure_examples_verified": 3,
+      "unexpected_strings": 0
+    },
+    "status": "independent_full_runtime_and_inventory_validation_passed"
+  },
+  "final_corrected_search_checks": {
+    "checked_utc": "2026-10-15T20:42:32.144123+00:00",
+    "direct_returned_neighbor_tanimoto_checks": 200,
+    "executor": "independent parent",
+    "full_library_rank_checks": 10,
+    "known_foreign_version_rejected": true,
+    "mapped_query_caller_unchanged": true,
+    "mapped_query_ranking_equal": true,
+    "original_bit_mismatch_queries_included": 2,
+    "passed": true,
+    "queries": 10,
+    "returned_query_count": 0,
+    "scope": "Eight actual cross-version exact-identity cases plus both original bit-mismatch query structures: old index rejected, corrected fixed-point index ranks checked over all stored vectors, returned molecule Tanimotos directly recomputed. This is not a full-campaign result, a runtime speed comparison or proof of chemical-family uniqueness."
+  },
+  "frozen_campaign_interpretation": {
+    "original_asset_and_observations_changed": false,
+    "planned_attempts": 630,
+    "planned_generator_sensitivity_attempts": 252,
+    "scope": "Corrected-index generator sensitivity across 252 planned attempts remains pending; no campaign-level impact estimate is supplied. The original 630-attempt comparison remains historical, with its original affected asset and observations. These engineering checks do not retroactively correct it or establish efficacy.",
+    "sensitivity_evaluation": "pending",
+    "status": "Historical campaigns retain the affected original asset and frozen code. They are not retroactively corrected by this engineering work."
+  },
+  "limitations": [
+    "Sampled bit verification does not certify every index row or cross-version runtime compatibility.",
+    "Matching binary vectors does not establish parse/serialize identity stability or chemical-family uniqueness.",
+    "Canonical exact-state string stabilization is a runtime convention, not independent adjudication of stereochemical truth.",
+    "These are engineering compatibility/identity observations, not biological activity, synthesis success, scaffold-coverage or method-superiority evidence."
+  ],
+  "original_frozen_asset_full_scan": {
+    "bit_mismatch_details": [
+      {
+        "different_bits": 29,
+        "row": 19479
+      },
+      {
+        "different_bits": 18,
+        "row": 19520
+      }
+    ],
+    "checked_utc": "2026-10-15T20:05:17.697085+00:00",
+    "complete_scan": true,
+    "database_rdkit_version": "2026.09.1",
+    "fingerprints_checked": 522959,
+    "input_asset_sha256": {
+      "fingerprints.npy": "383db5047079a41c17689074c10e165532ef7cfd8c9a1fe8e6517ffabf1fa7d5",
+      "metadata.json": "893267f49646a236d16fb2d0be69b0aa02260fb79e5286c352bdea3347e17684",
+      "smiles.npy": "45636028bc4c8ef09c42b75164381bd6793c5d68f50f401b4395e53323c8c1cb"
+    },
+    "interpretation": "Stored bytes were generated under RDKit 2026.09.1 and checked under 2025.09.6. Changed canonical strings do not by themselves prove changed chemical structures. This is not chemical-family uniqueness or active-scaffold coverage.",
+    "invalid_rows": 0,
+    "one_roundtrip_canonical_string_changed_rows": 994,
+    "one_roundtrip_duplicate_rows": 0,
+    "raw_strings_strictly_sorted_unique": true,
+    "rows": 522959,
+    "runtime_canonical_unique_strings_one_roundtrip": 522959,
+    "runtime_rdkit_version": "2025.09.6",
+    "stored_bit_compatibility_passed": false,
+    "stored_bit_mismatch_rows": 2,
+    "whole_asset_certified": false
+  },
+  "provenance": {
+    "draft_worktree_base_commit": "b6bc6e2ee2d773d56b5c9d8ff28c3183f9fad63e",
+    "final_build_report": {
+      "path": "/data2/home/jyryu/chembounce-fingerprint-identity/benchmark-results/fingerprint-runtime-identity/build-fixedpoint.json",
+      "sha256": "b4ce64f10831fd72bba130807b4c74b132708b34030db7ff2d5d678ddb6a2ff3"
+    },
+    "fingerprint_code_sha256": {
+      "final_fix_at_recorded_commit": "3831ab3f05aafdb1f683a3edb6fcd0e1eb5e748c1b9e8c0e6f88e9d16a83285f",
+      "original_frozen": "2901db6fadb90aa886d7d194f9ed38ac86f962f74fecfa6ea391a5d9cb97068e",
+      "provisional_fix_at_recorded_commit": "38e27e31e9cb6250bac9c1cb314abb9ba841127a8fcba656305c85172268fc1d"
+    },
+    "local_sources_bundled": false,
+    "provisional_build_report_sha256": "476a1e4baac6b87ee4edcf167032eb9c2aebe47b103195b3093b9441fd9102ed",
+    "raw_scaffold_source_sha256": "19d159ffacbef87a026a85c13d00a15867cd58336650fd24246693921da545ac",
+    "report_sha256": {
+      "/data2/home/jyryu/chembounce-fingerprint-identity/benchmark-results/research-validation/fingerprint-runtime-identity/activation.json": "71ecfa293a7ed18c1b162be5933727bbd887d1785bb785322fba86984dad407c",
+      "benchmark-results/research-validation/fingerprint-fragment-boundary-campaign-runtime-parent/validation.json": "f3bf5d109d7b876090b0cbd7362853bf5f4cf65e499e98c7b060d3da8514d119",
+      "benchmark-results/research-validation/fingerprint-identity-parent-validation/after-fixedpoint.json": "5a1760b799d818f75689b71d82ab514a57563ca6bc12fbfc968ce0f172f08869",
+      "benchmark-results/research-validation/fingerprint-identity-parent-validation/after.json": "6ac63a9b69b9e14efef896a7d8d0230d952a6bc99a14130c3dc84a0957ab6a24",
+      "benchmark-results/research-validation/fingerprint-identity-parent-validation/before.json": "0285bcfa95accbc2e4ad6618b215cbe713e1db4fb1f1d3f3515bd5f24d0bfa34",
+      "benchmark-results/research-validation/fingerprint-runtime-compatibility-sample.json": "37d2b76856c1c7f0daed961adf8a8868b933605837116c342a27a27a40a0767d",
+      "benchmark-results/research-validation/fingerprint-runtime-fixedpoint-audit/activation-parent-check.json": "ae52f23e7cb5ecaed5950731775274bd08b206ecf7aafe146eaaac739958cfc7",
+      "benchmark-results/research-validation/fingerprint-runtime-fixedpoint-audit/inventory-check.json": "23cc78cfe5fa72c31462282921976f0ecf11d25d9c0001b8b703cca9166728a1",
+      "benchmark-results/research-validation/fingerprint-runtime-fixedpoint-audit/merged-default-loader-parent-check.json": "f4032b6df9e7c81d5fea1e05c67feff46409f57cf507f0cc3c70ff17ea612980",
+      "benchmark-results/research-validation/fingerprint-runtime-fixedpoint-audit/runtime-binary-check.json": "6afc871b2e559cc43a85a693408e27586263659765e035e88ac4627078c36fed",
+      "benchmark-results/research-validation/fingerprint-runtime-fixedpoint-audit/validation.json": "0e1d23766337b5874aae8bb2554175b3b6ee11c09c031dcccacc9fe785fb6769",
+      "benchmark-results/research-validation/fingerprint-runtime-fixedpoint-pins.json": "b613281210adf671d90dcd0045e434968c7bc0be240c47b40718d65ad9e88d3d",
+      "benchmark-results/research-validation/fingerprint-runtime-full-audit/validation.json": "b3e8ad8e6420a9ec70cb40c41ade2caf025b7c5c5dbe595715da1e16ac41605e",
+      "benchmark-results/research-validation/fingerprint-runtime-rebuild-pins.json": "107d7b3266a06f171891c14d7ac1a78f683967c6de09e7f9d07074460e835869",
+      "benchmark-results/research-validation/fingerprint-runtime-rebuilt-audit/public-query-stability.json": "1593883a726fe4b6b763283e62b0fea5ac113db709819e21c29fc4ee481def67",
+      "benchmark-results/research-validation/fingerprint-runtime-rebuilt-audit/stabilized-inventory-comparison.json": "113247e8997e629131c67bbc245b05d50669e87e16b5c49da055c160d7460b1f",
+      "benchmark-results/research-validation/fingerprint-runtime-rebuilt-audit/unstable-cases.json": "564bd7f5e3a0cff333cb91dc4c1816404a7f8fa5e32d49ffba52b3fa90d2bf14",
+      "benchmark-results/research-validation/fingerprint-runtime-rebuilt-audit/validation.json": "e20637d1660678b2020f2dbecef5cf49d80c19afb78d50e908c97b57183c7853"
+    },
+    "script_sha256": {
+      "/data2/home/jyryu/chembounce-fingerprint-identity/benchmark-results/research-validation/fingerprint-runtime-identity/activate.py": "e0fa16714c42df0eb0a69055101ca07222a9a6c4cc1eeccc520d642b49dc21a0",
+      "/tmp/audit-fingerprint-runtime-parent.py": "8320206ac10e3926f086aac1aa1701dca05340594a1841d75f2c982451b53c7b",
+      "/tmp/audit-fixedpoint-fingerprint-runtime-parent.py": "fec40cf1bca926cae38d60c2f5a9408d90a3d8cd3d24d7857dc649bc9fc87908",
+      "/tmp/audit-fragment-search-boundary-campaign-runtime-parent.py": "7a9166680d5f070023df8c6bebcdfb53b175c725e64dff8af04db96942507fcc",
+      "/tmp/audit-rebuilt-fingerprint-runtime-parent.py": "99ba94f6a8187a59e96b3c36c7b16e424801edb5ee99a1b9861b91fe01390cd9",
+      "/tmp/replay-fingerprint-identities-parent.py": "68efb8220d6be6ddc3023731f7edc3a4d08479326102530d8085102e2a5cea96",
+      "/tmp/validate-fingerprint-fix-parent.py": "212e029db21301077eafe812f33a951689b2305d4b117fc7bbf488d096d07a61",
+      "/tmp/validate-fixedpoint-fingerprint-search-parent.py": "5cdf934ed3151cb26ba2c81f7de2317811891d90bcd1aa30d7056c151a4ed210"
+    }
+  },
+  "provisional_rebuilt_asset_full_scan": {
+    "checked_utc": "2026-10-15T20:19:43.416287+00:00",
+    "complete_scan": true,
+    "database_rdkit_version": "2025.09.6",
+    "fingerprints_checked": 522960,
+    "followup_string_stability": {
+      "changed_rows_examined": 5,
+      "converged_after_additional_roundtrips": 2,
+      "cycles": 3
+    },
+    "input_asset_sha256": {
+      "fingerprints.npy": "e3b7ccdeda56d1cecad1262157177eed66a2b3e507bcc951f7898d018c6b8b7c",
+      "metadata.json": "89fcf43eb89a29dd534dbfcb3248522cfa9763bd4524d5ed7def8a0a2d7c7b8c",
+      "smiles.npy": "df77d479a2e7641ab6b4edff3dd5c70188d8a7517044af2978a32e4a90411d53"
+    },
+    "interpretation": "All stored vectors matched direct runtime fingerprints, but five serialized identities were not stable after one roundtrip. Three cycled and two converged later. This provisional index is not the final corrected or certified asset.",
+    "invalid_rows": 0,
+    "one_roundtrip_canonical_string_changed_rows": 5,
+    "one_roundtrip_duplicate_rows": 0,
+    "raw_strings_strictly_sorted_unique": true,
+    "rows": 522960,
+    "runtime_canonical_unique_strings_one_roundtrip": 522960,
+    "runtime_rdkit_version": "2025.09.6",
+    "stored_bit_compatibility_passed": true,
+    "stored_bit_mismatch_rows": 0,
+    "whole_asset_certified": false
+  },
+  "public_query_string_stability": {
+    "changed_occurrences": 0,
+    "execution_record": "Parent inline command; no persistent procedure script exists for this check. The retained report and panel hashes bind the observation.",
+    "input_panel_sha256": {
+      "scaffold": "e87a3b539b8c41dde4887a7d52ec67b29a7a63f688584b579272398ef6522204",
+      "target": "8d87129ebc096d122fb581eb1721b9893243cec958434b5720a94df83c2d074e",
+      "time": "5402b98837c4abba4ab85606f8354736ec2ef20e23e1e0e8c6dadfbd0c8f7269"
+    },
+    "partition_counts": {
+      "scaffold": 12,
+      "target": 6,
+      "time": 12
+    },
+    "query_occurrences": 30,
+    "runtime_rdkit_version": "2025.09.6",
+    "scope": "All 30 public query occurrences across three panels, not 30 independent or necessarily unique molecules. Direct bounded parse/serialize string stability is not stereochemistry validity and does not assess generated scaffold intermediates.",
+    "stable_occurrences": 30
+  },
+  "publication_scope": "Raw molecular strings and full row/array inventories are excluded. Hash-bound local reports, scripts and generator assets remain outside this compact public record.",
+  "relevant_rdkit_binary_identity": {
+    "bundled_libraries": 133,
+    "checked_utc": "2026-10-15T20:43:32.989796+00:00",
+    "executor": "independent parent",
+    "extension_modules": 4,
+    "matched_files": 137,
+    "passed": true,
+    "runtimes": [
+      ".venv-forward-audit/bin/python",
+      ".venv-synllama-min/bin/python"
+    ],
+    "scope": "Byte identity of RDKit base/chemistry/SMILES/fingerprint extension modules plus bundled rdkit.libs between independent audit and campaign interpreters. This is not whole-environment or hardware equivalence."
+  },
+  "runtime_sample_preceding_full_scan": {
+    "canonical_string_changed_rows": 8,
+    "database_rows": 522959,
+    "interpretation": "A zero-mismatch sample did not certify the full index: the subsequent exhaustive scan found two bit-mismatch rows. This runtime-compatibility sample is separate from the seed-42 scaffold search-space sample.",
+    "sample_indices_sha256": "ad76e9f0c55e626b6953a2cde0681c919f997b7b50319c260e35537b6c1e606b",
+    "sampled_rows": 5000,
+    "seed": 20261016,
+    "stored_bit_mismatch_rows": 0
+  },
+  "schema_version": 1,
+  "scope": "Aggregate engineering evidence from retained independent parent audits and separately attributed implementation-agent regression tests. Creating this record did not run a new experiment, normalization, build or campaign evaluation.",
+  "stabilized_inventory_comparison": {
+    "added_stable_strings": 1,
+    "execution_record": "Parent inline commands; no persistent procedure script exists for this comparison. The retained report and its input-audit hashes bind the observation.",
+    "old_stable_unique_strings": 522956,
+    "old_unstable_rows": 3,
+    "procedure": "Inventory comparison after bounded parse/serialize string stabilization. Unchanged rows rely on pinned exhaustive audits; changed rows are reparsed directly. This is string identity under one RDKit runtime, not an independent chemical stereochemistry adjudication or search-impact comparison.",
+    "provisional_stable_unique_strings": 522957,
+    "provisional_unstable_rows": 3,
+    "removed_stable_strings": 0,
+    "runtime_rdkit_version": "2025.09.6"
+  },
+  "status": "engineering_validation_and_local_activation_complete_sensitivity_pending",
+  "updated_utc": "2026-10-15T20:50:55.919155+00:00"
+}
