@@ -36,6 +36,17 @@
     "frozen_campaign_changed": false,
     "results": "preflight_validation.json"
   },
+  "fixed_pose_score_validation": {
+    "checked_utc": "2026-10-15T19:51:22.175874+00:00",
+    "coordinate_arrays_unchanged": 96,
+    "feature_count_checks": 96,
+    "frozen_campaign_changed": false,
+    "reference_pose_pairs": 48,
+    "results": "fixed_pose_score_validation.json",
+    "returned_3d_candidate_records": 24,
+    "scope": "Later direct fixed-pose shape/color and separate pharmacophore arithmetic on an earlier immutable successful-output snapshot; shared RDKit kernel and feature perception, not full-campaign performance or independent physical-kernel validation.",
+    "score_checks": 288
+  },
   "graceful_termination_validation": {
     "commit": "1afac243e629dcb7e3b967814d0c07913d162c0b",
     "frozen_campaign_changed": false,
@@ -67,7 +78,7 @@
     "status": "partial_sample_audit_independently_recomputed"
   },
   "published_compact_artifacts": {
-    "README.md": "1c03ea2204c20681aa6f25fbcc5d2be580b07956dbb8fdbe97d3bd0226b4b039",
+    "README.md": "e4166490f9537bf27737d022d93f8a199059a2d554301d7ce0fcb2f16720f4ee",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
@@ -87,6 +98,7 @@
     "controls_time.png": "11c761dd1972226c08120547a7ca949026074022a671bb51de1400214bf5f185",
     "design_preflight_validation.json": "1450a5f20dc703f5eb4176421582d242800768f0621c8f759aaac04d96057e83",
     "engineering.json": "0774f9a6c07d4b763742fa6c7b35695b8c6deafd1c08074bab4cf8d7fbcf69c0",
+    "fixed_pose_score_validation.json": "4af182632b449d441c414cc41edd297b5a501f490210cc88770bde15396211b8",
     "forward_analysis_plan.json": "385be03fee3d2df6cfc04975cb63b42717088eabe62077bdbd3c6db9ca5db529",
     "forward_audit_validation.json": "c0e12e44a60702008806415ad23c8914fe58ac451e837bc32f3b9fb1d357b504",
     "isolated_runtime_validation.json": "7bf5c6c837191c64d7e277b91c021ea0dab6a9ebf236c74935bc7dca595f58e5",

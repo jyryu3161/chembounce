@@ -1,0 +1,178 @@
+{
+  "api_reference": "https://www.rdkit.org/docs/source/rdkit.Chem.rdShapeAlign.html",
+  "api_reference_scope": "The live documentation URL is an API reference, not the runtime version pin; this audit executed RDKit 2025.09.6.",
+  "check_count_interpretation": "Each of 48 pairs contributes four score-component comparisons and two result-table comparisons, plus two feature-count and two coordinate-array checks. These checks are not independent chemical examples.",
+  "checked_utc": "2026-10-15T19:51:22.175874+00:00",
+  "controls": {
+    "common_rigid_motion_absolute_errors": {
+      "alignment_color": 7.385897005107722e-08,
+      "pharmacophore": 1.1102230246251565e-16,
+      "shape": 3.295632122757297e-08
+    },
+    "common_rigid_motion_tolerances": {
+      "alignment_color": 1e-06,
+      "pharmacophore": 1e-10,
+      "shape": 1e-06
+    },
+    "one_partner_translation_A": [
+      100.0,
+      0.0,
+      0.0
+    ],
+    "scope": "One selected reference/pose pair; diagnostics of this API and arithmetic path, not a general performance estimate.",
+    "selected_pair": {
+      "method_id": "pipeline",
+      "query_id": "CHEMBL203-query-1",
+      "role": "hit",
+      "route_id": "route_000009",
+      "seed": 42
+    },
+    "self_absolute_tolerance": 1e-06,
+    "self_scores": {
+      "alignment_color": 1.0,
+      "pharmacophore": 0.9999999999999996,
+      "shape": 1.0
+    },
+    "separated_scores": {
+      "pharmacophore": 0.0,
+      "shape": 0.0
+    },
+    "separation_upper_bound": 1e-08
+  },
+  "counts": {
+    "coordinate_arrays_unchanged": 96,
+    "feature_count_checks": 96,
+    "pose_score_checks": 288,
+    "reference_pose_pairs": 48,
+    "returned_3d_candidates": 24,
+    "three_d_runs": 9
+  },
+  "frozen_campaign": {
+    "implementation_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+    "original_observations_rewritten": false,
+    "source_files_unchanged": 39
+  },
+  "independence_limits": [
+    "RDKit point scoring and alignment share an upstream shape/color kernel; this is not an independent implementation of that kernel.",
+    "RDKit chemical feature definitions and perception are shared; the matching/arithmetic implementation and assignment solver are independent.",
+    "Four-decimal SDF coordinates support tolerance 1e-4, not bitwise score identity.",
+    "No assessment of global alignment optimality, probability calibration, activity, experimental synthesis, or incomplete/later campaign outputs.",
+    "The shared RDKit shape/color kernel and shared feature definitions/perception mean this is not a wholly independent physical scoring kernel or chemical-perception validation."
+  ],
+  "max_absolute_errors": {
+    "alignment_color": 1.4621015637372725e-05,
+    "joint": 6.402358005530573e-06,
+    "pharmacophore": 8.435324611255623e-06,
+    "shape": 5.561969329548333e-06
+  },
+  "methods": {
+    "array_integrity": "Reference and probe coordinate arrays were exactly equal in the in-memory before/after array comparison for every checked pair; no coordinates were written back to campaign outputs.",
+    "pharmacophore": {
+      "arithmetic": "Feature-family distance weights with aromatic orientation weighting; maximum-weight one-to-one feature matching and overlap normalization.",
+      "aromatic_orientation": "Smallest covariance eigenvector from numpy.linalg.eigh, separate from project SVD",
+      "assignment_solver": "NetworkX max_weight_matching, separate from the project SciPy assignment call",
+      "comparison": "Separately implemented arithmetic compared with retained pharmacophore scores and result-table values; joint scores recomputed as sqrt(shape * pharmacophore).",
+      "feature_definition_sha256": "87ab54bd717af50a78a710d23e7737a2cafc96e5293bf6257ecdda86b6da3f65",
+      "feature_source": "RDKit ChemicalFeatures and BaseFeatures.fdef, shared with the project"
+    },
+    "project_scorer_imported": false,
+    "shape_and_alignment_color": {
+      "api": "rdkit.Chem.rdShapeAlign.ScoreMol",
+      "comparison": "Direct point scores from exported heavy-atom reference/pose coordinates compared with retained score components; shape also compared with the result table.",
+      "realignment": false,
+      "shape_input_options": {
+        "normalize": false,
+        "useColors": true
+      }
+    }
+  },
+  "publication_limits": [
+    "No molecular strings, route graphs, raw predictions or coordinates are bundled in this compact record.",
+    "The original local reports, provenance and assessment script are hash-bound but not bundled; this is not a self-contained public replay.",
+    "No global alignment optimality, activity probability, biological activity, synthesis success or method superiority is established.",
+    "This check does not cover failed, incomplete or later campaign outputs and is not a full-suite rerun."
+  ],
+  "relationship_to_previous_evidence": {
+    "distinction": "The earlier audit recomputed score arithmetic and used the project pharmacophore function; it did not directly recompute shape scores. This later check directly evaluates fixed-pose shape/color and independently implements pharmacophore matching/arithmetic, while retaining the shared-kernel/perception limitations.",
+    "earlier_report_preserved_unchanged": true,
+    "previous_ranking_checked_utc": "2026-10-15T19:30:26.147244+00:00",
+    "previous_ranking_validation_sha256": "64433a3666cf9bf409d8e101d94ca660fe4e782c13ad0d9250bb2d8e59ed1fc0",
+    "published_record": "score_reference_validation.json",
+    "published_record_sha256": "672789e41fafcbc364665946512c11e49b3c0d626e2eebd1d3ace9f5f2e97989"
+  },
+  "retained_evidence": [
+    {
+      "bundled": false,
+      "bytes": 43316,
+      "retained_filename": "validation.json",
+      "role": "parent_validation",
+      "sha256": "1e1c5192f2205b3c44cc8eeaca381c0c79cd3a9421ee12abf98c8833911e18f0"
+    },
+    {
+      "bundled": false,
+      "bytes": 927,
+      "retained_filename": "fixed-pose-score-validation-20261016.log",
+      "role": "parent_log",
+      "sha256": "7ff25693a12755621efc51148ba133ec6e43715b4762c9b98f698d53ae39cfc1"
+    },
+    {
+      "bundled": false,
+      "bytes": 12231,
+      "retained_filename": "audit-fixed-pose-scores-parent.py",
+      "role": "parent_audit_script",
+      "sha256": "546d3141df571b52364710ec55bfc3d0e5edbb90f87a1b8daa4b50eb01a38982"
+    },
+    {
+      "bundled": false,
+      "bytes": 405,
+      "retained_filename": "input-snapshot-manifest.json",
+      "role": "input_snapshot_manifest",
+      "sha256": "2356e0a888cdfbf4e321ee92f66d3a4361727031e25f895493bb694e06e3bb94"
+    },
+    {
+      "bundled": false,
+      "bytes": 16889,
+      "retained_filename": "ranking-validation.json",
+      "role": "previous_ranking_validation",
+      "sha256": "64433a3666cf9bf409d8e101d94ca660fe4e782c13ad0d9250bb2d8e59ed1fc0"
+    },
+    {
+      "bundled": false,
+      "bytes": 4507,
+      "retained_filename": "frozen-campaign-code-provenance.json",
+      "role": "frozen_campaign_code_provenance",
+      "sha256": "8c8d9a883fe29acc8ffc1d6c3826a0056def13a93fa852508617069f3d48075e"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Later direct fixed-pose consistency check of returned 3D candidates from the retained 2026-10-15 19:28:54 UTC snapshot. No new alignment, campaign generation, model prediction or full regression suite was run.",
+  "score_absolute_tolerance": 0.0001,
+  "source_snapshot": {
+    "bound_input_artifacts": 120,
+    "bound_input_artifacts_scope": "All 106 artifacts from the preceding export audit plus 14 request files are hash-checked; direct point scoring selects the nine successful 3D runs.",
+    "manifest_sha256": "2356e0a888cdfbf4e321ee92f66d3a4361727031e25f895493bb694e06e3bb94",
+    "observation_unit": "Returned candidate records and hit/design reference-pose pairs, not distinct compounds or independent target observations.",
+    "selection": "Nine successful pipeline-prefixed 3D runs present in the immutable read-time run snapshots, with 24 returned candidate records and two reference/pose pairs per candidate. This is not every planned campaign output or a performance denominator.",
+    "sources": [
+      {
+        "read_utc": "2026-10-15T19:28:54.916570+00:00",
+        "runs": 41,
+        "sha256": "c5cd13c1173ac364a01a86b8da873948d8a479b1d7e725be751deffb9219d8cb",
+        "source": "comparison-gpu0/runs.json"
+      },
+      {
+        "read_utc": "2026-10-15T19:28:54.933319+00:00",
+        "runs": 56,
+        "sha256": "cab8f1f405c55f174ab044c5a79a69945197bd4189a82ba7007c2307441e5369",
+        "source": "comparison-gpu1/runs.json"
+      }
+    ]
+  },
+  "status": "passed",
+  "tolerance_basis": "Coordinates were serialized to four decimal places in SDF. The check permits 1e-4 absolute score differences rather than claiming bitwise identity.",
+  "versions": {
+    "networkx": "3.4.2",
+    "numpy": "1.26.4",
+    "rdkit": "2025.09.6"
+  }
+}
