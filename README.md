@@ -115,6 +115,13 @@ and checks its published archive digest before extraction. It refuses to overwri
 an existing data directory. Fingerprint generation canonicalizes and deduplicates
 connected scaffolds, reports rejected lines, and records source hash and RDKit
 version. Existing output databases are also protected from overwrite.
+Generation checks that each serialized isomeric SMILES is unchanged after
+reparsing, with cycle detection and at most eight roundtrips. Fingerprint bits
+come from that exact reparsed molecule. Unresolved inputs are excluded as
+`canonicalization_unstable`; metadata records cycle/limit counts and original
+input examples. Stereo is not removed to force convergence. New assets declare
+`canonicalization_policy=rdkit-roundtrip-fixed-point-v1`; only this policy with a
+matching RDKit version enables the canonical-string fast path.
 
 Fingerprint bits and canonical SMILES can differ between RDKit releases. Search
 rejects a database with a known different RDKit version before ranking. Build a
@@ -134,10 +141,11 @@ Use your actual RDKit version in the output directory name. `--verify` recompute
 sampled fingerprint bits; a passing sample does not establish whole-database
 compatibility or enable cross-version ranking. Neither search nor verification
 rewrites an existing asset. Missing-version legacy databases remain readable and
-searchable, with fingerprint compatibility unverified. Their selected hits are
-canonicalized under the runtime, exact-query matches and duplicate structures are
-excluded, and the shortlist is refilled. Specified stereo, isotope and charge
-differences remain distinct.
+searchable, with fingerprint compatibility unverified. Assets without the new
+canonicalization policy have selected hits checked for a stable identity; exact
+query matches, duplicates and unresolved hits are excluded, and the shortlist is
+refilled. An unresolved query fails explicitly. Specified stereo, isotope and
+charge differences remain distinct.
 
 Use `--fingerprint-db data/fingerprints_v2` when running ChemBounce. A directory
 stores packed bits in memory-mappable NPY files; a `.npz` output is compressed but

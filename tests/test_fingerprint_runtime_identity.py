@@ -94,12 +94,14 @@ def test_mapped_query_exact_identity_uses_copy_and_preserves_stereo_isotope_char
 @pytest.mark.parametrize("packed", [False, True])
 def test_matching_runtime_keeps_string_fast_path_without_parsing_hits(monkeypatch, packed):
     data = database(["CC", "CCC", "CCCC", "CCCCC"], rdBase.rdkitVersion, packed, collisions=True)
+    data["canonicalization_policy"] = fp.CANONICALIZATION_POLICY
     query = Chem.MolFromSmiles("CC")
-    parse = Mock(side_effect=AssertionError("Canonical same-version rows do not need reparsing"))
+    parse = Mock(wraps=Chem.MolFromSmiles)
     monkeypatch.setattr(fp.Chem, "MolFromSmiles", parse)
     actual = fp.search_similar_scaffolds_fast(query, data, 2, 0)
     assert list(actual.index) == ["CCC", "CCCC"]
-    parse.assert_not_called()
+    # Only the query is stabilized. Certified stored hits need no reparsing.
+    assert [call.args[0] for call in parse.call_args_list] == ["CC"]
 
 
 def test_missing_version_database_only_parses_selected_hits(monkeypatch):
@@ -109,7 +111,8 @@ def test_missing_version_database_only_parses_selected_hits(monkeypatch):
     monkeypatch.setattr(fp.Chem, "MolFromSmiles", parse)
     actual = fp.search_similar_scaffolds_fast(query, data, 3, 0)
     assert list(actual.index) == ["C", "CC", "CCC"]
-    assert parse.call_count == 3
+    # One query parse, then input parsing + fixed-point verification per hit.
+    assert [call.args[0] for call in parse.call_args_list] == ["N", "C", "C", "CC", "CC", "CCC", "CCC"]
 
 
 @pytest.mark.parametrize("packed", [False, True])

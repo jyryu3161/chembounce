@@ -64,7 +64,15 @@ for read-only cross-version audits. With missing version metadata, legacy search
 remains available with fingerprint compatibility unverified: it canonicalizes
 selected hits, removes exact-query matches and equivalent representations, then
 refills top-k as necessary. The string-only identity fast path requires matching
-version metadata and the canonical/sorted/unique claim. Search does
+version metadata, the canonical/sorted/unique claim and the
+`rdkit-roundtrip-fixed-point-v1` policy marker. This policy requires serialized
+isomeric SMILES to be unchanged after reparsing; generation calculates bits from
+that exact reparsed molecule. It detects cycles and permits at most eight
+roundtrips. Unresolved source lines are rejected with original-input examples and
+separate cycle/limit counts. Queries use the same bounded policy and fail if
+unresolved; uncertified selected hits are checked and skipped with refill if
+unresolved. No stereo removal, tautomer enumeration or charge normalization is
+used to force convergence. Search does
 not canonicalize the entire library before each bounded lookup. Atom maps are
 removed from a query copy, preserving the caller's molecule; specified stereo,
 isotopes and charges remain part of exact identity. Ties retain stored database

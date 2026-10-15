@@ -9,11 +9,48 @@ from rdkit import Chem, rdBase, DataStructs
 from rdkit.Chem import rdFingerprintGenerator
 
 POPCOUNT = np.array([i.bit_count() for i in range(256)], dtype=np.uint8)
+CANONICALIZATION_POLICY = "rdkit-roundtrip-fixed-point-v1"
+CANONICALIZATION_MAX_ROUNDTRIPS = 8
 # The empty/empty convention changed between supported RDKit releases. Derive
 # the reference value from the installed version instead of silently disagreeing.
 EMPTY_TANIMOTO = DataStructs.TanimotoSimilarity(
     DataStructs.ExplicitBitVect(1), DataStructs.ExplicitBitVect(1)
 )
+
+
+class CanonicalizationError(ValueError):
+    def __init__(self, reason, roundtrips):
+        self.reason = reason
+        self.roundtrips = roundtrips
+        super().__init__(f"Canonical SMILES did not stabilize ({reason} after {roundtrips} roundtrips)")
+
+
+def stable_canonical_molecule(mol, max_roundtrips=CANONICALIZATION_MAX_ROUNDTRIPS):
+    """Return a fixed-point isomeric SMILES, its exact parsed Mol, and work count.
+
+    Atom maps are removed on a copy. No stereo removal, tautomer enumeration or
+    charge normalization is used to resolve a cycle or an exhausted work budget.
+    """
+    if isinstance(max_roundtrips, bool) or not isinstance(max_roundtrips, int) or max_roundtrips < 1:
+        raise ValueError("max_roundtrips must be a positive integer")
+    mol = Chem.Mol(mol)
+    for atom in mol.GetAtoms():
+        atom.SetAtomMapNum(0)
+    current = Chem.MolToSmiles(mol)
+    seen = {current}
+    for count in range(1, max_roundtrips + 1):
+        with rdBase.BlockLogs():
+            parsed = Chem.MolFromSmiles(current)
+        if parsed is None:
+            raise CanonicalizationError("invalid_roundtrip", count)
+        rewritten = Chem.MolToSmiles(parsed)
+        if rewritten == current:
+            return current, parsed, count
+        if rewritten in seen:
+            raise CanonicalizationError("cycle", count)
+        seen.add(rewritten)
+        current = rewritten
+    raise CanonicalizationError("limit", max_roundtrips)
 
 
 @lru_cache(maxsize=32)
@@ -145,12 +182,9 @@ def search_similar_scaffolds_fast(
             f"{rdBase.rdkitVersion}. Regenerate with this runtime from source SMILES to a new output path; "
             "sampled bit verification does not establish cross-version compatibility."
         )
-    # Generated rows and validated hits omit atom maps. Normalize a copy so exact
-    # query exclusion follows that same policy without changing the caller's Mol.
-    query_mol = Chem.Mol(query_mol)
-    for atom in query_mol.GetAtoms():
-        atom.SetAtomMapNum(0)
-    query_smiles = Chem.MolToSmiles(query_mol)
+    # Use the same bounded identity policy for queries, stored rows and old hits.
+    # Unresolved queries fail explicitly without modifying the caller's Mol.
+    query_smiles, query_mol, _ = stable_canonical_molecule(query_mol)
     query = generate_query_fingerprint(query_mol, fp_db["radius"], fp_db["fp_size"])
     packed = fp_db.get("packed", False)
     if packed:
@@ -169,12 +203,12 @@ def search_similar_scaffolds_fast(
             duplicate[first] = False
         fp_db["_duplicate_mask"] = duplicate
     duplicate = fp_db["_duplicate_mask"]
-    # Canonical spellings can change across RDKit releases (including E/Z slash
-    # direction). A sorted/unique string claim alone cannot establish identity
-    # under this runtime. Unknown versions use selected-hit validation.
+    # A single canonical write is not always stable even within one RDKit release.
+    # Only a matching runtime and fixed-point builder policy certify the fast path.
     canonical_db = (
         bool(fp_db.get("canonical_sorted_unique", False))
         and str(fp_db.get("rdkit_version", "")) == rdBase.rdkitVersion
+        and str(fp_db.get("canonicalization_policy", "")) == CANONICALIZATION_POLICY
     )
     fetch_n = scaffold_top_n
     while True:
@@ -203,9 +237,15 @@ def search_similar_scaffolds_fast(
             ):
                 rejected.add(int(index))
                 continue
-            for atom in mol.GetAtoms():
-                atom.SetAtomMapNum(0)
-            canonical = Chem.MolToSmiles(mol)
+            try:
+                canonical, _, _ = stable_canonical_molecule(mol)
+            except CanonicalizationError as exc:
+                rejected.add(int(index))
+                fp_db.setdefault("_canonicalization_rejected_rows", {})[int(index)] = {
+                    "reason": exc.reason,
+                    "roundtrips": exc.roundtrips,
+                }
+                continue
             if canonical != query_smiles and canonical not in valid:
                 valid[canonical] = score
         if (
