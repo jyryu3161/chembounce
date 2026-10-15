@@ -2,6 +2,12 @@
 
 ## 2.0.0.dev0
 
+- Enforce reaction-site stereochemistry during replay and reject isotope/stereo-only
+  scaffold hops. Score carried routes across all designs before fresh candidates.
+- Validate synthesis settings and protect existing synthesis output before hopping;
+  report model runtime failures through CLI diagnostics. Compute Pareto dominance
+  once per candidate pair, preserving fronts with quadratic worst-case work.
+  See the [develop review and live validation](docs/VALIDATION.md#develop-review-2026-10-15).
 - Report hit/design Morgan-bit Tanimoto alongside shape/pharmacophore, include both
   in Pareto ranking, and export them in TSV, JSON and SDF. Similarity cutoffs remain
   opt-in. Preserve the legacy `hit_morgan` output alias.

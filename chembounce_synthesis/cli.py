@@ -50,7 +50,7 @@ def main(argv=None):
         if designs is None:
             raise ValueError("Provide --design/--designs-tsv or --continue-from")
         rows = run(args.hit or inherited_hit, designs, apply_expansion_options(config, args), args.output)
-    except (ValueError, OSError, KeyError, TypeError) as exc:
+    except (ValueError, OSError, KeyError, TypeError, RuntimeError) as exc:
         logging.error("%s", exc)
         return 2
     print(f"Verified and ranked products: {len(rows)}; results: {args.output}/results.tsv")

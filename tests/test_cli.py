@@ -87,3 +87,43 @@ def test_synthesis_overrides_require_config_before_hopping(tmp_path, args):
     assert result.returncode == 2
     assert "require --synthesis-config" in result.stderr
     assert not (tmp_path / "overall_result.txt").exists()
+
+
+def test_existing_synthesis_outputs_are_protected_before_hopping_overwrite(tmp_path):
+    old = tmp_path / "overall_result.txt"
+    old.write_text("previous hopping results\n")
+    synthesis = tmp_path / "synthesis"
+    synthesis.mkdir()
+    (synthesis / "results.tsv").write_text("previous synthesis results\n")
+    result = invoke(
+        tmp_path,
+        "-i",
+        "CCO",
+        "--overwrite",
+        "--synthesis-config",
+        str(ROOT / "examples/synthesis/demo-config.json"),
+    )
+    assert result.returncode == 2
+    assert "fresh output directory" in result.stderr
+    assert old.read_text() == "previous hopping results\n"
+    assert (synthesis / "results.tsv").read_text() == "previous synthesis results\n"
+
+
+@pytest.mark.parametrize(
+    "setting",
+    [
+        {"search": {"max_steps": 0}},
+        {"conformers": {"num_conformers": 0}},
+        {"conformers": {"energy_window": "5"}},
+        {"conformers": {"seed": True}},
+    ],
+)
+def test_invalid_synthesis_settings_fail_before_hopping(tmp_path, setting):
+    config = json.loads((ROOT / "examples/synthesis/demo-config.json").read_text())
+    config.update(setting)
+    path = tmp_path / "invalid.json"
+    path.write_text(json.dumps(config))
+    result = invoke(tmp_path, "-i", "CCO", "--synthesis-config", str(path))
+    assert result.returncode == 2
+    assert "Traceback" not in result.stderr
+    assert not (tmp_path / "overall_result.txt").exists()

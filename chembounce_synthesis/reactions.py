@@ -65,6 +65,9 @@ class Rules:
             # the same known warnings for every registry load on stderr.
             with rdBase.BlockLogs():
                 rxn.Initialize()
+            # A whole-molecule role check is insufficient when only one of several
+            # sites has the required stereochemistry. Enforce it during replay too.
+            rxn.GetSubstructParams().useChirality = True
             self.rules[ident] = ReactionRule(ident, smarts, source, rxn, warnings)
             self.by_smarts[smarts] = ident
         if not self.rules:

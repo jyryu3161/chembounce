@@ -43,11 +43,17 @@ class ConformerSettings:
             raise ValueError("reject_unspecified_stereo must be true or false")
         positive(self.num_conformers, "num_conformers")
         positive(self.max_iterations, "max_iterations")
-        if not isinstance(self.seed, int) or not 0 <= self.seed <= 2**31 - 1:
+        if isinstance(self.seed, bool) or not isinstance(self.seed, int) or not 0 <= self.seed <= 2**31 - 1:
             raise ValueError("seed must be an integer in [0, 2**31-1]")
         for key in ("energy_window", "strain_penalty", "pharmacophore_sigma"):
             value = getattr(self, key)
-            if not math.isfinite(value) or value < 0 or (key == "pharmacophore_sigma" and value == 0):
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(value)
+                or value < 0
+                or (key == "pharmacophore_sigma" and value == 0)
+            ):
                 raise ValueError(f"Invalid {key}")
 
 

@@ -114,6 +114,18 @@ def test_final_structure_constraints():
         check_constraints(DESIGN, HIT, DESIGN, core_smiles="S")
 
 
+@pytest.mark.parametrize(
+    "hit,product",
+    [
+        (HIT, "CC(=O)Nc1cc[13cH]cc1"),
+        ("C1CC[C@H]2CCCC[C@@H]2C1", "C1CC[C@@H]2CCCC[C@@H]2C1"),
+    ],
+)
+def test_isotope_or_stereo_change_alone_is_not_scaffold_hopping(hit, product):
+    with pytest.raises(ValueError, match="Murcko"):
+        check_constraints(product, hit, product)
+
+
 def test_prompt_loader_does_not_execute_upstream_source(tmp_path):
     path = tmp_path / "vars.py"
     path.write_text(
@@ -422,3 +434,44 @@ def test_refinement_failure_keeps_screening_pool_without_falling_back(
     assert summary["route_rejections"]["refinement_failed"] == 1
     assert len((out / "results.tsv").read_text().splitlines()) == 1
     assert len((out / "screening.tsv").read_text().splitlines()) > 1
+
+
+def test_continuation_scores_all_designs_carried_routes_before_new_candidates(tmp_path, assets, proposal):
+    from chembounce_synthesis.continuation import continuation_inputs
+
+    second_design = "CC(=O)Nc1ccccn1"
+    second_proposal = {
+        "reactions": [
+            {"reaction_template": "amide", "reactants": ["CC(=O)O", "Nc1ccccn1"], "product": second_design}
+        ],
+        "building_blocks": ["CC(=O)O", "Nc1ccccn1"],
+    }
+    config = config_for(tmp_path, assets, proposal)
+    config["search"] = {"building_block_top_k": 1, "beam_width": 1}
+    config["expansion"] = {"rounds": 0}
+    config["max_scored_products"] = 2
+    path = tmp_path / "proposals.json"
+    data = json.loads(path.read_text())
+    data["proposals"].append({"design": second_design, "response": second_proposal})
+    path.write_text(json.dumps(data))
+    first = tmp_path / "first"
+    old = run(HIT, [DESIGN, second_design], config, first)
+    assert len(old) == 2
+    hit, designs, resumed = continuation_inputs(first)
+    resumed["search"] = {"building_block_top_k": 3, "beam_width": 4}
+    continued = run(hit, designs, resumed, tmp_path / "continued")
+    assert {r["smiles"] for r in old} <= {r["smiles"] for r in continued}
+
+
+def test_cli_reports_model_runtime_failure_without_traceback(tmp_path, assets, proposal, monkeypatch, caplog):
+    def fail(config):
+        raise RuntimeError("Install the synllama optional dependency group")
+
+    monkeypatch.setattr("chembounce_synthesis.workflow._provider", fail)
+    config = config_for(tmp_path, assets, proposal)
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps(config))
+    out = tmp_path / "runtime-error"
+    assert main(["--hit", HIT, "--design", DESIGN, "--config", str(path), "--output", str(out)]) == 2
+    assert "Install the synllama" in caplog.text
+    assert json.loads((out / "summary.json").read_text())["status"] == "error"

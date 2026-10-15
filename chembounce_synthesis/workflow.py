@@ -11,6 +11,7 @@ import time
 from dataclasses import asdict
 from pathlib import Path
 
+import numpy as np
 from rdkit import Chem, DataStructs
 from rdkit.Chem.Scaffolds import MurckoScaffold
 
@@ -51,8 +52,8 @@ COLUMNS = [
 ]
 
 
-def scaffold(smiles):
-    return Chem.MolToSmiles(MurckoScaffold.GetScaffoldForMol(molecule(smiles)), isomericSmiles=True)
+def scaffold(smiles, *, isomeric=True):
+    return Chem.MolToSmiles(MurckoScaffold.GetScaffoldForMol(molecule(smiles)), isomericSmiles=isomeric)
 
 
 def check_constraints(product, hit, design, mode="hop", core_smiles=None, preserve_design_scaffold=False):
@@ -60,7 +61,9 @@ def check_constraints(product, hit, design, mode="hop", core_smiles=None, preser
     if canonical(product) == canonical(hit) and mode == "hop":
         raise ValueError("Reconstruction returned the original hit")
     if mode == "hop":
-        if scaffold(product) == scaffold(hit):
+        # Isotope labels or stereoisomers alone do not constitute a scaffold hop.
+        # Exact chemical-state checks remain in replay and scaffold/core preservation.
+        if scaffold(product, isomeric=False) == scaffold(hit, isomeric=False):
             raise ValueError("Reconstructed product did not change the original Murcko scaffold")
     elif mode == "expand":
         if canonical(product) == canonical(design):
@@ -116,6 +119,8 @@ def _config(config):
             raise ValueError(f"{key} must be a JSON object")
     if "preserve_design_scaffold" in config and not isinstance(config["preserve_design_scaffold"], bool):
         raise ValueError("preserve_design_scaffold must be true or false")
+    SearchLimits(**config.get("search", {}))
+    ConformerSettings(**config.get("conformers", {}))
     RefinementSettings(**config.get("refinement", {}))
     carried = config.get("carry_forward", [])
     if not isinstance(carried, list) or not all(isinstance(p, str) and p for p in carried):
@@ -270,36 +275,39 @@ def _manifest(config, hit, designs):
 
 
 def _pareto(rows):
-    remaining = list(range(len(rows)))
-    level = 0
-    points = [
-        (
-            r["hit_shape"],
-            r["hit_pharmacophore"],
-            r["design_shape"],
-            r["design_pharmacophore"],
-            r["hit_tanimoto"],
-            r["design_tanimoto"],
-            -r["relative_energy"],
-            -r["reaction_steps"],
-        )
-        for r in rows
-    ]
-    while remaining:
-        front = [
-            i
-            for i in remaining
-            if not any(
-                all(a >= b for a, b in zip(points[j], points[i]))
-                and any(a > b for a, b in zip(points[j], points[i]))
-                for j in remaining
-                if j != i
+    if not rows:
+        return
+    points = np.asarray(
+        [
+            (
+                r["hit_shape"],
+                r["hit_pharmacophore"],
+                r["design_shape"],
+                r["design_pharmacophore"],
+                r["hit_tanimoto"],
+                r["design_tanimoto"],
+                -r["relative_energy"],
+                -r["reaction_steps"],
             )
+            for r in rows
         ]
+    )
+    if not np.isfinite(points).all():
+        raise ValueError("Pareto ranking requires finite metrics")
+    # Compute dominance once. Rechecking every remaining pair on every front
+    # makes a fully ordered pool cubic in the number of candidates.
+    dominates = np.asarray(
+        [np.all(point >= points, axis=1) & np.any(point > points, axis=1) for point in points]
+    )
+    counts = dominates.sum(axis=0)
+    front = np.flatnonzero(counts == 0)
+    level = 0
+    while len(front):
         for i in front:
             rows[i]["pareto_front"] = level
-        removed = set(front)
-        remaining = [i for i in remaining if i not in removed]
+        counts[front] = -1
+        counts -= dominates[front].sum(axis=0)
+        front = np.flatnonzero(counts == 0)
         level += 1
 
 
@@ -317,6 +325,15 @@ def _write_table(path, rows):
         writer.writeheader()
         for row in rows:
             writer.writerow(row | {"alternative_route_ids": json.dumps(row["alternative_route_ids"])})
+
+
+def _design_batches(designs, provider):
+    # The scoring budget is global: carry every design before starting any new
+    # projection. Otherwise early designs can displace later designs' old hits.
+    for design in designs:
+        yield design, [None]
+    for design in designs:
+        yield design, provider.propose(design)
 
 
 def run(hit, designs, config, output_dir):
@@ -404,13 +421,12 @@ def run(hit, designs, config, output_dir):
         )
         from utils import _get_molecular_prop_extd_, determ_props
 
-        for design in designs:
+        for design, proposals in _design_batches(designs, provider):
             LOGGER.info("Projecting design %s onto catalog reaction space", design)
-            proposals = provider.propose(design)
             design_fp = FP.GetFingerprint(molecule(design))
             expansion_cache = {}
             # Carry evidence first, before the fresh search can consume the scoring budget.
-            for proposal in [None, *proposals]:
+            for proposal in proposals:
                 if proposal is None:
                     proposal_id, projected = None, []
                     candidates = carried[design]

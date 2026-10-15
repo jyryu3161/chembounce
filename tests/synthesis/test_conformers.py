@@ -75,7 +75,16 @@ def test_bound_pose_is_preserved_and_identity_checked(tmp_path):
 
 
 @pytest.mark.parametrize(
-    "kwargs", [{"num_conformers": 0}, {"energy_window": math.nan}, {"pharmacophore_sigma": 0}, {"seed": -1}]
+    "kwargs",
+    [
+        {"num_conformers": 0},
+        {"energy_window": math.nan},
+        {"pharmacophore_sigma": 0},
+        {"seed": -1},
+        {"seed": True},
+        {"energy_window": True},
+        {"pharmacophore_sigma": "1"},
+    ],
 )
 def test_invalid_ensemble_settings(kwargs):
     with pytest.raises(ValueError):
