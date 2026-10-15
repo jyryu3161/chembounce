@@ -287,6 +287,8 @@ def score_candidate(smiles, hit, design, settings=ConformerSettings(), hit_pose=
     Each reference overlay computes shape and pharmacophore on one common pose.
     The same candidate conformation must support both references, although its
     rigid-body orientation can differ. Scores are heuristics, not probabilities.
+    Identical reference ensemble objects share an alignment calculation; their
+    returned comparison dictionaries and pose molecules remain independent.
     """
     require_alignment()
     if pose_constraints is not None:
@@ -294,14 +296,21 @@ def score_candidate(smiles, hit, design, settings=ConformerSettings(), hit_pose=
     candidate = ensemble(canonical(smiles), settings)
     hit_ref = hit_pose if hit_pose is not None else ensemble(canonical(hit), settings)
     design_ref = ensemble(canonical(design), settings)
+    shared_reference = hit_ref is design_ref
     best, rejected_poses = None, []
     for cid in candidate.relative_energies:
         hit_info, hit_aligned = _overlay(hit_ref, candidate, cid, settings)
+        if shared_reference:
+            # Equal SMILES do not imply equal bound/generated reference poses.
+            # Copy before pocket assessment so either exported pose can be
+            # annotated or modified independently, as with two overlays.
+            design_info, design_aligned = dict(hit_info), Chem.Mol(hit_aligned)
         pocket = pose_constraints.evaluate(hit_aligned, cid) if pose_constraints is not None else None
         if pocket is not None and not pocket["passed"]:
             rejected_poses.append({"candidate_conformer_id": cid, **pocket})
             continue
-        design_info, design_aligned = _overlay(design_ref, candidate, cid, settings)
+        if not shared_reference:
+            design_info, design_aligned = _overlay(design_ref, candidate, cid, settings)
         relative_energy = candidate.relative_energies[cid]
         score = math.sqrt(
             hit_info["reference_adjusted_joint"] * design_info["reference_adjusted_joint"]
