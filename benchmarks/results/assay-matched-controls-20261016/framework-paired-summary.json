@@ -1,0 +1,4892 @@
+{
+  "bit_tanimoto": {
+    "aggregation_contract": {
+      "conditional_estimates": "Report success-conditional estimates and unestimable groups explicitly; do not replace missing estimates with zero",
+      "dependence": "Target clustering contains within-target assay/family repeats; shared chemistry and related targets can still correlate across clusters",
+      "hierarchy": [
+        "query",
+        "context",
+        "assay",
+        "target"
+      ],
+      "interpretation": "Descriptive uncertainty for sampled targets, not proof of broad generalization or calibrated activity probability",
+      "missing_scores": "Keep every selected pair; missing/failed scores enter pessimistic and optimistic ranking bounds",
+      "uncertainty_unit": "Resample target groups only, never query-control pairs, assays or conformer seeds as independent targets",
+      "weights": "Equal child weights at each level; contexts within an assay cannot give that assay extra target weight"
+    },
+    "assays": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "metrics": {
+          "average_precision": 0.6689435564435564,
+          "average_precision_bounds": [
+            0.6689435564435564,
+            0.6689435564435564
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.3,
+          "roc_auc_bounds": [
+            0.3,
+            0.3
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "metrics": {
+          "average_precision": 0.8761904761904762,
+          "average_precision_bounds": [
+            0.8761904761904762,
+            0.8761904761904762
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.84,
+          "roc_auc_bounds": [
+            0.84,
+            0.84
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "metrics": {
+          "average_precision": 0.8493578643578643,
+          "average_precision_bounds": [
+            0.8493578643578643,
+            0.8493578643578643
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.7833333333333333,
+          "roc_auc_bounds": [
+            0.7833333333333333,
+            0.7833333333333333
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "metrics": {
+          "average_precision": 0.8040384615384615,
+          "average_precision_bounds": [
+            0.8040384615384615,
+            0.8040384615384615
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.6,
+            0.6
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "metrics": {
+          "average_precision": 0.980909090909091,
+          "average_precision_bounds": [
+            0.980909090909091,
+            0.980909090909091
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.96,
+          "roc_auc_bounds": [
+            0.96,
+            0.96
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "metrics": {
+          "average_precision": 0.6619262681762682,
+          "average_precision_bounds": [
+            0.6619262681762682,
+            0.6619262681762682
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.64,
+          "roc_auc_bounds": [
+            0.64,
+            0.64
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "metrics": {
+          "average_precision": 0.6041785375118709,
+          "average_precision_bounds": [
+            0.6041785375118709,
+            0.6041785375118709
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6444444444444445,
+          "roc_auc_bounds": [
+            0.6444444444444445,
+            0.6444444444444445
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "metrics": {
+          "average_precision": 0.928030303030303,
+          "average_precision_bounds": [
+            0.6422527472527472,
+            0.9408119658119658
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.7407407407407407,
+          "roc_auc_bounds": [
+            0.4,
+            0.86
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "metrics": {
+          "average_precision": 0.5430795395081109,
+          "average_precision_bounds": [
+            0.5430795395081109,
+            0.5430795395081109
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6071428571428571,
+          "roc_auc_bounds": [
+            0.6071428571428571,
+            0.6071428571428571
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "metrics": {
+          "average_precision": 0.719313725490196,
+          "average_precision_bounds": [
+            0.719313725490196,
+            0.719313725490196
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.755,
+          "roc_auc_bounds": [
+            0.755,
+            0.755
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 20261016
+    },
+    "contexts": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "context_id": "context-5ee8d3d2dbc6832c550fc069",
+        "metrics": {
+          "average_precision": 0.6689435564435564,
+          "average_precision_bounds": [
+            0.6689435564435564,
+            0.6689435564435564
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.3,
+          "roc_auc_bounds": [
+            0.3,
+            0.3
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "context_id": "context-b0835ae2c8b32155a0d25f35",
+        "metrics": {
+          "average_precision": 0.8761904761904762,
+          "average_precision_bounds": [
+            0.8761904761904762,
+            0.8761904761904762
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.84,
+          "roc_auc_bounds": [
+            0.84,
+            0.84
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "context_id": "context-0877ed7ed11f53a5411e35f7",
+        "metrics": {
+          "average_precision": 0.8493578643578643,
+          "average_precision_bounds": [
+            0.8493578643578643,
+            0.8493578643578643
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.7833333333333333,
+          "roc_auc_bounds": [
+            0.7833333333333333,
+            0.7833333333333333
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "context_id": "context-9f17838f7fe0595c8263186d",
+        "metrics": {
+          "average_precision": 0.8040384615384615,
+          "average_precision_bounds": [
+            0.8040384615384615,
+            0.8040384615384615
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.6,
+            0.6
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "context_id": "context-a8597534f3cbe9135f90fd6a",
+        "metrics": {
+          "average_precision": 0.980909090909091,
+          "average_precision_bounds": [
+            0.980909090909091,
+            0.980909090909091
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.96,
+          "roc_auc_bounds": [
+            0.96,
+            0.96
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "context_id": "context-07741203664a5a1ab85e8943",
+        "metrics": {
+          "average_precision": 0.6619262681762682,
+          "average_precision_bounds": [
+            0.6619262681762682,
+            0.6619262681762682
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.64,
+          "roc_auc_bounds": [
+            0.64,
+            0.64
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "context_id": "context-659e6e342eacc140fc6c6a2e",
+        "metrics": {
+          "average_precision": 0.6041785375118709,
+          "average_precision_bounds": [
+            0.6041785375118709,
+            0.6041785375118709
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6444444444444445,
+          "roc_auc_bounds": [
+            0.6444444444444445,
+            0.6444444444444445
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "context_id": "context-ae4d778097316c985130d458",
+        "metrics": {
+          "average_precision": 0.928030303030303,
+          "average_precision_bounds": [
+            0.6422527472527472,
+            0.9408119658119658
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.7407407407407407,
+          "roc_auc_bounds": [
+            0.4,
+            0.86
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "context_id": "context-635fc1e3c7d3b20cb558e32f",
+        "metrics": {
+          "average_precision": 0.5430795395081109,
+          "average_precision_bounds": [
+            0.5430795395081109,
+            0.5430795395081109
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6071428571428571,
+          "roc_auc_bounds": [
+            0.6071428571428571,
+            0.6071428571428571
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "context_id": "context-3565895fa386e29340475aa1",
+        "metrics": {
+          "average_precision": 0.719313725490196,
+          "average_precision_bounds": [
+            0.719313725490196,
+            0.719313725490196
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.755,
+          "roc_auc_bounds": [
+            0.755,
+            0.755
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "context_id": "context-1cd8f6206d38fe3b32a34860",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "context_id": "context-4065e169ce5abc92848b68cc",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "metric": "bit_tanimoto",
+    "missing_or_failed_pairs": 3,
+    "pair_count": 197,
+    "queries": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "context_id": "context-5ee8d3d2dbc6832c550fc069",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.6689435564435564,
+          "average_precision_bounds": [
+            0.6689435564435564,
+            0.6689435564435564
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.3,
+          "roc_auc_bounds": [
+            0.3,
+            0.3
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-aeb699155b5951331e3414c4",
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "context_id": "context-b0835ae2c8b32155a0d25f35",
+        "metrics": {
+          "active_count": 5,
+          "average_precision": 0.8761904761904762,
+          "average_precision_bounds": [
+            0.8761904761904762,
+            0.8761904761904762
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.84,
+          "roc_auc_bounds": [
+            0.84,
+            0.84
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 5,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-3112fe8f62a9915e64c043dd",
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "context_id": "context-9f17838f7fe0595c8263186d",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.8040384615384615,
+          "average_precision_bounds": [
+            0.8040384615384615,
+            0.8040384615384615
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.6,
+            0.6
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-558c73c70d162c6e27f51c6c",
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "context_id": "context-0877ed7ed11f53a5411e35f7",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.8493578643578643,
+          "average_precision_bounds": [
+            0.8493578643578643,
+            0.8493578643578643
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.7833333333333333,
+          "roc_auc_bounds": [
+            0.7833333333333333,
+            0.7833333333333333
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-60be606ec9c7d73837d797c7",
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "context_id": "context-a8597534f3cbe9135f90fd6a",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.980909090909091,
+          "average_precision_bounds": [
+            0.980909090909091,
+            0.980909090909091
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.96,
+          "roc_auc_bounds": [
+            0.96,
+            0.96
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-b7e1a42703821102f2b20148",
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "context_id": "context-07741203664a5a1ab85e8943",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.6619262681762682,
+          "average_precision_bounds": [
+            0.6619262681762682,
+            0.6619262681762682
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.64,
+          "roc_auc_bounds": [
+            0.64,
+            0.64
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-e7cd32c492584e673ba7c9cc",
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "context_id": "context-ae4d778097316c985130d458",
+        "metrics": {
+          "active_count": 9,
+          "average_precision": 0.928030303030303,
+          "average_precision_bounds": [
+            0.6422527472527472,
+            0.9408119658119658
+          ],
+          "inactive_count": 3,
+          "missing_scores": {
+            "active": 1,
+            "inactive": 2
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.7407407407407407,
+          "roc_auc_bounds": [
+            0.4,
+            0.86
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-ca4f5ab71f884bc05ea9cd09",
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "context_id": "context-659e6e342eacc140fc6c6a2e",
+        "metrics": {
+          "active_count": 9,
+          "average_precision": 0.6041785375118709,
+          "average_precision_bounds": [
+            0.6041785375118709,
+            0.6041785375118709
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6444444444444445,
+          "roc_auc_bounds": [
+            0.6444444444444445,
+            0.6444444444444445
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 9,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-e2de92fe34e24d8b1f3dc835",
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "context_id": "context-635fc1e3c7d3b20cb558e32f",
+        "metrics": {
+          "active_count": 7,
+          "average_precision": 0.5430795395081109,
+          "average_precision_bounds": [
+            0.5430795395081109,
+            0.5430795395081109
+          ],
+          "inactive_count": 8,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6071428571428571,
+          "roc_auc_bounds": [
+            0.6071428571428571,
+            0.6071428571428571
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 7,
+          "total_inactive_controls": 8
+        },
+        "query_id": "query-9a6a7884bdcc7b79d6a88389",
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "context_id": "context-3565895fa386e29340475aa1",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.719313725490196,
+          "average_precision_bounds": [
+            0.719313725490196,
+            0.719313725490196
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.755,
+          "roc_auc_bounds": [
+            0.755,
+            0.755
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-f1965f0755e0bca9a6ee94ce",
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "context_id": "context-1cd8f6206d38fe3b32a34860",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-29d8276ad6b6076dba437051",
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "context_id": "context-4065e169ce5abc92848b68cc",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-779b977dd327929e05e9918f",
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "schema": "assay-matched-controls-v1",
+    "success_conditional_target_bootstrap": {
+      "average_precision": {
+        "ci95": [
+          0.7190454593842199,
+          0.8942282665893777
+        ],
+        "mean": 0.8029973185963498,
+        "target_groups": 6
+      },
+      "roc_auc": {
+        "ci95": [
+          0.6466491953262786,
+          0.8616666666666667
+        ],
+        "mean": 0.7392217813051146,
+        "target_groups": 6
+      }
+    },
+    "target_macro": {
+      "average_precision": 0.8029973185963498,
+      "average_precision_bounds": [
+        0.7791825222815535,
+        0.8040624571614884
+      ],
+      "average_precision_estimable_children": 6,
+      "children": 6,
+      "roc_auc": 0.7392217813051146,
+      "roc_auc_bounds": [
+        0.7108267195767196,
+        0.7491600529100529
+      ],
+      "roc_auc_estimable_children": 6
+    },
+    "targets": [
+      {
+        "metrics": {
+          "average_precision": 0.7725670163170163,
+          "average_precision_bounds": [
+            0.7725670163170163,
+            0.7725670163170163
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.57,
+          "roc_auc_bounds": [
+            0.57,
+            0.57
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.8266981629481629,
+          "average_precision_bounds": [
+            0.8266981629481629,
+            0.8266981629481629
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.6916666666666667,
+          "roc_auc_bounds": [
+            0.6916666666666667,
+            0.6916666666666667
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.8214176795426795,
+          "average_precision_bounds": [
+            0.8214176795426795,
+            0.8214176795426795
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.8,
+          "roc_auc_bounds": [
+            0.8,
+            0.8
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.7661044202710869,
+          "average_precision_bounds": [
+            0.623215642382309,
+            0.7724952516619183
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.6925925925925926,
+          "roc_auc_bounds": [
+            0.5222222222222223,
+            0.7522222222222222
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.6311966324991535,
+          "average_precision_bounds": [
+            0.6311966324991535,
+            0.6311966324991535
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.6810714285714285,
+          "roc_auc_bounds": [
+            0.6810714285714285,
+            0.6810714285714285
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "unreturned_pairs": 0
+  },
+  "count_tanimoto": {
+    "aggregation_contract": {
+      "conditional_estimates": "Report success-conditional estimates and unestimable groups explicitly; do not replace missing estimates with zero",
+      "dependence": "Target clustering contains within-target assay/family repeats; shared chemistry and related targets can still correlate across clusters",
+      "hierarchy": [
+        "query",
+        "context",
+        "assay",
+        "target"
+      ],
+      "interpretation": "Descriptive uncertainty for sampled targets, not proof of broad generalization or calibrated activity probability",
+      "missing_scores": "Keep every selected pair; missing/failed scores enter pessimistic and optimistic ranking bounds",
+      "uncertainty_unit": "Resample target groups only, never query-control pairs, assays or conformer seeds as independent targets",
+      "weights": "Equal child weights at each level; contexts within an assay cannot give that assay extra target weight"
+    },
+    "assays": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "metrics": {
+          "average_precision": 0.5639069264069264,
+          "average_precision_bounds": [
+            0.5639069264069264,
+            0.5639069264069264
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.25,
+          "roc_auc_bounds": [
+            0.25,
+            0.25
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "metrics": {
+          "average_precision": 0.8761904761904762,
+          "average_precision_bounds": [
+            0.8761904761904762,
+            0.8761904761904762
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.84,
+          "roc_auc_bounds": [
+            0.84,
+            0.84
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "metrics": {
+          "average_precision": 0.8173015873015872,
+          "average_precision_bounds": [
+            0.8173015873015872,
+            0.8173015873015872
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.7,
+          "roc_auc_bounds": [
+            0.7,
+            0.7
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "metrics": {
+          "average_precision": 0.7760714285714284,
+          "average_precision_bounds": [
+            0.7760714285714284,
+            0.7760714285714284
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.5666666666666667,
+          "roc_auc_bounds": [
+            0.5666666666666667,
+            0.5666666666666667
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "metrics": {
+          "average_precision": 0.9024531024531025,
+          "average_precision_bounds": [
+            0.9024531024531025,
+            0.9024531024531025
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.88,
+          "roc_auc_bounds": [
+            0.88,
+            0.88
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "metrics": {
+          "average_precision": 0.40768306040364866,
+          "average_precision_bounds": [
+            0.40768306040364866,
+            0.40768306040364866
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.24,
+          "roc_auc_bounds": [
+            0.24,
+            0.24
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "metrics": {
+          "average_precision": 0.6000240500240499,
+          "average_precision_bounds": [
+            0.6000240500240499,
+            0.6000240500240499
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6222222222222222,
+          "roc_auc_bounds": [
+            0.6222222222222222,
+            0.6222222222222222
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "metrics": {
+          "average_precision": 0.7946649029982364,
+          "average_precision_bounds": [
+            0.5993939393939394,
+            0.8539646464646466
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.36,
+            0.82
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "metrics": {
+          "average_precision": 0.6168890633176347,
+          "average_precision_bounds": [
+            0.6168890633176347,
+            0.6168890633176347
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6785714285714286,
+          "roc_auc_bounds": [
+            0.6785714285714286,
+            0.6785714285714286
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "metrics": {
+          "average_precision": 0.8583333333333333,
+          "average_precision_bounds": [
+            0.8583333333333333,
+            0.8583333333333333
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.8,
+          "roc_auc_bounds": [
+            0.8,
+            0.8
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 20261016
+    },
+    "contexts": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "context_id": "context-5ee8d3d2dbc6832c550fc069",
+        "metrics": {
+          "average_precision": 0.5639069264069264,
+          "average_precision_bounds": [
+            0.5639069264069264,
+            0.5639069264069264
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.25,
+          "roc_auc_bounds": [
+            0.25,
+            0.25
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "context_id": "context-b0835ae2c8b32155a0d25f35",
+        "metrics": {
+          "average_precision": 0.8761904761904762,
+          "average_precision_bounds": [
+            0.8761904761904762,
+            0.8761904761904762
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.84,
+          "roc_auc_bounds": [
+            0.84,
+            0.84
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "context_id": "context-0877ed7ed11f53a5411e35f7",
+        "metrics": {
+          "average_precision": 0.8173015873015872,
+          "average_precision_bounds": [
+            0.8173015873015872,
+            0.8173015873015872
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.7,
+          "roc_auc_bounds": [
+            0.7,
+            0.7
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "context_id": "context-9f17838f7fe0595c8263186d",
+        "metrics": {
+          "average_precision": 0.7760714285714284,
+          "average_precision_bounds": [
+            0.7760714285714284,
+            0.7760714285714284
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.5666666666666667,
+          "roc_auc_bounds": [
+            0.5666666666666667,
+            0.5666666666666667
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "context_id": "context-a8597534f3cbe9135f90fd6a",
+        "metrics": {
+          "average_precision": 0.9024531024531025,
+          "average_precision_bounds": [
+            0.9024531024531025,
+            0.9024531024531025
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.88,
+          "roc_auc_bounds": [
+            0.88,
+            0.88
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "context_id": "context-07741203664a5a1ab85e8943",
+        "metrics": {
+          "average_precision": 0.40768306040364866,
+          "average_precision_bounds": [
+            0.40768306040364866,
+            0.40768306040364866
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.24,
+          "roc_auc_bounds": [
+            0.24,
+            0.24
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "context_id": "context-659e6e342eacc140fc6c6a2e",
+        "metrics": {
+          "average_precision": 0.6000240500240499,
+          "average_precision_bounds": [
+            0.6000240500240499,
+            0.6000240500240499
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6222222222222222,
+          "roc_auc_bounds": [
+            0.6222222222222222,
+            0.6222222222222222
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "context_id": "context-ae4d778097316c985130d458",
+        "metrics": {
+          "average_precision": 0.7946649029982364,
+          "average_precision_bounds": [
+            0.5993939393939394,
+            0.8539646464646466
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.36,
+            0.82
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "context_id": "context-635fc1e3c7d3b20cb558e32f",
+        "metrics": {
+          "average_precision": 0.6168890633176347,
+          "average_precision_bounds": [
+            0.6168890633176347,
+            0.6168890633176347
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6785714285714286,
+          "roc_auc_bounds": [
+            0.6785714285714286,
+            0.6785714285714286
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "context_id": "context-3565895fa386e29340475aa1",
+        "metrics": {
+          "average_precision": 0.8583333333333333,
+          "average_precision_bounds": [
+            0.8583333333333333,
+            0.8583333333333333
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.8,
+          "roc_auc_bounds": [
+            0.8,
+            0.8
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "context_id": "context-1cd8f6206d38fe3b32a34860",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "context_id": "context-4065e169ce5abc92848b68cc",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "metric": "count_tanimoto",
+    "missing_or_failed_pairs": 3,
+    "pair_count": 197,
+    "queries": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "context_id": "context-5ee8d3d2dbc6832c550fc069",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.5639069264069264,
+          "average_precision_bounds": [
+            0.5639069264069264,
+            0.5639069264069264
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.25,
+          "roc_auc_bounds": [
+            0.25,
+            0.25
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-aeb699155b5951331e3414c4",
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "context_id": "context-b0835ae2c8b32155a0d25f35",
+        "metrics": {
+          "active_count": 5,
+          "average_precision": 0.8761904761904762,
+          "average_precision_bounds": [
+            0.8761904761904762,
+            0.8761904761904762
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.84,
+          "roc_auc_bounds": [
+            0.84,
+            0.84
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 5,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-3112fe8f62a9915e64c043dd",
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "context_id": "context-9f17838f7fe0595c8263186d",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.7760714285714284,
+          "average_precision_bounds": [
+            0.7760714285714284,
+            0.7760714285714284
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.5666666666666667,
+          "roc_auc_bounds": [
+            0.5666666666666667,
+            0.5666666666666667
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-558c73c70d162c6e27f51c6c",
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "context_id": "context-0877ed7ed11f53a5411e35f7",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.8173015873015872,
+          "average_precision_bounds": [
+            0.8173015873015872,
+            0.8173015873015872
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.7,
+          "roc_auc_bounds": [
+            0.7,
+            0.7
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-60be606ec9c7d73837d797c7",
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "context_id": "context-a8597534f3cbe9135f90fd6a",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.9024531024531025,
+          "average_precision_bounds": [
+            0.9024531024531025,
+            0.9024531024531025
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.88,
+          "roc_auc_bounds": [
+            0.88,
+            0.88
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-b7e1a42703821102f2b20148",
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "context_id": "context-07741203664a5a1ab85e8943",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.40768306040364866,
+          "average_precision_bounds": [
+            0.40768306040364866,
+            0.40768306040364866
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.24,
+          "roc_auc_bounds": [
+            0.24,
+            0.24
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-e7cd32c492584e673ba7c9cc",
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "context_id": "context-ae4d778097316c985130d458",
+        "metrics": {
+          "active_count": 9,
+          "average_precision": 0.7946649029982364,
+          "average_precision_bounds": [
+            0.5993939393939394,
+            0.8539646464646466
+          ],
+          "inactive_count": 3,
+          "missing_scores": {
+            "active": 1,
+            "inactive": 2
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.36,
+            0.82
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-ca4f5ab71f884bc05ea9cd09",
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "context_id": "context-659e6e342eacc140fc6c6a2e",
+        "metrics": {
+          "active_count": 9,
+          "average_precision": 0.6000240500240499,
+          "average_precision_bounds": [
+            0.6000240500240499,
+            0.6000240500240499
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6222222222222222,
+          "roc_auc_bounds": [
+            0.6222222222222222,
+            0.6222222222222222
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 9,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-e2de92fe34e24d8b1f3dc835",
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "context_id": "context-635fc1e3c7d3b20cb558e32f",
+        "metrics": {
+          "active_count": 7,
+          "average_precision": 0.6168890633176347,
+          "average_precision_bounds": [
+            0.6168890633176347,
+            0.6168890633176347
+          ],
+          "inactive_count": 8,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6785714285714286,
+          "roc_auc_bounds": [
+            0.6785714285714286,
+            0.6785714285714286
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 7,
+          "total_inactive_controls": 8
+        },
+        "query_id": "query-9a6a7884bdcc7b79d6a88389",
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "context_id": "context-3565895fa386e29340475aa1",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.8583333333333333,
+          "average_precision_bounds": [
+            0.8583333333333333,
+            0.8583333333333333
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.8,
+          "roc_auc_bounds": [
+            0.8,
+            0.8
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-f1965f0755e0bca9a6ee94ce",
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "context_id": "context-1cd8f6206d38fe3b32a34860",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-29d8276ad6b6076dba437051",
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "context_id": "context-4065e169ce5abc92848b68cc",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-779b977dd327929e05e9918f",
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "schema": "assay-matched-controls-v1",
+    "success_conditional_target_bootstrap": {
+      "average_precision": {
+        "ci95": [
+          0.6937475025838705,
+          0.865878516324945
+        ],
+        "mean": 0.7677931609167019,
+        "target_groups": 6
+      },
+      "roc_auc": {
+        "ci95": [
+          0.5823700396825396,
+          0.8221031746031745
+        ],
+        "mean": 0.687010582010582,
+        "target_groups": 6
+      }
+    },
+    "target_macro": {
+      "average_precision": 0.767793160916702,
+      "average_precision_bounds": [
+        0.7515205806163439,
+        0.7727348062055694
+      ],
+      "average_precision_estimable_children": 6,
+      "children": 6,
+      "roc_auc": 0.687010582010582,
+      "roc_auc_bounds": [
+        0.6614550264550264,
+        0.6997883597883597
+      ],
+      "roc_auc_estimable_children": 6
+    },
+    "targets": [
+      {
+        "metrics": {
+          "average_precision": 0.7200487012987014,
+          "average_precision_bounds": [
+            0.7200487012987014,
+            0.7200487012987014
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.5449999999999999,
+          "roc_auc_bounds": [
+            0.5449999999999999,
+            0.5449999999999999
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.7966865079365077,
+          "average_precision_bounds": [
+            0.7966865079365077,
+            0.7966865079365077
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.6333333333333333,
+          "roc_auc_bounds": [
+            0.6333333333333333,
+            0.6333333333333333
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.6550680814283756,
+          "average_precision_bounds": [
+            0.6550680814283756,
+            0.6550680814283756
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.56,
+          "roc_auc_bounds": [
+            0.56,
+            0.56
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.6973444765111432,
+          "average_precision_bounds": [
+            0.5997089947089946,
+            0.7269943482443483
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.6444444444444444,
+          "roc_auc_bounds": [
+            0.4911111111111111,
+            0.721111111111111
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.737611198325484,
+          "average_precision_bounds": [
+            0.737611198325484,
+            0.737611198325484
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.7392857142857143,
+          "roc_auc_bounds": [
+            0.7392857142857143,
+            0.7392857142857143
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "unreturned_pairs": 0
+  },
+  "hit_pharmacophore": {
+    "aggregation_contract": {
+      "conditional_estimates": "Report success-conditional estimates and unestimable groups explicitly; do not replace missing estimates with zero",
+      "dependence": "Target clustering contains within-target assay/family repeats; shared chemistry and related targets can still correlate across clusters",
+      "hierarchy": [
+        "query",
+        "context",
+        "assay",
+        "target"
+      ],
+      "interpretation": "Descriptive uncertainty for sampled targets, not proof of broad generalization or calibrated activity probability",
+      "missing_scores": "Keep every selected pair; missing/failed scores enter pessimistic and optimistic ranking bounds",
+      "uncertainty_unit": "Resample target groups only, never query-control pairs, assays or conformer seeds as independent targets",
+      "weights": "Equal child weights at each level; contexts within an assay cannot give that assay extra target weight"
+    },
+    "assays": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "metrics": {
+          "average_precision": 0.8374908424908424,
+          "average_precision_bounds": [
+            0.8374908424908424,
+            0.8374908424908424
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "metrics": {
+          "average_precision": 0.41888888888888887,
+          "average_precision_bounds": [
+            0.41888888888888887,
+            0.41888888888888887
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.24,
+          "roc_auc_bounds": [
+            0.24,
+            0.24
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "metrics": {
+          "average_precision": 0.9175,
+          "average_precision_bounds": [
+            0.9175,
+            0.9175
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.8166666666666667,
+          "roc_auc_bounds": [
+            0.8166666666666667,
+            0.8166666666666667
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "metrics": {
+          "average_precision": 0.7593253968253969,
+          "average_precision_bounds": [
+            0.7593253968253969,
+            0.7593253968253969
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.6,
+            0.6
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "metrics": {
+          "average_precision": 0.9572979797979799,
+          "average_precision_bounds": [
+            0.9572979797979799,
+            0.9572979797979799
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.92,
+          "roc_auc_bounds": [
+            0.92,
+            0.92
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "metrics": {
+          "average_precision": 0.4576571141277023,
+          "average_precision_bounds": [
+            0.4576571141277023,
+            0.4576571141277023
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.39,
+          "roc_auc_bounds": [
+            0.39,
+            0.39
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "metrics": {
+          "average_precision": 0.5976522932405286,
+          "average_precision_bounds": [
+            0.5976522932405286,
+            0.5976522932405286
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6333333333333333,
+          "roc_auc_bounds": [
+            0.6333333333333333,
+            0.6333333333333333
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "metrics": {
+          "average_precision": 0.8412257495590829,
+          "average_precision_bounds": [
+            0.5940367965367965,
+            0.8813455988455989
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.7037037037037037,
+          "roc_auc_bounds": [
+            0.38,
+            0.84
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "metrics": {
+          "average_precision": 0.6202380952380953,
+          "average_precision_bounds": [
+            0.6202380952380953,
+            0.6202380952380953
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6428571428571429,
+          "roc_auc_bounds": [
+            0.6428571428571429,
+            0.6428571428571429
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "metrics": {
+          "average_precision": 0.7177455877455876,
+          "average_precision_bounds": [
+            0.7177455877455876,
+            0.7177455877455876
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.78,
+          "roc_auc_bounds": [
+            0.78,
+            0.78
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 20261016
+    },
+    "contexts": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "context_id": "context-5ee8d3d2dbc6832c550fc069",
+        "metrics": {
+          "average_precision": 0.8374908424908424,
+          "average_precision_bounds": [
+            0.8374908424908424,
+            0.8374908424908424
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "context_id": "context-b0835ae2c8b32155a0d25f35",
+        "metrics": {
+          "average_precision": 0.41888888888888887,
+          "average_precision_bounds": [
+            0.41888888888888887,
+            0.41888888888888887
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.24,
+          "roc_auc_bounds": [
+            0.24,
+            0.24
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "context_id": "context-0877ed7ed11f53a5411e35f7",
+        "metrics": {
+          "average_precision": 0.9175,
+          "average_precision_bounds": [
+            0.9175,
+            0.9175
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.8166666666666667,
+          "roc_auc_bounds": [
+            0.8166666666666667,
+            0.8166666666666667
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "context_id": "context-9f17838f7fe0595c8263186d",
+        "metrics": {
+          "average_precision": 0.7593253968253969,
+          "average_precision_bounds": [
+            0.7593253968253969,
+            0.7593253968253969
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.6,
+            0.6
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "context_id": "context-a8597534f3cbe9135f90fd6a",
+        "metrics": {
+          "average_precision": 0.9572979797979799,
+          "average_precision_bounds": [
+            0.9572979797979799,
+            0.9572979797979799
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.92,
+          "roc_auc_bounds": [
+            0.92,
+            0.92
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "context_id": "context-07741203664a5a1ab85e8943",
+        "metrics": {
+          "average_precision": 0.4576571141277023,
+          "average_precision_bounds": [
+            0.4576571141277023,
+            0.4576571141277023
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.39,
+          "roc_auc_bounds": [
+            0.39,
+            0.39
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "context_id": "context-659e6e342eacc140fc6c6a2e",
+        "metrics": {
+          "average_precision": 0.5976522932405286,
+          "average_precision_bounds": [
+            0.5976522932405286,
+            0.5976522932405286
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6333333333333333,
+          "roc_auc_bounds": [
+            0.6333333333333333,
+            0.6333333333333333
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "context_id": "context-ae4d778097316c985130d458",
+        "metrics": {
+          "average_precision": 0.8412257495590829,
+          "average_precision_bounds": [
+            0.5940367965367965,
+            0.8813455988455989
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.7037037037037037,
+          "roc_auc_bounds": [
+            0.38,
+            0.84
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "context_id": "context-635fc1e3c7d3b20cb558e32f",
+        "metrics": {
+          "average_precision": 0.6202380952380953,
+          "average_precision_bounds": [
+            0.6202380952380953,
+            0.6202380952380953
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6428571428571429,
+          "roc_auc_bounds": [
+            0.6428571428571429,
+            0.6428571428571429
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "context_id": "context-3565895fa386e29340475aa1",
+        "metrics": {
+          "average_precision": 0.7177455877455876,
+          "average_precision_bounds": [
+            0.7177455877455876,
+            0.7177455877455876
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.78,
+          "roc_auc_bounds": [
+            0.78,
+            0.78
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "context_id": "context-1cd8f6206d38fe3b32a34860",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "context_id": "context-4065e169ce5abc92848b68cc",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "metric": "hit_pharmacophore",
+    "missing_or_failed_pairs": 3,
+    "pair_count": 197,
+    "queries": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "context_id": "context-5ee8d3d2dbc6832c550fc069",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.8374908424908424,
+          "average_precision_bounds": [
+            0.8374908424908424,
+            0.8374908424908424
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-aeb699155b5951331e3414c4",
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "context_id": "context-b0835ae2c8b32155a0d25f35",
+        "metrics": {
+          "active_count": 5,
+          "average_precision": 0.41888888888888887,
+          "average_precision_bounds": [
+            0.41888888888888887,
+            0.41888888888888887
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.24,
+          "roc_auc_bounds": [
+            0.24,
+            0.24
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 5,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-3112fe8f62a9915e64c043dd",
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "context_id": "context-9f17838f7fe0595c8263186d",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.7593253968253969,
+          "average_precision_bounds": [
+            0.7593253968253969,
+            0.7593253968253969
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.6,
+            0.6
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-558c73c70d162c6e27f51c6c",
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "context_id": "context-0877ed7ed11f53a5411e35f7",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.9175,
+          "average_precision_bounds": [
+            0.9175,
+            0.9175
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.8166666666666667,
+          "roc_auc_bounds": [
+            0.8166666666666667,
+            0.8166666666666667
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-60be606ec9c7d73837d797c7",
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "context_id": "context-a8597534f3cbe9135f90fd6a",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.9572979797979799,
+          "average_precision_bounds": [
+            0.9572979797979799,
+            0.9572979797979799
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.92,
+          "roc_auc_bounds": [
+            0.92,
+            0.92
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-b7e1a42703821102f2b20148",
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "context_id": "context-07741203664a5a1ab85e8943",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.4576571141277023,
+          "average_precision_bounds": [
+            0.4576571141277023,
+            0.4576571141277023
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.39,
+          "roc_auc_bounds": [
+            0.39,
+            0.39
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-e7cd32c492584e673ba7c9cc",
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "context_id": "context-ae4d778097316c985130d458",
+        "metrics": {
+          "active_count": 9,
+          "average_precision": 0.8412257495590829,
+          "average_precision_bounds": [
+            0.5940367965367965,
+            0.8813455988455989
+          ],
+          "inactive_count": 3,
+          "missing_scores": {
+            "active": 1,
+            "inactive": 2
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.7037037037037037,
+          "roc_auc_bounds": [
+            0.38,
+            0.84
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-ca4f5ab71f884bc05ea9cd09",
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "context_id": "context-659e6e342eacc140fc6c6a2e",
+        "metrics": {
+          "active_count": 9,
+          "average_precision": 0.5976522932405286,
+          "average_precision_bounds": [
+            0.5976522932405286,
+            0.5976522932405286
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6333333333333333,
+          "roc_auc_bounds": [
+            0.6333333333333333,
+            0.6333333333333333
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 9,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-e2de92fe34e24d8b1f3dc835",
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "context_id": "context-635fc1e3c7d3b20cb558e32f",
+        "metrics": {
+          "active_count": 7,
+          "average_precision": 0.6202380952380953,
+          "average_precision_bounds": [
+            0.6202380952380953,
+            0.6202380952380953
+          ],
+          "inactive_count": 8,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6428571428571429,
+          "roc_auc_bounds": [
+            0.6428571428571429,
+            0.6428571428571429
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 7,
+          "total_inactive_controls": 8
+        },
+        "query_id": "query-9a6a7884bdcc7b79d6a88389",
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "context_id": "context-3565895fa386e29340475aa1",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.7177455877455876,
+          "average_precision_bounds": [
+            0.7177455877455876,
+            0.7177455877455876
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.78,
+          "roc_auc_bounds": [
+            0.78,
+            0.78
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-f1965f0755e0bca9a6ee94ce",
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "context_id": "context-1cd8f6206d38fe3b32a34860",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-29d8276ad6b6076dba437051",
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "context_id": "context-4065e169ce5abc92848b68cc",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-779b977dd327929e05e9918f",
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "schema": "assay-matched-controls-v1",
+    "success_conditional_target_bootstrap": {
+      "average_precision": {
+        "ci95": [
+          0.6702133304543435,
+          0.8704526070334894
+        ],
+        "mean": 0.7604184956595087,
+        "target_groups": 6
+      },
+      "roc_auc": {
+        "ci95": [
+          0.5724603174603174,
+          0.8392012786596115
+        ],
+        "mean": 0.6994356261022928,
+        "target_groups": 6
+      }
+    },
+    "target_macro": {
+      "average_precision": 0.7604184956595088,
+      "average_precision_bounds": [
+        0.7398194162409849,
+        0.763761816433385
+      ],
+      "average_precision_estimable_children": 6,
+      "children": 6,
+      "roc_auc": 0.6994356261022928,
+      "roc_auc_bounds": [
+        0.6724603174603174,
+        0.7107936507936508
+      ],
+      "roc_auc_estimable_children": 6
+    },
+    "targets": [
+      {
+        "metrics": {
+          "average_precision": 0.6281898656898657,
+          "average_precision_bounds": [
+            0.6281898656898657,
+            0.6281898656898657
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.4533333333333333,
+          "roc_auc_bounds": [
+            0.4533333333333333,
+            0.4533333333333333
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.8384126984126985,
+          "average_precision_bounds": [
+            0.8384126984126985,
+            0.8384126984126985
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.7083333333333333,
+          "roc_auc_bounds": [
+            0.7083333333333333,
+            0.7083333333333333
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.7074775469628412,
+          "average_precision_bounds": [
+            0.7074775469628412,
+            0.7074775469628412
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.655,
+          "roc_auc_bounds": [
+            0.655,
+            0.655
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.7194390213998058,
+          "average_precision_bounds": [
+            0.5958445448886626,
+            0.7394989460430638
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.6685185185185185,
+          "roc_auc_bounds": [
+            0.5066666666666666,
+            0.7366666666666666
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.6689918414918414,
+          "average_precision_bounds": [
+            0.6689918414918414,
+            0.6689918414918414
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.7114285714285715,
+          "roc_auc_bounds": [
+            0.7114285714285715,
+            0.7114285714285715
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "unreturned_pairs": 0
+  },
+  "hit_shape": {
+    "aggregation_contract": {
+      "conditional_estimates": "Report success-conditional estimates and unestimable groups explicitly; do not replace missing estimates with zero",
+      "dependence": "Target clustering contains within-target assay/family repeats; shared chemistry and related targets can still correlate across clusters",
+      "hierarchy": [
+        "query",
+        "context",
+        "assay",
+        "target"
+      ],
+      "interpretation": "Descriptive uncertainty for sampled targets, not proof of broad generalization or calibrated activity probability",
+      "missing_scores": "Keep every selected pair; missing/failed scores enter pessimistic and optimistic ranking bounds",
+      "uncertainty_unit": "Resample target groups only, never query-control pairs, assays or conformer seeds as independent targets",
+      "weights": "Equal child weights at each level; contexts within an assay cannot give that assay extra target weight"
+    },
+    "assays": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "metrics": {
+          "average_precision": 0.7891666666666667,
+          "average_precision_bounds": [
+            0.7891666666666667,
+            0.7891666666666667
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.7,
+          "roc_auc_bounds": [
+            0.7,
+            0.7
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "metrics": {
+          "average_precision": 0.8766666666666667,
+          "average_precision_bounds": [
+            0.8766666666666667,
+            0.8766666666666667
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.88,
+          "roc_auc_bounds": [
+            0.88,
+            0.88
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "metrics": {
+          "average_precision": 0.6607034632034632,
+          "average_precision_bounds": [
+            0.6607034632034632,
+            0.6607034632034632
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.5166666666666667,
+          "roc_auc_bounds": [
+            0.5166666666666667,
+            0.5166666666666667
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "metrics": {
+          "average_precision": 0.7426082251082251,
+          "average_precision_bounds": [
+            0.7426082251082251,
+            0.7426082251082251
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.5833333333333334,
+          "roc_auc_bounds": [
+            0.5833333333333334,
+            0.5833333333333334
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "metrics": {
+          "average_precision": 0.8480122655122655,
+          "average_precision_bounds": [
+            0.8480122655122655,
+            0.8480122655122655
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.82,
+          "roc_auc_bounds": [
+            0.82,
+            0.82
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "metrics": {
+          "average_precision": 0.42777597402597406,
+          "average_precision_bounds": [
+            0.42777597402597406,
+            0.42777597402597406
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.36,
+          "roc_auc_bounds": [
+            0.36,
+            0.36
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "metrics": {
+          "average_precision": 0.5778520375011603,
+          "average_precision_bounds": [
+            0.5778520375011603,
+            0.5778520375011603
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.6,
+            0.6
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            0.6626911976911978,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            0.54,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "metrics": {
+          "average_precision": 0.6972789115646258,
+          "average_precision_bounds": [
+            0.6972789115646258,
+            0.6972789115646258
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.8035714285714286,
+          "roc_auc_bounds": [
+            0.8035714285714286,
+            0.8035714285714286
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "metrics": {
+          "average_precision": 0.6648151848151848,
+          "average_precision_bounds": [
+            0.6648151848151848,
+            0.6648151848151848
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.75,
+          "roc_auc_bounds": [
+            0.75,
+            0.75
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "metrics": {
+          "average_precision": 0.9464285714285714,
+          "average_precision_bounds": [
+            0.9464285714285714,
+            0.9464285714285714
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.86,
+          "roc_auc_bounds": [
+            0.86,
+            0.86
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "metrics": {
+          "average_precision": 0.9733333333333334,
+          "average_precision_bounds": [
+            0.9733333333333334,
+            0.9733333333333334
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.97,
+          "roc_auc_bounds": [
+            0.97,
+            0.97
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 20261016
+    },
+    "contexts": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "context_id": "context-5ee8d3d2dbc6832c550fc069",
+        "metrics": {
+          "average_precision": 0.7891666666666667,
+          "average_precision_bounds": [
+            0.7891666666666667,
+            0.7891666666666667
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.7,
+          "roc_auc_bounds": [
+            0.7,
+            0.7
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "context_id": "context-b0835ae2c8b32155a0d25f35",
+        "metrics": {
+          "average_precision": 0.8766666666666667,
+          "average_precision_bounds": [
+            0.8766666666666667,
+            0.8766666666666667
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.88,
+          "roc_auc_bounds": [
+            0.88,
+            0.88
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "context_id": "context-0877ed7ed11f53a5411e35f7",
+        "metrics": {
+          "average_precision": 0.6607034632034632,
+          "average_precision_bounds": [
+            0.6607034632034632,
+            0.6607034632034632
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.5166666666666667,
+          "roc_auc_bounds": [
+            0.5166666666666667,
+            0.5166666666666667
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "context_id": "context-9f17838f7fe0595c8263186d",
+        "metrics": {
+          "average_precision": 0.7426082251082251,
+          "average_precision_bounds": [
+            0.7426082251082251,
+            0.7426082251082251
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.5833333333333334,
+          "roc_auc_bounds": [
+            0.5833333333333334,
+            0.5833333333333334
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "context_id": "context-a8597534f3cbe9135f90fd6a",
+        "metrics": {
+          "average_precision": 0.8480122655122655,
+          "average_precision_bounds": [
+            0.8480122655122655,
+            0.8480122655122655
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.82,
+          "roc_auc_bounds": [
+            0.82,
+            0.82
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "context_id": "context-07741203664a5a1ab85e8943",
+        "metrics": {
+          "average_precision": 0.42777597402597406,
+          "average_precision_bounds": [
+            0.42777597402597406,
+            0.42777597402597406
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.36,
+          "roc_auc_bounds": [
+            0.36,
+            0.36
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "context_id": "context-659e6e342eacc140fc6c6a2e",
+        "metrics": {
+          "average_precision": 0.5778520375011603,
+          "average_precision_bounds": [
+            0.5778520375011603,
+            0.5778520375011603
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.6,
+            0.6
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "context_id": "context-ae4d778097316c985130d458",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            0.6626911976911978,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            0.54,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "context_id": "context-635fc1e3c7d3b20cb558e32f",
+        "metrics": {
+          "average_precision": 0.6972789115646258,
+          "average_precision_bounds": [
+            0.6972789115646258,
+            0.6972789115646258
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.8035714285714286,
+          "roc_auc_bounds": [
+            0.8035714285714286,
+            0.8035714285714286
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "context_id": "context-3565895fa386e29340475aa1",
+        "metrics": {
+          "average_precision": 0.6648151848151848,
+          "average_precision_bounds": [
+            0.6648151848151848,
+            0.6648151848151848
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.75,
+          "roc_auc_bounds": [
+            0.75,
+            0.75
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "context_id": "context-1cd8f6206d38fe3b32a34860",
+        "metrics": {
+          "average_precision": 0.9464285714285714,
+          "average_precision_bounds": [
+            0.9464285714285714,
+            0.9464285714285714
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.86,
+          "roc_auc_bounds": [
+            0.86,
+            0.86
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "context_id": "context-4065e169ce5abc92848b68cc",
+        "metrics": {
+          "average_precision": 0.9733333333333334,
+          "average_precision_bounds": [
+            0.9733333333333334,
+            0.9733333333333334
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.97,
+          "roc_auc_bounds": [
+            0.97,
+            0.97
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "metric": "hit_shape",
+    "missing_or_failed_pairs": 3,
+    "pair_count": 197,
+    "queries": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "context_id": "context-5ee8d3d2dbc6832c550fc069",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.7891666666666667,
+          "average_precision_bounds": [
+            0.7891666666666667,
+            0.7891666666666667
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.7,
+          "roc_auc_bounds": [
+            0.7,
+            0.7
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-aeb699155b5951331e3414c4",
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "context_id": "context-b0835ae2c8b32155a0d25f35",
+        "metrics": {
+          "active_count": 5,
+          "average_precision": 0.8766666666666667,
+          "average_precision_bounds": [
+            0.8766666666666667,
+            0.8766666666666667
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.88,
+          "roc_auc_bounds": [
+            0.88,
+            0.88
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 5,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-3112fe8f62a9915e64c043dd",
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "context_id": "context-9f17838f7fe0595c8263186d",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.7426082251082251,
+          "average_precision_bounds": [
+            0.7426082251082251,
+            0.7426082251082251
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.5833333333333334,
+          "roc_auc_bounds": [
+            0.5833333333333334,
+            0.5833333333333334
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-558c73c70d162c6e27f51c6c",
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "context_id": "context-0877ed7ed11f53a5411e35f7",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.6607034632034632,
+          "average_precision_bounds": [
+            0.6607034632034632,
+            0.6607034632034632
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.5166666666666667,
+          "roc_auc_bounds": [
+            0.5166666666666667,
+            0.5166666666666667
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-60be606ec9c7d73837d797c7",
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "context_id": "context-a8597534f3cbe9135f90fd6a",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.8480122655122655,
+          "average_precision_bounds": [
+            0.8480122655122655,
+            0.8480122655122655
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.82,
+          "roc_auc_bounds": [
+            0.82,
+            0.82
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-b7e1a42703821102f2b20148",
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "context_id": "context-07741203664a5a1ab85e8943",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.42777597402597406,
+          "average_precision_bounds": [
+            0.42777597402597406,
+            0.42777597402597406
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.36,
+          "roc_auc_bounds": [
+            0.36,
+            0.36
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-e7cd32c492584e673ba7c9cc",
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "context_id": "context-ae4d778097316c985130d458",
+        "metrics": {
+          "active_count": 9,
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            0.6626911976911978,
+            1.0
+          ],
+          "inactive_count": 3,
+          "missing_scores": {
+            "active": 1,
+            "inactive": 2
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            0.54,
+            1.0
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-ca4f5ab71f884bc05ea9cd09",
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "context_id": "context-659e6e342eacc140fc6c6a2e",
+        "metrics": {
+          "active_count": 9,
+          "average_precision": 0.5778520375011603,
+          "average_precision_bounds": [
+            0.5778520375011603,
+            0.5778520375011603
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.6,
+            0.6
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 9,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-e2de92fe34e24d8b1f3dc835",
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "context_id": "context-635fc1e3c7d3b20cb558e32f",
+        "metrics": {
+          "active_count": 7,
+          "average_precision": 0.6972789115646258,
+          "average_precision_bounds": [
+            0.6972789115646258,
+            0.6972789115646258
+          ],
+          "inactive_count": 8,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.8035714285714286,
+          "roc_auc_bounds": [
+            0.8035714285714286,
+            0.8035714285714286
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 7,
+          "total_inactive_controls": 8
+        },
+        "query_id": "query-9a6a7884bdcc7b79d6a88389",
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "context_id": "context-3565895fa386e29340475aa1",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.6648151848151848,
+          "average_precision_bounds": [
+            0.6648151848151848,
+            0.6648151848151848
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.75,
+          "roc_auc_bounds": [
+            0.75,
+            0.75
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-f1965f0755e0bca9a6ee94ce",
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "context_id": "context-1cd8f6206d38fe3b32a34860",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.9464285714285714,
+          "average_precision_bounds": [
+            0.9464285714285714,
+            0.9464285714285714
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.86,
+          "roc_auc_bounds": [
+            0.86,
+            0.86
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-29d8276ad6b6076dba437051",
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "context_id": "context-4065e169ce5abc92848b68cc",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.9733333333333334,
+          "average_precision_bounds": [
+            0.9733333333333334,
+            0.9733333333333334
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.97,
+          "roc_auc_bounds": [
+            0.97,
+            0.97
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-779b977dd327929e05e9918f",
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "schema": "assay-matched-controls-v1",
+    "success_conditional_target_bootstrap": {
+      "average_precision": {
+        "ci95": [
+          0.6875940907637337,
+          0.8565632770548707
+        ],
+        "mean": 0.767053441652178,
+        "target_groups": 6
+      },
+      "roc_auc": {
+        "ci95": [
+          0.6361309523809524,
+          0.8327976190476191
+        ],
+        "mean": 0.7369642857142858,
+        "target_groups": 6
+      }
+    },
+    "target_macro": {
+      "average_precision": 0.7670534416521781,
+      "average_precision_bounds": [
+        0.7389443747931113,
+        0.7670534416521781
+      ],
+      "average_precision_estimable_children": 6,
+      "children": 6,
+      "roc_auc": 0.7369642857142857,
+      "roc_auc_bounds": [
+        0.6986309523809524,
+        0.7369642857142857
+      ],
+      "roc_auc_estimable_children": 6
+    },
+    "targets": [
+      {
+        "metrics": {
+          "average_precision": 0.8329166666666667,
+          "average_precision_bounds": [
+            0.8329166666666667,
+            0.8329166666666667
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.79,
+          "roc_auc_bounds": [
+            0.79,
+            0.79
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.7016558441558441,
+          "average_precision_bounds": [
+            0.7016558441558441,
+            0.7016558441558441
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.55,
+          "roc_auc_bounds": [
+            0.55,
+            0.55
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.6378941197691198,
+          "average_precision_bounds": [
+            0.6378941197691198,
+            0.6378941197691198
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.59,
+          "roc_auc_bounds": [
+            0.59,
+            0.59
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.7889260187505802,
+          "average_precision_bounds": [
+            0.6202716175961791,
+            0.7889260187505802
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.8,
+          "roc_auc_bounds": [
+            0.5700000000000001,
+            0.8
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.6810470481899054,
+          "average_precision_bounds": [
+            0.6810470481899054,
+            0.6810470481899054
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.7767857142857143,
+          "roc_auc_bounds": [
+            0.7767857142857143,
+            0.7767857142857143
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.9598809523809524,
+          "average_precision_bounds": [
+            0.9598809523809524,
+            0.9598809523809524
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.915,
+          "roc_auc_bounds": [
+            0.915,
+            0.915
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "unreturned_pairs": 0
+  },
+  "score": {
+    "aggregation_contract": {
+      "conditional_estimates": "Report success-conditional estimates and unestimable groups explicitly; do not replace missing estimates with zero",
+      "dependence": "Target clustering contains within-target assay/family repeats; shared chemistry and related targets can still correlate across clusters",
+      "hierarchy": [
+        "query",
+        "context",
+        "assay",
+        "target"
+      ],
+      "interpretation": "Descriptive uncertainty for sampled targets, not proof of broad generalization or calibrated activity probability",
+      "missing_scores": "Keep every selected pair; missing/failed scores enter pessimistic and optimistic ranking bounds",
+      "uncertainty_unit": "Resample target groups only, never query-control pairs, assays or conformer seeds as independent targets",
+      "weights": "Equal child weights at each level; contexts within an assay cannot give that assay extra target weight"
+    },
+    "assays": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "metrics": {
+          "average_precision": 0.7961363636363636,
+          "average_precision_bounds": [
+            0.7961363636363636,
+            0.7961363636363636
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.5833333333333334,
+          "roc_auc_bounds": [
+            0.5833333333333334,
+            0.5833333333333334
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "metrics": {
+          "average_precision": 0.46095238095238095,
+          "average_precision_bounds": [
+            0.46095238095238095,
+            0.46095238095238095
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.36,
+          "roc_auc_bounds": [
+            0.36,
+            0.36
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "metrics": {
+          "average_precision": 0.9097008547008546,
+          "average_precision_bounds": [
+            0.9097008547008546,
+            0.9097008547008546
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.8333333333333334,
+          "roc_auc_bounds": [
+            0.8333333333333334,
+            0.8333333333333334
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "metrics": {
+          "average_precision": 0.7858225108225108,
+          "average_precision_bounds": [
+            0.7858225108225108,
+            0.7858225108225108
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "metrics": {
+          "average_precision": 0.9263455988455989,
+          "average_precision_bounds": [
+            0.9263455988455989,
+            0.9263455988455989
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.88,
+          "roc_auc_bounds": [
+            0.88,
+            0.88
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "metrics": {
+          "average_precision": 0.4226346314504209,
+          "average_precision_bounds": [
+            0.4226346314504209,
+            0.4226346314504209
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.34,
+          "roc_auc_bounds": [
+            0.34,
+            0.34
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "metrics": {
+          "average_precision": 0.6583123122338809,
+          "average_precision_bounds": [
+            0.6583123122338809,
+            0.6583123122338809
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "metrics": {
+          "average_precision": 0.8782627865961199,
+          "average_precision_bounds": [
+            0.6040367965367965,
+            0.9063455988455988
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.7407407407407407,
+          "roc_auc_bounds": [
+            0.4,
+            0.86
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "metrics": {
+          "average_precision": 0.6449812092669235,
+          "average_precision_bounds": [
+            0.6449812092669235,
+            0.6449812092669235
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6964285714285714,
+          "roc_auc_bounds": [
+            0.6964285714285714,
+            0.6964285714285714
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "metrics": {
+          "average_precision": 0.6827960927960928,
+          "average_precision_bounds": [
+            0.6827960927960928,
+            0.6827960927960928
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.79,
+          "roc_auc_bounds": [
+            0.79,
+            0.79
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 20261016
+    },
+    "contexts": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "context_id": "context-5ee8d3d2dbc6832c550fc069",
+        "metrics": {
+          "average_precision": 0.7961363636363636,
+          "average_precision_bounds": [
+            0.7961363636363636,
+            0.7961363636363636
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.5833333333333334,
+          "roc_auc_bounds": [
+            0.5833333333333334,
+            0.5833333333333334
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "context_id": "context-b0835ae2c8b32155a0d25f35",
+        "metrics": {
+          "average_precision": 0.46095238095238095,
+          "average_precision_bounds": [
+            0.46095238095238095,
+            0.46095238095238095
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.36,
+          "roc_auc_bounds": [
+            0.36,
+            0.36
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "context_id": "context-0877ed7ed11f53a5411e35f7",
+        "metrics": {
+          "average_precision": 0.9097008547008546,
+          "average_precision_bounds": [
+            0.9097008547008546,
+            0.9097008547008546
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.8333333333333334,
+          "roc_auc_bounds": [
+            0.8333333333333334,
+            0.8333333333333334
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "context_id": "context-9f17838f7fe0595c8263186d",
+        "metrics": {
+          "average_precision": 0.7858225108225108,
+          "average_precision_bounds": [
+            0.7858225108225108,
+            0.7858225108225108
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "context_id": "context-a8597534f3cbe9135f90fd6a",
+        "metrics": {
+          "average_precision": 0.9263455988455989,
+          "average_precision_bounds": [
+            0.9263455988455989,
+            0.9263455988455989
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.88,
+          "roc_auc_bounds": [
+            0.88,
+            0.88
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "context_id": "context-07741203664a5a1ab85e8943",
+        "metrics": {
+          "average_precision": 0.4226346314504209,
+          "average_precision_bounds": [
+            0.4226346314504209,
+            0.4226346314504209
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.34,
+          "roc_auc_bounds": [
+            0.34,
+            0.34
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "context_id": "context-659e6e342eacc140fc6c6a2e",
+        "metrics": {
+          "average_precision": 0.6583123122338809,
+          "average_precision_bounds": [
+            0.6583123122338809,
+            0.6583123122338809
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "context_id": "context-ae4d778097316c985130d458",
+        "metrics": {
+          "average_precision": 0.8782627865961199,
+          "average_precision_bounds": [
+            0.6040367965367965,
+            0.9063455988455988
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.7407407407407407,
+          "roc_auc_bounds": [
+            0.4,
+            0.86
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "context_id": "context-635fc1e3c7d3b20cb558e32f",
+        "metrics": {
+          "average_precision": 0.6449812092669235,
+          "average_precision_bounds": [
+            0.6449812092669235,
+            0.6449812092669235
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.6964285714285714,
+          "roc_auc_bounds": [
+            0.6964285714285714,
+            0.6964285714285714
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "context_id": "context-3565895fa386e29340475aa1",
+        "metrics": {
+          "average_precision": 0.6827960927960928,
+          "average_precision_bounds": [
+            0.6827960927960928,
+            0.6827960927960928
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 0.79,
+          "roc_auc_bounds": [
+            0.79,
+            0.79
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "context_id": "context-1cd8f6206d38fe3b32a34860",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "context_id": "context-4065e169ce5abc92848b68cc",
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 1,
+          "children": 1,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 1
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "metric": "score",
+    "missing_or_failed_pairs": 3,
+    "pair_count": 197,
+    "queries": [
+      {
+        "assay_id": "CHEMBL5046855",
+        "context_id": "context-5ee8d3d2dbc6832c550fc069",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.7961363636363636,
+          "average_precision_bounds": [
+            0.7961363636363636,
+            0.7961363636363636
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.5833333333333334,
+          "roc_auc_bounds": [
+            0.5833333333333334,
+            0.5833333333333334
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-aeb699155b5951331e3414c4",
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5141216",
+        "context_id": "context-b0835ae2c8b32155a0d25f35",
+        "metrics": {
+          "active_count": 5,
+          "average_precision": 0.46095238095238095,
+          "average_precision_bounds": [
+            0.46095238095238095,
+            0.46095238095238095
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.36,
+          "roc_auc_bounds": [
+            0.36,
+            0.36
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 5,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-3112fe8f62a9915e64c043dd",
+        "target_id": "CHEMBL203"
+      },
+      {
+        "assay_id": "CHEMBL5040919",
+        "context_id": "context-9f17838f7fe0595c8263186d",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.7858225108225108,
+          "average_precision_bounds": [
+            0.7858225108225108,
+            0.7858225108225108
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-558c73c70d162c6e27f51c6c",
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4842709",
+        "context_id": "context-0877ed7ed11f53a5411e35f7",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.9097008547008546,
+          "average_precision_bounds": [
+            0.9097008547008546,
+            0.9097008547008546
+          ],
+          "inactive_count": 6,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.8333333333333334,
+          "roc_auc_bounds": [
+            0.8333333333333334,
+            0.8333333333333334
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 6
+        },
+        "query_id": "query-60be606ec9c7d73837d797c7",
+        "target_id": "CHEMBL205"
+      },
+      {
+        "assay_id": "CHEMBL4845572",
+        "context_id": "context-a8597534f3cbe9135f90fd6a",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.9263455988455989,
+          "average_precision_bounds": [
+            0.9263455988455989,
+            0.9263455988455989
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.88,
+          "roc_auc_bounds": [
+            0.88,
+            0.88
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-b7e1a42703821102f2b20148",
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL957365",
+        "context_id": "context-07741203664a5a1ab85e8943",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.4226346314504209,
+          "average_precision_bounds": [
+            0.4226346314504209,
+            0.4226346314504209
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.34,
+          "roc_auc_bounds": [
+            0.34,
+            0.34
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-e7cd32c492584e673ba7c9cc",
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "assay_id": "CHEMBL5235525",
+        "context_id": "context-ae4d778097316c985130d458",
+        "metrics": {
+          "active_count": 9,
+          "average_precision": 0.8782627865961199,
+          "average_precision_bounds": [
+            0.6040367965367965,
+            0.9063455988455988
+          ],
+          "inactive_count": 3,
+          "missing_scores": {
+            "active": 1,
+            "inactive": 2
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.7407407407407407,
+          "roc_auc_bounds": [
+            0.4,
+            0.86
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-ca4f5ab71f884bc05ea9cd09",
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL3047076",
+        "context_id": "context-659e6e342eacc140fc6c6a2e",
+        "metrics": {
+          "active_count": 9,
+          "average_precision": 0.6583123122338809,
+          "average_precision_bounds": [
+            0.6583123122338809,
+            0.6583123122338809
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 9,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-e2de92fe34e24d8b1f3dc835",
+        "target_id": "CHEMBL220"
+      },
+      {
+        "assay_id": "CHEMBL2394446",
+        "context_id": "context-635fc1e3c7d3b20cb558e32f",
+        "metrics": {
+          "active_count": 7,
+          "average_precision": 0.6449812092669235,
+          "average_precision_bounds": [
+            0.6449812092669235,
+            0.6449812092669235
+          ],
+          "inactive_count": 8,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.6964285714285714,
+          "roc_auc_bounds": [
+            0.6964285714285714,
+            0.6964285714285714
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 7,
+          "total_inactive_controls": 8
+        },
+        "query_id": "query-9a6a7884bdcc7b79d6a88389",
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5109848",
+        "context_id": "context-3565895fa386e29340475aa1",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 0.6827960927960928,
+          "average_precision_bounds": [
+            0.6827960927960928,
+            0.6827960927960928
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 0.79,
+          "roc_auc_bounds": [
+            0.79,
+            0.79
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-f1965f0755e0bca9a6ee94ce",
+        "target_id": "CHEMBL251"
+      },
+      {
+        "assay_id": "CHEMBL5318948",
+        "context_id": "context-1cd8f6206d38fe3b32a34860",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "inactive_count": 5,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 5
+        },
+        "query_id": "query-29d8276ad6b6076dba437051",
+        "target_id": "CHEMBL2637"
+      },
+      {
+        "assay_id": "CHEMBL5732897",
+        "context_id": "context-4065e169ce5abc92848b68cc",
+        "metrics": {
+          "active_count": 10,
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "inactive_count": 10,
+          "missing_scores": {
+            "active": 0,
+            "inactive": 0
+          },
+          "probability_calibration": "not_applicable_to_similarity_scores",
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "success_conditional_metrics": true,
+          "total_active_controls": 10,
+          "total_inactive_controls": 10
+        },
+        "query_id": "query-779b977dd327929e05e9918f",
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "schema": "assay-matched-controls-v1",
+    "success_conditional_target_bootstrap": {
+      "average_precision": {
+        "ci95": [
+          0.6695070411830448,
+          0.8740989340785092
+        ],
+        "mean": 0.7638287284417622,
+        "target_groups": 6
+      },
+      "roc_auc": {
+        "ci95": [
+          0.5863690476190476,
+          0.8469444444444445
+        ],
+        "mean": 0.7130974426807759,
+        "target_groups": 6
+      }
+    },
+    "target_macro": {
+      "average_precision": 0.7638287284417622,
+      "average_precision_bounds": [
+        0.7409765626034852,
+        0.7661689627958854
+      ],
+      "average_precision_estimable_children": 6,
+      "children": 6,
+      "roc_auc": 0.713097442680776,
+      "roc_auc_bounds": [
+        0.6847023809523809,
+        0.7230357142857142
+      ],
+      "roc_auc_estimable_children": 6
+    },
+    "targets": [
+      {
+        "metrics": {
+          "average_precision": 0.6285443722943723,
+          "average_precision_bounds": [
+            0.6285443722943723,
+            0.6285443722943723
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.4716666666666667,
+          "roc_auc_bounds": [
+            0.4716666666666667,
+            0.4716666666666667
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL203"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.8477616827616827,
+          "average_precision_bounds": [
+            0.8477616827616827,
+            0.8477616827616827
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.75,
+          "roc_auc_bounds": [
+            0.75,
+            0.75
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL205"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.6744901151480098,
+          "average_precision_bounds": [
+            0.6744901151480098,
+            0.6744901151480098
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.61,
+          "roc_auc_bounds": [
+            0.61,
+            0.61
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL2147"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.7682875494150003,
+          "average_precision_bounds": [
+            0.6311745543853386,
+            0.7823289555397399
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.7037037037037037,
+          "roc_auc_bounds": [
+            0.5333333333333333,
+            0.7633333333333333
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL220"
+      },
+      {
+        "metrics": {
+          "average_precision": 0.6638886510315081,
+          "average_precision_bounds": [
+            0.6638886510315081,
+            0.6638886510315081
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 0.7432142857142857,
+          "roc_auc_bounds": [
+            0.7432142857142857,
+            0.7432142857142857
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL251"
+      },
+      {
+        "metrics": {
+          "average_precision": 1.0,
+          "average_precision_bounds": [
+            1.0,
+            1.0
+          ],
+          "average_precision_estimable_children": 2,
+          "children": 2,
+          "roc_auc": 1.0,
+          "roc_auc_bounds": [
+            1.0,
+            1.0
+          ],
+          "roc_auc_estimable_children": 2
+        },
+        "target_id": "CHEMBL2637"
+      }
+    ],
+    "unreturned_pairs": 0
+  }
+}

@@ -1,0 +1,8 @@
+rdkit==2025.9.6
+numpy==1.26.4
+scipy==1.13.1
+pandas==2.3.3
+psutil==7.2.2
+scaffoldgraph==1.1.2
+matplotlib==3.10.8
+scikit-learn==1.6.1

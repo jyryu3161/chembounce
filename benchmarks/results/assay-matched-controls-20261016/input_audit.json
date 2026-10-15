@@ -1,0 +1,17 @@
+{
+  "deterministic_selection_reproduced": true,
+  "pairs": 197,
+  "plan_matches": true,
+  "queries": 12,
+  "same_scoring_source_as_frozen_controls": true,
+  "source_payloads_verified": true,
+  "targets": {
+    "CHEMBL203": 26,
+    "CHEMBL205": 32,
+    "CHEMBL2147": 35,
+    "CHEMBL220": 34,
+    "CHEMBL251": 35,
+    "CHEMBL2637": 35
+  },
+  "utc": "2026-10-15T16:54:05.622712+00:00"
+}

@@ -1,0 +1,12 @@
+{
+  "implementation_commit": "3c8ad2b619d8168e061d63467b6b9391e2464d2d",
+  "numerical_scoring_implementation": "Same controls, conformer, chemistry and identity source hashes as original frozen comparison; see protocol.json",
+  "parent_regression_commit": "2f74ee8caaf3a488cabefcea19d316448f26ea5a",
+  "parent_tests": {
+    "failed": 0,
+    "log_sha256": "2f1557121f726e7b66e9887e7782c2f65d012b67b931484caa22868a05fa91ff",
+    "passed": 403,
+    "seconds": 82.82
+  },
+  "scope": "Software and source validation does not establish method superiority or experimental activity"
+}

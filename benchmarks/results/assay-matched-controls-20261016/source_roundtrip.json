@@ -1,0 +1,37 @@
+{
+  "additive_availability_summary": {
+    "explanation": "Final curator adds this summary after the initial pool was retained; counts were independently recomputed from original per-query availability and match exactly",
+    "field": "per_target.query_feasibility.min_5_per_label_and_1_active_scaffolds",
+    "values": {
+      "CHEMBL203": 20,
+      "CHEMBL205": 28,
+      "CHEMBL2147": 30,
+      "CHEMBL220": 59,
+      "CHEMBL251": 40,
+      "CHEMBL2637": 164
+    }
+  },
+  "archive_sha256": "72fde29b4fc9f6a7b896745781820d0c255c52e6a1e7036ad4036442e2a4c518",
+  "checks": {
+    "identical_control_pairs.json": true,
+    "identical_public_queries.json": true,
+    "same_all_exclusions": true,
+    "same_all_preexisting_availability_fields": true,
+    "same_full_curated_records": true,
+    "same_selected_panel_except_local_provenance": true
+  },
+  "curated_records": 5890,
+  "ignored_for_semantic_comparison": [
+    "artifact",
+    "curated_pool_sha256",
+    "source_artifact",
+    "source_manifest_sha256"
+  ],
+  "interpretation": "Byte hashes change with local paths, provenance hashes and the noted additive availability summary; no chemical records, labels, contexts, exclusions or chosen pairs changed",
+  "original_panel_sha256": "464e71b8bc54ad9002a8ff02e08b249272ae43ce17a4aee3d53c394642439d33",
+  "pairs": 197,
+  "queries": 12,
+  "raw_measurements": 15533,
+  "relocated_panel_sha256": "7d74b0e4cbaec3ec32255722886eae176fcdf7c7519c61bda5000e6653a286b5",
+  "scope": "Rebuilt from published ChEMBL ZIP at a fresh path, with fixed audit/select settings and source-payload verification"
+}

@@ -75,6 +75,8 @@ The later [assay-context audit](assay_heterogeneity.json) is explicitly post hoc
 
 Requiring query and control to share a retained assay ID leaves six pairs, four with successful 3D scoring, and only one target with both active and inactive observations. That is insufficient for a general activity-discrimination claim. The audit also reports format-matched and single-protein-format sensitivity subsets, their missing scores and actual target counts. Those subsets change the evaluated population; their estimates cannot be treated as improvement over the original cohort or as confirmatory findings. Frozen panels, thresholds and generation settings were not changed in response to these results.
 
+A subsequent [separately selected same-assay evaluation](../assay-matched-controls-20261016/README.md) contains 197 pairs across 12 queries/assays and the same six targets. It preserves the original controls and records its follow-up timing and fixed criteria. Its paired bit/joint-3D ROC AUCs are 0.7392/0.7131, without an established 3D advantage. Different evaluated populations prevent interpreting the difference from this original panel as an effect caused solely by assay matching.
+
 ### Recompute the records
 
 From the repository root, use the recorded Python 3.10 environment, project synthesis dependencies and [pinned control requirements](control-requirements.txt). Reproduce the independent metric check, bootstrap and figures directly from the adjacent compact records:

@@ -1,0 +1,186 @@
+{
+  "identical_failures": 0,
+  "identical_successes": 12,
+  "median_warm_scoring_speed_ratio": 1.8200855961928197,
+  "new_commit": "53709051ea3d6a25b95c5e309250fb2bf5888e8f",
+  "new_source_sha256": "93bc916b739bb89194ffde8f74b91c630792b10935504fbded6ad8b1786b0904",
+  "old_source_sha256": "8f289778a7056d728a4115fdf934626f80f19448853c55b9d971260fc991634b",
+  "regression": {
+    "commit": "53709051ea3d6a25b95c5e309250fb2bf5888e8f",
+    "failed": 0,
+    "log_sha256": "65f161e803e0cdab7615e9527c20a5cbad9beae49a18be44b44f49e3aed2c60e",
+    "passed": 411,
+    "seconds": 103.28
+  },
+  "rows": [
+    {
+      "errors": {},
+      "identical_info": true,
+      "maximum_coordinate_delta_A": 0.0,
+      "new_seconds": 0.44356480799615383,
+      "old_seconds": 0.45835569128394127,
+      "overlay_calls": {
+        "new": 1,
+        "old": 2
+      },
+      "pair_id": "pair-ed58246212909c5e44b0dde1",
+      "query_id": "query-aeb699155b5951331e3414c4",
+      "target_id": "CHEMBL203"
+    },
+    {
+      "errors": {},
+      "identical_info": true,
+      "maximum_coordinate_delta_A": 0.0,
+      "new_seconds": 5.070864112116396,
+      "old_seconds": 3.032534941099584,
+      "overlay_calls": {
+        "new": 6,
+        "old": 12
+      },
+      "pair_id": "pair-6d06f1b09beabfff3d3198d8",
+      "query_id": "query-3112fe8f62a9915e64c043dd",
+      "target_id": "CHEMBL203"
+    },
+    {
+      "errors": {},
+      "identical_info": true,
+      "maximum_coordinate_delta_A": 0.0,
+      "new_seconds": 2.1522672809660435,
+      "old_seconds": 5.10420713480562,
+      "overlay_calls": {
+        "new": 6,
+        "old": 12
+      },
+      "pair_id": "pair-525a8ccf3fc59197484752ea",
+      "query_id": "query-558c73c70d162c6e27f51c6c",
+      "target_id": "CHEMBL205"
+    },
+    {
+      "errors": {},
+      "identical_info": true,
+      "maximum_coordinate_delta_A": 0.0,
+      "new_seconds": 0.4784925887361169,
+      "old_seconds": 2.996557273901999,
+      "overlay_calls": {
+        "new": 3,
+        "old": 6
+      },
+      "pair_id": "pair-ed460557579eb72dc19242f8",
+      "query_id": "query-60be606ec9c7d73837d797c7",
+      "target_id": "CHEMBL205"
+    },
+    {
+      "errors": {},
+      "identical_info": true,
+      "maximum_coordinate_delta_A": 0.0,
+      "new_seconds": 4.125082101672888,
+      "old_seconds": 14.21310034673661,
+      "overlay_calls": {
+        "new": 5,
+        "old": 10
+      },
+      "pair_id": "pair-9a1ad559c5741f7c6bc5da1b",
+      "query_id": "query-b7e1a42703821102f2b20148",
+      "target_id": "CHEMBL2147"
+    },
+    {
+      "errors": {},
+      "identical_info": true,
+      "maximum_coordinate_delta_A": 0.0,
+      "new_seconds": 0.4392411280423403,
+      "old_seconds": 0.7837915532290936,
+      "overlay_calls": {
+        "new": 3,
+        "old": 6
+      },
+      "pair_id": "pair-4e2df61d9b6dd73a7e3d6634",
+      "query_id": "query-e7cd32c492584e673ba7c9cc",
+      "target_id": "CHEMBL2147"
+    },
+    {
+      "errors": {},
+      "identical_info": true,
+      "maximum_coordinate_delta_A": 0.0,
+      "new_seconds": 2.7448744336143136,
+      "old_seconds": 9.808189881965518,
+      "overlay_calls": {
+        "new": 4,
+        "old": 8
+      },
+      "pair_id": "pair-3c1585af688233169332c8bf",
+      "query_id": "query-ca4f5ab71f884bc05ea9cd09",
+      "target_id": "CHEMBL220"
+    },
+    {
+      "errors": {},
+      "identical_info": true,
+      "maximum_coordinate_delta_A": 0.0,
+      "new_seconds": 0.2792907012626529,
+      "old_seconds": 0.5069382712244987,
+      "overlay_calls": {
+        "new": 2,
+        "old": 4
+      },
+      "pair_id": "pair-c4e0011d8334255368bf5d9b",
+      "query_id": "query-e2de92fe34e24d8b1f3dc835",
+      "target_id": "CHEMBL220"
+    },
+    {
+      "errors": {},
+      "identical_info": true,
+      "maximum_coordinate_delta_A": 0.0,
+      "new_seconds": 4.59595391061157,
+      "old_seconds": 4.358446851372719,
+      "overlay_calls": {
+        "new": 8,
+        "old": 16
+      },
+      "pair_id": "pair-b65b9000161d388553dd82ad",
+      "query_id": "query-9a6a7884bdcc7b79d6a88389",
+      "target_id": "CHEMBL251"
+    },
+    {
+      "errors": {},
+      "identical_info": true,
+      "maximum_coordinate_delta_A": 0.0,
+      "new_seconds": 0.11693637911230326,
+      "old_seconds": 0.21341817174106836,
+      "overlay_calls": {
+        "new": 1,
+        "old": 2
+      },
+      "pair_id": "pair-9709673226863a2117a0c011",
+      "query_id": "query-f1965f0755e0bca9a6ee94ce",
+      "target_id": "CHEMBL251"
+    },
+    {
+      "errors": {},
+      "identical_info": true,
+      "maximum_coordinate_delta_A": 0.0,
+      "new_seconds": 6.531777495518327,
+      "old_seconds": 13.567327443510294,
+      "overlay_calls": {
+        "new": 7,
+        "old": 14
+      },
+      "pair_id": "pair-609e1f153b1ed17200b97520",
+      "query_id": "query-29d8276ad6b6076dba437051",
+      "target_id": "CHEMBL2637"
+    },
+    {
+      "errors": {},
+      "identical_info": true,
+      "maximum_coordinate_delta_A": 0.0,
+      "new_seconds": 6.442097152583301,
+      "old_seconds": 10.258775291964412,
+      "overlay_calls": {
+        "new": 8,
+        "old": 16
+      },
+      "pair_id": "pair-1326f51e1ad84b3c364c33f3",
+      "query_id": "query-779b977dd327929e05e9918f",
+      "target_id": "CHEMBL2637"
+    }
+  ],
+  "scope": "First selected control per each of 12 fixed assay queries, independent of scores; single seed 42 and frozen eight-conformer settings. Exact old/new info and coordinate comparison. Timing excludes ensemble creation, alternates order, and is diagnostic on a shared host, not a general generation-throughput benchmark."
+}

@@ -1,0 +1,59 @@
+{
+  "aggregation": "Average queries within context, contexts within assay, assays within target, then equal targets; target bootstrap10000 resamples seed20261016; repeated families/assays do not create independent target samples",
+  "availability_pool_sha256": "eeefec1a6d9365735bad8b4b5c0337ccccda2a98c077dd6b166981ed7c88861d",
+  "context": [
+    "assay_chembl_id",
+    "exact target_chembl_id",
+    "endpoint",
+    "units"
+  ],
+  "design": "Follow-up assay-matched similarity discrimination assessment designed after observing heterogeneous-control results; not an untouched confirmatory test and not a replacement of frozen generation comparisons",
+  "eligibility": {
+    "active_nm": 1000,
+    "controls_differ_from_query_family_and_scaffold": true,
+    "direct_human_metadata_gate": "same existing structured-field policy; null variant annotation does not prove wildtype; prose/BAO ambiguities retained",
+    "inactive_nm": 10000,
+    "max_heavy_atoms": 60,
+    "minimum_active_reference_scaffolds": 1,
+    "minimum_control_families_per_label": 5
+  },
+  "interpretation": [
+    "Same retained assay identifier improves context matching but does not independently audit identical experimental conditions",
+    "No new molecules or reaction yields experimentally tested",
+    "Six targets remain the same source targets as previous panels; panels are not independent target replications",
+    "No threshold or ranking weight tuning from this evaluation"
+  ],
+  "planned_utc": "2026-10-15T16:45:56.306969+00:00",
+  "scoring": {
+    "configuration_sha256": "f3170e95d379361b7a1ec3ac11b51b578aba738618e86b764036161394e72722",
+    "conformers": {
+      "energy_window": 5.0,
+      "max_iterations": 500,
+      "num_conformers": 8,
+      "pharmacophore_sigma": 1.0,
+      "reject_unspecified_stereo": true,
+      "strain_penalty": 0.05
+    },
+    "failure_policy": "Retain all selected pairs and seed failures; same complete-case comparisons plus all-control missing-score ranking bounds",
+    "metrics": [
+      "bit_tanimoto",
+      "count_tanimoto",
+      "hit_shape",
+      "hit_pharmacophore",
+      "score"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ]
+  },
+  "selection": {
+    "max_contexts_per_target": 2,
+    "max_controls_per_label": 10,
+    "queries_per_context": 1,
+    "ranking": "deterministic hash selection, not potency magnitude or any similarity score",
+    "seed": 42
+  },
+  "source_manifest_sha256": "66ed4314c12be5e2b912c6239392a9094aa0e7767babfd188001c73457263988"
+}
