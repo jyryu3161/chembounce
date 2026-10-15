@@ -1,0 +1,8 @@
+{
+  "energy_window": 5.0,
+  "max_iterations": 500,
+  "num_conformers": 8,
+  "pharmacophore_sigma": 1.0,
+  "reject_unspecified_stereo": true,
+  "strain_penalty": 0.05
+}

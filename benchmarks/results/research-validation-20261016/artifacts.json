@@ -1,0 +1,33 @@
+{
+  "analysis_script": "analyze_controls.py",
+  "analysis_script_sha256": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
+  "data_provenance": "Derived from pinned ChEMBL 37 bounded activity/assay source snapshots. control_summary.json retains dataset SHA and local source paths; individual source URLs/hashes and licensing are in source_provenance.json.",
+  "observation_unit": "240 query-control pairs; 120 distinct target-family compound IDs, 119 distinct exact structures, reused across queries; 6 independent target groups",
+  "published_compact_artifacts": {
+    "README.md": "96df2ab681ecdba9d4d8f85ef7c11f7a35f57145658b119098acd8b141047034",
+    "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
+    "chembl-source-snapshot.zip": "72fde29b4fc9f6a7b896745781820d0c255c52e6a1e7036ad4036442e2a4c518",
+    "common-conformers.json": "f3170e95d379361b7a1ec3ac11b51b578aba738618e86b764036161394e72722",
+    "control-requirements.txt": "0cb7e18bdbf2560f295073a21bfb12591dfbd081bafd60b0b09dbb80e2123b3f",
+    "control_analysis.json": "1df900ef466ee0f981e4acd18702bc40a7ebe4a100fc0fa8cf82e54c4f1d1fc5",
+    "control_scores.json": "4c1496c8391dd3440094dea672b63db5446f12e5e42d9183a2533a72e3481c87",
+    "control_summary.json": "ad5d9aa4db1e9f8bb5afecbe0e0b5d8367a188d2e409607f6a8146f1b39c5827",
+    "controls.pdf": "17cc008326af8da66927f11b1cc0b85cd4d8dfa47979a8d773a0521696541f23",
+    "controls.png": "83cf54a59b6a7181d28a10e430dbab112d102cb8f2250270e74c625995a7aef1",
+    "engineering.json": "0774f9a6c07d4b763742fa6c7b35695b8c6deafd1c08074bab4cf8d7fbcf69c0",
+    "query_scope.json": "72c97730f9f76906bc1afcbd88a3f19009862f79af51f7ef18662f0e01fa972b",
+    "snapshot_roundtrip.json": "10cfe393189025ad87e6e428659080d42db76abfd3adab2fa45b8e5fb7b2c9a3",
+    "source_provenance.json": "5d680d5dad8a273989d3548035d1e3352453e4939bd6fa22f041c7ad0da5f94b"
+  },
+  "source_snapshot": {
+    "artifact": "chembl-source-snapshot.zip",
+    "bytes": 1189007,
+    "license": {
+      "name": "CC BY-SA 3.0",
+      "source": "https://www.ebi.ac.uk/chembldb/"
+    },
+    "scope": "Bundled portable ChEMBL raw sources and manifests only; model generation assets and non-ChEMBL integration cases remain separate",
+    "sha256": "72fde29b4fc9f6a7b896745781820d0c255c52e6a1e7036ad4036442e2a4c518"
+  },
+  "status": "Common labelled control evaluation complete; generation comparison remains in progress"
+}
