@@ -137,6 +137,11 @@ def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch
 
 
 def verify_fingerprints(fp_file, sample_size=100, seed=42, trust_legacy=False):
+    """Recompute sampled bit vectors under this runtime; return the checked count.
+
+    Passing does not certify unsampled rows or canonical SMILES compatibility
+    across RDKit versions, and never upgrades the database's version metadata.
+    """
     if sample_size < 1:
         raise ValueError("sample_size must be positive")
     data = load_fingerprint_db(fp_file, trust_legacy)

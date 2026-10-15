@@ -28,7 +28,8 @@ def generate_query_fingerprint(mol, radius=2, fp_size=2048):
 def load_fingerprint_db(fp_file=None, trust_legacy=False):
     if fp_file is None:
         root = Path(__file__).parent / "data"
-        preferred = root / "fingerprints_mw250_v2"
+        runtime = root / f"fingerprints_mw250_rdkit_{rdBase.rdkitVersion}"
+        preferred = runtime if runtime.is_dir() else root / "fingerprints_mw250_v2"
         path = preferred if preferred.is_dir() else root / "scaffold_fingerprints_mw250.npz"
     else:
         path = Path(fp_file)
@@ -137,12 +138,25 @@ def calculate_bulk_tanimoto(
 def search_similar_scaffolds_fast(
     query_mol, fp_db, scaffold_top_n=None, threshold=0.3, use_multiprocessing=False, n_jobs=None
 ):
+    build_version = fp_db.get("rdkit_version")
+    if build_version is not None and str(build_version) != rdBase.rdkitVersion:
+        raise ValueError(
+            f"Fingerprint database was built with RDKit {build_version}, but runtime is "
+            f"{rdBase.rdkitVersion}. Regenerate with this runtime from source SMILES to a new output path; "
+            "sampled bit verification does not establish cross-version compatibility."
+        )
+    # Generated rows and validated hits omit atom maps. Normalize a copy so exact
+    # query exclusion follows that same policy without changing the caller's Mol.
+    query_mol = Chem.Mol(query_mol)
+    for atom in query_mol.GetAtoms():
+        atom.SetAtomMapNum(0)
+    query_smiles = Chem.MolToSmiles(query_mol)
     query = generate_query_fingerprint(query_mol, fp_db["radius"], fp_db["fp_size"])
     packed = fp_db.get("packed", False)
     if packed:
         query = np.packbits(query)
     smiles = np.asarray(fp_db["smiles"])
-    exclude = smiles == Chem.MolToSmiles(query_mol)
+    exclude = smiles == query_smiles
     # Duplicate rows must not consume top-k slots. New databases are canonical.
     if "_duplicate_mask" not in fp_db:
         if bool(fp_db.get("canonical_sorted_unique", False)):
@@ -155,7 +169,13 @@ def search_similar_scaffolds_fast(
             duplicate[first] = False
         fp_db["_duplicate_mask"] = duplicate
     duplicate = fp_db["_duplicate_mask"]
-    canonical_db = bool(fp_db.get("canonical_sorted_unique", False))
+    # Canonical spellings can change across RDKit releases (including E/Z slash
+    # direction). A sorted/unique string claim alone cannot establish identity
+    # under this runtime. Unknown versions use selected-hit validation.
+    canonical_db = (
+        bool(fp_db.get("canonical_sorted_unique", False))
+        and str(fp_db.get("rdkit_version", "")) == rdBase.rdkitVersion
+    )
     fetch_n = scaffold_top_n
     while True:
         indices, scores = calculate_bulk_tanimoto(
@@ -168,11 +188,10 @@ def search_similar_scaffolds_fast(
         )
         if canonical_db:
             return pd.Series(scores, index=smiles[indices], name="Tanimoto Similarity", dtype=float)
-        # Legacy libraries contain pseudoatoms, disconnected entries and equivalent
-        # SMILES. Validate selected hits and refill top-k after those exclusions.
+        # Legacy or unversioned libraries may contain equivalent SMILES. Validate
+        # only selected hits and refill top-k after invalid/identity exclusions.
         valid = {}
         rejected = fp_db.setdefault("_legacy_rejected_rows", set())
-        query_smiles = Chem.MolToSmiles(query_mol)
         for index, score in zip(indices, scores):
             with rdBase.BlockLogs():
                 mol = Chem.MolFromSmiles(str(smiles[index]))
