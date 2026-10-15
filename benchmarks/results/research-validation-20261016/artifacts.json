@@ -13,9 +13,15 @@
     "frozen_campaign_changed": false,
     "results": "preflight_validation.json"
   },
+  "graceful_termination_validation": {
+    "commit": "1afac243e629dcb7e3b967814d0c07913d162c0b",
+    "frozen_campaign_changed": false,
+    "independent_full_suite_passed": 452,
+    "results": "runner_signal_validation.json"
+  },
   "observation_unit": "240 query-control pairs; 120 distinct target-family compound IDs, 119 distinct exact structures, reused across queries; 6 independent target groups",
   "published_compact_artifacts": {
-    "README.md": "c32780e919a0a311c3db5383e12311a16e96ca96f82f01de70ab028a4eb40a9b",
+    "README.md": "1dd72ea85d6dce8a7cadb61c5f438fac6cd23a62ae532ec2c75adc0ca452d1eb",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
@@ -35,6 +41,7 @@
     "engineering.json": "0774f9a6c07d4b763742fa6c7b35695b8c6deafd1c08074bab4cf8d7fbcf69c0",
     "preflight_validation.json": "c810853f907c579fd858e3fa823671ccb11a17071ea25e62bab3c0134818e59c",
     "query_scope.json": "72c97730f9f76906bc1afcbd88a3f19009862f79af51f7ef18662f0e01fa972b",
+    "runner_signal_validation.json": "9bb69fed7c8d56f472df74ca4036640e3b85b96e595452d6370021fe4dada5f1",
     "secondary_controls.json": "a6e5b8cb1574847260638a8a839fae22e33ff2f364e99499e19994f0d3c49109",
     "secondary_panels_roundtrip.json": "d32eeb84539a5cf7f8eb71bfeefc6968055886a8d351a519c0fadd473d952460",
     "snapshot_roundtrip.json": "10cfe393189025ad87e6e428659080d42db76abfd3adab2fa45b8e5fb7b2c9a3",
