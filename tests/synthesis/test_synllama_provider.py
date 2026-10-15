@@ -66,3 +66,16 @@ def test_local_inference_formats_capture_raw_outputs_and_restore_rng(tmp_path, w
     timed = provider.propose("CCO", deadline_monotonic=time.monotonic() + 10)
     assert len(timed) == 1 and timed[0]["sampling"]["elapsed_seconds"] >= 0
     assert TORCH.equal(before, TORCH.random.get_rng_state())
+    # Skipping an earlier design at preflight must not reseed a later design.
+    # Exercise actual generation and both sample-index seeds, without a deadline.
+    provider.samples = 2
+    direct = provider.propose("CCO")
+    provider.propose("CC(O)c1ccncc1")
+    after_other_design = provider.propose("CCO")
+    assert [row["sampling"]["seed"] for row in direct] == [17, 18]
+    for first, later in zip(direct, after_other_design, strict=True):
+        assert first["response"] == later["response"]
+        assert {k: v for k, v in first["sampling"].items() if k != "elapsed_seconds"} == {
+            k: v for k, v in later["sampling"].items() if k != "elapsed_seconds"
+        }
+    assert TORCH.equal(before, TORCH.random.get_rng_state())

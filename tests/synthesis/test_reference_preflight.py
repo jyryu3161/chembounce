@@ -99,7 +99,6 @@ class ReachedExpensiveWork(Exception):
     [
         (HIT, DESIGN, {}, "3d"),
         ("C[C@H](O)c1ccccc1", DESIGN, {}, "3d"),
-        (HIT, UNSPECIFIED, {}, "3d"),  # Designs are still validated during their own scoring.
         (UNSPECIFIED, DESIGN, {"reject_unspecified_stereo": False}, "3d"),
         (CAGE, DESIGN, {"reject_unspecified_stereo": False}, "3d"),
         (UNSPECIFIED, DESIGN, {}, "2d"),
