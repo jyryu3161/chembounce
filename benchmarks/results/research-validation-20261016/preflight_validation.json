@@ -1,0 +1,28 @@
+{
+  "changed_request_fields": [
+    "output_dir",
+    "deadline_monotonic"
+  ],
+  "commit": "009b7aaa1d3efc5e418a1c885f50c704a6cdfb58",
+  "cuda_disabled_for_parent_diagnostic": true,
+  "expected_stereo_reason_present": true,
+  "generator_output_directory_exists": false,
+  "hit": "NS(=O)(=O)Oc1ccc(NC(=O)NC23CC4CC(CC(C4)C2)C3)cc1",
+  "interpretation": "One actual invalid-reference request; earlier validation preserves the rejection policy and avoids generation. Not a general speedup benchmark. Frozen generation campaigns retain their original code and measurements.",
+  "new_returncode": 1,
+  "new_wall_seconds": 2.4144405405968428,
+  "no_response_promoted_to_success": true,
+  "original_request_sha256": "049b54af1e85bf112ece85712784f8afdd8bf536d32e771a2cb4ea880f8d5a1b",
+  "original_run_status": "no_candidates",
+  "original_wall_seconds": 156.25951590482146,
+  "parent_regression": {
+    "command": "PYTHONPATH=/data2/home/jyryu/chembounce-3d-preflight CUDA_VISIBLE_DEVICES= OMP_NUM_THREADS=2 /data2/home/jyryu/chembounce/.venv-synllama-min/bin/python -m pytest -q",
+    "failed": 0,
+    "log_sha256": "ee03cd8108efe4fd869eeea2dd9f3d0c80a69beab3f61a42db68b1a6d4756d69",
+    "passed": 390,
+    "seconds": 83.92,
+    "working_tree": "fix/early-3d-validation"
+  },
+  "query_id": "CHEMBL205-query-2",
+  "scope": "Actual frozen CA2 query 2 request evaluated with separate preflight commit; failure-policy/latency diagnostic, not a rerun or replacement of the frozen campaign"
+}
