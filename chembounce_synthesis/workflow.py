@@ -965,6 +965,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         "tanimoto": tanimoto,
                         "scoring_stage": "screening" if scoring_mode == "3d" else "2d_screening",
                         **info,
+                        "hit_smiles": hit,
+                        "design_smiles": design,
                     }
                 )
             primary = min(
@@ -1156,6 +1158,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                             "design": row["design"],
                             "scoring_stage": "refined",
                             **info,
+                            "hit_smiles": hit,
+                            "design_smiles": row["design"],
                         }
                     )
                     break
