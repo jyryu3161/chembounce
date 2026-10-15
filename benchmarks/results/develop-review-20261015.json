@@ -1,0 +1,157 @@
+{
+  "date": "2026-10-15",
+  "base_revision": "9dab6cb",
+  "scope": "Develop working-tree review; see runtime source hashes. No experimental synthesis or held-out accuracy claim.",
+  "tests": {
+    "baseline": {
+      "passed": 159
+    },
+    "primary": {
+      "passed": 177,
+      "warnings": 2,
+      "rdkit": "2025.09.6"
+    },
+    "minimum": {
+      "passed": 138,
+      "skipped": 4,
+      "rdkit": "2023.09.6"
+    },
+    "static_checks": [
+      "ruff check",
+      "ruff format --check",
+      "git diff --check"
+    ]
+  },
+  "live": {
+    "scope": "Single preselected retrospective integration case; design occurs in upstream prompt; not held-out accuracy or experimental synthesis evidence",
+    "catalog_rows": 238542,
+    "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "source_sha256": {
+      "__init__.py": "8d5968b9f40381dafd4b5b491c0d09f0f3536f08ba3bf56503a96df3df459435",
+      "assets.py": "0f513372fee6211d6af0c134e4b2e9adc590d1d8499e1072013628f7f18c51df",
+      "catalog.py": "81cacefa665595f32231fc03f0d35b8e0d76acf1584ed8fcc91b3dbdc837517c",
+      "cli.py": "2c44b5b30da774728ca40adaa0e987e8d34f3eb202f656b688918c2807ef700b",
+      "common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+      "conformers.py": "4f95da4088b30de53eb3f7d1da5c3491e682157e8aaee518ecf06eb16895e9c5",
+      "continuation.py": "ea91d5969c31f1560bd81ba0b584a69ee83a1cabe434d8309cc113ebcdb6c461",
+      "options.py": "cf57ac9d24dac12784b4ba3b66e865514ba44b22fc0c8e4b1e6dc7efa70d5d6a",
+      "reactions.py": "f77c6a98632697086614927267212e0948c39f8b2c76fd42dd9971fb58ef2569",
+      "refinement.py": "f62d174ff65236b1c417d38305bccfe90b02e9c7534984a4c1bb72bb4926acad",
+      "routes.py": "6ec3fa5caa421355e0f420fad6e040b64e7dc3c86676e35133b202b73e1c7d42",
+      "synllama.py": "007868b44f3c91689b5fd2e3f9946798ed39c78c2d158d9ebecbee8fc7d84e1f",
+      "workflow.py": "4e6c07362eff507b0b5d9a62b75269f5d1eeb8ee59a2f290aa5535db6660d385"
+    },
+    "provider": "synllama_local",
+    "versions": {
+      "rdkit": "2025.9.6",
+      "numpy": "1.26.4",
+      "scipy": "1.13.1"
+    },
+    "selected_products": 3,
+    "all_selected_routes_replayed": true,
+    "all_selected_scaffolds_changed": true,
+    "both_tanimotos_recomputed": true,
+    "all_selected_seeds_successful": true,
+    "maximum_sdf_pharmacophore_error": 1.0790410051364496e-05,
+    "maximum_pose_pair_distance_error_angstrom": 0.00019068190223592296,
+    "summary": {
+      "schema_version": 1,
+      "status": "success",
+      "proposals": 4,
+      "verified_routes": 168,
+      "scored_products": 6,
+      "accepted_products": 3,
+      "limits_reached": [
+        "refinement.top_n"
+      ],
+      "designs_supplied": 1,
+      "designs_used": 1,
+      "carried_routes_loaded": 0,
+      "screened_products": 6,
+      "refinement_attempted": 3,
+      "refinement_accepted": 3,
+      "returned_products": 3,
+      "eligible_products": 6,
+      "carried_eligible_products": 0,
+      "new_eligible_products": 6,
+      "carried_screened_products": 0,
+      "elapsed_seconds": 120.54301203135401,
+      "route_rejections": {
+        "accepted": 3,
+        "constraint_rejected": 124,
+        "screened": 41
+      }
+    }
+  },
+  "continuation": {
+    "provider": "saved_proposals",
+    "previous_screened_products": 6,
+    "continued_screened_products": 27,
+    "lost_previous_products": [],
+    "all_selected_routes_replayed": true,
+    "all_selected_scaffolds_changed": true,
+    "both_tanimotos_recomputed": true,
+    "maximum_sdf_pharmacophore_error": 6.687943496119786e-06,
+    "maximum_pose_pair_distance_error_angstrom": 0.00016199505731151476,
+    "summary": {
+      "schema_version": 1,
+      "status": "success",
+      "proposals": 4,
+      "verified_routes": 820,
+      "scored_products": 28,
+      "accepted_products": 3,
+      "limits_reached": [
+        "refinement.top_n"
+      ],
+      "designs_supplied": 1,
+      "designs_used": 1,
+      "carried_routes_loaded": 28,
+      "screened_products": 27,
+      "refinement_attempted": 3,
+      "refinement_accepted": 3,
+      "returned_products": 3,
+      "eligible_products": 28,
+      "carried_eligible_products": 6,
+      "new_eligible_products": 22,
+      "carried_screened_products": 6,
+      "elapsed_seconds": 166.4838777333498,
+      "route_rejections": {
+        "3d_failed": 4,
+        "accepted": 3,
+        "constraint_rejected": 646,
+        "screened": 167
+      }
+    }
+  },
+  "pareto_microbenchmark": {
+    "scope": "Isolated Pareto ranking microbenchmark; median of three runs; not end-to-end speedup",
+    "cases": {
+      "ordered_256": {
+        "seconds": {
+          "before": 1.5109227960929275,
+          "after": 0.009023256599903107
+        },
+        "speedup": 167.44761487877358,
+        "identical_fronts": true
+      },
+      "random_256": {
+        "seconds": {
+          "before": 0.033098096027970314,
+          "after": 0.006822499446570873
+        },
+        "speedup": 4.8513153115177,
+        "identical_fronts": true
+      }
+    }
+  },
+  "integrated_cli": {
+    "hopping_results": 1,
+    "verified_products": 1,
+    "design": "Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1",
+    "provider": "saved actual SynLlama responses from the live run",
+    "catalog_scope": "original catalog subset containing the live finalists building blocks",
+    "required_core": "c1cccnc1N1CCOCC1",
+    "hopping_to_synthesis_connected": true
+  }
+}

@@ -671,6 +671,11 @@ def main(argv=None):
                 if synthesis_config.get("core_smiles") not in (None, options.core_smiles):
                     raise ValueError("core_smiles conflicts with the synthesis configuration")
                 synthesis_config["core_smiles"] = options.core_smiles
+            synthesis_out = Path(options.output_dir) / "synthesis"
+            if synthesis_out.exists() and (not synthesis_out.is_dir() or any(synthesis_out.iterdir())):
+                raise ValueError(
+                    f"Synthesis output directory is not empty: {synthesis_out}. Choose a fresh output directory."
+                )
         except (ValueError, OSError, KeyError, TypeError) as exc:
             LOGGER.error("Synthesis configuration: %s", exc)
             return 2
@@ -742,7 +747,7 @@ def main(argv=None):
                 config,
                 Path(options.output_dir) / "synthesis",
             )
-        except (ValueError, OSError, KeyError, TypeError) as exc:
+        except (ValueError, OSError, KeyError, TypeError, RuntimeError) as exc:
             LOGGER.error("Synthesis workflow: %s", exc)
             return 2
         print(

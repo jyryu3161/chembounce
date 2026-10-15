@@ -26,6 +26,9 @@ The demo contains **handwritten proposals and fixture building blocks**, explici
 labelled as such. It exercises replay, expansion, constraints and scoring; it is
 not evidence of model accuracy or commercial availability. Use a new output
 directory for each run. Existing nonempty synthesis directories are protected.
+The integrated CLI checks this before starting hopping, including when
+`--overwrite` is supplied, so a failed synthesis rerun cannot replace the hopping
+results underneath an older synthesis result.
 
 The base ChemBounce installation retains support for RDKit 2023.9. The optional
 3D alignment workflow needs a build with `rdShapeAlign`; `.[synthesis]` selects
@@ -159,6 +162,9 @@ of substantially different cores, choose appropriate `-t` and
 already discarded upstream. No cutoff is automatically relaxed.
 
 Set `mode: "hop"` to require a changed Murcko scaffold versus the original hit.
+This comparison ignores isotope labels and stereochemistry: isotope or stereo
+changes alone do not qualify as hopping. Exact isomeric identities remain required
+for reaction replay, required cores, and design-scaffold preservation.
 Set `mode: "expand"` to preserve each selected design's Murcko scaffold while
 varying blocks; the unchanged design itself is excluded. `preserve_design_scaffold: true` optionally keeps that scaffold
 in hop mode too. `core_smiles` protects a required substructure with specified
@@ -274,7 +280,8 @@ Every carried route is replayed against the current catalog and registered rules
 then rechecked for core, scaffold and property constraints. Old scores and
 verification claims are never trusted. Ineligible routes are retained with
 explicit rejection reasons; eligible products are rescored with current settings.
-Within each design, carried routes receive scoring priority. Finite scoring and
+Carried routes from **all designs** receive scoring priority before any newly
+projected routes consume the global scoring budget. Finite scoring and
 shortlist budgets can still exclude products from final results; increase those
 budgets to compare more of the accumulated pool. A changed hit is rejected;
 routes for designs omitted from the current run are counted as excluded in the
@@ -301,6 +308,9 @@ route verification and core constraints apply to those extensions too.
 3. Enumerate reactant-slot permutations, execute RDKit reaction rules, sanitize
    each principal product, and retain bounded intermediate states. Shared nodes
    must retain a consistent block/intermediate assignment across branches.
+   Chirality matching applies during reaction execution as well as catalog
+   filtering; a molecule with one matching stereocenter cannot authorize reaction
+   at another site that violates the template's stereochemistry.
 4. Independently replay each selected route. Every leaf must resolve to an eligible
    catalog ID, every rule to the allowlist, and every recorded intermediate/final
    product must match the replay product's **canonical isomeric SMILES exactly**.
@@ -414,7 +424,8 @@ arbitrary weighted scalar sum.
   truncations, unscored products and elapsed time.
 
 Exit codes are 0 (results), 3 (valid run without accepted results), or 2 (invalid
-request/data). Unexpected programming/model-runtime failures remain visible.
+request/data or model runtime failure). Model runtime errors are logged and retained
+in workflow diagnostics; other unexpected programming failures remain visible.
 An empty successful search writes a TSV header and diagnostic files.
 
 Tests cover independent forward replay, multistep dependencies, unknown rules,

@@ -227,3 +227,43 @@ def test_alkene_stereochemistry_survives_reaction_replay(assets):
     }
     with pytest.raises(ValueError, match="stereochemistry"):
         verify_route(route, catalog, rules)
+
+
+def test_replay_only_reacts_at_sites_matching_template_stereochemistry(assets, tmp_path):
+    from chembounce_synthesis.catalog import Catalog
+    from chembounce_synthesis.reactions import Rules
+
+    # One substrate contains both matching and nonmatching stereocentres.
+    with assets[0].path.open("a") as stream:
+        stream.write("diol\tC[C@H](O)CC[C@H](O)C\ttest fixture\tfixture-date\n")
+    catalog = Catalog(assets[0].path)
+    path = tmp_path / "stereo-rule.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "stereo-site",
+                        "source": "stereospecific test fixture",
+                        "smarts": "[CH3:1][C@H:2]([O:3])[CH2:4]>>[CH3:1][C@H:2]([Cl:3])[CH2:4]",
+                    }
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    allowed = canonical("C[C@H](Cl)CC[C@H](O)C")
+    forbidden = canonical("C[C@H](O)CC[C@H](Cl)C")
+    products, _ = rules.apply("stereo-site", (catalog.get("diol").smiles,))
+    assert products == (allowed,)
+    route = {
+        "schema_version": 1,
+        "root": "r",
+        "nodes": [
+            {"id": "b", "building_block_id": "diol"},
+            {"id": "r", "rule_id": "stereo-site", "reactants": ["b"], "product": forbidden},
+        ],
+    }
+    with pytest.raises(ValueError, match="regenerate"):
+        verify_route(route, catalog, rules)

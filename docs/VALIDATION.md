@@ -277,3 +277,84 @@ The optional SynLlama/catalog/reaction/3D pipeline has a separate
 actual GPU inference, a 238,542-structure catalog snapshot, independent route replay,
 exported-coordinate checks, isotope-preserving scoring and Python/dependency tests.
 This is a small retrospective workflow check, not experimental or held-out validation.
+
+## Develop review, 2026-10-15
+
+Reviewed the working tree based on `9dab6cb`, including the integrated hopping CLI,
+catalog/reaction verification, conformer scoring, refinement and continuation.
+The [machine-readable audit](../benchmarks/results/develop-review-20261015.json)
+records runtime source hashes, package versions and measured results.
+
+The original 159 tests passed, but targeted negative controls exposed defects
+outside their coverage. The review fixes:
+
+- Reaction execution accepted a nonmatching stereocenter when a different site
+  on the same substrate matched the rule. Chirality is now enforced through
+  RDKit's [reaction matching parameters](https://www.rdkit.org/docs/source/rdkit.Chem.rdChemReactions.html#rdkit.Chem.rdChemReactions.ChemicalReaction.GetSubstructParams)
+  during execution, in addition to the existing reactant-role check.
+- Isotope-only and retained ring-stereochemistry changes could count as a new
+  Murcko scaffold. Hopping now compares scaffold connectivity and atom/bond types
+  without isotope/stereo labels; exact replay and preservation checks remain.
+- New candidates for an early design could consume the global scoring budget
+  before a later design's carried candidates. All carried designs are now
+  processed before fresh proposals.
+- The integrated `--overwrite` path could replace hopping files before rejecting
+  an existing synthesis directory. It now rejects that destination beforehand.
+- Invalid search/conformer settings are rejected before hopping, and both CLIs
+  report model runtime errors with exit code 2 while retaining workflow diagnostics.
+
+The updated suite passed **177 tests** on RDKit 2025.09.6. Minimum dependencies
+(RDKit 2023.09.6, NumPy 1.24.4, pandas 2.0.3, SciPy 1.10.1) passed **138 tests**, with
+four skips for unavailable optional modules. Lint, formatting and whitespace
+checks passed. The retained ring-stereo negative control was additionally rerun
+using two fused-ring stereoisomers; both scaffold-change negative controls passed.
+
+Live SynLlama-1B-2M-91rxns inference on an NVIDIA L40 used the full 238,542-entry
+catalog, four samples, six screening conformers, and refinement of the top three
+products with eight conformers at seeds 42/43/44. It screened six unique products
+and returned three refined products. All three changed the original scaffold;
+their selected routes replayed exactly using IDs looked up in the original
+catalog. Both Tanimotos matched independent recomputation. Exported SDF coordinates
+reproduced pharmacophore scores within `1.08e-5`; the two orientations of each
+candidate preserved pair distances within `0.000191` angstrom.
+
+Continuation used those saved model responses, six alternative blocks per leaf,
+two expansion rounds, 32 routes per starting route and a 64-pair scoring budget.
+The screening pool grew from **6 to 27** with **zero prior products lost**, and
+three products passed refinement. One additional unique product failed 3D scoring;
+failures remain in route evidence. Selected routes, both Tanimotos and exported
+coordinates were rechecked. A separate integrated CLI run generated the thiazole
+design by replacing the oxazole ring and passed it to synthesis verification,
+using these actual saved proposals and a small catalog subset. Its required core
+was retained, and one verified result was returned.
+
+Reproduce the full-catalog runs after preparing the external assets:
+
+```bash
+python -m chembounce_synthesis.cli \
+  --hit 'Cc1coc(NC(=O)c2cccnc2N2CCOCC2)n1' \
+  --design 'Cc1csc(NC(=O)c2cccnc2N2CCOCC2)n1' \
+  --config benchmarks/synthesis_smoke_config.json \
+  --refine-top-n 3 --refine-conformers 8 --refine-seeds 42 43 44 \
+  --output benchmark-results/develop-review-20261015/live
+python -m chembounce_synthesis.cli \
+  --continue-from benchmark-results/develop-review-20261015/live \
+  --expansion-top-k 6 --expansion-rounds 2 --expansion-max-routes 32 \
+  --synthesis-max-scored 64 \
+  --output benchmark-results/develop-review-20261015/continued
+```
+
+Pareto ranking now computes pairwise dominance once, reducing worst-case work
+from cubic to quadratic, with quadratic Boolean storage. A three-repeat median
+microbenchmark on 256 candidates preserved every front:
+
+| Pool | Before | After | Speedup |
+| --- | ---: | ---: | ---: |
+| Random eight-metric values | 33.10 ms | 6.82 ms | 4.85x |
+| Fully ordered dominance chain | 1510.92 ms | 9.02 ms | 167.45x |
+
+These are isolated ranking timings on a shared host, not whole-workflow speedups.
+The integration design appears in the upstream prompt, so this case does not
+measure model generalization. Catalog membership and reaction replay do not
+establish yield, selectivity, reagent/condition completeness, current stock or
+biological activity. Refinement scores remain sampling-sensitive heuristics.
