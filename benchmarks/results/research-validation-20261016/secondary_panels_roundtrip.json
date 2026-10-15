@@ -1,0 +1,31 @@
+{
+  "panels": {
+    "target": {
+      "checks": {
+        "same_compound_and_assay_records": true,
+        "same_queries": true,
+        "same_source_urls_hashes": true,
+        "same_split_definition": true
+      },
+      "compound_records": 5557,
+      "original_dataset_sha256": "8d87129ebc096d122fb581eb1721b9893243cec958434b5720a94df83c2d074e",
+      "queries": 6,
+      "relocated_dataset_sha256": "d497cc0a4d1747c81a3ac8e1eb88d420dec6edc85add5e73c209fcfc59b43b93"
+    },
+    "time": {
+      "checks": {
+        "same_compound_and_assay_records": true,
+        "same_queries": true,
+        "same_source_urls_hashes": true,
+        "same_split_definition": true
+      },
+      "compound_records": 5575,
+      "original_dataset_sha256": "5402b98837c4abba4ab85606f8354736ec2ef20e23e1e0e8c6dadfbd0c8f7269",
+      "queries": 12,
+      "relocated_dataset_sha256": "178d17e8df11d347b92eea1c614e6ece68199c3a7d1055050a17c10a00692345"
+    }
+  },
+  "path_note": "Absolute source_artifact paths and manifest hash can change under relocation; these are not biological differences",
+  "scope": "Reconstructed from the published raw ZIP in a new location using original fixed parameters; original biological records, labels, supporting assay records and partitions compared",
+  "snapshot_sha256": "72fde29b4fc9f6a7b896745781820d0c255c52e6a1e7036ad4036442e2a4c518"
+}

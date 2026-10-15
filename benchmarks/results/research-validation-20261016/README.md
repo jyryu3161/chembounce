@@ -38,6 +38,37 @@ Figure: (A) Count-Tanimoto ≥0.5 active-scaffold recall over all eligible held-
 
 ## Reproduction and files
 
+### Publication-year and held-out-target controls
+
+The same scoring and sampling protocol was also evaluated on the frozen publication-year partition (cutoff 2020) and target partition. These are alternative partitions of the same bounded source collection, not independent external cohorts. The target partition evaluates CA2, PIM1 and AChE; EGFR, A2a and JNK3 form its development library. No similarity score was fitted to these labels. Target separation alone does not establish unseen pretrained-model chemistry.
+
+| Partition | Targets / queries | Pairs / failed 3D pairs | Active-scaffold recall at count T ≥0.5 | Paired bit ROC AUC | Paired joint 3D ROC AUC |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Scaffold | 6 / 12 | 240 / 42 | 3.162% | 0.6390 | 0.5500 |
+| Publication year | 6 / 12 | 240 / 21 | 0.298% | 0.5638 | 0.5104 |
+| Held-out target | 3 / 6 | 120 / 29 | 2.005% | 0.4377 | 0.3401 |
+
+The time controls represent 130 distinct compound IDs and exact structures; target controls represent 99. All additional 3D failures are explicit stereo-policy rejections. Independent ROC/AP and missing-score-bound calculations agreed with the framework within `1e-12`. Joint-score all-control ROC bounds are 0.4300–0.5950 for time and 0.2217–0.5367 for target. Target-bootstrap intervals and every metric appear in [secondary_controls.json](secondary_controls.json), [time analysis](time_control_analysis.json) and [target analysis](target_control_analysis.json). Three target groups provide limited uncertainty information. These results do not demonstrate improved discrimination from the current 3D score, and they retain the assay heterogeneity described below.
+
+![Publication-year controls](controls_time.png)
+
+![Held-out-target controls](controls_target.png)
+
+The [secondary relocation audit](secondary_panels_roundtrip.json) reconstructed both panels from the bundled ZIP: all 5,575 time-panel and 5,557 target-panel records, supporting assay metadata, queries, partitions and source URL/hash entries matched. Portable analysis also reproduced every numerical estimate. After extracting the source archive as below, reproduce either partition by replacing `scaffold` with `time` or `target` in the panel import command (`--cutoff-year 2020` is the time default), then run the same controls command on that panel. Reanalyse the bundled score records directly with:
+
+```bash
+python benchmarks/results/research-validation-20261016/analyze_secondary_controls.py \
+  --scores benchmarks/results/research-validation-20261016/time_control_scores.json \
+  --summary benchmarks/results/research-validation-20261016/time_control_summary.json \
+  --output benchmark-results/recomputed-time-controls
+```
+
+Use the corresponding `target_control_*.json` paths for the target partition.
+
+### Early validation of fixed 3D references
+
+Commit `009b7aaa` validates a fixed query's 3D prerequisites before generation and model loading. Independent regression testing passed all 390 tests. An actual CA2 request with unspecified cage stereochemistry was rejected in 2.41 seconds, before a generator output directory was created; its original frozen run spent 156.26 seconds before returning no candidates. This single diagnostic establishes earlier rejection under the same policy, not a general throughput improvement. [preflight_validation.json](preflight_validation.json) records the request hash and check results. The running generation comparisons keep their original code and timing observations.
+
 ### Assay-context sensitivity
 
 The later [assay-context audit](assay_heterogeneity.json) is explicitly post hoc. Of 5,567 records, 1,103 have a representative assay annotated as cell-based and 1,229 have representative descriptions containing “unknown origin” or “unspecified origin.” Across all retained supporting assays, 1,250 records have that origin ambiguity and 79 span multiple assay-format annotations. The text flags do not prove a non-human experiment; they expose unresolved ambiguity despite the structured human assignment. A null variant annotation is not experimental proof of wild-type sequence. ChEMBL's [confidence score concerns assay-to-target assignment](https://chembl.gitbook.io/chembl-interface-documentation/frequently-asked-questions/chembl-data-questions), not equivalent experimental conditions.

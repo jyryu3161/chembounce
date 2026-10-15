@@ -8,10 +8,16 @@
     "script": "audit_assay_heterogeneity.py"
   },
   "data_provenance": "Derived from pinned ChEMBL 37 bounded activity/assay source snapshots. control_summary.json retains dataset SHA and local source paths; individual source URLs/hashes and licensing are in source_provenance.json.",
+  "early_reference_validation": {
+    "commit": "009b7aaa1d3efc5e418a1c885f50c704a6cdfb58",
+    "frozen_campaign_changed": false,
+    "results": "preflight_validation.json"
+  },
   "observation_unit": "240 query-control pairs; 120 distinct target-family compound IDs, 119 distinct exact structures, reused across queries; 6 independent target groups",
   "published_compact_artifacts": {
-    "README.md": "10952a1ea7a87cc0c640411a7c3e522269b9f0aaec9627285b696135af696406",
+    "README.md": "5c4ea5a90e4cbb972c579044b1585650c8e493752ab51d492eb3bda499ecf9d5",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
+    "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
     "audit_assay_heterogeneity.py": "ce9eabd824201812c52038f379414672a438683a7a265330de6edbcff3c99bcd",
     "chembl-source-snapshot.zip": "72fde29b4fc9f6a7b896745781820d0c255c52e6a1e7036ad4036442e2a4c518",
@@ -22,10 +28,29 @@
     "control_summary.json": "ad5d9aa4db1e9f8bb5afecbe0e0b5d8367a188d2e409607f6a8146f1b39c5827",
     "controls.pdf": "17cc008326af8da66927f11b1cc0b85cd4d8dfa47979a8d773a0521696541f23",
     "controls.png": "83cf54a59b6a7181d28a10e430dbab112d102cb8f2250270e74c625995a7aef1",
+    "controls_target.pdf": "6b7d0b0624c6bf27cd0a0571533057e46273a56023dc992676dc3032f8f18e64",
+    "controls_target.png": "f3ea6badcd431beedfc55c81473e4c84f58d5113ccce265000dfe145140b2dde",
+    "controls_time.pdf": "95249a81ac4cc5220ed33f13eab4b04dad88d65bea68bb9cda5d41aca6ff1aa2",
+    "controls_time.png": "11c761dd1972226c08120547a7ca949026074022a671bb51de1400214bf5f185",
     "engineering.json": "0774f9a6c07d4b763742fa6c7b35695b8c6deafd1c08074bab4cf8d7fbcf69c0",
+    "preflight_validation.json": "c810853f907c579fd858e3fa823671ccb11a17071ea25e62bab3c0134818e59c",
     "query_scope.json": "72c97730f9f76906bc1afcbd88a3f19009862f79af51f7ef18662f0e01fa972b",
+    "secondary_controls.json": "a6e5b8cb1574847260638a8a839fae22e33ff2f364e99499e19994f0d3c49109",
+    "secondary_panels_roundtrip.json": "d32eeb84539a5cf7f8eb71bfeefc6968055886a8d351a519c0fadd473d952460",
     "snapshot_roundtrip.json": "10cfe393189025ad87e6e428659080d42db76abfd3adab2fa45b8e5fb7b2c9a3",
-    "source_provenance.json": "5d680d5dad8a273989d3548035d1e3352453e4939bd6fa22f041c7ad0da5f94b"
+    "source_provenance.json": "5d680d5dad8a273989d3548035d1e3352453e4939bd6fa22f041c7ad0da5f94b",
+    "target_control_analysis.json": "2e5273ce81829e9818766adc4571edbd98827bb4786d69fc53149a01084a8ac4",
+    "target_control_scores.json": "e281294d1d5653f363339ea60f2fc1fc460fb6e0fe32403eb40047691dfbcf18",
+    "target_control_summary.json": "3f6edcbe8ee6071a8548c69655136bc7ceab63183ff544d07eee42fab4812b3b",
+    "time_control_analysis.json": "4c3fdb7ee09a0e63ddccdfbce4a6e4e379bd99056cf260b90ce9ddedfc8a9fa7",
+    "time_control_scores.json": "f1847507ca25f54cf56f875b6d52162925fcb929fb215d59607b8426277a60d1",
+    "time_control_summary.json": "8f3ae79fae5ed76b634773e130608b2e6e8375d4656bd9380440fcf7b22a9d5c"
+  },
+  "secondary_controls": {
+    "reproduction": "Every numerical estimate reproduced; both source panels reconstructed with identical biological records, assay metadata and partitions",
+    "results": "secondary_controls.json",
+    "scope": "Alternative partitions of the same sources; assay heterogeneity retained; not independent new target cohorts",
+    "script": "analyze_secondary_controls.py"
   },
   "source_snapshot": {
     "artifact": "chembl-source-snapshot.zip",

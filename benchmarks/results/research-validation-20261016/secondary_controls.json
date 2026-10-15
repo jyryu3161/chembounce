@@ -1,0 +1,156 @@
+{
+  "assay_context": "Same structured-metadata policy and assay heterogeneity limitations as primary panel; not the subsequently planned assay-matched panel",
+  "not_a_training_claim": "These fixed similarity scores were not fitted to development target labels; target partition alone does not prove unseen pretrained chemistry",
+  "panels": {
+    "target": {
+      "compounds": 5557,
+      "dataset_sha256": "8d87129ebc096d122fb581eb1721b9893243cec958434b5720a94df83c2d074e",
+      "distinct_compound_ids": 99,
+      "distinct_exact_structures": 99,
+      "failed_3d_pairs": 29,
+      "failed_seed_reasons": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 87
+      },
+      "independent_metric_mismatches": [],
+      "joint_roc_missing_score_bounds": [
+        0.22166666666666668,
+        0.5366666666666666
+      ],
+      "paired_roc": {
+        "bit_tanimoto": {
+          "ci95": [
+            0.30714285714285716,
+            0.5203703703703704
+          ],
+          "mean": 0.4377425044091711,
+          "targets": 3
+        },
+        "count_tanimoto": {
+          "ci95": [
+            0.3657142857142857,
+            0.6092592592592594
+          ],
+          "mean": 0.5011816578483246,
+          "targets": 3
+        },
+        "hit_pharmacophore": {
+          "ci95": [
+            0.08642857142857141,
+            0.4469135802469137
+          ],
+          "mean": 0.29206643151087597,
+          "targets": 3
+        },
+        "hit_shape": {
+          "ci95": [
+            0.33285714285714285,
+            0.5320987654320988
+          ],
+          "mean": 0.44546149323927103,
+          "targets": 3
+        },
+        "score": {
+          "ci95": [
+            0.15714285714285714,
+            0.44285714285714284
+          ],
+          "mean": 0.34012345679012346,
+          "targets": 3
+        }
+      },
+      "prefilter_target_macro_recall": {
+        "ci95": [
+          0.005836575875486381,
+          0.04709094852230831
+        ],
+        "mean": 0.020049247001430962,
+        "targets": 3
+      },
+      "queries": 6,
+      "query_control_pairs": 120,
+      "target_ids": [
+        "CHEMBL205",
+        "CHEMBL2147",
+        "CHEMBL220"
+      ]
+    },
+    "time": {
+      "compounds": 5575,
+      "dataset_sha256": "5402b98837c4abba4ab85606f8354736ec2ef20e23e1e0e8c6dadfbd0c8f7269",
+      "distinct_compound_ids": 130,
+      "distinct_exact_structures": 130,
+      "failed_3d_pairs": 21,
+      "failed_seed_reasons": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 63
+      },
+      "independent_metric_mismatches": [],
+      "joint_roc_missing_score_bounds": [
+        0.42999999999999994,
+        0.5950000000000001
+      ],
+      "paired_roc": {
+        "bit_tanimoto": {
+          "ci95": [
+            0.4878105985449735,
+            0.6443154761904762
+          ],
+          "mean": 0.5637781084656085,
+          "targets": 6
+        },
+        "count_tanimoto": {
+          "ci95": [
+            0.4562996031746032,
+            0.6587500000000001
+          ],
+          "mean": 0.5592063492063492,
+          "targets": 6
+        },
+        "hit_pharmacophore": {
+          "ci95": [
+            0.49060846560846566,
+            0.5751851851851851
+          ],
+          "mean": 0.5318816137566138,
+          "targets": 6
+        },
+        "hit_shape": {
+          "ci95": [
+            0.34769179894179897,
+            0.5552678571428572
+          ],
+          "mean": 0.44688822751322754,
+          "targets": 6
+        },
+        "score": {
+          "ci95": [
+            0.43030423280423274,
+            0.6023214285714286
+          ],
+          "mean": 0.5103902116402117,
+          "targets": 6
+        }
+      },
+      "prefilter_target_macro_recall": {
+        "ci95": [
+          0.0008818342151675485,
+          0.005337171905799357
+        ],
+        "mean": 0.0029842307293287684,
+        "targets": 6
+      },
+      "queries": 12,
+      "query_control_pairs": 240,
+      "target_ids": [
+        "CHEMBL203",
+        "CHEMBL205",
+        "CHEMBL2147",
+        "CHEMBL220",
+        "CHEMBL251",
+        "CHEMBL2637"
+      ]
+    }
+  },
+  "sampling": "Same maximum of 10 controls per label per query, selection seed 42; eight conformers with seeds 42, 43 and 44; no thresholds retuned",
+  "scope": "Secondary labelled control analyses on publication-year and held-out-target partitions; generation-method comparisons are separate and still running",
+  "uncertainty": "Target bootstrap with 10,000 draws, seed 20261016; six targets in time, three in target; repeated targets across panels are not independent new targets"
+}
