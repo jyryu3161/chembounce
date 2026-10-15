@@ -78,7 +78,7 @@
     "status": "partial_sample_audit_independently_recomputed"
   },
   "published_compact_artifacts": {
-    "README.md": "e4166490f9537bf27737d022d93f8a199059a2d554301d7ce0fcb2f16720f4ee",
+    "README.md": "c3ef72dfc9bd5407fda7add6ee3f6008090885c1f334393ee89d9558a09bf989",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
@@ -106,6 +106,7 @@
     "query_scope.json": "72c97730f9f76906bc1afcbd88a3f19009862f79af51f7ef18662f0e01fa972b",
     "runner_signal_validation.json": "9bb69fed7c8d56f472df74ca4036640e3b85b96e595452d6370021fe4dada5f1",
     "score_reference_validation.json": "672789e41fafcbc364665946512c11e49b3c0d626e2eebd1d3ace9f5f2e97989",
+    "search_space_inventory_scope.json": "1a4cbb951030f8aa69ae98b63ba078350ce1e9b73102e505d794ef774e6f07d8",
     "secondary_controls.json": "a6e5b8cb1574847260638a8a839fae22e33ff2f364e99499e19994f0d3c49109",
     "secondary_panels_roundtrip.json": "d32eeb84539a5cf7f8eb71bfeefc6968055886a8d351a519c0fadd473d952460",
     "snapshot_roundtrip.json": "10cfe393189025ad87e6e428659080d42db76abfd3adab2fa45b8e5fb7b2c9a3",
@@ -126,6 +127,13 @@
     "results": "score_reference_validation.json",
     "scope": "Explicit identity-field fix, bounded real before/after replay and read-time export consistency; not full-suite revalidation, independent shape-kernel validation or a method comparison.",
     "score_records_compared": 13
+  },
+  "search_space_inventory_scope": {
+    "frozen_campaign_changed": false,
+    "local_evidence_bundled": false,
+    "new_normalization_performed": false,
+    "results": "search_space_inventory_scope.json",
+    "scope": "Scope disclosure from the existing frozen primary manifest only: 5000 sampled raw scaffold records, 4755 assessed, 245 unassessed; 188 matched dataset records across all partitions. Not exhaustive effective-library coverage or a model-training/label-leakage conclusion."
   },
   "secondary_controls": {
     "reproduction": "Every numerical estimate reproduced; both source panels reconstructed with identical biological records, assay metadata and partitions",
