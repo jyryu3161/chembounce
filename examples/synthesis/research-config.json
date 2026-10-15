@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "catalog": "../../.chembounce-data-synthesis/catalog.tsv",
+  "rules": "../../.chembounce-data-synthesis/rules.json",
+  "provider": {
+    "kind": "synllama",
+    "model_path": "../../.chembounce-data-synthesis/synllama-data/inference/model/SynLlama-1B-2M-91rxns",
+    "prompt_path": "../../.chembounce-data-synthesis/SynLlama/synllama/llm/vars.py",
+    "device": "cuda:0",
+    "samples": 4,
+    "max_new_tokens": 1600,
+    "seed": 42
+  },
+  "mode": "hop",
+  "search": {
+    "building_block_top_k": 8,
+    "beam_width": 24,
+    "max_combinations": 4096,
+    "reaction_product_limit": 64,
+    "max_steps": 12
+  },
+  "conformers": {
+    "num_conformers": 12,
+    "seed": 42,
+    "energy_window": 5.0,
+    "strain_penalty": 0.05,
+    "pharmacophore_sigma": 1.0,
+    "reject_unspecified_stereo": true
+  },
+  "expansion": {
+    "building_block_top_k": 16,
+    "rounds": 1,
+    "max_routes": 128,
+    "min_tanimoto": 0.0
+  },
+  "minimum_scores": {},
+  "max_designs": 20,
+  "max_scored_products": 256,
+  "max_results": 50,
+  "protocol": "research-v1"
+}

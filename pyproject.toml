@@ -18,6 +18,7 @@ shape = []
 dev = ["pytest>=8,<10", "pytest-cov>=5,<8", "ruff>=0.9"]
 pubchem = ["pubchempy>=1.0.4"]
 synllama = ["torch>=2.6,<3", "transformers>=4.51,<6", "safetensors>=0.4,<1"]
+reactiont5 = ["torch>=2.6,<3", "transformers>=4.51,<5", "safetensors>=0.4,<1"]
 synthesis = ["rdkit>=2025.9,<2027"]
 
 [project.scripts]

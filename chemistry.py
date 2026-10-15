@@ -8,6 +8,8 @@ The beam is a heuristic, not an exhaustive enumeration of substitution isomers.
 from rdkit import Chem, DataStructs, rdBase
 from rdkit.Chem import rdFingerprintGenerator
 
+from chembounce_synthesis.exploration import select_diverse, validate_policy
+
 GENERATOR = rdFingerprintGenerator.GetMorganGenerator(radius=2)
 
 
@@ -99,7 +101,20 @@ def _insufficient_capacity(replacement, outside):
     return demand > capacity
 
 
-def replace(target, pattern, replacement, max_n=10, beam_width=100, *, prepared=None):
+def replace(
+    target,
+    pattern,
+    replacement,
+    max_n=10,
+    beam_width=100,
+    *,
+    prepared=None,
+    search_policy="legacy",
+    exploration_fraction=0.25,
+    seed=42,
+    diagnostics=None,
+):
+    validate_policy(search_policy, exploration_fraction, seed)
     if max_n < 1 or beam_width < 1:
         raise ValueError("Candidate and beam limits must be positive")
     if replacement is None or not replacement.GetNumAtoms():
@@ -109,14 +124,14 @@ def replace(target, pattern, replacement, max_n=10, beam_width=100, *, prepared=
     outside, query_fp = prepared if prepared is not None else prepare_replacement(target, pattern)
     if _insufficient_capacity(replacement, outside):
         return []
-    seed = Chem.Mol(replacement)
-    for atom in seed.GetAtoms():
+    assembly_seed = Chem.Mol(replacement)
+    for atom in assembly_seed.GetAtoms():
         atom.SetAtomMapNum(0)
         atom.SetBoolProp("_cb_site", True)
     for part in outside:
-        seed = Chem.CombineMols(seed, part)
-    labels = sorted(a.GetIsotope() for a in seed.GetAtoms() if a.GetAtomicNum() == 0)
-    states = [seed]
+        assembly_seed = Chem.CombineMols(assembly_seed, part)
+    labels = sorted(a.GetIsotope() for a in assembly_seed.GetAtoms() if a.GetAtomicNum() == 0)
+    states = [assembly_seed]
     for label in labels:
         candidates = {}
         for state in states:
@@ -132,7 +147,25 @@ def replace(target, pattern, replacement, max_n=10, beam_width=100, *, prepared=
                 except (ValueError, RuntimeError):
                     # Invalid valence at a proposed attachment is an expected rejection.
                     continue
-        ranked = sorted(candidates.items(), key=lambda x: (-x[1][0], x[0]))[:beam_width]
+        if search_policy == "diverse":
+            ranked, report = select_diverse(
+                list(candidates.items()),
+                beam_width,
+                score=lambda item: item[1][0],
+                smiles=lambda item: item[0],
+                fingerprint=lambda item: count_fingerprint(item[1][1]),
+                fraction=exploration_fraction,
+                seed=seed + label,
+            )
+            if diagnostics is not None:
+                diagnostics.setdefault("beam_stages", []).append(
+                    {
+                        "attachment_label": label,
+                        **{key: value for key, value in report.items() if key != "lanes"},
+                    }
+                )
+        else:
+            ranked = sorted(candidates.items(), key=lambda x: (-x[1][0], x[0]))[:beam_width]
         states = [value[1] for _, value in ranked]
         if not states:
             break
@@ -142,4 +175,18 @@ def replace(target, pattern, replacement, max_n=10, beam_width=100, *, prepared=
             continue
         smiles = Chem.MolToSmiles(mol, isomericSmiles=True)
         final[smiles] = DataStructs.TanimotoSimilarity(query_fp, count_fingerprint(mol))
-    return [(score, smiles) for smiles, score in sorted(final.items(), key=lambda x: (-x[1], x[0]))[:max_n]]
+    if search_policy == "diverse":
+        selected, report = select_diverse(
+            list(final.items()),
+            max_n,
+            score=lambda item: item[1],
+            smiles=lambda item: item[0],
+            fingerprint=lambda item: count_fingerprint(Chem.MolFromSmiles(item[0])),
+            fraction=exploration_fraction,
+            seed=seed,
+        )
+        if diagnostics is not None:
+            diagnostics["final_selection"] = report
+    else:
+        selected = sorted(final.items(), key=lambda x: (-x[1], x[0]))[:max_n]
+    return [(score, smiles) for smiles, score in selected]

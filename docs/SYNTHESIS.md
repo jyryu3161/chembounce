@@ -3,9 +3,11 @@
 The optional synthesis workflow turns scaffold-hopping designs into **catalog and
 reaction verified computational candidates**. SynLlama supplies route proposals.
 The [SynLlama publication](https://doi.org/10.1021/acscentsci.5c01285) describes
-the external model. ChemBounce independently resolves building blocks, executes registered reactions,
+the external model. ChemBounce resolves building blocks, executes and replays registered reactions,
 checks the final structure, and ranks regenerated products against both the
 original hit and the design using multiple 3D conformers.
+Optional independent forward-model evidence and bound-pose geometry checks are
+reported separately from this catalog/rule consistency check.
 
 This verifies a specific, reproducible computational claim. It does not establish
 experimental yield, selectivity, protection requirements, current stock, biological
@@ -154,20 +156,92 @@ toggle the stage. With neither flag, no config means hopping alone; supplying a
 config runs its configured provider, preserving the previous behavior. A
 `provider.kind: "saved"` config replays stored model proposals without inference;
 omit `--synllama` in that case. The three expansion override options also work with
-`chembounce-synthesis`. Existing base hopping 2D cutoffs remain separate.
+`chembounce-synthesis`.
 
-The normal hopping search still uses its configured 2D cutoffs. For exploration
-of substantially different cores, choose appropriate `-t` and
-`--search-threshold` explicitly; a downstream 3D method cannot recover designs
-already discarded upstream. No cutoff is automatically relaxed.
+### Research preset and bounded 2D exploration
 
-Set `mode: "hop"` to require a changed Murcko scaffold versus the original hit.
-This comparison ignores isotope labels and stereochemistry: isotope or stereo
-changes alone do not qualify as hopping. Exact isomeric identities remain required
-for reaction replay, required cores, and design-scaffold preservation.
+Both CLIs accept `--protocol research-v1`. After preparing the local assets above,
+edit [research-config.json](../examples/synthesis/research-config.json) for your
+model/device and run the integrated protocol:
+
+```bash
+chembounce -i 'CC(=O)Nc1ccccc1' -o output_research \
+  --protocol research-v1 \
+  --scaffold-db tests/fixtures/scaffolds.smi \
+  --overall_max_n 20 \
+  --synllama --synthesis-config examples/synthesis/research-config.json
+```
+
+The fixture scaffold library is for a small operational check. Replace it with
+your pinned research library for evaluation. To exercise the synthesis preset
+without a model or commercial catalog, use the handwritten fixture:
+
+```bash
+chembounce-synthesis \
+  --hit 'CC(=O)Nc1ccccc1' --design 'CC(=O)Nc1ccncc1' \
+  --protocol research-v1 --config examples/synthesis/demo-config.json \
+  --output output_research_fixture
+```
+
+The preset makes these choices explicit:
+
+| Stage | `research-v1` defaults |
+| --- | --- |
+| Hopping | `search_policy="diverse"`, `exploration_fraction=0.25`, `search_candidate_budget=4096` |
+| Synthesis allocation | `allocation_policy="balanced"` across scaffold families and designs |
+| Refinement | Up to 10 chemical families; seeds 42, 43, 44; 8 conformers initially, then 16 and 32 when escalation is needed |
+| Acceptance and ranking | `threshold_policy="all_seeds"`, `ranking_statistic="minimum"` |
+| Sampling stability | `max_score_range=0.10`, `max_metric_range=0.15`, `borderline_margin=0.02` |
+| Refinement budget | `max_total_conformers=1680` candidate-conformer requests across all stages and fallback designs |
+| Similarity acceptance | `minimum_scores={}`; no assumed activity or pharmacophore cutoff |
+
+These spread tolerances are engineering choices for observed sampling stability,
+not calibrated biological thresholds. Explicit configuration and CLI overrides
+take precedence over preset defaults. In particular, the older
+`synllama-config.json` explicitly sets 24 refinement conformers; use
+`research-config.json` to obtain the preset's initial 8 without that override.
+Setting `protocol` in synthesis JSON configures the synthesis stage only; use the
+main CLI's `--protocol research-v1` or Python `protocol="research-v1"` to select
+the corresponding upstream hopping policy. Effective settings and protocol
+provenance are saved in each manifest.
+
+The default named `legacy` search policy retains mandatory scaffold-bit
+`--search-threshold` (0.3) and final count-Tanimoto `-t` (0.5) cutoffs. The `diverse`
+policy uses those values to prioritize inexpensive 2D matches while reserving a
+bounded fraction of scaffold, intermediate attachment and final candidate slots
+for diverse alternatives, including candidates below those cutoffs. It does not
+simply set both thresholds to zero. The reservoir and tie-breaking are seeded;
+fragment allocation is round-robin. `--exploration-fraction` controls the reserved
+fraction; zero disables lower-2D admission. `--search-candidate-budget` caps
+requested candidate slots, including requests that produce no valid molecule.
+Existing beam, per-replacement, output, core and property limits also apply.
+`search_decisions.json` records admissions, exclusions and budget truncation.
+This is bounded exploration, not exhaustive retrieval of all possible hops.
+
+### Chemical identity and scaffold constraints
+
+Three identities serve different purposes:
+
+- **Exact state:** canonical isomeric SMILES used for reaction replay, scoring,
+  core checks and route-to-product attribution. Input protonation, tautomer,
+  stereo and isotope choices are retained.
+- **Chemical family:** the versioned normalization groups reversible protonation,
+  tautomers, stereo and isotopic variants for novelty and final deduplication.
+  Permanent charges are retained. Normalized structures never replace the exact
+  state in scoring or reaction replay.
+- **Scaffold family:** Murcko scaffolds of normalized families distinguish scaffold
+  changes from decoration changes. The generic ring skeleton is an additional
+  diagnostic; a heteroatom substitution can change the scaffold without changing
+  that generic topology.
+
+Set `mode: "hop"` to require a changed scaffold family versus the original hit.
+State-only and decoration-only changes do not qualify. Normalization failures
+are explicit: an invalid query fails, and an invalid candidate is excluded with
+diagnostics rather than counted as a novel scaffold.
 Set `mode: "expand"` to preserve each selected design's Murcko scaffold while
-varying blocks; the unchanged design itself is excluded. `preserve_design_scaffold: true` optionally keeps that scaffold
-in hop mode too. `core_smiles` protects a required substructure with specified
+varying blocks; the unchanged design family is excluded. This preservation check
+uses the exact isomeric scaffold. `preserve_design_scaffold: true` optionally
+keeps that scaffold in hop mode too. `core_smiles` protects a required substructure with specified
 stereochemistry. These checks apply to **regenerated final molecules**, not just
 LLM proposals. Acyclic scaffolds are empty Murcko scaffolds: hop mode cannot
 certify an acyclic-to-acyclic scaffold change; use explicit cores and expansion
@@ -180,18 +254,20 @@ mode for that case.
 are protected too). For a single known route, the Python `expand_route` API also
 accepts `locked_nodes` with route-local building-block node IDs. These local IDs
 must not be reused as global selectors across different proposals.
-For example, an exploratory configuration is:
+For example, merge these keys into an existing synthesis configuration:
 
 ```json
-"expansion": {
-  "building_block_top_k": 16,
-  "rounds": 1,
-  "max_routes": 128,
-  "min_tanimoto": 0.0,
-  "locked_building_block_ids": []
-},
-"refinement": {"top_n": 10, "num_conformers": 24, "seeds": [42, 43, 44]},
-"minimum_scores": {}
+{
+  "protocol": "research-v1",
+  "expansion": {
+    "building_block_top_k": 16,
+    "rounds": 1,
+    "max_routes": 128,
+    "min_tanimoto": 0.0,
+    "locked_building_block_ids": []
+  },
+  "minimum_scores": {}
+}
 ```
 
 Each round substitutes one leaf
@@ -208,49 +284,106 @@ increase candidates but cannot guarantee better 3D matches. Explicit
 beam/combination/product caps prevent combinatorial growth; reports identify
 truncation per round. Repeated neighbour searches and identical starting-route
 expansions are cached. `max_routes` and combination bounds apply per starting route;
-`max_scored_products` bounds initial product/design comparisons. Refinement has
-its own budget: at most `top_n` products times the number of seeds.
+`max_scored_products` bounds attempted initial exact-product/design comparisons.
+Refinement has a separate global candidate-conformer request budget, including
+additional stages and alternative designs, as described below.
 
 The Python interfaces are `workflow.run(hit, designs, config, output_dir)`,
 `routes.resolve_proposal(...)`, `routes.verify_route(...)`, and
 `routes.expand_route(...)`. The original ChemBounce Python API remains compatible.
+`workflow.run(..., deadline_monotonic=...)` optionally accepts an absolute
+`time.monotonic()` deadline. It stops at work boundaries and exports fully
+evaluated candidates plus explicit unassessed evidence. An incomplete refinement
+seed block cannot become a successful refined result. A single long operation
+can exceed the deadline; use an outer process timeout for a hard limit.
+The research benchmark's `scoring_mode="2d"` ablation shares route collection,
+constraints, evidence and allocation with the default `"3d"` mode, but uses only
+hit/design Morgan Tanimotos and emits no pose SDFs. Its 3D/energy/seed values are
+null and refinement is disabled explicitly. Combining this mode with pocket
+constraints or 3D `minimum_scores` is rejected rather than silently ignored.
 
 ## Refinement and continuation
 
-The supplied **model configuration** starts with 16 alternative blocks per leaf,
-one substitution round and 12 conformers at seed 42 for screening. The top 10
-unique products are then reevaluated with 24 conformers at seeds 42, 43 and 44.
-This is an adjustable starting protocol, not a universal optimum. Historical
-configurations without a `refinement` object retain their previous single-seed
-behavior (`top_n=0`); configurations without `expansion` still disable expansion.
+The older [model configuration](../examples/synthesis/synllama-config.json)
+uses 12 screening conformers and 24 refinement conformers at three seeds. The
+[research configuration](../examples/synthesis/research-config.json) uses the
+adaptive preset above. Configurations without a `refinement` object or a research
+preset retain screening-only behavior (`top_n=0`); configurations without
+`expansion` disable expansion.
 
-Screening uses the existing Pareto ranking. Refinement reevaluates each shortlisted
-product against its selected design and the original hit. Every requested seed
-must produce a valid score; numerical failures are recorded and that candidate
-is excluded from refined results. Each seed independently builds candidate and
-reference ensembles; a supplied reference SDF remains fixed. Scoring and core
-rules are unchanged. Raising conformer counts does not produce nested ensembles.
+Screening retains every eligible exact-product/design comparison, including
+multiple designs or explicit chemical states in one family. With
+`allocation_policy="balanced"` (the default), scoring and refinement shortlists
+visit distinct scaffold families and then designs in turn, preserving ranking
+within those groups. `"encounter"` is an explicit allocation ablation. Carried
+routes retain priority over newly projected routes. When a family's preferred
+design fails refinement, stability or threshold acceptance, eligible alternatives
+are attempted deterministically within the same budget. Final deduplication
+selects one accepted exact state/design per chemical family; it does not erase
+alternatives before they can be tested.
 
-The **median-score seed** supplies one representative candidate conformer and both
+Each refinement stage evaluates all requested seeds at one ensemble size. Every
+seed must succeed before the stage can supply a result. Candidate and reference
+ensembles are generated independently per seed; a supplied hit `reference_sdf`
+remains fixed. Raising conformer counts does not produce nested ensembles.
+The **median-score seed** supplies one actual candidate conformation and its two
 reference comparisons. With an even seed count, the lower middle trial supplies
-the pose. The six similarity components and `score` always belong to that actual
-trial; they are never assembled from different seeds. `seed_score_median`,
-`seed_score_min` and `seed_score_max` expose sampling sensitivity. Refined products
-are ranked by Pareto fronts of their representative components, then median seed
-score, route length and SMILES. The median is a heuristic summary, not a confidence
-interval or activity probability. At the default odd seed count, `score` equals
-`seed_score_median`; they can differ for even counts.
+the pose. Exported `score`, shape, pharmacophore and energy components belong to
+that trial. Its hit and design poses differ by a rigid alignment, not by candidate
+conformation. `seed_score_median` can differ from `score` for an even seed count.
 
-`results.tsv` and the four SDF files contain **only successfully refined shortlisted
-products** when refinement is enabled. All scored products remain in
-`screening.tsv`; all route evidence, including candidates beyond scoring/output
-budgets, remains in `routes.json`. This avoids mixing screening and refinement
-scores in one final ranking. `refinement.json` contains every seed's components,
-settings, diagnostics and failures. The reference SDFs use the representative
-seed's exact conformers. Optional 3D cutoffs apply after refinement, so a poor
-initial pose alone cannot trigger premature rejection. 2D, core and property
-constraints still apply before scoring. No similarity cutoff is enabled by default.
-Shortlisting can miss candidates; increase `--refine-top-n` to reevaluate more.
+`seed_score_min`, `seed_score_max`, `seed_score_range`, `seed_score_std` and
+per-component `metric_ranges` expose sampling sensitivity. With
+`ranking_statistic="median"`, Pareto ranking uses the representative pose's
+components and the scalar tie-breaker uses the seed median. With `"minimum"`,
+Pareto ranking uses the per-component minima across final-stage seeds and maximum
+relative energy; `ranking_score` is the minimum seed score. These conservative
+ranking diagnostics are stored separately in `ranking_metrics`; they are not
+presented as the components of an invented pose.
+
+For explicitly configured 3D `minimum_scores`, `threshold_policy="all_seeds"`
+requires every final-stage seed to meet each cutoff. `"representative"` requests
+only the representative pose check. Optional `max_score_range` and
+`max_metric_range` bound the observed across-seed score and four shape/pharmacophore
+component ranges. `convergence_status="converged"` means those engineering range
+criteria passed at the final ensemble size. It does **not** establish asymptotic
+convergence, a confidence interval, activity probability or biological validity.
+Without range criteria, stability is reported as unassessed.
+
+`adaptive_max_conformers` allows larger stages when seeds fail, ranges are unstable
+or a configured cutoff is within `borderline_margin` of the sampled component
+range. `conformer_growth_factor` controls the increase. Each stage restarts all
+seeds; reports retain every trial and the change between stages. Only the final
+complete, eligible stage can supply refined results. Adaptive refinement requires
+an explicit `max_total_conformers`. A candidate that remains unstable or cannot
+complete its necessary stage is not silently replaced by its earlier screening
+score.
+
+The budget counts **requested candidate conformers**, not successful conformers,
+physical CPU work or reference ensembles. In `research-v1`, 1,680 requests cover
+10 families × 3 seeds × (8 + 16 + 32), if each family uses all stages without
+fallbacks. Alternative designs share this same budget. Separate counters record
+score calls and actual ensemble outcomes. Before escalation or fallback, the
+workflow reserves a complete initial seed block for each remaining shortlisted
+family. If the total budget cannot cover that initial allocation, a deterministic
+balanced subset is evaluated and omitted families receive explicit
+`not_evaluated`/budget-exhausted records.
+
+When refinement is enabled, `results.tsv` and the four SDF files contain only
+successfully refined shortlisted families. `screening_alternatives.tsv` preserves
+all accepted initial exact-product/design scores; `screening.tsv` contains one
+initial representative per family. `refinement.json` records attempted alternatives,
+stages, failures, thresholds, stability and budgets. `routes.json` also preserves
+routes beyond scoring/output budgets. The selected row's `alternative_route_ids`
+refer only to the **same exact product**; `alternative_family_candidates` names
+other state/design candidates separately, so a stereoisomer's route cannot be
+mistaken for a route to the selected state.
+
+Optional 3D cutoffs are checked after refinement; one poor screening pose cannot
+prematurely eliminate a candidate. Explicit 2D, core and property constraints still
+apply before scoring. No similarity cutoff is enabled by default. Shortlisting
+can miss candidates; increasing `--refine-top-n` should be accompanied by a review
+of the global conformer budget.
 
 Continue an existing synthesis run without loading SynLlama again:
 
@@ -311,15 +444,17 @@ route verification and core constraints apply to those extensions too.
    Chirality matching applies during reaction execution as well as catalog
    filtering; a molecule with one matching stereocenter cannot authorize reaction
    at another site that violates the template's stereochemistry.
-4. Independently replay each selected route. Every leaf must resolve to an eligible
-   catalog ID, every rule to the allowlist, and every recorded intermediate/final
+4. Replay each selected route in a separate verification pass using the registered
+   rules. Every leaf must resolve to an eligible catalog ID, every rule to the
+   allowlist, and every recorded intermediate/final
    product must match the replay product's **canonical isomeric SMILES exactly**.
    Fingerprint similarity of 1.0 never substitutes for identity.
-5. Reapply scaffold/core/property constraints, then score actual regenerated
-   molecules. Keep model-claimed and regenerated structures separate in reports.
+5. Reapply scaffold/core/property constraints and any configured independent
+   synthesis-evidence requirements, then score actual regenerated molecules. Keep
+   model-claimed and regenerated structures separate in reports.
 
-The initial implementation supports rules with one principal product template
-and 1–3 reactants. It does not validate reaction conditions, stoichiometry,
+Rule replay supports one principal product template and 1–3 reactants.
+Replay alone does not validate reaction conditions, stoichiometry,
 chemoselectivity, byproducts, kinetics or protecting-group strategy. Product
 template heavy atoms without explicit reactant atom-map sources are listed per
 step as `unmapped_product_template_atoms`, with a route-level
@@ -331,10 +466,114 @@ Product
 enumeration is bounded and may retain multiple regioisomers. An unspecified
 stereocenter is not assigned an experimentally justified configuration.
 
+## Independent synthesis evidence
+
+Catalog/rule replay establishes consistency with the allowed reaction templates.
+A forward predictor provides a separate check: it receives exact reactants and
+supplied reagents, without the claimed product or the generating reaction template.
+Its agreement is model support, not a synthesis probability. The research preset
+does not automatically load this second model or require an agreement.
+
+The optional local ReactionT5 adapter has its own dependency extra:
+
+```bash
+python -m pip install -e '.[synthesis,reactiont5]'
+# Add synllama as well when running both models in this environment:
+python -m pip install -e '.[synthesis,synllama,reactiont5]'
+```
+
+ReactionT5 requires Transformers >=4.51,<5 and Torch >=2.6. The adapter rejects
+Transformers 5 because its changed tied-weight loading produced incompatible
+predictions for this checkpoint. Supply a compatible local ReactionT5 model
+directory containing safetensors, configuration and tokenizer assets; the adapter
+does not download weights or execute remote model code. File hashes and runtime
+versions are recorded. An optional `model_revision` is a declared attribution,
+not a substitute for the recorded file hashes.
+
+Merge this example into your synthesis configuration, replacing the model path:
+
+```json
+{
+  "synthesis_evidence": {
+    "predictor": {
+      "kind": "reactiont5",
+      "model_path": "models/reactiont5",
+      "device": "cpu",
+      "top_k": 5,
+      "max_new_tokens": 128,
+      "max_input_tokens": 512
+    },
+    "product_matching": "exact",
+    "policy": {
+      "require_forward_agreement": true,
+      "require_complete_context": false,
+      "require_explicit_atom_sources": false,
+      "require_observed_success": false
+    },
+    "max_predictor_calls": 128,
+    "max_input_tokens": 32768,
+    "max_output_tokens": 32768,
+    "reaction_contexts": [],
+    "observations": []
+  }
+}
+```
+
+Here the predictor's `max_input_tokens` is a per-request limit; the outer token
+and call limits are shared across the workflow. Deterministic beam search returns
+up to `top_k` predictions. `product_matching="exact"` requires the complete
+canonical isomeric predicted product to match. Explicit `"component"` matching
+allows the expected product among predicted disconnected components, preserving
+all other components in the report. Truncated, missing or budget-exhausted
+predictions remain `unknown`; a complete nonmatching prediction is `mismatched`.
+Runtime failures remain explicit. None counts as agreement.
+
+Each evidence dimension is reported separately:
+
+| Dimension | What is recorded |
+| --- | --- |
+| Rule replay | Exact intermediate/product agreement with registered templates and catalog leaves |
+| Forward prediction | `matched`, `mismatched`, `unknown` or `failed`, prediction ranks and model/input provenance |
+| Reaction context | Explicit reagents and conditions; `supplied_unvalidated` when present, otherwise `incomplete` |
+| Atom sources | Template mappings or supplied reagent-atom attributions; missing sources remain `unknown` |
+| Observations | Exact reaction/context matches to supplied literature or experiment records: `success`, `failure`, `conflicting` or `unknown` |
+
+All four `require_*` flags default to false; enabling one requires it to pass for
+**every route step**. `require_complete_context` checks that a reagents list
+(which may be empty) and nonempty conditions object were supplied. It does not
+validate those conditions. ReactionT5 consumes reactants and reagents but does
+not use temperature/time conditions; reports state this limitation explicitly.
+Omit `predictor` to record context/observations without forward inference.
+
+`reaction_contexts` entries bind an exact `reactants` SMILES multiset and `product`
+SMILES to optional `reagents` (SMILES list), `conditions` (object), `source` and
+`atom_sources`. Reusing a route-local node name such as `r0` would not safely
+identify the same chemistry across expanded routes, so config entries use exact
+reaction selectors. Each atom-source attribution requires
+`template_atom_index`, `reagent_index`, `reagent_atom_index`, `source` and
+`record_id`. Indices are zero-based and must refer to the reported unmapped
+product-template atom and the supplied reagent SMILES representation; element
+matching is checked. Supplied attributions remain unaudited source claims.
+
+Each `observations` entry requires `kind` (`literature` or `experiment`), `source`,
+`record_id`, exact `reactants` and `product`, `reagents`, nonempty `conditions`, and
+`outcome` (`success` or `failure`). These records are matched to the same exact
+reaction/context, never propagated by similarity. Their provenance remains
+`source_audited=false`: users must verify the underlying sources. Conflicting
+records cannot satisfy `require_observed_success`.
+
+Evidence evaluation visits candidate/route queues in rounds before spending work
+on additional routes for one candidate. Cached predictions share the global
+budget. When a preferred route fails a requirement, other routes to that exact
+product can still qualify; all unsuccessful or unassessed routes remain in
+`routes.json`. Exhausted budgets are unknown evidence, not negative chemistry
+labels, and cannot silently satisfy a required agreement.
+
 ## 3D and pharmacophore methods
 
-Chemical states are explicit input states. No automatic neutralization,
-pH-based protonation, tautomer or stereoisomer enumeration is performed. Prepare
+Scoring uses explicit input states. Family normalization is used only for
+identity/novelty checks; no pH-based protonation, tautomer or stereoisomer ensemble
+is generated for scoring. Prepare
 and evaluate plausible states explicitly. By default, 3D scoring rejects
 unspecified potential stereochemistry; the failure is recorded. Setting
 `reject_unspecified_stereo: false` is exploratory and does not validate a
@@ -360,8 +599,8 @@ RDKit `BaseFeatures.fdef`: donor, acceptor, aromatic, positive/
 negative ionizable and hydrophobic groups. One-to-one feature assignment uses
 Gaussian position weights with configurable sigma (default 1 Å). Aromatic plane
 normal agreement multiplies that weight; its sign is ignored. Grouped hydrophobes
-replace overlapping atom features. Donor/acceptor direction vectors and receptor
-contacts are **not** included in this version.
+replace overlapping atom features. Donor/acceptor direction vectors are not part of this similarity score. Optional
+receptor geometry is assessed separately by the pocket constraints below.
 
 If feature-match weight is `M`, pharmacophore overlap is
 `M / (N_reference + N_candidate - M)`. Two featureless structures have overlap 1
@@ -386,8 +625,9 @@ interpret them as interchangeable scores. The six similarity components are
 exported in both the table and candidate SDFs, with 2D scores also in `scores.json`.
 
 Final results receive Pareto fronts over both Tanimotos, hit/design shape and
-pharmacophore, relative conformer energy and reaction count. Within a front they are ordered by
-the recorded heuristic score, route length and canonical SMILES. These defaults
+pharmacophore, relative conformer energy and reaction count. Refinement can use
+representative or conservative across-seed components as described above. Within
+a front, `ranking_score`, route length and canonical SMILES determine order. These defaults
 are transparent ranking choices, not experimentally calibrated thresholds. Use
 `minimum_scores` for explicit `hit_tanimoto`, `design_tanimoto`, `hit_shape`,
 `design_shape`, `hit_pharmacophore`, `design_pharmacophore` cutoffs and
@@ -397,47 +637,146 @@ The default `minimum_scores: {}` applies **no hard similarity cutoff**. Earlier
 illustrative shape 0.70/pharmacophore 0.50 comparisons are not defaults or validated
 quality thresholds. Core retention and catalog/rule replay remain mandatory when
 specified regardless of similarity. Optional Tanimoto cutoffs are applied before
-3D scoring; 3D cutoffs use the selected joint pose. The scalar `score` remains the
+3D scoring; 3D cutoffs follow the configured final-stage seed acceptance policy (or the
+selected joint pose in a screening-only run). The scalar `score` remains the
 3D/energy heuristic above; Tanimoto contributes to Pareto ranking rather than an
 arbitrary weighted scalar sum.
 
+## Optional bound-pose pocket constraints
+
+A `pocket` object adds geometric assessment of candidate poses aligned to a supplied
+bound hit. It always requires an explicit `reference_sdf` containing one molecule
+of the exact hit state. To assess receptor clashes, provide the full PDB containing
+that ligand and identify it by chain, residue number and residue name. The SDF
+coordinates must already be in that PDB frame: heavy-atom count, elements and
+matched coordinates are checked. A ligand-deleted receptor or an independently
+embedded reference cannot establish that frame.
+
+Merge this illustrative configuration into an existing synthesis config and
+replace the paths and residue selector with those from your own structure:
+
+```json
+{
+  "reference_sdf": "structures/bound-hit.sdf",
+  "pocket": {
+    "receptor_pdb": "structures/complex.pdb",
+    "reference_ligand": {
+      "chain": "A",
+      "residue_number": 401,
+      "residue_name": "LIG"
+    },
+    "model": 1,
+    "coordinate_tolerance": 0.25,
+    "include_waters": false,
+    "include_hetero": false,
+    "vdw_overlap_tolerance": 0.4,
+    "max_clashes": 0,
+    "contact_distance": 4.0,
+    "max_reported_pairs": 1000,
+    "anchors": []
+  }
+}
+```
+
+Distances and overlap tolerances are in Å. `max_clashes: 0` is an explicit example
+gate, not a default or an affinity cutoff. Omitting `max_clashes` reports clashes
+without excluding poses on that basis. Clash counts are heavy-atom pairs with
+van der Waals overlap exceeding the specified tolerance; contact distances are
+reported separately. `max_reported_pairs` limits the detailed list, not the count
+used for acceptance.
+
+The selected reference ligand is automatically excluded from receptor atoms.
+Protein residues are included by default; `protein_chains` can restrict their
+chains. Waters and other hetero residues are opt-in. `include_residues` and
+`exclude_residues` accept lists of selectors with the same fields as
+`reference_ligand`, optionally including `insertion_code`. `reference_altloc`
+selects an explicit ligand alternate location; the selected model, alternate
+locations and receptor filters are recorded in provenance.
+
+`anchors` can require a candidate atom or pharmacophore feature near a specified
+reference position. An atom-anchor entry has exactly these fields:
+
+```json
+{
+  "id": "reference-carbon",
+  "kind": "atom",
+  "reference_atom_index": 0,
+  "candidate_smarts": "[#6]",
+  "candidate_atom_index": 0,
+  "max_distance": 1.5,
+  "required": true
+}
+```
+
+This is a schema example, not a recommended chemical anchor. Replace the indices,
+SMARTS and distance after inspecting the actual bound ligand. All indices are
+zero-based: `reference_atom_index` indexes the scoring reference after ordinary
+hydrogen removal and must select a heavy atom; `candidate_atom_index` indexes
+the SMARTS query, not the entire candidate. A
+feature anchor instead requires exactly `id`, `kind: "feature"`,
+`reference_feature_index`, `max_distance` and `required`. The reference feature
+index, family, atoms and position are exported in pocket provenance. An optional
+anchor (`required: false`) reports its match without gating acceptance. Anchors
+alone may be configured without a receptor PDB, but still require a bound
+`reference_sdf` and make no receptor-clash claim.
+
+Constraints are evaluated on each sampled, hit-aligned candidate pose before
+selecting the best eligible pose, during both screening and refinement. If all
+poses fail, the candidate has an explicit scoring failure. Accepted pose geometry
+and selection diagnostics are included in `scores.json`. These checks do not
+perform receptor relaxation, exhaustive docking or affinity prediction; a failed
+alignment does not prove that no feasible binding pose exists.
+
 ## Artifacts and evaluation
 
-- `results.tsv`: unique selected products, 3D components, 2D diagnostic similarity,
-  relative energy, route IDs, scoring stage, representative seed and seed-score range.
-- `screening.tsv`: all accepted initial scores before refinement and `max_results` truncation.
-- `refinement.json`: every reevaluated candidate and all requested seed trials.
+- `results.tsv`: one selected exact product/design per chemical family, pose
+  components, 2D similarities, route IDs, family/scaffold identities, ranking
+  diagnostics, representative seed and observed seed spread.
+- `screening.tsv`: one representative per initially scored family, before refinement
+  and `max_results` truncation.
+- `screening_alternatives.tsv`: all accepted initial exact-product/design scores,
+  including different chemical states and fallback designs.
+- `refinement.json`: attempted alternatives, complete and incomplete stages, seed
+  trials, failures, acceptance/stability criteria and candidate-conformer budgets.
 - `routes.json`: actual blocks, catalog hash, rule IDs/SMARTS/source, all actual
   reactants/intermediates/products, projection or expansion provenance, final
-  constraint/scoring acceptance or rejection reasons.
+  constraint/scoring acceptance or rejection reasons, and separately reported
+  forward-model/context/observation evidence for evaluated routes.
 - `poses_hit.sdf`, `poses_design.sdf`: the selected candidate conformation aligned
   to each reference, linked to its route ID.
 - `references_hit.sdf`, `references_design.sdf`: the exact reference conformers
   used for those scores, in matching result order, enabling coordinate-level checks.
 - `scores.json`: complete score components, feature counts, conformer IDs,
-  energies, force field, settings and ensemble failures.
+  energies, force field, settings and ensemble failures; configured pocket
+  assessments and candidate-pose selection diagnostics.
 - `proposals.json`: raw model responses and sampling metadata; reusable by the
   `saved` provider without Torch or Transformers.
 - `manifest.json`: effective settings, exact chemical-state policy, input/model/
-  catalog/rule/code hashes and software/Git versions.
+  catalog/rule/code hashes and software/Git versions, protocol/identity policies,
+  optional forward-model provenance and bound-pose/receptor frame provenance.
 - `summary.json`: status, counts, failed proposals, rejected routes, search
-  truncations, unscored products and elapsed time.
+  truncations, unscored products, evidence/refinement usage, active limits and
+  elapsed time. Cooperative deadline stops are explicit when requested through
+  the Python API.
 
 Exit codes are 0 (results), 3 (valid run without accepted results), or 2 (invalid
 request/data or model runtime failure). Model runtime errors are logged and retained
 in workflow diagnostics; other unexpected programming failures remain visible.
 An empty successful search writes a TSV header and diagnostic files.
 
-Tests cover independent forward replay, multistep dependencies, unknown rules,
-missing blocks, false products, stereochemical mismatches, expansion locks,
+Tests cover catalog/rule replay, independent forward-model evidence, multistep
+dependencies, unknown rules, missing blocks, false products, stereochemical
+mismatches, expansion locks,
 post-reconstruction constraints, shared 3D pose scoring, deterministic ensembles,
 bound-pose preservation, provenance, empty results and bounded search. Model
 accuracy and experimental synthesis success require separate held-out and
 laboratory evaluation. For publication, compare projection-only, 2D, shape-only
 and joint ranking on the same catalog/rule/model budgets, report failed as well
-as successful targets, and use scaffold/time separated evaluation sets.
+as successful targets, and use scaffold/time separated evaluation sets. See the executable
+[research validation protocol](RESEARCH_VALIDATION.md) for held-out panels,
+baselines, ablations, negative controls, compute accounting and failure denominators.
 
-An actual local-model/full-catalog integration run and exported-coordinate audit
+An earlier local-model/full-catalog integration run and exported-coordinate audit
 are recorded in [the validation artifacts](../benchmarks/results/synthesis/README.md).
 The small case produced five scaffold-hopping products and four expansion products.
 The later [expansion comparison](../benchmarks/results/synthesis-expansion/README.md)
@@ -447,10 +786,12 @@ algorithm. It reports both Tanimotos and all 3D components, including the tradeo
 between design and original-hit pharmacophore similarity.
 These are integration results, not an estimate of general success rate.
 
-The [multi-seed refinement and continuation validation](../benchmarks/results/synthesis-refinement/README.md)
+The earlier [multi-seed refinement and continuation validation](../benchmarks/results/synthesis-refinement/README.md)
 uses the same withheld-precursor case with 12-conformer screening and 24-conformer
 reevaluation at three seeds. It retains all four earlier candidates, screens 14
 products in the first stage and 36 after continuation, and refines the top 10 in
 each stage. All 14 first-stage products remain in the continued pool. Seed ranges
 and independently checked exported coordinates accompany the results; increasing
-conformer sampling changes earlier low-budget 3D conclusions.
+conformer sampling changes earlier low-budget 3D conclusions. These historical
+artifacts describe their pinned versions and settings, not an evaluation of the
+new `research-v1` preset.

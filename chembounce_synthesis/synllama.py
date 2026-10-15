@@ -8,6 +8,8 @@ import ast
 import importlib.metadata
 import json
 import logging
+import math
+import time
 from pathlib import Path
 
 from .common import canonical, digest, positive
@@ -105,7 +107,13 @@ class SynLlama:
             torch.cuda.get_device_name(torch.device(device)) if device.startswith("cuda") else "cpu"
         )
 
-    def propose(self, smiles):
+    def propose(self, smiles, deadline_monotonic=None):
+        if deadline_monotonic is not None and (
+            isinstance(deadline_monotonic, bool)
+            or not isinstance(deadline_monotonic, (int, float))
+            or not math.isfinite(deadline_monotonic)
+        ):
+            raise ValueError("deadline_monotonic must be finite")
         smiles = canonical(smiles)
         prompt = f"### Instruction:\n{self.template['instruction']}\n\n### Input:\n{self.template['input'].replace('SMILES_STRING', smiles)}\n\n### Response: \n"
         inputs = self.tokenizer(prompt, return_tensors="pt", return_token_type_ids=False).to(self.device)
@@ -118,7 +126,22 @@ class SynLlama:
             eos.append(eot)
         responses = []
         devices = [self.torch.device(self.device).index or 0] if self.device.startswith("cuda") else []
+        stopping = {}
+        if deadline_monotonic is not None:
+            from transformers import StoppingCriteria, StoppingCriteriaList
+
+            class DeadlineStop(StoppingCriteria):
+                def __call__(self, input_ids, scores, **kwargs):
+                    return time.monotonic() >= deadline_monotonic
+
+            stopping["stopping_criteria"] = StoppingCriteriaList([DeadlineStop()])
+        longest_sample = 0.0
         for index in range(self.samples):
+            if deadline_monotonic is not None and deadline_monotonic - time.monotonic() <= max(
+                0.1, longest_sample * 1.2
+            ):
+                break
+            sample_started = time.monotonic()
             temperature, top_p = modes[index % len(modes)]
             LOGGER.info("SynLlama sample %s/%s for %s", index + 1, self.samples, smiles)
             with self.torch.random.fork_rng(devices=devices), self.torch.inference_mode():
@@ -135,7 +158,9 @@ class SynLlama:
                     max_new_tokens=self.max_new_tokens,
                     eos_token_id=eos,
                     pad_token_id=self.tokenizer.pad_token_id,
+                    **stopping,
                 )
+            longest_sample = max(longest_sample, time.monotonic() - sample_started)
             tokens = generated[0, inputs.input_ids.shape[1] :]
             response = self.tokenizer.decode(tokens, skip_special_tokens=True)
             responses.append(
@@ -147,6 +172,9 @@ class SynLlama:
                         "seed": self.seed + index,
                         "generated_tokens": len(tokens),
                         "ended_with_eos": int(tokens[-1]) in eos if len(tokens) else False,
+                        "deadline_reached": deadline_monotonic is not None
+                        and time.monotonic() >= deadline_monotonic,
+                        "elapsed_seconds": time.monotonic() - sample_started,
                     },
                 }
             )
@@ -173,7 +201,9 @@ class SavedProposals:
             "recorded_provider": data.get("provider", {}),
         }
 
-    def propose(self, smiles):
+    def propose(self, smiles, deadline_monotonic=None):
+        if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
+            return []
         key = canonical(smiles)
         if key not in self.proposals:
             raise ValueError(f"No saved proposals for design {key}")

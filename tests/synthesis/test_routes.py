@@ -110,6 +110,89 @@ def test_caps_are_reported(assets, proposal):
     assert report.combination_truncations > 0
 
 
+def test_combination_budget_is_global_across_reaction_steps(assets):
+    proposal = {
+        "reactions": [
+            {
+                "reaction_template": "amide",
+                "reactants": ["CC(=O)O", "NCC(=O)O"],
+                "product": "CC(=O)NCC(=O)O",
+            },
+            {
+                "reaction_template": "amide",
+                "reactants": ["CC(=O)NCC(=O)O", "Nc1ccncc1"],
+                "product": "CC(=O)NCC(=O)Nc1ccncc1",
+            },
+        ],
+        "building_blocks": ["CC(=O)O", "NCC(=O)O", "Nc1ccncc1"],
+    }
+    limited, report = resolve_proposal(
+        proposal, *assets, SearchLimits(building_block_top_k=1, max_combinations=1)
+    )
+    assert not limited, "One evaluated combination cannot complete two reaction steps"
+    assert report.combinations == 1
+    assert report.combination_budget_scope == "proposal_reactant_combinations"
+    assert report.combination_limit == 1
+    assert report.combination_truncations
+    assert "r1" in report.budget_exhausted_nodes
+    assert any("Global proposal combination budget" in failure["reason"] for failure in report.failures)
+    complete, full_report = resolve_proposal(
+        proposal, *assets, SearchLimits(building_block_top_k=1, max_combinations=16)
+    )
+    assert complete
+    assert full_report.combinations <= 16
+    assert not full_report.budget_exhausted_nodes
+
+
+def test_shared_intermediate_is_memoized_and_counted_once(assets, monkeypatch):
+    catalog, rules = assets
+    intermediate = rules.apply("amide", ("CC(=O)O", "NCC(=O)O"))[0][0]
+    product = rules.apply("amide", (intermediate, intermediate))[0][0]
+    proposal = {
+        "reactions": [
+            {
+                "reaction_template": "amide",
+                "reactants": ["CC(=O)O", "NCC(=O)O"],
+                "product": intermediate,
+            },
+            {
+                "reaction_template": "amide",
+                "reactants": [intermediate, intermediate],
+                "product": product,
+            },
+        ],
+        "building_blocks": ["CC(=O)O", "NCC(=O)O"],
+    }
+    lookups = []
+    nearest = catalog.nearest
+
+    def recorded_nearest(*args, **kwargs):
+        lookups.append(args[0])
+        return nearest(*args, **kwargs)
+
+    monkeypatch.setattr(catalog, "nearest", recorded_nearest)
+    routes, report = resolve_proposal(
+        proposal, catalog, rules, SearchLimits(building_block_top_k=1, max_combinations=64)
+    )
+    assert routes
+    # Two permutations of the child, two leaf lookups each; the parent's second
+    # reference to the same intermediate must reuse these solved states.
+    assert len(lookups) == 4
+    assert report.combinations == 6  # Two child combinations plus 2 x 2 parent combinations.
+    for item in routes:
+        evidence = verify_route(item["route"], catalog, rules)
+        assert len(evidence["steps"]) == 2
+        assert evidence["steps"][-1]["reactants"][0] == evidence["steps"][-1]["reactants"][1]
+
+
+def test_expansion_budget_remains_total_leaf_substitutions(assets, route):
+    _, report = expand_route(route, *assets, SearchLimits(max_combinations=3), rounds=3, max_routes=12)
+    assert report.combinations <= 3
+    assert report.combination_budget_scope == "starting_route_leaf_substitutions"
+    assert report.combination_limit == 3
+    assert report.combinations == sum(item["combinations"] for item in report.round_reports)
+
+
 def test_model_schema_never_executes_code(proposal):
     assert parse_response("```json\n" + json.dumps(proposal) + "\n```") == proposal
     with pytest.raises(ValueError):

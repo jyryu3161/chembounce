@@ -1,0 +1,9 @@
+[
+  {
+    "id": "design_only_2d",
+    "parent": "pipeline",
+    "variant_kind": "compound_baseline",
+    "description": "Compound baseline returning generated designs ranked by 2D similarity. Removes synthesis reconstruction, independent route evidence, 3D scoring and refinement together; not a single-factor ablation or a synthesizability claim.",
+    "settings": {"disable_synthesis": true}
+  }
+]
