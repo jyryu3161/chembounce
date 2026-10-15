@@ -534,8 +534,10 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 )
         hit = canonical(hit)
         hit_fp = FP.GetFingerprint(molecule(hit))
-        all_designs = list(dict.fromkeys(canonical(s) for s in designs))
+        requested_designs = list(designs)
+        all_designs = list(dict.fromkeys(canonical(s) for s in requested_designs))
         designs = all_designs[: config.get("max_designs", 20)]
+        capped_designs = list(designs)
         if len(designs) < len(all_designs):
             summary["limits_reached"].append("max_designs")
         summary["designs_supplied"], summary["designs_used"] = len(all_designs), len(designs)
@@ -555,23 +557,83 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 # Preserve the existing bound-reference validation for empty runs,
                 # which have no alignment or generated-reference requirement.
                 hit_pose = reference_from_sdf(config["reference_sdf"], hit, settings)
-        carried, carry_sources = load_carried_routes(config.get("carry_forward", []), hit, designs)
+        design_checks, eligible_designs = [], []
+        for index, design in enumerate(capped_designs):
+            check = {"design": design, "capped_design_index": index, "role": "design"}
+            if scoring_mode == "3d":
+                try:
+                    # Designs always use generated references, even with a bound hit.
+                    # Reuse the existing policy without embedding or assigning stereo.
+                    prepare_reference(design, settings)
+                except ValueError as exc:
+                    check.update(status="rejected", stage="design_reference_preflight", reason=str(exc))
+                    summary["failures"].append(dict(check))
+                    design_checks.append(check)
+                    continue
+            check["status"] = "eligible" if scoring_mode == "3d" else "not_applicable_2d"
+            design_checks.append(check)
+            eligible_designs.append(design)
+        designs = eligible_designs
+        rejected_designs = {
+            check["design"]: check for check in design_checks if check["status"] == "rejected"
+        }
+        summary["designs_preflight_rejected"] = len(rejected_designs)
+        summary["designs_eligible_for_scoring"] = len(designs)
+        # Keep original capped inputs for continuation and preserve carried evidence
+        # even when its design reference is unusable under today's scoring policy.
+        carried, carry_sources = load_carried_routes(config.get("carry_forward", []), hit, capped_designs)
         summary["carried_routes_loaded"] = sum(len(items) for items in carried.values())
-        catalog, rules = Catalog(config["catalog"]), Rules(config["rules"])
-        if deadline_reached():
-            evidence_settings = {
-                key: value
-                for key, value in config.get("synthesis_evidence", {}).items()
-                if key != "predictor"
-            }
-            evidence_evaluator = evaluator_from_config(evidence_settings)
-            summary["evidence_model_not_loaded_deadline"] = True
+        for design, check in rejected_designs.items():
+            for item in carried[design]:
+                route_records.append(
+                    {
+                        "route_id": f"route_{len(route_records):06d}",
+                        "proposal_id": None,
+                        "design": design,
+                        **item,
+                        "selection_status": "design_preflight_rejected",
+                        "reference_preflight": dict(check),
+                        "reason": check["reason"],
+                        "verification_status": "not_evaluated",
+                        "eligible_for_evidence": False,
+                        "eligible_for_scoring": False,
+                    }
+                )
+        all_designs_rejected = bool(capped_designs) and not designs
+        catalog = rules = None
+        if all_designs_rejected:
+            summary["no_candidates_reason"] = (
+                "All capped designs failed the configured 3D reference preflight"
+            )
+            summary["assets_not_loaded"] = ["catalog", "rules", "provider", "synthesis_evidence"]
+            if "pocket" in config:
+                summary["assets_not_loaded"].append("pocket")
         else:
-            evidence_evaluator = _evidence_evaluator(config)
-        manifest = _manifest(config, hit, designs)
+            catalog, rules = Catalog(config["catalog"]), Rules(config["rules"])
+            if deadline_reached():
+                evidence_settings = {
+                    key: value
+                    for key, value in config.get("synthesis_evidence", {}).items()
+                    if key != "predictor"
+                }
+                evidence_evaluator = evaluator_from_config(evidence_settings)
+                summary["evidence_model_not_loaded_deadline"] = True
+            else:
+                evidence_evaluator = _evidence_evaluator(config)
+        manifest = _manifest(config, hit, capped_designs)
+        manifest["design_preflight"] = {
+            "requested_designs": requested_designs,
+            "canonical_unique_requested_designs": all_designs,
+            "capped_designs": capped_designs,
+            "eligible_designs": designs,
+            "checks": design_checks,
+            "scope": "Configured generated-reference stereochemistry and alignment prerequisites only; no embedding or stereo assignment. Applied after the original design cap, with no backfill or provider reseeding.",
+            "reject_unspecified_stereo": settings.reject_unspecified_stereo,
+        }
+        manifest["assets_not_loaded"] = summary.get("assets_not_loaded", [])
         manifest["scoring_backend"] = {
             "mode": scoring_mode,
-            "shared_candidate_path": "route collection, chemical/property constraints, synthesis evidence, allocation and screening cap are identical",
+            "shared_candidate_path": "After mode-specific reference eligibility, route collection, chemical/property constraints, synthesis evidence, allocation and screening cap use the same implementation",
             "requested_refinement": asdict(requested_refinement),
             "effective_refinement": asdict(refinement),
             "missing_3d_values": "null; no conformers or poses generated" if scoring_mode == "2d" else None,
@@ -590,12 +652,17 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             else None,
             "scope": "Cooperative boundary checks; complete evaluated candidates retained, incomplete seed blocks rejected; single long calls still require an outer hard timeout",
         }
-        manifest["synthesis_evidence"] = {
-            **evidence_evaluator.provenance,
-            "allocation": "One whole route per balanced product/design round before alternate routes; shared input-only prediction cache and explicit global call/token budgets",
-        }
-        manifest["catalog_sha256"], manifest["rules_sha256"] = catalog.sha256, rules.sha256
-        manifest["catalog_import"] = catalog.import_provenance
+        manifest["synthesis_evidence"] = (
+            {
+                **evidence_evaluator.provenance,
+                "allocation": "One whole route per balanced product/design round before alternate routes; shared input-only prediction cache and explicit global call/token budgets",
+            }
+            if evidence_evaluator is not None
+            else {"status": "not_initialized", "reason": summary["no_candidates_reason"]}
+        )
+        manifest["catalog_sha256"] = catalog.sha256 if catalog is not None else None
+        manifest["rules_sha256"] = rules.sha256 if rules is not None else None
+        manifest["catalog_import"] = catalog.import_provenance if catalog is not None else None
         manifest["carry_forward"] = carry_sources
         manifest["effective_search"], manifest["effective_conformers"] = asdict(limits), asdict(settings)
         manifest["effective_workflow"] = {
@@ -620,7 +687,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         }
         pose_constraints = (
             constraints_from_config(config["pocket"], hit_pose, config.get("reference_sdf"))
-            if "pocket" in config
+            if "pocket" in config and not all_designs_rejected
             else None
         )
         scoring_options = {"pose_constraints": pose_constraints} if pose_constraints is not None else {}
@@ -1162,7 +1229,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     mol.SetIntProp("pose_seed", row["pose_seed"])
                     sdf.write(mol, confId=cid)
         deadline_reached()
-        summary["designs_not_projected"] = [design for design in designs if design not in projected_designs]
+        summary["designs_not_projected"] = [
+            design for design in capped_designs if design not in projected_designs
+        ]
         summary.update(
             status="success" if selected else "no_candidates",
             accepted_products=len(ranked),

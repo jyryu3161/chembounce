@@ -587,8 +587,36 @@ pipeline performs this same input check before generating designs. A failed
 precondition is an explicit error, not a successful empty search. This check
 neither embeds molecules nor assigns missing stereo, including cage stereo;
 `reject_unspecified_stereo: false` and the complete 2D ablation retain their
-existing behavior. Candidate/design checks remain part of their own scoring,
-and passing input validation does not guarantee later conformer optimization.
+existing behavior.
+
+The workflow then checks each capped design reference against the same configured
+stereochemistry policy, before loading the catalog or calling synthesis/evidence
+models. Designs always use generated references, even when the hit has a bound
+SDF. A rejected design is skipped individually; valid alternatives keep their
+original order and provider sampling seeds. Canonical deduplication and
+`max_designs` apply **before** this check, with no backfill from later designs.
+Product stereochemistry is still checked during scoring. Passing reference
+preflight does not guarantee later conformer embedding, optimization or alignment.
+
+`manifest.json` retains the original capped `designs` for continuation.
+`design_preflight` records the requested inputs, canonical unique inputs, capped
+and eligible lists, and per-design checks. Rejections appear in `summary.failures`
+with `role: "design"` and `stage: "design_reference_preflight"`;
+`designs_used` remains the capped count, while `designs_eligible_for_scoring` and
+`designs_preflight_rejected` report eligibility. When every capped design is
+rejected, the run returns `no_candidates` with explicit reasons and empty result
+artifacts. Catalog, rules, provider, evidence model and optional pocket assets are
+not initialized or validated in that case; `assets_not_loaded` lists them and
+unavailable asset hashes are null. This outcome is not a successful candidate.
+
+Carried route graphs for rejected designs are preserved with
+`selection_status: "design_preflight_rejected"` and
+`verification_status: "not_evaluated"`; prior verification and scores are not
+trusted. The carry source's schema and original hit are still checked. An explicit
+later policy change can reconsider those routes. A skipped design has no newly
+generated proposal, so continuation that newly enables it must also supply a
+provider or saved proposal source containing that design. The complete 2D ablation
+does not perform these 3D reference checks; it records `not_applicable_2d`.
 
 For each candidate, original hit and design, generate seeded, single-threaded
 ETKDGv3 ensembles. Optimize with MMFF94s when all parameters exist, otherwise
