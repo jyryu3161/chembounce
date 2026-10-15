@@ -115,6 +115,37 @@ and checks its published archive digest before extraction. It refuses to overwri
 an existing data directory. Fingerprint generation canonicalizes and deduplicates
 connected scaffolds, reports rejected lines, and records source hash and RDKit
 version. Existing output databases are also protected from overwrite.
+Generation checks that each serialized isomeric SMILES is unchanged after
+reparsing, with cycle detection and at most eight roundtrips. Fingerprint bits
+come from that exact reparsed molecule. Unresolved inputs are excluded as
+`canonicalization_unstable`; metadata records cycle/limit counts and original
+input examples. Stereo is not removed to force convergence. New assets declare
+`canonicalization_policy=rdkit-roundtrip-fixed-point-v1`; only this policy with a
+matching RDKit version enables the canonical-string fast path.
+
+Fingerprint bits and canonical SMILES can differ between RDKit releases. Search
+rejects a database with a known different RDKit version before ranking. Build a
+separate index with the runtime you will use; for RDKit 2025.09.6 and the mw250
+library:
+
+```bash
+python generate_fingerprints.py \
+  --input data/Scaffolds_processed_mw250.txt \
+  --output data/fingerprints_mw250_rdkit_2025.09.6 --verify
+# Explicit use; this also takes precedence over automatic database selection.
+chembounce -i 'CC(=O)Nc1ccccc1' -o output_runtime_db \
+  --fingerprint-db data/fingerprints_mw250_rdkit_2025.09.6
+```
+
+Use your actual RDKit version in the output directory name. `--verify` recomputes
+sampled fingerprint bits; a passing sample does not establish whole-database
+compatibility or enable cross-version ranking. Neither search nor verification
+rewrites an existing asset. Missing-version legacy databases remain readable and
+searchable, with fingerprint compatibility unverified. Assets without the new
+canonicalization policy have selected hits checked for a stable identity; exact
+query matches, duplicates and unresolved hits are excluded, and the shortlist is
+refilled. An unresolved query fails explicitly. Specified stereo, isotope and
+charge differences remain distinct.
 
 Use `--fingerprint-db data/fingerprints_v2` when running ChemBounce. A directory
 stores packed bits in memory-mappable NPY files; a `.npz` output is compressed but
@@ -126,9 +157,12 @@ are excluded with counts and examples in `run_summary.json`.
 
 Old NPZ files can contain Python pickle objects. Regenerate from SMILES where
 possible. To read a trusted legacy file explicitly, use
-`--fingerprint-db PATH --trust-legacy-db`. Never enable this for an untrusted file.
-Automatic database selection prefers `data/fingerprints_mw250_v2` when present;
-otherwise the legacy filename is `data/scaffold_fingerprints_mw250.npz`.
+`--fingerprint-db PATH --trust-legacy-db`. This authorizes pickle loading only; it
+does not override RDKit compatibility checks. Never enable it for an untrusted
+file. Automatic selection first prefers
+`data/fingerprints_mw250_rdkit_<runtime-version>`, then `data/fingerprints_mw250_v2`,
+then the legacy filename `data/scaffold_fingerprints_mw250.npz`. An explicit
+`--fingerprint-db` always takes precedence.
 
 ## Options
 

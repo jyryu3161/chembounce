@@ -57,8 +57,27 @@ chirality disabled). Database metadata determines radius and size when a custom
 fingerprint database is provided. Threshold comparisons are inclusive. Identical
 canonical SMILES are excluded, but a different structure with Tanimoto=1 remains
 eligible because fingerprints can collide. Generated databases are canonical,
-sorted and unique; ties use database row order, which is canonical SMILES order
-for these databases. Empty-vector similarity follows the installed RDKit convention
+sorted and unique under their recorded RDKit release. Known build/runtime version
+differences are rejected before ranking because fingerprint bits may also differ;
+regenerate into a new asset with the current runtime. The loader remains available
+for read-only cross-version audits. With missing version metadata, legacy search
+remains available with fingerprint compatibility unverified: it canonicalizes
+selected hits, removes exact-query matches and equivalent representations, then
+refills top-k as necessary. The string-only identity fast path requires matching
+version metadata, the canonical/sorted/unique claim and the
+`rdkit-roundtrip-fixed-point-v1` policy marker. This policy requires serialized
+isomeric SMILES to be unchanged after reparsing; generation calculates bits from
+that exact reparsed molecule. It detects cycles and permits at most eight
+roundtrips. Unresolved source lines are rejected with original-input examples and
+separate cycle/limit counts. Queries use the same bounded policy and fail if
+unresolved; uncertified selected hits are checked and skipped with refill if
+unresolved. No stereo removal, tautomer enumeration or charge normalization is
+used to force convergence. Search does
+not canonicalize the entire library before each bounded lookup. Atom maps are
+removed from a query copy, preserving the caller's molecule; specified stereo,
+isotopes and charges remain part of exact identity. Ties retain stored database
+row order, including when canonical spellings change between versions.
+Empty-vector similarity follows the installed RDKit convention
 (1 for two empty vectors in 2023.09; 0 in the tested 2025.09/2026.09 releases).
 Legacy databases retain their stored row order at score ties.
 The text path uses canonical SMILES tie ordering.
@@ -121,4 +140,7 @@ Packed bits reduce array storage by eight relative to uint8 bit matrices. Search
 processes chunks and retains top-k scores without making whole-database AND/OR
 matrices. NPY directory databases support mmap; NPZ loading decompresses the data.
 The schema records the generator version, input digest, radius, width and bit order.
-Verification recomputes sampled rows against RDKit and raises on mismatch.
+Verification recomputes sampled fingerprint rows against the runtime RDKit and
+raises on bit mismatch. Passing a sample does not establish compatibility of
+unsampled bits or canonical SMILES across releases. Search and verification leave
+the stored fingerprint bits and metadata unchanged.

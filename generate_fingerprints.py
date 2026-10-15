@@ -12,7 +12,14 @@ from rdkit import Chem, rdBase
 from rdkit.SimDivFilters import MaxMinPicker
 from rdkit import DataStructs
 
-from fingerprint_db import generate_query_fingerprint, load_fingerprint_db
+from fingerprint_db import (
+    CANONICALIZATION_MAX_ROUNDTRIPS,
+    CANONICALIZATION_POLICY,
+    CanonicalizationError,
+    generate_query_fingerprint,
+    load_fingerprint_db,
+    stable_canonical_molecule,
+)
 
 
 def sample_by_diversity(fps, percentages, seed=42):
@@ -60,6 +67,9 @@ def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch
         blanks = 0
         rejection_counts = {}
         rejection_examples = []
+        canonicalization_adjusted_lines = 0
+        canonicalization_failure_counts = {}
+        canonicalization_failure_examples = []
         with source.open() as stream:
             for line_number, line in enumerate(stream, 1):
                 smiles = line.strip()
@@ -81,9 +91,29 @@ def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch
                     if len(rejection_examples) < 10:
                         rejection_examples.append({"line": line_number, "smiles": smiles, "reason": reason})
                     continue
-                for atom in mol.GetAtoms():
-                    atom.SetAtomMapNum(0)
-                smiles = Chem.MolToSmiles(mol)
+                try:
+                    stable_smiles, mol, roundtrips = stable_canonical_molecule(mol)
+                except CanonicalizationError as exc:
+                    rejected += 1
+                    reason = "canonicalization_unstable"
+                    rejection_counts[reason] = rejection_counts.get(reason, 0) + 1
+                    canonicalization_failure_counts[exc.reason] = (
+                        canonicalization_failure_counts.get(exc.reason, 0) + 1
+                    )
+                    if len(rejection_examples) < 10:
+                        rejection_examples.append({"line": line_number, "smiles": smiles, "reason": reason})
+                    if len(canonicalization_failure_examples) < 10:
+                        canonicalization_failure_examples.append(
+                            {
+                                "line": line_number,
+                                "smiles": smiles,
+                                "reason": exc.reason,
+                                "roundtrips": exc.roundtrips,
+                            }
+                        )
+                    continue
+                canonicalization_adjusted_lines += roundtrips > 1
+                smiles = stable_smiles
                 if smiles in rows:
                     duplicates += 1
                     continue
@@ -95,7 +125,13 @@ def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch
                         f"Processed {line_number}/{n_lines} lines; {len(rows)} unique scaffolds", flush=True
                     )
         if not rows:
-            raise ValueError("No valid connected scaffolds in input")
+            details = (
+                f"; canonicalization failures: {json.dumps(canonicalization_failure_counts, sort_keys=True)}"
+                f"; original input examples: {json.dumps(canonicalization_failure_examples)}"
+                if canonicalization_failure_counts
+                else ""
+            )
+            raise ValueError("No valid connected scaffolds in input" + details)
         smiles = np.asarray(sorted(rows), dtype=str)
         order = np.asarray([rows[s] for s in smiles])
         stage = scratch / "database"
@@ -115,6 +151,13 @@ def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch
             "radius": radius,
             "include_chirality": False,
             "canonical_sorted_unique": True,
+            "canonicalization_policy": CANONICALIZATION_POLICY,
+            "canonicalization_max_roundtrips": CANONICALIZATION_MAX_ROUNDTRIPS,
+            "canonicalization_adjusted_lines": canonicalization_adjusted_lines,
+            "canonicalization_failure_counts_json": json.dumps(
+                canonicalization_failure_counts, sort_keys=True
+            ),
+            "canonicalization_failure_examples_json": json.dumps(canonicalization_failure_examples),
             "source_sha256": digest.hexdigest(),
             "rdkit_version": rdBase.rdkitVersion,
             "input_lines": n_lines,
@@ -137,6 +180,11 @@ def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch
 
 
 def verify_fingerprints(fp_file, sample_size=100, seed=42, trust_legacy=False):
+    """Recompute sampled bit vectors under this runtime; return the checked count.
+
+    Passing does not certify unsampled rows or canonical SMILES compatibility
+    across RDKit versions, and never upgrades the database's version metadata.
+    """
     if sample_size < 1:
         raise ValueError("sample_size must be positive")
     data = load_fingerprint_db(fp_file, trust_legacy)
