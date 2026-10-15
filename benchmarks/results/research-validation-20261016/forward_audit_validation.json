@@ -1,0 +1,166 @@
+{
+  "analysis_plan": {
+    "byte_identical_to_original": true,
+    "expected_attempts": {
+      "scaffold": 360,
+      "target": 90,
+      "time": 180
+    },
+    "publication_file": "forward_analysis_plan.json",
+    "recorded_utc": "2026-10-15T18:23:04.197787+00:00",
+    "sha256": "385be03fee3d2df6cfc04975cb63b42717088eabe62077bdbd3c6db9ca5db529",
+    "timing": "Post hoc plan specified before comparative analysis while generation and common forward assessment were incomplete; not preregistered confirmatory evidence.",
+    "total_attempts": 630
+  },
+  "compute_only_amendment": {
+    "change": "Additional isolated CPU runtime, torch 2.8.0+cpu replacing 2.8.0+cu128; GPU-only dependencies omitted. Original CUDA setup left separate.",
+    "cpu_audit_started_utc": "2026-10-15T18:13:32.134923+00:00",
+    "original_audit_planned_utc": "2026-10-15T16:17:26.265459+00:00",
+    "original_dependency_closure_sha256": "195711d9ac8e8f773009d95679989a740e2662e89c4a042d74047e7680affe4c",
+    "recorded_before_cpu_audit_execution": true,
+    "recorded_utc": "2026-10-15T18:06:10.244339+00:00",
+    "unchanged": "Original route population, frozen source, model revision, reactant-only context, exact product matching, top_k=3, token/call budgets and 630-attempt analysis scope."
+  },
+  "evidence_records_sha256": {
+    "forward-cpu-runtime/activation.json": "a45b006b76b0ac5d72271b332552f2998813bf1d90bf3bc6b19e2f5e1a13c0cc",
+    "forward-cpu-runtime/compute-only-amendment.json": "c238ed52056f47ee71c788a6d571ea703f308175df7daffb77f8a77fe583fbed",
+    "forward-cpu-runtime/copy-semantic-validation.json": "5166b4b756aded84b310f4d1e04b72e35467b1f84f4b6db90a9421512d6a2abb",
+    "forward-cpu-runtime/dependency-pins.txt": "87afc5234a838776ae07971de9711b698e999b12e4fd7cc4f493ff4f3231edfe",
+    "forward-cpu-runtime/expected-versions.json": "33ad8d34934a38bb18e64e3113f0deadf9285b209e5890d9941c843457099d56",
+    "forward-cpu-runtime/final-forward-queue-activation.json": "baddbd8b14a7ebda8088bdcad0ac84fd563469b725fb3e3f8f07287513badfa5",
+    "forward-cpu-runtime/isolated-runtime-validation.json": "a0d34f7d44b26e55aab43582324f3b9b515153daae2fcfe5daa039d25282579b",
+    "forward-cpu-runtime/package-runtime-validation.json": "be17637a874e7e0c06fe9d58096ec2a7e6623a1b7ba960b1844a3a5c90881d7f",
+    "forward-cpu-runtime/parent-analysis-integrity-tests.log": "706ff26ce0c2a5bfcaf5c519867d99e370db2b03f027742850e76e479f9a426e",
+    "forward-cpu-runtime/parent-analysis-integrity-validation.json": "5ebdcb547134b3f3ca3b5b89fd67b9aa135bb8f9544b9c12fbb7d2277d119629",
+    "forward-cpu-runtime/parent-final-forward-queue-tests.log": "875fe1df89374c102e25c3af82635c64a11e16c251fcf258678c6d44f15ec96f",
+    "forward-cpu-runtime/parent-real-cache-validation.json": "833e4bb9108dda7c99d2afc59cdbe5580aabf75ec6f1dc997b5ed56dfc1f3aac",
+    "forward-cpu-runtime/parent-statistics-validation.json": "55afd8e56921451e06581518987943a74d3078e650a42195f7f08e88f6ff4714",
+    "forward-cpu-runtime/pip-check.log": "54841cbcecec913e8f84653077a211e76dc0974c3a0fa763cd9dc9bb8c0650bf",
+    "forward-cpu-runtime/provenance-integrity-engineering-validation.json": "41866dd4490992c88e15aba4bfde1e6bc7cedace2521b7c33ea82d6ec292e61d",
+    "forward-cpu-runtime/test_analyze_forward_audit.py": "3121f2c514f1a975d20f11cf939fc438fac7eed35b78c9bb35152dcf085c95ab",
+    "forward-cpu-runtime/test_final_forward_analysis_queue.py": "e25a1d17367a4256f2d20b0db314b73e3e73542de99adfddbfe88c47d480d90b",
+    "forward-cpu-runtime/uv-pip-check.log": "a294762f79297a75684046b1f82c848b2aa8136b0dde1cb9e8bcd2c0fce8ef43"
+  },
+  "evidence_root": "benchmark-results/research-validation",
+  "final_analysis_queue": {
+    "activated_utc": "2026-10-15T18:52:12.041155+00:00",
+    "analysis_helper_sha256": "01b4c9468d23bb2870083c0b8f66886fafbf0262b429e08e5e102e683e20d83e",
+    "execution": "Shared flock and persistent one-shot claim; separate output directory, atomic terminal state/log/result hashes, no retry on failure, parent review required.",
+    "final_comparison": "pending; no analysis artifact emitted at this snapshot",
+    "gate": "Exact 630 unique terminal planned attempts across all 9 campaigns and completed common forward audit with matching run hashes; authoritative helper additionally requires frozen 39-source provenance, model files, response linkage and fresh route replay.",
+    "pid_at_activation": 383651,
+    "python_executable_sha256": "0812c05967309d1cf936120184b79f15162fc5bcbe4b7787945ed51be28a23e9",
+    "pyvenv_config_sha256": "dccc2e51d6594402e9fc7afdf86e3baa0e9aa5c7d2dfb5bbe54cd5b6530edc01",
+    "queue_sha256": "bafb7c82d86624e2a32920664d2ed5cb845cbe98ed16bfc98a3f5faed7f33bc0",
+    "runtime_command_sha256": "ad35bb961247f89e31a0b36237d0fed04ac55d7d42ebdf0030ce036797d6570e",
+    "status_snapshot": {
+      "comparison_validated": false,
+      "launch_count": 0,
+      "state_updated_utc": "2026-10-15T18:54:59.918544+00:00",
+      "status": "waiting"
+    }
+  },
+  "independent_tests": {
+    "analysis_helper": {
+      "passed": 50,
+      "seconds": 1.99
+    },
+    "queue_scope": "Incomplete gate, exact grid/hash tampering, one-time launch, nonzero no retry, duplicate flock, SIGTERM stopping only the owned analyzer process group.",
+    "waiting_queue": {
+      "passed": 19,
+      "seconds": 11.71
+    }
+  },
+  "interpretation_limits": [
+    "The common forward predictor is the same model used by the selection gate; selection-related enrichment is expected and is not independent synthesis validation.",
+    "Reactant-only predictions omit experimental conditions/reagents; no activity, affinity, experimental synthesis, yield or calibrated success-probability claim.",
+    "Infrastructure-interrupted attempts remain in the planned denominator; bounded missing-outcome sensitivity and selection-biased complete-case results follow the fixed plan."
+  ],
+  "isolated_cpu_runtime": {
+    "cuda_validation": "Original isolated CUDA environment validation remains pending; CPU validation does not establish GPU capability.",
+    "environment": ".venv-forward-audit",
+    "include_system_site_packages": false,
+    "modules_outside_environment": {},
+    "pinned_dependency_versions_match": true,
+    "pip_check": "No broken requirements found",
+    "python": "3.10.12",
+    "torch_cuda_build": null,
+    "uv_pip_check": "All 49 installed packages compatible",
+    "versions": {
+      "numpy": "1.26.4",
+      "rdkit": "2025.9.6",
+      "safetensors": "0.6.2",
+      "scipy": "1.13.1",
+      "tokenizers": "0.21.4",
+      "torch": "2.8.0+cpu",
+      "transformers": "4.51.3"
+    }
+  },
+  "model_diagnostics": {
+    "count": 2,
+    "limitation": "Two selected compatibility diagnostics, not held-out predictive accuracy and not proof of full CPU/GPU numerical or campaign equivalence.",
+    "model_files_sha256": {
+      "README.md": "1a689168cf12a60fb49166cdc5245308f6ef18d28d8fec165295edf7404449c2",
+      "config.json": "a80eac6938e51ccabfc6a8b281497c6553626145e57b2268101f718fbaa034a2",
+      "generation_config.json": "aed028489d41ae6a673920da9d103f2f58a650c3fbc50bd880b35e30a481dba6",
+      "model.safetensors": "69c23ca364e63e0e2be22d114652aad9f3df4e161d43936eee0dc3ce74a87fb7",
+      "special_tokens_map.json": "0f385cf62b07c1b63aaa84d4c86a313c751df7039d958a7d7bd7e723d933bcd9",
+      "tokenizer.json": "511dfd8bb25c19cccae8d7d996c1ff0f1b5263207be4cdd275f23b75da8113b6",
+      "tokenizer_config.json": "ac38d16067df56f00dfa2c2e0d1546a6ff08aa37814662a6fc38dea66cd13d9d",
+      "trainer_state.json": "f89bde13ce68202577b7eddf752376632a40ce296e5c005da51e37bba6d195ac"
+    },
+    "model_revision": "933114058cb2604dc1bf536dbebdfcefbe83d4fc",
+    "previous_returned_reaction_probe": {
+      "exact_expected_product_supported": true,
+      "known_wrong_product_supported": false,
+      "three_prediction_strings_equal_to_parent_gpu_reference": true
+    },
+    "published_model_card_probe": {
+      "published_top1_product_match": true,
+      "three_prediction_strings_equal_to_parent_reference": true
+    }
+  },
+  "parent_integrity_checks": {
+    "accepted_raw_response_file_links_and_hashes_checked": 115,
+    "canonical_frozen_inventory_sha256": "c3a926f289accdbea57c84923b82ba5863e9bbb0a5b87a73f2081e798b5cfe07",
+    "checked_utc": "2026-10-15T18:51:33.042086+00:00",
+    "frozen_implementation_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+    "incomplete_real_grid_refused_before_replay": true,
+    "modified_relocated_source_refused": true,
+    "original_source_files_unchanged": 39,
+    "passed": true,
+    "real_source_root_and_identical_relocation_verified": true,
+    "scope": "Engineering source/response integrity checks on available retained artifacts; no interim method estimates."
+  },
+  "parent_statistics_checks": {
+    "additional_scope": "Seed/query/target hierarchy, bounded infrastructure missing-outcome intervals kept separate from CIs, paired shared-slot comparisons, conditional eligibility and complete-case selection bias.",
+    "coverage": [
+      "Exact target-bootstrap endpoints",
+      "Missing-only target stays in full-grid bounds",
+      "Complete-case pairing uses identical slots",
+      "Conditional null and eligibility counts",
+      "Repeated-route/reactant dependence counts"
+    ],
+    "independent_hand_calculated_checks": 14,
+    "limitation": "Synthetic test quantities only; no campaign scientific estimates.",
+    "passed": true,
+    "permutation_invariant": true
+  },
+  "protocol_pins": {
+    "common_forward_audit_protocol_sha256": "b5c1ddc8c86fe50f59bcd9605404901ec2fef75f45bc1ff14efe56385153468c",
+    "frozen_source_provenance_record_sha256": "8c8d9a883fe29acc8ffc1d6c3826a0056def13a93fa852508617069f3d48075e",
+    "live_cpu_audit_helper_sha256": "7c0f3265eb8d4728bcec58870cb81d22c44d066ad896fa2979d8b78d4fddbefe"
+  },
+  "recorded_utc": "2026-10-15T18:55:02.200786+00:00",
+  "retained_cache_validation": {
+    "applicability_to_final_helper": "Parent verified unchanged AST hashes for validate_cache, validate_step and four statistics functions after provenance-guard additions.",
+    "checked_utc": "2026-10-15T18:37:59.963548+00:00",
+    "passed": true,
+    "route_caches_checked": 61,
+    "scope": "Component/schema checks and fresh replay of raw routes against retained cache bytes, using the frozen route implementation; no repeat model inference or relaxation of the complete-grid gate.",
+    "validated_helper_sha256_at_check": "60afbbe741a140686b8d68bfb78b11fc65f929393590daf28b6d0d4cc105d9af"
+  },
+  "schema_version": 1,
+  "scope": "Publication record of runtime and analysis engineering validation only. No unfinished campaign or method comparison and no scientific estimates.",
+  "status": "engineering_validated_final_630_comparison_pending"
+}
