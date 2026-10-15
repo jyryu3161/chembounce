@@ -1,0 +1,190 @@
+{
+  "agent_reported_regressions": {
+    "benchmark_adapters_and_checks": {
+      "passed": 36,
+      "seconds": 3.74
+    },
+    "catalog_assets_routes": {
+      "passed": 54,
+      "seconds": 0.88
+    },
+    "evidence": "Agent tool transcripts; standalone focused logs were not retained. Test source hash and implementation commit are pinned above; the independent full-suite record is persisted separately.",
+    "focused_catalog_cases": {
+      "passed": 24,
+      "seconds": 0.44
+    },
+    "ruff_check_format_and_diff_check": "passed_as_reported"
+  },
+  "frozen_campaign": {
+    "implementation_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+    "outcomes_or_timing_rewritten": false,
+    "planned_attempts": 630,
+    "scope": "Original generation campaigns continue with their frozen implementation; no observations are replaced with the lazy implementation or its diagnostic counts.",
+    "source_files_checked": 39,
+    "source_files_unchanged": true
+  },
+  "implementation": {
+    "api_contract": "Catalog.fps is an insertion-ordered mutable mapping, not a concrete dict. Key iteration, membership and length do not compute values. Value reads, iteration over items/values, and copy materialize requested fingerprints. Catalog molecules are a fixed snapshot; post-load mutation of those molecules is outside the contract.",
+    "base_commit": "7e01e2562f957b7d3d0a6881f6761ac713726751",
+    "behavior": "The full catalog and import provenance are eagerly validated. Each eligible structure fingerprint is computed when first read, using the fingerprint generator captured at catalog construction and a per-instance cache.",
+    "commit": "ddecd99563e9da2822d2c6bf1bd1122a8eae6337",
+    "develop_merge_commit": "51cccd5be0fc3900d4f7ea9d1e61b554e7794680",
+    "previous_source_sha256": "81cacefa665595f32231fc03f0d35b8e0d76acf1584ed8fcc91b3dbdc837517c",
+    "source": "chembounce_synthesis/catalog.py",
+    "source_sha256": "9b9e68176aed026715c10fb7e6720e7f04b0bb849430e7a614f2151319e0b616",
+    "test_source": "tests/synthesis/test_catalog_fingerprints.py",
+    "test_source_sha256": "b0b958b545ba16e446b5bfe0d9700abac705cde558bec51eb738f07b19b03504"
+  },
+  "independent_full_suite": {
+    "catalog_source_sha256": "9b9e68176aed026715c10fb7e6720e7f04b0bb849430e7a614f2151319e0b616",
+    "checked_utc": "2026-10-15T19:21:24.602173+00:00",
+    "command": "python -m pytest -q",
+    "elapsed_seconds": 74.28,
+    "environment_overrides": {
+      "CUDA_VISIBLE_DEVICES": "",
+      "MKL_NUM_THREADS": "2",
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONNOUSERSITE": "1"
+    },
+    "exit_code": 0,
+    "implementation_commit": "ddecd99563e9da2822d2c6bf1bd1122a8eae6337",
+    "log_sha256": "7fcf4405fec7fb6cd225758fd3b2ff533afccdcbbbed1225358ab0c70e6fb0e8",
+    "passed": 488,
+    "runtime_scope": "Previously validated isolated CPU runtime; not a CUDA validation",
+    "skip_reason": "Optional oddt dependency unavailable: tests/test_descriptors.py:43",
+    "skipped": 1,
+    "source_resolution": "cwd and PYTHONPATH point to the isolated implementation worktree; exact original command/environment are bound by the metadata artifact hash.",
+    "status": "passed"
+  },
+  "independent_real_subset_validation": {
+    "actual_routes_identical": 16,
+    "all_subset_fingerprint_bits_identical": 795,
+    "blocks_provenance_eligible_keys_and_role_matches_identical": true,
+    "catalog_subset_rows": 795,
+    "catalog_subset_sha256": "c73dc6c611d6954a083ae37ffc2b29f83c793bad1d1525b0bb6126dcb03aa737",
+    "checked_utc": "2026-10-15T19:19:22.072456+00:00",
+    "counter_scope": "Search and fully-materialized totals include query fingerprints as well as catalog fingerprints. Counts describe avoided/deferred work for this subset, not measured time or memory savings.",
+    "fingerprint_calls_after_search": {
+      "after": 652,
+      "before": 910
+    },
+    "fingerprint_calls_constructor": {
+      "after": 0,
+      "before": 795
+    },
+    "fingerprint_calls_fully_materialized": {
+      "after": 910,
+      "before": 910
+    },
+    "lazy_fingerprint_calls_after_route_replay": 0,
+    "limitation": "This checks a sampled catalog subset and retained routes, not full-catalog behavioral equivalence over every possible search. No new model inference or experimental synthesis validation.",
+    "nearest_comparisons_identical": 200,
+    "rdkit": "2025.09.6",
+    "reaction_rules": 91,
+    "reaction_rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "search_design": "20 sampled reaction roles and 10 sampled catalog queries; varied top-k, similarity thresholds and required-role intersections.",
+    "selection": "768 catalog row indices sampled with random.Random(20261016), plus required blocks for the first 16 SHA-sorted unique routes in successful retained GPU0/GPU1 outputs; union 795 rows.",
+    "source_run_snapshots_sha256": {
+      "comparison-gpu0/runs.json": "3ff840e4955fbff0ef3adb24512172b863026d70aff341902d9bcc02d2ce3cc1",
+      "comparison-gpu1/runs.json": "7dad084ba11ad000ca78cae50cc0f21e0f1c1d5f912d3a66af5f4802d10c1055"
+    },
+    "status": "passed"
+  },
+  "pre_change_profile": {
+    "catalog_bytes": 67472599,
+    "catalog_import_manifest_sha256": "953c3f93614a1a69ab93b682d335c47bbf79cb4a38efed88d88d57def231a8ae",
+    "catalog_rows": 238542,
+    "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "checked_utc": "2026-10-15T19:11:51.536313+00:00",
+    "constructor_process_cpu_seconds": 89.294125087,
+    "constructor_wall_seconds": 512.7083678273484,
+    "eager_fingerprint_calls": 238542,
+    "eligible_unique_structures": 238542,
+    "fingerprint_fraction_constructor_cpu": 0.09170869204464079,
+    "fingerprint_process_cpu_seconds": 8.189047418999316,
+    "fingerprint_wall_seconds": 46.48896995931864,
+    "interpretation": "Instrumented pre-change CPU attribution only. Timer overhead is included; MolFromSmiles time is nested in strict-molecule validation and must not be added twice. Wall time includes nice-19 low-priority scheduling. No post-change full-catalog timing or memory measurement was made.",
+    "replicates": 1,
+    "runtime": {
+      "cuda_visible_devices": "",
+      "nice": 19,
+      "python": "3.10.12",
+      "rdkit": "2025.9.6",
+      "thread_limits": {
+        "MKL_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1"
+      },
+      "torch_or_transformers_imported": false
+    }
+  },
+  "publication_limits": [
+    "No supplier catalog rows, molecular route graphs or private subset are bundled.",
+    "Local evidence reports, logs and assessment scripts are hash-bound but not bundled; this compact record alone is not a self-contained replay of the real-data checks.",
+    "No post-change full-catalog speedup, campaign-throughput or memory-reduction estimate is established.",
+    "Independent full-suite validation used the isolated CPU runtime; it is not CUDA validation."
+  ],
+  "retained_evidence": [
+    {
+      "bundled": false,
+      "bytes": 3827,
+      "retained_filename": "constructor.json",
+      "role": "pre_change_constructor_profile",
+      "sha256": "a82d9592db6df9e6f5cd6b725e429954fddbaa5da614d1417554cd68f7e932ad"
+    },
+    {
+      "bundled": false,
+      "bytes": 7062,
+      "retained_filename": "profile_catalog.py",
+      "role": "profile_script",
+      "sha256": "388d8409e6bd3886706e3a29bfd81276af885c36873e5fc810b247d0294349d4"
+    },
+    {
+      "bundled": false,
+      "bytes": 624,
+      "retained_filename": "profile.log",
+      "role": "profile_log",
+      "sha256": "7e6bd1c2c2bb4c8d9e46fe3d07e87cd7195fb23d35e741f6b34a15030ed37a3a"
+    },
+    {
+      "bundled": false,
+      "bytes": 4054,
+      "retained_filename": "validation.json",
+      "role": "parent_actual_subset_validation",
+      "sha256": "ff23acbbd1b94ef552cde5a456f70ea5f21fc1ba8b6aa44faebfa79643e41296"
+    },
+    {
+      "bundled": false,
+      "bytes": 1683,
+      "retained_filename": "catalog-lazy-parent-validation.log",
+      "role": "parent_actual_subset_log",
+      "sha256": "bb4915d78c1b3e44e2a6cf0f723a7150299cfde25c727c672944fc1831509869"
+    },
+    {
+      "bundled": false,
+      "bytes": 6255,
+      "retained_filename": "validate-lazy-catalog-parent.py",
+      "role": "parent_subset_validator",
+      "sha256": "6835c646095a6e47657cce0c0e7ddcc5beb4f49c7232e39abc6d2f0800328187"
+    },
+    {
+      "bundled": false,
+      "bytes": 1057,
+      "retained_filename": "catalog-lazy-full-regression.json",
+      "role": "parent_full_regression_metadata",
+      "sha256": "3e859c4ec1481e270ec92c8a980105b7876e06d3941d9b1d0e9c6669f3c7eeae"
+    },
+    {
+      "bundled": false,
+      "bytes": 773,
+      "retained_filename": "catalog-lazy-full-regression.log",
+      "role": "parent_full_regression_log",
+      "sha256": "7fcf4405fec7fb6cd225758fd3b2ff533afccdcbbbed1225358ab0c70e6fb0e8"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Lazy catalog fingerprint construction; one pre-change full-catalog profile, independent old/new behavior checks on a real subset, and software regression tests. No measured post-change speedup or memory reduction.",
+  "status": "engineering_validated"
+}

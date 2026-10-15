@@ -7,6 +7,15 @@
     "results": "assay_heterogeneity.json",
     "script": "audit_assay_heterogeneity.py"
   },
+  "catalog_lazy_fingerprint_validation": {
+    "commit": "ddecd99563e9da2822d2c6bf1bd1122a8eae6337",
+    "develop_merge_commit": "51cccd5be0fc3900d4f7ea9d1e61b554e7794680",
+    "frozen_campaign_changed": false,
+    "independent_full_suite_passed": 488,
+    "optional_tests_skipped": 1,
+    "results": "catalog_lazy_fingerprint_validation.json",
+    "scope": "Pre-change full-catalog CPU attribution and subset behavior equivalence; deferred fingerprint calls, not a measured post-change speedup or memory reduction."
+  },
   "common_forward_audit_engineering": {
     "analysis_plan": "forward_analysis_plan.json",
     "frozen_campaign_changed": false,
@@ -45,11 +54,12 @@
     "status": "partial_sample_audit_independently_recomputed"
   },
   "published_compact_artifacts": {
-    "README.md": "2f44f228976598c3991bf4744cde2d6b20cb0961e5319d6929304adaf164e309",
+    "README.md": "b862d4f101e9a4a459eae34b7345775bee8b94d18245af8860efbaeeceb1c5ea",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
     "audit_assay_heterogeneity.py": "ce9eabd824201812c52038f379414672a438683a7a265330de6edbcff3c99bcd",
+    "catalog_lazy_fingerprint_validation.json": "731f5b869de8494f3d746a22dffd7dbc8d5f2e08160380aac52cc6b06146d5b2",
     "chembl-source-snapshot.zip": "72fde29b4fc9f6a7b896745781820d0c255c52e6a1e7036ad4036442e2a4c518",
     "common-conformers.json": "f3170e95d379361b7a1ec3ac11b51b578aba738618e86b764036161394e72722",
     "control-requirements.txt": "0cb7e18bdbf2560f295073a21bfb12591dfbd081bafd60b0b09dbb80e2123b3f",
