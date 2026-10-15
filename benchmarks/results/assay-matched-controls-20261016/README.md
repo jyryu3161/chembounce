@@ -48,6 +48,21 @@ The portable script reproduces the recorded numerical report exactly. To reconst
 
 The [source round trip](source_roundtrip.json) rebuilt all 5,890 curated records and all exclusions from that ZIP, then reproduced the selected panel, 197 pairs and 12 public queries. Every pre-existing availability field matched. The final curator additionally emits six minimum-five-controls/one-active-scaffold summary counts; these were independently recomputed from the original per-query availability and matched. This additive metadata difference is recorded rather than described as byte-identical reproduction.
 
+After reconstructing `benchmark-results/assay-matched-selected/panel.json`, compute its chemical scores with the portable CLI:
+
+```bash
+python -m benchmarks.research.assay_control_scoring \
+  --panel benchmark-results/assay-matched-selected/panel.json \
+  --conformers benchmarks/results/research-validation-20261016/common-conformers.json \
+  --seeds 42 43 44 --workers 3 \
+  --output benchmark-results/recomputed-assay-matched-scores
+python benchmarks/results/assay-matched-controls-20261016/analyze.py \
+  --input benchmark-results/recomputed-assay-matched-scores \
+  --output benchmark-results/recomputed-assay-matched-chemistry-analysis
+```
+
+Commit `f3aebcbea82faf928e4f420e733dd1b2aa344391` provides this CLI with the original scoring implementation. Use a separate checkout and the pinned requirements when reproducing that version. The CLI independently reproduced all score values and seed outcomes for the first query's 16 real controls. The three known stereo-policy failures were also replayed, retaining identical 2D scores and failed seed outcomes without a partial 3D aggregate. Direct fingerprint recomputation matched both 2D scores exactly for all 197 pairs. The integrated software passed **436 tests**; [portable_cli_validation.json](portable_cli_validation.json) records these checks. This 16-pair replay is a software equivalence check, not a new evaluation cohort.
+
 The original chemical scores used the scoring implementation present at commit `3c8ad2b619d8168e061d63467b6b9391e2464d2d`; [protocol.json](protocol.json) pins individual source hashes and settings. [input_audit.json](input_audit.json) records independent source-payload validation and deterministic selection reproduction. [validation.json](validation.json) records the 403-test integration check.
 
 The later optimization at `53709051` reuses an alignment only when the two references are the same ensemble object. An independent check on the first selected control of each of these 12 queries found exactly identical score/diagnostic dictionaries and coordinates, with half as many overlay calls. Its full regression suite passed 411 tests. [overlay_reuse_validation.json](overlay_reuse_validation.json) retains the individual checks and diagnostic timings; shared-host warm-scoring timings are not a general generation-throughput claim. The recorded control scores and running generation comparisons keep their original implementation and observations.
