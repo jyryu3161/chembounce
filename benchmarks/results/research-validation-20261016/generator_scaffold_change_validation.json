@@ -1,0 +1,352 @@
+{
+  "attribution": {
+    "documentation": "implementation agent; arithmetic projection and file-hash checks of retained evidence, without new chemistry or scientific execution",
+    "evaluator": "parent reviewer; separate retained script",
+    "independent_component": "Heavy-atom graph construction, direct iterative leaf pruning and NetworkX isomorphism; shares the RDKit parser.",
+    "shared_implementation_component": "Versioned project chemical-family normalization and atom/bond-aware normalized Murcko classification; an observation of production policy, not independent chemical validation of normalization."
+  },
+  "complete": true,
+  "completed_utc": "2026-10-15T21:51:29.506812+00:00",
+  "limitations": [
+    "Post hoc descriptive assessment of these saved generator outputs; not preregistered comparative efficacy evidence.",
+    "The independent graph method shares RDKit SMILES interpretation. Production family normalization and Murcko observations share project code and are not independently chemically validated here.",
+    "Bond order, charge, stereochemistry and isotopes are ignored by graph comparison. A matching graph topology does not preclude an atom/bond-aware scaffold hop.",
+    "The policy cohorts differ. Repeated seeds, rows and policies are not independent biological samples; no policy superiority, confidence interval or significance inference is made.",
+    "Raw three-row tables, configured downstream first-two inputs and final synthesis-qualified outputs are different populations. This record reports only the first two populations.",
+    "The original 630-attempt campaign was still pending at this assessment. No original pipeline failures are promoted, and no current-develop end-to-end, activity-retention, reaction-feasibility, synthesis-success or yield claim follows."
+  ],
+  "methods": {
+    "count_similarity": "Reported sparse-count Morgan Tanimoto scores, whose 756 old/new-arm row values were independently recalculated in the preceding index-sensitivity evaluation. The present assessment does not rerun that calculation.",
+    "independent_graph": {
+      "construction": "Build the undirected heavy-atom graph, retaining atomic numbers as optional vertex labels; repeatedly remove degree<2 vertices to obtain its graph 2-core.",
+      "element_labeled_metric": "NetworkX graph isomorphism matching atomic numbers.",
+      "ignored_by_both_metrics": [
+        "bond order",
+        "charge",
+        "stereochemistry",
+        "isotope"
+      ],
+      "interpretation": "Equal topology can accompany a heteroatom or bond-order scaffold change. The graph 2-core metrics do not replace atom/bond-aware Murcko or family identity; bond-order-only changes are invisible to both graph metrics.",
+      "topology_metric": "NetworkX graph isomorphism without atom labels."
+    },
+    "production_policy": {
+      "definition": "Versioned project chemical-family and atom/bond-aware normalized Murcko identity; candidate must retain a nonempty scaffold and differ in family and scaffold",
+      "independent_normalization_validation": false,
+      "source_path": "chembounce_synthesis/identity.py",
+      "source_sha256": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+      "version": "protonation-tautomer-family-v1"
+    },
+    "runtime": {
+      "networkx": "3.4.2",
+      "nice": 19,
+      "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]",
+      "python_executable": "/data2/home/jyryu/chembounce/.venv-synllama-min/bin/python",
+      "rdkit": "2025.09.6"
+    }
+  },
+  "observation_units": {
+    "arm": "new corrected index only",
+    "cohorts": "Diverse covers 30 public input strings across scaffold/time/target panels; legacy covers 12 main-panel input strings. Both use seeds 42, 43 and 44. Their different input scopes do not support a direct policy-superiority comparison.",
+    "condition_counts_by_policy": {
+      "diverse": 90,
+      "legacy": 36
+    },
+    "conditions": 126,
+    "configured_downstream_first_two_rows": 252,
+    "downstream_selection": "First two distinct exact candidate identities in raw table order under the frozen configuration. These are intended downstream inputs, not final synthesis-qualified outputs.",
+    "raw_generator_rows": 378,
+    "raw_rows_per_condition": 3,
+    "within_policy_unique_pairs": "Exact canonical isomeric query-design pairs collapse repeated seeds separately within each policy. Unique-pair summaries omit the arbitrary representative-job count. Counts are not pooled across policies as independent samples."
+  },
+  "parent_validation_checks": {
+    "all_rows_graph_assessed": 378,
+    "all_rows_production_policy_assessed": 378,
+    "candidate_empty_graph_core_rows": 0,
+    "direct_exact_query_candidate_equal_rows": 0,
+    "graph_control_results": [
+      {
+        "expected": {
+          "candidate_core_atoms": 0,
+          "query_core_atoms": 0,
+          "same_core_topology": true,
+          "same_element_labeled_core": true
+        },
+        "name": "acyclic",
+        "passed": true
+      },
+      {
+        "expected": {
+          "candidate_core_atoms": 6,
+          "query_core_atoms": 6,
+          "same_core_topology": true,
+          "same_element_labeled_core": true
+        },
+        "name": "decoration",
+        "passed": true
+      },
+      {
+        "expected": {
+          "candidate_core_atoms": 6,
+          "query_core_atoms": 6,
+          "same_core_topology": true,
+          "same_element_labeled_core": false
+        },
+        "name": "heteroatom",
+        "passed": true
+      },
+      {
+        "expected": {
+          "candidate_core_atoms": 6,
+          "query_core_atoms": 6,
+          "same_core_topology": true,
+          "same_element_labeled_core": true
+        },
+        "name": "bond_order_ignored",
+        "passed": true
+      },
+      {
+        "expected": {
+          "candidate_core_atoms": 5,
+          "query_core_atoms": 6,
+          "same_core_topology": false,
+          "same_element_labeled_core": false
+        },
+        "name": "ring_size",
+        "passed": true
+      },
+      {
+        "expected": {
+          "candidate_core_atoms": 6,
+          "query_core_atoms": 6,
+          "same_core_topology": true,
+          "same_element_labeled_core": true
+        },
+        "name": "exocyclic_ignored",
+        "passed": true
+      },
+      {
+        "expected": {
+          "candidate_core_atoms": 13,
+          "query_core_atoms": 14,
+          "same_core_topology": false,
+          "same_element_labeled_core": false
+        },
+        "name": "linker_retained",
+        "passed": true
+      },
+      {
+        "expected": {
+          "candidate_core_atoms": 10,
+          "query_core_atoms": 10,
+          "same_core_topology": false,
+          "same_element_labeled_core": false
+        },
+        "name": "fused_vs_linked",
+        "passed": true
+      }
+    ],
+    "hand_specified_graph_controls_passed": 8,
+    "input_pin_categories": {
+      "frozen_source_files": 39,
+      "plan_and_prior_outputs": 4,
+      "raw_generator_tables": 126
+    },
+    "input_pin_check_scope": "Before and after this post hoc parent assessment of completed saved outputs; these are not before/after generator-experiment checks.",
+    "input_pins_checked_before_and_after": 169,
+    "production_generic_skeleton_vs_graph_topology_disagreement_rows": 0,
+    "production_policy_qualifying_scaffold_hop_rows": 378,
+    "production_vs_direct_exact_identity_disagreement_rows": 0,
+    "unresolved_records": 0
+  },
+  "passed": true,
+  "provenance": {
+    "frozen_implementation_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+    "frozen_source_mapping_sha256": "c3a926f289accdbea57c84923b82ba5863e9bbb0a5b87a73f2081e798b5cfe07",
+    "local_evidence": {
+      "index_sensitivity_parent_validation": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-parent-validation.json",
+        "sha256": "b7e2a2204c52cda74a51adf7f46f8ac00b64e08bda2686696cd84b9e613f6bd7"
+      },
+      "parent_evaluator": {
+        "path": "/tmp/audit-generator-scaffold-changes.py",
+        "sha256": "841b011995df1e9f79a6bc1a231f4eb7e98c20b28d35727477b8c874a0d86eb0"
+      },
+      "parent_validation": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/generator-scaffold-change-parent-validation.json",
+        "sha256": "ef0358c4d7dc6debebb52b673ae056dd25197a3ab22225b924d8b03a183b1ef6"
+      },
+      "plan": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-plan-hashseed0/plan.json",
+        "sha256": "3e993a6a9e8504e24d998d97d9105d5f4a4a0fb1c0f71452a442192d040057b1"
+      },
+      "progress": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-run/progress.json",
+        "sha256": "bef8aec138af01457c32549d580c8a490eb50c17549d4db6ca61d59da636533b"
+      },
+      "runs": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/index-sensitivity-run/runs.json",
+        "sha256": "ceac90e83be5d57d0da93c361d4a1e15116adff95cce51341d72b6415b46b43b"
+      }
+    },
+    "local_evidence_bundled": false,
+    "mapping_digest_encoding": "SHA-256 of UTF-8 json.dumps(mapping, sort_keys=True, separators=(\",\", \":\")); parent pins use recorded absolute paths, source mapping uses paths relative to frozen root.",
+    "parent_input_pin_mapping_sha256": "b369fca36b0fa7f6e174d80daa3d2f5339f154ad9567d4e8c60c7c5d810c89b3",
+    "previous_public_record": {
+      "path": "index_sensitivity_validation.json",
+      "sha256": "e953155f54f48f0d53baa18d5b9c5270fa01b451b9cda27c827582f51f6982e5"
+    },
+    "public_helper_documentation": "../../diagnostics/index_sensitivity/README.md",
+    "publication_scope": "Aggregate counts and eight molecule-free control descriptions only. Raw molecules, per-row or pair identifiers, full plans, source tables and local evaluator script are not bundled; local paths are provenance locators, not download links."
+  },
+  "schema": "public-generator-scaffold-change-validation-v1",
+  "scope": "Saved new-index generator outputs from the completed index-substitution diagnostic; no new generation or downstream model, synthesis or 3D run. The equal old arm is not double counted.",
+  "similarity_interpretation": {
+    "configured_first_two_rows": "Diverse: 90 of 180 are below 0.5. Legacy: 0 of 72 are below 0.5. These are selected generator inputs, not final synthesis-qualified outputs.",
+    "diverse_all_raw_rows": "90 of 270 have Tanimoto <0.5; six rows have Tanimoto=1.0 and represent two unique exact query-design pairs. None is an exact input copy.",
+    "legacy_all_raw_rows": "0 of 108 have Tanimoto <0.5; none has Tanimoto=1.0.",
+    "limits": "Fingerprint equality is not molecular identity. Neither similarity nor these graph classifications establish biological activity or synthesis success."
+  },
+  "status": "completed_post_hoc_descriptive_assessment",
+  "summaries_by_policy": {
+    "diverse": {
+      "all_returned_rows": {
+        "candidate_empty_core": 0,
+        "conditions": 90,
+        "different_core_topology": 192,
+        "different_element_labeled_core": 243,
+        "direct_exact_state_equal": 0,
+        "graph_statuses": {
+          "assessed": 270
+        },
+        "policy_change_classes": {
+          "scaffold": 270
+        },
+        "policy_generic_vs_graph_topology_disagreements": 0,
+        "policy_qualifying_scaffold_hops": 270,
+        "policy_statuses": {
+          "assessed": 270
+        },
+        "policy_vs_direct_exact_state_disagreements": 0,
+        "rows": 270,
+        "similarity_below_0_5": 90,
+        "similarity_equal_1": 6,
+        "unique_query_design_exact_pairs": 150
+      },
+      "downstream_first_two_rows": {
+        "candidate_empty_core": 0,
+        "conditions": 90,
+        "different_core_topology": 141,
+        "different_element_labeled_core": 168,
+        "direct_exact_state_equal": 0,
+        "graph_statuses": {
+          "assessed": 180
+        },
+        "policy_change_classes": {
+          "scaffold": 180
+        },
+        "policy_generic_vs_graph_topology_disagreements": 0,
+        "policy_qualifying_scaffold_hops": 180,
+        "policy_statuses": {
+          "assessed": 180
+        },
+        "policy_vs_direct_exact_state_disagreements": 0,
+        "rows": 180,
+        "similarity_below_0_5": 90,
+        "similarity_equal_1": 3,
+        "unique_query_design_exact_pairs": 120
+      },
+      "unique_exact_query_design_pairs": {
+        "candidate_empty_core": 0,
+        "different_core_topology": 124,
+        "different_element_labeled_core": 141,
+        "direct_exact_state_equal": 0,
+        "graph_statuses": {
+          "assessed": 150
+        },
+        "policy_change_classes": {
+          "scaffold": 150
+        },
+        "policy_generic_vs_graph_topology_disagreements": 0,
+        "policy_qualifying_scaffold_hops": 150,
+        "policy_statuses": {
+          "assessed": 150
+        },
+        "policy_vs_direct_exact_state_disagreements": 0,
+        "rows": 150,
+        "similarity_below_0_5": 90,
+        "similarity_equal_1": 2,
+        "unique_query_design_exact_pairs": 150
+      }
+    },
+    "legacy": {
+      "all_returned_rows": {
+        "candidate_empty_core": 0,
+        "conditions": 36,
+        "different_core_topology": 93,
+        "different_element_labeled_core": 108,
+        "direct_exact_state_equal": 0,
+        "graph_statuses": {
+          "assessed": 108
+        },
+        "policy_change_classes": {
+          "scaffold": 108
+        },
+        "policy_generic_vs_graph_topology_disagreements": 0,
+        "policy_qualifying_scaffold_hops": 108,
+        "policy_statuses": {
+          "assessed": 108
+        },
+        "policy_vs_direct_exact_state_disagreements": 0,
+        "rows": 108,
+        "similarity_below_0_5": 0,
+        "similarity_equal_1": 0,
+        "unique_query_design_exact_pairs": 36
+      },
+      "downstream_first_two_rows": {
+        "candidate_empty_core": 0,
+        "conditions": 36,
+        "different_core_topology": 60,
+        "different_element_labeled_core": 72,
+        "direct_exact_state_equal": 0,
+        "graph_statuses": {
+          "assessed": 72
+        },
+        "policy_change_classes": {
+          "scaffold": 72
+        },
+        "policy_generic_vs_graph_topology_disagreements": 0,
+        "policy_qualifying_scaffold_hops": 72,
+        "policy_statuses": {
+          "assessed": 72
+        },
+        "policy_vs_direct_exact_state_disagreements": 0,
+        "rows": 72,
+        "similarity_below_0_5": 0,
+        "similarity_equal_1": 0,
+        "unique_query_design_exact_pairs": 24
+      },
+      "unique_exact_query_design_pairs": {
+        "candidate_empty_core": 0,
+        "different_core_topology": 31,
+        "different_element_labeled_core": 36,
+        "direct_exact_state_equal": 0,
+        "graph_statuses": {
+          "assessed": 36
+        },
+        "policy_change_classes": {
+          "scaffold": 36
+        },
+        "policy_generic_vs_graph_topology_disagreements": 0,
+        "policy_qualifying_scaffold_hops": 36,
+        "policy_statuses": {
+          "assessed": 36
+        },
+        "policy_vs_direct_exact_state_disagreements": 0,
+        "rows": 36,
+        "similarity_below_0_5": 0,
+        "similarity_equal_1": 0,
+        "unique_query_design_exact_pairs": 36
+      }
+    }
+  }
+}

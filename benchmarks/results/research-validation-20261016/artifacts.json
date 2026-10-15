@@ -66,6 +66,20 @@
     "scope": "Later direct fixed-pose shape/color and separate pharmacophore arithmetic on an earlier immutable successful-output snapshot; shared RDKit kernel and feature perception, not full-campaign performance or independent physical-kernel validation.",
     "score_checks": 288
   },
+  "generator_scaffold_change_validation": {
+    "completed_utc": "2026-10-15T21:51:29.506812+00:00",
+    "conditions": 126,
+    "frozen_campaign_changed": false,
+    "hand_specified_graph_controls_passed": 8,
+    "independent_family_normalization_validation": false,
+    "local_evidence_bundled": false,
+    "parent_input_pins_checked": 169,
+    "production_policy_scaffold_hop_rows": 378,
+    "raw_new_arm_rows": 378,
+    "results": "generator_scaffold_change_validation.json",
+    "scope": "Post hoc independent heavy-atom 2-core graph comparisons plus shared production-policy observations of saved corrected-index generator outputs; distinct raw, configured first-two and within-policy unique-pair units. No biological/synthesis-success or policy-superiority inference.",
+    "status": "completed_post_hoc_descriptive_assessment"
+  },
   "graceful_termination_validation": {
     "commit": "1afac243e629dcb7e3b967814d0c07913d162c0b",
     "frozen_campaign_changed": false,
@@ -109,7 +123,7 @@
     "status": "partial_sample_audit_independently_recomputed"
   },
   "published_compact_artifacts": {
-    "README.md": "d6b8667fc2a67a27f49e0aac0566791c0e6ef41206b69c1447664143b97071dc",
+    "README.md": "658965bbdbd44b150c8c21c0e22bfab651c079143d38c58dae9e056d848e2c36",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
@@ -133,6 +147,7 @@
     "fixed_pose_score_validation.json": "4af182632b449d441c414cc41edd297b5a501f490210cc88770bde15396211b8",
     "forward_analysis_plan.json": "385be03fee3d2df6cfc04975cb63b42717088eabe62077bdbd3c6db9ca5db529",
     "forward_audit_validation.json": "c0e12e44a60702008806415ad23c8914fe58ac451e837bc32f3b9fb1d357b504",
+    "generator_scaffold_change_validation.json": "77531518dc164a6fbeafab29b75fec9ec8d64621205d9b3b4342a33b0581a86a",
     "index_sensitivity_validation.json": "e953155f54f48f0d53baa18d5b9c5270fa01b451b9cda27c827582f51f6982e5",
     "isolated_runtime_validation.json": "7bf5c6c837191c64d7e277b91c021ea0dab6a9ebf236c74935bc7dca595f58e5",
     "preflight_validation.json": "c810853f907c579fd858e3fa823671ccb11a17071ea25e62bab3c0134818e59c",
