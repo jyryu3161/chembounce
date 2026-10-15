@@ -1,11 +1,19 @@
 {
   "analysis_script": "analyze_controls.py",
   "analysis_script_sha256": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
+  "assay_context_audit": {
+    "design": "Post hoc descriptive audit; no changes to frozen panels or generation methods",
+    "reproduction": "Portable audit reproduced original context counts and numerical sensitivity summaries",
+    "results": "assay_heterogeneity.json",
+    "script": "audit_assay_heterogeneity.py"
+  },
   "data_provenance": "Derived from pinned ChEMBL 37 bounded activity/assay source snapshots. control_summary.json retains dataset SHA and local source paths; individual source URLs/hashes and licensing are in source_provenance.json.",
   "observation_unit": "240 query-control pairs; 120 distinct target-family compound IDs, 119 distinct exact structures, reused across queries; 6 independent target groups",
   "published_compact_artifacts": {
-    "README.md": "96df2ab681ecdba9d4d8f85ef7c11f7a35f57145658b119098acd8b141047034",
+    "README.md": "10952a1ea7a87cc0c640411a7c3e522269b9f0aaec9627285b696135af696406",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
+    "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
+    "audit_assay_heterogeneity.py": "ce9eabd824201812c52038f379414672a438683a7a265330de6edbcff3c99bcd",
     "chembl-source-snapshot.zip": "72fde29b4fc9f6a7b896745781820d0c255c52e6a1e7036ad4036442e2a4c518",
     "common-conformers.json": "f3170e95d379361b7a1ec3ac11b51b578aba738618e86b764036161394e72722",
     "control-requirements.txt": "0cb7e18bdbf2560f295073a21bfb12591dfbd081bafd60b0b09dbb80e2123b3f",
