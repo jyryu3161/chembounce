@@ -69,6 +69,12 @@ Use the corresponding `target_control_*.json` paths for the target partition.
 
 Commit `009b7aaa` validates a fixed query's 3D prerequisites before generation and model loading. Independent regression testing passed all 390 tests. An actual CA2 request with unspecified cage stereochemistry was rejected in 2.41 seconds, before a generator output directory was created; its original frozen run spent 156.26 seconds before returning no candidates. This single diagnostic establishes earlier rejection under the same policy, not a general throughput improvement. [preflight_validation.json](preflight_validation.json) records the request hash and check results. The running generation comparisons keep their original code and timing observations.
 
+### Design reference preflight
+
+Commit `08c3774c` checks the original capped design references before synthesis work. Invalid references are reported individually, without assigning missing stereochemistry or backfilling the cap. Valid alternatives retain their order, provider seeds and scoring behavior. When all capped designs fail, unused catalog/model/pocket assets are not initialized or validated; their unavailable hashes and explicit rejection reasons are retained.
+
+Independent testing in an isolated CPU environment passed **464 tests**, with one optional `oddt` test skipped. Replaying a retained PIM1 input confirmed that its hit passes the existing policy and both capped designs fail it. Catalog, model, route-verification and embedding spies all recorded zero calls; the explicit empty result was produced in 3.81 seconds. This is a diagnostic replay with forbidden-call spies, not a general timing comparison or a replacement for the original generation attempt. [design_preflight_validation.json](design_preflight_validation.json) records input/code hashes, checks and limitations. All 39 frozen campaign source files remain unchanged.
+
 ### Graceful benchmark termination
 
 Commit `1afac243e629dcb7e3b967814d0c07913d162c0b` handles SIGTERM/SIGINT by stopping the active worker's process group, preserving sampled resources, checkpointing the interrupted attempt and preventing a subsequent attempt. A plausible partial response remains diagnostic and cannot become accepted output. A worker result already validated before cancellation remains valid. The CLI exits 143/130; library signal handlers are restored, and cancellation during setup/evaluation is cooperative at Python work boundaries. SIGKILL cannot provide the same checkpoint guarantee.

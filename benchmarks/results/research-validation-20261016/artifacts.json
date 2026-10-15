@@ -8,6 +8,13 @@
     "script": "audit_assay_heterogeneity.py"
   },
   "data_provenance": "Derived from pinned ChEMBL 37 bounded activity/assay source snapshots. control_summary.json retains dataset SHA and local source paths; individual source URLs/hashes and licensing are in source_provenance.json.",
+  "design_reference_preflight": {
+    "commit": "08c3774cf2e10bcc56a738a31cfe0ed0aa35b046",
+    "frozen_campaign_changed": false,
+    "independent_full_suite_passed": 464,
+    "optional_tests_skipped": 1,
+    "results": "design_preflight_validation.json"
+  },
   "early_reference_validation": {
     "commit": "009b7aaa1d3efc5e418a1c885f50c704a6cdfb58",
     "frozen_campaign_changed": false,
@@ -21,7 +28,7 @@
   },
   "observation_unit": "240 query-control pairs; 120 distinct target-family compound IDs, 119 distinct exact structures, reused across queries; 6 independent target groups",
   "published_compact_artifacts": {
-    "README.md": "1dd72ea85d6dce8a7cadb61c5f438fac6cd23a62ae532ec2c75adc0ca452d1eb",
+    "README.md": "f1fc4b64b771a97143d3c9a4d091809ff474310347ff73174dd7ebf51de2cb3b",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
@@ -38,6 +45,7 @@
     "controls_target.png": "f3ea6badcd431beedfc55c81473e4c84f58d5113ccce265000dfe145140b2dde",
     "controls_time.pdf": "95249a81ac4cc5220ed33f13eab4b04dad88d65bea68bb9cda5d41aca6ff1aa2",
     "controls_time.png": "11c761dd1972226c08120547a7ca949026074022a671bb51de1400214bf5f185",
+    "design_preflight_validation.json": "1450a5f20dc703f5eb4176421582d242800768f0621c8f759aaac04d96057e83",
     "engineering.json": "0774f9a6c07d4b763742fa6c7b35695b8c6deafd1c08074bab4cf8d7fbcf69c0",
     "preflight_validation.json": "c810853f907c579fd858e3fa823671ccb11a17071ea25e62bab3c0134818e59c",
     "query_scope.json": "72c97730f9f76906bc1afcbd88a3f19009862f79af51f7ef18662f0e01fa972b",

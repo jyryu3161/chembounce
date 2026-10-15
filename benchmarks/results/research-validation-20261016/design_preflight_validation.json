@@ -1,0 +1,71 @@
+{
+  "all_original_designs_and_config_preserved": true,
+  "checked_utc": "2026-10-15T18:16:20.706932+00:00",
+  "configured_conformers": {
+    "energy_window": 5.0,
+    "num_conformers": 6,
+    "pharmacophore_sigma": 1.0,
+    "reject_unspecified_stereo": true,
+    "seed": 43,
+    "strain_penalty": 0.05
+  },
+  "designs_rejected_by_unchanged_policy": [
+    {
+      "design": "ClC(C1CC1)C1(Cl)CCC(NC2CCOCC2)C1",
+      "reason": "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly"
+    },
+    {
+      "design": "N=c1[nH]c(-c2ccccc2Cl)nc2c1oc1ccc(Cl)cc12",
+      "reason": "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly"
+    }
+  ],
+  "expensive_calls": {
+    "Catalog": 0,
+    "EmbedMultipleConfs": 0,
+    "Rules": 0,
+    "_evidence_evaluator": 0,
+    "_provider": 0,
+    "constraints_from_config": 0,
+    "ensemble": 0,
+    "resolve_proposal": 0,
+    "score_candidate": 0,
+    "verify_route": 0
+  },
+  "frozen_campaign_code_files_unchanged": 39,
+  "hit": "O=c1[nH]c(-c2ccccc2Cl)nc2c1oc1ccc(Cl)cc12",
+  "hit_passes_unchanged_reference_policy": true,
+  "implementation_commit": "08c3774cf2e10bcc56a738a31cfe0ed0aa35b046",
+  "implementation_dirty": false,
+  "independent_full_suite": {
+    "command": "python -m pytest -q",
+    "environment": "Separate isolated CPU environment; no system site-packages",
+    "log_sha256": "f47ed49690f74fc6c8ca2e081602dc0b7aec9e97895270c532392d156d2f28ae",
+    "passed": 464,
+    "pip_check": "No broken requirements found",
+    "python": "3.10.12",
+    "rdkit": "2025.9.6",
+    "seconds": 86.86,
+    "skip_reason": "Optional oddt package absent: tests/test_descriptors.py:43",
+    "skipped": 1,
+    "torch": "2.8.0+cpu",
+    "transformers": "4.51.3"
+  },
+  "new_workflow_seconds": 3.8072333885356784,
+  "original_workflow_seconds": 282.9898447068408,
+  "result": "no_candidates",
+  "reviewed_behaviors": [
+    "Original canonical deduplication and max_designs cap precede reference eligibility, without backfill",
+    "Rejected designs do not consume provider, route evidence or 3D scoring budget",
+    "Mixed valid references keep results, poses and per-sample seeds",
+    "Carried graphs remain available but explicitly unverified when their design reference is rejected",
+    "2D scoring and explicit permissive stereo policy retain their behavior",
+    "No implicit stereoisomer assignment or conformer embedding during preflight"
+  ],
+  "schema_version": 1,
+  "scope": "Diagnostic replay of one retained all-invalid design set, with forbidden-call spies. No fresh model generation, no timing superiority claim, and no replacement of the frozen campaign outcome.",
+  "source_attempt": "pipeline / CHEMBL2147-query-2 / seed 43",
+  "source_manifest_sha256": "ad73504c18c141672bfc102445d56d3e2fe202c9808224398563dab4337d7ebb",
+  "source_summary_sha256": "e6eff9ca2909d303a92a4e104ade071fc1ceee3097de7e02b123c94eef873545",
+  "unused_asset_validation": "All-invalid runs do not initialize or validate unused catalog/rules/provider/evidence/pocket assets; manifest records assets_not_loaded and null hashes",
+  "workflow_sha256": "1681d5b6f36aa97c5ad9d00d23c28212223cab0c0a11f2f78701bb9f55e7a452"
+}
