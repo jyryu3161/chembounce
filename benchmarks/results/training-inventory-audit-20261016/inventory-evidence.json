@@ -1,0 +1,195 @@
+{
+  "assessed_utc": "2026-10-15T18:23:18.852406+00:00",
+  "local_evidence": [
+    {
+      "bytes": 70189,
+      "contents_bundled": false,
+      "path": "backup/synllama-reference/archive-listing.json",
+      "sha256": "361fcb19a070cb6fdf6d7c5e6ee4af9385d4232eaa0b13102ead028cef27ba3e"
+    },
+    {
+      "bytes": 933,
+      "contents_bundled": false,
+      "path": "backup/synllama-reference/archive-provenance.json",
+      "sha256": "1aae766f21c557a7a2ff0e76dcfb0d2d324d45a8920a71fa6791b5d44db61765"
+    },
+    {
+      "bytes": 2663,
+      "contents_bundled": false,
+      "path": "backup/synllama-reference/source/README.md",
+      "sha256": "451ab79a93b36b51f79ed351d72dea719f1f164a0a196f70f144cd40f26eea5c"
+    },
+    {
+      "bytes": 1208,
+      "contents_bundled": false,
+      "path": "backup/synllama-reference/source/LICENSE",
+      "sha256": "3925a07d8642ae2304fb318842ab6fa7034770ef7fa66a6010d7e2dc990970c0"
+    },
+    {
+      "bytes": 5762,
+      "contents_bundled": false,
+      "path": "backup/synllama-reference/source/assets/docs/inference_guide.md",
+      "sha256": "8d83a45899567f6d13ce4449f7138679b3748c253e96c5d9f1d68370731754ae"
+    },
+    {
+      "bytes": 5336,
+      "contents_bundled": false,
+      "path": "backup/synllama-reference/source/assets/docs/retraining_guide.md",
+      "sha256": "707faf437a9f9527fbe323c97f3490a310d1a3cce69c0a4239f1e6cb99b8b37f"
+    },
+    {
+      "bytes": 1583,
+      "contents_bundled": false,
+      "path": "backup/synllama-reference/source/synllama/llm/sft/synllama_sft.yml",
+      "sha256": "984e55930a44aa664acb7058583245fa82774db8b0649743d68fc69b024d9716"
+    }
+  ],
+  "overlap_interpretation": {
+    "audit": "post_hoc_partial_train_labelled_evaluation_sample",
+    "full_pretraining_independence": "unknown",
+    "negative_match_does_not_prove": "clean holdout or no leakage",
+    "positive_match_does_not_prove": "membership in exact2M checkpoint fine-tuning rows",
+    "positive_match_means": "membership in this upstream sample at stated identity level"
+  },
+  "public_export_policy": "Publish counts/procedure/URLs/hashes; retain molecule-bearing sample/row snapshots privately pending source-data redistribution terms.",
+  "publication_bundle": {
+    "fetched_document_bodies_included": false,
+    "original_evidence_sha256": "7b2861e48dbc0a22c46e5f3ad10543c8d5a72830e0d1fa4bc28ec0836f8c1e89",
+    "private_sample_and_snapshots_included": false
+  },
+  "reactiont5": {
+    "base_revision_used_by_checkpoint": "unrecorded in pinned model card",
+    "checkpoint": "sagawa/ReactionT5v2-forward",
+    "complete_checkpoint_training_inventory": "unknown",
+    "declared_base": "sagawa/CompoundT5",
+    "declared_training_stage": "ORD with USPTO-MIT test-reaction exclusions",
+    "license_declarations": {
+      "repository_and_checkpoint_card": "MIT",
+      "underlying_zinc_ord_records": "not inferred from code or model licenses",
+      "zinc_dataset_card": "Apache-2.0"
+    },
+    "ord": {
+      "author_url": "https://drive.google.com/file/d/1JozA2OlByfZ-ILt5H5YrTjLJvSvD8xdL/view",
+      "contents_verified": false,
+      "downloaded": false,
+      "name": "ORD.zip",
+      "postfilter_checkpoint_row_manifest_found": false,
+      "preview_reported_bytes": 233136954
+    },
+    "public_zinc_inventory": {
+      "all_parquet_bytes": 582020457,
+      "contents_verified": false,
+      "data_shards_downloaded": false,
+      "exact_forward_checkpoint_base_revision_association": "unverified",
+      "feasibility": "A later audit of this public dataset is feasible after shard download and LFS hash verification; does not cover ORD or establish exact checkpoint association",
+      "link_from_compoundt5_card": true,
+      "metadata_retained": true,
+      "repository": "sagawa/ZINC-canonicalized",
+      "revision": "5497e797c551617bc1d94a859e4f3429f3d0b32d",
+      "schema": {
+        "smiles": "string"
+      },
+      "train_parquet_bytes": 523819107,
+      "train_rows": 20693269,
+      "validation_rows": 2299253
+    },
+    "revision": "933114058cb2604dc1bf536dbebdfcefbe83d4fc",
+    "source_code_revision": "76eb08068e10fe255cae5d563a91e1c1e9abac54",
+    "weight_sha256": "69c23ca364e63e0e2be22d114652aad9f3df4e161d43936eee0dc3ce74a87fb7"
+  },
+  "sample_overlap_result": {
+    "all_evaluation_inputs": {
+      "exact": {
+        "assessed_rows": 19387,
+        "distinct": 5618,
+        "duplicate_rows": 13769,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 19387,
+        "distinct": 5616,
+        "duplicate_rows": 13771,
+        "matching_distinct": 0,
+        "matching_rows": 0,
+        "unassessed_rows": 0
+      },
+      "raw_distinct": 5618,
+      "role": "ALL",
+      "rows": 19387,
+      "source": "ALL"
+    },
+    "artifacts": {
+      "input-rows.private.json": {
+        "contents_bundled": false,
+        "original_local_relative_path": "sample-overlap-20261016/input-rows.private.json",
+        "sha256": "0d555f7b71b2041c7e4baae9b0357ac965ae9a9cfd5214ed21fd6835f56fa30a"
+      },
+      "overlap-aggregate.json": {
+        "contents_bundled": true,
+        "original_local_relative_path": "sample-overlap-20261016/overlap-aggregate.json",
+        "public_path": "aggregate.json",
+        "sha256": "8a629181ad23558d52ffef2400a069969f1f06d1f263f370f5186de78509a560"
+      },
+      "overlap.json": {
+        "contents_bundled": false,
+        "original_local_relative_path": "sample-overlap-20261016/overlap.json",
+        "sha256": "073240a8f8628b4e686cb060969494f85a4431fd067b0a046b4bc2e861c089ea"
+      }
+    },
+    "completed_utc": "2026-10-15T18:38:33.951776+00:00",
+    "sample": {
+      "empty_lines": 0,
+      "exact": {
+        "assessed_rows": 1000,
+        "distinct": 1000,
+        "duplicate_rows": 0,
+        "unassessed_rows": 0
+      },
+      "family": {
+        "assessed_rows": 928,
+        "distinct": 928,
+        "duplicate_rows": 0,
+        "unassessed_rows": 72
+      },
+      "lines": 1000,
+      "nonempty_rows": 1000,
+      "raw_distinct": 1000
+    },
+    "scope": "14 snapshot inputs; partial live campaigns; no exact-checkpoint holdout conclusion",
+    "source_count": 14
+  },
+  "schema": "checkpoint_training_inventory_evidence_v1",
+  "synllama": {
+    "base_pretraining_inventory": "unknown",
+    "checkpoint": "SynLlama-1B-2M-91rxns",
+    "code_revision": "57a98b658eae8ba4f6f1d04aa99c4f91da566fb0",
+    "full_finetuning_inventory": "not_established_from_inspected_primary_sources",
+    "license_declarations": {
+      "base_llama": "separate base model terms",
+      "figshare_release": "MIT",
+      "repository_LICENSE": "UC Regents educational, research and not-for-profit software/documentation terms",
+      "supporting_information": "CC BY-NC 4.0",
+      "underlying_enamine_data": "access required per retraining guide; no independent redistribution grant established"
+    },
+    "partial_sample": {
+      "archive": "synllama-data.tar.gz (locally retained archive; not bundled)",
+      "archive_bytes": 7773956257,
+      "archive_sha256": "d46ceb49c3e2949c6e65386187d07c8866852de93f20d710daebb57597acebed",
+      "association": "Upstream train-labelled evaluation sample; final paper Table1 and Supporting TableS1 describe1000 evaluation inputs per training source/template set",
+      "declared_bytes": 111240,
+      "exact_checkpoint_training_membership": "unverified",
+      "extracted_utc": "2026-10-15T18:27:13.723445+00:00",
+      "member": "./synllama-data/inference/smiles/syn-planning/1k_train_91rxns.smi",
+      "operation": "regular-member byte read only; no pickle deserialization",
+      "sample_bytes": 111240,
+      "sample_sha256": "fa00401f509a4b77d121f22824400aae63ecba48c665f9c46d4e9fbe9b7940ac",
+      "scope": "upstream train-labelled evaluation sample; exact-checkpoint membership unverified",
+      "source_url": "https://doi.org/10.6084/m9.figshare.28719125.v1"
+    },
+    "release_archive_sha256": "d46ceb49c3e2949c6e65386187d07c8866852de93f20d710daebb57597acebed",
+    "release_doi": "10.6084/m9.figshare.28719125.v1",
+    "weight_sha256": "4c85cf6e568b66f299cf235a3196a326fc7bebd41b8fb90be4c018ed5ea79781"
+  }
+}

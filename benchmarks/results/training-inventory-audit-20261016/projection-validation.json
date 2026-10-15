@@ -1,0 +1,107 @@
+{
+  "checked_utc": "2026-10-15T18:42:14.184528+00:00",
+  "checks": [
+    {
+      "kind": "panel",
+      "passed": true,
+      "projected_rows": 5579,
+      "source": "strict-scaffold-panel",
+      "source_bytes_unchanged": true
+    },
+    {
+      "kind": "controls",
+      "passed": true,
+      "projected_rows": 480,
+      "source": "strict-scaffold-scored-controls",
+      "source_bytes_unchanged": true
+    },
+    {
+      "kind": "generated_scores",
+      "passed": true,
+      "projected_rows": 285,
+      "source": "scaffold-rescored-generated",
+      "source_bytes_unchanged": false
+    },
+    {
+      "kind": "panel",
+      "passed": true,
+      "projected_rows": 5587,
+      "source": "strict-time-panel",
+      "source_bytes_unchanged": true
+    },
+    {
+      "kind": "controls",
+      "passed": true,
+      "projected_rows": 480,
+      "source": "strict-time-scored-controls",
+      "source_bytes_unchanged": true
+    },
+    {
+      "kind": "generated_scores",
+      "passed": true,
+      "projected_rows": 0,
+      "source": "time-rescored-generated",
+      "source_bytes_unchanged": true
+    },
+    {
+      "kind": "panel",
+      "passed": true,
+      "projected_rows": 5563,
+      "source": "strict-target-panel",
+      "source_bytes_unchanged": true
+    },
+    {
+      "kind": "controls",
+      "passed": true,
+      "projected_rows": 240,
+      "source": "strict-target-scored-controls",
+      "source_bytes_unchanged": true
+    },
+    {
+      "kind": "generated_scores",
+      "passed": true,
+      "projected_rows": 0,
+      "source": "target-rescored-generated",
+      "source_bytes_unchanged": true
+    },
+    {
+      "kind": "matched_panel",
+      "passed": true,
+      "projected_rows": 209,
+      "source": "assay-matched-panel",
+      "source_bytes_unchanged": true
+    },
+    {
+      "kind": "matched_pairs",
+      "passed": true,
+      "projected_rows": 394,
+      "source": "assay-matched-pairs",
+      "source_bytes_unchanged": true
+    },
+    {
+      "kind": "runs",
+      "passed": true,
+      "projected_rows": 348,
+      "source": "live-comparison-baselines",
+      "source_bytes_unchanged": false
+    },
+    {
+      "kind": "runs",
+      "passed": true,
+      "projected_rows": 30,
+      "source": "live-comparison-gpu0",
+      "source_bytes_unchanged": false
+    },
+    {
+      "kind": "runs",
+      "passed": true,
+      "projected_rows": 192,
+      "source": "live-comparison-gpu1",
+      "source_bytes_unchanged": false
+    }
+  ],
+  "passed": true,
+  "rows_checked": 19387,
+  "scope": "Independent field lookups and coverage checks; no audit projector imported. Immutable source bytes verified. Growing run sources checked against their retained first-N attempts, and growing rescore records against matching unique keys; those growing source full original bytes were not reconstructed.",
+  "snapshot_sha256": "0d555f7b71b2041c7e4baae9b0357ac965ae9a9cfd5214ed21fd6835f56fa30a"
+}

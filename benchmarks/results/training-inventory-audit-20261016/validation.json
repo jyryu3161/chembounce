@@ -1,0 +1,42 @@
+{
+  "fetched_document_hashes": {
+    "all_match": true,
+    "files": 33
+  },
+  "frozen_source_read_check": {
+    "all_match": true,
+    "files": 39
+  },
+  "helper_regressions": {
+    "independent_parent_rerun": "passed",
+    "scope": "synthetic software fixtures only",
+    "status": "passed",
+    "tests": 5
+  },
+  "independent_input_projection": {
+    "limitation": "Growing source files checked by retained attempts/unique keys; complete original growing-file bytes were not reconstructed.",
+    "report": "projection-validation.json",
+    "report_sha256": "d838157f01f4945c5fabe7c8cf06536b4b9e6cd4275c2413ebe5cf14743f0b1d",
+    "rows": 19387,
+    "sources": 14,
+    "status": "passed"
+  },
+  "independent_numerical_recomputation": {
+    "checked_utc": "2026-10-15T19:03:19.849539+00:00",
+    "group_level_checks": 100,
+    "limitation": "Family normalization reuses the existing versioned project identity policy; this is not independent validation of that chemical policy, full training-corpus coverage or checkpoint membership.",
+    "normalization_inputs": 6618,
+    "projected_rows": 19387,
+    "report": "numerical-validation.json",
+    "report_sha256": "3463f7e82ec5d2b77b42c96a1dc99e17519e376ec8dcecaf245dfe40ebf79d8f",
+    "scope": "Independent direct RDKit exact canonicalization and set/count aggregation; exact/family matches, sample-line provenance and public aggregate consistency checked without the audit helper normalization/count functions.",
+    "status": "passed"
+  },
+  "independent_provenance": {
+    "audit_and_identity_implementation_hashes_checked": 3,
+    "parent_report_sha256": "ad77ca9e3b660e975dd5316df76e6375eb26d388a9aeb00feddcd62c5fc5f755",
+    "scope": "Local retained source-document bytes and audit/identity implementation hashes; full training corpora not verified.",
+    "source_document_sha256_and_lengths_checked": 33,
+    "status": "passed"
+  }
+}

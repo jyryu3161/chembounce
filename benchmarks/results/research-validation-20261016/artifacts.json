@@ -34,8 +34,18 @@
     "results": "runner_signal_validation.json"
   },
   "observation_unit": "240 query-control pairs; 120 distinct target-family compound IDs, 119 distinct exact structures, reused across queries; 6 independent target groups",
+  "partial_training_sample_audit": {
+    "aggregate_sha256": "8a629181ad23558d52ffef2400a069969f1f06d1f263f370f5186de78509a560",
+    "artifact_manifest": "../training-inventory-audit-20261016/artifacts.json",
+    "artifact_manifest_sha256": "e8fb0a6dde40903c96a2378816447b4098176aecfa688ba18fa05b630efd826f",
+    "frozen_campaign_changed": false,
+    "numerical_validation_sha256": "3463f7e82ec5d2b77b42c96a1dc99e17519e376ec8dcecaf245dfe40ebf79d8f",
+    "results": "../training-inventory-audit-20261016/README.md",
+    "scope": "Post hoc 14-source read-time snapshot including 137 main-campaign runs; zero exact matches against 1,000 sample molecules and zero family matches against 928 assessable sample families; 72 family identities unassessed. Full checkpoint training inventory and exact sample membership remain unknown.",
+    "status": "partial_sample_audit_independently_recomputed"
+  },
   "published_compact_artifacts": {
-    "README.md": "3f94e947a7128f9876c715a57f83a2743f24f4e8f9556ddf2aa1cd7fded13200",
+    "README.md": "2f44f228976598c3991bf4744cde2d6b20cb0961e5319d6929304adaf164e309",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",

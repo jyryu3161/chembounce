@@ -1,0 +1,34 @@
+{
+  "aggregate_sha256": "8a629181ad23558d52ffef2400a069969f1f06d1f263f370f5186de78509a560",
+  "all": {
+    "exact": {
+      "assessed_rows": 19387,
+      "distinct": 5618,
+      "duplicate_rows": 13769,
+      "matching_distinct": 0,
+      "matching_rows": 0,
+      "unassessed_rows": 0
+    },
+    "family": {
+      "assessed_rows": 19387,
+      "distinct": 5616,
+      "duplicate_rows": 13771,
+      "matching_distinct": 0,
+      "matching_rows": 0,
+      "unassessed_rows": 0
+    },
+    "raw_distinct": 5618,
+    "role": "ALL",
+    "rows": 19387,
+    "source": "ALL"
+  },
+  "checked_utc": "2026-10-15T19:03:19.849539+00:00",
+  "group_level_checks": 100,
+  "matched_appearances": 0,
+  "normalization_inputs": 6618,
+  "passed": true,
+  "projected_rows": 19387,
+  "sample_sha256": "fa00401f509a4b77d121f22824400aae63ecba48c665f9c46d4e9fbe9b7940ac",
+  "scope": "Independent direct RDKit exact canonicalization and independent set/count aggregation. Family identity calls the existing versioned project policy. No use of the audit helper normalization/count functions. Nonmembership in a partial sample cannot establish clean checkpoint holdout.",
+  "snapshot_sha256": "0d555f7b71b2041c7e4baae9b0357ac965ae9a9cfd5214ed21fd6835f56fa30a"
+}
