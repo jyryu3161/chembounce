@@ -1,0 +1,2570 @@
+{
+  "controls": 240,
+  "distinct_compound_ids": 120,
+  "failed_3d_controls": 42,
+  "independent_metric_check": {
+    "errors": [],
+    "method": "sklearn ROC AUC and AP, independent missing-score extreme assignment",
+    "tolerance": 1e-12
+  },
+  "observation_unit": "query-control pair",
+  "paired_complete_case_scope": "All metrics evaluated on the same controls with all requested 3D seeds successful; empty paired query groups remain explicit. Complete-case performance can still be selection-biased.",
+  "prefilter_target_macro_recall": {
+    "ci95": [
+      0.011485603791444613,
+      0.05180256237465707
+    ],
+    "mean": 0.03162008747081994,
+    "targets": 6
+  },
+  "queries": [
+    {
+      "active_scaffolds": 44,
+      "complete_case_count": 19,
+      "controls": 20,
+      "failed_3d": 1,
+      "independent": {
+        "bit_tanimoto": {
+          "average_precision": 0.657750626566416,
+          "average_precision_bounds": [
+            0.657750626566416,
+            0.657750626566416
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.6150000000000001,
+          "roc_auc_bounds": [
+            0.6150000000000001,
+            0.6150000000000001
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.6610183770477888,
+          "average_precision_bounds": [
+            0.6610183770477888,
+            0.6610183770477888
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.58,
+          "roc_auc_bounds": [
+            0.58,
+            0.58
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.5979002479002478,
+          "average_precision_bounds": [
+            0.588110223110223,
+            0.6740751353909248
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.5444444444444445,
+          "roc_auc_bounds": [
+            0.49,
+            0.5900000000000001
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.5030603259447428,
+          "average_precision_bounds": [
+            0.5027542933502686,
+            0.5924111560953665
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.37777777777777777,
+          "roc_auc_bounds": [
+            0.34,
+            0.44
+          ]
+        },
+        "score": {
+          "average_precision": 0.5613210376368272,
+          "average_precision_bounds": [
+            0.5551889338731444,
+            0.6434355921855921
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.48888888888888893,
+          "roc_auc_bounds": [
+            0.44000000000000006,
+            0.54
+          ]
+        }
+      },
+      "paired_complete_case": {
+        "bit_tanimoto": {
+          "average_precision": 0.5758143091476424,
+          "average_precision_bounds": [
+            0.5758143091476424,
+            0.5758143091476424
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.5722222222222222,
+          "roc_auc_bounds": [
+            0.5722222222222222,
+            0.5722222222222222
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.581005051593287,
+          "average_precision_bounds": [
+            0.581005051593287,
+            0.581005051593287
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.5333333333333333,
+          "roc_auc_bounds": [
+            0.5333333333333333,
+            0.5333333333333333
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.5979002479002478,
+          "average_precision_bounds": [
+            0.5979002479002478,
+            0.5979002479002478
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.5444444444444445,
+          "roc_auc_bounds": [
+            0.5444444444444445,
+            0.5444444444444445
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.5030603259447428,
+          "average_precision_bounds": [
+            0.5030603259447428,
+            0.5030603259447428
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.37777777777777777,
+          "roc_auc_bounds": [
+            0.37777777777777777,
+            0.37777777777777777
+          ]
+        },
+        "score": {
+          "average_precision": 0.5613210376368272,
+          "average_precision_bounds": [
+            0.5613210376368272,
+            0.5613210376368272
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.48888888888888893,
+          "roc_auc_bounds": [
+            0.48888888888888893,
+            0.48888888888888893
+          ]
+        }
+      },
+      "prefilter_scaffold_recall": 0.022727272727272728,
+      "query_id": "CHEMBL203-query-1",
+      "surviving_scaffolds": 1,
+      "target_id": "CHEMBL203"
+    },
+    {
+      "active_scaffolds": 44,
+      "complete_case_count": 19,
+      "controls": 20,
+      "failed_3d": 1,
+      "independent": {
+        "bit_tanimoto": {
+          "average_precision": 0.5133953189912942,
+          "average_precision_bounds": [
+            0.5133953189912942,
+            0.5133953189912942
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.33,
+          "roc_auc_bounds": [
+            0.33,
+            0.33
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.5418116145979923,
+          "average_precision_bounds": [
+            0.5418116145979923,
+            0.5418116145979923
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.42999999999999994,
+          "roc_auc_bounds": [
+            0.42999999999999994,
+            0.42999999999999994
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.49943292574871523,
+          "average_precision_bounds": [
+            0.49948963317384365,
+            0.6048825684119802
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.4888888888888889,
+          "roc_auc_bounds": [
+            0.44000000000000006,
+            0.54
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.424485505703256,
+          "average_precision_bounds": [
+            0.43203695513293033,
+            0.5381602680944786
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.3222222222222222,
+          "roc_auc_bounds": [
+            0.29,
+            0.39
+          ]
+        },
+        "score": {
+          "average_precision": 0.42407700897122985,
+          "average_precision_bounds": [
+            0.43166930807410686,
+            0.537951680672269
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.34444444444444444,
+          "roc_auc_bounds": [
+            0.31000000000000005,
+            0.41
+          ]
+        }
+      },
+      "paired_complete_case": {
+        "bit_tanimoto": {
+          "average_precision": 0.5148836877681047,
+          "average_precision_bounds": [
+            0.5148836877681047,
+            0.5148836877681047
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.3666666666666667,
+          "roc_auc_bounds": [
+            0.3666666666666667,
+            0.3666666666666667
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.5402926322043968,
+          "average_precision_bounds": [
+            0.5402926322043968,
+            0.5402926322043968
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.45555555555555555,
+          "roc_auc_bounds": [
+            0.45555555555555555,
+            0.45555555555555555
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.49943292574871523,
+          "average_precision_bounds": [
+            0.49943292574871523,
+            0.49943292574871523
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.4888888888888889,
+          "roc_auc_bounds": [
+            0.4888888888888889,
+            0.4888888888888889
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.424485505703256,
+          "average_precision_bounds": [
+            0.424485505703256,
+            0.424485505703256
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.3222222222222222,
+          "roc_auc_bounds": [
+            0.3222222222222222,
+            0.3222222222222222
+          ]
+        },
+        "score": {
+          "average_precision": 0.42407700897122985,
+          "average_precision_bounds": [
+            0.42407700897122985,
+            0.42407700897122985
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.34444444444444444,
+          "roc_auc_bounds": [
+            0.34444444444444444,
+            0.34444444444444444
+          ]
+        }
+      },
+      "prefilter_scaffold_recall": 0.0,
+      "query_id": "CHEMBL203-query-2",
+      "surviving_scaffolds": 0,
+      "target_id": "CHEMBL203"
+    },
+    {
+      "active_scaffolds": 72,
+      "complete_case_count": 16,
+      "controls": 20,
+      "failed_3d": 4,
+      "independent": {
+        "bit_tanimoto": {
+          "average_precision": 0.755187356503146,
+          "average_precision_bounds": [
+            0.755187356503146,
+            0.755187356503146
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.7200000000000001,
+          "roc_auc_bounds": [
+            0.7200000000000001,
+            0.7200000000000001
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.7578083028083027,
+          "average_precision_bounds": [
+            0.7578083028083027,
+            0.7578083028083027
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.7150000000000001,
+          "roc_auc_bounds": [
+            0.7150000000000001,
+            0.7150000000000001
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.7583333333333333,
+          "average_precision_bounds": [
+            0.6549999999999999,
+            0.9013888888888889
+          ],
+          "missing": 4,
+          "observed": 16,
+          "roc_auc": 0.75,
+          "roc_auc_bounds": [
+            0.45,
+            0.8500000000000001
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.5877136752136752,
+          "average_precision_bounds": [
+            0.5526282051282051,
+            0.8357189542483661
+          ],
+          "missing": 4,
+          "observed": 16,
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.36000000000000004,
+            0.76
+          ]
+        },
+        "score": {
+          "average_precision": 0.666880341880342,
+          "average_precision_bounds": [
+            0.6001282051282051,
+            0.8676759300211312
+          ],
+          "missing": 4,
+          "observed": 16,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.4,
+            0.8
+          ]
+        }
+      },
+      "paired_complete_case": {
+        "bit_tanimoto": {
+          "average_precision": 0.7037037037037036,
+          "average_precision_bounds": [
+            0.7037037037037036,
+            0.7037037037037036
+          ],
+          "missing": 0,
+          "observed": 16,
+          "roc_auc": 0.7333333333333333,
+          "roc_auc_bounds": [
+            0.7333333333333333,
+            0.7333333333333333
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.7450396825396826,
+          "average_precision_bounds": [
+            0.7450396825396826,
+            0.7450396825396826
+          ],
+          "missing": 0,
+          "observed": 16,
+          "roc_auc": 0.7666666666666666,
+          "roc_auc_bounds": [
+            0.7666666666666666,
+            0.7666666666666666
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.7583333333333333,
+          "average_precision_bounds": [
+            0.7583333333333333,
+            0.7583333333333333
+          ],
+          "missing": 0,
+          "observed": 16,
+          "roc_auc": 0.75,
+          "roc_auc_bounds": [
+            0.75,
+            0.75
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.5877136752136752,
+          "average_precision_bounds": [
+            0.5877136752136752,
+            0.5877136752136752
+          ],
+          "missing": 0,
+          "observed": 16,
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.6,
+            0.6
+          ]
+        },
+        "score": {
+          "average_precision": 0.666880341880342,
+          "average_precision_bounds": [
+            0.666880341880342,
+            0.666880341880342
+          ],
+          "missing": 0,
+          "observed": 16,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ]
+        }
+      },
+      "prefilter_scaffold_recall": 0.041666666666666664,
+      "query_id": "CHEMBL205-query-1",
+      "surviving_scaffolds": 3,
+      "target_id": "CHEMBL205"
+    },
+    {
+      "active_scaffolds": 72,
+      "complete_case_count": 0,
+      "controls": 20,
+      "failed_3d": 20,
+      "independent": {
+        "bit_tanimoto": {
+          "average_precision": 0.760484975550765,
+          "average_precision_bounds": [
+            0.760484975550765,
+            0.760484975550765
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.7000000000000001,
+          "roc_auc_bounds": [
+            0.7000000000000001,
+            0.7000000000000001
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.7787752525252525,
+          "average_precision_bounds": [
+            0.7787752525252525,
+            0.7787752525252525
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.7,
+          "roc_auc_bounds": [
+            0.7,
+            0.7
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": null,
+          "average_precision_bounds": [
+            0.5,
+            1.0
+          ],
+          "missing": 20,
+          "observed": 0,
+          "roc_auc": null,
+          "roc_auc_bounds": [
+            0.0,
+            1.0
+          ]
+        },
+        "hit_shape": {
+          "average_precision": null,
+          "average_precision_bounds": [
+            0.5,
+            1.0
+          ],
+          "missing": 20,
+          "observed": 0,
+          "roc_auc": null,
+          "roc_auc_bounds": [
+            0.0,
+            1.0
+          ]
+        },
+        "score": {
+          "average_precision": null,
+          "average_precision_bounds": [
+            0.5,
+            1.0
+          ],
+          "missing": 20,
+          "observed": 0,
+          "roc_auc": null,
+          "roc_auc_bounds": [
+            0.0,
+            1.0
+          ]
+        }
+      },
+      "paired_complete_case": {
+        "bit_tanimoto": {
+          "average_precision": null,
+          "average_precision_bounds": [
+            null,
+            null
+          ],
+          "missing": 0,
+          "observed": 0,
+          "roc_auc": null,
+          "roc_auc_bounds": [
+            null,
+            null
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": null,
+          "average_precision_bounds": [
+            null,
+            null
+          ],
+          "missing": 0,
+          "observed": 0,
+          "roc_auc": null,
+          "roc_auc_bounds": [
+            null,
+            null
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": null,
+          "average_precision_bounds": [
+            null,
+            null
+          ],
+          "missing": 0,
+          "observed": 0,
+          "roc_auc": null,
+          "roc_auc_bounds": [
+            null,
+            null
+          ]
+        },
+        "hit_shape": {
+          "average_precision": null,
+          "average_precision_bounds": [
+            null,
+            null
+          ],
+          "missing": 0,
+          "observed": 0,
+          "roc_auc": null,
+          "roc_auc_bounds": [
+            null,
+            null
+          ]
+        },
+        "score": {
+          "average_precision": null,
+          "average_precision_bounds": [
+            null,
+            null
+          ],
+          "missing": 0,
+          "observed": 0,
+          "roc_auc": null,
+          "roc_auc_bounds": [
+            null,
+            null
+          ]
+        }
+      },
+      "prefilter_scaffold_recall": 0.0,
+      "query_id": "CHEMBL205-query-2",
+      "surviving_scaffolds": 0,
+      "target_id": "CHEMBL205"
+    },
+    {
+      "active_scaffolds": 76,
+      "complete_case_count": 20,
+      "controls": 20,
+      "failed_3d": 0,
+      "independent": {
+        "bit_tanimoto": {
+          "average_precision": 0.6910075545369663,
+          "average_precision_bounds": [
+            0.6910075545369663,
+            0.6910075545369663
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.65,
+          "roc_auc_bounds": [
+            0.65,
+            0.65
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.5651092861386979,
+          "average_precision_bounds": [
+            0.5651092861386979,
+            0.5651092861386979
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.6000000000000001,
+          "roc_auc_bounds": [
+            0.6000000000000001,
+            0.6000000000000001
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.8459967320261438,
+          "average_precision_bounds": [
+            0.8459967320261438,
+            0.8459967320261438
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.75,
+          "roc_auc_bounds": [
+            0.75,
+            0.75
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.5177566877566878,
+          "average_precision_bounds": [
+            0.5177566877566878,
+            0.5177566877566878
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.5,
+          "roc_auc_bounds": [
+            0.5,
+            0.5
+          ]
+        },
+        "score": {
+          "average_precision": 0.7747149122807017,
+          "average_precision_bounds": [
+            0.7747149122807017,
+            0.7747149122807017
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.7100000000000001,
+          "roc_auc_bounds": [
+            0.7100000000000001,
+            0.7100000000000001
+          ]
+        }
+      },
+      "paired_complete_case": {
+        "bit_tanimoto": {
+          "average_precision": 0.6910075545369663,
+          "average_precision_bounds": [
+            0.6910075545369663,
+            0.6910075545369663
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.65,
+          "roc_auc_bounds": [
+            0.65,
+            0.65
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.5651092861386979,
+          "average_precision_bounds": [
+            0.5651092861386979,
+            0.5651092861386979
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.6000000000000001,
+          "roc_auc_bounds": [
+            0.6000000000000001,
+            0.6000000000000001
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.8459967320261438,
+          "average_precision_bounds": [
+            0.8459967320261438,
+            0.8459967320261438
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.75,
+          "roc_auc_bounds": [
+            0.75,
+            0.75
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.5177566877566878,
+          "average_precision_bounds": [
+            0.5177566877566878,
+            0.5177566877566878
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.5,
+          "roc_auc_bounds": [
+            0.5,
+            0.5
+          ]
+        },
+        "score": {
+          "average_precision": 0.7747149122807017,
+          "average_precision_bounds": [
+            0.7747149122807017,
+            0.7747149122807017
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.7100000000000001,
+          "roc_auc_bounds": [
+            0.7100000000000001,
+            0.7100000000000001
+          ]
+        }
+      },
+      "prefilter_scaffold_recall": 0.0,
+      "query_id": "CHEMBL2147-query-1",
+      "surviving_scaffolds": 0,
+      "target_id": "CHEMBL2147"
+    },
+    {
+      "active_scaffolds": 76,
+      "complete_case_count": 20,
+      "controls": 20,
+      "failed_3d": 0,
+      "independent": {
+        "bit_tanimoto": {
+          "average_precision": 0.870962370962371,
+          "average_precision_bounds": [
+            0.870962370962371,
+            0.870962370962371
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.84,
+          "roc_auc_bounds": [
+            0.84,
+            0.84
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.7590133477633477,
+          "average_precision_bounds": [
+            0.7590133477633477,
+            0.7590133477633477
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.7,
+          "roc_auc_bounds": [
+            0.7,
+            0.7
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.6215525702367807,
+          "average_precision_bounds": [
+            0.6215525702367807,
+            0.6215525702367807
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.44000000000000006,
+          "roc_auc_bounds": [
+            0.44000000000000006,
+            0.44000000000000006
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.7390476190476191,
+          "average_precision_bounds": [
+            0.7390476190476191,
+            0.7390476190476191
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.71,
+          "roc_auc_bounds": [
+            0.71,
+            0.71
+          ]
+        },
+        "score": {
+          "average_precision": 0.7102111338953443,
+          "average_precision_bounds": [
+            0.7102111338953443,
+            0.7102111338953443
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.59,
+          "roc_auc_bounds": [
+            0.59,
+            0.59
+          ]
+        }
+      },
+      "paired_complete_case": {
+        "bit_tanimoto": {
+          "average_precision": 0.870962370962371,
+          "average_precision_bounds": [
+            0.870962370962371,
+            0.870962370962371
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.84,
+          "roc_auc_bounds": [
+            0.84,
+            0.84
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.7590133477633477,
+          "average_precision_bounds": [
+            0.7590133477633477,
+            0.7590133477633477
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.7,
+          "roc_auc_bounds": [
+            0.7,
+            0.7
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.6215525702367807,
+          "average_precision_bounds": [
+            0.6215525702367807,
+            0.6215525702367807
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.44000000000000006,
+          "roc_auc_bounds": [
+            0.44000000000000006,
+            0.44000000000000006
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.7390476190476191,
+          "average_precision_bounds": [
+            0.7390476190476191,
+            0.7390476190476191
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.71,
+          "roc_auc_bounds": [
+            0.71,
+            0.71
+          ]
+        },
+        "score": {
+          "average_precision": 0.7102111338953443,
+          "average_precision_bounds": [
+            0.7102111338953443,
+            0.7102111338953443
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.59,
+          "roc_auc_bounds": [
+            0.59,
+            0.59
+          ]
+        }
+      },
+      "prefilter_scaffold_recall": 0.013157894736842105,
+      "query_id": "CHEMBL2147-query-2",
+      "surviving_scaffolds": 1,
+      "target_id": "CHEMBL2147"
+    },
+    {
+      "active_scaffolds": 82,
+      "complete_case_count": 14,
+      "controls": 20,
+      "failed_3d": 6,
+      "independent": {
+        "bit_tanimoto": {
+          "average_precision": 0.7976587301587301,
+          "average_precision_bounds": [
+            0.7976587301587301,
+            0.7976587301587301
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.79,
+          "roc_auc_bounds": [
+            0.79,
+            0.79
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.7886002886002885,
+          "average_precision_bounds": [
+            0.7886002886002885,
+            0.7886002886002885
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.76,
+          "roc_auc_bounds": [
+            0.76,
+            0.76
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.6876373626373626,
+          "average_precision_bounds": [
+            0.3800441715147597,
+            0.7542199467199467
+          ],
+          "missing": 6,
+          "observed": 14,
+          "roc_auc": 0.4888888888888889,
+          "roc_auc_bounds": [
+            0.21999999999999997,
+            0.77
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.8317340067340069,
+          "average_precision_bounds": [
+            0.4152405489247594,
+            0.8671031746031745
+          ],
+          "missing": 6,
+          "observed": 14,
+          "roc_auc": 0.7111111111111111,
+          "roc_auc_bounds": [
+            0.32000000000000006,
+            0.87
+          ]
+        },
+        "score": {
+          "average_precision": 0.7407999407999408,
+          "average_precision_bounds": [
+            0.39585081585081583,
+            0.7983621933621934
+          ],
+          "missing": 6,
+          "observed": 14,
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.27,
+            0.8200000000000001
+          ]
+        }
+      },
+      "paired_complete_case": {
+        "bit_tanimoto": {
+          "average_precision": 0.8168430335097003,
+          "average_precision_bounds": [
+            0.8168430335097003,
+            0.8168430335097003
+          ],
+          "missing": 0,
+          "observed": 14,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.8087622254288922,
+          "average_precision_bounds": [
+            0.8087622254288922,
+            0.8087622254288922
+          ],
+          "missing": 0,
+          "observed": 14,
+          "roc_auc": 0.6444444444444444,
+          "roc_auc_bounds": [
+            0.6444444444444444,
+            0.6444444444444444
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.6876373626373626,
+          "average_precision_bounds": [
+            0.6876373626373626,
+            0.6876373626373626
+          ],
+          "missing": 0,
+          "observed": 14,
+          "roc_auc": 0.4888888888888889,
+          "roc_auc_bounds": [
+            0.4888888888888889,
+            0.4888888888888889
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.8317340067340069,
+          "average_precision_bounds": [
+            0.8317340067340069,
+            0.8317340067340069
+          ],
+          "missing": 0,
+          "observed": 14,
+          "roc_auc": 0.7111111111111111,
+          "roc_auc_bounds": [
+            0.7111111111111111,
+            0.7111111111111111
+          ]
+        },
+        "score": {
+          "average_precision": 0.7407999407999408,
+          "average_precision_bounds": [
+            0.7407999407999408,
+            0.7407999407999408
+          ],
+          "missing": 0,
+          "observed": 14,
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.6,
+            0.6
+          ]
+        }
+      },
+      "prefilter_scaffold_recall": 0.012195121951219513,
+      "query_id": "CHEMBL220-query-1",
+      "surviving_scaffolds": 1,
+      "target_id": "CHEMBL220"
+    },
+    {
+      "active_scaffolds": 82,
+      "complete_case_count": 14,
+      "controls": 20,
+      "failed_3d": 6,
+      "independent": {
+        "bit_tanimoto": {
+          "average_precision": 0.7737959701117595,
+          "average_precision_bounds": [
+            0.7737959701117595,
+            0.7737959701117595
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.76,
+          "roc_auc_bounds": [
+            0.76,
+            0.76
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.8277777777777777,
+          "average_precision_bounds": [
+            0.8277777777777777,
+            0.8277777777777777
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.77,
+          "roc_auc_bounds": [
+            0.77,
+            0.77
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.8741943241943244,
+          "average_precision_bounds": [
+            0.42224492827434,
+            0.8978646353646353
+          ],
+          "missing": 6,
+          "observed": 14,
+          "roc_auc": 0.7555555555555555,
+          "roc_auc_bounds": [
+            0.33999999999999997,
+            0.89
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.897530864197531,
+          "average_precision_bounds": [
+            0.4296108956403074,
+            0.9165190365190365
+          ],
+          "missing": 6,
+          "observed": 14,
+          "roc_auc": 0.8,
+          "roc_auc_bounds": [
+            0.36,
+            0.9099999999999999
+          ]
+        },
+        "score": {
+          "average_precision": 0.8870731120731121,
+          "average_precision_bounds": [
+            0.43162212787212784,
+            0.910588023088023
+          ],
+          "missing": 6,
+          "observed": 14,
+          "roc_auc": 0.8222222222222222,
+          "roc_auc_bounds": [
+            0.37000000000000005,
+            0.9200000000000002
+          ]
+        }
+      },
+      "paired_complete_case": {
+        "bit_tanimoto": {
+          "average_precision": 0.8093745760412427,
+          "average_precision_bounds": [
+            0.8093745760412427,
+            0.8093745760412427
+          ],
+          "missing": 0,
+          "observed": 14,
+          "roc_auc": 0.6888888888888889,
+          "roc_auc_bounds": [
+            0.6888888888888889,
+            0.6888888888888889
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.8484848484848486,
+          "average_precision_bounds": [
+            0.8484848484848486,
+            0.8484848484848486
+          ],
+          "missing": 0,
+          "observed": 14,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.8741943241943244,
+          "average_precision_bounds": [
+            0.8741943241943244,
+            0.8741943241943244
+          ],
+          "missing": 0,
+          "observed": 14,
+          "roc_auc": 0.7555555555555555,
+          "roc_auc_bounds": [
+            0.7555555555555555,
+            0.7555555555555555
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.897530864197531,
+          "average_precision_bounds": [
+            0.897530864197531,
+            0.897530864197531
+          ],
+          "missing": 0,
+          "observed": 14,
+          "roc_auc": 0.8,
+          "roc_auc_bounds": [
+            0.8,
+            0.8
+          ]
+        },
+        "score": {
+          "average_precision": 0.8870731120731121,
+          "average_precision_bounds": [
+            0.8870731120731121,
+            0.8870731120731121
+          ],
+          "missing": 0,
+          "observed": 14,
+          "roc_auc": 0.8222222222222222,
+          "roc_auc_bounds": [
+            0.8222222222222222,
+            0.8222222222222222
+          ]
+        }
+      },
+      "prefilter_scaffold_recall": 0.012195121951219513,
+      "query_id": "CHEMBL220-query-2",
+      "surviving_scaffolds": 1,
+      "target_id": "CHEMBL220"
+    },
+    {
+      "active_scaffolds": 187,
+      "complete_case_count": 19,
+      "controls": 20,
+      "failed_3d": 1,
+      "independent": {
+        "bit_tanimoto": {
+          "average_precision": 0.6525961538461538,
+          "average_precision_bounds": [
+            0.6525961538461538,
+            0.6525961538461538
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.575,
+          "roc_auc_bounds": [
+            0.575,
+            0.575
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.8219444444444444,
+          "average_precision_bounds": [
+            0.8219444444444444,
+            0.8219444444444444
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.8049999999999999,
+          "roc_auc_bounds": [
+            0.8049999999999999,
+            0.8049999999999999
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.5231762065095398,
+          "average_precision_bounds": [
+            0.5208585858585858,
+            0.6247322122322122
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.611111111111111,
+          "roc_auc_bounds": [
+            0.55,
+            0.6499999999999999
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.8774691358024693,
+          "average_precision_bounds": [
+            0.8397222222222221,
+            0.9021031746031746
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.8888888888888888,
+          "roc_auc_bounds": [
+            0.8,
+            0.9
+          ]
+        },
+        "score": {
+          "average_precision": 0.5925222925222926,
+          "average_precision_bounds": [
+            0.5832700632700633,
+            0.6865476190476191
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.6888888888888889,
+          "roc_auc_bounds": [
+            0.6200000000000001,
+            0.72
+          ]
+        }
+      },
+      "paired_complete_case": {
+        "bit_tanimoto": {
+          "average_precision": 0.6596828609986505,
+          "average_precision_bounds": [
+            0.6596828609986505,
+            0.6596828609986505
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.6055555555555556,
+          "roc_auc_bounds": [
+            0.6055555555555556,
+            0.6055555555555556
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.8184303350970017,
+          "average_precision_bounds": [
+            0.8184303350970017,
+            0.8184303350970017
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.8055555555555556,
+          "roc_auc_bounds": [
+            0.8055555555555556,
+            0.8055555555555556
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.5231762065095398,
+          "average_precision_bounds": [
+            0.5231762065095398,
+            0.5231762065095398
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.611111111111111,
+          "roc_auc_bounds": [
+            0.611111111111111,
+            0.611111111111111
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.8774691358024693,
+          "average_precision_bounds": [
+            0.8774691358024693,
+            0.8774691358024693
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.8888888888888888,
+          "roc_auc_bounds": [
+            0.8888888888888888,
+            0.8888888888888888
+          ]
+        },
+        "score": {
+          "average_precision": 0.5925222925222926,
+          "average_precision_bounds": [
+            0.5925222925222926,
+            0.5925222925222926
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.6888888888888889,
+          "roc_auc_bounds": [
+            0.6888888888888889,
+            0.6888888888888889
+          ]
+        }
+      },
+      "prefilter_scaffold_recall": 0.09090909090909091,
+      "query_id": "CHEMBL251-query-1",
+      "surviving_scaffolds": 17,
+      "target_id": "CHEMBL251"
+    },
+    {
+      "active_scaffolds": 187,
+      "complete_case_count": 19,
+      "controls": 20,
+      "failed_3d": 1,
+      "independent": {
+        "bit_tanimoto": {
+          "average_precision": 0.6019755682913577,
+          "average_precision_bounds": [
+            0.6019755682913577,
+            0.6019755682913577
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.54,
+          "roc_auc_bounds": [
+            0.54,
+            0.54
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.6994822282980178,
+          "average_precision_bounds": [
+            0.6994822282980178,
+            0.6994822282980178
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.66,
+          "roc_auc_bounds": [
+            0.66,
+            0.66
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.49704879027634447,
+          "average_precision_bounds": [
+            0.49734391124871,
+            0.5868616595822478
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.36666666666666664,
+          "roc_auc_bounds": [
+            0.32999999999999996,
+            0.43
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.44597512719287746,
+          "average_precision_bounds": [
+            0.4513776144735897,
+            0.5387771512113617
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.2444444444444444,
+          "roc_auc_bounds": [
+            0.22,
+            0.31999999999999995
+          ]
+        },
+        "score": {
+          "average_precision": 0.4606783161607723,
+          "average_precision_bounds": [
+            0.4646104845446951,
+            0.5530024194072182
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.2777777777777778,
+          "roc_auc_bounds": [
+            0.25,
+            0.35
+          ]
+        }
+      },
+      "paired_complete_case": {
+        "bit_tanimoto": {
+          "average_precision": 0.5991777285894933,
+          "average_precision_bounds": [
+            0.5991777285894933,
+            0.5991777285894933
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.5555555555555556,
+          "roc_auc_bounds": [
+            0.5555555555555556,
+            0.5555555555555556
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.6974664224664224,
+          "average_precision_bounds": [
+            0.6974664224664224,
+            0.6974664224664224
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.49704879027634447,
+          "average_precision_bounds": [
+            0.49704879027634447,
+            0.49704879027634447
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.36666666666666664,
+          "roc_auc_bounds": [
+            0.36666666666666664,
+            0.36666666666666664
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.44597512719287746,
+          "average_precision_bounds": [
+            0.44597512719287746,
+            0.44597512719287746
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.2444444444444444,
+          "roc_auc_bounds": [
+            0.2444444444444444,
+            0.2444444444444444
+          ]
+        },
+        "score": {
+          "average_precision": 0.4606783161607723,
+          "average_precision_bounds": [
+            0.4606783161607723,
+            0.4606783161607723
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.2777777777777778,
+          "roc_auc_bounds": [
+            0.2777777777777778,
+            0.2777777777777778
+          ]
+        }
+      },
+      "prefilter_scaffold_recall": 0.0481283422459893,
+      "query_id": "CHEMBL251-query-2",
+      "surviving_scaffolds": 9,
+      "target_id": "CHEMBL251"
+    },
+    {
+      "active_scaffolds": 65,
+      "complete_case_count": 19,
+      "controls": 20,
+      "failed_3d": 1,
+      "independent": {
+        "bit_tanimoto": {
+          "average_precision": 0.6782341269841271,
+          "average_precision_bounds": [
+            0.6782341269841271,
+            0.6782341269841271
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.69,
+          "roc_auc_bounds": [
+            0.69,
+            0.69
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.5921916533758639,
+          "average_precision_bounds": [
+            0.5921916533758639,
+            0.5921916533758639
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.48000000000000004,
+          "roc_auc_bounds": [
+            0.48000000000000004,
+            0.48000000000000004
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.42518186816432435,
+          "average_precision_bounds": [
+            0.43266368134789185,
+            0.5382192369034474
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.33333333333333337,
+          "roc_auc_bounds": [
+            0.30000000000000004,
+            0.4
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.4434008496185999,
+          "average_precision_bounds": [
+            0.44906076465673983,
+            0.5364508745468497
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.23333333333333334,
+          "roc_auc_bounds": [
+            0.21000000000000002,
+            0.31
+          ]
+        },
+        "score": {
+          "average_precision": 0.42335515457290485,
+          "average_precision_bounds": [
+            0.4310196391156143,
+            0.5364136813478918
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.3,
+          "roc_auc_bounds": [
+            0.27,
+            0.37
+          ]
+        }
+      },
+      "paired_complete_case": {
+        "bit_tanimoto": {
+          "average_precision": 0.6458605664488017,
+          "average_precision_bounds": [
+            0.6458605664488017,
+            0.6458605664488017
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.6666666666666666,
+          "roc_auc_bounds": [
+            0.6666666666666666,
+            0.6666666666666666
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.5588770400947903,
+          "average_precision_bounds": [
+            0.5588770400947903,
+            0.5588770400947903
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.4444444444444444,
+          "roc_auc_bounds": [
+            0.4444444444444444,
+            0.4444444444444444
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.42518186816432435,
+          "average_precision_bounds": [
+            0.42518186816432435,
+            0.42518186816432435
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.33333333333333337,
+          "roc_auc_bounds": [
+            0.33333333333333337,
+            0.33333333333333337
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.4434008496185999,
+          "average_precision_bounds": [
+            0.4434008496185999,
+            0.4434008496185999
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.23333333333333334,
+          "roc_auc_bounds": [
+            0.23333333333333334,
+            0.23333333333333334
+          ]
+        },
+        "score": {
+          "average_precision": 0.42335515457290485,
+          "average_precision_bounds": [
+            0.42335515457290485,
+            0.42335515457290485
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.3,
+          "roc_auc_bounds": [
+            0.3,
+            0.3
+          ]
+        }
+      },
+      "prefilter_scaffold_recall": 0.015384615384615385,
+      "query_id": "CHEMBL2637-query-1",
+      "surviving_scaffolds": 1,
+      "target_id": "CHEMBL2637"
+    },
+    {
+      "active_scaffolds": 65,
+      "complete_case_count": 19,
+      "controls": 20,
+      "failed_3d": 1,
+      "independent": {
+        "bit_tanimoto": {
+          "average_precision": 0.5944830118282131,
+          "average_precision_bounds": [
+            0.5944830118282131,
+            0.5944830118282131
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.6,
+          "roc_auc_bounds": [
+            0.6,
+            0.6
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.6019206232364127,
+          "average_precision_bounds": [
+            0.6019206232364127,
+            0.6019206232364127
+          ],
+          "missing": 0,
+          "observed": 20,
+          "roc_auc": 0.5800000000000001,
+          "roc_auc_bounds": [
+            0.5800000000000001,
+            0.5800000000000001
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.5422259352083914,
+          "average_precision_bounds": [
+            0.5380033416875522,
+            0.6279749417249417
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.48888888888888893,
+          "roc_auc_bounds": [
+            0.44000000000000006,
+            0.54
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.5210853474011369,
+          "average_precision_bounds": [
+            0.5189768126610231,
+            0.624345238095238
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.5111111111111111,
+          "roc_auc_bounds": [
+            0.4600000000000001,
+            0.56
+          ]
+        },
+        "score": {
+          "average_precision": 0.5679584361859904,
+          "average_precision_bounds": [
+            0.5611625925673913,
+            0.6471381886087768
+          ],
+          "missing": 1,
+          "observed": 19,
+          "roc_auc": 0.4444444444444444,
+          "roc_auc_bounds": [
+            0.4,
+            0.5
+          ]
+        }
+      },
+      "paired_complete_case": {
+        "bit_tanimoto": {
+          "average_precision": 0.5728395061728395,
+          "average_precision_bounds": [
+            0.5728395061728395,
+            0.5728395061728395
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.5888888888888888,
+          "roc_auc_bounds": [
+            0.5888888888888888,
+            0.5888888888888888
+          ]
+        },
+        "count_tanimoto": {
+          "average_precision": 0.594880174291939,
+          "average_precision_bounds": [
+            0.594880174291939,
+            0.594880174291939
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.5888888888888889,
+          "roc_auc_bounds": [
+            0.5888888888888889,
+            0.5888888888888889
+          ]
+        },
+        "hit_pharmacophore": {
+          "average_precision": 0.5422259352083914,
+          "average_precision_bounds": [
+            0.5422259352083914,
+            0.5422259352083914
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.48888888888888893,
+          "roc_auc_bounds": [
+            0.48888888888888893,
+            0.48888888888888893
+          ]
+        },
+        "hit_shape": {
+          "average_precision": 0.5210853474011369,
+          "average_precision_bounds": [
+            0.5210853474011369,
+            0.5210853474011369
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.5111111111111111,
+          "roc_auc_bounds": [
+            0.5111111111111111,
+            0.5111111111111111
+          ]
+        },
+        "score": {
+          "average_precision": 0.5679584361859904,
+          "average_precision_bounds": [
+            0.5679584361859904,
+            0.5679584361859904
+          ],
+          "missing": 0,
+          "observed": 19,
+          "roc_auc": 0.4444444444444444,
+          "roc_auc_bounds": [
+            0.4444444444444444,
+            0.4444444444444444
+          ]
+        }
+      },
+      "prefilter_scaffold_recall": 0.12307692307692308,
+      "query_id": "CHEMBL2637-query-2",
+      "surviving_scaffolds": 8,
+      "target_id": "CHEMBL2637"
+    }
+  ],
+  "scope": "Retrospective discrimination and prefilter audit on a capped balanced active/inactive control sample; not deployment prevalence or calibrated activity probability",
+  "source_sha256": {
+    "control_scores.json": "4c1496c8391dd3440094dea672b63db5446f12e5e42d9183a2533a72e3481c87",
+    "control_summary.json": "ad5d9aa4db1e9f8bb5afecbe0e0b5d8367a188d2e409607f6a8146f1b39c5827"
+  },
+  "target_macro_metrics": {
+    "bit_tanimoto": {
+      "average_precision_all_control_bounds": [
+        0.6956276470276083,
+        0.6956276470276083
+      ],
+      "average_precision_paired_complete_case": {
+        "ci95": [
+          0.6059553384574884,
+          0.7555608528484345
+        ],
+        "mean": 0.6803211334652683,
+        "targets": 6
+      },
+      "average_precision_success_conditional": {
+        "ci95": [
+          0.6312120371959768,
+          0.7553936247647548
+        ],
+        "mean": 0.6956276470276083,
+        "targets": 6
+      },
+      "roc_auc_all_control_bounds": [
+        0.6508333333333334,
+        0.6508333333333334
+      ],
+      "roc_auc_paired_complete_case": {
+        "ci95": [
+          0.5583333333333333,
+          0.7103703703703704
+        ],
+        "mean": 0.6389814814814815,
+        "targets": 6
+      },
+      "roc_auc_success_conditional": {
+        "ci95": [
+          0.5604166666666667,
+          0.7324999999999999
+        ],
+        "mean": 0.6508333333333334,
+        "targets": 6
+      }
+    },
+    "count_tanimoto": {
+      "average_precision_all_control_bounds": [
+        0.699621099717849,
+        0.699621099717849
+      ],
+      "average_precision_paired_complete_case": {
+        "ci95": [
+          0.6131391381037709,
+          0.7632732236898905
+        ],
+        "mean": 0.6885333940535824,
+        "targets": 6
+      },
+      "average_precision_success_conditional": {
+        "ci95": [
+          0.6344243828783303,
+          0.762622712505646
+        ],
+        "mean": 0.699621099717849,
+        "targets": 6
+      },
+      "roc_auc_all_control_bounds": [
+        0.6483333333333333,
+        0.6483333333333333
+      ],
+      "roc_auc_paired_complete_case": {
+        "ci95": [
+          0.5537037037037037,
+          0.7175925925925926
+        ],
+        "mean": 0.6365740740740741,
+        "targets": 6
+      },
+      "roc_auc_success_conditional": {
+        "ci95": [
+          0.5670833333333333,
+          0.7212500000000001
+        ],
+        "mean": 0.6483333333333333,
+        "targets": 6
+      }
+    },
+    "hit_pharmacophore": {
+      "average_precision_all_control_bounds": [
+        0.5417756482065692,
+        0.7231473772901791
+      ],
+      "average_precision_paired_complete_case": {
+        "ci95": [
+          0.5420420908768002,
+          0.7271526272622765
+        ],
+        "mean": 0.63591780246407,
+        "targets": 6
+      },
+      "average_precision_success_conditional": {
+        "ci95": [
+          0.5420420908768002,
+          0.7271526272622765
+        ],
+        "mean": 0.63591780246407,
+        "targets": 6
+      },
+      "roc_auc_all_control_bounds": [
+        0.3958333333333334,
+        0.6541666666666667
+      ],
+      "roc_auc_paired_complete_case": {
+        "ci95": [
+          0.48064814814814816,
+          0.6509259259259259
+        ],
+        "mean": 0.5639814814814815,
+        "targets": 6
+      },
+      "roc_auc_success_conditional": {
+        "ci95": [
+          0.48064814814814816,
+          0.6509259259259259
+        ],
+        "mean": 0.5639814814814815,
+        "targets": 6
+      }
+    },
+    "hit_shape": {
+      "average_precision_all_control_bounds": [
+        0.5290177182495294,
+        0.7173661112351127
+      ],
+      "average_precision_paired_complete_case": {
+        "ci95": [
+          0.518024642880594,
+          0.7246324178535222
+        ],
+        "mean": 0.6147477349855232,
+        "targets": 6
+      },
+      "average_precision_success_conditional": {
+        "ci95": [
+          0.518024642880594,
+          0.7246324178535222
+        ],
+        "mean": 0.6147477349855232,
+        "targets": 6
+      },
+      "roc_auc_all_control_bounds": [
+        0.38083333333333336,
+        0.6391666666666667
+      ],
+      "roc_auc_paired_complete_case": {
+        "ci95": [
+          0.4314814814814815,
+          0.647962962962963
+        ],
+        "mean": 0.541574074074074,
+        "targets": 6
+      },
+      "roc_auc_success_conditional": {
+        "ci95": [
+          0.4314814814814815,
+          0.647962962962963
+        ],
+        "mean": 0.541574074074074,
+        "targets": 6
+      }
+    },
+    "score": {
+      "average_precision_all_control_bounds": [
+        0.5366206847060174,
+        0.7221701144930633
+      ],
+      "average_precision_paired_complete_case": {
+        "ci95": [
+          0.5283653805981378,
+          0.7246601909068584
+        ],
+        "mean": 0.6230393357383167,
+        "targets": 6
+      },
+      "average_precision_success_conditional": {
+        "ci95": [
+          0.5283653805981378,
+          0.7246601909068584
+        ],
+        "mean": 0.6230393357383167,
+        "targets": 6
+      },
+      "roc_auc_all_control_bounds": [
+        0.3858333333333334,
+        0.6441666666666667
+      ],
+      "roc_auc_paired_complete_case": {
+        "ci95": [
+          0.4444444444444444,
+          0.648148148148148
+        ],
+        "mean": 0.55,
+        "targets": 6
+      },
+      "roc_auc_success_conditional": {
+        "ci95": [
+          0.4444444444444444,
+          0.648148148148148
+        ],
+        "mean": 0.55,
+        "targets": 6
+      }
+    }
+  },
+  "targets": [
+    {
+      "controls": 40,
+      "failed_3d": 2,
+      "metrics": {
+        "bit_tanimoto": {
+          "average_precision_all_control_bounds": [
+            0.5855729727788551,
+            0.5855729727788551
+          ],
+          "average_precision_paired_complete_case": 0.5453489984578735,
+          "average_precision_success_conditional": 0.5855729727788551,
+          "roc_auc_all_control_bounds": [
+            0.47250000000000003,
+            0.47250000000000003
+          ],
+          "roc_auc_paired_complete_case": 0.46944444444444444,
+          "roc_auc_success_conditional": 0.47250000000000003
+        },
+        "count_tanimoto": {
+          "average_precision_all_control_bounds": [
+            0.6014149958228905,
+            0.6014149958228905
+          ],
+          "average_precision_paired_complete_case": 0.5606488418988419,
+          "average_precision_success_conditional": 0.6014149958228905,
+          "roc_auc_all_control_bounds": [
+            0.5049999999999999,
+            0.5049999999999999
+          ],
+          "roc_auc_paired_complete_case": 0.49444444444444446,
+          "roc_auc_success_conditional": 0.5049999999999999
+        },
+        "hit_pharmacophore": {
+          "average_precision_all_control_bounds": [
+            0.5437999281420334,
+            0.6394788519014525
+          ],
+          "average_precision_paired_complete_case": 0.5486665868244816,
+          "average_precision_success_conditional": 0.5486665868244816,
+          "roc_auc_all_control_bounds": [
+            0.465,
+            0.5650000000000001
+          ],
+          "roc_auc_paired_complete_case": 0.5166666666666667,
+          "roc_auc_success_conditional": 0.5166666666666667
+        },
+        "hit_shape": {
+          "average_precision_all_control_bounds": [
+            0.4673956242415994,
+            0.5652857120949226
+          ],
+          "average_precision_paired_complete_case": 0.4637729158239994,
+          "average_precision_success_conditional": 0.4637729158239994,
+          "roc_auc_all_control_bounds": [
+            0.315,
+            0.41500000000000004
+          ],
+          "roc_auc_paired_complete_case": 0.35,
+          "roc_auc_success_conditional": 0.35
+        },
+        "score": {
+          "average_precision_all_control_bounds": [
+            0.4934291209736256,
+            0.5906936364289306
+          ],
+          "average_precision_paired_complete_case": 0.4926990233040285,
+          "average_precision_success_conditional": 0.4926990233040285,
+          "roc_auc_all_control_bounds": [
+            0.37500000000000006,
+            0.475
+          ],
+          "roc_auc_paired_complete_case": 0.4166666666666667,
+          "roc_auc_success_conditional": 0.4166666666666667
+        }
+      },
+      "name": "EGFR",
+      "prefilter_scaffold_recall": 0.011363636363636364,
+      "queries": 2,
+      "target_id": "CHEMBL203"
+    },
+    {
+      "controls": 40,
+      "failed_3d": 24,
+      "metrics": {
+        "bit_tanimoto": {
+          "average_precision_all_control_bounds": [
+            0.7578361660269555,
+            0.7578361660269555
+          ],
+          "average_precision_paired_complete_case": 0.7037037037037036,
+          "average_precision_success_conditional": 0.7578361660269555,
+          "roc_auc_all_control_bounds": [
+            0.7100000000000001,
+            0.7100000000000001
+          ],
+          "roc_auc_paired_complete_case": 0.7333333333333333,
+          "roc_auc_success_conditional": 0.7100000000000001
+        },
+        "count_tanimoto": {
+          "average_precision_all_control_bounds": [
+            0.7682917776667776,
+            0.7682917776667776
+          ],
+          "average_precision_paired_complete_case": 0.7450396825396826,
+          "average_precision_success_conditional": 0.7682917776667776,
+          "roc_auc_all_control_bounds": [
+            0.7075,
+            0.7075
+          ],
+          "roc_auc_paired_complete_case": 0.7666666666666666,
+          "roc_auc_success_conditional": 0.7075
+        },
+        "hit_pharmacophore": {
+          "average_precision_all_control_bounds": [
+            0.5774999999999999,
+            0.9506944444444445
+          ],
+          "average_precision_paired_complete_case": 0.7583333333333333,
+          "average_precision_success_conditional": 0.7583333333333333,
+          "roc_auc_all_control_bounds": [
+            0.225,
+            0.925
+          ],
+          "roc_auc_paired_complete_case": 0.75,
+          "roc_auc_success_conditional": 0.75
+        },
+        "hit_shape": {
+          "average_precision_all_control_bounds": [
+            0.5263141025641025,
+            0.917859477124183
+          ],
+          "average_precision_paired_complete_case": 0.5877136752136752,
+          "average_precision_success_conditional": 0.5877136752136752,
+          "roc_auc_all_control_bounds": [
+            0.18000000000000002,
+            0.88
+          ],
+          "roc_auc_paired_complete_case": 0.6,
+          "roc_auc_success_conditional": 0.6
+        },
+        "score": {
+          "average_precision_all_control_bounds": [
+            0.5500641025641025,
+            0.9338379650105656
+          ],
+          "average_precision_paired_complete_case": 0.666880341880342,
+          "average_precision_success_conditional": 0.666880341880342,
+          "roc_auc_all_control_bounds": [
+            0.2,
+            0.9
+          ],
+          "roc_auc_paired_complete_case": 0.6666666666666666,
+          "roc_auc_success_conditional": 0.6666666666666666
+        }
+      },
+      "name": "CA2",
+      "prefilter_scaffold_recall": 0.020833333333333332,
+      "queries": 2,
+      "target_id": "CHEMBL205"
+    },
+    {
+      "controls": 40,
+      "failed_3d": 0,
+      "metrics": {
+        "bit_tanimoto": {
+          "average_precision_all_control_bounds": [
+            0.7809849627496686,
+            0.7809849627496686
+          ],
+          "average_precision_paired_complete_case": 0.7809849627496686,
+          "average_precision_success_conditional": 0.7809849627496686,
+          "roc_auc_all_control_bounds": [
+            0.745,
+            0.745
+          ],
+          "roc_auc_paired_complete_case": 0.745,
+          "roc_auc_success_conditional": 0.745
+        },
+        "count_tanimoto": {
+          "average_precision_all_control_bounds": [
+            0.6620613169510228,
+            0.6620613169510228
+          ],
+          "average_precision_paired_complete_case": 0.6620613169510228,
+          "average_precision_success_conditional": 0.6620613169510228,
+          "roc_auc_all_control_bounds": [
+            0.65,
+            0.65
+          ],
+          "roc_auc_paired_complete_case": 0.65,
+          "roc_auc_success_conditional": 0.65
+        },
+        "hit_pharmacophore": {
+          "average_precision_all_control_bounds": [
+            0.7337746511314622,
+            0.7337746511314622
+          ],
+          "average_precision_paired_complete_case": 0.7337746511314622,
+          "average_precision_success_conditional": 0.7337746511314622,
+          "roc_auc_all_control_bounds": [
+            0.595,
+            0.595
+          ],
+          "roc_auc_paired_complete_case": 0.595,
+          "roc_auc_success_conditional": 0.595
+        },
+        "hit_shape": {
+          "average_precision_all_control_bounds": [
+            0.6284021534021534,
+            0.6284021534021534
+          ],
+          "average_precision_paired_complete_case": 0.6284021534021534,
+          "average_precision_success_conditional": 0.6284021534021534,
+          "roc_auc_all_control_bounds": [
+            0.605,
+            0.605
+          ],
+          "roc_auc_paired_complete_case": 0.605,
+          "roc_auc_success_conditional": 0.605
+        },
+        "score": {
+          "average_precision_all_control_bounds": [
+            0.7424630230880229,
+            0.7424630230880229
+          ],
+          "average_precision_paired_complete_case": 0.7424630230880229,
+          "average_precision_success_conditional": 0.7424630230880229,
+          "roc_auc_all_control_bounds": [
+            0.65,
+            0.65
+          ],
+          "roc_auc_paired_complete_case": 0.65,
+          "roc_auc_success_conditional": 0.65
+        }
+      },
+      "name": "PIM1",
+      "prefilter_scaffold_recall": 0.006578947368421052,
+      "queries": 2,
+      "target_id": "CHEMBL2147"
+    },
+    {
+      "controls": 40,
+      "failed_3d": 12,
+      "metrics": {
+        "bit_tanimoto": {
+          "average_precision_all_control_bounds": [
+            0.7857273501352449,
+            0.7857273501352449
+          ],
+          "average_precision_paired_complete_case": 0.8131088047754715,
+          "average_precision_success_conditional": 0.7857273501352449,
+          "roc_auc_all_control_bounds": [
+            0.775,
+            0.775
+          ],
+          "roc_auc_paired_complete_case": 0.6777777777777778,
+          "roc_auc_success_conditional": 0.775
+        },
+        "count_tanimoto": {
+          "average_precision_all_control_bounds": [
+            0.8081890331890331,
+            0.8081890331890331
+          ],
+          "average_precision_paired_complete_case": 0.8286235369568704,
+          "average_precision_success_conditional": 0.8081890331890331,
+          "roc_auc_all_control_bounds": [
+            0.765,
+            0.765
+          ],
+          "roc_auc_paired_complete_case": 0.6555555555555554,
+          "roc_auc_success_conditional": 0.765
+        },
+        "hit_pharmacophore": {
+          "average_precision_all_control_bounds": [
+            0.40114454989454984,
+            0.8260422910422911
+          ],
+          "average_precision_paired_complete_case": 0.7809158434158435,
+          "average_precision_success_conditional": 0.7809158434158435,
+          "roc_auc_all_control_bounds": [
+            0.27999999999999997,
+            0.8300000000000001
+          ],
+          "roc_auc_paired_complete_case": 0.6222222222222222,
+          "roc_auc_success_conditional": 0.6222222222222222
+        },
+        "hit_shape": {
+          "average_precision_all_control_bounds": [
+            0.4224257222825334,
+            0.8918111055611055
+          ],
+          "average_precision_paired_complete_case": 0.864632435465769,
+          "average_precision_success_conditional": 0.864632435465769,
+          "roc_auc_all_control_bounds": [
+            0.34,
+            0.8899999999999999
+          ],
+          "roc_auc_paired_complete_case": 0.7555555555555555,
+          "roc_auc_success_conditional": 0.7555555555555555
+        },
+        "score": {
+          "average_precision_all_control_bounds": [
+            0.41373647186147183,
+            0.8544751082251082
+          ],
+          "average_precision_paired_complete_case": 0.8139365264365265,
+          "average_precision_success_conditional": 0.8139365264365265,
+          "roc_auc_all_control_bounds": [
+            0.32000000000000006,
+            0.8700000000000001
+          ],
+          "roc_auc_paired_complete_case": 0.711111111111111,
+          "roc_auc_success_conditional": 0.711111111111111
+        }
+      },
+      "name": "AChE",
+      "prefilter_scaffold_recall": 0.012195121951219513,
+      "queries": 2,
+      "target_id": "CHEMBL220"
+    },
+    {
+      "controls": 40,
+      "failed_3d": 2,
+      "metrics": {
+        "bit_tanimoto": {
+          "average_precision_all_control_bounds": [
+            0.6272858610687557,
+            0.6272858610687557
+          ],
+          "average_precision_paired_complete_case": 0.6294302947940719,
+          "average_precision_success_conditional": 0.6272858610687557,
+          "roc_auc_all_control_bounds": [
+            0.5575,
+            0.5575
+          ],
+          "roc_auc_paired_complete_case": 0.5805555555555556,
+          "roc_auc_success_conditional": 0.5575
+        },
+        "count_tanimoto": {
+          "average_precision_all_control_bounds": [
+            0.7607133363712311,
+            0.7607133363712311
+          ],
+          "average_precision_paired_complete_case": 0.7579483787817121,
+          "average_precision_success_conditional": 0.7607133363712311,
+          "roc_auc_all_control_bounds": [
+            0.7324999999999999,
+            0.7324999999999999
+          ],
+          "roc_auc_paired_complete_case": 0.7361111111111112,
+          "roc_auc_success_conditional": 0.7324999999999999
+        },
+        "hit_pharmacophore": {
+          "average_precision_all_control_bounds": [
+            0.5091012485536479,
+            0.6057969359072299
+          ],
+          "average_precision_paired_complete_case": 0.5101124983929421,
+          "average_precision_success_conditional": 0.5101124983929421,
+          "roc_auc_all_control_bounds": [
+            0.44,
+            0.5399999999999999
+          ],
+          "roc_auc_paired_complete_case": 0.4888888888888888,
+          "roc_auc_success_conditional": 0.4888888888888888
+        },
+        "hit_shape": {
+          "average_precision_all_control_bounds": [
+            0.6455499183479059,
+            0.7204401629072681
+          ],
+          "average_precision_paired_complete_case": 0.6617221314976733,
+          "average_precision_success_conditional": 0.6617221314976733,
+          "roc_auc_all_control_bounds": [
+            0.51,
+            0.61
+          ],
+          "roc_auc_paired_complete_case": 0.5666666666666667,
+          "roc_auc_success_conditional": 0.5666666666666667
+        },
+        "score": {
+          "average_precision_all_control_bounds": [
+            0.5239402739073792,
+            0.6197750192274186
+          ],
+          "average_precision_paired_complete_case": 0.5266003043415325,
+          "average_precision_success_conditional": 0.5266003043415325,
+          "roc_auc_all_control_bounds": [
+            0.43500000000000005,
+            0.5349999999999999
+          ],
+          "roc_auc_paired_complete_case": 0.48333333333333334,
+          "roc_auc_success_conditional": 0.48333333333333334
+        }
+      },
+      "name": "A2a",
+      "prefilter_scaffold_recall": 0.06951871657754011,
+      "queries": 2,
+      "target_id": "CHEMBL251"
+    },
+    {
+      "controls": 40,
+      "failed_3d": 2,
+      "metrics": {
+        "bit_tanimoto": {
+          "average_precision_all_control_bounds": [
+            0.6363585694061701,
+            0.6363585694061701
+          ],
+          "average_precision_paired_complete_case": 0.6093500363108206,
+          "average_precision_success_conditional": 0.6363585694061701,
+          "roc_auc_all_control_bounds": [
+            0.645,
+            0.645
+          ],
+          "roc_auc_paired_complete_case": 0.6277777777777778,
+          "roc_auc_success_conditional": 0.645
+        },
+        "count_tanimoto": {
+          "average_precision_all_control_bounds": [
+            0.5970561383061384,
+            0.5970561383061384
+          ],
+          "average_precision_paired_complete_case": 0.5768786071933647,
+          "average_precision_success_conditional": 0.5970561383061384,
+          "roc_auc_all_control_bounds": [
+            0.53,
+            0.53
+          ],
+          "roc_auc_paired_complete_case": 0.5166666666666666,
+          "roc_auc_success_conditional": 0.53
+        },
+        "hit_pharmacophore": {
+          "average_precision_all_control_bounds": [
+            0.48533351151772197,
+            0.5830970893141946
+          ],
+          "average_precision_paired_complete_case": 0.48370390168635785,
+          "average_precision_success_conditional": 0.48370390168635785,
+          "roc_auc_all_control_bounds": [
+            0.37000000000000005,
+            0.47000000000000003
+          ],
+          "roc_auc_paired_complete_case": 0.41111111111111115,
+          "roc_auc_success_conditional": 0.41111111111111115
+        },
+        "hit_shape": {
+          "average_precision_all_control_bounds": [
+            0.4840187886588815,
+            0.5803980563210438
+          ],
+          "average_precision_paired_complete_case": 0.48224309850986835,
+          "average_precision_success_conditional": 0.48224309850986835,
+          "roc_auc_all_control_bounds": [
+            0.3350000000000001,
+            0.43500000000000005
+          ],
+          "roc_auc_paired_complete_case": 0.37222222222222223,
+          "roc_auc_success_conditional": 0.37222222222222223
+        },
+        "score": {
+          "average_precision_all_control_bounds": [
+            0.4960911158415028,
+            0.5917759349783343
+          ],
+          "average_precision_paired_complete_case": 0.4956567953794476,
+          "average_precision_success_conditional": 0.4956567953794476,
+          "roc_auc_all_control_bounds": [
+            0.335,
+            0.435
+          ],
+          "roc_auc_paired_complete_case": 0.37222222222222223,
+          "roc_auc_success_conditional": 0.37222222222222223
+        }
+      },
+      "name": "JNK3",
+      "prefilter_scaffold_recall": 0.06923076923076923,
+      "queries": 2,
+      "target_id": "CHEMBL2637"
+    }
+  ],
+  "uncertainty": "10,000 target bootstrap resamples, seed 20261016; only six independent target groups. Missing-score bounds are identification bounds, not confidence intervals."
+}

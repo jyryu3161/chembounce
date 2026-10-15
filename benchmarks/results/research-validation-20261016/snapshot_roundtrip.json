@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "same_compound_records": true,
+    "same_queries": true,
+    "same_source_names_urls_hashes": true,
+    "same_split_definition": true
+  },
+  "compound_records": 5567,
+  "path_note": "Absolute artifact paths and manifest hash change under relocation; biological records, labels, partitions and original source hashes are unchanged",
+  "queries": 12,
+  "record_fields_compared": [
+    "id",
+    "smiles",
+    "target_id",
+    "label",
+    "split",
+    "publication_year",
+    "assay_id",
+    "label_basis",
+    "activity",
+    "supporting_activity_ids",
+    "supporting_assay_ids",
+    "supporting_source_ids",
+    "molecule_chembl_id"
+  ],
+  "scope": "Published ZIP bytes extracted, all 43 artifacts verified, strict panel rebuilt with original fixed parameters",
+  "snapshot_sha256": "72fde29b4fc9f6a7b896745781820d0c255c52e6a1e7036ad4036442e2a4c518",
+  "source_artifacts": 41
+}
