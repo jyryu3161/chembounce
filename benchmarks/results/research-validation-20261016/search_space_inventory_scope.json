@@ -1,0 +1,138 @@
+{
+  "checked_utc": "2026-10-15T20:04:26.590830+00:00",
+  "effective_generator_asset": {
+    "asset_role": "Replacement scaffold/fragment templates, not labelled active end-product retrieval records or the query set.",
+    "dispatch": "With fragments, no replacement files, enabled fingerprint search and the explicit fingerprint path, the frozen generator loads that fingerprint database. The text asset is checked against metadata.source_sha256; it is not the runtime search iterator when the fingerprint database is loaded.",
+    "files_sha256": {
+      "fingerprints.npy": "383db5047079a41c17689074c10e165532ef7cfd8c9a1fe8e6517ffabf1fa7d5",
+      "metadata.json": "893267f49646a236d16fb2d0be69b0aa02260fb79e5286c352bdea3347e17684",
+      "smiles.npy": "45636028bc4c8ef09c42b75164381bd6793c5d68f50f401b4395e53323c8c1cb"
+    },
+    "fingerprint_directory": "data/fingerprints_mw250_v2",
+    "metadata_declared": {
+      "canonical_sorted_unique": true,
+      "fp_size": 2048,
+      "include_chirality": false,
+      "input_lines": 848180,
+      "radius": 2,
+      "rdkit_version": "2026.09.1",
+      "rejected_lines": 39862,
+      "rows": 522959,
+      "schema_version": 2,
+      "source_sha256": "19d159ffacbef87a026a85c13d00a15867cd58336650fd24246693921da545ac"
+    },
+    "metadata_scope": "522959 is the observed row count; sorted canonical uniqueness and 39862 rejected raw lines are metadata declarations, not an independent chemical-uniqueness audit or rebuild of source filtering.",
+    "scaffold_text": {
+      "bytes": 22940811,
+      "path": "data/Scaffolds_processed_mw250.txt",
+      "sha256": "19d159ffacbef87a026a85c13d00a15867cd58336650fd24246693921da545ac"
+    },
+    "selection": "The pinned diverse policy uses fingerprint SMILES for similarity priority and a bounded hash reservoir; shortlisted candidates undergo identity/structure validation. Inventory presence is not proof of actual selection or successful molecule reconstruction.",
+    "smiles_array_rows_observed": 522959
+  },
+  "existing_matches": {
+    "counting_unit": "Dataset compound records with at least one stored family/scaffold match, not unique scaffold identities, inventory matches, or query-control pairs.",
+    "exact_smiles_match_assessed": false,
+    "family_overlap_partition_label_counts": [
+      {
+        "label": "inactive",
+        "partition": "train",
+        "records": 1
+      }
+    ],
+    "family_overlap_records": 1,
+    "matched_compound_records": 188,
+    "not_estimated": [
+      "Unique matched Murcko scaffolds",
+      "Query-specific eligible active-reference coverage",
+      "Generic ring-skeleton coverage",
+      "Full effective fingerprint-library coverage",
+      "Sample-to-effective-fingerprint membership"
+    ],
+    "partition_label_counts": [
+      {
+        "label": "active",
+        "partition": "test",
+        "records": 102
+      },
+      {
+        "label": "inactive",
+        "partition": "test",
+        "records": 23
+      },
+      {
+        "label": "active",
+        "partition": "train",
+        "records": 39
+      },
+      {
+        "label": "inactive",
+        "partition": "train",
+        "records": 24
+      }
+    ],
+    "query_compound_matches": 0,
+    "scaffold_overlap_records": 188
+  },
+  "existing_raw_scaffold_sample": {
+    "analysis_coverage": "partial",
+    "assessed_records": 4755,
+    "audit_rdkit_version": "2025.9.6",
+    "coverage": "partial",
+    "identity_policy": "protonation-tautomer-family-v1",
+    "normalization_note": "Existing chemical-family and standardized Murcko-family identities ignore configured reversible protonation/tautomer, isotope and stereo distinctions; exact scoring structures remain separate. Identities were not recomputed for this disclosure.",
+    "parser": "read_inventory: first whitespace-delimited token of each nonblank text line; sample indices are zero-based in that parsed list.",
+    "reason_category_rule": "Exact reason text before its first colon; individual molecular inputs are omitted.",
+    "sample_unit": "Parsed raw text record; duplicate structures can occupy separate source records.",
+    "sampling": "seed-42 uniform sample without replacement",
+    "sampling_seed": 42,
+    "selected_records": 5000,
+    "source_records": 848180,
+    "status": "overlap_detected",
+    "unassessed_reason_category_counts": {
+      "A connected molecule without dummy atoms is required": 245
+    },
+    "unassessed_records": 245
+  },
+  "interpretation": {
+    "downstream_limit": "Template/scaffold presence does not establish completed-molecule identity, generated-candidate activity, synthetic success or method superiority.",
+    "sampling_limit": "The existing raw-text sample is not a census of the effective fingerprint-library rows. Its negative matches cannot establish globally absent references or a clean holdout.",
+    "search_space_exposure": "Presence in a declared generation/search library is distinct from pretrained-model training exposure and does not by itself establish activity-label leakage.",
+    "secondary_scope": "No time/target search-space numerical results are added; this record describes the existing primary scaffold manifest only."
+  },
+  "primary_scaffold_panel": {
+    "audited_partition_scope": "All dataset partitions, not only held-out active references; query membership joined separately by compound identifier.",
+    "queries": 12,
+    "records": 5567
+  },
+  "provenance": {
+    "frozen_implementation_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+    "frozen_inputs_changed": false,
+    "frozen_source_sha256": {
+      "benchmarks/research/protocol.py": "ebabb21494a8293353ed3a45b5832ea98542e4fddffa222a6aed92105bdbe09e",
+      "benchmarks/research/runner.py": "73666fad7b6c6947a461e46d55bbbf01b816451966b81cb1cb2bf2726ff5661a",
+      "chembounce.py": "d981e328b0b8e146dea43afeb56e7df4d62cd57e33709c5f825ba2610c69a5dc",
+      "chembounce_synthesis/common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+      "chembounce_synthesis/exploration.py": "e2dff768077c5957261660d8f4aeaa9434388c0a7a7e0a4504ab0f047dbdc315",
+      "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+      "fingerprint_db.py": "2901db6fadb90aa886d7d194f9ed38ac86f962f74fecfa6ea391a5d9cb97068e",
+      "utils.py": "197f32d92deb299a709383116fbd8f0651991069512a4c78860403eef2f42a81"
+    },
+    "local_source_sha256": {
+      "benchmark-results/research-validation/comparison-gpu0/manifest.json": "dde338f8168e691046f76a47ebd98ab79f2d9fdc66351ce0d77a6f2378b8154c",
+      "benchmark-results/research-validation/frozen-campaign-code-provenance.json": "8c8d9a883fe29acc8ffc1d6c3826a0056def13a93fa852508617069f3d48075e",
+      "benchmark-results/research-validation/main-protocol-gpu0.json": "6b8ee2ad718e23fe95f370679755e8202687f8d36059c2e58e2dee6f3b3ba7c7",
+      "benchmark-results/research-validation/panels/direct-human-scaffold/panel.json": "e87a3b539b8c41dde4887a7d52ec67b29a7a63f688584b579272398ef6522204",
+      "data/fingerprints_mw250_v2/metadata.json": "893267f49646a236d16fb2d0be69b0aa02260fb79e5286c352bdea3347e17684"
+    },
+    "projection_method": "Read existing audit counters; join stored matches to frozen panel records by compound_id, tally partition/label and query membership, inspect pinned fingerprint metadata and array shape. No chemical normalization or model inference."
+  },
+  "publication_scope": "Aggregate counts and provenance only; no molecules, compound identifiers or individual sample records. Referenced local evidence and generator assets are not bundled with this record.",
+  "schema_version": 1,
+  "scope": "Post hoc scope disclosure projected from an existing frozen primary search-space audit; no new normalization, coverage estimate or generation evaluation.",
+  "source_audit_locator": {
+    "manifest": "benchmark-results/research-validation/comparison-gpu0/manifest.json",
+    "method_id": "pipeline",
+    "path": "protocol.methods[id=pipeline].search_space_overlap_audit[asset=scaffold_db]"
+  }
+}
