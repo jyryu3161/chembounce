@@ -579,6 +579,17 @@ unspecified potential stereochemistry; the failure is recorded. Setting
 `reject_unspecified_stereo: false` is exploratory and does not validate a
 particular stereoisomer.
 
+Before loading the catalog, model or carried routes for a 3D run, the workflow
+checks alignment availability and the fixed hit's existing stereochemistry
+policy. A supplied `reference_sdf` instead passes the existing exact-state,
+stereochemistry and coordinate checks and is reused unchanged. The research
+pipeline performs this same input check before generating designs. A failed
+precondition is an explicit error, not a successful empty search. This check
+neither embeds molecules nor assigns missing stereo, including cage stereo;
+`reject_unspecified_stereo: false` and the complete 2D ablation retain their
+existing behavior. Candidate/design checks remain part of their own scoring,
+and passing input validation does not guarantee later conformer optimization.
+
 For each candidate, original hit and design, generate seeded, single-threaded
 ETKDGv3 ensembles. Optimize with MMFF94s when all parameters exist, otherwise
 UFF. Discard unconverged/nonfinite conformers and those outside the configured

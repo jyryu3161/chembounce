@@ -148,6 +148,21 @@ def reference_from_sdf(filename, expected_smiles, settings=ConformerSettings()):
     return Ensemble(mol, {cid: None}, {cid: 0.0}, "supplied_pose_not_minimized", {}, True)
 
 
+def prepare_reference(hit, settings=ConformerSettings(), reference_sdf=None):
+    """Check fixed 3D prerequisites without embedding or modifying chemical state.
+
+    Return the supplied bound pose, if any, so the workflow can reuse its exact
+    coordinates. SDF references retain their existing exact-state/stereo checks;
+    generated references use the same stereo policy as ``ensemble``. This does
+    not guarantee that later embedding, optimization or alignment will succeed.
+    """
+    require_alignment()
+    if reference_sdf:
+        return reference_from_sdf(reference_sdf, hit, settings)
+    _check_stereo(molecule(hit), settings)
+    return None
+
+
 def _heavy_view(mol):
     # Ordinary Hs are already removed from optimized ensembles, but RDKit keeps
     # isotopic Hs by default. Explicit D/T must not create extra pharmacophore

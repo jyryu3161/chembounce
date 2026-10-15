@@ -132,7 +132,7 @@ def test_2d_has_no_alignment_dependency_or_conformer_work(tmp_path, assets, monk
         raise AssertionError("2D ablation invoked a geometric operation")
 
     for name in (
-        "require_alignment",
+        "prepare_reference",
         "score_candidate",
         "ensemble",
         "reference_from_sdf",
