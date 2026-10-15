@@ -797,7 +797,14 @@ alignment does not prove that no feasible binding pose exists.
   used for those scores, in matching result order, enabling coordinate-level checks.
 - `scores.json`: complete score components, feature counts, conformer IDs,
   energies, force field, settings and ensemble failures; configured pocket
-  assessments and candidate-pose selection diagnostics.
+  assessments and candidate-pose selection diagnostics. Every 2D screening,
+  3D screening and refined record includes `hit_smiles` and `design_smiles`,
+  the canonical workflow input references used for that assessment. Use these
+  fields to identify references, including when one product is scored against
+  multiple designs; `product` identifies the candidate and `route_id` links its
+  route. For compatibility, legacy `hit`/`design` fields retain the 3D metric
+  dictionaries; in 2D records the legacy `design` field remains a SMILES string
+  and `hit` is absent. Earlier outputs lack the explicit reference fields.
 - `proposals.json`: raw model responses and sampling metadata; reusable by the
   `saved` provider without Torch or Transformers.
 - `manifest.json`: effective settings, exact chemical-state policy, input/model/
