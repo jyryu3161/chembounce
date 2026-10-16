@@ -1,0 +1,105 @@
+{
+  "driver_commit": "cf6a7eb4ab481b854d71baa1b4d6311645393693",
+  "driver_sha256": "8c35ed371c5eb45b8fe4df88f310f2e756983002f0db3562452b90d2e59e7cbf",
+  "evidence_access": "Hash-bound local parent reports and detailed inventories are retained but not bundled; this compact projection is not a self-contained public replay.",
+  "first_attempt": {
+    "preservation_parent_report_sha256": "1f59fb971eabc19c3111d66451b8fa2ae17dd340586b15fbafaad9e27ec1ccc6",
+    "preserved_record": "budget-amendment.json",
+    "preserved_record_sha256": "584e4ebf7f377d7cb762291892486b82398910f9f8f617c00e30c5b84d6dc7c2",
+    "status": "failed_at_900_second_stage_limit"
+  },
+  "functional_comparison": {
+    "checked_utc": "2026-10-16T05:41:22.580641+00:00",
+    "comparison": "Each fresh profile versus its own original; identical fixed cases and settings",
+    "conformer_scalar_breakdown": {
+      "atoms_per_profile": 19,
+      "coordinates_per_atom": 3,
+      "energies_per_profile": 1,
+      "profiles": 4,
+      "scalars_per_profile": 58
+    },
+    "conformer_scalar_checks": 232,
+    "criteria_sha256": "60543682c91968120059a9d12ed7134b68099702f706400b9f53466151e9e587",
+    "declared_absolute_tolerance": 1e-10,
+    "exact_fields_equal": [
+      "profile",
+      "python",
+      "rdkit_version",
+      "identities",
+      "invalid_inputs_rejected",
+      "fingerprints",
+      "reaction_products",
+      "numpy_arithmetic",
+      "extra_api_checks",
+      "scope"
+    ],
+    "installed_reinvent_package": {
+      "bytes_match_pinned_upstream_and_original": true,
+      "installed_package_criteria_sha256": "f334ca1412236169ff3aeea7e49e2b112208ca657e16817f993c3c15963458bc",
+      "new_environment_origin_verified": true,
+      "package_data_files": 1,
+      "parent_helper_sha256": "f48d663356180bdf171100baee2538846a7f8ebcf3b3faf84d01ead3e6f3616a",
+      "python_files": 273,
+      "record_hashes_verified": 274,
+      "sascore_data": "Hashed only; not unpickled or executed",
+      "upstream_commit": "eb61443a1a93a8cbd06510548b25cc77cfd9d3a6"
+    },
+    "maximum_absolute_conformer_difference": 0.0,
+    "module_origin_checks": 32,
+    "parent_helper_sha256": "a3cd15ad9a1787acf0305a1eeb11ad18ab9ecb5ccc798592cb672d020960542b",
+    "profiles_passed": [
+      "crem",
+      "forward-cpu",
+      "mol2mol",
+      "research"
+    ],
+    "project_execution_source": {
+      "commit": "2328588d0969369e694d9293a1dccc89392a8203",
+      "scientific_source_files": 41,
+      "selection": "Explicit study checkout imports verified; frozen 39-file checkout remains the editable distribution installation source"
+    },
+    "source_and_build_files_unchanged": 658
+  },
+  "installation": {
+    "all_step_exit_codes": 0,
+    "checked_utc": "2026-10-16T05:39:56.339309+00:00",
+    "driver_exit_code": 0,
+    "installed_distributions": {
+      "crem": 25,
+      "forward-cpu": 49,
+      "mol2mol": 108,
+      "research": 64
+    },
+    "original_bundle_files_checked": 13,
+    "owned_process_groups_absent": true,
+    "parent_helper_sha256": "400484f09f1c9034308d70bad1ed1b0c5e4cc87d01b3b88f1b425908c5d0197f",
+    "source_and_build_files_checked": 658,
+    "step_logs_records_and_source_validation_files_checked": 180,
+    "steps_passed": 54,
+    "terminal_status_sha256": "467577a6c4f3d7cc05f7440fd8c1f26250e9502563619e9e6e58a94c8ae7ddea"
+  },
+  "limits": [
+    "Same host and selected fixed CPU cases only; no independent OS or container rebuild.",
+    "No checkpoints or chemical DBs loaded, learned model inference, molecule-generation campaign or GPU execution.",
+    "Installed versions and the checked source/package files do not constitute a fully hashed build lock or byte-identical installation of every dependency.",
+    "No general numerical, full-pipeline, timing, activity, synthesis, superiority or journal-readiness claim."
+  ],
+  "pins_sha256": "42cfee5362719a936aba4487c8019e8f67adb53d39db2f3edf8c4634cf311df7",
+  "retained_reports": {
+    "study-rebuild-amended-terminal-parent-20261016.json": {
+      "bytes": 188802,
+      "sha256": "968127454a8f1cc089dfcc0a2584fd02bfccbf9b191a701db94236cc0550d2d3"
+    },
+    "study-rebuild-fresh-functional-parent-20261016/mol2mol-installed-package.json": {
+      "bytes": 47548,
+      "sha256": "9cf19818a8f51357314da9bc88eab3d48a3a2193d3fab0c69e7a8be60b6887fb"
+    },
+    "study-rebuild-fresh-functional-parent-20261016/validation.json": {
+      "bytes": 7931,
+      "sha256": "3f8573916c2af11da087556df4a5f962233d91a6e668ff86d45fb094b846bca8"
+    }
+  },
+  "schema_version": 1,
+  "scope": "Fresh installation on the same host, followed by selected fixed CPU comparisons against each profile's own original environment; not cross-profile equivalence.",
+  "status": "passed_selected_same_host_checks"
+}
