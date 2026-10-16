@@ -12,7 +12,7 @@ from rdkit import Chem
 from benchmarks.research.controls import similarity_scores
 from benchmarks.research.evaluation import cluster_interval, evaluate_candidates, score_stability
 from benchmarks.research.protocol import load_dataset
-from benchmarks.research.runner import evidence_verifier, public_request
+from benchmarks.research.runner import evidence_verifier, load_protocol, public_request
 from chembounce_synthesis.identity import chemical_identity
 
 MODULE = Path(__file__).resolve().parents[1] / "benchmarks/research/assess_comparator_followup.py"
@@ -383,6 +383,88 @@ def test_private_request_fields_rejected_after_snapshot(completed, api):
     records, _ = assess.collect_generation(completed)
     with pytest.raises(ValueError, match="private-field"):
         assess.recompute(completed, records, api)
+
+
+@pytest.mark.parametrize("symlinked_protocol", [False, True])
+def test_recompute_resolves_assets_like_runner_through_parent_and_symlink(completed, api, symlinked_protocol):
+    command = completed["plan"]["commands"][0]
+    protocol_arg = command["argv"].index("--protocol") + 1
+    protocol_path = Path(command["argv"][protocol_arg])
+    physical = completed["tmp"] / "physical-assets"
+    (physical / "nested").mkdir(parents=True)
+    artifact = physical / "fixture.txt"
+    artifact.write_text("Read-only path-resolution fixture\n")
+    directory = physical / "fixture-directory"
+    directory.mkdir()
+    member = directory / "member.txt"
+    member.write_text("No model or database\n")
+    # alias/.. must traverse the symlink before moving to the physical parent.
+    # Lexical normalization instead would point into the protocol directory.
+    (protocol_path.parent / "alias").symlink_to(physical / "nested", target_is_directory=True)
+    protocol = assess.read_json(protocol_path)
+    method = protocol["methods"][0]
+    method["command"] = ["never-executed", "{request}", "{response}"]
+    method["assets"] = {
+        "relative_file": {"artifact": "alias/../fixture.txt", "sha256": assess.digest(artifact)},
+        "absolute_file": {
+            "artifact": str(protocol_path.parent / "alias/../fixture.txt"),
+            "sha256": assess.digest(artifact),
+        },
+        "relative_directory": {
+            "directory": "alias/../fixture-directory",
+            "files_sha256": {"member.txt": assess.digest(member)},
+        },
+        "absolute_directory": {
+            "directory": str(protocol_path.parent / "alias/../fixture-directory"),
+            "files_sha256": {"member.txt": assess.digest(member)},
+        },
+    }
+    save(protocol_path, protocol)
+    if symlinked_protocol:
+        alias = completed["tmp"] / "protocol-alias" / "exposed.json"
+        alias.parent.mkdir()
+        alias.symlink_to(protocol_path)
+        command["argv"][protocol_arg] = str(alias)
+    panel = command["argv"][command["argv"].index("--dataset") + 1]
+    dataset, _ = load_dataset(panel)
+    runner_method = load_protocol(command["argv"][protocol_arg], dataset)["methods"][0]
+    canonical = {
+        "relative_file": str(artifact),
+        "absolute_file": str(artifact),
+        "relative_directory": str(directory),
+        "absolute_directory": str(directory),
+    }
+    assert runner_method["resolved_assets"] == canonical
+    campaign = Path(command["argv"][-1])
+    manifest = assess.read_json(campaign / "manifest.json")
+    manifest["protocol_sha256"] = assess.digest(protocol_path)
+    save(campaign / "manifest.json", manifest)
+    queries = {q["id"]: q for q in dataset["queries"]}
+    for slot in completed["grid"]:
+        if (slot["split"], slot["method_id"]) != (command["split"], command["method_id"]):
+            continue
+        request_path = Path(slot["output_dir"]) / "request.json"
+        request = assess.read_json(request_path)
+        expected = public_request(
+            dataset,
+            queries[slot["query_id"]],
+            runner_method,
+            slot["seed"],
+            protocol["budget"],
+            slot["output_dir"],
+        )
+        expected.update(
+            deadline_monotonic=request["deadline_monotonic"],
+            finalization_margin_seconds=request["finalization_margin_seconds"],
+        )
+        save(request_path, expected)
+    original_protocol = protocol_path.read_bytes()
+    records, _ = assess.collect_generation(completed)
+    assert records[0]["request"]["assets"] == canonical
+    rebuilt, occurrences = assess.recompute(completed, records, api)
+    assert len(rebuilt) == 270 and len(occurrences) == 4
+    assert records[0]["protocol_path"] == str(protocol_path.resolve())
+    assert protocol_path.read_bytes() == original_protocol
 
 
 def test_failed_partial_response_never_becomes_accepted(completed, api):
