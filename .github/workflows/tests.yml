@@ -16,6 +16,7 @@ jobs:
       - run: ruff check .
       - run: ruff format --check .
       - run: pytest --cov --cov-report=term-missing
+      - run: python -I -B -m unittest discover -s benchmarks/diagnostics/study_environment_rebuild/replay -p test_replay.py -v
       - run: python chembounce.py --help
       - run: python -m chembounce_synthesis.cli --help
   minimum-dependencies:
