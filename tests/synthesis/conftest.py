@@ -121,10 +121,16 @@ def strict_predictor(monkeypatch):
                 ([0] + [ord(c) + 3 for c in value] + [1]) if isinstance(value, str) else value
                 for value in products
             ]
-            predictions, tokens = self.inspect_sequences(sequences)
+            width = max(len(sequence) for sequence in sequences)
+            beam_indices = [
+                [0] * (len(sequence) - 1) + [-1] * (width - len(sequence)) for sequence in sequences
+            ]
+            sequences = [sequence + [1] * (width - len(sequence)) for sequence in sequences]
+            predictions, tokens = self.inspect_sequences(sequences, beam_indices)
             return {
                 "input": copy.deepcopy(prepared),
                 "sequences": sequences,
+                "beam_indices": beam_indices,
                 "predictions": predictions,
                 "output_tokens": tokens,
                 "predictor_binding_sha256": binding(self.provenance),

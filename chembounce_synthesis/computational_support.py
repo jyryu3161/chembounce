@@ -66,6 +66,7 @@ class ComputationalRouteSupport(SynthesisEvidenceEvaluator):
             return {"status": "unknown", "reason": "Forward prediction budget exhausted"}
         self.usage["predictor_calls"] += 1
         self.usage["input_tokens"] += prepared["input_tokens"]
+        raw = None
         try:
             raw = self.predictor.predict_raw(prepared)
             self.predictor.validate_raw(raw, prepared)
@@ -77,6 +78,8 @@ class ComputationalRouteSupport(SynthesisEvidenceEvaluator):
         except (ValueError, RuntimeError, KeyError, TypeError) as exc:
             self.usage["output_tokens"] += reserve
             result = {"status": "failed", "reason": str(exc)}
+            if raw is not None:
+                result["raw"] = copy.deepcopy(raw)
         self.cache[key] = copy.deepcopy(result)
         return result
 

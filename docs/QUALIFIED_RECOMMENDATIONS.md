@@ -411,7 +411,11 @@ It requires Python 3.10.12, Torch 2.8.0, Transformers 4.51.3, tokenizers 0.21.4,
 safetensors 0.6.2 and RDKit 2025.9.6. It uses local files only, no remote code,
 CPU with one Torch thread, deterministic top-three decoding, at most 256 new
 tokens per beam and 512 input tokens. Bundle, adapter, runtime, input-token,
-thread and decoding provenance is retained. Default global evidence limits are
+thread and decoding provenance is retained. Standard local Hugging Face download
+metadata is separately recorded; it cannot replace any pinned numerical file.
+The adapter also pins the Transformers generation implementation, SHA-256
+`dc9044d10c00abe7d341f2e777fb623925ff59dda2c1d814ecc7d6a685ad2ee1`.
+Default global evidence limits are
 128 calls, 32768 input tokens and 32768 output tokens; explicit lower limits and
 the workflow deadline remain authoritative. A failed call charges its reserved
 output allowance and is not retried.
@@ -422,8 +426,17 @@ labels. Reject unknown/special content, other whitespace, empty components,
 names/CXSMILES and terminal dots; preserve every molecular component. The local
 model card documents trailing-dot cleanup, so this deliberately stricter policy
 may lose coverage. It is not a claim that upstream preprocessing is a bug.
-Original decoded text, full/content token IDs, EOS completion and every invalid
-or unfinished beam remain visible. One valid exact full-product beam can support
+Original decoded text, full/generated/content token IDs, actual `beam_indices`,
+EOS completion and every invalid or unfinished beam remain visible. Padding
+policy `transformers-4.51.3-beam-ancestry-v1` requires a nonempty contiguous
+prefix of beam indices 0–2, followed only by -1. Rows must align with the returned
+sequences, excluding the decoder start. Only the witnessed prefix contains
+generated tokens; its unique terminal EOS establishes completion. The -1 suffix
+must contain the exact EOS1 fill used by this pinned runtime when PAD0 is falsey.
+EOS in fill cannot complete an unfinished prefix. Generated PAD/unknown/special
+content is never erased into a valid molecule. Every witnessed generated position
+is charged; malformed metadata fails closed, preserves the returned tensors and
+charges the reserved allowance. Missing ancestry has no permissive fallback. One valid exact full-product beam can support
 a step; absent a match, invalid/unfinished beams mean partial evaluation, not
 complete model disagreement. There is no component-only match or punctuation
 repair.
@@ -438,6 +451,14 @@ replays and predicts under the current policy rather than trusting prior reports
 JSON/TSV and selected pose/reference SDFs identify the effective evidence profile
 and selected route-support binding, with complete evidence in `routes.json`.
 
-Stage 5 remains pending until source/independent review and the separately
-authorized bounded CPU adapter smoke pass. No new scientific campaign or Stage 6
+The original metadata-only load failure and first two-call adapter exercise are
+preserved. The latter returned zero recommendations under the old decoder and
+exposed its incorrect assumption that unused suffixes contain PAD0. That run
+discarded beam ancestry and cannot be retroactively certified. The correction
+changes interpretation of witnessed tensor padding, not SMILES normalization,
+chemical thresholds or model settings. A separately frozen correction regression
+permits only the same two known inputs after a new source/independent review gate.
+
+Stage 5 remains pending until corrected source/independent review and the separately
+authorized bounded CPU adapter regression pass. No new scientific campaign or Stage 6
 benchmark is included in this implementation.

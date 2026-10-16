@@ -17,6 +17,10 @@ from rdkit import Chem
 from .common import digest
 from .evidence import ReactionT5Forward
 
+GENERATION_SOURCE_SHA256 = "dc9044d10c00abe7d341f2e777fb623925ff59dda2c1d814ecc7d6a685ad2ee1"
+PADDING_POLICY = (
+    "transformers-4.51.3-beam-ancestry-v1; generated-prefix indices 0..2; -1 suffix filled with EOS1"
+)
 PROFILE = "computational-route-support-v1"
 REVISION = "933114058cb2604dc1bf536dbebdfcefbe83d4fc"
 SETTINGS = {
@@ -144,6 +148,11 @@ class PinnedReactionT5Forward(ReactionT5Forward):
         runtime = {name: importlib.metadata.version(name) for name in RUNTIME}
         if platform.python_version() != "3.10.12" or runtime != RUNTIME:
             raise ValueError(f"Pinned ReactionT5 runtime mismatch: {runtime}")
+        generation_source = Path(
+            importlib.metadata.distribution("transformers").locate_file("transformers/generation/utils.py")
+        )
+        if digest(generation_source) != GENERATION_SOURCE_SHA256:
+            raise ValueError("Pinned Transformers generation implementation mismatch")
         super().__init__(model_path, **{k: v for k, v in SETTINGS.items() if k != "kind"})
         self.torch.set_num_threads(1)
         self.provenance.update(
@@ -157,6 +166,8 @@ class PinnedReactionT5Forward(ReactionT5Forward):
                 for key in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS")
             },
             runtime=runtime,
+            generation_source={"path": str(generation_source), "sha256": GENERATION_SOURCE_SHA256},
+            padding_policy=PADDING_POLICY,
             adapter_sha256=digest(Path(__file__)),
             base_adapter_sha256=digest(Path(__file__).with_name("evidence.py")),
             normalization="canonical-isomeric-unmapped-v1; ASCII tokenization spaces only; no component or punctuation repair",
@@ -181,34 +192,48 @@ class PinnedReactionT5Forward(ReactionT5Forward):
             raise ValueError("Forward input contains unknown or unsupported special tokens")
         return {**data, "input_token_ids": ids, "input_tokens": size}
 
-    def inspect_sequences(self, sequences):
+    def inspect_sequences(self, sequences, beam_indices):
         if not isinstance(sequences, list) or len(sequences) != 3:
             raise ValueError("Strict forward prediction requires exactly three raw beams")
+        if not isinstance(beam_indices, list) or len(beam_indices) != 3:
+            raise ValueError("Strict forward prediction requires actual beam_indices metadata")
         results, output_tokens = [], 0
         eos, pad = self.tokenizer.eos_token_id, self.tokenizer.pad_token_id
         start = self.model.config.decoder_start_token_id
-        for rank, sequence in enumerate(sequences, 1):
+        if (start, pad, eos) != (0, 0, 1):
+            raise ValueError("Decoder token identities differ from the pinned runtime")
+        width = len(sequences[0]) if isinstance(sequences[0], list) else 0
+        for rank, (sequence, ancestry) in enumerate(zip(sequences, beam_indices), 1):
             if (
                 not isinstance(sequence, list)
                 or not sequence
                 or sequence[0] != start
                 or any(isinstance(i, bool) or not isinstance(i, int) or i < 0 for i in sequence)
-                or len(sequence) > self.max_new_tokens + 1
+                or len(sequence) != width
+                or not 2 <= width <= self.max_new_tokens + 1
             ):
-                raise ValueError("Malformed or oversized raw decoder sequence")
-            generated = sequence[1:]
-            complete = eos in generated
-            if complete:
-                end = generated.index(eos)
-                content = generated[:end]
-                tail_valid = all(i == pad for i in generated[end + 1 :])
-                charged = end + 1
-            else:
-                # Without EOS every returned position was generated. PAD tokens
-                # can be model output, so neither hide them nor refund their cost.
-                content = list(generated)
-                tail_valid, charged = True, len(generated)
-            output_tokens += charged
+                raise ValueError("Malformed, nonrectangular or oversized raw decoder sequence")
+            if (
+                not isinstance(ancestry, list)
+                or len(ancestry) != width - 1
+                or any(
+                    isinstance(i, bool) or not isinstance(i, int) or i not in {-1, 0, 1, 2} for i in ancestry
+                )
+            ):
+                raise ValueError("Malformed or misaligned beam_indices metadata")
+            generated_length = next((i for i, value in enumerate(ancestry) if value == -1), len(ancestry))
+            if not generated_length or any(value != -1 for value in ancestry[generated_length:]):
+                raise ValueError("Beam ancestry requires a nonempty contiguous generated prefix")
+            generated = sequence[1 : 1 + generated_length]
+            padding = sequence[1 + generated_length :]
+            # The pinned 4.51.3 implementation uses `pad_token_id or eos_id`:
+            # zero PAD falls through to EOS. Only actual -1 ancestry witnesses
+            # may identify these positions as fill; EOS itself is no witness.
+            if any(token != eos for token in padding):
+                raise ValueError("Beam suffix differs from pinned runtime EOS fill")
+            complete = generated[-1] == eos and generated.count(eos) == 1
+            content = generated[:-1] if complete else list(generated)
+            output_tokens += generated_length
             raw = self.tokenizer.decode(
                 sequence, skip_special_tokens=False, clean_up_tokenization_spaces=False
             )
@@ -218,6 +243,10 @@ class PinnedReactionT5Forward(ReactionT5Forward):
             item = {
                 "rank": rank,
                 "token_ids": list(sequence),
+                "beam_indices": list(ancestry),
+                "generated_token_ids": generated,
+                "padding_token_ids": padding,
+                "generated_length": generated_length,
                 "content_token_ids": content,
                 "original_decoded_text": raw,
                 "raw_product": decoded,
@@ -226,8 +255,8 @@ class PinnedReactionT5Forward(ReactionT5Forward):
             }
             try:
                 if not complete:
-                    raise ValueError("Incomplete decoding")
-                if not tail_valid or any(i in self.tokenizer.all_special_ids for i in content):
+                    raise ValueError("Incomplete or inconsistent generated EOS decoding")
+                if any(i in self.tokenizer.all_special_ids for i in content):
                     raise ValueError("Unknown or unexpected special-token content")
                 item["product"] = strict_smiles(decoded, tokenization_spaces=True)
             except ValueError as exc:
@@ -250,19 +279,27 @@ class PinnedReactionT5Forward(ReactionT5Forward):
                 output_scores=False,
             )
         sequences = output.sequences.tolist()
-        predictions, tokens = self.inspect_sequences(sequences)
-        return {
+        ancestry = getattr(output, "beam_indices", None)
+        beam_indices = ancestry.tolist() if ancestry is not None else None
+        raw = {
             "input": copy.deepcopy(prepared),
             "sequences": sequences,
-            "predictions": predictions,
-            "output_tokens": tokens,
+            "beam_indices": beam_indices,
             "predictor_binding_sha256": binding(self.provenance),
         }
+        try:
+            predictions, tokens = self.inspect_sequences(sequences, beam_indices)
+            raw.update(predictions=predictions, output_tokens=tokens)
+        except ValueError as exc:
+            # Retain actual malformed tensors; validation will reject and the
+            # evaluator charges the reserved allowance, without another call.
+            raw.update(predictions=[], output_tokens=3 * self.max_new_tokens, decoding_error=str(exc))
+        return raw
 
     def validate_raw(self, raw, prepared):
         if raw.get("input") != prepared or raw.get("predictor_binding_sha256") != binding(self.provenance):
             raise ValueError("Forward prediction input/model binding mismatch")
-        predictions, tokens = self.inspect_sequences(raw.get("sequences"))
+        predictions, tokens = self.inspect_sequences(raw.get("sequences"), raw.get("beam_indices"))
         if raw.get("predictions") != predictions or raw.get("output_tokens") != tokens:
             raise ValueError("Forward raw token/decoded evidence mismatch")
         return predictions
