@@ -1,0 +1,242 @@
+{
+  "audit_protocol_sha256": "b5c1ddc8c86fe50f59bcd9605404901ec2fef75f45bc1ff14efe56385153468c",
+  "bootstrap": {
+    "draws": 10000,
+    "hierarchy": "Within every split: mean matched generation seeds per query, mean queries per target, equal target macro. Paired pipeline-minus-each-comparator differences at identical query/seed slots before aggregation. Single target: no CI. No pooling targets across splits.",
+    "quantiles": [
+      0.025,
+      0.975
+    ],
+    "seed": 20261016,
+    "unit": "target"
+  },
+  "comparison_set": "Every planned method and split; pipeline minus every other planned method, no favorable subset selection. Descriptive unadjusted intervals only; no significance/multiplicity claim.",
+  "conditional_metric": "Within each attempt having >=1 supplied replay-verified fully evaluated route, matched occurrences / fully evaluated route occurrences. Aggregate observed attempt ratios by query then target, retaining eligibility counts. Null without eligible routes, never fabricate zero; secondary selected-subset descriptive statistic only. Also report pooled occurrence fraction descriptively without occurrence-independent CI.",
+  "coverage": "Report attempts, accepted candidate occurrences, no_route_supplied, route_supplied, assessed/replay-verified, all_steps_evaluated, all_steps_matched, assessed_but_incomplete, evaluated_but_mismatched and audit_failed separately. Per-attempt counts, bounded any-output indicators and output-slot rates use all planned attempts; raw counts retain exact denominators.",
+  "dependence": "Occurrences sharing routes or identical reactant/context inputs are reuse, not independent samples; report unique route/input keys and repeated occurrences descriptively. No candidate-, reaction-, route- or seed-level iid uncertainty; cluster at target with query/seed hierarchy. Few-target and cross-target shared-input limitations remain explicit.",
+  "design": "Post hoc analysis plan specified while all generation and common forward assessment were incomplete; not preregistered confirmatory evidence. No comparative results computed to choose endpoints or subsets.",
+  "expected_attempts": {
+    "scaffold": 360,
+    "target": 90,
+    "time": 180
+  },
+  "expected_grid": {
+    "scaffold": {
+      "groups": {
+        "baselines": {
+          "methods": [
+            "nearest_catalog",
+            "nearest_3d",
+            "reaction_enumeration"
+          ],
+          "output_caps": {
+            "nearest_3d": 3,
+            "nearest_catalog": 3,
+            "reaction_enumeration": 3
+          },
+          "protocol": "main-protocol-baselines.json",
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        },
+        "gpu0": {
+          "methods": [
+            "pipeline",
+            "pipeline_no_3d",
+            "pipeline_no_refinement"
+          ],
+          "output_caps": {
+            "pipeline": 3,
+            "pipeline_no_3d": 3,
+            "pipeline_no_refinement": 3
+          },
+          "protocol": "main-protocol-gpu0.json",
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        },
+        "gpu1": {
+          "methods": [
+            "synllama_only",
+            "pipeline_legacy_search",
+            "pipeline_encounter_allocation",
+            "pipeline_rule_only"
+          ],
+          "output_caps": {
+            "pipeline_encounter_allocation": 3,
+            "pipeline_legacy_search": 3,
+            "pipeline_rule_only": 3,
+            "synllama_only": 3
+          },
+          "protocol": "main-protocol-gpu1.json",
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        }
+      },
+      "queries": {
+        "CHEMBL203-query-1": "CHEMBL203",
+        "CHEMBL203-query-2": "CHEMBL203",
+        "CHEMBL205-query-1": "CHEMBL205",
+        "CHEMBL205-query-2": "CHEMBL205",
+        "CHEMBL2147-query-1": "CHEMBL2147",
+        "CHEMBL2147-query-2": "CHEMBL2147",
+        "CHEMBL220-query-1": "CHEMBL220",
+        "CHEMBL220-query-2": "CHEMBL220",
+        "CHEMBL251-query-1": "CHEMBL251",
+        "CHEMBL251-query-2": "CHEMBL251",
+        "CHEMBL2637-query-1": "CHEMBL2637",
+        "CHEMBL2637-query-2": "CHEMBL2637"
+      }
+    },
+    "target": {
+      "groups": {
+        "baselines": {
+          "methods": [
+            "nearest_catalog",
+            "nearest_3d",
+            "reaction_enumeration"
+          ],
+          "output_caps": {
+            "nearest_3d": 3,
+            "nearest_catalog": 3,
+            "reaction_enumeration": 3
+          },
+          "protocol": "secondary-target-protocol-baselines.json",
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        },
+        "gpu0": {
+          "methods": [
+            "pipeline"
+          ],
+          "output_caps": {
+            "pipeline": 3
+          },
+          "protocol": "secondary-target-protocol-gpu0.json",
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        },
+        "gpu1": {
+          "methods": [
+            "synllama_only"
+          ],
+          "output_caps": {
+            "synllama_only": 3
+          },
+          "protocol": "secondary-target-protocol-gpu1.json",
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        }
+      },
+      "queries": {
+        "CHEMBL205-query-1": "CHEMBL205",
+        "CHEMBL205-query-2": "CHEMBL205",
+        "CHEMBL2147-query-1": "CHEMBL2147",
+        "CHEMBL2147-query-2": "CHEMBL2147",
+        "CHEMBL220-query-1": "CHEMBL220",
+        "CHEMBL220-query-2": "CHEMBL220"
+      }
+    },
+    "time": {
+      "groups": {
+        "baselines": {
+          "methods": [
+            "nearest_catalog",
+            "nearest_3d",
+            "reaction_enumeration"
+          ],
+          "output_caps": {
+            "nearest_3d": 3,
+            "nearest_catalog": 3,
+            "reaction_enumeration": 3
+          },
+          "protocol": "secondary-time-protocol-baselines.json",
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        },
+        "gpu0": {
+          "methods": [
+            "pipeline"
+          ],
+          "output_caps": {
+            "pipeline": 3
+          },
+          "protocol": "secondary-time-protocol-gpu0.json",
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        },
+        "gpu1": {
+          "methods": [
+            "synllama_only"
+          ],
+          "output_caps": {
+            "synllama_only": 3
+          },
+          "protocol": "secondary-time-protocol-gpu1.json",
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        }
+      },
+      "queries": {
+        "CHEMBL203-query-1": "CHEMBL203",
+        "CHEMBL203-query-2": "CHEMBL203",
+        "CHEMBL205-query-1": "CHEMBL205",
+        "CHEMBL205-query-2": "CHEMBL205",
+        "CHEMBL2147-query-1": "CHEMBL2147",
+        "CHEMBL2147-query-2": "CHEMBL2147",
+        "CHEMBL220-query-1": "CHEMBL220",
+        "CHEMBL220-query-2": "CHEMBL220",
+        "CHEMBL251-query-1": "CHEMBL251",
+        "CHEMBL251-query-2": "CHEMBL251",
+        "CHEMBL2637-query-1": "CHEMBL2637",
+        "CHEMBL2637-query-2": "CHEMBL2637"
+      }
+    }
+  },
+  "infrastructure": "Primary realized accepted return=0 for infrastructure_interruption. Separate [0,1] missing-counterfactual bounds for primary and all bounded any-output/slot coverage metrics on full grid, plus pipeline-comparator difference bounds; these are not CIs. Complete-case excludes only infrastructure_interruption, is selection-biased, retains other failures, and reports availability. Paired complete-case requires both outcomes observed.",
+  "interpretation": "Product-blind reactant-only input; same model as selection gate so selection-related enrichment is expected. Missing reagents/conditions and absent empirical context remain explicit. No predicted activity, biological validation, experimental synthesis, yield or synthesis probability claim.",
+  "primary_definition": "Indicator: at least one accepted returned candidate supplies a raw route that replays to the exact candidate and has a nonempty set of reaction steps, every common forward prediction status matched and all steps evaluated. All planned attempts remain in denominator; timeout/no_candidates/other terminal failures have no accepted returns.",
+  "primary_metric": "attempt_with_common_forward_matched_route",
+  "recorded_utc": "2026-10-15T18:23:04.197787+00:00",
+  "schema_version": 1,
+  "source_sha256": {
+    "main-protocol-baselines.json": "714e9265f1c89659d7c90441aba6086234518f00f149587a7d2bac1e9886abdf",
+    "main-protocol-gpu0.json": "6b8ee2ad718e23fe95f370679755e8202687f8d36059c2e58e2dee6f3b3ba7c7",
+    "main-protocol-gpu1.json": "e9cdbb08d69916801a6ff5263dd4e39e7485bf0142d867df23bc12e23127737f",
+    "panels/direct-human-scaffold/panel.json": "e87a3b539b8c41dde4887a7d52ec67b29a7a63f688584b579272398ef6522204",
+    "panels/direct-human-target/panel.json": "8d87129ebc096d122fb581eb1721b9893243cec958434b5720a94df83c2d074e",
+    "panels/direct-human-time/panel.json": "5402b98837c4abba4ab85606f8354736ec2ef20e23e1e0e8c6dadfbd0c8f7269",
+    "secondary-target-protocol-baselines.json": "bfd09d75fa120775e8890f5af2c399a328c3068600547cf697549e989264dbff",
+    "secondary-target-protocol-gpu0.json": "02665eb636361a5c3e4a43b614a5a850cb405b57c45321b573c406a00918fb34",
+    "secondary-target-protocol-gpu1.json": "3cd3327cc684c76692afcc5bd00cf7d620afb9e731b62fb62b73f5cc94e81f32",
+    "secondary-time-protocol-baselines.json": "97b458822e9415245cc6aa5735242b345e318d90d69d9d4485b96e91fc002620",
+    "secondary-time-protocol-gpu0.json": "28909a8f7bf8f8c38cc2f6548eabe663b787d3b6cd28e05dd78353080ed55840",
+    "secondary-time-protocol-gpu1.json": "59f1ef33f980d69fc4c9e8f4668011b35160d09fe8abc431608677ba289eafd1"
+  },
+  "validation": "Require all 630 unique planned method/query/seed entries, all 9 run-file input hashes from completed audit snapshot, frozen protocol/panel/source hashes, exact evaluation/raw-candidate rank+SMILES correspondence, exactly one occurrence per accepted candidate, derived cache keys, fresh rule replay and evidence-step correspondence. Refuse any comparative estimates until global grid/audit completion and integrity checks pass."
+}

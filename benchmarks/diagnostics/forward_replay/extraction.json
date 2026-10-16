@@ -1,0 +1,128 @@
+{
+  "extracted_sha256": "0bf96138f0a137a6048a700d78bc064f6b278766d8b09da87f3f54ca45739cd1",
+  "historical_sha256": "01b4c9468d23bb2870083c0b8f66886fafbf0262b429e08e5e102e683e20d83e",
+  "schema_version": 1,
+  "selected_nodes": [
+    {
+      "first_line": 8,
+      "last_line": 8,
+      "node": "import:collections",
+      "sha256": "2005f965e5e6e538c8c389788c75a3cc763714aaef60660c0af3d37a4e81c386"
+    },
+    {
+      "first_line": 14,
+      "last_line": 14,
+      "node": "import:statistics",
+      "sha256": "1f05c716d56ae527bd07a66a1a5d74d0083eb6a336549328df6ae83625411bd5"
+    },
+    {
+      "first_line": 17,
+      "last_line": 17,
+      "node": "import:numpy",
+      "sha256": "d34aea06c990aeedd2f8f5ff809c1180b92fccca0381269b7c18654043b9a374"
+    },
+    {
+      "first_line": 30,
+      "last_line": 30,
+      "node": "SPLITS",
+      "sha256": "c665c82de0865a9db253295ebead1ff21fec2aabb3bf3f4c3be7f399dd977b60"
+    },
+    {
+      "first_line": 31,
+      "last_line": 31,
+      "node": "PRIMARY",
+      "sha256": "83519379b5afde4a3ee71d44c9ae23e8f894d103fdc052892676f45e66217c5b"
+    },
+    {
+      "first_line": 32,
+      "last_line": 32,
+      "node": "INFRA",
+      "sha256": "646d7d0848f67abce7ea364e0d379e4d4577120e84400bc3e48a3d9bf59577e6"
+    },
+    {
+      "first_line": 33,
+      "last_line": 43,
+      "node": "COUNTS",
+      "sha256": "94d0a1e63a91a039a0bdd555755031fa481db6868f9bd4489fd641ca9ebbcea9"
+    },
+    {
+      "first_line": 44,
+      "last_line": 44,
+      "node": "COVERAGE",
+      "sha256": "27903ef31c46717a14a8d242649de08b2b99ad156a27d936c64156a90b823731"
+    },
+    {
+      "first_line": 45,
+      "last_line": 49,
+      "node": "BOUNDED",
+      "sha256": "0592433ce208e05b64203c551111e499affd409b4c4adc306eac6f375327cf72"
+    },
+    {
+      "first_line": 50,
+      "last_line": 50,
+      "node": "CONDITIONAL",
+      "sha256": "ba98549f41afd9f6f23042f183991896fb9bbb20374add16da52f6b6cf1552ca"
+    },
+    {
+      "first_line": 51,
+      "last_line": 51,
+      "node": "METRICS",
+      "sha256": "6b24f755ad03e31c1e2e92eb2f669b2d1ed16a1c65ec2eae10a6678169632e00"
+    },
+    {
+      "first_line": 52,
+      "last_line": 64,
+      "node": "TERMINAL",
+      "sha256": "19222555be3aea3b1a5e4db3fa1a18649fbe590960ede1f9e928d1eac857f134"
+    },
+    {
+      "first_line": 67,
+      "last_line": 70,
+      "node": "ValidationError",
+      "sha256": "cf0529f38303242a2b054a4be731c36296cd658ff5709f8dfe0f50cbd9c5811e"
+    },
+    {
+      "first_line": 73,
+      "last_line": 75,
+      "node": "require",
+      "sha256": "f87d3efa6405c878506fb2afe884ca27dec57c62c9d50265ba861d10776678bd"
+    },
+    {
+      "first_line": 112,
+      "last_line": 113,
+      "node": "run_key",
+      "sha256": "743639b2b8d139569defa98b2104beef429de62fa93034e9fdb5710508347a89"
+    },
+    {
+      "first_line": 544,
+      "last_line": 546,
+      "node": "mean",
+      "sha256": "df055b3af2d9c5231c9cd4cf045fa8beeece62ce2060c8267dc662e8a096837e"
+    },
+    {
+      "first_line": 549,
+      "last_line": 563,
+      "node": "bootstrap",
+      "sha256": "73e43b8f4517c178e629a91713b8affaaea4f04939ed56e7de3f98eba338af6b"
+    },
+    {
+      "first_line": 566,
+      "last_line": 606,
+      "node": "summarize",
+      "sha256": "75e9e2eaab6b50337f8bf0467e5b2c3a89bb2b292d81ad9c60b330660d2e6666"
+    },
+    {
+      "first_line": 609,
+      "last_line": 630,
+      "node": "paired_rows",
+      "sha256": "799a5ede8aac27f23998505b47327bf5f71c79d5447c77368f36612533a07063"
+    },
+    {
+      "first_line": 633,
+      "last_line": 758,
+      "node": "aggregate_split",
+      "sha256": "cd74dc83eba188d302aaf9bec377ed4f4add505d5124f6e8b95cf46ee0bd2a11"
+    }
+  ],
+  "serialization": "Original UTF-8 source bytes for each selected top-level AST node, including its terminal newline, joined by one additional newline in original source order."
+}
