@@ -1,6 +1,7 @@
 """Original-hit scoring mathematics and robust ranking; no calibrated cutoffs."""
 
 import copy
+import csv
 import json
 import math
 from dataclasses import replace
@@ -216,6 +217,18 @@ def test_real_cli_fixed_three_seed_protocol_exports_robust_ranking_and_exact_pos
         return
     selected = read("results.json")["results"][0]
     assert selected["ranking_policy"] == selected["scoring_objective"] == "original-hit-v1"
+    with (out / "results.tsv").open() as stream:
+        table = list(csv.DictReader(stream, delimiter="\t"))
+    assert len(table) == 1 and table[0]["route_id"] == selected["route_id"]
+    assert table[0]["ranking_policy"] == table[0]["scoring_objective"] == "original-hit-v1"
+    for name in ("poses_hit.sdf", "poses_design.sdf", "references_hit.sdf", "references_design.sdf"):
+        records = list(Chem.SDMolSupplier(str(out / name), removeHs=False))
+        assert len(records) == 1 and records[0] is not None
+        assert records[0].GetProp("_Name") == selected["route_id"]
+        assert records[0].GetProp("scoring_objective") == "original-hit-v1"
+        if name.startswith("poses_"):
+            assert records[0].GetProp("ranking_policy") == "original-hit-v1"
+            assert canonical(Chem.MolToSmiles(records[0])) == selected["smiles"]
     assert selected["ranking_score"] == report["seed_score_min"]
     assert [t["settings"]["seed"] for t in report["trials"]] == [42, 43, 44]
     assert all(

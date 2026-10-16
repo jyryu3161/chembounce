@@ -1539,6 +1539,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     mol.SetProp("smiles", row["smiles"])
                     mol.SetProp("score", str(row["score"]))
                     mol.SetProp("scoring_stage", row["scoring_stage"])
+                    mol.SetProp("scoring_objective", row["scoring_objective"])
+                    mol.SetProp("ranking_policy", row["ranking_policy"])
                     mol.SetIntProp("pose_seed", row["pose_seed"])
                     for metric in ("seed_score_median", "seed_score_min", "seed_score_max"):
                         mol.SetDoubleProp(metric, row[metric])
@@ -1566,6 +1568,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     mol = Chem.Mol(reference.mol)
                     mol.SetProp("_Name", row["route_id"])
                     mol.SetProp("reference_role", role)
+                    mol.SetProp("scoring_objective", pose_settings.scoring_objective)
                     cid = info[role]["reference_conformer_id"]
                     mol.SetIntProp("source_conformer_id", cid)
                     mol.SetIntProp("pose_seed", row["pose_seed"])
