@@ -104,7 +104,16 @@ class BoundCatalog:
         return block
 
     def evidence(self, ident):
-        return asdict(self.get(ident)) | {"catalog_sha256": self.sha256}
+        expected = asdict(self.get(ident)) | {"catalog_sha256": self.sha256}
+        evidence = self._catalog.evidence(ident)
+        if not isinstance(evidence, dict) or any(
+            evidence.get(key) != value for key, value in expected.items()
+        ):
+            raise ValueError("Shared catalog evidence differs from its frozen records")
+        return evidence
+
+    def _check_import_unchanged(self):
+        self._catalog._check_import_unchanged()
 
     def binding(self):
         return {

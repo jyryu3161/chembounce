@@ -7,6 +7,7 @@ Molecule's stored SMILES string is retained; embeddings are discarded.
 
 import argparse
 import csv
+import hashlib
 import pickle
 import pickletools
 from pathlib import Path
@@ -75,16 +76,19 @@ def read_index_smiles(path):
 def convert_catalog(inputs, output, source, snapshot, smiles_column="smiles", id_column="id"):
     """Convert SDF/CSV/TSV or inert SynLlama indices, recording skipped records.
 
-    SDF/CSV supplier identifiers are preserved. Missing IDs receive an explicit
-    snapshot-derived chemical identity, never a fabricated vendor SKU.
+    Supplied identifiers are stripped consistently with Catalog. Missing or blank
+    IDs receive a structure-derived chemical identity, never a vendor SKU.
     """
     output = Path(output)
     if output.exists() or output.with_suffix(output.suffix + ".manifest.json").exists():
         raise ValueError("Refusing to overwrite converted catalog or manifest")
-    if not source or not snapshot:
-        raise ValueError("Catalog source and snapshot identifier are required")
-    records, failures, inputs_evidence = {}, [], []
-    for filename in inputs:
+    if any(
+        not isinstance(value, str) or not value.strip()
+        for value in (source, snapshot, smiles_column, id_column)
+    ):
+        raise ValueError("Catalog source, snapshot identifier and column names must be nonempty strings")
+    records, origins, failures, inputs_evidence = {}, {}, [], []
+    for input_index, filename in enumerate(inputs):
         path = Path(filename)
         file_hash = digest(path)
         inputs_evidence.append({"path": str(path.resolve()), "sha256": file_hash})
@@ -118,11 +122,13 @@ def convert_catalog(inputs, output, source, snapshot, smiles_column="smiles", id
             try:
                 smiles = canonical(smiles)
             except ValueError as exc:
-                failures.append({"file": str(path), "record": index, "reason": str(exc)})
+                failures.append(
+                    {"input_index": input_index, "file": str(path), "record": index, "reason": str(exc)}
+                )
                 continue
+            ident = ident.strip() if ident else ""
+            identifier_origin = "input_provided" if ident else "generated_structure_sha256"
             if not ident:
-                import hashlib
-
                 ident = "structure-sha256:" + hashlib.sha256(smiles.encode()).hexdigest()
             if ident in records and records[ident]["smiles"] != smiles:
                 raise ValueError(f"Conflicting structures for catalog ID {ident}")
@@ -133,6 +139,15 @@ def convert_catalog(inputs, output, source, snapshot, smiles_column="smiles", id
                 "snapshot": snapshot,
                 "availability": "catalogued",
             }
+            origins.setdefault(ident, []).append(
+                {
+                    "input_index": input_index,
+                    "record_index": index,
+                    "identifier_origin": identifier_origin,
+                }
+            )
+        if digest(path) != file_hash:
+            raise ValueError(f"Catalog input changed during conversion: {path}")
     if not records:
         raise ValueError("No valid connected building blocks in inputs")
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -143,14 +158,18 @@ def convert_catalog(inputs, output, source, snapshot, smiles_column="smiles", id
         writer.writeheader()
         writer.writerows(records[k] for k in sorted(records))
     manifest = {
-        "schema_version": 1,
+        "schema_version": 2,
         "inputs": inputs_evidence,
         "output_sha256": digest(output),
         "records": len(records),
         "rejected_records": failures,
         "source": source,
         "snapshot": snapshot,
-        "id_policy": "Preserve input ID when present, otherwise structure-sha256 (not a supplier SKU)",
+        "smiles_column": smiles_column,
+        "id_column": id_column,
+        "record_index_policy": "zero_based_logical_records",
+        "record_origins": {ident: origins[ident] for ident in sorted(origins)},
+        "id_policy": "Strip input ID when nonblank, otherwise structure-sha256 (not a verified supplier SKU)",
         "availability_policy": "Snapshot membership only; live stock is not checked",
     }
     write_json(output.with_suffix(output.suffix + ".manifest.json"), manifest)

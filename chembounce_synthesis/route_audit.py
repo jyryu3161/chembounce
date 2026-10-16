@@ -394,6 +394,7 @@ def audit_route(route, catalog, rules, product_limit=64):
         raise ValueError("Authoritative route requires only schema_version=1, root and nodes")
     if digest(catalog.path) != catalog.sha256 or digest(rules.path) != rules.sha256:
         raise ValueError("Authoritative catalog/rules files changed since loading")
+    catalog._check_import_unchanged()
     verification = verify_route(route, catalog, rules, product_limit)
     order = _topology(route["nodes"], route["root"])
     values, parents, blocks, steps = {}, {}, [], []

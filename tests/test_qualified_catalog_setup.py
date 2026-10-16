@@ -8,6 +8,7 @@ import pytest
 
 from benchmarks.research import qualified_collector as collector, qualified_runner as runner
 from benchmarks.research.protocol import digest, write_json
+from chembounce_synthesis.assets import convert_catalog
 from tests.test_qualified_runner import protocol
 
 
@@ -255,3 +256,55 @@ def test_mutation_during_constructor_rejected(tmp_path, monkeypatch):
     monkeypatch.setattr(collector, "Catalog", changed)
     with pytest.raises(ValueError, match="sidecar"):
         load([method], source)
+
+
+@pytest.mark.parametrize("version", ["absent", "unversioned", "v1", "v2"])
+def test_bound_catalog_preserves_leaf_lineage_and_freshness(tmp_path, version):
+    method, source = pinned(tmp_path, sidecar=version != "absent")
+    path = Path(method["resolved_assets"]["catalog"])
+    sidecar = path.with_suffix(".tsv.manifest.json")
+    if version == "v2":
+        input_path = tmp_path / "source.csv"
+        input_path.write_text("id,smiles\nethane,CC\nethane,CC\n")
+        path = tmp_path / "converted.tsv"
+        convert_catalog([input_path], path, "fixture", "snapshot")
+        sidecar = path.with_suffix(".tsv.manifest.json")
+        method["assets"]["catalog"] = {"artifact": str(path), "sha256": digest(path)}
+        method["resolved_assets"]["catalog"] = str(path)
+        method["resolved_assets"]["catalog_manifest"] = str(sidecar)
+    elif version == "v1":
+        write_json(sidecar, {"schema_version": 1, "output_sha256": digest(path)})
+    if version != "absent":
+        method["assets"]["catalog_manifest"] = {"artifact": str(sidecar), "sha256": digest(sidecar)}
+    bound = load([method], source)[0]["catalog"]
+    ordinary = collector.Catalog(path)
+    expected = ordinary.evidence("ethane")
+    assert bound.evidence("ethane") == expected
+    assert expected["identifier_provenance"]["status"] == (
+        "recorded" if version == "v2" else "unknown_legacy"
+    )
+    returned = bound.evidence("ethane")
+    if version == "v2":
+        assert len(returned["identifier_provenance"]["source_records"]) == 2
+        returned["identifier_provenance"]["source_records"][0]["record_index"] = 999
+    returned["identifier_provenance"]["source_records"].clear()
+    returned["identifier_provenance"]["status"] = "mutated"
+    assert bound.evidence("ethane") == expected
+    bound._check_import_unchanged()
+    sidecar.write_text("{}")
+    with pytest.raises(ValueError, match="import manifest changed"):
+        bound._check_import_unchanged()
+    with pytest.raises(ValueError, match="sidecar"):
+        bound.validate(path, runner.synthesis_sources(source))
+
+
+@pytest.mark.parametrize("field,value", [("id", "other"), ("smiles", "CCC"), ("catalog_sha256", "0" * 64)])
+def test_bound_evidence_checks_frozen_record_fields(tmp_path, monkeypatch, field, value):
+    method, source = pinned(tmp_path)
+    bound = load([method], source)[0]["catalog"]
+    altered = bound.evidence("ethane") | {field: value}
+    monkeypatch.setattr(bound._catalog, "evidence", lambda ident: altered)
+    with pytest.raises(ValueError, match="frozen records"):
+        bound.evidence("ethane")
+    with pytest.raises(ValueError, match="absent"):
+        bound.evidence("missing")
