@@ -1,0 +1,704 @@
+{
+  "evidence": {
+    "crem_database_manifest": {
+      "bundled": false,
+      "bytes": 19279,
+      "record": "scaffold DB source/runtime manifest; all split runtimes equivalent",
+      "sha256": "4910e3771ee91f69dc3a7586092803ae80662016f2efd429c697dec9f7b7f50f"
+    },
+    "execution_plan": {
+      "bundled": false,
+      "bytes": 183331,
+      "record": "prepared supplementary 270 execution-plan.json",
+      "sha256": "d9cdc59af4d973028373a64c514a59da9c47cdb383949783a932e670405323f0"
+    },
+    "forward_install_script": {
+      "bundled": false,
+      "bytes": 3843,
+      "record": "retained CPU installer script",
+      "sha256": "921dba343d4f8b4f3476a422a72f37e9dd7bcba51f8079083d43021b301e38cf"
+    },
+    "forward_install_state": {
+      "bundled": false,
+      "bytes": 1815,
+      "record": "CPU installation stage results",
+      "sha256": "1be508f8015a27e07e85af263812d36c3ee5d7ee314d4c4c0b8458ca6a70894d"
+    },
+    "forward_pins": {
+      "bundled": false,
+      "bytes": 791,
+      "record": "CPU non-Torch dependency pins",
+      "sha256": "87afc5234a838776ae07971de9711b698e999b12e4fd7cc4f493ff4f3231edfe"
+    },
+    "forward_wheel_reference": {
+      "bundled": false,
+      "bytes": 333,
+      "record": "official CPU Torch wheel reference",
+      "sha256": "cf5973e21173fd3a6865e81f9339f0521d86c1f4ef58f25c8e76507781d108d7"
+    },
+    "fragment_index": {
+      "bundled": false,
+      "bytes": 998,
+      "record": "prepared final method fragment index",
+      "sha256": "6efc4f4c1b4502e4bbeb75bbd4926fa92c2c8ec2adaa38c90e18bf8c5687a4c5"
+    },
+    "frozen_source": {
+      "bundled": false,
+      "bytes": 4507,
+      "record": "original frozen source provenance",
+      "sha256": "8c8d9a883fe29acc8ffc1d6c3826a0056def13a93fa852508617069f3d48075e"
+    },
+    "mol2mol_constraints": {
+      "bundled": false,
+      "bytes": 99,
+      "record": "original explicit NumPy/RDKit constraints",
+      "sha256": "653512656d77cf26653f27d04f3a9fefb2c5da8b2d2db6b709773e0a080ada84"
+    },
+    "mol2mol_install_report": {
+      "bundled": false,
+      "bytes": 1392427,
+      "record": "original pip installation report",
+      "sha256": "4b94cd62718159a40d476c6b62757136893337ccaa0b908ec6f0155787493996"
+    },
+    "mol2mol_prepared_bundle": {
+      "bundled": false,
+      "bytes": 68823,
+      "record": "prepared official Mol2Mol bundle",
+      "sha256": "93b65e71add5dba81b1d8d0459b5e48655962fbaf231c83a939fdfcd762bf03d"
+    },
+    "mol2mol_source_inventory": {
+      "bundled": false,
+      "bytes": 56926,
+      "record": "prepared official Mol2Mol Python/metadata source inventory",
+      "sha256": "82577f8d96506645fa6102b271099a83b7cc7a77be19a9cf17241e93c882f514"
+    },
+    "research_initial_pins": {
+      "bundled": false,
+      "bytes": 1226,
+      "record": "original 62 dependency pins",
+      "sha256": "e9c391387b1791b2e898b01fe0058dc96fee9d1300fbd12b4a18e576b4cb5a6c"
+    },
+    "research_install_log": {
+      "bundled": false,
+      "bytes": 3556,
+      "record": "original isolated environment installation log",
+      "sha256": "45939e1e49be93feb544c7d55a55cb24fe65c7503e14009fbb76e056c6febb67"
+    },
+    "research_parent_runtime": {
+      "bundled": false,
+      "bytes": 3046,
+      "record": "parent isolated runtime validation",
+      "sha256": "5981a7492cd898ef29c3181d65eb526027e44f2707ad6b0013e0302e9050fb72"
+    }
+  },
+  "no_install_download_gpu_or_inference_during_packaging": true,
+  "profiles": {
+    "crem": {
+      "augmented_metadata": {
+        "additional_unique_packages": {
+          "autocommand": "2.2.2",
+          "backports-tarfile": "1.2.0",
+          "importlib-metadata": "8.0.0",
+          "inflect": "7.3.1",
+          "jaraco-collections": "5.1.0",
+          "jaraco-context": "5.3.0",
+          "jaraco-functools": "4.0.1",
+          "jaraco-text": "3.12.1",
+          "more-itertools": "10.3.0",
+          "platformdirs": "4.2.2",
+          "typeguard": "4.3.0",
+          "zipp": "3.19.2"
+        },
+        "duplicate_vendored_names": [
+          "packaging",
+          "tomli",
+          "typing-extensions",
+          "wheel"
+        ],
+        "raw_entries": 41,
+        "scope": "crem imports setuptools_scm/setuptools; vendored dist-info entries become discoverable. These are not separately installed requirements.",
+        "unique_names": 37
+      },
+      "constraints_check": {
+        "checked_requirements": 22,
+        "issues": [],
+        "scope": "installed Requires-Dist markers for this platform with no optional extras; Requires-Python"
+      },
+      "execution_sources": [
+        "crem_adapter",
+        "crem_upstream"
+      ],
+      "include_system_site_packages": false,
+      "installed_distribution_count": 25,
+      "installed_packages": {
+        "crem": "0.3.3.dev1+gb84003cd8",
+        "exceptiongroup": "1.3.1",
+        "iniconfig": "2.3.1",
+        "joblib": "1.5.2",
+        "numpy": "2.2.6",
+        "packaging": "26.3",
+        "pandas": "2.3.3",
+        "pillow": "12.3.0",
+        "pip": "23.0.1",
+        "pluggy": "1.7.0",
+        "psutil": "7.2.2",
+        "pygments": "2.21.0",
+        "pytest": "8.4.2",
+        "python-dateutil": "2.9.0.post0",
+        "pytz": "2026.5",
+        "rdkit": "2025.9.6",
+        "ruff": "0.14.1",
+        "setuptools": "80.9.0",
+        "setuptools-scm": "9.2.2",
+        "six": "1.17.0",
+        "tomli": "2.5.0",
+        "tqdm": "4.67.1",
+        "typing-extensions": "4.16.0",
+        "tzdata": "2026.5",
+        "wheel": "0.45.1"
+      },
+      "libc": [
+        "glibc",
+        "2.31"
+      ],
+      "machine": "x86_64",
+      "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+      "prepared_runtime": {
+        "interpreter_sha256": "0812c05967309d1cf936120184b79f15162fc5bcbe4b7787945ed51be28a23e9",
+        "rdkit_policy": "2025.9.6",
+        "scope": "Interpreter/config hashes and distribution versions; not hashes of all installed binaries",
+        "venv_config_sha256": "20d3a6762a029d4e535b257c18cf58ddb0420b0c1c33dae13212f8a161f742ec",
+        "version": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+      },
+      "requirements": {
+        "crem-pypi.txt": {
+          "index_url": "https://pypi.org/simple",
+          "packages": 24
+        }
+      },
+      "source_installation": {
+        "distribution": "crem",
+        "editable": true,
+        "source_id": "crem_upstream",
+        "version": "0.3.3.dev1+gb84003cd8"
+      }
+    },
+    "forward-cpu": {
+      "constraints_check": {
+        "checked_requirements": 68,
+        "issues": [],
+        "scope": "installed Requires-Dist markers for this platform with no optional extras; Requires-Python"
+      },
+      "execution_sources": [
+        "chembounce_frozen",
+        "chembounce_current"
+      ],
+      "include_system_site_packages": false,
+      "installed_distribution_count": 49,
+      "installed_packages": {
+        "certifi": "2026.2.25",
+        "charset-normalizer": "3.4.7",
+        "chembounce": "2.0.0.dev0",
+        "contourpy": "1.3.2",
+        "cycler": "0.12.1",
+        "exceptiongroup": "1.3.0",
+        "filelock": "3.25.2",
+        "fonttools": "4.43.1",
+        "fsspec": "2026.3.0",
+        "hf-xet": "1.2.0",
+        "huggingface-hub": "0.36.2",
+        "idna": "3.11",
+        "iniconfig": "2.3.0",
+        "jinja2": "3.1.6",
+        "kiwisolver": "1.4.5",
+        "loguru": "0.7.3",
+        "markupsafe": "3.0.3",
+        "matplotlib": "3.10.8",
+        "mpmath": "1.3.0",
+        "networkx": "3.4.2",
+        "numpy": "1.26.4",
+        "packaging": "26.0",
+        "pandas": "2.3.3",
+        "pillow": "12.2.0",
+        "pip": "22.3.1",
+        "pluggy": "1.6.0",
+        "psutil": "7.2.2",
+        "pygments": "2.18.0",
+        "pyparsing": "3.1.1",
+        "pytest": "9.0.2",
+        "python-dateutil": "2.9.0.post0",
+        "pytz": "2026.1.post1",
+        "pyyaml": "6.0.2",
+        "rdkit": "2025.9.6",
+        "regex": "2024.11.6",
+        "requests": "2.32.3",
+        "safetensors": "0.6.2",
+        "scaffoldgraph": "1.1.2",
+        "scipy": "1.13.1",
+        "six": "1.17.0",
+        "sympy": "1.14.0",
+        "tokenizers": "0.21.4",
+        "tomli": "2.0.1",
+        "torch": "2.8.0+cpu",
+        "tqdm": "4.67.3",
+        "transformers": "4.51.3",
+        "typing-extensions": "4.15.0",
+        "tzdata": "2026.1",
+        "urllib3": "2.6.3"
+      },
+      "libc": [
+        "glibc",
+        "2.31"
+      ],
+      "machine": "x86_64",
+      "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+      "prepared_runtime": {
+        "interpreter_sha256": "0812c05967309d1cf936120184b79f15162fc5bcbe4b7787945ed51be28a23e9",
+        "rdkit_policy": "2025.9.6",
+        "scope": "Interpreter/config hashes and distribution versions; not hashes of all installed binaries",
+        "venv_config_sha256": "dccc2e51d6594402e9fc7afdf86e3baa0e9aa5c7d2dfb5bbe54cd5b6530edc01",
+        "version": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+      },
+      "requirements": {
+        "forward-cpu-pypi.txt": {
+          "index_url": "https://pypi.org/simple",
+          "packages": 47
+        },
+        "forward-cpu-pytorch-cpu.txt": {
+          "index_url": "https://download.pytorch.org/whl/cpu",
+          "packages": 1
+        }
+      },
+      "source_installation": {
+        "commit_evidence": "Scientific source provenance; direct_url.json records a directory, not a Git commit",
+        "distribution": "chembounce",
+        "editable": true,
+        "source_id": "chembounce_frozen",
+        "version": "2.0.0.dev0"
+      }
+    },
+    "mol2mol": {
+      "constraints_check": {
+        "checked_requirements": 171,
+        "issues": [],
+        "scope": "installed Requires-Dist markers for this platform with no optional extras; Requires-Python"
+      },
+      "execution_sources": [
+        "mol2mol_adapter",
+        "mol2mol_upstream"
+      ],
+      "include_system_site_packages": false,
+      "installed_distribution_count": 108,
+      "installed_packages": {
+        "absl-py": "2.5.1",
+        "alabaster": "1.0.0",
+        "annotated-types": "0.8.0",
+        "babel": "2.18.0",
+        "blinker": "1.9.0",
+        "certifi": "2026.7.22",
+        "charset-normalizer": "3.5.2",
+        "chemprop": "1.5.2",
+        "click": "8.5.0",
+        "cloudpickle": "3.1.2",
+        "contourpy": "1.3.2",
+        "cycler": "0.12.1",
+        "descriptastorus": "2.8.0",
+        "dill": "0.4.1",
+        "docstring-parser": "0.18.0",
+        "docutils": "0.21.2",
+        "exceptiongroup": "1.3.1",
+        "filelock": "4.1.0",
+        "flask": "3.1.3",
+        "fonttools": "4.65.0",
+        "fsspec": "2026.9.0",
+        "funcy": "2.1",
+        "grpcio": "1.84.0",
+        "hyperopt": "0.3.0",
+        "idna": "3.20",
+        "imagesize": "2.0.1",
+        "iniconfig": "2.3.1",
+        "itsdangerous": "2.2.0",
+        "jinja2": "3.1.6",
+        "joblib": "1.6.0",
+        "kiwisolver": "1.5.1",
+        "markdown": "3.10.3",
+        "markupsafe": "3.0.4",
+        "matplotlib": "3.10.9",
+        "mmpdb": "2.1",
+        "molvs": "0.1.1",
+        "mpmath": "1.3.0",
+        "multiprocess": "0.70.19",
+        "networkx": "3.4.2",
+        "numpy": "1.26.4",
+        "nvidia-cublas-cu12": "12.1.3.1",
+        "nvidia-cuda-cupti-cu12": "12.1.105",
+        "nvidia-cuda-nvrtc-cu12": "12.1.105",
+        "nvidia-cuda-runtime-cu12": "12.1.105",
+        "nvidia-cudnn-cu12": "8.9.2.26",
+        "nvidia-cufft-cu12": "11.0.2.54",
+        "nvidia-curand-cu12": "10.3.2.106",
+        "nvidia-cusolver-cu12": "11.4.5.107",
+        "nvidia-cusparse-cu12": "12.1.0.106",
+        "nvidia-nccl-cu12": "2.20.5",
+        "nvidia-nvjitlink-cu12": "12.9.86",
+        "nvidia-nvtx-cu12": "12.1.105",
+        "openeye-toolkits": "2025.2.3",
+        "packaging": "26.3",
+        "pandas": "2.3.3",
+        "pandas-flavor": "0.8.1",
+        "pathos": "0.3.5",
+        "pillow": "10.4.0",
+        "pip": "23.0.1",
+        "pluggy": "1.7.0",
+        "pox": "0.3.7",
+        "ppft": "1.7.8",
+        "protobuf": "7.36.2",
+        "pydantic": "2.14.1",
+        "pydantic-core": "2.50.1",
+        "pygments": "2.21.0",
+        "pyparsing": "3.3.3",
+        "pytest": "8.4.2",
+        "pytest-mock": "3.16.0",
+        "python-dateutil": "2.9.0.post0",
+        "python-dotenv": "1.2.4",
+        "pytz": "2026.5",
+        "pyyaml": "6.0.3",
+        "rdkit": "2023.9.5",
+        "reinvent": "4.4.22",
+        "requests": "2.34.2",
+        "requests-mock": "1.12.1",
+        "scikit-learn": "1.2.2",
+        "scipy": "1.15.3",
+        "setuptools": "65.5.0",
+        "six": "1.17.0",
+        "snowballstemmer": "3.1.1",
+        "sphinx": "8.1.3",
+        "sphinxcontrib-applehelp": "2.0.0",
+        "sphinxcontrib-devhelp": "2.0.0",
+        "sphinxcontrib-htmlhelp": "2.1.0",
+        "sphinxcontrib-jsmath": "1.0.1",
+        "sphinxcontrib-qthelp": "2.0.0",
+        "sphinxcontrib-serializinghtml": "2.0.0",
+        "sympy": "1.14.0",
+        "tenacity": "8.5.0",
+        "tensorboard": "2.21.0",
+        "tensorboard-data-server": "0.7.2",
+        "tensorboardx": "2.6.5",
+        "threadpoolctl": "3.7.0",
+        "tomli": "2.5.0",
+        "torch": "2.3.1+cu121",
+        "torchvision": "0.18.1+cu121",
+        "tqdm": "4.70.1",
+        "triton": "2.3.1",
+        "typed-argument-parser": "1.12.0",
+        "typing-extensions": "4.16.0",
+        "typing-inspection": "0.4.4",
+        "tzdata": "2026.5",
+        "urllib3": "2.8.0",
+        "werkzeug": "3.1.9",
+        "xarray": "2025.6.1",
+        "xxhash": "3.8.1"
+      },
+      "libc": [
+        "glibc",
+        "2.31"
+      ],
+      "machine": "x86_64",
+      "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+      "prepared_runtime": {
+        "interpreter_sha256": "0812c05967309d1cf936120184b79f15162fc5bcbe4b7787945ed51be28a23e9",
+        "rdkit_policy": "2023.9.5",
+        "scope": "Interpreter/config hashes and distribution versions; not hashes of all installed binaries",
+        "venv_config_sha256": "ad3168b2022aa8cd3c8d6da9a054fba7ec7cd5bd45376875a0ce93bb24992cae",
+        "version": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+      },
+      "requirements": {
+        "mol2mol-nvidia.txt": {
+          "index_url": "https://pypi.nvidia.com",
+          "packages": 12
+        },
+        "mol2mol-openeye.txt": {
+          "index_url": "https://pypi.anaconda.org/OpenEye/simple",
+          "packages": 1
+        },
+        "mol2mol-pypi.txt": {
+          "index_url": "https://pypi.org/simple",
+          "packages": 91
+        },
+        "mol2mol-pytorch-cu121.txt": {
+          "index_url": "https://download.pytorch.org/whl/cu121",
+          "packages": 3
+        }
+      },
+      "source_installation": {
+        "distribution": "reinvent",
+        "editable": false,
+        "source_id": "mol2mol_upstream",
+        "version": "4.4.22"
+      }
+    },
+    "research": {
+      "constraints_check": {
+        "checked_requirements": 90,
+        "issues": [],
+        "scope": "installed Requires-Dist markers for this platform with no optional extras; Requires-Python"
+      },
+      "execution_sources": [
+        "chembounce_current"
+      ],
+      "include_system_site_packages": false,
+      "installed_distribution_count": 64,
+      "installed_packages": {
+        "certifi": "2026.2.25",
+        "charset-normalizer": "3.4.7",
+        "chembounce": "2.0.0.dev0",
+        "contourpy": "1.3.2",
+        "cycler": "0.12.1",
+        "exceptiongroup": "1.3.0",
+        "filelock": "3.25.2",
+        "fonttools": "4.43.1",
+        "fsspec": "2026.3.0",
+        "hf-xet": "1.2.0",
+        "huggingface-hub": "0.36.2",
+        "idna": "3.11",
+        "iniconfig": "2.3.0",
+        "jinja2": "3.1.6",
+        "kiwisolver": "1.4.5",
+        "loguru": "0.7.3",
+        "markupsafe": "3.0.3",
+        "matplotlib": "3.10.8",
+        "mpmath": "1.3.0",
+        "networkx": "3.4.2",
+        "numpy": "1.26.4",
+        "nvidia-cublas-cu12": "12.8.4.1",
+        "nvidia-cuda-cupti-cu12": "12.8.90",
+        "nvidia-cuda-nvrtc-cu12": "12.8.93",
+        "nvidia-cuda-runtime-cu12": "12.8.90",
+        "nvidia-cudnn-cu12": "9.10.2.21",
+        "nvidia-cufft-cu12": "11.3.3.83",
+        "nvidia-cufile-cu12": "1.13.1.3",
+        "nvidia-curand-cu12": "10.3.9.90",
+        "nvidia-cusolver-cu12": "11.7.3.90",
+        "nvidia-cusparse-cu12": "12.5.8.93",
+        "nvidia-cusparselt-cu12": "0.7.1",
+        "nvidia-nccl-cu12": "2.27.3",
+        "nvidia-nvjitlink-cu12": "12.8.93",
+        "nvidia-nvtx-cu12": "12.8.90",
+        "packaging": "26.0",
+        "pandas": "2.3.3",
+        "pillow": "12.2.0",
+        "pluggy": "1.6.0",
+        "psutil": "7.2.2",
+        "pygments": "2.18.0",
+        "pyparsing": "3.1.1",
+        "pytest": "9.0.2",
+        "python-dateutil": "2.9.0.post0",
+        "pytz": "2026.1.post1",
+        "pyyaml": "6.0.2",
+        "rdkit": "2025.9.6",
+        "regex": "2024.11.6",
+        "requests": "2.32.3",
+        "safetensors": "0.6.2",
+        "scaffoldgraph": "1.1.2",
+        "scipy": "1.13.1",
+        "setuptools": "84.0.0",
+        "six": "1.17.0",
+        "sympy": "1.14.0",
+        "tokenizers": "0.21.4",
+        "tomli": "2.0.1",
+        "torch": "2.8.0",
+        "tqdm": "4.67.3",
+        "transformers": "4.51.3",
+        "triton": "3.4.0",
+        "typing-extensions": "4.15.0",
+        "tzdata": "2026.1",
+        "urllib3": "2.6.3"
+      },
+      "libc": [
+        "glibc",
+        "2.31"
+      ],
+      "machine": "x86_64",
+      "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+      "prepared_runtime": {
+        "interpreter_sha256": "0812c05967309d1cf936120184b79f15162fc5bcbe4b7787945ed51be28a23e9",
+        "rdkit_policy": "2025.9.6",
+        "scope": "Interpreter/config hashes and distribution versions; not hashes of all installed binaries",
+        "venv_config_sha256": "dccc2e51d6594402e9fc7afdf86e3baa0e9aa5c7d2dfb5bbe54cd5b6530edc01",
+        "version": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+      },
+      "requirements": {
+        "research-pypi.txt": {
+          "index_url": "https://pypi.org/simple",
+          "packages": 63
+        }
+      },
+      "source_installation": {
+        "commit_evidence": "Scientific source provenance; direct_url.json records a directory, not a Git commit",
+        "distribution": "chembounce",
+        "editable": true,
+        "source_id": "chembounce_frozen",
+        "version": "2.0.0.dev0"
+      }
+    }
+  },
+  "python": "3.10.12",
+  "schema_version": 1,
+  "scope": "Observed four study runtime profiles; package metadata parity, not a hashed lock or validated cold rebuild. Original legacy generation runtime is outside this bundle.",
+  "sources": {
+    "chembounce_current": {
+      "commit": "2328588d0969369e694d9293a1dccc89392a8203",
+      "files_sha256": {
+        "benchmarks/research/__init__.py": "327f267abf66df80902e31f0c50896eaf9b92a3122158bf0e061e8a5c52a15ae",
+        "benchmarks/research/adapters.py": "b17d68bab97d76bab0058402e8e3e54ddfc5d051fa28a471b6d1fc9b3073460d",
+        "benchmarks/research/assay_control_scoring.py": "58c9e982f9f63f5506bc1d9abb68d852084713403605f021b7507f4d911a155f",
+        "benchmarks/research/assay_matched.py": "f65f7973c4c37f85b3e71b481c83dabb4ca0cadb4ed3c06897af9bbd74b9c00f",
+        "benchmarks/research/assay_metadata.py": "d3791a1a4b18f1506c3e37fcc8137b9a9fd1a077520570f91425facecb8e9629",
+        "benchmarks/research/build_protocol.py": "d04488118d6ccf051c687f20e932b8f346e23ba2d6fe3e19b2ac7f825d2ee72e",
+        "benchmarks/research/controls.py": "eb409cb4198348ced6c49d444d0ab2148122e8729fcefde9e386b804ce039fd8",
+        "benchmarks/research/evaluation.py": "4bc5f24c5f2e043b52c55e530ec35d68407b669a017804a9f5e75c67729a75e5",
+        "benchmarks/research/import_chembl.py": "2ff61c961d077dafd6985ddb5c7c2eb824ddc993e2d2b2bf01636aa32b6472de",
+        "benchmarks/research/protocol.py": "ebabb21494a8293353ed3a45b5832ea98542e4fddffa222a6aed92105bdbe09e",
+        "benchmarks/research/runner.py": "7b1cc8d6d7a3e1a7f454b8f93195e9d5618405500bb521e128689447601bb4e7",
+        "benchmarks/research/sources.py": "02b1544ecae89f1e770958a927a26ebb0896fe829cd2827a637feaf81bc19df0",
+        "benchmarks/research/training_library.py": "d284cb4e0293b06e19d05e32e4b3a8ba569c7901697bc678cc2e5c3325c3374e",
+        "cats_module.py": "cd90d5ef199e126070bd1f55918a12844763c1fa9ba1b232f1b5f4cc071e634a",
+        "chembounce.py": "d981e328b0b8e146dea43afeb56e7df4d62cd57e33709c5f825ba2610c69a5dc",
+        "chembounce_synthesis/__init__.py": "8d5968b9f40381dafd4b5b491c0d09f0f3536f08ba3bf56503a96df3df459435",
+        "chembounce_synthesis/assets.py": "0f513372fee6211d6af0c134e4b2e9adc590d1d8499e1072013628f7f18c51df",
+        "chembounce_synthesis/catalog.py": "9b9e68176aed026715c10fb7e6720e7f04b0bb849430e7a614f2151319e0b616",
+        "chembounce_synthesis/cli.py": "2c44b5b30da774728ca40adaa0e987e8d34f3eb202f656b688918c2807ef700b",
+        "chembounce_synthesis/common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+        "chembounce_synthesis/conformers.py": "93bc916b739bb89194ffde8f74b91c630792b10935504fbded6ad8b1786b0904",
+        "chembounce_synthesis/continuation.py": "ea91d5969c31f1560bd81ba0b584a69ee83a1cabe434d8309cc113ebcdb6c461",
+        "chembounce_synthesis/evidence.py": "b66b072a92e434d0278ce8ab2e43e36aca62ca080dbcbbed788930ea5d1c586d",
+        "chembounce_synthesis/exploration.py": "e2dff768077c5957261660d8f4aeaa9434388c0a7a7e0a4504ab0f047dbdc315",
+        "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+        "chembounce_synthesis/options.py": "8c17da2ac7e24cad193fccba4f2fe936793db53760c110269ca01f2d3beece68",
+        "chembounce_synthesis/pocket.py": "6ed66bbb409878c5490249115ba125587f361178e16a27eab986f3678453f1f0",
+        "chembounce_synthesis/protocols.py": "1b7f582857f7b0f603c81b45fd08c9f94e88e5b92d8546e7b188a760a733b3f7",
+        "chembounce_synthesis/reactions.py": "f77c6a98632697086614927267212e0948c39f8b2c76fd42dd9971fb58ef2569",
+        "chembounce_synthesis/refinement.py": "2a2a9cb5f14a115d56006ca17466d8da925e835532dcc186ed7b6d2b8a2340bf",
+        "chembounce_synthesis/routes.py": "65221078db350d08af1fcb1cd81faa162c9085355cab19dc658875112dd19047",
+        "chembounce_synthesis/synllama.py": "aaa20ea1beb87e4160babc92e0943e8da94ec4a3cf2343e7ae2968e046b2b535",
+        "chembounce_synthesis/workflow.py": "93d4ee581181701f2c6300b4ed59199c58ebaf6a95b9aaa8984cd3161582e2eb",
+        "chemistry.py": "bdd598d1255ce827fb6843e3d95f8ceb4a5cdafe33335086f0b270b04940f462",
+        "cli.py": "9b5c9c24972a5c5c1eb7bf22f15acbd29bc527ca8e8854b897f8f57f60968c3e",
+        "cost_estimation.py": "4a416388ec4e210f9eb61f532d9b4650ee80ecd5808756d3ae04c48ba56d483f",
+        "fingerprint_db.py": "3831ab3f05aafdb1f683a3edb6fcd0e1eb5e748c1b9e8c0e6f88e9d16a83285f",
+        "generate_fingerprints.py": "92bbd8e440a81eed653806580352e9bf8fb9e732b2c0f2d6474b69417ea8d2e7",
+        "scaffoldgraph_fragmenter.py": "17787d5666155ec748a7136ee9b2351cfac0c7bd9557c4f52bd505d9a21698bc",
+        "shape_descriptors.py": "fd7f5a42e87e7b9987abf3c6536ffff08a18b5a1b05d1c097e5c1701d12a3b5e",
+        "utils.py": "197f32d92deb299a709383116fbd8f0651991069512a4c78860403eef2f42a81"
+      },
+      "role": "Supplementary runner/current pipeline and common evaluation; explicit cwd/PYTHONPATH takes precedence over editable frozen project.",
+      "url": "https://github.com/jyryu3161/chembounce"
+    },
+    "chembounce_frozen": {
+      "commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+      "files_sha256": {
+        "benchmarks/research/__init__.py": "327f267abf66df80902e31f0c50896eaf9b92a3122158bf0e061e8a5c52a15ae",
+        "benchmarks/research/adapters.py": "4e9ce66140f931fe4fd5527e36661b1408719e6f917c3da0c542b8d6f636fc1a",
+        "benchmarks/research/assay_metadata.py": "d3791a1a4b18f1506c3e37fcc8137b9a9fd1a077520570f91425facecb8e9629",
+        "benchmarks/research/build_protocol.py": "d04488118d6ccf051c687f20e932b8f346e23ba2d6fe3e19b2ac7f825d2ee72e",
+        "benchmarks/research/controls.py": "eb409cb4198348ced6c49d444d0ab2148122e8729fcefde9e386b804ce039fd8",
+        "benchmarks/research/evaluation.py": "4bc5f24c5f2e043b52c55e530ec35d68407b669a017804a9f5e75c67729a75e5",
+        "benchmarks/research/import_chembl.py": "2ff61c961d077dafd6985ddb5c7c2eb824ddc993e2d2b2bf01636aa32b6472de",
+        "benchmarks/research/protocol.py": "ebabb21494a8293353ed3a45b5832ea98542e4fddffa222a6aed92105bdbe09e",
+        "benchmarks/research/runner.py": "73666fad7b6c6947a461e46d55bbbf01b816451966b81cb1cb2bf2726ff5661a",
+        "benchmarks/research/sources.py": "02b1544ecae89f1e770958a927a26ebb0896fe829cd2827a637feaf81bc19df0",
+        "benchmarks/research/training_library.py": "d284cb4e0293b06e19d05e32e4b3a8ba569c7901697bc678cc2e5c3325c3374e",
+        "cats_module.py": "cd90d5ef199e126070bd1f55918a12844763c1fa9ba1b232f1b5f4cc071e634a",
+        "chembounce.py": "d981e328b0b8e146dea43afeb56e7df4d62cd57e33709c5f825ba2610c69a5dc",
+        "chembounce_synthesis/__init__.py": "8d5968b9f40381dafd4b5b491c0d09f0f3536f08ba3bf56503a96df3df459435",
+        "chembounce_synthesis/assets.py": "0f513372fee6211d6af0c134e4b2e9adc590d1d8499e1072013628f7f18c51df",
+        "chembounce_synthesis/catalog.py": "81cacefa665595f32231fc03f0d35b8e0d76acf1584ed8fcc91b3dbdc837517c",
+        "chembounce_synthesis/cli.py": "2c44b5b30da774728ca40adaa0e987e8d34f3eb202f656b688918c2807ef700b",
+        "chembounce_synthesis/common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+        "chembounce_synthesis/conformers.py": "8f289778a7056d728a4115fdf934626f80f19448853c55b9d971260fc991634b",
+        "chembounce_synthesis/continuation.py": "ea91d5969c31f1560bd81ba0b584a69ee83a1cabe434d8309cc113ebcdb6c461",
+        "chembounce_synthesis/evidence.py": "b66b072a92e434d0278ce8ab2e43e36aca62ca080dbcbbed788930ea5d1c586d",
+        "chembounce_synthesis/exploration.py": "e2dff768077c5957261660d8f4aeaa9434388c0a7a7e0a4504ab0f047dbdc315",
+        "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+        "chembounce_synthesis/options.py": "8c17da2ac7e24cad193fccba4f2fe936793db53760c110269ca01f2d3beece68",
+        "chembounce_synthesis/pocket.py": "6ed66bbb409878c5490249115ba125587f361178e16a27eab986f3678453f1f0",
+        "chembounce_synthesis/protocols.py": "1b7f582857f7b0f603c81b45fd08c9f94e88e5b92d8546e7b188a760a733b3f7",
+        "chembounce_synthesis/reactions.py": "f77c6a98632697086614927267212e0948c39f8b2c76fd42dd9971fb58ef2569",
+        "chembounce_synthesis/refinement.py": "2a2a9cb5f14a115d56006ca17466d8da925e835532dcc186ed7b6d2b8a2340bf",
+        "chembounce_synthesis/routes.py": "65221078db350d08af1fcb1cd81faa162c9085355cab19dc658875112dd19047",
+        "chembounce_synthesis/synllama.py": "aaa20ea1beb87e4160babc92e0943e8da94ec4a3cf2343e7ae2968e046b2b535",
+        "chembounce_synthesis/workflow.py": "b28f72f8845178f049d52e61971bfdc33d40020357428893057edc8552c1bcca",
+        "chemistry.py": "bdd598d1255ce827fb6843e3d95f8ceb4a5cdafe33335086f0b270b04940f462",
+        "cli.py": "d4a1c25f5b3307a2d99d4ec34f0e59abe07e43e512420898dbfdeece0a332970",
+        "cost_estimation.py": "4a416388ec4e210f9eb61f532d9b4650ee80ecd5808756d3ae04c48ba56d483f",
+        "fingerprint_db.py": "2901db6fadb90aa886d7d194f9ed38ac86f962f74fecfa6ea391a5d9cb97068e",
+        "generate_fingerprints.py": "57781998a33d33c7d81941de80a7100dbcddffd7791290bbc24fb991de4f7640",
+        "scaffoldgraph_fragmenter.py": "17787d5666155ec748a7136ee9b2351cfac0c7bd9557c4f52bd505d9a21698bc",
+        "shape_descriptors.py": "fd7f5a42e87e7b9987abf3c6536ffff08a18b5a1b05d1c097e5c1701d12a3b5e",
+        "utils.py": "197f32d92deb299a709383116fbd8f0651991069512a4c78860403eef2f42a81"
+      },
+      "role": "Original editable project scientific source. Directory metadata does not encode commit; later documentation commits do not identify a different frozen scientific implementation.",
+      "url": "https://github.com/jyryu3161/chembounce"
+    },
+    "crem_adapter": {
+      "commit": "107c906ef98bd8345a7ddfcf0eeff7f4e1821835",
+      "files_sha256": {
+        "benchmarks/external/crem_baseline.py": "df41757d8e8e4145a755a6be91929c11a52b7ee0bc4a59c9426957ffd2804d00",
+        "benchmarks/research/__init__.py": "327f267abf66df80902e31f0c50896eaf9b92a3122158bf0e061e8a5c52a15ae",
+        "benchmarks/research/evaluation.py": "4bc5f24c5f2e043b52c55e530ec35d68407b669a017804a9f5e75c67729a75e5",
+        "benchmarks/research/protocol.py": "ebabb21494a8293353ed3a45b5832ea98542e4fddffa222a6aed92105bdbe09e",
+        "benchmarks/research/runner.py": "7b1cc8d6d7a3e1a7f454b8f93195e9d5618405500bb521e128689447601bb4e7",
+        "chembounce_synthesis/__init__.py": "8d5968b9f40381dafd4b5b491c0d09f0f3536f08ba3bf56503a96df3df459435",
+        "chembounce_synthesis/common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+        "chembounce_synthesis/exploration.py": "e2dff768077c5957261660d8f4aeaa9434388c0a7a7e0a4504ab0f047dbdc315",
+        "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+        "chemistry.py": "bdd598d1255ce827fb6843e3d95f8ceb4a5cdafe33335086f0b270b04940f462",
+        "fingerprint_db.py": "3831ab3f05aafdb1f683a3edb6fcd0e1eb5e748c1b9e8c0e6f88e9d16a83285f"
+      },
+      "role": "Source checkout, not an installed distribution.",
+      "url": "https://github.com/jyryu3161/chembounce"
+    },
+    "crem_upstream": {
+      "commit": "b84003cd8c84bc2afe98b5473570b7328e703ead",
+      "generated_files_sha256": {
+        "crem/_version.py": "f7f77dde668112f7a85677d186666ee3630ecc6cd5cd3be59ca95fa3d06bd82d"
+      },
+      "role": "Official editable CReM installation; complete source inventory is bound by the DB manifest.",
+      "tracked_file_count": 80,
+      "tracked_files_manifest_sha256": "7e53d3679469e20894cc23bec18e05f1db632208b1899be9d44dc0a7e1f6c8b3",
+      "url": "https://github.com/DrrDom/crem"
+    },
+    "mol2mol_adapter": {
+      "commit": "be6204e43060d6d168e7151177c0694f78a389c2",
+      "files_sha256": {
+        "benchmarks/external/mol2mol/__init__.py": "668e9bc22f430f24b85af419b118c4d367dbda9b85d2ef9789c3159590add0a7",
+        "benchmarks/external/mol2mol/adapter.py": "b0e3366d743598cf2c29713f6b5966ffd2555f3d9039d52805d8f749cdd6ca87",
+        "benchmarks/external/mol2mol/observation.py": "abd0b62874c1a8b738923f2aeecfd8c21e73d877f522e1ad8629c84be5b4392d",
+        "benchmarks/external/mol2mol/prepare.py": "8e8acba24a2ab2cad4fb7fe4d934cb26ace67ffae84dcd884508f2423ac1aab6",
+        "benchmarks/external/mol2mol/selection.py": "923b5fcda7bc121667e9fbf8e3c71c72a5f288fd9a43282f1f9ea9214eb8e738",
+        "benchmarks/external/mol2mol/support.py": "4dab932e76cff2b8a4fa99b4687b069ce3021d7dd7e827fa5b1d0cd2013f113e",
+        "benchmarks/external/mol2mol/worker.py": "a1c5d7ab64c40098167a67694b202ed430e1961d09c52af46970ea9a12f94772",
+        "chembounce_synthesis/__init__.py": "8d5968b9f40381dafd4b5b491c0d09f0f3536f08ba3bf56503a96df3df459435",
+        "chembounce_synthesis/common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+        "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da"
+      },
+      "role": "Source checkout, not an installed distribution.",
+      "url": "https://github.com/jyryu3161/chembounce"
+    },
+    "mol2mol_upstream": {
+      "additional_original_artifact_hashes": {
+        "LICENSE": "9f0f6abba6fe77a76fdf38bb3fa08904325c0508e888ece3adde95fb64a02bd5",
+        "priors/sha512.sum": "3132dd89b4a786e6f7a4f4b5e73137ec660c9160e721183d7e39a04739b4689a",
+        "pyproject.toml": "21e01bf499c0e2923b8ff5c329353e9501ef90425c98405f968d5de04d58b525",
+        "requirements-linux-64.lock": "0dae6cef52c3c5018cf1ffa31dbeaf93212b145f3ea912bbd3c90d193028e7a8"
+      },
+      "commit": "eb61443a1a93a8cbd06510548b25cc77cfd9d3a6",
+      "prepared_source_manifest_file_count": 455,
+      "prepared_source_manifest_sha256": "25e04c786fc195a851bea6f12c065aee08f567e38cedde8914f423b70b1c2636",
+      "role": "Official direct local-source install of reinvent 4.4.22, not editable; 455 prepared Python/metadata source files and four original metadata artifacts are bound by prepared bundle, not a claim to enumerate every tracked non-code asset.",
+      "url": "https://github.com/MolecularAI/REINVENT4"
+    }
+  },
+  "temporary_build_tools": "PEP517 isolated build dependencies were not fully pinned/retained and are not claimed reproducible.",
+  "wheel_hash_scope": "Only hashes already present in retained reports are reproduced; requirements are not hash locked."
+}
