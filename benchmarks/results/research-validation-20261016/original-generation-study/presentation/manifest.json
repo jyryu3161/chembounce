@@ -1,0 +1,81 @@
+{
+  "expected_validation_sha256": "87a0210ea63fedd89d480850e5b205e26d1313aa6e66af258af21ef9dec1db94",
+  "exporter_sha256": "9ff90a30557c678e0f5125272349f6b98450bd6428ff38445054dfb52b740d2d",
+  "files_sha256": {
+    "availability.csv": "0bdbd7a06117e441f29f79c686636a35964f4ba63f161023aff15577c46257dd",
+    "infrastructure_bounds.csv": "12f4ce33ea48bb1bba1c429c56b7f5eff704c0164f539660e48c79c938fe6950",
+    "metrics.csv": "b9601ae6b8f0f14d152da75d67fcf52188692f41113854c95b6e5ed0adc2eb30",
+    "paired_contrasts.csv": "d6e5d329b96104744634b4246e919cff1e5212f9149f7f00228836cd829d0c51",
+    "scaffold.pdf": "a96cb47f4db26cfb69604a94c0169d9fe4f16a3a4bbcab781fa773c29e8f02fd",
+    "scaffold.png": "7832b72cdbd86b82b2fd1917f3e8ada0691a3d78a503b65fe74f762864cadc87",
+    "target.pdf": "ee4ae3e1b4c38127b050f998dbe2d4f6b26450eb1594a06ac72ac3a02ce1379c",
+    "target.png": "bdc286a7ca536475e282a29217d4bb392f889335a789a98e0ccfdabe4042adf5",
+    "time.pdf": "ead054157777bec52f859c94b21beedafb93d5086456726f27763718a32050d8",
+    "time.png": "6da98516b062f13418a00405f20f7464a45ab3636b96528904533992d0c0906a"
+  },
+  "historical_helper_sha256": "cb6992cda28895fa42791ad3969df5cbafd48a71b4ab8362ecc180cfeb4f2cc0",
+  "input_before_after_sha256": {
+    "scaffold-comparison.json": "709115d6bc350295240d22fdaefb7404123c7c92a41a0b9357a6c4cd57d2ff25",
+    "target-comparison.json": "2890c0605385e0b8763e43d6d9e9308dfcb680a674faee91b25ddc78ab3d4c79",
+    "time-comparison.json": "5d009690c5dc516048110c29e986ac4dad4c261454ad7a74d092489ff008c14f",
+    "validation.json": "87a0210ea63fedd89d480850e5b205e26d1313aa6e66af258af21ef9dec1db94"
+  },
+  "method_order": {
+    "scaffold": [
+      "nearest_3d",
+      "nearest_catalog",
+      "pipeline",
+      "pipeline_encounter_allocation",
+      "pipeline_legacy_search",
+      "pipeline_no_3d",
+      "pipeline_no_refinement",
+      "pipeline_rule_only",
+      "reaction_enumeration",
+      "synllama_only"
+    ],
+    "target": [
+      "nearest_3d",
+      "nearest_catalog",
+      "pipeline",
+      "reaction_enumeration",
+      "synllama_only"
+    ],
+    "time": [
+      "nearest_3d",
+      "nearest_catalog",
+      "pipeline",
+      "reaction_enumeration",
+      "synllama_only"
+    ]
+  },
+  "null_encoding": "Blank CSV cell; missing plot values are labelled missing, never zero",
+  "original_scientific_files": 39,
+  "original_source_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+  "paired_contrast_scope": "Recorded target-mean contrast; success-conditional populations may differ, not like-for-like improvement",
+  "plotted_metrics": [
+    "attempt_with_hop",
+    "attempt_with_verified_route",
+    "common_3d_output_slot_coverage"
+  ],
+  "replay_contract_sha256": "9751209528300cdc38250d68c3a6a8748ed873362af1d1dabfa14ecbb2234113",
+  "runtime": {
+    "matplotlib": "3.10.8",
+    "numpy": "1.26.4",
+    "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+  },
+  "schema_version": 1,
+  "scope": "Original frozen generation study, commit d972124d587e647ef48455cf1a038e6be96e5b04 (39 files). Post hoc descriptive presentation of recorded statistics, not preregistration. No new estimates, pooling, imputation, generation, models, chemistry or 3D scoring. Repeated split targets are not independent cohorts. Rule replay is not experimental synthesis or the separate common-forward re-inference audit. Coverage is successful common-3D output slots divided by cap 3, not conditional quality. No activity, yield, probability or superiority claim. The current-pipeline supplementary 270 study is excluded. Recorded target-mean contrast; success-conditional populations may differ, not like-for-like improvement.",
+  "status": "completed",
+  "synthetic_fixture": false,
+  "table_rows": {
+    "availability": 2565,
+    "infrastructure_bounds": 1866,
+    "metrics": 21440,
+    "paired_contrasts": 1405
+  },
+  "target_clusters_by_split": {
+    "scaffold": 6,
+    "target": 3,
+    "time": 6
+  }
+}

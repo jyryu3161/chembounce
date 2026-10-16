@@ -143,6 +143,196 @@ A subsequent [assay-context audit](../benchmarks/results/research-validation-202
 
 The frozen [publication-year and held-out-target controls](../benchmarks/results/research-validation-20261016/secondary_controls.json) also completed. Time controls contain 240 pairs across six targets, with 21 stereo-policy failures; target controls contain 120 pairs across three targets, with 29 such failures. Paired bit/joint-3D ROC AUCs are 0.564/0.510 and 0.438/0.340, respectively. Count-Tanimoto ≥0.5 retains only 0.298% and 2.005% of eligible active scaffolds on target-macro averaging. These alternative partitions preserve the same assay limitations and do not establish a 3D discrimination benefit. Independent metric recomputation and reconstruction from the published source archive matched both records; see the result README for figures, uncertainty and reproduction commands.
 
+## Completed original frozen generation study
+
+The original study used commit `d972124d587e647ef48455cf1a038e6be96e5b04`
+and its pinned 39-file scientific source inventory. It completed all 630 planned
+method/query/seed attempts: scaffold 360, publication-year 180 and held-out-target
+90. These are the original frozen outputs, including their failures. They are not
+measurements of the later 41-file current pipeline or the separate supplementary
+270-attempt comparator study. Earlier partial-status records remain historical
+snapshots rather than being rewritten as completed experiments.
+
+Metrics were averaged over seeds 42, 43 and 44 within each query, queries within
+each target, and target clusters equally. The splits contain respectively 12, 12 and 6 queries
+and 6, 6 and 3 target clusters. Reused targets and reaction inputs do not establish
+statistical independence, and the splits must not be pooled as independent
+cohorts. The fixed outer budget was 360 seconds including cold start, 24,000 MB
+sampled process-tree RSS, and at most three returned candidates per attempt;
+method-specific inner limits remain recorded in the protocols.
+
+### All-method output and failure accounting
+
+The complete grid contains 434 successful attempts, 140 with no candidates,
+55 timeouts and one infrastructure interruption. The interruption is an unknown
+outcome, not a demonstrated chemistry failure. Conservative realized-output
+estimates retain its attempted slot; separately reported identification bounds
+show its possible contribution to bounded metrics. These bounds are not confidence
+intervals. Its lost runtime remains missing, and observed-runtime summaries do not
+substitute zero. Timeouts retain zero accepted outputs. Complete-case analyses
+excluding only infrastructure-missing outcomes are secondary and selection-biased.
+
+The tables below retain every method and split in alphabetical method order.
+Hop is the attempt-level scaffold-hop output indicator; route is the attempt-level
+output with a verified rule route; 3D coverage is available successful common-3D
+output slots divided by the output cap of three. Coverage measures available
+output, not success-conditional score quality. Zero route coverage for retrieval
+methods means no verified route was supplied, not that synthesis was attempted
+and failed. Displayed values are target-macro means and descriptive, unadjusted
+target-bootstrap 95% CIs (10,000 draws, seed
+20261016). Few target clusters limit inference; CI overlap is not a statistical
+test, and no significance or superiority claim is made.
+
+**Scaffold split: 360 attempts, 6 target clusters.** [PNG](../benchmarks/results/research-validation-20261016/original-generation-study/presentation/scaffold.png) / [PDF](../benchmarks/results/research-validation-20261016/original-generation-study/presentation/scaffold.pdf).
+
+| Method | Attempts | Hop, mean [95% CI] | Route, mean [95% CI] | 3D coverage, mean [95% CI] |
+| --- | ---: | ---: | ---: | ---: |
+| `nearest_3d` | 36 | 0.694 [0.611, 0.778] | 0.000 [0.000, 0.000] | 0.722 [0.611, 0.861] |
+| `nearest_catalog` | 36 | 0.667 [0.500, 0.833] | 0.000 [0.000, 0.000] | 0.889 [0.722, 1.000] |
+| `pipeline` | 36 | 0.167 [0.028, 0.333] | 0.167 [0.028, 0.333] | 0.139 [0.028, 0.250] |
+| `pipeline_encounter_allocation` | 36 | 0.417 [0.278, 0.556] | 0.417 [0.278, 0.556] | 0.315 [0.213, 0.444] |
+| `pipeline_legacy_search` | 36 | 0.361 [0.139, 0.639] | 0.361 [0.139, 0.639] | 0.343 [0.139, 0.583] |
+| `pipeline_no_3d` | 36 | 0.806 [0.667, 0.944] | 0.806 [0.667, 0.944] | 0.546 [0.444, 0.648] |
+| `pipeline_no_refinement` | 36 | 0.444 [0.306, 0.556] | 0.444 [0.306, 0.556] | 0.398 [0.278, 0.528] |
+| `pipeline_rule_only` | 36 | 0.306 [0.139, 0.500] | 0.306 [0.139, 0.500] | 0.269 [0.111, 0.444] |
+| `reaction_enumeration` | 36 | 0.833 [0.611, 1.000] | 0.833 [0.611, 1.000] | 0.620 [0.407, 0.833] |
+| `synllama_only` | 36 | 0.722 [0.611, 0.833] | 0.833 [0.694, 0.944] | 0.667 [0.472, 0.861] |
+
+**Publication-year split: 180 attempts, 6 target clusters.** [PNG](../benchmarks/results/research-validation-20261016/original-generation-study/presentation/time.png) / [PDF](../benchmarks/results/research-validation-20261016/original-generation-study/presentation/time.pdf).
+
+| Method | Attempts | Hop, mean [95% CI] | Route, mean [95% CI] | 3D coverage, mean [95% CI] |
+| --- | ---: | ---: | ---: | ---: |
+| `nearest_3d` | 36 | 0.972 [0.917, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
+| `nearest_catalog` | 36 | 0.667 [0.333, 0.917] | 0.000 [0.000, 0.000] | 0.944 [0.889, 1.000] |
+| `pipeline` | 36 | 0.444 [0.250, 0.639] | 0.444 [0.250, 0.639] | 0.380 [0.194, 0.565] |
+| `reaction_enumeration` | 36 | 1.000 [1.000, 1.000] | 1.000 [1.000, 1.000] | 0.843 [0.796, 0.898] |
+| `synllama_only` | 36 | 0.972 [0.917, 1.000] | 0.972 [0.917, 1.000] | 0.870 [0.713, 0.981] |
+
+**Held-out-target split: 90 attempts, 3 target clusters.** [PNG](../benchmarks/results/research-validation-20261016/original-generation-study/presentation/target.png) / [PDF](../benchmarks/results/research-validation-20261016/original-generation-study/presentation/target.pdf).
+
+| Method | Attempts | Hop, mean [95% CI] | Route, mean [95% CI] | 3D coverage, mean [95% CI] |
+| --- | ---: | ---: | ---: | ---: |
+| `nearest_3d` | 18 | 0.833 [0.500, 1.000] | 0.000 [0.000, 0.000] | 0.833 [0.500, 1.000] |
+| `nearest_catalog` | 18 | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 0.778 [0.500, 1.000] |
+| `pipeline` | 18 | 0.056 [0.000, 0.167] | 0.056 [0.000, 0.167] | 0.037 [0.000, 0.111] |
+| `reaction_enumeration` | 18 | 0.944 [0.833, 1.000] | 0.944 [0.833, 1.000] | 0.537 [0.444, 0.667] |
+| `synllama_only` | 18 | 0.500 [0.000, 1.000] | 0.667 [0.500, 1.000] | 0.444 [0.333, 0.500] |
+
+These display values are rounded to three decimals; the linked recorded JSON and
+[metrics CSV](../benchmarks/results/research-validation-20261016/original-generation-study/presentation/metrics.csv) preserve full numerical precision.
+The figures separately show infrastructure identification bounds; the complete
+[bounds](../benchmarks/results/research-validation-20261016/original-generation-study/presentation/infrastructure_bounds.csv) and
+[availability](../benchmarks/results/research-validation-20261016/original-generation-study/presentation/availability.csv) tables retain that distinction.
+
+The original `pipeline` produced successful outputs in only **6/36 scaffold
+attempts** (19 timeouts, 10 no-candidate outcomes and one infrastructure-missing
+outcome) and **1/18 held-out-target attempts** (17 no-candidate outcomes). These
+results do not support pipeline superiority. They document limited realized
+output under this frozen implementation and finite budget; later repairs and
+different successful-score populations cannot turn these failures into successes.
+
+### What was checked, and what remains unmeasured
+
+The completed common-scoring record covers 1,264 returned candidate occurrences;
+repeated molecules, queries and seeds are not independent new compounds.
+Independent direct catalog/rule replay matched all 763 supplied-route occurrences;
+501 candidate occurrences supplied no route and remain separate. Replay used the
+same RDKit chemistry kernel, a direct enumeration cap of 4,096 per step and the
+pinned catalog/rule records. It is bounded route consistency, not proof of all
+reagent sources, conditions, chemical feasibility, experimental synthesis or yield.
+It does not imply chemical validation of every catalog molecule or registered rule.
+The separate common-forward audit is not part of the generation-statistics bundle.
+
+Common 3D means and the original pipeline-minus-comparator conditional-score
+contrasts can involve different successful attempts and candidates for each method.
+The historical paired contrasts pair target means, not identical observed
+query/seed or candidate populations. They cannot establish like-for-like 3D
+improvements. The full-grid hop, route and output-slot metrics retain the common
+attempt grid; successful-score subsets and runtime availability are separately
+recorded. Model agreement and similarity are not calibrated probabilities,
+preserved biological activity, synthesis success or reaction yield.
+
+This is a post hoc descriptive evaluation. The bounded ChEMBL panels have the
+assay-context limitations recorded above, and unknown complete checkpoint training
+inventories prevent a clean pretrained holdout claim. The separate partial training
+sample audit cannot resolve that absence. Reusing a forward predictor for selection
+and evaluation can enrich agreement through the selection rule itself; it is not
+independent experimental evidence. Later engineering repairs, index sensitivity
+checks and current-pipeline studies do not retrospectively change the original
+failed attempts or establish their full-pipeline equivalence.
+
+### Reproduce the recorded statistics and presentation
+
+The [publication validation record](../benchmarks/results/research-validation-20261016/original-generation-study/validation.json),
+[SHA256 checksums](../benchmarks/results/research-validation-20261016/original-generation-study/SHA256SUMS),
+[portable statistical bundle](../benchmarks/results/research-validation-20261016/original-generation-study/statistical-bundle.zip),
+[recorded replay validation](../benchmarks/results/research-validation-20261016/original-generation-study/replay/validation.json), and
+[presentation manifest](../benchmarks/results/research-validation-20261016/original-generation-study/presentation/manifest.json) bind the completed
+inputs and outputs. The 55-file ZIP contains the original panels, protocols, run
+lists, common-score records, historical analysis helper and hash-bound completion
+reviews. It does not contain model weights or a runnable generation environment.
+Original absolute paths remain historical provenance strings and are not opened
+by statistical replay. Existing source attribution is retained without assigning
+a new project or model license.
+
+The parent replayed all three splits with Python 3.10.12 / NumPy 1.26.4,
+Python 3.10.12 / NumPy 1.24.4 and Python 3.12.13 / NumPy 2.5.4; the three comparison
+JSON files were byte-identical across these environments. This establishes stored
+statistical replay under those runtimes, not chemical or neural-runtime equivalence.
+An independent arithmetic implementation also checked the original per-query,
+per-target, bootstrap, contrast and infrastructure records. The actual presentation
+review checked all 21,440 metric rows, 1,405 contrast rows, 1,866 bounds rows and
+2,565 availability rows, including preservation of 756 null numeric rows.
+
+From the repository root, use fresh destinations:
+
+```bash
+STUDY_ARTIFACTS=benchmarks/results/research-validation-20261016/original-generation-study
+(cd "$STUDY_ARTIFACTS" && sha256sum -c SHA256SUMS)
+mkdir /tmp/original630-reproduction
+python -m zipfile -e "$STUDY_ARTIFACTS/statistical-bundle.zip" /tmp/original630-reproduction
+
+python -B benchmarks/diagnostics/generation_replay/replay.py verify \
+  --bundle /tmp/original630-reproduction/original630-bundle \
+  --expected-manifest-sha256 147e2b874974e2a99586570315bf72f9a0e97aac1647285e8a97533d3c9b300a \
+  --output /tmp/original630-reproduction/verification.json
+
+python -B benchmarks/diagnostics/generation_replay/replay.py replay \
+  --bundle /tmp/original630-reproduction/original630-bundle \
+  --expected-manifest-sha256 147e2b874974e2a99586570315bf72f9a0e97aac1647285e8a97533d3c9b300a \
+  --output /tmp/original630-reproduction/recomputed
+
+python -B benchmarks/diagnostics/generation_replay/export_figures.py \
+  --replay "$STUDY_ARTIFACTS/replay" \
+  --expected-validation-sha256 87a0210ea63fedd89d480850e5b205e26d1313aa6e66af258af21ef9dec1db94 \
+  --output /tmp/original630-reproduction/presentation
+```
+
+The final command deliberately renders the published, externally anchored replay.
+A new replay records its own runtime in `validation.json`; its validation-file hash
+can therefore differ even when the three comparison JSONs match. Review and retain
+that new validation hash before using it for a new presentation. The published
+figures used Matplotlib 3.10.8; rendering bytes can vary across plotting runtimes.
+The [replay contract](../benchmarks/diagnostics/generation_replay/README.md) and
+[exporter contract](../benchmarks/diagnostics/generation_replay/EXPORT.md) describe
+the trust anchors, fixed estimator and interpretation limits.
+
+The portable statistical replay verifies the completed input grids, original
+source/protocol identities, source and output hashes, and common-score joins
+before recomputing recorded aggregates. It requires Python and NumPy; it performs
+no generation, model inference, chemistry or common-3D recomputation. The separate
+figure exporter accepts a passed replay and an externally retained validation SHA,
+then exports its recorded values without new statistical calculations. Matplotlib
+is needed only for presentation. All destinations must be fresh, and the external
+hashes must come from the reviewed publication record rather than being trusted
+solely because an unverified archive contains them.
+
+The complete-precision CSVs preserve null values as blanks and include every
+recorded metric, per-query and per-target summaries, target-macro estimates,
+conditional-population contrast scope, and separate infrastructure bounds and
+availability. The publication archive preserves existing source attribution; it
+does not assign a new license to project code, models or third-party artifacts.
+
 ## Publication interpretation
 
 A separately selected [same-assay follow-up](../benchmarks/results/assay-matched-controls-20261016/README.md) now contains 197 pairs, 12 queries and 12 assays across those same six targets. Selection/scoring criteria were fixed before its chemical scores were calculated, after the initial heterogeneity findings. Three pairs failed the stereo policy; all failures remain in the denominators and bounds. Paired complete-case target-macro ROC AUC was 0.7392 for bit Tanimoto, 0.7370 for shape and 0.7131 for joint 3D. The paired joint-minus-bit difference was −0.0261 (target-bootstrap 95% interval −0.1017 to +0.0402), so this evaluation does not establish additional 3D discrimination. All hierarchical ROC/AP estimates and missing-score bounds matched independent scikit-learn calculations within `1e-12`. Reconstruction from the published raw ZIP reproduced all chemical records and selected pairs. Same assay ID narrows context without resolving every metadata ambiguity or establishing new-molecule activity; changed cohorts prevent attributing differences from earlier panels to assay matching alone.
