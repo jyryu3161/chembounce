@@ -212,7 +212,15 @@ retrosynthesis planner for every method's final products. No planner is added he
 The dedicated CPU fixture run passed **46 tests in 9.89 seconds**. Without the
 explicit upstream opt-in, 10 optional integrations skip explicitly.
 [Validation record](crem-engineering-validation.json) binds source versions,
-file/log hashes and scope; independent parent assessment is pending.
+file/log hashes and the original agent-check scope. A subsequent
+[independent parent review](crem-parent-validation.json) passed 46 tests (9.68 s),
+verified all 80 tracked upstream files against Git blobs, and independently
+recomputed a ten-row count-Morgan selection fixture using sum(min)/sum(max)
+(tolerance 1e-12). Source/runtime hashes and the original 39 campaign sources
+were unchanged. This is engineering validation, not full-DB cost, activity,
+synthesis or benchmark-performance evidence; the earlier agent record is retained
+as a historical record. The hash-bound local parent evidence is not bundled as a
+self-contained public replay.
 
 ```bash
 CHEMBOUNCE_CREM_SOURCE=/path/to/crem-upstream \
