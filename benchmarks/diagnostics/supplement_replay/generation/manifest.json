@@ -1,0 +1,10 @@
+{
+  "assessment_code_sha256": "b9e24075c3940121c0dea6f0a6323a826824f372ca00129fe576194494f4a295",
+  "complete": true,
+  "files_sha256": {
+    "generation.json": "020f8651fdc909ff622919b18c500f21fc68e4e6f75197e76568885d334d8b78"
+  },
+  "schema_version": 1,
+  "stage": "generation_snapshot",
+  "study_manifest_sha256": "db76ab6355526ce833c06b443ccf9bd9b1222cbb26e253441f2f23ee2d4d9004"
+}

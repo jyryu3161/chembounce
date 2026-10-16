@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "selected_nodes": [
+    {
+      "first_line": 8,
+      "last_line": 8,
+      "node": "import:collections",
+      "sha256": "2005f965e5e6e538c8c389788c75a3cc763714aaef60660c0af3d37a4e81c386",
+      "source": "assess_historical.py"
+    },
+    {
+      "first_line": 17,
+      "last_line": 17,
+      "node": "import:statistics",
+      "sha256": "1f05c716d56ae527bd07a66a1a5d74d0083eb6a336549328df6ae83625411bd5",
+      "source": "assess_historical.py"
+    },
+    {
+      "first_line": 38,
+      "last_line": 38,
+      "node": "INFRA",
+      "sha256": "646d7d0848f67abce7ea364e0d379e4d4577120e84400bc3e48a3d9bf59577e6",
+      "source": "assess_historical.py"
+    },
+    {
+      "first_line": 39,
+      "last_line": 44,
+      "node": "RETENTION_FIELDS",
+      "sha256": "090705a2d1879a7fdfe05ea56193541e0321c83e0fe5c3bc85770e27fcb76a47",
+      "source": "assess_historical.py"
+    },
+    {
+      "first_line": 45,
+      "last_line": 54,
+      "node": "BOUNDED",
+      "sha256": "532ee88c0edd6d063136a4a8230c24f4d6f8c9ac9f760fff3f504b4a197d8022",
+      "source": "assess_historical.py"
+    },
+    {
+      "first_line": 71,
+      "last_line": 72,
+      "node": "key",
+      "sha256": "a552819bfd8614a610a1155ca0682a2b6d5aaaa80938e70d09262e49d34eb14a",
+      "source": "assess_historical.py"
+    },
+    {
+      "first_line": 75,
+      "last_line": 76,
+      "node": "occurrence_key",
+      "sha256": "716bb5f878ea44e11f136b7bb3b4b07d3a32d05b42070062497a9633a4f741d2",
+      "source": "assess_historical.py"
+    },
+    {
+      "first_line": 886,
+      "last_line": 888,
+      "node": "mean",
+      "sha256": "5c2857a0083bca1adc56265200a943c6980f4cb1fba007312191cb4cc86972cb",
+      "source": "assess_historical.py"
+    },
+    {
+      "first_line": 891,
+      "last_line": 960,
+      "node": "attempt_metrics",
+      "sha256": "ea73b45f9c61d49bd8e780f577e9c009c603f16f83f086cadf4ad357038273f1",
+      "source": "assess_historical.py"
+    },
+    {
+      "first_line": 963,
+      "last_line": 995,
+      "node": "hierarchical",
+      "sha256": "64efbc5ce5a0a092bb172d54ce9dd1195174870aa5cb657b9ae3c82ce970e4e4",
+      "source": "assess_historical.py"
+    },
+    {
+      "first_line": 998,
+      "last_line": 1072,
+      "node": "comparisons",
+      "sha256": "4d129f014005c39abb041e4dc3299008429a8f93bb78321eda3a3dbf82a44eb4",
+      "source": "assess_historical.py"
+    },
+    {
+      "first_line": 5,
+      "last_line": 5,
+      "node": "import:math",
+      "sha256": "085ea91d7cfeb4f5695793f882c7463cbfdf7be9f98e6c5133847a245bbea366",
+      "source": "evaluation_historical.py"
+    },
+    {
+      "first_line": 8,
+      "last_line": 8,
+      "node": "import:numpy",
+      "sha256": "d34aea06c990aeedd2f8f5ff809c1180b92fccca0381269b7c18654043b9a374",
+      "source": "evaluation_historical.py"
+    },
+    {
+      "first_line": 19,
+      "last_line": 24,
+      "node": "finite_scores",
+      "sha256": "fc7d8578617f13292e8369ac7ebce53aceab870bf08ad106bf9767d941bda266",
+      "source": "evaluation_historical.py"
+    },
+    {
+      "first_line": 27,
+      "last_line": 39,
+      "node": "score_stability",
+      "sha256": "998f417efb8d0a7e513c93669f8ee9bfc95520d9d7dc584ad1dca3e7bd1319ab",
+      "source": "evaluation_historical.py"
+    },
+    {
+      "first_line": 239,
+      "last_line": 251,
+      "node": "cluster_interval",
+      "sha256": "914731f5c0794e287a73f4767dad204e524b29945c5716c37680370b31250bb9",
+      "source": "evaluation_historical.py"
+    }
+  ],
+  "serialization": "Original selected AST node bytes including terminal newline; joined by one newline, assessor then evaluator."
+}

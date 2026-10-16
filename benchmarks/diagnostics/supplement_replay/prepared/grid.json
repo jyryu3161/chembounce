@@ -1,0 +1,2432 @@
+[
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0000-seed-42",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0000-seed-43",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0000-seed-44",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0001-seed-42",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0001-seed-43",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0001-seed-44",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0002-seed-42",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0002-seed-43",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0002-seed-44",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0003-seed-42",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0003-seed-43",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0003-seed-44",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0004-seed-42",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0004-seed-43",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0004-seed-44",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0005-seed-42",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0005-seed-43",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0005-seed-44",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0006-seed-42",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0006-seed-43",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0006-seed-44",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0007-seed-42",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0007-seed-43",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0007-seed-44",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0008-seed-42",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0008-seed-43",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0008-seed-44",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0009-seed-42",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0009-seed-43",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0009-seed-44",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0010-seed-42",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0010-seed-43",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0010-seed-44",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0011-seed-42",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0011-seed-43",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/pipeline_current/pipeline_current/query-0011-seed-44",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0000-seed-42",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0000-seed-43",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0000-seed-44",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0001-seed-42",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0001-seed-43",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0001-seed-44",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0002-seed-42",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0002-seed-43",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0002-seed-44",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0003-seed-42",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0003-seed-43",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0003-seed-44",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0004-seed-42",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0004-seed-43",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0004-seed-44",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0005-seed-42",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0005-seed-43",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0005-seed-44",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0006-seed-42",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0006-seed-43",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0006-seed-44",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0007-seed-42",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0007-seed-43",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0007-seed-44",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0008-seed-42",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0008-seed-43",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0008-seed-44",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0009-seed-42",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0009-seed-43",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0009-seed-44",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0010-seed-42",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0010-seed-43",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0010-seed-44",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0011-seed-42",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0011-seed-43",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/crem_train_partial_exo/crem_train_partial_exo/query-0011-seed-44",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0000-seed-42",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0000-seed-43",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0000-seed-44",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0001-seed-42",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0001-seed-43",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0001-seed-44",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0002-seed-42",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0002-seed-43",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0002-seed-44",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0003-seed-42",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0003-seed-43",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0003-seed-44",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0004-seed-42",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0004-seed-43",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0004-seed-44",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0005-seed-42",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0005-seed-43",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0005-seed-44",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0006-seed-42",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0006-seed-43",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0006-seed-44",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0007-seed-42",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0007-seed-43",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0007-seed-44",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0008-seed-42",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0008-seed-43",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0008-seed-44",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0009-seed-42",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0009-seed-43",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0009-seed-44",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0010-seed-42",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0010-seed-43",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0010-seed-44",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0011-seed-42",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 42,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0011-seed-43",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 43,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/scaffold/mol2mol_pretrained/mol2mol_pretrained/query-0011-seed-44",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 44,
+    "split": "scaffold",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0000-seed-42",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0000-seed-43",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0000-seed-44",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0001-seed-42",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0001-seed-43",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0001-seed-44",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0002-seed-42",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0002-seed-43",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0002-seed-44",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0003-seed-42",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0003-seed-43",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0003-seed-44",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0004-seed-42",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0004-seed-43",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0004-seed-44",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0005-seed-42",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0005-seed-43",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0005-seed-44",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0006-seed-42",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0006-seed-43",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0006-seed-44",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0007-seed-42",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0007-seed-43",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0007-seed-44",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0008-seed-42",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0008-seed-43",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0008-seed-44",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0009-seed-42",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0009-seed-43",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0009-seed-44",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0010-seed-42",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0010-seed-43",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0010-seed-44",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0011-seed-42",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0011-seed-43",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/pipeline_current/pipeline_current/query-0011-seed-44",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0000-seed-42",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0000-seed-43",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0000-seed-44",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0001-seed-42",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0001-seed-43",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0001-seed-44",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0002-seed-42",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0002-seed-43",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0002-seed-44",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0003-seed-42",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0003-seed-43",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0003-seed-44",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0004-seed-42",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0004-seed-43",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0004-seed-44",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0005-seed-42",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0005-seed-43",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0005-seed-44",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0006-seed-42",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0006-seed-43",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0006-seed-44",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0007-seed-42",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0007-seed-43",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0007-seed-44",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0008-seed-42",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0008-seed-43",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0008-seed-44",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0009-seed-42",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0009-seed-43",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0009-seed-44",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0010-seed-42",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0010-seed-43",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0010-seed-44",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0011-seed-42",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0011-seed-43",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/crem_train_partial_exo/crem_train_partial_exo/query-0011-seed-44",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0000-seed-42",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0000-seed-43",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0000-seed-44",
+    "query_id": "CHEMBL203-query-1",
+    "query_index": 0,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0001-seed-42",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0001-seed-43",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0001-seed-44",
+    "query_id": "CHEMBL203-query-2",
+    "query_index": 1,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL203"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0002-seed-42",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0002-seed-43",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0002-seed-44",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 2,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0003-seed-42",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0003-seed-43",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0003-seed-44",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 3,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0004-seed-42",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0004-seed-43",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0004-seed-44",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 4,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0005-seed-42",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0005-seed-43",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0005-seed-44",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 5,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0006-seed-42",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0006-seed-43",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0006-seed-44",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 6,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0007-seed-42",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0007-seed-43",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0007-seed-44",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 7,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0008-seed-42",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0008-seed-43",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0008-seed-44",
+    "query_id": "CHEMBL251-query-1",
+    "query_index": 8,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0009-seed-42",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0009-seed-43",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0009-seed-44",
+    "query_id": "CHEMBL251-query-2",
+    "query_index": 9,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL251"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0010-seed-42",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0010-seed-43",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0010-seed-44",
+    "query_id": "CHEMBL2637-query-1",
+    "query_index": 10,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0011-seed-42",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 42,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0011-seed-43",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 43,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/time/mol2mol_pretrained/mol2mol_pretrained/query-0011-seed-44",
+    "query_id": "CHEMBL2637-query-2",
+    "query_index": 11,
+    "seed": 44,
+    "split": "time",
+    "target_id": "CHEMBL2637"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0000-seed-42",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 0,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0000-seed-43",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 0,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0000-seed-44",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 0,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0001-seed-42",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 1,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0001-seed-43",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 1,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0001-seed-44",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 1,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0002-seed-42",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 2,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0002-seed-43",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 2,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0002-seed-44",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 2,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0003-seed-42",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 3,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0003-seed-43",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 3,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0003-seed-44",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 3,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0004-seed-42",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 4,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0004-seed-43",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 4,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0004-seed-44",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 4,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0005-seed-42",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 5,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0005-seed-43",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 5,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "pipeline_current",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/pipeline_current/pipeline_current/query-0005-seed-44",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 5,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0000-seed-42",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 0,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0000-seed-43",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 0,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0000-seed-44",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 0,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0001-seed-42",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 1,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0001-seed-43",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 1,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0001-seed-44",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 1,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0002-seed-42",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 2,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0002-seed-43",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 2,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0002-seed-44",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 2,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0003-seed-42",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 3,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0003-seed-43",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 3,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0003-seed-44",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 3,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0004-seed-42",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 4,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0004-seed-43",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 4,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0004-seed-44",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 4,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0005-seed-42",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 5,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0005-seed-43",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 5,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "crem_train_partial_exo",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/crem_train_partial_exo/crem_train_partial_exo/query-0005-seed-44",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 5,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0000-seed-42",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 0,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0000-seed-43",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 0,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0000-seed-44",
+    "query_id": "CHEMBL205-query-1",
+    "query_index": 0,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0001-seed-42",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 1,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0001-seed-43",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 1,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0001-seed-44",
+    "query_id": "CHEMBL205-query-2",
+    "query_index": 1,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL205"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0002-seed-42",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 2,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0002-seed-43",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 2,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0002-seed-44",
+    "query_id": "CHEMBL2147-query-1",
+    "query_index": 2,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0003-seed-42",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 3,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0003-seed-43",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 3,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0003-seed-44",
+    "query_id": "CHEMBL2147-query-2",
+    "query_index": 3,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL2147"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0004-seed-42",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 4,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0004-seed-43",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 4,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0004-seed-44",
+    "query_id": "CHEMBL220-query-1",
+    "query_index": 4,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0005-seed-42",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 5,
+    "seed": 42,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0005-seed-43",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 5,
+    "seed": 43,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  },
+  {
+    "method_id": "mol2mol_pretrained",
+    "output_dir": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/comparator-followup-prepared-20261016-runs/target/mol2mol_pretrained/mol2mol_pretrained/query-0005-seed-44",
+    "query_id": "CHEMBL220-query-2",
+    "query_index": 5,
+    "seed": 44,
+    "split": "target",
+    "target_id": "CHEMBL220"
+  }
+]

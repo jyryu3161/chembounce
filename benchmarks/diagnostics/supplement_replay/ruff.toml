@@ -1,0 +1,8 @@
+extend = "../../../pyproject.toml"
+
+[format]
+# Archived helpers and AST extracts retain their exact reviewed source bytes.
+exclude = ["assess_historical.py", "evaluation_historical.py", "statistics_extracted.py"]
+
+[lint.per-file-ignores]
+"statistics_extracted.py" = ["F821"] # preparation is an injected constant namespace, never imported.

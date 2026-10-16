@@ -1,0 +1,23 @@
+{
+  "execution_authorized": false,
+  "files_sha256": {
+    "analysis-plan.json": "d5f3d826f7b155fac980bfe82ec4907bebd42dd7cd295c8f9c4f2b61505caae2",
+    "common-3d-plan.json": "12545ad82552e0fd47d84dfea424031ceaf41106202181bab619042f274004b5",
+    "execution-plan.json": "d9cdc59af4d973028373a64c514a59da9c47cdb383949783a932e670405323f0",
+    "grid.json": "033991f31b98ecd84cdbfbd0cae96d9c859584aa7a826535d12edcc1fb5f482d",
+    "protocols/scaffold-crem_train_partial_exo.json": "b3624531ff6ef67605827eeebedc3694971153cac2bb6d2ed2450fbbcf36d2dc",
+    "protocols/scaffold-mol2mol_pretrained.json": "ffdbf4d42e623689df4be57be079ca743af6c6d9e91b0ec83f0ebbfbcb05e370",
+    "protocols/scaffold-pipeline_current.json": "5b1ae2a7a1e1fbe4c9969866facdf08f4b322b0390183ee996eb2789a36a8132",
+    "protocols/target-crem_train_partial_exo.json": "0b209332af369b5c85b474cad2877f5beb96a19d46365a6cfadb71e12808e50f",
+    "protocols/target-mol2mol_pretrained.json": "816cd46b07def7305310fbe508298b75f13cdf5d1f8efab66ff8d413d249f59d",
+    "protocols/target-pipeline_current.json": "b248899c0c22d7c0402c381f02afe8589d2c7017e013f4161ac2c3de2c272c9a",
+    "protocols/time-crem_train_partial_exo.json": "708e357e1bc58e27ce5a0e102b83c9bc583a8ec11f9cbd98359711f7a270f652",
+    "protocols/time-mol2mol_pretrained.json": "b90487cc4ac7fef8c7164fdc1354f1fa2f622f2628d5b08cd4818b987b554fee",
+    "protocols/time-pipeline_current.json": "258fe98bb235edf6c8068e8190d877f5d395f2e5c5f0bb7ef5b1e298bbf73773",
+    "public-queries/scaffold.json": "07efffc417ed40424f37d202927abd7b80e104161959d1361a2e468fa8e1e732",
+    "public-queries/target.json": "5a59b9cb1875acaf5185ddc3fac95bc9ffa207a26285593336c1252c1b02e326",
+    "public-queries/time.json": "bd5317992dabf734a966b1080c41483c12452dec1f95c86eb266f7174f7e2cea"
+  },
+  "schema_version": 1,
+  "status": "prepared_requires_parent_activation"
+}
