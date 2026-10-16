@@ -541,8 +541,9 @@ def test_bounds(tmp_path, data, monkeypatch):
     assert any("256 MiB" in item for item in view["issues"])
 
 
-def test_stdlib_import_and_file_access_sentinels(tmp_path, data):
-    run = save(tmp_path, data)
+@pytest.mark.parametrize("with_identity", [False, True])
+def test_stdlib_import_and_file_access_sentinels(tmp_path, data, with_identity):
+    run = save(tmp_path, identity_bundle() if with_identity else data)
     # Disposable child: a permanent audit hook cannot contaminate other tests.
     script = """import sys, pathlib
 root = pathlib.Path(sys.argv[1]).resolve()
@@ -1072,3 +1073,361 @@ def test_selective_nonrepresentative_design_floor_still_enforced(tmp_path, data,
     data["refinement.json"]["candidates"][0]["trials"][0]["design"][metric] = 0.4
     view = diagnostic(tmp_path, data)
     assert f"Required seed design_{metric} contradicts floor" in str(view["candidates"][0]["issues"])
+
+
+# Producer-shaped metadata; symbolic saved strings are deliberately not parsed.
+def identity_bundle():
+    docs = bundle()
+    manifest = docs["manifest.json"]
+    descriptor = {
+        "schema_version": 1,
+        "policy_version": "protonation-tautomer-family-v1",
+        "rdkit_version": "2025.09.6",
+        "tautomer_limit": 1000,
+        "transform_limit": 1000,
+        "code_sha256": {"identity.py": "a" * 64, "common.py": "b" * 64},
+    }
+    manifest["identity_comparison_policy"] = descriptor
+    manifest["code_sha256"] = copy.deepcopy(descriptor["code_sha256"])
+    manifest["versions"] = {"rdkit": "2025.9.6"}  # Package spelling is not rdBase spelling.
+    row = docs["results.json"]["results"][0]
+    row["family_smiles"] = PRODUCT
+
+    def identity(exact, scaffold):
+        return {
+            "exact_smiles": exact,
+            "family_smiles": exact,
+            "scaffold_family_smiles": scaffold,
+            "ring_skeleton_smiles": "C1CCCCC1",
+            "has_scaffold": True,
+            "policy_version": descriptor["policy_version"],
+            "rdkit_version": descriptor["rdkit_version"],
+        }
+
+    row["hit_identity_comparison"] = {
+        "schema_version": 1,
+        "reference_role": "original_hit",
+        "status": "recorded",
+        "original_hit_smiles": HIT,
+        "final_product_smiles": PRODUCT,
+        "original_hit": identity(HIT, "c1ccccc1"),
+        "final_product": identity(PRODUCT, "c1ccncc1"),
+        "change_class": "scaffold",
+        "atom_aware_scaffold_changed": True,
+        "generic_ring_linker_topology_changed": False,
+        "scaffold_presence_change": "both_present",
+    }
+    return docs
+
+
+def identity_parts(docs):
+    row = docs["results.json"]["results"][0]
+    return row, row["hit_identity_comparison"], docs["manifest.json"]
+
+
+def identity_view(docs):
+    row, _, manifest = identity_parts(docs)
+    return r._identity_comparison(
+        row, manifest, docs["results.json"]["policy"], r._identity_descriptor(manifest)
+    )
+
+
+def unavailable(docs, reason="retained_identity_policy_mismatch"):
+    row, record, _ = identity_parts(docs)
+    row["hit_identity_comparison"] = {
+        **{
+            k: record[k]
+            for k in ("schema_version", "reference_role", "original_hit_smiles", "final_product_smiles")
+        },
+        "status": "unavailable",
+        "reason_code": reason,
+        "reason": "<saved & unavailable>",
+    }
+
+
+def test_recorded_identity_public_roundtrip_and_defensive_copy(tmp_path):
+    docs = identity_bundle()
+    before = copy.deepcopy(docs)
+    view = r._assemble(docs, {}, [])
+    candidate = view["candidates"][0]
+    assert view["artifact_consistency"] == "consistent_recorded_bundle"
+    assert candidate["identity_comparison"]["status"] == "recorded"
+    assert candidate["refinement"]["route_id"] != candidate["row"]["route_id"]
+    saved = candidate["identity_comparison"]["record"]
+    saved["original_hit"]["exact_smiles"] = "mutated view"
+    view["identity_descriptor"]["record"]["code_sha256"]["identity.py"] = "changed"
+    assert docs == before
+    run = save(tmp_path, docs)
+    raw = {p.name: p.read_bytes() for p in run.iterdir()}
+    result = r.write_report(run)
+    assert result["artifact_consistency"] == "consistent_recorded_bundle"
+    output = (run / "review.html").read_text()
+    for text in ("both_present", "scaffold", "c1ccccc1", "ring/linker graph", "False"):
+        assert text in output
+    assert all((run / name).read_bytes() == value for name, value in raw.items())
+
+
+@pytest.mark.parametrize("state", ["absent", "valid", "null", "unsupported", "conflicting"])
+@pytest.mark.parametrize("kind", ["absent", "unavailable", "recorded", "null"])
+def test_identity_presence_matrix(state, kind):
+    docs = identity_bundle()
+    row, _, manifest = identity_parts(docs)
+    if state == "absent":
+        del manifest["identity_comparison_policy"]
+    elif state == "null":
+        manifest["identity_comparison_policy"] = None
+    elif state == "unsupported":
+        manifest["identity_comparison_policy"]["schema_version"] = 2
+    elif state == "conflicting":
+        manifest["code_sha256"]["common.py"] = "c" * 64
+    if kind == "absent":
+        del row["hit_identity_comparison"]
+    elif kind == "null":
+        row["hit_identity_comparison"] = None
+    elif kind == "unavailable":
+        unavailable(docs)
+    view = r._assemble(docs, {}, [])
+    expected = (
+        (kind == "absent" and state == "absent")
+        or kind == "unavailable"
+        or (kind == "recorded" and state == "valid")
+    )
+    assert (view["artifact_consistency"] == "consistent_recorded_bundle") == expected
+    assert "<saved & unavailable>" not in r.render_html(view)
+    if kind == "unavailable":
+        assert view["candidates"][0]["identity_comparison"]["status"] == "unavailable"
+        assert "&lt;saved &amp; unavailable&gt;" in r.render_html(view)
+
+
+@pytest.mark.parametrize("descriptor", ["absent", None, {}, {"schema_version": 99}, "valid"])
+def test_identity_zero_selected_never_invents_row_failure(descriptor):
+    docs = identity_bundle()
+    docs["results.json"]["results"] = []
+    docs["qualification.json"]["selected_route_ids"] = []
+    docs["summary.json"].update(
+        status="no_candidates", returned_products=0, accepted_products=0, qualified_products=0
+    )
+    if descriptor == "absent":
+        del docs["manifest.json"]["identity_comparison_policy"]
+    elif descriptor != "valid":
+        docs["manifest.json"]["identity_comparison_policy"] = descriptor
+    view = r._assemble(docs, {}, [])
+    assert view["artifact_consistency"] == "consistent_recorded_bundle"
+    assert not view["candidates"]
+    assert "No selected candidates" in r.render_html(view)
+
+
+@pytest.mark.parametrize(
+    "reason",
+    [
+        "original_hit_not_retained",
+        "deadline_before_hit_capture",
+        "hit_capture_failed",
+        "retained_identity_conflict",
+        "final_product_not_retained",
+        "retained_identity_binding_mismatch",
+        "original_hit_classification_not_retained",
+        "retained_identity_policy_mismatch",
+    ],
+)
+def test_all_unavailable_reasons_are_not_chemical_rejections(reason):
+    docs = identity_bundle()
+    unavailable(docs, reason)
+    assert identity_view(docs)["status"] == "unavailable"
+
+
+@pytest.mark.parametrize("field", r._IDENTITY_RECORDED)
+def test_unavailable_rejects_each_recorded_field_even_null(field):
+    docs = identity_bundle()
+    unavailable(docs)
+    identity_parts(docs)[1][field] = None
+    assert identity_view(docs)["issues"]
+
+
+@pytest.mark.parametrize(
+    "path,value",
+    [
+        (("schema_version",), True),
+        (("schema_version",), 2),
+        (("status",), "unknown"),
+        (("reference_role",), "design"),
+        (("original_hit_smiles",), PRODUCT),
+        (("final_product_smiles",), HIT),
+        (("original_hit",), []),
+        (("final_product", "exact_smiles"), HIT),
+        (("final_product", "family_smiles"), "other"),
+        (("final_product", "scaffold_family_smiles"), "other"),
+        (("original_hit", "policy_version"), "other"),
+        (("final_product", "rdkit_version"), "2025.9.6"),
+        (("original_hit", "has_scaffold"), 1),
+        (("original_hit", "has_scaffold"), False),
+        (("original_hit", "ring_skeleton_smiles"), ""),
+        (("atom_aware_scaffold_changed",), 1),
+        (("atom_aware_scaffold_changed",), False),
+        (("generic_ring_linker_topology_changed",), True),
+        (("generic_ring_linker_topology_changed",), "false"),
+        (("scaffold_presence_change",), "lost"),
+        (("change_class",), None),
+        (("change_class",), "unknown"),
+        (("change_class",), "state_only"),
+        (("change_class",), "unchanged"),
+        (("change_class",), "decoration"),
+    ],
+)
+def test_identity_record_contradictions(path, value):
+    docs = identity_bundle()
+    node = identity_parts(docs)[1]
+    for key in path[:-1]:
+        node = node[key]
+    node[path[-1]] = value
+    result = identity_view(docs)
+    assert result["status"] == "inconsistent_metadata" and result["issues"]
+    assert result["record"] is None  # Never display an inferred replacement.
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("schema_version", True),
+        ("schema_version", 2),
+        ("policy_version", "future"),
+        ("rdkit_version", ""),
+        ("tautomer_limit", True),
+        ("tautomer_limit", 0),
+        ("transform_limit", 1.5),
+        ("code_sha256", None),
+        ("code_sha256", {"identity.py": "x" * 64, "common.py": "b" * 64}),
+    ],
+)
+def test_descriptor_malformed_values_are_diagnostic(field, value):
+    docs = identity_bundle()
+    docs["manifest.json"]["identity_comparison_policy"][field] = value
+    view = r._assemble(docs, {}, [])
+    assert view["identity_descriptor"]["warnings"]
+    assert view["candidates"][0]["identity_comparison"]["issues"]
+    r.render_html(view)
+
+
+@pytest.mark.parametrize("label", ["unchanged", "state_only", "decoration", "scaffold"])
+@pytest.mark.parametrize("acyclic", [False, True])
+def test_supplied_class_implications_not_fallback_classification(label, acyclic):
+    docs = identity_bundle()
+    docs["results.json"]["policy"]["constraints"]["mode"] = "unconstrained"
+    row, record, manifest = identity_parts(docs)
+    hit, product = record["original_hit"], record["final_product"]
+    if label == "unchanged":
+        product.update(copy.deepcopy(hit))
+    elif label == "state_only":
+        product.update(
+            {k: hit[k] for k in ("family_smiles", "scaffold_family_smiles", "ring_skeleton_smiles")}
+        )
+    elif label == "decoration":
+        product["scaffold_family_smiles"] = hit["scaffold_family_smiles"]
+    if acyclic:
+        for identity in (hit, product):
+            identity.update(has_scaffold=False, scaffold_family_smiles="", ring_skeleton_smiles="")
+    row.update(
+        smiles=product["exact_smiles"],
+        family_smiles=product["family_smiles"],
+        scaffold_family_smiles=product["scaffold_family_smiles"],
+    )
+    record.update(
+        final_product_smiles=row["smiles"],
+        change_class=label,
+        atom_aware_scaffold_changed=hit["scaffold_family_smiles"] != product["scaffold_family_smiles"],
+        scaffold_presence_change="both_absent" if acyclic else "both_present",
+    )
+    result = identity_view(docs)
+    assert (result["status"] == "recorded") == (not acyclic or label != "scaffold")
+    if label != "scaffold" and result["status"] == "recorded":
+        docs["results.json"]["policy"]["constraints"]["mode"] = "hop"
+        assert identity_view(docs)["issues"]
+
+
+@pytest.mark.parametrize("presence", ["gained", "lost", "both_present"])
+def test_recorded_topology_may_change_or_scaffold_presence_change(presence):
+    docs = identity_bundle()
+    row, record, _ = identity_parts(docs)
+    if presence != "both_present":
+        identity = record["original_hit" if presence == "gained" else "final_product"]
+        identity.update(has_scaffold=False, scaffold_family_smiles="", ring_skeleton_smiles="")
+    else:
+        record["final_product"]["ring_skeleton_smiles"] = "different generic graph"
+    row["scaffold_family_smiles"] = record["final_product"]["scaffold_family_smiles"]
+    record.update(scaffold_presence_change=presence, generic_ring_linker_topology_changed=True)
+    assert identity_view(docs)["status"] == "recorded"
+
+
+@pytest.mark.parametrize("equal_part", ["exact_smiles", "family_smiles", "scaffold_family_smiles"])
+def test_nested_normalization_relationships_cannot_contradict(equal_part):
+    docs = identity_bundle()
+    row, record, _ = identity_parts(docs)
+    record["original_hit"][equal_part] = record["final_product"][equal_part]
+    # Keep exact common binding, so the implication itself must reject.
+    if equal_part == "exact_smiles":
+        docs["manifest.json"]["hit"] = record["original_hit_smiles"] = row["smiles"]
+    if equal_part == "scaffold_family_smiles":
+        record["original_hit"]["ring_skeleton_smiles"] = "contradictory graph"
+    assert identity_view(docs)["issues"]
+
+
+@pytest.mark.parametrize("broken", ["metric", "route", "count"])
+def test_identity_failure_cannot_skip_existing_checks(broken):
+    docs = identity_bundle()
+    identity_parts(docs)[0]["hit_identity_comparison"] = None
+    if broken == "metric":
+        docs["refinement.json"]["candidates"][0]["trials"][0]["hit"]["shape"] = 0.01
+    elif broken == "route":
+        docs["routes.json"]["routes"][0]["route"]["nodes"][-1]["product"] = "wrong"
+    else:
+        docs["summary.json"]["returned_products"] = 99
+    view = r._assemble(docs, {}, [])
+    issues = view["issues"] + view["candidates"][0]["issues"]
+    assert any("identity comparison" in issue for issue in issues)
+    assert any("identity comparison" not in issue for issue in issues)
+    r.render_html(view)
+
+
+def test_mixed_rows_do_not_borrow_identity_and_duplicates_stay_invalid():
+    docs = identity_bundle()
+    second = copy.deepcopy(docs["results.json"]["results"][0])
+    del second["hit_identity_comparison"]
+    docs["results.json"]["results"].append(second)
+    view = r._assemble(docs, {}, [])
+    first, second_view = view["candidates"]
+    assert first["identity_comparison"]["status"] == "recorded"
+    assert second_view["identity_comparison"]["issues"]
+    assert view["issues"]  # Existing selected-count/duplicate validation is not bypassed.
+    first["identity_comparison"]["record"]["original_hit"]["family_smiles"] = "changed"
+    assert (
+        docs["results.json"]["results"][0]["hit_identity_comparison"]["original_hit"]["family_smiles"] == HIT
+    )
+
+
+def test_descriptor_source_change_is_visible_not_an_authenticity_claim():
+    docs = identity_bundle()
+    docs["manifest.json"]["sources_changed_since_import"] = ["identity.py"]
+    view = r._assemble(docs, {}, [])
+    assert view["artifact_consistency"] == "consistent_recorded_bundle"
+    assert "sources changed since import" in r.render_html(view)
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["change_class", "original_hit", "final_product", "schema_version", "atom_aware_scaffold_changed"],
+)
+def test_missing_recorded_field_is_never_inferred(field):
+    docs = identity_bundle()
+    del identity_parts(docs)[1][field]
+    result = identity_view(docs)
+    assert result["status"] == "inconsistent_metadata" and result["record"] is None
+
+
+@pytest.mark.parametrize(
+    "field,value", [("reason_code", ""), ("reason", None), ("error_type", []), ("final_product_smiles", HIT)]
+)
+def test_unavailable_common_contract_still_checked(field, value):
+    docs = identity_bundle()
+    unavailable(docs)
+    identity_parts(docs)[1][field] = value
+    assert identity_view(docs)["issues"]

@@ -1103,3 +1103,22 @@ floors; optional design floors can be zero, as in the workflow policy. Each disp
 catalog origin is joined through the saved route leaf's exact building-block ID to
 its catalog record ID. This prevents borrowing another leaf's recorded origins;
 it does not authenticate the identifier or infer supplier provenance from its text.
+
+The offline report also reads selected `hit_identity_comparison` records and the
+saved manifest `identity_comparison_policy`. It displays the producer-recorded
+change class, atom-aware normalized scaffold change, generic ring/linker graph
+change, and scaffold presence separately. An atom-aware scaffold hop can retain
+the same generic graph. These labels do not add a similarity or synthesis test.
+
+Old bundles without either field show `not_exported`. Atomic `unavailable`
+records show their saved reason, including when the saved descriptor is missing
+or unusable; this alone does not negate recorded qualification. Explicit null,
+contradictory recorded values, or a declared descriptor with a missing selected
+comparison produce artifact diagnostics. An empty selected array does not require
+comparison records. The report checks saved strings, flags, labels and descriptor
+hash copies without importing chemistry code, parsing SMILES, reconstructing a
+class, or consulting the installed runtime/source. Matching saved copies do not
+authenticate scientific provenance. Existing metric, seed, route and count checks
+run independently, even if identity metadata is malformed. Each seed still has
+its own common-pose witness; the comparison does not assert a shared pose across
+seeds.
