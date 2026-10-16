@@ -19,7 +19,16 @@ def make_fixture():
     blobs = {n: (TOOL / n).read_bytes() for n in (replay.HELPER, replay.ATTRIBUTION, replay.PROVENANCE)}
     helper = replay.historical(blobs[replay.HELPER])
     code = replay.parse(blobs[replay.PROVENANCE])["code_sha256"]
-    source = replay.parse(blobs[replay.ATTRIBUTION])["sources"][0]
+    sources = replay.parse(blobs[replay.ATTRIBUTION])["sources"]
+    source_inventory = [
+        {
+            "id": source["name"],
+            "sha256": source["sha256"],
+            "url": source["url"],
+            "artifact": f"/synthetic/original-study/sources/chembl/{source['name']}.json",
+        }
+        for source in sources
+    ]
     for split, (_, query_count) in replay.SPLITS.items():
         names = replay.paths(split)
         queries = [{"id": f"q{i}", "compound_id": f"c{i}"} for i in range(query_count)]
@@ -30,7 +39,7 @@ def make_fixture():
                 {"id": f"c{i}", "target_id": f"synthetic-target-{i // 2}", "smiles": f"synthetic-query-{i}"}
                 for i in range(query_count)
             ],
-            "sources": [{"id": source["name"], "sha256": source["sha256"], "url": source["url"]}],
+            "sources": source_inventory,
         }
         blobs[names["panel"]] = replay.encoded(panel)
         all_runs, input_hashes = [], {}
@@ -58,7 +67,7 @@ def make_fixture():
                 "protocol_sha256": replay.sha(blobs[names[f"protocol_{group}"]]),
                 "dataset": {
                     "dataset_sha256": replay.sha(blobs[names["panel"]]),
-                    "source_artifacts": {source["name"]: source["sha256"]},
+                    "source_artifacts": {s["id"]: s["artifact"] for s in source_inventory},
                 },
                 "versions": dict.fromkeys(["numpy", "rdkit", "scipy", "psutil"], "synthetic-fixture"),
                 "python": "synthetic-fixture",
@@ -545,3 +554,48 @@ def test_stored_trial_arithmetic_and_failure_summary(fixture_blobs, field):
     mutate(blobs, name, change)
     with pytest.raises(ValueError, match="3D trial|Failed 3D"):
         replay.validate(blobs)
+
+
+@pytest.mark.parametrize("change", ["digest-instead-of-path", "changed-path", "missing-source-id"])
+def test_source_path_provenance_matches_actual_manifest_schema(fixture_blobs, change):
+    blobs = dict(fixture_blobs)
+
+    def modify(manifest):
+        paths = manifest["dataset"]["source_artifacts"]
+        if change == "missing-source-id":
+            paths.pop("status")
+        else:
+            paths["status"] = (
+                "0" * 64 if change == "digest-instead-of-path" else "/different-origin/status.json"
+            )
+
+    mutate(blobs, replay.paths("target")["manifest_gpu0"], modify)
+    with pytest.raises(ValueError, match="source path"):
+        replay.validate(blobs)
+
+
+@pytest.mark.parametrize("field", ["sha256", "url"])
+def test_panel_source_hash_and_url_remain_separately_bound(fixture_blobs, field):
+    blobs = dict(fixture_blobs)
+    mutate(
+        blobs,
+        replay.paths("target")["panel"],
+        lambda p: p["sources"][0].update(
+            {field: "0" * 64 if field == "sha256" else "https://invalid.example/source"}
+        ),
+    )
+    with pytest.raises(ValueError, match="ChEMBL source"):
+        replay.validate(blobs)
+
+
+def test_recorded_path_construction_is_lexical_and_never_dereferenced(monkeypatch):
+    def no_filesystem(*args, **kwargs):
+        pytest.fail("Recorded provenance paths must not be read or resolved")
+
+    monkeypatch.setattr(Path, "open", no_filesystem)
+    monkeypatch.setattr(Path, "resolve", no_filesystem)
+    replay.recorded_source_paths(
+        [{"id": "a", "artifact": "/synthetic/a/../b.json"}], {"a": "/synthetic/b.json"}
+    )
+    with pytest.raises(ValueError, match="relative provenance"):
+        replay.recorded_source_paths([{"id": "a", "artifact": "../../b.json"}], {"a": "/synthetic/b.json"})

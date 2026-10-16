@@ -10,6 +10,7 @@ import json
 import math
 import os
 from pathlib import Path, PurePosixPath
+import posixpath
 import re
 import stat
 import statistics
@@ -201,6 +202,33 @@ def normalized_protocol(raw, recorded):
     same(recorded, raw, "recorded protocol")
 
 
+def recorded_source_paths(sources, recorded):
+    """Check historical path strings without reading the original source filesystem.
+
+    Frozen load_dataset recorded resolved filenames, not digests. These original
+    panels supply absolute POSIX artifact paths, so lexical construction is
+    checkable after relocation. Relative artifacts lack their original panel base
+    in this compact format and must not be resolved against the replay directory.
+    """
+    require(isinstance(recorded, dict), "Invalid recorded source path inventory")
+    require(recorded.keys() == {s["id"] for s in sources}, "Recorded source path ID mismatch")
+    for source in sources:
+        artifact = source["artifact"]
+        require(
+            isinstance(artifact, str)
+            and artifact
+            and "\x00" not in artifact
+            and PurePosixPath(artifact).is_absolute(),
+            "Original absolute source artifact path required; relative provenance cannot be reconstructed",
+        )
+        path = recorded[source["id"]]
+        require(
+            isinstance(path, str) and path and "\x00" not in path and PurePosixPath(path).is_absolute(),
+            "Invalid recorded source path",
+        )
+        same(path, posixpath.normpath(artifact), "recorded source path construction")
+
+
 def validate_split(split, blobs, code):
     names = paths(split)
     data = {role: parse(blobs[name]) for role, name in names.items()}
@@ -242,7 +270,7 @@ def validate_split(split, blobs, code):
         )
         same(manifest["protocol_sha256"], sha(blobs[names[f"protocol_{group}"]]), "protocol SHA")
         same(manifest["dataset"]["dataset_sha256"], sha(blobs[names["panel"]]), "dataset SHA")
-        same(manifest["dataset"]["source_artifacts"], source_inventory, "dataset source inventory")
+        recorded_source_paths(panel["sources"], manifest["dataset"]["source_artifacts"])
         same(manifest["code_sha256"], code, "original source39")
         normalized_protocol(protocol, manifest["protocol"])
         require(

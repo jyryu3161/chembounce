@@ -54,6 +54,13 @@ the secondary groups contain 3, 1, and 1. Every method must have its exact
 query/seed grid. Query targets come from the panel, each recorded run manifest must
 bind the raw protocol and panel, and all nine manifests must match the original
 39-source hash inventory and retain package versions/Python/platform metadata.
+The run manifest's `dataset.source_artifacts` contains source ID → original
+absolute filename strings, **not hashes**. Their IDs and lexical path construction
+are checked against the panel's `sources[].artifact`; the separate source SHA/URL
+fields are bound to the archived ChEMBL attribution. Original path strings are
+never opened or resolved on the replay host. The original panels use absolute
+POSIX paths; a relative source artifact without its historical panel directory
+cannot be reconstructed by this compact schema and is rejected.
 The original 360-second/24,000-MB/three-output outer budget is checked, including
 method-specific cap overrides. Loader-added protocol fields are projected out only
 when absent in the raw protocol; explicit original fields remain checked.
