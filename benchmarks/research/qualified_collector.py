@@ -283,7 +283,48 @@ def checked_products(
     bound_catalog=None,
     benchmark_protocol=None,
 ):
-    """Return collector-computed chemistry/robust scores from complete consistent exports."""
+    """Authenticate the unchanged benchmark envelope before shared artifact checks."""
+    if deadline is not None and time.monotonic() >= deadline:
+        raise TimeoutError("Outer budget exhausted during collector integrity checks")
+    directory = Path(directory)
+    request = read(directory / "request.json")
+    if request.get("benchmark_protocol") != benchmark_protocol:
+        raise ValueError("Common request benchmark profile differs from frozen runner authority")
+    if request["query"] != query:
+        raise ValueError("Common request differs from planned public query")
+    bridge = directory / "selected-primary-bridge" if request["settings"]["arm"] == "baseline" else None
+    from chembounce_synthesis.workflow import _config
+
+    return checked_workflow_artifacts(
+        directory,
+        response,
+        query,
+        expected_source,
+        expected_config=_config(common_config(request, bridge)),
+        profile_name=benchmark_profile(request.get("benchmark_protocol")),
+        decoder_factory=decoder_factory,
+        deadline=deadline,
+        bound_catalog=bound_catalog,
+    )
+
+
+def checked_workflow_artifacts(
+    directory,
+    response,
+    query,
+    expected_source,
+    *,
+    expected_config,
+    profile_name,
+    decoder_factory=TokenReplay,
+    deadline=None,
+    bound_catalog=None,
+):
+    """Shared checks after a caller authenticates its own explicit config authority.
+
+    This does not authenticate a benchmark or development request by itself.
+    Both callers must bind their complete expected config, query and source map.
+    """
     from chembounce_synthesis.reactions import Rules
     from chembounce_synthesis.workflow import check_constraints
 
@@ -317,23 +358,16 @@ def checked_products(
     if manifest["hit"] != canonical(query["smiles"]):
         raise ValueError("Common hit differs from planned query")
     config, rows, policy = manifest["config"], result["results"], result["policy"]
-    request = read(directory / "request.json")
-    if request.get("benchmark_protocol") != benchmark_protocol:
-        raise ValueError("Common request benchmark profile differs from frozen runner authority")
-    if request["query"] != query:
-        raise ValueError("Common request differs from planned public query")
-    bridge = directory / "selected-primary-bridge" if request["settings"]["arm"] == "baseline" else None
-    from chembounce_synthesis.workflow import _config
     from chembounce_synthesis.forward_support import binding
 
-    if binding(_config(common_config(request, bridge))) != binding(config):
-        raise ValueError("Effective workflow config differs from frozen request plus declared arm overrides")
+    if binding(expected_config) != binding(config):
+        raise ValueError("Effective workflow config differs from authenticated expected config")
     if (
         len(rows) > 3
         or [{"smiles": r["smiles"], "route_id": r["route_id"]} for r in rows] != response["candidates"]
     ):
         raise ValueError("Response selected identities differ from final JSON")
-    name = benchmark_profile(request.get("benchmark_protocol"))
+    name = profile_name
     selective = name == SELECTIVE_PROFILE
     similarity = None
     if selective:
