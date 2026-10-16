@@ -33,6 +33,14 @@ def add_expansion_options(parser):
     group.add_argument("--synthesis-max-scored", type=int, help="Maximum screened product/design pairs")
     group.add_argument("--synthesis-max-results", type=int, help="Maximum final products written")
     group.add_argument(
+        "--synthesis-max-designs", type=int, help="Maximum eligible designs in bounded refill mode"
+    )
+    group.add_argument(
+        "--synthesis-max-design-attempts",
+        type=int,
+        help="Bound raw design attempts including invalid/duplicate entries; enables refill for exploratory runs",
+    )
+    group.add_argument(
         "--include-run",
         action="append",
         help="Retain and reverify routes from a previous synthesis directory; repeatable",
@@ -70,6 +78,8 @@ def apply_expansion_options(config, args):
     for attr, key in (
         ("synthesis_max_scored", "max_scored_products"),
         ("synthesis_max_results", "max_results"),
+        ("synthesis_max_designs", "max_designs"),
+        ("synthesis_max_design_attempts", "max_design_attempts"),
     ):
         if (value := getattr(args, attr, None)) is not None:
             config[key] = value

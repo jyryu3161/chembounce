@@ -21,6 +21,7 @@ from .catalog import Catalog
 from .common import FP, canonical, digest, molecule, positive, write_json
 from .conformers import ConformerSettings, ensemble, prepare_reference, reference_from_sdf, score_candidate
 from .continuation import load_carried_routes
+from .design_selection import select_designs, selection_policy, sized_count
 from .evidence import evaluator_from_config, validate_evidence_config
 from .identity import classify_change, family_key, scaffold_family_key
 from .pocket import constraints_from_config, validate_pocket_config
@@ -115,6 +116,7 @@ def _config(config):
         "core_smiles",
         "preserve_design_scaffold",
         "max_designs",
+        "max_design_attempts",
         "max_scored_products",
         "max_results",
         "expansion",
@@ -219,6 +221,7 @@ def _config(config):
 
     _validate_parameters(0.5, 0.3, 42, config.get("property_thresholds", {}))
     effective_policy(config)
+    selection_policy(config)
     return config
 
 
@@ -466,7 +469,7 @@ def _with_alternative_routes(row, alternatives):
     }
 
 
-def _design_batches(designs, provider, deadline_monotonic=None):
+def _design_batches(designs, provider, deadline_monotonic=None, *, carried_only=()):
     # The scoring budget is global: carry every design before starting any new
     # projection. Otherwise early designs can displace later designs' old hits.
     for design in designs:
@@ -474,6 +477,8 @@ def _design_batches(designs, provider, deadline_monotonic=None):
     for design in designs:
         if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
             return
+        if design in carried_only:
+            continue
         proposals = (
             provider.propose(design, deadline_monotonic=deadline_monotonic)
             if deadline_monotonic is not None
@@ -544,15 +549,22 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 raise ValueError(
                     "2D scoring cannot enforce pocket constraints or 3D minimum_scores; remove those explicitly for this ablation"
                 )
+        requested_hit = hit
         hit = canonical(hit)
         hit_fp = FP.GetFingerprint(molecule(hit))
-        requested_designs = list(designs)
-        all_designs = list(dict.fromkeys(canonical(s) for s in requested_designs))
-        designs = all_designs[: config.get("max_designs", 20)]
-        capped_designs = list(designs)
-        if len(designs) < len(all_designs):
-            summary["limits_reached"].append("max_designs")
-        summary["designs_supplied"], summary["designs_used"] = len(all_designs), len(designs)
+        design_policy = selection_policy(config)
+        bounded_refill = design_policy["version"] == "bounded-refill-v1"
+        raw_designs = designs
+        if bounded_refill:
+            summary["designs_raw_supplied"] = sized_count(raw_designs)
+        else:
+            requested_designs = list(designs)
+            all_designs = list(dict.fromkeys(canonical(s) for s in requested_designs))
+            designs = all_designs[: config.get("max_designs", 20)]
+            capped_designs = list(designs)
+            if len(designs) < len(all_designs):
+                summary["limits_reached"].append("max_designs")
+            summary["designs_supplied"], summary["designs_used"] = len(all_designs), len(designs)
         if config.get("core_smiles") and not molecule(hit).HasSubstructMatch(
             molecule(config["core_smiles"]), useChirality=True
         ):
@@ -608,40 +620,144 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             }
 
         hit_pose = None
-        if scoring_mode == "3d":
-            if designs:
-                hit_pose = prepare_reference(hit, settings, config.get("reference_sdf"))
-            elif config.get("reference_sdf"):
-                # Preserve the existing bound-reference validation for empty runs,
-                # which have no alignment or generated-reference requirement.
-                hit_pose = reference_from_sdf(config["reference_sdf"], hit, settings)
-        design_checks, eligible_designs = [], []
-        for index, design in enumerate(capped_designs):
-            check = {"design": design, "capped_design_index": index, "role": "design"}
-            if scoring_mode == "3d":
-                try:
-                    # Designs always use generated references, even with a bound hit.
-                    # Reuse the existing policy without embedding or assigning stereo.
-                    prepare_reference(design, settings)
-                except ValueError as exc:
-                    check.update(status="rejected", stage="design_reference_preflight", reason=str(exc))
-                    summary["failures"].append(dict(check))
-                    design_checks.append(check)
-                    continue
-            check["status"] = "eligible" if scoring_mode == "3d" else "not_applicable_2d"
-            design_checks.append(check)
-            eligible_designs.append(design)
-        designs = eligible_designs
+        try:
+            if bounded_refill and deadline_reached():
+                summary["query_preflight"] = {
+                    "input": requested_hit,
+                    "canonical_smiles": hit,
+                    "role": "original_hit",
+                    "status": "not_assessed",
+                    "reason_code": "deadline",
+                }
+            elif scoring_mode == "3d":
+                if bounded_refill or designs:
+                    hit_pose = prepare_reference(hit, settings, config.get("reference_sdf"))
+                elif config.get("reference_sdf"):
+                    hit_pose = reference_from_sdf(config["reference_sdf"], hit, settings)
+        except ValueError as exc:
+            summary["query_preflight"] = {
+                "input": requested_hit,
+                "canonical_smiles": hit,
+                "role": "original_hit",
+                "status": "ineligible",
+                "qualification_status": "not_assessed",
+                "reason_code": "unspecified_stereochemistry"
+                if "specified stereochemistry" in str(exc)
+                else "reference_ineligible",
+                "reason": str(exc),
+                "interpretation": "Query could not be assessed; this is not evidence that no qualifying chemistry exists",
+            }
+            raise
+        if bounded_refill:
+            summary.setdefault(
+                "query_preflight",
+                {
+                    "input": requested_hit,
+                    "canonical_smiles": hit,
+                    "role": "original_hit",
+                    "status": "eligible" if scoring_mode == "3d" else "not_applicable_2d",
+                    "stereo_policy": "Exact input state retained; no stereoisomer assignment or enumeration",
+                },
+            )
+        if bounded_refill:
+            design_preflight = select_designs(
+                raw_designs,
+                design_policy,
+                lambda design: prepare_reference(design, settings) if scoring_mode == "3d" else None,
+                deadline_reached,
+            )
+            requested_designs = design_preflight["requested_designs"]
+            all_designs = capped_designs = design_preflight["canonical_unique_requested_designs"]
+            design_checks = design_preflight["checks"]
+            designs = design_preflight["eligible_designs"]
+            summary["design_selection"] = {
+                key: design_preflight[key] for key in ("policy", "counts", "stop_reason", "input_exhausted")
+            }
+            summary["designs_supplied"] = design_preflight["counts"]["raw_supplied"]
+            summary["designs_used"] = len(capped_designs)
+            summary["failures"].extend(dict(c) for c in design_checks if c["status"] == "rejected")
+            for limit in design_preflight["limits_reached"]:
+                if limit not in summary["limits_reached"]:
+                    summary["limits_reached"].append(limit)
+        else:
+            design_checks, eligible_designs = [], []
+            for index, design in enumerate(capped_designs):
+                check = {"design": design, "capped_design_index": index, "role": "design"}
+                if scoring_mode == "3d":
+                    try:
+                        prepare_reference(design, settings)
+                    except ValueError as exc:
+                        check.update(status="rejected", stage="design_reference_preflight", reason=str(exc))
+                        summary["failures"].append(dict(check))
+                        design_checks.append(check)
+                        continue
+                check["status"] = "eligible" if scoring_mode == "3d" else "not_applicable_2d"
+                design_checks.append(check)
+                eligible_designs.append(design)
+            designs = eligible_designs
+            design_preflight = {
+                "requested_designs": requested_designs,
+                "canonical_unique_requested_designs": all_designs,
+                "capped_designs": capped_designs,
+                "eligible_designs": designs,
+                "checks": design_checks,
+                "scope": "Configured generated-reference stereochemistry and alignment prerequisites only; no embedding or stereo assignment. Applied after the original design cap, with no backfill or provider reseeding.",
+                "policy": design_policy,
+            }
         rejected_designs = {
-            check["design"]: check for check in design_checks if check["status"] == "rejected"
+            check["design"]: check
+            for check in design_checks
+            if check["status"] == "rejected" and "design" in check
         }
         summary["designs_preflight_rejected"] = len(rejected_designs)
         summary["designs_eligible_for_scoring"] = len(designs)
         # Keep original capped inputs for continuation and preserve carried evidence
         # even when its design reference is unusable under today's scoring policy.
-        carried, carry_sources = load_carried_routes(config.get("carry_forward", []), hit, capped_designs)
+        carried, carry_sources = load_carried_routes(
+            config.get("carry_forward", []),
+            hit,
+            capped_designs,
+            **({"include_excluded": True} if bounded_refill else {}),
+        )
         summary["carried_routes_loaded"] = sum(len(items) for items in carried.values())
-        for design, check in rejected_designs.items():
+        if bounded_refill:
+            # Only already-saved raw prefixes and known carried design identities
+            # can extend a later continuation. Never infer an unread input tail.
+            supply, known = list(requested_designs), set(all_designs)
+            for source in carry_sources:
+                prior = source.get("prior_design_preflight") or {}
+                saved = prior.get("saved_design_supply", prior.get("requested_designs", []))
+                if len(saved) > len(supply) and saved[: len(supply)] == supply:
+                    supply = list(saved)
+                    known.update(
+                        prior.get(
+                            "saved_design_identities", prior.get("canonical_unique_requested_designs", [])
+                        )
+                    )
+            for design in carried:
+                if design not in known:
+                    supply.append(design)
+                    known.add(design)
+            design_preflight["saved_design_supply"] = supply
+            design_preflight["saved_design_identities"] = sorted(known)
+        excluded_designs = (
+            {
+                design: rejected_designs.get(
+                    design,
+                    {
+                        "design": design,
+                        "role": "design",
+                        "status": "not_assessed",
+                        "reason": "Carried design was not selected within this run's raw/eligible/deadline bounds",
+                    },
+                )
+                for design in carried
+                if design not in designs
+            }
+            if bounded_refill
+            else rejected_designs
+        )
+        for design, check in excluded_designs.items():
             for item in carried[design]:
                 route_records.append(
                     {
@@ -649,7 +765,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         "proposal_id": None,
                         "design": design,
                         **item,
-                        "selection_status": "design_preflight_rejected",
+                        "selection_status": "design_preflight_rejected"
+                        if check["status"] == "rejected"
+                        else "design_not_assessed",
                         "reference_preflight": dict(check),
                         "reason": check["reason"],
                         "verification_status": "not_evaluated",
@@ -657,11 +775,13 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         "eligible_for_scoring": False,
                     }
                 )
-        all_designs_rejected = bool(capped_designs) and not designs
+        all_designs_rejected = not designs and (bounded_refill or bool(capped_designs))
         catalog = rules = None
         if all_designs_rejected:
             summary["no_candidates_reason"] = (
-                "All capped designs failed the configured 3D reference preflight"
+                "No eligible design was assessed within the configured intake limits; this does not establish that no qualifying chemistry exists"
+                if bounded_refill
+                else "All capped designs failed the configured 3D reference preflight"
             )
             summary["assets_not_loaded"] = ["catalog", "rules", "provider", "synthesis_evidence"]
             if "pocket" in config:
@@ -681,12 +801,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         manifest = _manifest(config, hit, capped_designs)
         manifest["recommendation_policy"] = policy
         manifest["design_preflight"] = {
-            "requested_designs": requested_designs,
-            "canonical_unique_requested_designs": all_designs,
-            "capped_designs": capped_designs,
-            "eligible_designs": designs,
-            "checks": design_checks,
-            "scope": "Configured generated-reference stereochemistry and alignment prerequisites only; no embedding or stereo assignment. Applied after the original design cap, with no backfill or provider reseeding.",
+            **design_preflight,
             "reject_unspecified_stereo": settings.reject_unspecified_stereo,
         }
         manifest["assets_not_loaded"] = summary.get("assets_not_loaded", [])
@@ -730,6 +845,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             "core_smiles": config.get("core_smiles"),
             "preserve_design_scaffold": config.get("preserve_design_scaffold", False),
             "max_designs": config.get("max_designs", 20),
+            "design_selection": design_policy,
             "max_scored_products": config.get("max_scored_products", 256),
             "max_results": config.get("max_results", 50),
             "expansion": {
@@ -754,6 +870,20 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         if config.get("reference_sdf"):
             manifest["reference_sdf_sha256"] = digest(config["reference_sdf"])
         provider = _provider(config["provider"]) if designs and not deadline_reached() else None
+        carried_only = {
+            design
+            for design in designs
+            if bounded_refill
+            and config.get("carry_forward")
+            and isinstance(provider, SavedProposals)
+            and design not in provider.proposals
+            and carried[design]
+        }
+        if carried_only:
+            summary["carried_only_designs"] = [design for design in designs if design in carried_only]
+            manifest["carried_only_policy"] = (
+                "No saved proposal for this design in the latest archive; reverify and score available carried graphs without new provider calls or fabricated sampling"
+            )
         manifest["provider"] = provider.provenance if provider else None
         write_json(out / "manifest.json", manifest)
         write_json(
@@ -761,7 +891,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         )
         from utils import _get_molecular_prop_extd_, determ_props
 
-        for design, proposals in _design_batches(designs, provider, deadline_monotonic):
+        for design, proposals in _design_batches(
+            designs, provider, deadline_monotonic, carried_only=carried_only
+        ):
             LOGGER.info("Projecting design %s onto catalog reaction space", design)
             design_fp = FP.GetFingerprint(molecule(design))
             expansion_cache = {}
@@ -1326,8 +1458,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         )
         summary["qualified_products"] = len(ranked) if qualified else 0
         if qualified and not selected:
-            summary["no_candidates_reason"] = (
-                "No candidate completed the qualified recommendation contract within configured limits"
+            summary.setdefault(
+                "no_candidates_reason",
+                ("No candidate completed the qualified recommendation contract within configured limits"),
             )
         eligible = {r["verification"]["product"] for r in route_records if r.get("eligible_for_scoring")}
         carried_eligible = {

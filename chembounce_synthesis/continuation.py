@@ -23,10 +23,16 @@ def continuation_inputs(directory):
     config["provider"] = {"kind": "saved", "path": str(directory / "proposals.json")}
     # The latest routes already contain the accumulated evidence from older runs.
     config["carry_forward"] = [str(directory)]
-    return manifest["hit"], manifest["designs"], config
+    preflight = manifest.get("design_preflight", {})
+    designs = (
+        preflight.get("saved_design_supply", preflight["requested_designs"])
+        if preflight.get("policy", {}).get("version") == "bounded-refill-v1"
+        else manifest["designs"]
+    )
+    return manifest["hit"], designs, config
 
 
-def load_carried_routes(directories, hit, designs):
+def load_carried_routes(directories, hit, designs, *, include_excluded=False):
     """Read and deduplicate evidence, leaving chemical verification to workflow.run."""
     candidates = {design: [] for design in designs}
     sources, seen = [], set()
@@ -47,11 +53,18 @@ def load_carried_routes(directories, hit, designs):
             "duplicate_routes": 0,
             "excluded_design_routes": 0,
         }
+        if include_excluded:
+            source["prior_design_preflight"] = manifest.get("design_preflight")
+            source["unselected_design_routes_retained"] = 0
         for record in data["routes"]:
             design = canonical(record["design"])
             if design not in candidates:
-                source["excluded_design_routes"] += 1
-                continue
+                if not include_excluded:
+                    source["excluded_design_routes"] += 1
+                    continue
+                candidates[design] = []
+            if include_excluded and design not in designs:
+                source["unselected_design_routes_retained"] += 1
             key = (design, json.dumps(record["route"], sort_keys=True))
             if key in seen:
                 source["duplicate_routes"] += 1

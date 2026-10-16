@@ -1118,12 +1118,32 @@ def main(argv=None):
                 lo if lo is not None else previous[0],
                 hi if hi is not None else previous[1],
             )
+    design_supply = None
+    overall_limit = options.overall_max_n
+    if synthesis_config is not None:
+        from chembounce_synthesis.design_selection import selection_policy
+
+        intake = selection_policy(synthesis_config)
+        if intake["version"] == "bounded-refill-v1":
+            overall_limit = (
+                min(options.overall_max_n, intake["max_raw_attempts"])
+                if options.overall_max_n is not None
+                else intake["max_raw_attempts"]
+            )
+            design_supply = {
+                "selection_policy": intake,
+                "requested_overall_max_n": options.overall_max_n,
+                "effective_overall_max_n": overall_limit,
+                "explicit_overall_cap_limits_pool": options.overall_max_n is not None
+                and options.overall_max_n < intake["max_raw_attempts"],
+                "scope": "Bounded upstream supply; existing explicit hopping caps are never increased; synthesis eligible/product/refinement limits remain separate",
+            }
     try:
         results, cost = chembounce(
             options.input_smiles,
             output_dir=options.output_dir,
             core_smiles=options.core_smiles,
-            overall_max_n=options.overall_max_n,
+            overall_max_n=overall_limit,
             frag_max_n=options.frag_max_n,
             scaffold_top_n=options.scaffold_top_n,
             cand_max_n__rplc=options.cand_max_n__rplc,
@@ -1151,6 +1171,11 @@ def main(argv=None):
         LOGGER.error("%s", exc)
         return 2
     _json_write(Path(options.output_dir) / "resource_cost.json", cost)
+    if design_supply is not None:
+        manifest_path = Path(options.output_dir) / "run_manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        manifest["synthesis_design_supply"] = design_supply
+        _json_write(manifest_path, manifest)
     if synthesis_config is not None:
         from chembounce_synthesis.workflow import run
 
