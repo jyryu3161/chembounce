@@ -15,7 +15,7 @@ biological activity, or experimental synthesizability.
 | 3. Similarity-aware route/search | Search and route construction retain original-hit similarity while finding changed scaffolds and viable route products; compare yield and compute under fixed budgets. | Engineering gate passed at `6adc2cedd73c14cf5a0ab88fbcd61004f3267ef6`. Controlled toy diagnostics only; scientific yield/compute benchmark remains Stage 6. |
 | 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | Full gate passed at `f6ab40e0d1d536636015d94c75f1b815898dc907`; reviewed development artifact and both CLI/API paths verified. Explicit opt-in, permissive development thresholds—not a strong-similarity guarantee. |
 | 5. Independent synthesis evidence | Establish independent, route-specific evidence and provenance beyond catalog/rule replay; define treatment of unknowns, missing context, atom sources, model disagreement and observation quality. Never present a heuristic as a synthesis probability. | Engineering and known-fixture execution gate passed at `4d47b30c925152198d2fb8e68cdad3b502bacc7d`. Conditional computational support; no experimental or post-selection independence claim. |
-| 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Pending. No scientific campaign or performance improvement claimed. |
+| 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Ten-attempt inspected development pilot completed; fresh evaluation pending. No scientific performance improvement claimed. |
 
 Each stage requires implementation, focused validation and independent review
 before the next stage. Historical published results and source inventories are
@@ -483,7 +483,7 @@ benchmark performance, experimental synthesis or activity validation. The earlie
 zero-recommendation run remains unchanged. Fresh comparisons and ablations remain
 Stage 6, whose execution requires a separate gate.
 
-## Stage 6 source path (inspected pilot running; fresh evaluation pending)
+## Stage 6 source path (inspected pilot completed; fresh evaluation pending)
 
 The new `benchmarks.research.qualified_runner` consumes an immutable
 `qualified-benchmark-protocol-v1` JSON with public `queries` (`id`, `target_id`,
@@ -596,10 +596,48 @@ zero. All retained costs include failed attempts. Parent CPU/RSS observations
 include collector work and retained shared catalogs, with the separate scope
 described above; subprocess metrics remain unchanged. The bounded runner and
 collector passed source review at `1841ed8`; the two-input, ten-attempt inspected
-development pilot uses that immutable source. Its outputs are engineering
-evidence only. Later source changes do not modify the running pilot. Revised
-protocol activation, fresh input selection, frozen final grids, execution and
-scientific interpretation remain pending.
+development pilot used that immutable source. All ten planned attempts completed
+with at least one qualified output, yielding 27 output occurrences across methods
+and queries; this is not a count of globally distinct compounds. The final
+collection SHA-256 is
+`9ccee0460f2c9ad38661c43bda8ad207335428f8c00812e4781ac3a94c189caf`.
+The final ledger passed 926 independent checks, and each of the ten selected-output
+detail audits passed (3,059 checks in total). The root result gate is
+`qualified-development-20261016/stage6-inspected-pilot-result-gate-1841ed8-v3.json`,
+SHA-256 `647b4859859dece15a5f529dfa745691e2d902215cdd8e68446f26852102f762`.
+These results attest engineering behavior under the existing
+permissive development profile, not high similarity or scientific superiority.
+
+| Method | CHEMBL203 output count | CHEMBL205 output count | Mean attempt wall seconds |
+| --- | --- | --- | --- |
+| Full method | 3 | 3 | 386.09 |
+| Frozen develop, common assessment | 2 | 1 | 325.24 |
+| CReM, common backend | 3 | 3 | 368.09 |
+| Mol2Mol, common backend | 3 | 3 | 382.42 |
+| Direct SynLlama, common assessment | 3 | 3 | 368.62 |
+
+Both inputs were previously inspected, and only generation seed 42 was used.
+The full method, CReM and direct SynLlama returned the same three products for
+CHEMBL203. Thus this pilot establishes neither a unique-output advantage nor a
+speed advantage for the full method. Some selected products lose input functional
+groups: preservation is guaranteed only for explicitly configured anchors. The
+full method's CHEMBL205 candidates span all-seed-minimum pharmacophore scores
+0.191–0.314, illustrating why the current acceptance profile cannot support a
+strong similarity claim. Later source changes do not modify this completed pilot.
+Revised protocol activation, fresh input selection, frozen final grids, execution
+and scientific interpretation remain pending.
+
+The later shared-catalog diagnostic reproduced all 18 ordered qualified records
+from seven saved attempts exactly, but its final guard assertion failed with one
+blocked operation. The original failed report is retained; output equality alone
+does not complete that diagnostic. A separate import-only probe reproduced one
+blocked `socket.bind` from urllib3's IPv6 loopback capability check, reached while
+importing Transformers. The operation was denied before binding, and the library
+caught the guard exception. This reproduces a mechanism consistent with the old
+counter failure; the old run did not retain a call stack. A new diagnostic must
+retain all operation blocks, record exact events, and separately recognize only
+the pinned, expected blocked import probe before accepting the optimization's
+execution contract.
 
 Fresh-panel preparation is implemented separately in
 `benchmarks.research.qualified_fresh_panel`; actual acquisition and selection
@@ -663,12 +701,12 @@ exact SMILES, separate from private activity/assay/selection evidence.
 
 ## Remaining delivery and research decisions
 
-1. Finish all ten inspected pilot attempts and audit the complete failure,
-   selection and cost ledgers. Preserve negative comparisons. On the first
-   inspected input, the full method, CReM and direct SynLlama produced the same
-   three final products under the common backend; this supplies no unique-output
-   advantage for the full generator on that input.
-2. Add all retained pilot structures to a new, source-bound exclusion inventory.
+1. The inspected pilot root result gate is closed with the final independent
+   ledger and all ten selected-output audits. Preserve the negative comparisons
+   above. Finish a revised catalog diagnostic with exact blocked-operation
+   telemetry; the original failed run must not be relabelled as passed.
+2. Review the new, source-bound pilot exclusion inventory for actual coverage,
+   including retained structures in previously unclassified fields.
    Freeze the reviewed selection source, exclusion mappings, models, assets,
    runtime, methods, budgets and analysis before fresh acquisition. Resolve
    known target aliases from official records and disclose normalization,
@@ -679,13 +717,19 @@ exact SMILES, separate from private activity/assay/selection evidence.
    yield, per-target behavior, scaffold changes, similarity distributions and
    full costs. Failures and missing attempts stay in the denominator; six target
    clusters support descriptive uncertainty, not a strong significance claim.
-4. Establish what a stronger similarity claim would require. The existing
-   development profile is deliberately permissive and does not guarantee high
+4. Before fresh acquisition, establish and freeze a separately versioned stricter
+   structural acceptance policy. The existing development profile is deliberately
+   permissive and does not guarantee high
    similarity or retained activity. A stricter profile needs a separately
-   declared development calibration objective and frozen external evaluation;
+   declared acceptance objective and frozen external evaluation;
    it must not be fitted to the fresh benchmark outcomes or retroactively
-   relabel the existing profile. Keep 2D, 3D shape and pharmacophore evidence
-   separate, and report the tradeoff with changed scaffolds and output yield.
+   relabel the existing profile. Active/inactive labels alone do not establish
+   structural similarity: inactive compounds can be close structural analogues.
+   If structural reference labels are unavailable, explicitly identify any
+   stricter thresholds as engineering constraints and report development
+   tradeoffs without claiming a calibrated similarity classifier. Keep 2D, 3D
+   shape and pharmacophore evidence separate, and report the tradeoff with changed
+   scaffolds and output yield.
 5. Keep practical synthesis questions explicit: model/rule agreement does not
    supply reaction conditions, yield, selectivity or current purchasing stock.
    Computational route support is the current delivered evidence level.
