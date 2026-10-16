@@ -406,3 +406,45 @@ def test_typed_search_work_does_not_double_count_cached_expansions(tmp_path):
     assert counts["returned_proposal_generated_tokens"] == 99
     write_json(out / "proposals.json", {"proposals": [{"sampling": {}}]})
     assert "returned_proposal_generated_tokens" not in runner.unit_counts(tmp_path)
+
+
+def test_common_cleanup_overrun_preserves_costs_and_continues_next_slot(tmp_path, monkeypatch):
+    p = protocol()
+    p["queries"] = p["queries"][:1]
+    p["methods"] = [{"id": name, "arm": "synllama", "resolved_assets": {}} for name in ("first", "next")]
+    path = tmp_path / "protocol.json"
+    write_json(path, p)
+    monkeypatch.setattr(runner, "resolve_protocol", lambda raw, base: p)
+    clock, requests, collected = SimpleNamespace(now=1000.0), [], []
+    monkeypatch.setattr(runner.time, "monotonic", lambda: clock.now)
+
+    def bounded(method, req, out, **kwargs):
+        requests.append(req)
+        out.mkdir()
+        write_json(out / "request.json", req)
+        duration = req["budget"]["wall_seconds"] + 1 if len(requests) == 1 else 10
+        clock.now += duration
+        return {
+            "status": "no_candidates",
+            "response": {"candidates": [], "evaluations": 0},
+            "resources": {
+                "wall_seconds": duration,
+                "sampled_cpu_seconds_lower_bound": 5,
+                "sampled_peak_rss_mb": 100,
+            },
+        }
+
+    def collect(*args, **kwargs):
+        collected.append(args[0])
+        return []
+
+    monkeypatch.setattr(runner, "bounded_method", bounded)
+    monkeypatch.setattr(runner.qualified_collector, "checked_products", collect)
+    result = runner.run(path, tmp_path / "run")
+    first, second = result["attempts"]
+    assert len(requests) == 2 and len(collected) == 1
+    assert first["status"] == "timeout" and first["qualified"] == []
+    assert first["failures"][0]["stage"] == "common" and "including cleanup" in first["failures"][0]["reason"]
+    assert first["costs"]["wall_seconds"] == 601 and first["costs"]["cpu_seconds"] == 5
+    assert second["status"] == "no_candidates"
+    assert adapter.read(tmp_path / "run/attempt-0000/phases.json")["phases"]["common"]["allocation_exceeded"]

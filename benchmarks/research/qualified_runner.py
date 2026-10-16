@@ -297,6 +297,9 @@ def attempt(method, query, seed, output, plan, termination):
         write_json(output / "common-report.json", phases["common"])
         if phases["common"]["status"] not in {"success", "no_candidates"}:
             raise RuntimeError("Common phase did not complete")
+        if phases["common"].get("resources", {}).get("wall_seconds", 0) > seconds:
+            phases["common"]["allocation_exceeded"] = True
+            raise TimeoutError("Common phase including cleanup exceeded its requested allocation")
         termination.phase = "qualified_collector"
         collector_started = time.monotonic()
         if collector_started >= outer_deadline:
@@ -349,7 +352,9 @@ def attempt(method, query, seed, output, plan, termination):
         result["failures"].append(
             {
                 "stage": "collector"
-                if "common" in phases and phases["common"]["status"] in {"success", "no_candidates"}
+                if "common" in phases
+                and phases["common"]["status"] in {"success", "no_candidates"}
+                and not phases["common"].get("allocation_exceeded", False)
                 else "common"
                 if "common" in phases
                 else "native",
