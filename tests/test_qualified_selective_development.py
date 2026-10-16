@@ -2,10 +2,14 @@
 
 import copy
 import importlib
+import json
 import os
 import signal
+import subprocess
+import sys
+from pathlib import Path
 import time
-from types import SimpleNamespace
+from types import ModuleType, SimpleNamespace
 
 import pytest
 
@@ -189,18 +193,73 @@ def test_summary_slot_identity_fail_closed(change):
         subject.summarize(plan["pairs"], plan["slots"], rows, old)
 
 
-def test_model_import_and_swallowed_network_fail_closed():
-    with pytest.raises(RuntimeError, match="Forbidden operation"):
+def isolated_guard_case(case, tmp_path):
+    """A new interpreter must exercise the guard, independent of suite imports."""
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import json, runpy, sys; from pathlib import Path; "
+            "namespace = runpy.run_path(sys.argv[1]); "
+            "print(json.dumps(namespace[sys.argv[2]](Path(sys.argv[3]))))",
+            str(Path(__file__).resolve()),
+            case,
+            str(tmp_path),
+        ],
+        cwd=Path(__file__).resolve().parents[1],
+        env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"),
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    return json.loads(result.stdout)
+
+
+@pytest.fixture(params=["ambient", "preloaded_forbidden_submodule"])
+def parent_import_state(request, monkeypatch):
+    if request.param == "preloaded_forbidden_submodule":
+        # Add a distinct sentinel; never replace/remove a real model runtime to
+        # evade the guard. The parent must reject, while the fresh child is clean.
+        name = "transformers.chembounce_guard_parent_fixture"
+        monkeypatch.setitem(sys.modules, name, ModuleType(name))
+        with pytest.raises(ValueError, match="Model runtime already imported"):
+            with subject.cpu_only():
+                pytest.fail("A preloaded model runtime must reject before the guard body")
+    return request.param
+
+
+def test_preloaded_model_runtime_rejected(monkeypatch):
+    name = "torch.chembounce_guard_preloaded_fixture"
+    monkeypatch.setitem(sys.modules, name, ModuleType(name))
+    with pytest.raises(ValueError, match="Model runtime already imported"):
         with subject.cpu_only():
+            pytest.fail("Preloaded runtimes cannot enter a guarded scoring run")
+
+
+def _exercise_model_import_and_swallowed_network(tmp_path):
+    assert not any(name.split(".")[0] in subject.FORBIDDEN_IMPORTS for name in sys.modules)
+    with pytest.raises(RuntimeError, match="Forbidden operation"):
+        with subject.cpu_only() as imports:
             with pytest.raises(RuntimeError, match="Model import"):
                 importlib.import_module("transformers")
+    assert imports == ["import:transformers"]
     import socket
 
     with pytest.raises(RuntimeError, match="Forbidden operation"):
-        with subject.cpu_only():
+        with subject.cpu_only() as network:
             with socket.socket() as sock:
-                with pytest.raises(RuntimeError):
+                with pytest.raises(RuntimeError, match="Network/process operation forbidden"):
                     sock.bind(("127.0.0.1", 0))
+    assert network == ["socket.bind"]
+    return {"imports": imports, "network": network}
+
+
+def test_model_import_and_swallowed_network_fail_closed(tmp_path, parent_import_state):
+    assert isolated_guard_case("_exercise_model_import_and_swallowed_network", tmp_path) == {
+        "imports": ["import:transformers"],
+        "network": ["socket.bind"],
+    }
 
 
 def test_measured_embedding_calls_are_not_cache_misses():
@@ -341,18 +400,29 @@ def declaration_fixture(tmp_path, monkeypatch):
     return path, declaration
 
 
-def test_prepare_run_exact_plan_and_before_after_bindings(tmp_path, monkeypatch):
-    path, _ = declaration_fixture(tmp_path, monkeypatch)
-    plan = subject.prepare(path, subject.base.file_hash(path), tmp_path / "prepared")
-    assert len(plan["slots"]) == 15
-    plan_path = tmp_path / "prepared/plan.json"
-    backend = Fake(tmp_path / "execution")
-    monkeypatch.setattr(subject, "ScientificBackend", lambda: backend)
-    result = subject.run(plan_path, subject.base.file_hash(plan_path), tmp_path / "execution")
-    assert len(result) == 15
-    integrity = subject.read(tmp_path / "execution/integrity.json")
-    assert len(integrity["checks"]) == 4
-    assert integrity["forbidden_attempts"] == []
+def _exercise_prepare_run_exact_plan(tmp_path):
+    assert not any(name.split(".")[0] in subject.FORBIDDEN_IMPORTS for name in sys.modules)
+    with pytest.MonkeyPatch.context() as monkeypatch:
+        path, _ = declaration_fixture(tmp_path, monkeypatch)
+        plan = subject.prepare(path, subject.base.file_hash(path), tmp_path / "prepared")
+        assert len(plan["slots"]) == 15
+        plan_path = tmp_path / "prepared/plan.json"
+        backend = Fake(tmp_path / "execution")
+        monkeypatch.setattr(subject, "ScientificBackend", lambda: backend)
+        result = subject.run(plan_path, subject.base.file_hash(plan_path), tmp_path / "execution")
+        assert len(result) == 15
+        integrity = subject.read(tmp_path / "execution/integrity.json")
+        assert len(integrity["checks"]) == 4
+        assert integrity["forbidden_attempts"] == []
+        return {"slots": len(result), "checks": len(integrity["checks"]), "forbidden_attempts": []}
+
+
+def test_prepare_run_exact_plan_and_before_after_bindings(tmp_path, parent_import_state):
+    assert isolated_guard_case("_exercise_prepare_run_exact_plan", tmp_path) == {
+        "slots": 15,
+        "checks": 4,
+        "forbidden_attempts": [],
+    }
 
 
 @pytest.mark.parametrize("field", ["input", "source", "runtime", "spec", "cpu"])
