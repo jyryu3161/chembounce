@@ -81,17 +81,20 @@ def load_reference(profile, directory=HERE):
     directory = Path(directory)
     provenance, digest = read_json(directory / "provenance.json")
     require(digest == PROVENANCE_SHA256, "Changed replay provenance")
-    files = {**provenance["helpers_sha256"], **provenance["expected_snapshots_sha256"],
-             "criteria.json": provenance["criteria_sha256"]}
+    files = {
+        **provenance["helpers_sha256"],
+        **provenance["expected_snapshots_sha256"],
+        "criteria.json": provenance["criteria_sha256"],
+    }
     for relative, expected in files.items():
         require(sha(directory / relative) == expected, "Changed replay artifact: " + relative)
     pins, digest = read_json(directory.parent / "pins.json")
     require(digest == provenance["source_pins_sha256"], "Changed source pins")
     criteria, _ = read_json(directory / "criteria.json")
-    require(criteria["comparison"]["conformer_absolute_tolerance"] == TOLERANCE,
-            "Unexpected comparison tolerance")
-    require(criteria["comparison"]["conformer_relative_tolerance"] == 0,
-            "Unexpected relative tolerance")
+    require(
+        criteria["comparison"]["conformer_absolute_tolerance"] == TOLERANCE, "Unexpected comparison tolerance"
+    )
+    require(criteria["comparison"]["conformer_relative_tolerance"] == 0, "Unexpected relative tolerance")
     expected, _ = read_json(directory / "expected" / (profile + ".json"))
     return expected, criteria, pins, provenance
 
@@ -111,18 +114,22 @@ def compare_report(report, profile, assets_root, reference):
     for key in criteria["comparison"]["exact_fields"]:
         typed_equal(report[key], expected[key], key)
     conformer, baseline = report["conformer"], expected["conformer"]
-    require(type(conformer) is dict and conformer.keys() == baseline.keys(),
-            "Conformer field membership mismatch")
+    require(
+        type(conformer) is dict and conformer.keys() == baseline.keys(), "Conformer field membership mismatch"
+    )
     for key in criteria["comparison"]["conformer_exact_fields"]:
         typed_equal(conformer[key], baseline[key], "conformer." + key)
     positions = conformer["positions"]
     require(type(positions) is list and len(positions) == 19, "Expected 19 coordinate rows")
-    require(all(type(row) is list and len(row) == 3 for row in positions),
-            "Expected three coordinates per atom")
+    require(
+        all(type(row) is list and len(row) == 3 for row in positions), "Expected three coordinates per atom"
+    )
     values = [conformer["energy"], *[x for row in positions for x in row]]
     targets = [baseline["energy"], *[x for row in baseline["positions"] for x in row]]
-    require(len(values) == 58 and all(type(v) is float and math.isfinite(v) for v in values),
-            "Expected 58 finite floating-point conformer values")
+    require(
+        len(values) == 58 and all(type(v) is float and math.isfinite(v) for v in values),
+        "Expected 58 finite floating-point conformer values",
+    )
     differences = [abs(a - b) for a, b in zip(values, targets)]
     require(max(differences) <= TOLERANCE, "Conformer absolute tolerance exceeded")
 
@@ -137,13 +144,17 @@ def compare_report(report, profile, assets_root, reference):
         path = rooted(source / relative, source, relative)
         require(sha(path) == digest, "Changed study source: " + relative)
     origins = report["module_origins"]
-    require(type(origins) is dict and origins.keys() == expected["module_origins"].keys(),
-            "Module membership mismatch")
+    require(
+        type(origins) is dict and origins.keys() == expected["module_origins"].keys(),
+        "Module membership mismatch",
+    )
     for name, expected_hash in expected["module_origins"].items():
         entry = origins[name]
         require(type(entry) is dict and set(entry) == {"path", "sha256"}, "Invalid origin: " + name)
-        require(type(entry["path"]) is str and Path(entry["path"]).is_absolute(),
-                "Origin must be an absolute file path: " + name)
+        require(
+            type(entry["path"]) is str and Path(entry["path"]).is_absolute(),
+            "Origin must be an absolute file path: " + name,
+        )
         if name in PROJECT_FILES:
             origin_root, relative = source, PROJECT_FILES[name]
         elif name in UPSTREAM_FILES:
@@ -156,15 +167,23 @@ def compare_report(report, profile, assets_root, reference):
         target = rooted(origin_root / relative, origin_root, name)
         actual = rooted(entry["path"], origin_root, name)
         require(actual == target, "Wrong module file: " + name)
-        require(type(entry["sha256"]) is str and entry["sha256"] == expected_hash,
-                "Reported module hash mismatch: " + name)
+        require(
+            type(entry["sha256"]) is str and entry["sha256"] == expected_hash,
+            "Reported module hash mismatch: " + name,
+        )
         require(sha(actual) == expected_hash, "Current module bytes mismatch: " + name)
-    return {"status": "passed_saved_report_checks", "profile": profile,
-            "conformer_scalar_checks": 58, "maximum_absolute_conformer_difference": max(differences),
-            "absolute_tolerance": TOLERANCE, "module_origin_checks": len(origins),
-            "study_source_files_checked": 41,
-            "assets_root": str(assets), "probe_execution_proven": False,
-            "scope": "Saved fixed CPU report checked against its own profile snapshot and current declared files; no probe execution, independent OS or general numerical-equivalence claim."}
+    return {
+        "status": "passed_saved_report_checks",
+        "profile": profile,
+        "conformer_scalar_checks": 58,
+        "maximum_absolute_conformer_difference": max(differences),
+        "absolute_tolerance": TOLERANCE,
+        "module_origin_checks": len(origins),
+        "study_source_files_checked": 41,
+        "assets_root": str(assets),
+        "probe_execution_proven": False,
+        "scope": "Saved fixed CPU report checked against its own profile snapshot and current declared files; no probe execution, independent OS or general numerical-equivalence claim.",
+    }
 
 
 def main(argv=None):
@@ -185,12 +204,19 @@ def main(argv=None):
             reference = load_reference(args.profile)
             report, report_hash = read_json(args.report)
             result = compare_report(report, args.profile, args.assets_root, reference)
-            result.update(report_sha256=report_hash, comparator_sha256=sha(__file__),
-                          provenance_sha256=PROVENANCE_SHA256)
+            result.update(
+                report_sha256=report_hash,
+                comparator_sha256=sha(__file__),
+                provenance_sha256=PROVENANCE_SHA256,
+            )
             code = 0
         except Exception as exc:
-            result = {"status": "failed", "profile": args.profile,
-                      "error": type(exc).__name__ + ": " + str(exc), "probe_execution_proven": False}
+            result = {
+                "status": "failed",
+                "profile": args.profile,
+                "error": type(exc).__name__ + ": " + str(exc),
+                "probe_execution_proven": False,
+            }
             code = 1
         result["checked_utc"] = datetime.now(timezone.utc).isoformat()
         output.write(json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n")

@@ -56,8 +56,12 @@ class ReplayTests(unittest.TestCase):
         return report
 
     def check(self, report=None, reference=None, profile="research"):
-        return compare.compare_report(self.report if report is None else report, profile,
-                                      self.assets, self.reference if reference is None else reference)
+        return compare.compare_report(
+            self.report if report is None else report,
+            profile,
+            self.assets,
+            self.reference if reference is None else reference,
+        )
 
     def test_all_four_profiles_synthetic_origin_layout(self):
         for profile, count in (("research", 8), ("forward-cpu", 8), ("crem", 7), ("mol2mol", 9)):
@@ -156,7 +160,9 @@ class ReplayTests(unittest.TestCase):
     def test_old_source_fallback_rejected_even_with_equal_bytes(self):
         old = self.assets / "sources/chembounce_frozen/chembounce_synthesis/identity.py"
         old.parent.mkdir(parents=True)
-        old.write_bytes(Path(self.report["module_origins"]["chembounce_synthesis.identity"]["path"]).read_bytes())
+        old.write_bytes(
+            Path(self.report["module_origins"]["chembounce_synthesis.identity"]["path"]).read_bytes()
+        )
         self.report["module_origins"]["chembounce_synthesis.identity"]["path"] = str(old)
         with self.assertRaises(ValueError):
             self.check()
@@ -217,8 +223,14 @@ class ReplayTests(unittest.TestCase):
 
     def test_reference_artifact_tampering_and_missing(self):
         target = self.copied_artifacts()
-        for relative in ("provenance.json", "probe_scientific.py", "audit_reinvent_installed.py",
-                         "criteria.json", "expected/research.json", "../pins.json"):
+        for relative in (
+            "provenance.json",
+            "probe_scientific.py",
+            "audit_reinvent_installed.py",
+            "criteria.json",
+            "expected/research.json",
+            "../pins.json",
+        ):
             with self.subTest(file=relative):
                 file = target / relative
                 original = file.read_bytes()
@@ -233,9 +245,23 @@ class ReplayTests(unittest.TestCase):
     def invoke(self, output, report=None):
         file = self.root / "report.json"
         file.write_text(json.dumps(self.report if report is None else report))
-        with patch.object(compare, "load_reference", return_value=self.reference), contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
-            return compare.main(["--profile", "research", "--assets-root", str(self.assets),
-                                 "--report", str(file), "--output", str(output)])
+        with (
+            patch.object(compare, "load_reference", return_value=self.reference),
+            contextlib.redirect_stdout(io.StringIO()),
+            contextlib.redirect_stderr(io.StringIO()),
+        ):
+            return compare.main(
+                [
+                    "--profile",
+                    "research",
+                    "--assets-root",
+                    str(self.assets),
+                    "--report",
+                    str(file),
+                    "--output",
+                    str(output),
+                ]
+            )
 
     def test_cli_pass_and_exclusive_output_preservation(self):
         output = self.root / "result.json"
@@ -257,8 +283,18 @@ class ReplayTests(unittest.TestCase):
     def test_cli_missing_input_records_failure(self):
         output = self.root / "missing.json"
         with contextlib.redirect_stdout(io.StringIO()):
-            result = compare.main(["--profile", "research", "--assets-root", str(self.assets),
-                                   "--report", str(self.root / "absent.json"), "--output", str(output)])
+            result = compare.main(
+                [
+                    "--profile",
+                    "research",
+                    "--assets-root",
+                    str(self.assets),
+                    "--report",
+                    str(self.root / "absent.json"),
+                    "--output",
+                    str(output),
+                ]
+            )
         self.assertEqual(result, 1)
         self.assertEqual(json.loads(output.read_text())["status"], "failed")
 
