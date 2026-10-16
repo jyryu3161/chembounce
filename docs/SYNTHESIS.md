@@ -177,6 +177,48 @@ chemical identities, **not supplier SKUs**. A historical Enamine-derived snapsho
 is evidence of membership in that snapshot; use a current supplier export when
 purchasability or delivery time matters. No stock-check API is implied.
 
+New conversions write a v2 `<catalog>.manifest.json` sidecar. Its `record_origins`
+maps every normalized catalog ID to all accepted source occurrences, each with
+`input_index`, `record_index`, and `identifier_origin` (`input_provided` or
+`generated_structure_sha256`). `input_index` references the existing `inputs`
+path/SHA256 list; repeated input arguments have distinct indices. IDs are stripped
+of surrounding whitespace before deduplication, and missing or blank IDs receive
+a structure digest. A supplied ID with a `structure-sha256:` prefix remains
+`input_provided`. Identical IDs and structures retain all origins, including mixed
+supplied/generated occurrences; conflicting structures for the same normalized
+ID fail before publication. Source bytes and record coordinates retain the link
+to the original ID spelling. `records` counts unique TSV IDs, not occurrences.
+
+The `zero_based_logical_records` policy counts parsed CSV/TSV data records after
+the header (multiline records count once), SDF supplier records including invalid
+entries, nonblank/noncomment SMILES entries, or inert-pickle molecule positions.
+Rejected records consume indices and include `input_index` alongside the existing
+`file`, `record`, and `reason`. The sidecar also records `smiles_column` and
+`id_column`. Input hashes are checked before and after parsing; a detected change
+fails conversion before publishing the TSV or sidecar.
+
+`Catalog.evidence` adds `identifier_provenance` with a `recorded` status, the
+sidecar SHA256, and `source_records` expanded to include source paths and hashes.
+Route verification and concrete route audits carry these fields for each leaf.
+Absent, legacy v1 or unversioned checksum-only sidecars produce `unknown_legacy`
+with an empty source-record list; identifier prefixes never fill missing provenance. Malformed v2 data and
+unsupported explicit schema versions fail closed. Every v2 ID, including an
+unavailable entry, requires origins; accepted and rejected source coordinates
+must be unique. Audits detect sidecar changes, removal or addition since loading.
+Present directories, other nonregular sidecars and dangling symlinks are rejected
+during loading and freshness checks; a symlink to a regular file uses content-hash
+semantics. The v2 fields `record_origins` and `record_index_policy` require explicit
+`schema_version: 2`, so deleting or downgrading the version cannot silently discard
+lineage. Genuine old v1 and unversioned metadata without those fields remain valid.
+
+Both `supplier_sku_verified` and `current_stock_verified` remain false, including
+for supplied identifiers and `in_stock` entries. Hashes bind source bytes and
+record traceability; a self-consistent rewritten sidecar is not independently
+authentic without an external trusted pin. These fields add no experimental
+yield, reaction-condition or synthesis-feasibility evidence. Existing TSV files
+and v1 sidecars remain readable; newly exported evidence includes additive fields
+and therefore receives new audit bindings. Historical artifacts are unchanged.
+
 The normalized TSV requires `id`, `smiles`, `source`, `snapshot`; optional
 `availability` is `catalogued` (default), `in_stock`, or `unavailable`. Unavailable
 entries are excluded. Even `in_stock` refers to the dated input evidence, not a
