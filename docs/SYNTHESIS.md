@@ -205,6 +205,11 @@ with an empty source-record list; identifier prefixes never fill missing provena
 unsupported explicit schema versions fail closed. Every v2 ID, including an
 unavailable entry, requires origins; accepted and rejected source coordinates
 must be unique. Audits detect sidecar changes, removal or addition since loading.
+Present directories, other nonregular sidecars and dangling symlinks are rejected
+during loading and freshness checks; a symlink to a regular file uses content-hash
+semantics. The v2 fields `record_origins` and `record_index_policy` require explicit
+`schema_version: 2`, so deleting or downgrading the version cannot silently discard
+lineage. Genuine old v1 and unversioned metadata without those fields remain valid.
 
 Both `supplier_sku_verified` and `current_stock_verified` remain false, including
 for supplied identifiers and `in_stock` entries. Hashes bind source bytes and

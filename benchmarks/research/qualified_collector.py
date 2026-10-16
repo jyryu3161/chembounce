@@ -23,7 +23,7 @@ from rdkit import Chem, DataStructs, rdBase
 from benchmarks.research.protocol import digest
 from benchmarks.research.qualified_adapter import read, common_config, benchmark_profile
 from chembounce_synthesis.common import FP, canonical, molecule
-from chembounce_synthesis.catalog import Catalog
+from chembounce_synthesis.catalog import Catalog, _import_manifest_present
 from chembounce_synthesis.forward_support import (
     GENERATION_SOURCE_SHA256,
     PADDING_POLICY,
@@ -85,7 +85,7 @@ class BoundCatalog:
         if Path(filename).resolve() != self.path or digest(self.path) != self.sha256:
             raise ValueError("Shared catalog path or checksum differs from the pinned snapshot")
         sidecar = self.path.with_suffix(self.path.suffix + ".manifest.json")
-        actual = digest(sidecar) if sidecar.exists() else None
+        actual = digest(sidecar) if _import_manifest_present(sidecar) else None
         if actual != self._sidecar_sha256:
             raise ValueError("Shared catalog sidecar presence/checksum changed")
         source_root = Path(__file__).resolve().parents[2] / "chembounce_synthesis"

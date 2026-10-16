@@ -4,6 +4,7 @@ import copy
 import csv
 import hashlib
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -25,6 +26,27 @@ def converted(tmp_path, rows=(("a", "CCO"), ("b", "CCN"), ("bad", "invalid"))):
     output = tmp_path / "converted.tsv"
     manifest = convert_catalog([source], output, "fixture", "snapshot", "structure", "sku")
     return source, output, output.with_suffix(".tsv.manifest.json"), manifest
+
+
+def bound_catalog(path, sidecar_sha256):
+    from benchmarks.research.qualified_collector import BoundCatalog
+    from chembounce_synthesis import catalog as catalog_module, common
+
+    return BoundCatalog(
+        path,
+        digest(path),
+        {"catalog.py": digest(catalog_module.__file__), "common.py": digest(common.__file__)},
+        sidecar_sha256=sidecar_sha256,
+    )
+
+
+def invalid_sidecar(path, kind):
+    if kind == "directory":
+        path.mkdir()
+    elif kind == "dangling_symlink":
+        path.symlink_to(path.with_name("missing-sidecar-target.json"))
+    else:
+        os.mkfifo(path)
 
 
 def test_mixed_records_and_multiline_id_preserve_exact_source_coordinates(tmp_path):
@@ -256,9 +278,6 @@ def test_smiles_logical_indices_exclude_comments_and_blanks(tmp_path):
 
 
 def test_evidence_copies_and_route_audit_export_parity(tmp_path, assets, route):
-    from benchmarks.research.qualified_collector import BoundCatalog
-    from chembounce_synthesis import catalog as catalog_module, common
-
     _, output, sidecar, _ = converted(tmp_path, (("acetic", "CC(=O)O"), ("pyridyl", "Nc1ccncc1")))
     catalog = Catalog(output)
     evidence = catalog.evidence("acetic")
@@ -268,12 +287,7 @@ def test_evidence_copies_and_route_audit_export_parity(tmp_path, assets, route):
     catalog.import_provenance["inputs"][0]["sha256"] = "0" * 64
     verification = verify_route(route, catalog, assets[1])
     audit = audit_route(route, catalog, assets[1])
-    bound = BoundCatalog(
-        output,
-        catalog.sha256,
-        {"catalog.py": digest(catalog_module.__file__), "common.py": digest(common.__file__)},
-        sidecar_sha256=digest(sidecar),
-    )
+    bound = bound_catalog(output, digest(sidecar))
     assert audit_route(route, bound, assets[1]) == audit
     for verified, audited in zip(verification["building_blocks"], audit["building_blocks"]):
         assert {k: v for k, v in verified.items() if k != "node_id"} == audited["catalog_record"]
@@ -319,3 +333,66 @@ def test_manifest_hash_binds_the_exact_bytes_parsed(tmp_path, monkeypatch):
     )
     with pytest.raises(ValueError, match="import manifest changed"):
         catalog._check_import_unchanged()
+
+
+@pytest.mark.parametrize("version", ["missing", 1])
+@pytest.mark.parametrize("marker", ["record_origins", "record_index_policy", "both"])
+def test_v2_lineage_markers_cannot_silently_downgrade(tmp_path, version, marker):
+    _, output, sidecar, manifest = converted(tmp_path)
+    if version == "missing":
+        del manifest["schema_version"]
+    else:
+        manifest["schema_version"] = version
+    if marker != "both":
+        del manifest["record_index_policy" if marker == "record_origins" else "record_origins"]
+    sidecar.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="requires explicit schema_version=2"):
+        Catalog(output)
+    with pytest.raises(ValueError, match="requires explicit schema_version=2"):
+        bound_catalog(output, digest(sidecar))
+
+
+@pytest.mark.parametrize("kind", ["directory", "dangling_symlink", "fifo"])
+def test_present_invalid_sidecar_is_not_legacy_absence(tmp_path, kind):
+    _, output, sidecar, _ = converted(tmp_path)
+    sidecar.unlink()
+    invalid_sidecar(sidecar, kind)
+    with pytest.raises(ValueError, match="import manifest must be a regular file"):
+        Catalog(output)
+    with pytest.raises(ValueError, match="import manifest must be a regular file"):
+        bound_catalog(output, None)
+
+
+@pytest.mark.parametrize("initial", ["absent", "present"])
+@pytest.mark.parametrize("kind", ["directory", "dangling_symlink", "fifo"])
+def test_audit_and_wrapper_reject_added_or_replaced_invalid_sidecar(tmp_path, assets, route, initial, kind):
+    _, output, sidecar, _ = converted(tmp_path, (("acetic", "CC(=O)O"), ("pyridyl", "Nc1ccncc1")))
+    if initial == "absent":
+        sidecar.unlink()
+    catalog = Catalog(output)
+    bound = bound_catalog(output, digest(sidecar) if initial == "present" else None)
+    if initial == "present":
+        sidecar.unlink()
+    invalid_sidecar(sidecar, kind)
+    for loaded in (catalog, bound):
+        with pytest.raises(ValueError, match="import manifest must be a regular file"):
+            audit_route(route, loaded, assets[1])
+    with pytest.raises(ValueError, match="import manifest must be a regular file"):
+        bound.validate(output, dict(bound._source))
+
+
+def test_regular_sidecar_symlink_retains_content_hash_semantics(tmp_path, assets, route):
+    _, output, sidecar, _ = converted(tmp_path, (("acetic", "CC(=O)O"), ("pyridyl", "Nc1ccncc1")))
+    original = Catalog(output)
+    original_audit = audit_route(route, original, assets[1])
+    target = tmp_path / "sidecar-target.json"
+    sidecar.rename(target)
+    sidecar.symlink_to(target)
+    catalog = Catalog(output)
+    bound = bound_catalog(output, digest(sidecar))
+    for loaded in (original, catalog, bound):
+        assert audit_route(route, loaded, assets[1]) == original_audit
+    target.write_bytes(target.read_bytes() + b" ")
+    for loaded in (original, catalog, bound):
+        with pytest.raises(ValueError, match="import manifest changed"):
+            audit_route(route, loaded, assets[1])

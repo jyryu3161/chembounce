@@ -15,6 +15,17 @@ from rdkit import Chem, DataStructs
 from .common import FP, canonical, digest, molecule, positive
 
 
+def _import_manifest_present(path):
+    """Distinguish absence from a present invalid sidecar, including dangling links."""
+    try:
+        path.lstat()
+    except FileNotFoundError:
+        return False
+    if not path.is_file():
+        raise ValueError("Catalog import manifest must be a regular file when present")
+    return True
+
+
 @dataclass(frozen=True)
 class BuildingBlock:
     id: str
@@ -93,7 +104,7 @@ class Catalog:
         self._manifest_inputs = ()
         manifest = None
         manifest_path = self._manifest_path = self.path.with_suffix(self.path.suffix + ".manifest.json")
-        if manifest_path.is_file():
+        if _import_manifest_present(manifest_path):
             manifest_bytes = manifest_path.read_bytes()
             manifest = json.loads(manifest_bytes)
             if not isinstance(manifest, dict):
@@ -101,6 +112,8 @@ class Catalog:
             version = manifest.get("schema_version", 1)
             if type(version) is not int or version not in {1, 2}:
                 raise ValueError("Unsupported catalog import manifest schema_version")
+            if version != 2 and {"record_origins", "record_index_policy"}.intersection(manifest):
+                raise ValueError("Catalog record lineage requires explicit schema_version=2")
             if manifest.get("output_sha256") != self.sha256:
                 raise ValueError("Catalog checksum differs from its import manifest; regenerate the snapshot")
             if not isinstance(manifest.get("rejected_records", []), list):
@@ -221,7 +234,7 @@ class Catalog:
         self._manifest_inputs = copy.deepcopy(inputs)
 
     def _check_import_unchanged(self):
-        current = digest(self._manifest_path) if self._manifest_path.is_file() else None
+        current = digest(self._manifest_path) if _import_manifest_present(self._manifest_path) else None
         if current != self._manifest_sha256:
             raise ValueError("Authoritative catalog import manifest changed since loading")
 
