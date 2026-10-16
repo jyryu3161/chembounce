@@ -19,20 +19,40 @@ from rdkit.Chem.Scaffolds import MurckoScaffold
 
 from .catalog import Catalog
 from .common import FP, canonical, digest, molecule, positive, write_json
-from .conformers import ConformerSettings, ensemble, prepare_reference, reference_from_sdf, score_candidate
+from .conformers import (
+    ConformerSettings,
+    _check_stereo,
+    ensemble,
+    prepare_reference,
+    reference_from_sdf,
+    score_candidate,
+)
 from .continuation import load_carried_routes
+from .design_selection import select_designs, selection_policy, sized_count
 from .evidence import evaluator_from_config, validate_evidence_config
 from .identity import classify_change, family_key, scaffold_family_key
 from .pocket import constraints_from_config, validate_pocket_config
 from .protocols import apply_synthesis_protocol, protocol_provenance
+from .qualification import decide, effective_policy, validate_result
 from .reactions import Rules
 from .refinement import RefinementBudget, RefinementSettings, refine_candidate
+from .route_objective import RootProductObjective, search_policy
 from .routes import SearchLimits, expand_route, resolve_proposal, verify_route
 from .synllama import SavedProposals, SynLlama
+from . import selective_scoring
 
 LOGGER = logging.getLogger(__name__)
 COLUMNS = [
     "rank",
+    "recommendation_status",
+    "qualification_policy",
+    "evidence_profile",
+    "route_support_binding",
+    "scoring_objective",
+    "ranking_policy",
+    "recommendation_profile",
+    "calibration_status",
+    "calibration_artifact_sha256",
     "smiles",
     "design",
     "score",
@@ -64,6 +84,13 @@ COLUMNS = [
     "seed_score_std",
     "convergence_status",
     "refinement_conformers",
+]
+SELECTIVE_COLUMNS = [
+    "pose_selection_policy",
+    "similarity_constraint_policy",
+    "similarity_constraint_sha256",
+    "similarity_witness_sha256",
+    "polar_reference_recall",
 ]
 
 
@@ -112,6 +139,7 @@ def _config(config):
         "core_smiles",
         "preserve_design_scaffold",
         "max_designs",
+        "max_design_attempts",
         "max_scored_products",
         "max_results",
         "expansion",
@@ -123,6 +151,12 @@ def _config(config):
         "allocation_policy",
         "synthesis_evidence",
         "pocket",
+        "recommendation",
+        "route_search_policy",
+        "route_search_cache_size",
+        "ranking_policy",
+        "recommendation_profile",
+        "similarity_constraints",
     }
     if set(config) - permitted:
         raise ValueError(f"Unknown synthesis configuration keys: {sorted(set(config) - permitted)}")
@@ -149,6 +183,7 @@ def _config(config):
     SearchLimits(**config.get("search", {}))
     ConformerSettings(**config.get("conformers", {}))
     RefinementSettings(**config.get("refinement", {}))
+    selective_scoring.configured_constraints(config)
     validate_evidence_config(config.get("synthesis_evidence", {}))
     if "pocket" in config:
         validate_pocket_config(config["pocket"])
@@ -214,12 +249,31 @@ def _config(config):
     from chembounce import _validate_parameters
 
     _validate_parameters(0.5, 0.3, 42, config.get("property_thresholds", {}))
+    effective_policy(config)
+    selection_policy(config)
+    search_policy(config)
+    _ranking_policy(config)
     return config
 
 
-def load_config(filename):
+def _ranking_policy(config):
+    objective = config.get("conformers", {}).get("scoring_objective", "joint-v1")
+    policy = config.get("ranking_policy", objective)
+    if policy not in ("joint-v1", "original-hit-v1"):
+        raise ValueError("ranking_policy must be joint-v1 or original-hit-v1")
+    if policy == "original-hit-v1" and objective != "original-hit-v1":
+        raise ValueError("original-hit-v1 ranking requires original-hit-v1 scoring_objective")
+    return policy
+
+
+def load_config(filename, *, options=None):
     path = Path(filename).resolve()
-    return _resolve_paths(_config(json.loads(path.read_text())), path.parent)
+    config = json.loads(path.read_text())
+    if options is not None:
+        from .options import apply_expansion_options
+
+        config = apply_expansion_options(config, options)
+    return _resolve_paths(_config(config), path.parent)
 
 
 def _resolve_paths(config, base):
@@ -322,7 +376,23 @@ def _pareto(rows):
     modes = {r.get("scoring_stage") == "2d_screening" for r in rows}
     if len(modes) > 1:
         raise ValueError("Cannot mix 2D and 3D candidates in one ranking")
-    if modes == {True}:
+    policies = {r.get("ranking_policy", "joint-v1") for r in rows}
+    if len(policies) != 1:
+        raise ValueError("Cannot mix ranking policies")
+    if policies == {"original-hit-v1"}:
+        if modes == {True}:
+            raise ValueError("original-hit-v1 ranking requires 3D scoring")
+        points = np.asarray(
+            [
+                (
+                    r["hit_tanimoto"],
+                    r.get("ranking_metrics", {}).get("hit_shape", r["hit_shape"]),
+                    r.get("ranking_metrics", {}).get("hit_pharmacophore", r["hit_pharmacophore"]),
+                )
+                for r in rows
+            ]
+        )
+    elif modes == {True}:
         points = np.asarray([(r["hit_tanimoto"], r["design_tanimoto"], -r["reaction_steps"]) for r in rows])
     else:
         points = np.asarray(
@@ -359,25 +429,50 @@ def _pareto(rows):
         level += 1
 
 
-def _rank(rows):
-    _pareto(rows)
-    rows.sort(
-        key=lambda r: (
+def _rank_key(r):
+    if r.get("ranking_policy", "joint-v1") == "original-hit-v1":
+        secondary = (
+            r["seed_score_range"],
+            r["design_tanimoto"],
+            r.get("ranking_metrics", {}).get("design_shape", r["design_shape"]),
+            r.get("ranking_metrics", {}).get("design_pharmacophore", r["design_pharmacophore"]),
+        )
+        if not all(math.isfinite(value) for value in (r["ranking_score"], *secondary)):
+            raise ValueError("Original-hit ranking requires finite scalar and secondary metrics")
+        return (
             r["pareto_front"],
-            -r.get("ranking_score", r["seed_score_median"]),
+            -r["ranking_score"],
+            secondary[0],
+            *(-v for v in secondary[1:]),
             r["reaction_steps"],
             r["smiles"],
             r["design"],
         )
+    return (
+        r["pareto_front"],
+        -r.get("ranking_score", r["seed_score_median"]),
+        r["reaction_steps"],
+        r["smiles"],
+        r["design"],
     )
+
+
+def _rank(rows):
+    _pareto(rows)
+    rows.sort(key=_rank_key)
     for rank, row in enumerate(rows, 1):
         row["rank"] = rank
     return rows
 
 
-def _write_table(path, rows):
+def _write_table(path, rows, *, selective=False):
     with path.open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=COLUMNS, delimiter="\t", extrasaction="ignore")
+        writer = csv.DictWriter(
+            stream,
+            fieldnames=COLUMNS + (SELECTIVE_COLUMNS if selective else []),
+            delimiter="\t",
+            extrasaction="ignore",
+        )
         writer.writeheader()
         for row in rows:
             writer.writerow(
@@ -428,6 +523,9 @@ def _family_groups(rows):
     for row in rows:
         groups.setdefault(row["family_smiles"], []).append(row)
     for alternatives in groups.values():
+        if alternatives[0].get("ranking_policy") == "original-hit-v1":
+            alternatives.sort(key=_rank_key)
+            continue
         alternatives.sort(
             key=lambda row: (
                 row["pareto_front"],
@@ -461,7 +559,7 @@ def _with_alternative_routes(row, alternatives):
     }
 
 
-def _design_batches(designs, provider, deadline_monotonic=None):
+def _design_batches(designs, provider, deadline_monotonic=None, *, carried_only=()):
     # The scoring budget is global: carry every design before starting any new
     # projection. Otherwise early designs can displace later designs' old hits.
     for design in designs:
@@ -469,6 +567,8 @@ def _design_batches(designs, provider, deadline_monotonic=None):
     for design in designs:
         if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
             return
+        if design in carried_only:
+            continue
         proposals = (
             provider.propose(design, deadline_monotonic=deadline_monotonic)
             if deadline_monotonic is not None
@@ -515,6 +615,10 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
     route_records, score_records, raw_records, refinement_records = [], [], [], []
     rows, poses, similarity_cache, candidates_by_key = {}, {}, {}, {}
     evidence_evaluator = None
+    policy = None
+    route_policy = None
+    root_objectives = {}
+    selected = []
     projected_designs = set()
     try:
         if deadline_monotonic is not None and (
@@ -526,21 +630,53 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         if scoring_mode not in {"3d", "2d"}:
             raise ValueError("scoring_mode must be 3d or 2d")
         config = _resolve_paths(_config(config), Path.cwd())
+        policy = effective_policy(config)
+        qualified = policy["mode"] == "qualified"
+        ranking_policy = _ranking_policy(config)
+        if ranking_policy == "original-hit-v1" and scoring_mode != "3d":
+            raise ValueError("original-hit-v1 ranking requires 3D scoring")
+        route_policy = search_policy(config)
+        summary["recommendation_mode"] = policy["mode"]
+        summary["recommendation_profile"] = {
+            key: policy["calibration"][key] for key in ("name", "status", "artifact_sha256")
+        }
+        if qualified and scoring_mode != "3d":
+            raise ValueError("Qualified recommendations require completed 3D scoring")
         if scoring_mode == "2d":
             forbidden = set(config.get("minimum_scores", {})) - {"hit_tanimoto", "design_tanimoto"}
             if "pocket" in config or forbidden:
                 raise ValueError(
                     "2D scoring cannot enforce pocket constraints or 3D minimum_scores; remove those explicitly for this ablation"
                 )
+        requested_hit = hit
         hit = canonical(hit)
+        similarity = None
+        if "similarity_constraints" in config:
+            try:
+                similarity = selective_scoring.configured_constraints(config, hit)
+            except ValueError as exc:
+                summary["similarity_preflight"] = selective_scoring.failure_record(exc, phase="preflight")
+                raise
+            policy["similarity_constraints"] = {"policy": similarity.policy, "sha256": similarity.sha256}
+            summary["similarity_preflight"] = {
+                "status": "eligible",
+                "policy_sha256": similarity.sha256,
+                "ensemble_request_status": "none_requested",
+            }
         hit_fp = FP.GetFingerprint(molecule(hit))
-        requested_designs = list(designs)
-        all_designs = list(dict.fromkeys(canonical(s) for s in requested_designs))
-        designs = all_designs[: config.get("max_designs", 20)]
-        capped_designs = list(designs)
-        if len(designs) < len(all_designs):
-            summary["limits_reached"].append("max_designs")
-        summary["designs_supplied"], summary["designs_used"] = len(all_designs), len(designs)
+        design_policy = selection_policy(config)
+        bounded_refill = design_policy["version"] == "bounded-refill-v1"
+        raw_designs = designs
+        if bounded_refill:
+            summary["designs_raw_supplied"] = sized_count(raw_designs)
+        else:
+            requested_designs = list(designs)
+            all_designs = list(dict.fromkeys(canonical(s) for s in requested_designs))
+            designs = all_designs[: config.get("max_designs", 20)]
+            capped_designs = list(designs)
+            if len(designs) < len(all_designs):
+                summary["limits_reached"].append("max_designs")
+            summary["designs_supplied"], summary["designs_used"] = len(all_designs), len(designs)
         if config.get("core_smiles") and not molecule(hit).HasSubstructMatch(
             molecule(config["core_smiles"]), useChirality=True
         ):
@@ -549,41 +685,220 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         settings = ConformerSettings(**config.get("conformers", {}))
         requested_refinement = RefinementSettings(**config.get("refinement", {}))
         refinement = replace(requested_refinement, top_n=0) if scoring_mode == "2d" else requested_refinement
+
+        def qualify(row, records, result, pose_settings, report=None):
+            # Reuse the exact final-product chemistry checks at the export
+            # boundary, before family selection or an alternative-design break.
+            constraint_error = None
+            try:
+                check_constraints(
+                    row["smiles"],
+                    hit,
+                    row["design"],
+                    "hop",
+                    config.get("core_smiles"),
+                    config.get("preserve_design_scaffold", False),
+                )
+            except ValueError as exc:
+                constraint_error = str(exc)
+            final_fp = FP.GetFingerprint(molecule(row["smiles"]))
+            row["hit_tanimoto"] = row["hit_morgan"] = DataStructs.TanimotoSimilarity(hit_fp, final_fp)
+            row["design_tanimoto"] = DataStructs.TanimotoSimilarity(
+                FP.GetFingerprint(molecule(row["design"])), final_fp
+            )
+            passed = []
+            for record in records:
+                decision = decide(
+                    row,
+                    record,
+                    result,
+                    policy,
+                    pose_settings,
+                    refinement,
+                    report,
+                    hit=hit,
+                    evidence_validator=(
+                        lambda record: evidence_evaluator.validate_route(
+                            record["synthesis_evidence"],
+                            record["route"],
+                            catalog,
+                            rules,
+                            limits.reaction_product_limit,
+                        )
+                    )
+                    if policy["evidence_profile"] == "computational-route-support-v1"
+                    else None,
+                    similarity=similarity,
+                )
+                if constraint_error:
+                    decision.update(status="rejected", qualified=False)
+                    decision["reasons"].append(constraint_error)
+                record["qualification"] = decision
+                record["selection_status"] = (
+                    "qualified" if decision["qualified"] else "qualification_rejected"
+                )
+                if decision["qualified"]:
+                    passed.append(record)
+            if not passed:
+                return None
+            primary = min(passed, key=lambda r: (len(r["verification"]["steps"]), r["route_id"]))
+            return {
+                **row,
+                "route_id": primary["route_id"],
+                "reaction_steps": len(primary["verification"]["steps"]),
+                "alternative_route_ids": [r["route_id"] for r in passed if r is not primary],
+                "alternative_family_candidates": [],
+                "recommendation_status": "qualified",
+                "qualification_policy": policy["policy_version"],
+                "evidence_profile": policy["evidence_profile"],
+                "route_support_binding": primary["synthesis_evidence"].get("route_binding_sha256", ""),
+            }
+
         hit_pose = None
-        if scoring_mode == "3d":
-            if designs:
-                hit_pose = prepare_reference(hit, settings, config.get("reference_sdf"))
-            elif config.get("reference_sdf"):
-                # Preserve the existing bound-reference validation for empty runs,
-                # which have no alignment or generated-reference requirement.
-                hit_pose = reference_from_sdf(config["reference_sdf"], hit, settings)
-        design_checks, eligible_designs = [], []
-        for index, design in enumerate(capped_designs):
-            check = {"design": design, "capped_design_index": index, "role": "design"}
-            if scoring_mode == "3d":
-                try:
-                    # Designs always use generated references, even with a bound hit.
-                    # Reuse the existing policy without embedding or assigning stereo.
-                    prepare_reference(design, settings)
-                except ValueError as exc:
-                    check.update(status="rejected", stage="design_reference_preflight", reason=str(exc))
-                    summary["failures"].append(dict(check))
-                    design_checks.append(check)
-                    continue
-            check["status"] = "eligible" if scoring_mode == "3d" else "not_applicable_2d"
-            design_checks.append(check)
-            eligible_designs.append(design)
-        designs = eligible_designs
+        try:
+            if bounded_refill and deadline_reached():
+                summary["query_preflight"] = {
+                    "input": requested_hit,
+                    "canonical_smiles": hit,
+                    "role": "original_hit",
+                    "status": "not_assessed",
+                    "reason_code": "deadline",
+                }
+            elif scoring_mode == "3d":
+                if bounded_refill or designs:
+                    hit_pose = prepare_reference(hit, settings, config.get("reference_sdf"))
+                elif config.get("reference_sdf"):
+                    hit_pose = reference_from_sdf(config["reference_sdf"], hit, settings)
+        except ValueError as exc:
+            summary["query_preflight"] = {
+                "input": requested_hit,
+                "canonical_smiles": hit,
+                "role": "original_hit",
+                "status": "ineligible",
+                "qualification_status": "not_assessed",
+                "reason_code": "unspecified_stereochemistry"
+                if "specified stereochemistry" in str(exc)
+                else "reference_ineligible",
+                "reason": str(exc),
+                "interpretation": "Query could not be assessed; this is not evidence that no qualifying chemistry exists",
+            }
+            raise
+        if bounded_refill:
+            summary.setdefault(
+                "query_preflight",
+                {
+                    "input": requested_hit,
+                    "canonical_smiles": hit,
+                    "role": "original_hit",
+                    "status": "eligible" if scoring_mode == "3d" else "not_applicable_2d",
+                    "stereo_policy": "Exact input state retained; no stereoisomer assignment or enumeration",
+                },
+            )
+        if bounded_refill:
+
+            def prepare_design_reference(design):
+                if similarity is not None:
+                    selective_scoring.preflight_design(design)
+                return prepare_reference(design, settings) if scoring_mode == "3d" else None
+
+            design_preflight = select_designs(
+                raw_designs,
+                design_policy,
+                prepare_design_reference,
+                deadline_reached,
+            )
+            requested_designs = design_preflight["requested_designs"]
+            all_designs = capped_designs = design_preflight["canonical_unique_requested_designs"]
+            design_checks = design_preflight["checks"]
+            designs = design_preflight["eligible_designs"]
+            summary["design_selection"] = {
+                key: design_preflight[key] for key in ("policy", "counts", "stop_reason", "input_exhausted")
+            }
+            summary["designs_supplied"] = design_preflight["counts"]["raw_supplied"]
+            summary["designs_used"] = len(capped_designs)
+            summary["failures"].extend(dict(c) for c in design_checks if c["status"] == "rejected")
+            for limit in design_preflight["limits_reached"]:
+                if limit not in summary["limits_reached"]:
+                    summary["limits_reached"].append(limit)
+        else:
+            design_checks, eligible_designs = [], []
+            for index, design in enumerate(capped_designs):
+                check = {"design": design, "capped_design_index": index, "role": "design"}
+                if scoring_mode == "3d":
+                    try:
+                        prepare_reference(design, settings)
+                    except ValueError as exc:
+                        check.update(status="rejected", stage="design_reference_preflight", reason=str(exc))
+                        summary["failures"].append(dict(check))
+                        design_checks.append(check)
+                        continue
+                check["status"] = "eligible" if scoring_mode == "3d" else "not_applicable_2d"
+                design_checks.append(check)
+                eligible_designs.append(design)
+            designs = eligible_designs
+            design_preflight = {
+                "requested_designs": requested_designs,
+                "canonical_unique_requested_designs": all_designs,
+                "capped_designs": capped_designs,
+                "eligible_designs": designs,
+                "checks": design_checks,
+                "scope": "Configured generated-reference stereochemistry and alignment prerequisites only; no embedding or stereo assignment. Applied after the original design cap, with no backfill or provider reseeding.",
+                "policy": design_policy,
+            }
         rejected_designs = {
-            check["design"]: check for check in design_checks if check["status"] == "rejected"
+            check["design"]: check
+            for check in design_checks
+            if check["status"] == "rejected" and "design" in check
         }
         summary["designs_preflight_rejected"] = len(rejected_designs)
         summary["designs_eligible_for_scoring"] = len(designs)
         # Keep original capped inputs for continuation and preserve carried evidence
         # even when its design reference is unusable under today's scoring policy.
-        carried, carry_sources = load_carried_routes(config.get("carry_forward", []), hit, capped_designs)
+        carried, carry_sources = load_carried_routes(
+            config.get("carry_forward", []),
+            hit,
+            capped_designs,
+            **({"include_excluded": True} if bounded_refill else {}),
+        )
         summary["carried_routes_loaded"] = sum(len(items) for items in carried.values())
-        for design, check in rejected_designs.items():
+        if bounded_refill:
+            # Only already-saved raw prefixes and known carried design identities
+            # can extend a later continuation. Never infer an unread input tail.
+            supply, known = list(requested_designs), set(all_designs)
+            for source in carry_sources:
+                prior = source.get("prior_design_preflight") or {}
+                saved = prior.get("saved_design_supply", prior.get("requested_designs", []))
+                if len(saved) > len(supply) and saved[: len(supply)] == supply:
+                    supply = list(saved)
+                    known.update(
+                        prior.get(
+                            "saved_design_identities", prior.get("canonical_unique_requested_designs", [])
+                        )
+                    )
+            for design in carried:
+                if design not in known:
+                    supply.append(design)
+                    known.add(design)
+            design_preflight["saved_design_supply"] = supply
+            design_preflight["saved_design_identities"] = sorted(known)
+        excluded_designs = (
+            {
+                design: rejected_designs.get(
+                    design,
+                    {
+                        "design": design,
+                        "role": "design",
+                        "status": "not_assessed",
+                        "reason": "Carried design was not selected within this run's raw/eligible/deadline bounds",
+                    },
+                )
+                for design in carried
+                if design not in designs
+            }
+            if bounded_refill
+            else rejected_designs
+        )
+        for design, check in excluded_designs.items():
             for item in carried[design]:
                 route_records.append(
                     {
@@ -591,7 +906,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         "proposal_id": None,
                         "design": design,
                         **item,
-                        "selection_status": "design_preflight_rejected",
+                        "selection_status": "design_preflight_rejected"
+                        if check["status"] == "rejected"
+                        else "design_not_assessed",
                         "reference_preflight": dict(check),
                         "reason": check["reason"],
                         "verification_status": "not_evaluated",
@@ -599,11 +916,13 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         "eligible_for_scoring": False,
                     }
                 )
-        all_designs_rejected = bool(capped_designs) and not designs
+        all_designs_rejected = not designs and (bounded_refill or bool(capped_designs))
         catalog = rules = None
         if all_designs_rejected:
             summary["no_candidates_reason"] = (
-                "All capped designs failed the configured 3D reference preflight"
+                "No eligible design was assessed within the configured intake limits; this does not establish that no qualifying chemistry exists"
+                if bounded_refill
+                else "All capped designs failed the configured 3D reference preflight"
             )
             summary["assets_not_loaded"] = ["catalog", "rules", "provider", "synthesis_evidence"]
             if "pocket" in config:
@@ -611,23 +930,28 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         else:
             catalog, rules = Catalog(config["catalog"]), Rules(config["rules"])
             if deadline_reached():
-                evidence_settings = {
-                    key: value
-                    for key, value in config.get("synthesis_evidence", {}).items()
-                    if key != "predictor"
-                }
-                evidence_evaluator = evaluator_from_config(evidence_settings)
+                evidence_evaluator = evaluator_from_config(
+                    config.get("synthesis_evidence", {}), load_predictor=False
+                )
                 summary["evidence_model_not_loaded_deadline"] = True
             else:
                 evidence_evaluator = _evidence_evaluator(config)
         manifest = _manifest(config, hit, capped_designs)
+        manifest["recommendation_policy"] = policy
+        manifest["recommendation_profile"] = policy["calibration"]
+        manifest["route_search_policy"] = route_policy
+        manifest["ranking_policy"] = ranking_policy
+        if ranking_policy == "original-hit-v1":
+            manifest["ranking_metrics"] = [
+                "hit_tanimoto",
+                "minimum_seed_hit_shape",
+                "minimum_seed_hit_pharmacophore",
+            ]
+            manifest["ranking_scope"] = (
+                "Original-hit Pareto dominance; minimum seed hit-objective scalar, then observed score range, design similarity, route steps and deterministic identities. Screening uses its single seed. No activity probability or convergence claim."
+            )
         manifest["design_preflight"] = {
-            "requested_designs": requested_designs,
-            "canonical_unique_requested_designs": all_designs,
-            "capped_designs": capped_designs,
-            "eligible_designs": designs,
-            "checks": design_checks,
-            "scope": "Configured generated-reference stereochemistry and alignment prerequisites only; no embedding or stereo assignment. Applied after the original design cap, with no backfill or provider reseeding.",
+            **design_preflight,
             "reject_unspecified_stereo": settings.reject_unspecified_stereo,
         }
         manifest["assets_not_loaded"] = summary.get("assets_not_loaded", [])
@@ -671,6 +995,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             "core_smiles": config.get("core_smiles"),
             "preserve_design_scaffold": config.get("preserve_design_scaffold", False),
             "max_designs": config.get("max_designs", 20),
+            "design_selection": design_policy,
             "max_scored_products": config.get("max_scored_products", 256),
             "max_results": config.get("max_results", 50),
             "expansion": {
@@ -684,6 +1009,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             "minimum_scores": config.get("minimum_scores", {}),
             "property_thresholds": config.get("property_thresholds", {}),
             "refinement": asdict(refinement),
+            **(
+                {"similarity_constraints": policy["similarity_constraints"]} if similarity is not None else {}
+            ),
         }
         pose_constraints = (
             constraints_from_config(config["pocket"], hit_pose, config.get("reference_sdf"))
@@ -695,6 +1023,20 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         if config.get("reference_sdf"):
             manifest["reference_sdf_sha256"] = digest(config["reference_sdf"])
         provider = _provider(config["provider"]) if designs and not deadline_reached() else None
+        carried_only = {
+            design
+            for design in designs
+            if bounded_refill
+            and config.get("carry_forward")
+            and isinstance(provider, SavedProposals)
+            and design not in provider.proposals
+            and carried[design]
+        }
+        if carried_only:
+            summary["carried_only_designs"] = [design for design in designs if design in carried_only]
+            manifest["carried_only_policy"] = (
+                "No saved proposal for this design in the latest archive; reverify and score available carried graphs without new provider calls or fabricated sampling"
+            )
         manifest["provider"] = provider.provenance if provider else None
         write_json(out / "manifest.json", manifest)
         write_json(
@@ -702,9 +1044,41 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         )
         from utils import _get_molecular_prop_extd_, determ_props
 
-        for design, proposals in _design_batches(designs, provider, deadline_monotonic):
+        def check_final_product(product, design):
+            check_constraints(
+                product,
+                hit,
+                design,
+                config.get("mode", "hop"),
+                config.get("core_smiles"),
+                config.get("preserve_design_scaffold", False),
+            )
+            mol = molecule(product)
+            if qualified:
+                _check_stereo(mol, ConformerSettings())
+            props = _get_molecular_prop_extd_(mol)
+            accepted, reasons = determ_props(
+                props, config.get("property_thresholds", {}), w_all_failed_reason=True
+            )
+            if not accepted:
+                raise ValueError("Product property filter: " + "; ".join(reasons))
+            return props
+
+        for design, proposals in _design_batches(
+            designs, provider, deadline_monotonic, carried_only=carried_only
+        ):
             LOGGER.info("Projecting design %s onto catalog reaction space", design)
             design_fp = FP.GetFingerprint(molecule(design))
+            if route_policy["version"] == "original-hit-v1" and design not in root_objectives:
+                root_objectives[design] = RootProductObjective(
+                    hit,
+                    design,
+                    config.get("minimum_scores", {}),
+                    lambda product, design=design: check_final_product(product, design),
+                    route_policy,
+                )
+            root_objective = root_objectives.get(design)
+            search_options = {"root_objective": root_objective} if root_objective is not None else {}
             expansion_cache = {}
             # Carry evidence first, before the fresh search can consume the scoring budget.
             for proposal in proposals:
@@ -731,7 +1105,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         )
                         continue
                     try:
-                        projected, report = resolve_proposal(proposal["response"], catalog, rules, limits)
+                        projected, report = resolve_proposal(
+                            proposal["response"], catalog, rules, limits, **search_options
+                        )
                         summary["search_reports"].append(
                             {"proposal_id": proposal_id, "stage": "projection", **asdict(report)}
                         )
@@ -758,7 +1134,13 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         cached = route_key in expansion_cache
                         if not cached:
                             expansion_cache[route_key] = expand_route(
-                                item["route"], catalog, rules, limits, target_smiles=design, **expansion
+                                item["route"],
+                                catalog,
+                                rules,
+                                limits,
+                                target_smiles=design,
+                                **expansion,
+                                **search_options,
                             )
                         expanded, report = expansion_cache[route_key]
                         candidates.extend(expanded)
@@ -799,21 +1181,16 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     record["verification"] = verification
                     product = verification["product"]
                     summary["verified_routes"] += 1
+                    if record.get("search_eligibility", {}).get("eligible") is False:
+                        record.update(
+                            selection_status="search_seed_only",
+                            eligible_for_evidence=False,
+                            eligible_for_scoring=False,
+                            reason="Root retained only as a bounded expansion seed; failed current cheap final-product requirements",
+                        )
+                        continue
                     try:
-                        check_constraints(
-                            product,
-                            hit,
-                            design,
-                            config.get("mode", "hop"),
-                            config.get("core_smiles"),
-                            config.get("preserve_design_scaffold", False),
-                        )
-                        props = _get_molecular_prop_extd_(molecule(product))
-                        accepted, reasons = determ_props(
-                            props, config.get("property_thresholds", {}), w_all_failed_reason=True
-                        )
-                        if not accepted:
-                            raise ValueError("Product property filter: " + "; ".join(reasons))
+                        props = check_final_product(product, design)
                     except ValueError as exc:
                         record.update(selection_status="constraint_rejected", reason=str(exc))
                         continue
@@ -882,10 +1259,19 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 if pending_routes:
                     evidence_queue.append((entry, pending_routes))
                 continue
-            evidence = evidence_evaluator.evaluate(
-                record["verification"],
-                **({"deadline_monotonic": deadline_monotonic} if deadline_monotonic is not None else {}),
-            )
+            if policy["evidence_profile"] == "computational-route-support-v1":
+                evidence = evidence_evaluator.evaluate_route(
+                    record["route"],
+                    catalog,
+                    rules,
+                    limits.reaction_product_limit,
+                    deadline_monotonic=deadline_monotonic,
+                )
+            else:
+                evidence = evidence_evaluator.evaluate(
+                    record["verification"],
+                    **({"deadline_monotonic": deadline_monotonic} if deadline_monotonic is not None else {}),
+                )
             record["synthesis_evidence"] = evidence
             if evidence["eligibility"]["passed"]:
                 record["eligible_for_scoring"] = True
@@ -923,11 +1309,34 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 }
             )
             if scoring_mode == "3d":
+                result, phase = None, "preflight"
                 try:
-                    result = score_candidate(product, hit, design, settings, hit_pose, **scoring_options)
+                    if similarity is not None:
+                        similarity.preflight_candidate(product)
+                        phase = "scoring"
+                        result = selective_scoring.score_candidate(
+                            product,
+                            hit,
+                            design,
+                            settings,
+                            similarity=similarity,
+                            deadline_monotonic=deadline_monotonic,
+                        )
+                        phase = "validation"
+                        selective_scoring.validate_result(
+                            result, product, settings, hit=hit, design=design, similarity=similarity
+                        )
+                    else:
+                        result = score_candidate(product, hit, design, settings, hit_pose, **scoring_options)
+                    if qualified and similarity is None:
+                        validate_result(result, product, settings, hit=hit, design=design)
                 except (ValueError, RuntimeError) as exc:
                     for record in records:
                         record.update(selection_status="3d_failed", reason=str(exc))
+                        if similarity is not None:
+                            record["similarity_failure"] = selective_scoring.failure_record(
+                                exc, phase=phase, result=result
+                            )
                     continue
                 info, hit_aligned, design_aligned = result
                 scores = {
@@ -975,6 +1384,11 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             row = {
                 "smiles": product,
                 "design": design,
+                "scoring_objective": settings.scoring_objective if scoring_mode == "3d" else "2d",
+                "ranking_policy": ranking_policy,
+                "recommendation_profile": policy["calibration"]["name"] or "none",
+                "calibration_status": policy["calibration"]["status"],
+                "calibration_artifact_sha256": policy["calibration"]["artifact_sha256"] or "none",
                 "score": info["score"],
                 **scores,
                 "hit_morgan": tanimoto["hit_tanimoto"],
@@ -996,17 +1410,26 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 "seed_score_std": 0.0 if scoring_mode == "3d" else None,
                 "convergence_status": "not_assessed" if scoring_mode == "3d" else "not_applicable_2d",
                 "refinement_conformers": settings.num_conformers if scoring_mode == "3d" else 0,
+                "recommendation_status": "exploratory_verified",
+                "qualification_policy": None,
+                "evidence_profile": policy["evidence_profile"],
+                "route_support_binding": primary["synthesis_evidence"].get("route_binding_sha256", ""),
+                **(selective_scoring.result_fields(info) if similarity is not None else {}),
             }
+            if qualified and not refinement.top_n:
+                row = qualify(row, records, result, settings)
+                if row is None:
+                    continue
             rows[(product, design)] = row
             if scoring_mode == "3d":
                 poses[(product, design)] = (info, hit_aligned, design_aligned)
         all_screened = _rank(list(rows.values()))
-        _write_table(out / "screening_alternatives.tsv", all_screened)
+        _write_table(out / "screening_alternatives.tsv", all_screened, selective=similarity is not None)
         groups = _family_groups(all_screened)
         ranked = _rank(
             [_with_alternative_routes(alternatives[0], alternatives) for alternatives in groups.values()]
         )
-        _write_table(out / "screening.tsv", ranked)
+        _write_table(out / "screening.tsv", ranked, selective=similarity is not None)
         summary["screened_products"] = len(ranked)
         summary["screened_product_design_pairs"] = len(all_screened)
         summary["screened_scaffold_families"] = len({row["scaffold_family_smiles"] for row in ranked})
@@ -1071,6 +1494,16 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         hit_pose,
                         minimum_scores=config.get("minimum_scores", {}),
                         budget=budget,
+                        **(
+                            {
+                                "result_validator": lambda result, product, settings: validate_result(
+                                    result, product, settings, hit=hit, design=coarse["design"]
+                                )
+                            }
+                            if qualified and similarity is None
+                            else {}
+                        ),
+                        **({"similarity": similarity} if similarity is not None else {}),
                         **scoring_options,
                         **(
                             {"deadline_monotonic": deadline_monotonic}
@@ -1121,6 +1554,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         "relative_energy": info["candidate_relative_energy"],
                         "scoring_stage": "refined",
                         "refinement_conformers": info["settings"]["num_conformers"],
+                        **(selective_scoring.result_fields(info) if similarity is not None else {}),
                         **{
                             key: report[key]
                             for key in (
@@ -1137,18 +1571,30 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                             )
                         },
                     }
-                    if refinement.ranking_statistic == "minimum":
+                    if refinement.ranking_statistic == "minimum" or ranking_policy == "original-hit-v1":
                         row["ranking_metrics"] = {
                             key: values["max" if key == "relative_energy" else "min"]
                             for key, values in report["metric_ranges"].items()
+                        }
+                    if ranking_policy == "original-hit-v1":
+                        row["ranking_score"] = min(trial["score"] for trial in report["trials"])
+                        row["ranking_metrics"] = {
+                            f"{role}_{metric}": min(trial[role][metric] for trial in report["trials"])
+                            for role in ("hit", "design")
+                            for metric in ("shape", "pharmacophore")
                         }
                     if any(row[k] < v for k, v in config.get("minimum_scores", {}).items()):
                         evidence["status"] = "3d_threshold_rejected"
                         for record in related:
                             record.update(selection_status="3d_threshold_rejected", scores=scores)
                         continue
+                    if qualified:
+                        row = qualify(row, related, result, ConformerSettings(**info["settings"]), report)
+                        if row is None:
+                            continue
                     for record in related:
-                        record["selection_status"] = "accepted"
+                        if not qualified:
+                            record["selection_status"] = "accepted"
                     ranked.append(row)
                     poses[(row["smiles"], row["design"])] = result
                     score_records.append(
@@ -1179,7 +1625,12 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 design_writer = stack.enter_context(Chem.SDWriter(str(out / "poses_design.sdf")))
                 hit_ref_writer = stack.enter_context(Chem.SDWriter(str(out / "references_hit.sdf")))
                 design_ref_writer = stack.enter_context(Chem.SDWriter(str(out / "references_design.sdf")))
-            writer = csv.DictWriter(stream, fieldnames=COLUMNS, delimiter="\t", extrasaction="ignore")
+            writer = csv.DictWriter(
+                stream,
+                fieldnames=COLUMNS + (SELECTIVE_COLUMNS if similarity is not None else []),
+                delimiter="\t",
+                extrasaction="ignore",
+            )
             writer.writeheader()
             for rank, row in enumerate(selected, 1):
                 row["rank"] = rank
@@ -1203,6 +1654,19 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     mol.SetProp("smiles", row["smiles"])
                     mol.SetProp("score", str(row["score"]))
                     mol.SetProp("scoring_stage", row["scoring_stage"])
+                    mol.SetProp("scoring_objective", row["scoring_objective"])
+                    mol.SetProp("ranking_policy", row["ranking_policy"])
+                    for key in (
+                        "recommendation_profile",
+                        "evidence_profile",
+                        "route_support_binding",
+                        "calibration_status",
+                        "calibration_artifact_sha256",
+                    ):
+                        mol.SetProp(key, row[key])
+                    if similarity is not None:
+                        for key, value in selective_scoring.result_fields(info).items():
+                            mol.SetProp(key, str(value) if value is not None else "not_applicable")
                     mol.SetIntProp("pose_seed", row["pose_seed"])
                     for metric in ("seed_score_median", "seed_score_min", "seed_score_max"):
                         mol.SetDoubleProp(metric, row[metric])
@@ -1216,18 +1680,50 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     ):
                         mol.SetDoubleProp(metric, row[metric])
                     mol.SetProp("verification", "catalog_and_rule_verified; experimental_validation=false")
+                    mol.SetProp("recommendation_status", row["recommendation_status"])
+                    mol.SetProp("qualification_policy", row["qualification_policy"] or "not_assessed")
                     sdf.write(mol, confId=info["candidate_conformer_id"])
-                for role, reference, sdf in (
-                    (
-                        "hit",
-                        hit_pose if hit_pose is not None else ensemble(hit, pose_settings),
-                        hit_ref_writer,
-                    ),
-                    ("design", ensemble(row["design"], pose_settings), design_ref_writer),
-                ):
-                    mol = Chem.Mol(reference.mol)
+                if similarity is not None:
+                    from .similarity_constraints import restore_pose
+
+                    references = (
+                        (
+                            "hit",
+                            restore_pose(info["similarity_constraints"]["witness"]["reference_pose"]),
+                            hit_ref_writer,
+                        ),
+                        (
+                            "design",
+                            restore_pose(info["selective_pose_evidence"]["design_reference"]),
+                            design_ref_writer,
+                        ),
+                    )
+                else:
+                    references = (
+                        (
+                            "hit",
+                            (hit_pose if hit_pose is not None else ensemble(hit, pose_settings)).mol,
+                            hit_ref_writer,
+                        ),
+                        ("design", ensemble(row["design"], pose_settings).mol, design_ref_writer),
+                    )
+                for role, reference, sdf in references:
+                    mol = Chem.Mol(reference)
                     mol.SetProp("_Name", row["route_id"])
                     mol.SetProp("reference_role", role)
+                    mol.SetProp("scoring_objective", pose_settings.scoring_objective)
+                    if similarity is not None:
+                        mol.SetProp("ranking_policy", row["ranking_policy"])
+                        for key, value in selective_scoring.result_fields(info).items():
+                            mol.SetProp(key, str(value) if value is not None else "not_applicable")
+                    for key in (
+                        "recommendation_profile",
+                        "evidence_profile",
+                        "route_support_binding",
+                        "calibration_status",
+                        "calibration_artifact_sha256",
+                    ):
+                        mol.SetProp(key, row[key])
                     cid = info[role]["reference_conformer_id"]
                     mol.SetIntProp("source_conformer_id", cid)
                     mol.SetIntProp("pose_seed", row["pose_seed"])
@@ -1241,6 +1737,12 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             accepted_products=len(ranked),
             returned_products=len(selected),
         )
+        summary["qualified_products"] = len(ranked) if qualified else 0
+        if qualified and not selected:
+            summary.setdefault(
+                "no_candidates_reason",
+                ("No candidate completed the qualified recommendation contract within configured limits"),
+            )
         eligible = {r["verification"]["product"] for r in route_records if r.get("eligible_for_scoring")}
         carried_eligible = {
             r["verification"]["product"]
@@ -1260,6 +1762,40 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         summary.update(status="error", error_type=type(exc).__name__, error=str(exc))
         raise
     finally:
+        write_json(
+            out / "search_objectives.json",
+            {
+                "schema_version": 1,
+                "policy": route_policy,
+                "design_objectives": [objective.snapshot() for objective in root_objectives.values()],
+            },
+        )
+        for record in route_records:
+            if "qualification" not in record:
+                record["qualification"] = {
+                    "policy_version": policy["policy_version"] if policy else None,
+                    "calibration": {
+                        key: policy["calibration"][key] for key in ("name", "status", "artifact_sha256")
+                    }
+                    if policy
+                    else None,
+                    "status": "not_assessed"
+                    if not policy or policy["mode"] == "exploratory"
+                    else "not_qualified",
+                    "qualified": False,
+                    "reasons": [record.get("reason", record.get("selection_status", "not_evaluated"))],
+                    "route_id": record["route_id"],
+                }
+        write_json(
+            out / "qualification.json",
+            {
+                "schema_version": 1,
+                "policy": policy,
+                "decisions": [record["qualification"] for record in route_records],
+                "selected_route_ids": [row["route_id"] for row in selected],
+            },
+        )
+        write_json(out / "results.json", {"schema_version": 1, "policy": policy, "results": selected})
         summary["elapsed_seconds"] = time.monotonic() - start
         if evidence_evaluator is not None:
             summary["synthesis_evidence_usage"] = evidence_evaluator.usage

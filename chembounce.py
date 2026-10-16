@@ -1047,19 +1047,44 @@ def main(argv=None):
     parser = cli.argument_parser()
     options = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
-    from chembounce_synthesis.options import apply_expansion_options, has_synthesis_overrides
+    from chembounce_synthesis.options import has_synthesis_overrides
 
     synthesis_config = None
+    if options.synllama is False:
+        try:
+            # Historical --no-synllama permits an unavailable config. Read only
+            # the declared recommendation intent when a config is available.
+            try:
+                disabled_config = (
+                    json.loads(Path(options.synthesis_config).read_text()) if options.synthesis_config else {}
+                )
+            except (OSError, ValueError):
+                disabled_config = {}
+            declaration = (
+                disabled_config.get("recommendation", {}) if isinstance(disabled_config, dict) else {}
+            )
+            requested_mode = options.recommendation_mode or (
+                declaration.get("mode") if isinstance(declaration, dict) else None
+            )
+            if (
+                requested_mode == "qualified"
+                or options.recommendation_profile
+                or (isinstance(disabled_config, dict) and disabled_config.get("recommendation_profile"))
+            ):
+                raise ValueError(
+                    "Qualified recommendations require the synthesis stage; remove --no-synllama"
+                )
+        except (ValueError, OSError, KeyError, TypeError) as exc:
+            LOGGER.error("Synthesis configuration: %s", exc)
+            return 2
     if options.synllama is True and not options.synthesis_config:
         LOGGER.error("--synllama requires --synthesis-config with provider.kind='synllama'")
         return 2
     if options.synllama is not False and options.synthesis_config:
-        from chembounce_synthesis.workflow import _config, load_config
+        from chembounce_synthesis.workflow import load_config
 
         try:
-            synthesis_config = _config(
-                apply_expansion_options(load_config(options.synthesis_config), options)
-            )
+            synthesis_config = load_config(options.synthesis_config, options=options)
             if options.synllama is True and synthesis_config["provider"].get("kind") != "synllama":
                 raise ValueError(
                     "--synllama requires provider.kind='synllama'; omit it to replay saved proposals"
@@ -1068,6 +1093,10 @@ def main(argv=None):
                 if synthesis_config.get("core_smiles") not in (None, options.core_smiles):
                     raise ValueError("core_smiles conflicts with the synthesis configuration")
                 synthesis_config["core_smiles"] = options.core_smiles
+            if "similarity_constraints" in synthesis_config:
+                from chembounce_synthesis.selective_scoring import configured_constraints
+
+                configured_constraints(synthesis_config, options.input_smiles)
             synthesis_out = Path(options.output_dir) / "synthesis"
             if synthesis_out.exists() and (not synthesis_out.is_dir() or any(synthesis_out.iterdir())):
                 raise ValueError(
@@ -1095,12 +1124,32 @@ def main(argv=None):
                 lo if lo is not None else previous[0],
                 hi if hi is not None else previous[1],
             )
+    design_supply = None
+    overall_limit = options.overall_max_n
+    if synthesis_config is not None:
+        from chembounce_synthesis.design_selection import selection_policy
+
+        intake = selection_policy(synthesis_config)
+        if intake["version"] == "bounded-refill-v1":
+            overall_limit = (
+                min(options.overall_max_n, intake["max_raw_attempts"])
+                if options.overall_max_n is not None
+                else intake["max_raw_attempts"]
+            )
+            design_supply = {
+                "selection_policy": intake,
+                "requested_overall_max_n": options.overall_max_n,
+                "effective_overall_max_n": overall_limit,
+                "explicit_overall_cap_limits_pool": options.overall_max_n is not None
+                and options.overall_max_n < intake["max_raw_attempts"],
+                "scope": "Bounded upstream supply; existing explicit hopping caps are never increased; synthesis eligible/product/refinement limits remain separate",
+            }
     try:
         results, cost = chembounce(
             options.input_smiles,
             output_dir=options.output_dir,
             core_smiles=options.core_smiles,
-            overall_max_n=options.overall_max_n,
+            overall_max_n=overall_limit,
             frag_max_n=options.frag_max_n,
             scaffold_top_n=options.scaffold_top_n,
             cand_max_n__rplc=options.cand_max_n__rplc,
@@ -1128,6 +1177,11 @@ def main(argv=None):
         LOGGER.error("%s", exc)
         return 2
     _json_write(Path(options.output_dir) / "resource_cost.json", cost)
+    if design_supply is not None:
+        manifest_path = Path(options.output_dir) / "run_manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        manifest["synthesis_design_supply"] = design_supply
+        _json_write(manifest_path, manifest)
     if synthesis_config is not None:
         from chembounce_synthesis.workflow import run
 
@@ -1151,9 +1205,15 @@ def main(argv=None):
         except (ValueError, OSError, KeyError, TypeError, RuntimeError) as exc:
             LOGGER.error("Synthesis workflow: %s", exc)
             return 2
-        print(
-            f"Verified synthesis products: {len(verified)}; results: {Path(options.output_dir) / 'synthesis/results.tsv'}"
+        label = (
+            "Qualified recommendations"
+            if config.get("recommendation", {}).get("mode") == "qualified"
+            else "Exploratory verified synthesis products (not qualified recommendations)"
         )
+        from chembounce_synthesis.profiles import profile_label
+
+        label += profile_label(config)
+        print(f"{label}: {len(verified)}; results: {Path(options.output_dir) / 'synthesis/results.tsv'}")
         return 0 if verified else 3
     print(
         f"Found hopped structures: {len(results)}; results: {Path(options.output_dir) / 'overall_result.txt'}"

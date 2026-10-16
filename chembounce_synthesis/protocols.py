@@ -2,6 +2,8 @@
 
 import copy
 
+from .profiles import apply_profile_defaults
+
 PROTOCOLS = ("legacy", "research-v1")
 CORE_DEFAULTS = {"search_policy": "legacy", "exploration_fraction": 0.25, "search_candidate_budget": 4096}
 RESEARCH_REFINEMENT = {
@@ -34,6 +36,7 @@ def core_protocol(name="legacy"):
 
 def apply_synthesis_protocol(config):
     """Explicit config fields override preset defaults; no cutoffs are invented."""
+    config = apply_profile_defaults(config)
     name = config.get("protocol", "legacy")
     validate_protocol(name)
     result = copy.deepcopy(config)

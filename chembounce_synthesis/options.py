@@ -5,6 +5,35 @@ import copy
 
 def add_expansion_options(parser):
     parser.add_argument(
+        "--forward-model-path",
+        help="Explicit local pinned ReactionT5 bundle required by the named recommendation profiles",
+    )
+    parser.add_argument(
+        "--recommendation-profile",
+        choices=("qualified-development-v1", "qualified-selective-engineering-v2"),
+        help="Explicit opt-in profile: permissive development fit or selective engineering constraints (not fitted); fixed three-seed scoring and computational route support, no activity guarantee",
+    )
+    parser.add_argument(
+        "--scoring-objective",
+        choices=("joint-v1", "original-hit-v1"),
+        help="Conformer selection objective; original-hit-v1 selects against the hit before the secondary design overlay",
+    )
+    parser.add_argument(
+        "--ranking-policy",
+        choices=("joint-v1", "original-hit-v1"),
+        help="Original-hit ranking uses hit-only dominance and robust seed minima; defaults to the scoring objective",
+    )
+    parser.add_argument(
+        "--recommendation-mode",
+        choices=("exploratory", "qualified"),
+        help="qualified enforces qualified-v1 on final products using explicit positive hit similarity minima; exploratory results are not recommendations",
+    )
+    parser.add_argument(
+        "--route-search-policy",
+        choices=("original-hit-v1", "design-v1"),
+        help="Root-product search objective; qualified defaults to original-hit-v1; design-v1 is an explicit search ablation with unchanged final acceptance",
+    )
+    parser.add_argument(
         "--protocol",
         choices=("legacy", "research-v1"),
         help="Versioned computational defaults; explicit settings override them. research-v1 enables diverse search and uncertainty-aware bounded refinement",
@@ -28,6 +57,14 @@ def add_expansion_options(parser):
     group.add_argument("--synthesis-max-scored", type=int, help="Maximum screened product/design pairs")
     group.add_argument("--synthesis-max-results", type=int, help="Maximum final products written")
     group.add_argument(
+        "--synthesis-max-designs", type=int, help="Maximum eligible designs in bounded refill mode"
+    )
+    group.add_argument(
+        "--synthesis-max-design-attempts",
+        type=int,
+        help="Bound raw design attempts including invalid/duplicate entries; enables refill for exploratory runs",
+    )
+    group.add_argument(
         "--include-run",
         action="append",
         help="Retain and reverify routes from a previous synthesis directory; repeatable",
@@ -48,6 +85,22 @@ def expansion_overrides(args):
 
 def apply_expansion_options(config, args):
     config = copy.deepcopy(config)
+    if getattr(args, "forward_model_path", None) is not None:
+        from pathlib import Path
+
+        config.setdefault("synthesis_evidence", {}).setdefault("predictor", {}).update(
+            kind="reactiont5", model_path=str(Path(args.forward_model_path).resolve())
+        )
+    if getattr(args, "recommendation_profile", None) is not None:
+        config["recommendation_profile"] = args.recommendation_profile
+    if getattr(args, "scoring_objective", None) is not None:
+        config.setdefault("conformers", {})["scoring_objective"] = args.scoring_objective
+    if getattr(args, "ranking_policy", None) is not None:
+        config["ranking_policy"] = args.ranking_policy
+    if getattr(args, "recommendation_mode", None) is not None:
+        config.setdefault("recommendation", {}).update(mode=args.recommendation_mode)
+    if getattr(args, "route_search_policy", None) is not None:
+        config["route_search_policy"] = args.route_search_policy
     if getattr(args, "protocol", None) is not None:
         config["protocol"] = args.protocol
     overrides = expansion_overrides(args)
@@ -63,6 +116,8 @@ def apply_expansion_options(config, args):
     for attr, key in (
         ("synthesis_max_scored", "max_scored_products"),
         ("synthesis_max_results", "max_results"),
+        ("synthesis_max_designs", "max_designs"),
+        ("synthesis_max_design_attempts", "max_design_attempts"),
     ):
         if (value := getattr(args, attr, None)) is not None:
             config[key] = value

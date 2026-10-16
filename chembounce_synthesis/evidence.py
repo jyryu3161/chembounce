@@ -31,6 +31,27 @@ class EvidencePolicy:
                 raise ValueError(f"{key} must be true or false")
 
 
+def evidence_requirements(prediction_status, context_complete, atom_source_status, observed_status):
+    """Shared policy checks for evaluation and final recommendation qualification."""
+    return {
+        "require_forward_agreement": prediction_status == "matched",
+        "require_complete_context": context_complete,
+        "require_explicit_atom_sources": atom_source_status
+        in {"explicit_in_reaction_rule", "supplied_mapped_attribution"},
+        "require_observed_success": observed_status == "success",
+    }
+
+
+def matching_prediction_ranks(predictions, product, product_matching):
+    """Exact canonical prediction matches used by evaluation and qualification."""
+    return [
+        p["rank"]
+        for p in predictions
+        if p.get("product") == product
+        or (product_matching == "component" and product in p.get("components", []))
+    ]
+
+
 def _json_key(value):
     try:
         return json.dumps(value, sort_keys=True, allow_nan=False, separators=(",", ":"))
@@ -241,6 +262,7 @@ class SynthesisEvidenceEvaluator:
         self.observations = _observations([] if observations is None else observations)
         self.reaction_contexts = _reaction_contexts([] if reaction_contexts is None else reaction_contexts)
         self.provenance = {
+            "profile": "legacy-conditional-v1",
             "predictor": copy.deepcopy(predictor.provenance) if predictor is not None else None,
             "policy": asdict(self.policy),
             "product_matching": product_matching,
@@ -378,12 +400,7 @@ class SynthesisEvidenceEvaluator:
             context_complete = "reagents" in context and bool(context.get("conditions"))
             prediction = self._predict(reactants, context, deadline_monotonic)
             if prediction["status"] == "predicted":
-                matches = [
-                    p["rank"]
-                    for p in prediction["predictions"]
-                    if p["product"] == product
-                    or (self.product_matching == "component" and product in p.get("components", []))
-                ]
+                matches = matching_prediction_ranks(prediction["predictions"], product, self.product_matching)
                 prediction["status"] = "matched" if matches else "mismatched"
                 prediction["matched_rank"] = min(matches) if matches else None
                 prediction["matching_policy"] = self.product_matching
@@ -406,12 +423,9 @@ class SynthesisEvidenceEvaluator:
             observed_status = (
                 "conflicting" if len(outcomes) > 1 else next(iter(outcomes)) if outcomes else "unknown"
             )
-            requirements = {
-                "require_forward_agreement": prediction["status"] == "matched",
-                "require_complete_context": context_complete,
-                "require_explicit_atom_sources": atom_sources["status"] != "unknown",
-                "require_observed_success": observed_status == "success",
-            }
+            requirements = evidence_requirements(
+                prediction["status"], context_complete, atom_sources["status"], observed_status
+            )
             rejected = [
                 name for name, passed in requirements.items() if getattr(self.policy, name) and not passed
             ]
@@ -440,6 +454,7 @@ class SynthesisEvidenceEvaluator:
             )
         return {
             "schema_version": 1,
+            "profile": "legacy-conditional-v1",
             "evidence_level": "catalog_rule_replay_with_separately_reported_external_evidence",
             "product": canonical(verification["product"]),
             "steps": reports,
@@ -465,6 +480,7 @@ def validate_evidence_config(config):
     if not isinstance(config, dict):
         raise ValueError("synthesis_evidence must be an object")
     allowed = {
+        "profile",
         "predictor",
         "policy",
         "max_predictor_calls",
@@ -477,6 +493,13 @@ def validate_evidence_config(config):
     if set(config) - allowed:
         raise ValueError(f"Unknown synthesis_evidence keys: {sorted(set(config) - allowed)}")
     values = copy.deepcopy(config)
+    profile = values.pop("profile", "legacy-conditional-v1")
+    if profile not in {"legacy-conditional-v1", "computational-route-support-v1"}:
+        raise ValueError("Unknown synthesis evidence profile")
+    if profile == "computational-route-support-v1":
+        from .computational_support import validate_config
+
+        validate_config(config)
     provider = values.pop("predictor", None)
     if provider is not None:
         permitted = {
@@ -514,13 +537,18 @@ def validate_evidence_config(config):
     return copy.deepcopy(config)
 
 
-def evaluator_from_config(config):
+def evaluator_from_config(config, *, load_predictor=True):
     """Build the optional predictor once and share its budgets/cache across routes."""
     values = validate_evidence_config(config)
+    if values.get("profile") == "computational-route-support-v1":
+        from .computational_support import from_config
+
+        return from_config(values, load_predictor=load_predictor)
+    values.pop("profile", None)
     provider = values.pop("predictor", None)
     predictor = (
         ReactionT5Forward(**{key: value for key, value in provider.items() if key != "kind"})
-        if provider is not None
+        if provider is not None and load_predictor
         else None
     )
     return SynthesisEvidenceEvaluator(predictor=predictor, **values)
