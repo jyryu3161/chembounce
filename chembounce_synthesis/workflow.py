@@ -32,6 +32,7 @@ from .design_selection import select_designs, selection_policy, sized_count
 from .evidence import evaluator_from_config, validate_evidence_config
 from .identity import classify_change, family_key, scaffold_family_key
 from .pocket import constraints_from_config, validate_pocket_config
+from .polar_capacity import PolarCapacity
 from .protocols import apply_synthesis_protocol, protocol_provenance
 from .qualification import decide, effective_policy, validate_result
 from .reactions import Rules
@@ -618,6 +619,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
     policy = None
     route_policy = None
     root_objectives = {}
+    polar_capacity = None
     selected = []
     projected_designs = set()
     try:
@@ -658,6 +660,11 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 summary["similarity_preflight"] = selective_scoring.failure_record(exc, phase="preflight")
                 raise
             policy["similarity_constraints"] = {"policy": similarity.policy, "sha256": similarity.sha256}
+            polar_capacity = PolarCapacity(
+                similarity,
+                cache_size=config.get("route_search_cache_size", 4096),
+                deadline_reached=deadline_reached,
+            )
             summary["similarity_preflight"] = {
                 "status": "eligible",
                 "policy_sha256": similarity.sha256,
@@ -1038,6 +1045,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 "No saved proposal for this design in the latest archive; reverify and score available carried graphs without new provider calls or fabricated sampling"
             )
         manifest["provider"] = provider.provenance if provider else None
+        if polar_capacity is not None:
+            manifest["polar_capacity"] = polar_capacity.policy
         write_json(out / "manifest.json", manifest)
         write_json(
             out / "proposals.json", {"schema_version": 1, "provider": manifest["provider"], "proposals": []}
@@ -1056,6 +1065,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             mol = molecule(product)
             if qualified:
                 _check_stereo(mol, ConformerSettings())
+            if polar_capacity is not None:
+                polar_capacity.require(product)
             props = _get_molecular_prop_extd_(mol)
             accepted, reasons = determ_props(
                 props, config.get("property_thresholds", {}), w_all_failed_reason=True
@@ -1181,12 +1192,27 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     record["verification"] = verification
                     product = verification["product"]
                     summary["verified_routes"] += 1
+                    if polar_capacity is not None:
+                        # Always after authoritative replay, including carried
+                        # routes and design-only search. Cache is chemistry-only.
+                        record["polar_capacity"] = polar_capacity.assess(product)
                     if record.get("search_eligibility", {}).get("eligible") is False:
                         record.update(
                             selection_status="search_seed_only",
                             eligible_for_evidence=False,
                             eligible_for_scoring=False,
                             reason="Root retained only as a bounded expansion seed; failed current cheap final-product requirements",
+                        )
+                        continue
+                    if polar_capacity is not None and not record["polar_capacity"]["eligible"]:
+                        decision = record["polar_capacity"]
+                        record.update(
+                            selection_status="selective_" + decision["status"]
+                            if decision["status"] != "not_evaluated_deadline"
+                            else "not_evaluated_deadline",
+                            eligible_for_evidence=False,
+                            eligible_for_scoring=False,
+                            reason=decision["reason"],
                         )
                         continue
                     try:
@@ -1762,6 +1788,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         summary.update(status="error", error_type=type(exc).__name__, error=str(exc))
         raise
     finally:
+        if polar_capacity is not None:
+            summary["polar_capacity"] = polar_capacity.snapshot()
         write_json(
             out / "search_objectives.json",
             {
