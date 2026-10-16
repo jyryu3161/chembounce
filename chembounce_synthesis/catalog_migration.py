@@ -561,12 +561,15 @@ def run(plan_path, plan_sha, *, started=None):
     phases, active, result = [], None, "failed"
     interrupted = []
     previous = {}
+    previous_affinity = None
     try:
         for signum in (signal.SIGINT, signal.SIGTERM):
             previous[signum] = signal.signal(signum, lambda sig, frame: interrupted.append(sig))
         _save(output / "owner.json", owner)
         _subreaper()
-        cpu = min(os.sched_getaffinity(0))
+        previous_affinity = os.sched_getaffinity(0)
+        cpu = min(previous_affinity)
+        os.sched_setaffinity(0, {cpu})
         owner["cpu"] = cpu
         env = dict(ENVIRONMENT, PYTHONPATH=plan["source"]["root"])
         for phase in ("startup", "converter", "validator", "bookkeeping"):
@@ -662,10 +665,14 @@ def run(plan_path, plan_sha, *, started=None):
         }
         if time.monotonic() >= total_deadline:
             receipt["status"] = result = "timeout"
-        _directory(plan, owner)
-        _save(output / "terminal.json", receipt)
-        for signum, handler in previous.items():
-            signal.signal(signum, handler)
+        try:
+            _directory(plan, owner)
+            _save(output / "terminal.json", receipt)
+        finally:
+            if previous_affinity is not None:
+                os.sched_setaffinity(0, previous_affinity)
+            for signum, handler in previous.items():
+                signal.signal(signum, handler)
     return 0 if result == "validated" and time.monotonic() < total_deadline else 3
 
 

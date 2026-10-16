@@ -302,13 +302,16 @@ def test_inert_validator_cannot_execute_reduce(tmp_path):
 
 def test_complete_isolated_coordinator(plan):
     path, pinned = write_plan(plan)
+    affinity = os.sched_getaffinity(0)
     assert migration.run(path, pinned, started=time.monotonic()) == 0
+    assert os.sched_getaffinity(0) == affinity
     output = Path(plan["output_dir"])
     receipt = json.loads((output / "terminal.json").read_text())
     assert receipt["status"] == "validated"
     assert [p["phase"] for p in receipt["phases"]] == ["startup", "converter", "validator", "bookkeeping"]
     assert all(p["cleanup"]["group_gone"] and p["cleanup"]["direct_child_reaped"] for p in receipt["phases"])
     assert json.loads((output / "validator.json").read_text())["N"] == 5
+    assert json.loads((output / "startup.json").read_text())["bindings"]["cpu_affinity"] == [receipt["cpu"]]
     assert (output / "owner.json").stat().st_mode & 0o077 == 0
 
 
