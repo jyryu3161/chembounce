@@ -31,6 +31,27 @@ class EvidencePolicy:
                 raise ValueError(f"{key} must be true or false")
 
 
+def evidence_requirements(prediction_status, context_complete, atom_source_status, observed_status):
+    """Shared policy checks for evaluation and final recommendation qualification."""
+    return {
+        "require_forward_agreement": prediction_status == "matched",
+        "require_complete_context": context_complete,
+        "require_explicit_atom_sources": atom_source_status
+        in {"explicit_in_reaction_rule", "supplied_mapped_attribution"},
+        "require_observed_success": observed_status == "success",
+    }
+
+
+def matching_prediction_ranks(predictions, product, product_matching):
+    """Exact canonical prediction matches used by evaluation and qualification."""
+    return [
+        p["rank"]
+        for p in predictions
+        if p.get("product") == product
+        or (product_matching == "component" and product in p.get("components", []))
+    ]
+
+
 def _json_key(value):
     try:
         return json.dumps(value, sort_keys=True, allow_nan=False, separators=(",", ":"))
@@ -378,12 +399,7 @@ class SynthesisEvidenceEvaluator:
             context_complete = "reagents" in context and bool(context.get("conditions"))
             prediction = self._predict(reactants, context, deadline_monotonic)
             if prediction["status"] == "predicted":
-                matches = [
-                    p["rank"]
-                    for p in prediction["predictions"]
-                    if p["product"] == product
-                    or (self.product_matching == "component" and product in p.get("components", []))
-                ]
+                matches = matching_prediction_ranks(prediction["predictions"], product, self.product_matching)
                 prediction["status"] = "matched" if matches else "mismatched"
                 prediction["matched_rank"] = min(matches) if matches else None
                 prediction["matching_policy"] = self.product_matching
@@ -406,12 +422,9 @@ class SynthesisEvidenceEvaluator:
             observed_status = (
                 "conflicting" if len(outcomes) > 1 else next(iter(outcomes)) if outcomes else "unknown"
             )
-            requirements = {
-                "require_forward_agreement": prediction["status"] == "matched",
-                "require_complete_context": context_complete,
-                "require_explicit_atom_sources": atom_sources["status"] != "unknown",
-                "require_observed_success": observed_status == "success",
-            }
+            requirements = evidence_requirements(
+                prediction["status"], context_complete, atom_sources["status"], observed_status
+            )
             rejected = [
                 name for name, passed in requirements.items() if getattr(self.policy, name) and not passed
             ]

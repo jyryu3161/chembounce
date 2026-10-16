@@ -317,6 +317,9 @@ def score_candidate(smiles, hit, design, settings=ConformerSettings(), hit_pose=
         ) * math.exp(-settings.strain_penalty * relative_energy)
         info = {
             "score": score,
+            "candidate_smiles": canonical(smiles),
+            "hit_smiles": canonical(hit),
+            "design_smiles": canonical(design),
             "candidate_conformer_id": cid,
             "candidate_energy": candidate.energies[cid],
             "candidate_relative_energy": relative_energy,

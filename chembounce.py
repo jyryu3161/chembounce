@@ -1050,6 +1050,29 @@ def main(argv=None):
     from chembounce_synthesis.options import apply_expansion_options, has_synthesis_overrides
 
     synthesis_config = None
+    if options.synllama is False:
+        try:
+            # Historical --no-synllama permits an unavailable config. Read only
+            # the declared recommendation intent when a config is available.
+            try:
+                disabled_config = (
+                    json.loads(Path(options.synthesis_config).read_text()) if options.synthesis_config else {}
+                )
+            except (OSError, ValueError):
+                disabled_config = {}
+            declaration = (
+                disabled_config.get("recommendation", {}) if isinstance(disabled_config, dict) else {}
+            )
+            requested_mode = options.recommendation_mode or (
+                declaration.get("mode") if isinstance(declaration, dict) else None
+            )
+            if requested_mode == "qualified":
+                raise ValueError(
+                    "Qualified recommendations require the synthesis stage; remove --no-synllama"
+                )
+        except (ValueError, OSError, KeyError, TypeError) as exc:
+            LOGGER.error("Synthesis configuration: %s", exc)
+            return 2
     if options.synllama is True and not options.synthesis_config:
         LOGGER.error("--synllama requires --synthesis-config with provider.kind='synllama'")
         return 2
@@ -1151,9 +1174,12 @@ def main(argv=None):
         except (ValueError, OSError, KeyError, TypeError, RuntimeError) as exc:
             LOGGER.error("Synthesis workflow: %s", exc)
             return 2
-        print(
-            f"Verified synthesis products: {len(verified)}; results: {Path(options.output_dir) / 'synthesis/results.tsv'}"
+        label = (
+            "Qualified recommendations"
+            if config.get("recommendation", {}).get("mode") == "qualified"
+            else "Exploratory verified synthesis products (not qualified recommendations)"
         )
+        print(f"{label}: {len(verified)}; results: {Path(options.output_dir) / 'synthesis/results.tsv'}")
         return 0 if verified else 3
     print(
         f"Found hopped structures: {len(results)}; results: {Path(options.output_dir) / 'overall_result.txt'}"

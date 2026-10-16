@@ -188,6 +188,7 @@ def refine_candidate(
     budget=None,
     pose_constraints=None,
     deadline_monotonic=None,
+    result_validator=None,
 ):
     """Refine reproducibly; all exported pose components belong to one real pose.
 
@@ -269,6 +270,8 @@ def refine_candidate(
                     {"pose_constraints": pose_constraints} if pose_constraints is not None else {}
                 )
                 candidate = score_candidate(smiles, hit, design, seeded, hit_pose, **scoring_options)
+                if result_validator is not None:
+                    result_validator(candidate, smiles, seeded)
                 if not math.isfinite(candidate[0]["score"]) or not all(
                     math.isfinite(v) for v in _trial_metrics(candidate[0]).values()
                 ):

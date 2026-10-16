@@ -25,6 +25,7 @@ from .evidence import evaluator_from_config, validate_evidence_config
 from .identity import classify_change, family_key, scaffold_family_key
 from .pocket import constraints_from_config, validate_pocket_config
 from .protocols import apply_synthesis_protocol, protocol_provenance
+from .qualification import decide, effective_policy, validate_result
 from .reactions import Rules
 from .refinement import RefinementBudget, RefinementSettings, refine_candidate
 from .routes import SearchLimits, expand_route, resolve_proposal, verify_route
@@ -33,6 +34,8 @@ from .synllama import SavedProposals, SynLlama
 LOGGER = logging.getLogger(__name__)
 COLUMNS = [
     "rank",
+    "recommendation_status",
+    "qualification_policy",
     "smiles",
     "design",
     "score",
@@ -123,6 +126,7 @@ def _config(config):
         "allocation_policy",
         "synthesis_evidence",
         "pocket",
+        "recommendation",
     }
     if set(config) - permitted:
         raise ValueError(f"Unknown synthesis configuration keys: {sorted(set(config) - permitted)}")
@@ -214,6 +218,7 @@ def _config(config):
     from chembounce import _validate_parameters
 
     _validate_parameters(0.5, 0.3, 42, config.get("property_thresholds", {}))
+    effective_policy(config)
     return config
 
 
@@ -515,6 +520,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
     route_records, score_records, raw_records, refinement_records = [], [], [], []
     rows, poses, similarity_cache, candidates_by_key = {}, {}, {}, {}
     evidence_evaluator = None
+    policy = None
+    selected = []
     projected_designs = set()
     try:
         if deadline_monotonic is not None and (
@@ -526,6 +533,11 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         if scoring_mode not in {"3d", "2d"}:
             raise ValueError("scoring_mode must be 3d or 2d")
         config = _resolve_paths(_config(config), Path.cwd())
+        policy = effective_policy(config)
+        qualified = policy["mode"] == "qualified"
+        summary["recommendation_mode"] = policy["mode"]
+        if qualified and scoring_mode != "3d":
+            raise ValueError("Qualified recommendations require completed 3D scoring")
         if scoring_mode == "2d":
             forbidden = set(config.get("minimum_scores", {})) - {"hit_tanimoto", "design_tanimoto"}
             if "pocket" in config or forbidden:
@@ -549,6 +561,52 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         settings = ConformerSettings(**config.get("conformers", {}))
         requested_refinement = RefinementSettings(**config.get("refinement", {}))
         refinement = replace(requested_refinement, top_n=0) if scoring_mode == "2d" else requested_refinement
+
+        def qualify(row, records, result, pose_settings, report=None):
+            # Reuse the exact final-product chemistry checks at the export
+            # boundary, before family selection or an alternative-design break.
+            constraint_error = None
+            try:
+                check_constraints(
+                    row["smiles"],
+                    hit,
+                    row["design"],
+                    "hop",
+                    config.get("core_smiles"),
+                    config.get("preserve_design_scaffold", False),
+                )
+            except ValueError as exc:
+                constraint_error = str(exc)
+            final_fp = FP.GetFingerprint(molecule(row["smiles"]))
+            row["hit_tanimoto"] = row["hit_morgan"] = DataStructs.TanimotoSimilarity(hit_fp, final_fp)
+            row["design_tanimoto"] = DataStructs.TanimotoSimilarity(
+                FP.GetFingerprint(molecule(row["design"])), final_fp
+            )
+            passed = []
+            for record in records:
+                decision = decide(row, record, result, policy, pose_settings, refinement, report, hit=hit)
+                if constraint_error:
+                    decision.update(status="rejected", qualified=False)
+                    decision["reasons"].append(constraint_error)
+                record["qualification"] = decision
+                record["selection_status"] = (
+                    "qualified" if decision["qualified"] else "qualification_rejected"
+                )
+                if decision["qualified"]:
+                    passed.append(record)
+            if not passed:
+                return None
+            primary = min(passed, key=lambda r: (len(r["verification"]["steps"]), r["route_id"]))
+            return {
+                **row,
+                "route_id": primary["route_id"],
+                "reaction_steps": len(primary["verification"]["steps"]),
+                "alternative_route_ids": [r["route_id"] for r in passed if r is not primary],
+                "alternative_family_candidates": [],
+                "recommendation_status": "qualified",
+                "qualification_policy": policy["policy_version"],
+            }
+
         hit_pose = None
         if scoring_mode == "3d":
             if designs:
@@ -621,6 +679,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             else:
                 evidence_evaluator = _evidence_evaluator(config)
         manifest = _manifest(config, hit, capped_designs)
+        manifest["recommendation_policy"] = policy
         manifest["design_preflight"] = {
             "requested_designs": requested_designs,
             "canonical_unique_requested_designs": all_designs,
@@ -925,6 +984,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             if scoring_mode == "3d":
                 try:
                     result = score_candidate(product, hit, design, settings, hit_pose, **scoring_options)
+                    if qualified:
+                        validate_result(result, product, settings, hit=hit, design=design)
                 except (ValueError, RuntimeError) as exc:
                     for record in records:
                         record.update(selection_status="3d_failed", reason=str(exc))
@@ -996,7 +1057,13 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 "seed_score_std": 0.0 if scoring_mode == "3d" else None,
                 "convergence_status": "not_assessed" if scoring_mode == "3d" else "not_applicable_2d",
                 "refinement_conformers": settings.num_conformers if scoring_mode == "3d" else 0,
+                "recommendation_status": "exploratory_verified",
+                "qualification_policy": None,
             }
+            if qualified and not refinement.top_n:
+                row = qualify(row, records, result, settings)
+                if row is None:
+                    continue
             rows[(product, design)] = row
             if scoring_mode == "3d":
                 poses[(product, design)] = (info, hit_aligned, design_aligned)
@@ -1071,6 +1138,15 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         hit_pose,
                         minimum_scores=config.get("minimum_scores", {}),
                         budget=budget,
+                        **(
+                            {
+                                "result_validator": lambda result, product, settings: validate_result(
+                                    result, product, settings, hit=hit, design=coarse["design"]
+                                )
+                            }
+                            if qualified
+                            else {}
+                        ),
                         **scoring_options,
                         **(
                             {"deadline_monotonic": deadline_monotonic}
@@ -1147,8 +1223,13 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         for record in related:
                             record.update(selection_status="3d_threshold_rejected", scores=scores)
                         continue
+                    if qualified:
+                        row = qualify(row, related, result, ConformerSettings(**info["settings"]), report)
+                        if row is None:
+                            continue
                     for record in related:
-                        record["selection_status"] = "accepted"
+                        if not qualified:
+                            record["selection_status"] = "accepted"
                     ranked.append(row)
                     poses[(row["smiles"], row["design"])] = result
                     score_records.append(
@@ -1216,6 +1297,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     ):
                         mol.SetDoubleProp(metric, row[metric])
                     mol.SetProp("verification", "catalog_and_rule_verified; experimental_validation=false")
+                    mol.SetProp("recommendation_status", row["recommendation_status"])
+                    mol.SetProp("qualification_policy", row["qualification_policy"] or "not_assessed")
                     sdf.write(mol, confId=info["candidate_conformer_id"])
                 for role, reference, sdf in (
                     (
@@ -1241,6 +1324,11 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             accepted_products=len(ranked),
             returned_products=len(selected),
         )
+        summary["qualified_products"] = len(ranked) if qualified else 0
+        if qualified and not selected:
+            summary["no_candidates_reason"] = (
+                "No candidate completed the qualified recommendation contract within configured limits"
+            )
         eligible = {r["verification"]["product"] for r in route_records if r.get("eligible_for_scoring")}
         carried_eligible = {
             r["verification"]["product"]
@@ -1260,6 +1348,27 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         summary.update(status="error", error_type=type(exc).__name__, error=str(exc))
         raise
     finally:
+        for record in route_records:
+            if "qualification" not in record:
+                record["qualification"] = {
+                    "policy_version": policy["policy_version"] if policy else None,
+                    "status": "not_assessed"
+                    if not policy or policy["mode"] == "exploratory"
+                    else "not_qualified",
+                    "qualified": False,
+                    "reasons": [record.get("reason", record.get("selection_status", "not_evaluated"))],
+                    "route_id": record["route_id"],
+                }
+        write_json(
+            out / "qualification.json",
+            {
+                "schema_version": 1,
+                "policy": policy,
+                "decisions": [record["qualification"] for record in route_records],
+                "selected_route_ids": [row["route_id"] for row in selected],
+            },
+        )
+        write_json(out / "results.json", {"schema_version": 1, "policy": policy, "results": selected})
         summary["elapsed_seconds"] = time.monotonic() - start
         if evidence_evaluator is not None:
             summary["synthesis_evidence_usage"] = evidence_evaluator.usage

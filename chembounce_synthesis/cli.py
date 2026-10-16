@@ -49,11 +49,17 @@ def main(argv=None):
             designs = inherited_designs
         if designs is None:
             raise ValueError("Provide --design/--designs-tsv or --continue-from")
-        rows = run(args.hit or inherited_hit, designs, apply_expansion_options(config, args), args.output)
+        config = apply_expansion_options(config, args)
+        rows = run(args.hit or inherited_hit, designs, config, args.output)
     except (ValueError, OSError, KeyError, TypeError, RuntimeError) as exc:
         logging.error("%s", exc)
         return 2
-    print(f"Verified and ranked products: {len(rows)}; results: {args.output}/results.tsv")
+    label = (
+        "Qualified recommendations"
+        if config.get("recommendation", {}).get("mode") == "qualified"
+        else "Exploratory verified products (not qualified recommendations)"
+    )
+    print(f"{label}: {len(rows)}; results: {args.output}/results.tsv")
     return 0 if rows else 3
 
 

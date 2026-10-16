@@ -5,6 +5,11 @@ import copy
 
 def add_expansion_options(parser):
     parser.add_argument(
+        "--recommendation-mode",
+        choices=("exploratory", "qualified"),
+        help="qualified enforces qualified-v1 on final products using explicit positive hit similarity minima; exploratory results are not recommendations",
+    )
+    parser.add_argument(
         "--protocol",
         choices=("legacy", "research-v1"),
         help="Versioned computational defaults; explicit settings override them. research-v1 enables diverse search and uncertainty-aware bounded refinement",
@@ -48,6 +53,8 @@ def expansion_overrides(args):
 
 def apply_expansion_options(config, args):
     config = copy.deepcopy(config)
+    if getattr(args, "recommendation_mode", None) is not None:
+        config.setdefault("recommendation", {}).update(mode=args.recommendation_mode)
     if getattr(args, "protocol", None) is not None:
         config["protocol"] = args.protocol
     overrides = expansion_overrides(args)
