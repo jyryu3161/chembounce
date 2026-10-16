@@ -9,6 +9,7 @@ from .workflow import load_config, run
 from .options import add_expansion_options, apply_expansion_options
 from .continuation import continuation_inputs
 from .design_selection import selection_policy
+from .profiles import profile_label
 
 
 def main(argv=None):
@@ -31,14 +32,17 @@ def main(argv=None):
         if args.continue_from:
             inherited_hit, inherited_designs, config = continuation_inputs(args.continue_from)
         if args.config:
-            config = load_config(args.config)
+            config = load_config(args.config, options=args)
             if args.continue_from:
                 from pathlib import Path
 
                 config.setdefault("carry_forward", []).append(str(Path(args.continue_from).resolve()))
         if config is None or (not args.hit and not inherited_hit):
             raise ValueError("Provide --hit, --design/--designs-tsv and --config, or --continue-from")
-        config = apply_expansion_options(config, args)
+        if not args.config:
+            from .workflow import _config
+
+            config = _config(apply_expansion_options(config, args))
         designs = args.design
         if args.designs_tsv:
             stream = inputs.enter_context(open(args.designs_tsv, newline=""))
@@ -64,6 +68,7 @@ def main(argv=None):
         if config.get("recommendation", {}).get("mode") == "qualified"
         else "Exploratory verified products (not qualified recommendations)"
     )
+    label += profile_label(config)
     print(f"{label}: {len(rows)}; results: {args.output}/results.tsv")
     return 0 if rows else 3
 

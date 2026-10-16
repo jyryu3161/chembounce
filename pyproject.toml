@@ -30,6 +30,9 @@ chembounce-synthesis = "chembounce_synthesis.cli:main"
 packages = ["chembounce_synthesis"]
 py-modules = ["chembounce", "chemistry", "cli", "utils", "cats_module", "fingerprint_db", "generate_fingerprints", "scaffoldgraph_fragmenter", "cost_estimation", "shape_descriptors"]
 
+[tool.setuptools.package-data]
+chembounce_synthesis = ["data/*.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"

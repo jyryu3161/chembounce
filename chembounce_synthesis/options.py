@@ -5,6 +5,11 @@ import copy
 
 def add_expansion_options(parser):
     parser.add_argument(
+        "--recommendation-profile",
+        choices=("qualified-development-v1",),
+        help="Reviewed development recommendation profile: supplies fitted minima and a complete fixed three-seed protocol",
+    )
+    parser.add_argument(
         "--scoring-objective",
         choices=("joint-v1", "original-hit-v1"),
         help="Conformer selection objective; original-hit-v1 selects against the hit before the secondary design overlay",
@@ -76,6 +81,8 @@ def expansion_overrides(args):
 
 def apply_expansion_options(config, args):
     config = copy.deepcopy(config)
+    if getattr(args, "recommendation_profile", None) is not None:
+        config["recommendation_profile"] = args.recommendation_profile
     if getattr(args, "scoring_objective", None) is not None:
         config.setdefault("conformers", {})["scoring_objective"] = args.scoring_objective
     if getattr(args, "ranking_policy", None) is not None:

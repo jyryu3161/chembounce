@@ -10,6 +10,7 @@ from .common import canonical, molecule
 from .conformers import ConformerSettings, _check_stereo
 from .evidence import EvidencePolicy, evidence_requirements, matching_prediction_ranks
 from .refinement import RefinementSettings
+from .profiles import profile_provenance
 
 VERSION = "qualified-v1"
 REQUIRED_MINIMA = ("hit_tanimoto", "hit_shape", "hit_pharmacophore")
@@ -39,6 +40,7 @@ def effective_policy(config):
     return {
         "policy_version": VERSION,
         "mode": mode,
+        "calibration": profile_provenance(config),
         "minimum_scores": dict(minimum),
         "evidence_policy": asdict(EvidencePolicy(**config.get("synthesis_evidence", {}).get("policy", {}))),
         "evidence_product_matching": config.get("synthesis_evidence", {}).get("product_matching", "exact"),
@@ -59,7 +61,7 @@ def effective_policy(config):
         "reference": "original_hit_and_regenerated_final_product",
         "fingerprint": "binary Morgan radius=2 bits=2048 chirality=true; not sparse-count Morgan",
         "seed_acceptance": "every requested seed at the final ensemble size",
-        "scope": "Explicit engineering thresholds and requested computational evidence; no calibrated activity or synthesis probability",
+        "scope": "Explicit engineering thresholds or reviewed development fit as recorded in calibration provenance; requested computational evidence, no activity or synthesis probability",
     }
 
 
@@ -214,6 +216,9 @@ def decide(row, record, result, policy, settings, refinement, report=None, *, hi
         row.get("pose_seed") != settings.seed
         or row.get("scoring_objective") != settings.scoring_objective
         or row.get("ranking_policy") != policy["ranking_policy"]
+        or row.get("recommendation_profile") != (policy["calibration"]["name"] or "none")
+        or row.get("calibration_status") != policy["calibration"]["status"]
+        or row.get("calibration_artifact_sha256") != (policy["calibration"]["artifact_sha256"] or "none")
         or row.get("score") != info.get("score")
         or row.get("relative_energy") != info.get("candidate_relative_energy")
         or any(
@@ -308,6 +313,7 @@ def decide(row, record, result, policy, settings, refinement, report=None, *, hi
             reasons.append("Exported pose scores do not match the accepted representative seed")
     return {
         "policy_version": VERSION,
+        "calibration": {key: policy["calibration"][key] for key in ("name", "status", "artifact_sha256")},
         "status": "qualified" if not reasons else "rejected",
         "qualified": not reasons,
         "reasons": reasons,

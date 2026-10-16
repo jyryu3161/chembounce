@@ -47,6 +47,9 @@ COLUMNS = [
     "qualification_policy",
     "scoring_objective",
     "ranking_policy",
+    "recommendation_profile",
+    "calibration_status",
+    "calibration_artifact_sha256",
     "smiles",
     "design",
     "score",
@@ -142,6 +145,7 @@ def _config(config):
         "route_search_policy",
         "route_search_cache_size",
         "ranking_policy",
+        "recommendation_profile",
     }
     if set(config) - permitted:
         raise ValueError(f"Unknown synthesis configuration keys: {sorted(set(config) - permitted)}")
@@ -250,9 +254,14 @@ def _ranking_policy(config):
     return policy
 
 
-def load_config(filename):
+def load_config(filename, *, options=None):
     path = Path(filename).resolve()
-    return _resolve_paths(_config(json.loads(path.read_text())), path.parent)
+    config = json.loads(path.read_text())
+    if options is not None:
+        from .options import apply_expansion_options
+
+        config = apply_expansion_options(config, options)
+    return _resolve_paths(_config(config), path.parent)
 
 
 def _resolve_paths(config, base):
@@ -611,6 +620,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             raise ValueError("original-hit-v1 ranking requires 3D scoring")
         route_policy = search_policy(config)
         summary["recommendation_mode"] = policy["mode"]
+        summary["recommendation_profile"] = {
+            key: policy["calibration"][key] for key in ("name", "status", "artifact_sha256")
+        }
         if qualified and scoring_mode != "3d":
             raise ValueError("Qualified recommendations require completed 3D scoring")
         if scoring_mode == "2d":
@@ -870,6 +882,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 evidence_evaluator = _evidence_evaluator(config)
         manifest = _manifest(config, hit, capped_designs)
         manifest["recommendation_policy"] = policy
+        manifest["recommendation_profile"] = policy["calibration"]
         manifest["route_search_policy"] = route_policy
         manifest["ranking_policy"] = ranking_policy
         if ranking_policy == "original-hit-v1":
@@ -1284,6 +1297,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 "design": design,
                 "scoring_objective": settings.scoring_objective if scoring_mode == "3d" else "2d",
                 "ranking_policy": ranking_policy,
+                "recommendation_profile": policy["calibration"]["name"] or "none",
+                "calibration_status": policy["calibration"]["status"],
+                "calibration_artifact_sha256": policy["calibration"]["artifact_sha256"] or "none",
                 "score": info["score"],
                 **scores,
                 "hit_morgan": tanimoto["hit_tanimoto"],
@@ -1541,6 +1557,12 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     mol.SetProp("scoring_stage", row["scoring_stage"])
                     mol.SetProp("scoring_objective", row["scoring_objective"])
                     mol.SetProp("ranking_policy", row["ranking_policy"])
+                    for key in (
+                        "recommendation_profile",
+                        "calibration_status",
+                        "calibration_artifact_sha256",
+                    ):
+                        mol.SetProp(key, row[key])
                     mol.SetIntProp("pose_seed", row["pose_seed"])
                     for metric in ("seed_score_median", "seed_score_min", "seed_score_max"):
                         mol.SetDoubleProp(metric, row[metric])
@@ -1569,6 +1591,12 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     mol.SetProp("_Name", row["route_id"])
                     mol.SetProp("reference_role", role)
                     mol.SetProp("scoring_objective", pose_settings.scoring_objective)
+                    for key in (
+                        "recommendation_profile",
+                        "calibration_status",
+                        "calibration_artifact_sha256",
+                    ):
+                        mol.SetProp(key, row[key])
                     cid = info[role]["reference_conformer_id"]
                     mol.SetIntProp("source_conformer_id", cid)
                     mol.SetIntProp("pose_seed", row["pose_seed"])
@@ -1619,6 +1647,11 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             if "qualification" not in record:
                 record["qualification"] = {
                     "policy_version": policy["policy_version"] if policy else None,
+                    "calibration": {
+                        key: policy["calibration"][key] for key in ("name", "status", "artifact_sha256")
+                    }
+                    if policy
+                    else None,
                     "status": "not_assessed"
                     if not policy or policy["mode"] == "exploratory"
                     else "not_qualified",

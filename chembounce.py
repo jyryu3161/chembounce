@@ -1047,7 +1047,7 @@ def main(argv=None):
     parser = cli.argument_parser()
     options = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
-    from chembounce_synthesis.options import apply_expansion_options, has_synthesis_overrides
+    from chembounce_synthesis.options import has_synthesis_overrides
 
     synthesis_config = None
     if options.synllama is False:
@@ -1066,7 +1066,11 @@ def main(argv=None):
             requested_mode = options.recommendation_mode or (
                 declaration.get("mode") if isinstance(declaration, dict) else None
             )
-            if requested_mode == "qualified":
+            if (
+                requested_mode == "qualified"
+                or options.recommendation_profile
+                or (isinstance(disabled_config, dict) and disabled_config.get("recommendation_profile"))
+            ):
                 raise ValueError(
                     "Qualified recommendations require the synthesis stage; remove --no-synllama"
                 )
@@ -1077,12 +1081,10 @@ def main(argv=None):
         LOGGER.error("--synllama requires --synthesis-config with provider.kind='synllama'")
         return 2
     if options.synllama is not False and options.synthesis_config:
-        from chembounce_synthesis.workflow import _config, load_config
+        from chembounce_synthesis.workflow import load_config
 
         try:
-            synthesis_config = _config(
-                apply_expansion_options(load_config(options.synthesis_config), options)
-            )
+            synthesis_config = load_config(options.synthesis_config, options=options)
             if options.synllama is True and synthesis_config["provider"].get("kind") != "synllama":
                 raise ValueError(
                     "--synllama requires provider.kind='synllama'; omit it to replay saved proposals"
@@ -1204,6 +1206,9 @@ def main(argv=None):
             if config.get("recommendation", {}).get("mode") == "qualified"
             else "Exploratory verified synthesis products (not qualified recommendations)"
         )
+        from chembounce_synthesis.profiles import profile_label
+
+        label += profile_label(config)
         print(f"{label}: {len(verified)}; results: {Path(options.output_dir) / 'synthesis/results.tsv'}")
         return 0 if verified else 3
     print(

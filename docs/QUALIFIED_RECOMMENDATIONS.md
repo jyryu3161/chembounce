@@ -13,7 +13,7 @@ biological activity, or experimental synthesizability.
 | 1. Unified final qualification | One versioned conjunction at the real API/CLI export boundary; final-product/original-hit similarity, normalized hop, anchor, exact selected route, requested evidence and complete scoring/seed checks. Adversarial workflow tests, alternative survival, continuation, and matching JSON/TSV/SDF selection. | Engineering gate passed at `e47c38a1734bab4f154fc47b4f4fb7fb5493aa43`; explicit engineering thresholds only. |
 | 2. Stereo/design eligibility and bounded refill | Explicit stereo/design eligibility with an auditable, bounded replacement supply when designs fail; preserve caps and complete rejection denominators. | Engineering gate passed at `8461d9a492d181165df53f031f5c12f6a3dde167`. No scientific yield claim. |
 | 3. Similarity-aware route/search | Search and route construction retain original-hit similarity while finding changed scaffolds and viable route products; compare yield and compute under fixed budgets. | Engineering gate passed at `6adc2cedd73c14cf5a0ab88fbcd61004f3267ef6`. Controlled toy diagnostics only; scientific yield/compute benchmark remains Stage 6. |
-| 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | Pending. No calibrated cutoffs or production recommendation preset is supplied by Stage 1. |
+| 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | In progress. Stage 4a scorer/ranking passed; profile integration is tested with synthetic fixtures only. Activation requires a feasible reviewed fit artifact. |
 | 5. Independent synthesis evidence | Establish independent, route-specific evidence and provenance beyond catalog/rule replay; define treatment of unknowns, missing context, atom sources, model disagreement and observation quality. Never present a heuristic as a synthesis probability. | Pending. Stage 1 enforces the existing explicitly requested evidence policy. |
 | 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Pending. No scientific campaign or performance improvement claimed. |
 
@@ -45,6 +45,13 @@ focused Python 3.12 **142 passed**; final minimum runtime **59 passed,
 remain skipped on the minimum RDKit runtime. Gate record:
 `qualified-development-20261016/stage3-gate.json`, SHA-256
 `827ad5b9f5adcbb3d6b33fe9fbad7a2d2ae12f0dccb428b44c9b6843de9881ac`.
+
+Stage 4a scorer/ranking gate passed after the SDF provenance correction at
+`7394d30c90ba1d54ffc5933cb94270cf9d9ed18a`. Root parent validation:
+**933 passed, 11 skipped**; focused Python 3.12 **117 passed**; minimum
+runtime **25 passed, 17 skipped**. The correction passed **16** objective/export
+tests and **19** unchanged independent tests. Gate record SHA-256:
+`792edba1c666d61a8f4bc7c6173325ea3ef980ed03d3cd39eab1acdf33ad3365`.
 
 ## Stage 1 interface
 
@@ -239,3 +246,58 @@ conformers with seeds 42/43/44, matching eight-conformer seed-42 screening, no
 adaptive enlargement and no arbitrary range tolerance. Previously inspected
 controls are development data only. No fitted cutoffs or empirical claims are
 introduced by this scorer change.
+
+## Stage 4c recommendation profile (activation pending)
+
+The API field `recommendation_profile: "qualified-development-v1"` and both
+CLIs' `--recommendation-profile qualified-development-v1` select one named
+development profile. Catalog, rules and proposal-provider configuration remain
+explicit. No minima need to be entered manually once the reviewed fit is
+packaged. Until then, this profile fails clearly as unavailable; it never
+substitutes test values, guessed cutoffs or an exploratory fallback.
+
+Profile defaults apply to raw configuration **before** generic protocol defaults
+and validation. CLI overrides are applied before this resolution, so an existing
+`research-v1` declaration cannot inject adaptive stages or arbitrary range gates
+into the fixed protocol. Explicit values survive and are audited. API callers
+should specify the profile in the raw configuration or before `load_config`;
+settings already materialized by a prior load are effective overrides.
+
+The complete profile supplies eight-conformer seed-42 screening, final eight
+conformers at seeds 42/43/44, all-seed acceptance, minimum-seed hit ranking,
+original-hit route search and strict hop/stereo handling. Engineering limits
+default to 20 eligible designs, 80 raw attempts, 256 scored products, 10 refined
+families, 240 final candidate-conformer requests and 10 final results. Explicit
+resource limits remain authoritative and are recorded separately from numerical
+protocol changes. Additional anchors, property bounds and evidence requirements
+remain explicit and may reduce coverage.
+
+The release artifact has its own reviewed-profile schema/status, binds the
+untouched fit candidate and root/independent review record digests, and is pinned
+by its complete-file SHA-256. Its numerical values, procedure and provenance
+must match the reviewed candidate; packaging never fits or adjusts cutoffs.
+Package data and wheel-import tests cover the JSON resource.
+
+`development_protocol_matched` requires qualified mode, the complete fixed
+three-seed acceptance settings, matching minima, original-hit scoring/ranking,
+and the recorded numerical runtime. Material overrides—including stricter
+thresholds, seeds, ensembles, energy settings, bound references, pocket
+conditioning, exploratory mode or adaptive/range gates—are labelled
+`custom_unvalidated` (or rejected when internally inconsistent). Exact Python,
+RDKit, NumPy and SciPy versions, `BaseFeatures.fdef` SHA-256, and the frozen
+`conformers.py`, `common.py`, `identity.py` kernel hashes are compared. Full
+calibration and current source/runtime snapshots remain auditable; reviewed
+orchestration/packaging changes are distinct from numerical-kernel drift.
+
+Manifest and qualification policy record fit/procedure/source/runtime/review
+digests, effective overrides and scope. JSON, TSV, hit/design pose SDFs and
+reference SDFs carry profile identity, match status and artifact digest.
+Continuation retains prior provenance but re-resolves the current artifact,
+settings, runtime and every route/seed; historic profile claims never authorize
+a new result.
+
+A matched score protocol is **not a pipeline retention promise**. These controls
+are previously inspected development data, and real-design diagnostic
+availability, anchors/properties, finite search/refinement budgets and synthesis
+evidence introduce additional vetoes. No biological activity, future-seed
+robustness, experimental synthesis or held-out validation claim follows.

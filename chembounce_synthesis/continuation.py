@@ -52,6 +52,7 @@ def load_carried_routes(directories, hit, designs, *, include_excluded=False):
             "loaded_routes": 0,
             "duplicate_routes": 0,
             "excluded_design_routes": 0,
+            "prior_recommendation_profile": manifest.get("recommendation_profile"),
         }
         if include_excluded:
             source["prior_design_preflight"] = manifest.get("design_preflight")
