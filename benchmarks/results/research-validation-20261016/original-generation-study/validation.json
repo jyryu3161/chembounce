@@ -1,0 +1,236 @@
+{
+  "attempt_status_counts": {
+    "infrastructure_interruption": 1,
+    "no_candidates": 140,
+    "success": 434,
+    "timeout": 55
+  },
+  "bounded_route_replay": {
+    "catalog_rows_loaded": 238542,
+    "distinct_serialized_route_product_inputs": 484,
+    "enumeration_cap_per_step": 4096,
+    "evidence_in_archive": "original630-bundle/parent-review-evidence/original630-selected-route-replay-parent-20261016/validation.json",
+    "matched_catalog_leaf_occurrences": 1591,
+    "matched_route_occurrences": 763,
+    "matched_step_occurrences": 868,
+    "no_route_supplied_occurrences": 501,
+    "registered_rules_loaded": 91,
+    "returned_candidate_occurrences": 1264,
+    "scope": "Independent direct catalog/rule lookup and bounded RDKit reaction replay sharing the chemistry kernel; repeated serialized routes are not independent syntheses. No claim that every catalog molecule/rule was chemically validated or all atom sources/conditions supplied.",
+    "sha256": "3130e8cbf938c753af577c64ce7785f9ad5d38220e3dba827f1dd3713a7b9822"
+  },
+  "budget": {
+    "max_candidates": 3,
+    "sampled_process_tree_rss_mb": 24000,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "wall_seconds_including_cold_start": 360
+  },
+  "copied_artifact_sha256": {
+    "presentation/availability.csv": "0bdbd7a06117e441f29f79c686636a35964f4ba63f161023aff15577c46257dd",
+    "presentation/infrastructure_bounds.csv": "12f4ce33ea48bb1bba1c429c56b7f5eff704c0164f539660e48c79c938fe6950",
+    "presentation/manifest.json": "ae578d85e669f1024a64a6995794725eef67d1bd33de7bb2e6af2fab5fa5c8f4",
+    "presentation/metrics.csv": "b9601ae6b8f0f14d152da75d67fcf52188692f41113854c95b6e5ed0adc2eb30",
+    "presentation/paired_contrasts.csv": "d6e5d329b96104744634b4246e919cff1e5212f9149f7f00228836cd829d0c51",
+    "presentation/scaffold.pdf": "a96cb47f4db26cfb69604a94c0169d9fe4f16a3a4bbcab781fa773c29e8f02fd",
+    "presentation/scaffold.png": "7832b72cdbd86b82b2fd1917f3e8ada0691a3d78a503b65fe74f762864cadc87",
+    "presentation/target.pdf": "ee4ae3e1b4c38127b050f998dbe2d4f6b26450eb1594a06ac72ac3a02ce1379c",
+    "presentation/target.png": "bdc286a7ca536475e282a29217d4bb392f889335a789a98e0ccfdabe4042adf5",
+    "presentation/time.pdf": "ead054157777bec52f859c94b21beedafb93d5086456726f27763718a32050d8",
+    "presentation/time.png": "6da98516b062f13418a00405f20f7464a45ab3636b96528904533992d0c0906a",
+    "replay/scaffold-comparison.json": "709115d6bc350295240d22fdaefb7404123c7c92a41a0b9357a6c4cd57d2ff25",
+    "replay/target-comparison.json": "2890c0605385e0b8763e43d6d9e9308dfcb680a674faee91b25ddc78ab3d4c79",
+    "replay/time-comparison.json": "5d009690c5dc516048110c29e986ac4dad4c261454ad7a74d092489ff008c14f",
+    "replay/validation.json": "87a0210ea63fedd89d480850e5b205e26d1313aa6e66af258af21ef9dec1db94",
+    "statistical-bundle.zip": "ad084be0a8f8d9d24d26b817d7c157e13bd28bf7377203e86a0c8dce9cf42d9b"
+  },
+  "full_completion_parent_check": {
+    "evidence_in_archive": "original630-bundle/parent-review-evidence/full-completion-validation.json",
+    "generation_or_model_rerun": false,
+    "returned_candidate_occurrences": 1264,
+    "scope": "Completed original630 projection after raw request/response, source, all1264 common3D cache identities and stored-seed arithmetic, direct route replay, and independent full split statistics. Frozen39, not current41. No model rerun or experimental validation. Conditional populations and infrastructure unknown outcome retained.",
+    "sha256": "403295736d3830e5e45f2c1085a1e0d6ecbfefa04719262d9f241390cb740136",
+    "stored_trial_summary_scalar_checks": 26592
+  },
+  "independent_statistics_checks": {
+    "scaffold": {
+      "attempts": 360,
+      "candidate_occurrences": 606,
+      "evidence_in_archive": "original630-bundle/parent-review-evidence/original-generation-statistics-parent-20261016/scaffold.json",
+      "interpretation": "Original paired contrasts pair target aggregates. Conditional 3D and runtime aggregate populations may differ by method, even where both target means exist; they are not differences restricted to identical observed query/seed slots. All-attempt bounded indicators retain the complete planned grid. Explicit paired complete-case infrastructure diagnostics are a separate estimand. No new method estimate is emitted by this audit.",
+      "numeric_cells_compared": 18813,
+      "numerical_absolute_tolerance": 1e-12,
+      "parent_helper_sha256": "82ab4c17bca35f6ae05467f64a1634128a4209db70ca251c76ba443d47bcb104",
+      "sha256": "df19ea752bfed50d358b4e4bf79cd377ff3bedf8d803284ede35ab07aafce0d1"
+    },
+    "target": {
+      "attempts": 90,
+      "candidate_occurrences": 188,
+      "evidence_in_archive": "original630-bundle/parent-review-evidence/original-generation-statistics-parent-20261016/target.json",
+      "interpretation": "Original paired contrasts pair target aggregates. Conditional 3D and runtime aggregate populations may differ by method, even where both target means exist; they are not differences restricted to identical observed query/seed slots. All-attempt bounded indicators retain the complete planned grid. Explicit paired complete-case infrastructure diagnostics are a separate estimand. No new method estimate is emitted by this audit.",
+      "numeric_cells_compared": 5534,
+      "numerical_absolute_tolerance": 1e-12,
+      "parent_helper_sha256": "82ab4c17bca35f6ae05467f64a1634128a4209db70ca251c76ba443d47bcb104",
+      "sha256": "38d002773df17a17645623be06e5ec4d081ec689c6dda96fb9390539efed36b9"
+    },
+    "time": {
+      "attempts": 180,
+      "candidate_occurrences": 470,
+      "evidence_in_archive": "original630-bundle/parent-review-evidence/original-generation-statistics-parent-20261016/time.json",
+      "interpretation": "Original paired contrasts pair target aggregates. Conditional 3D and runtime aggregate populations may differ by method, even where both target means exist; they are not differences restricted to identical observed query/seed slots. All-attempt bounded indicators retain the complete planned grid. Explicit paired complete-case infrastructure diagnostics are a separate estimand. No new method estimate is emitted by this audit.",
+      "numeric_cells_compared": 9412,
+      "numerical_absolute_tolerance": 1e-12,
+      "parent_helper_sha256": "82ab4c17bca35f6ae05467f64a1634128a4209db70ca251c76ba443d47bcb104",
+      "sha256": "5f635ea7f75b09752e0dc712030a4978ff4e941ce677fce61b24346eadd34997"
+    }
+  },
+  "limitations": [
+    "Original frozen39 outputs only; later current41 and supplementary270 experiments are separate.",
+    "Post hoc descriptive target-cluster bootstrap intervals; few clusters, repeated targets, and no confirmatory superiority claim.",
+    "Infrastructure interruption is an unknown outcome; bounded identification intervals are not confidence intervals. Missing runtime is not zero.",
+    "Original conditional-score contrasts pair target means from method-specific observed populations, not like-for-like candidate or attempt populations.",
+    "Rule replay and forward agreement do not prove full atom sources, experimental synthesis, activity, probability, or yield.",
+    "Unknown full checkpoint training inventories and model selection/evaluation reuse limit generalization and independent-evidence claims.",
+    "Separate common-forward re-inference audit and its statistical bundle are not included.",
+    "Existing source attribution is preserved; no new project/model/third-party license is assigned."
+  ],
+  "original_scientific_files": 39,
+  "original_source_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+  "packaging": {
+    "all_archive_member_bytes_match_reviewed_bundle": true,
+    "all_source_bytes_rechecked_after_packaging": true,
+    "archive": "statistical-bundle.zip",
+    "archive_bytes": 6619796,
+    "archive_root": "original630-bundle/",
+    "archive_sha256": "ad084be0a8f8d9d24d26b817d7c157e13bd28bf7377203e86a0c8dce9cf42d9b",
+    "compression": "ZIP_DEFLATED",
+    "compression_level": 9,
+    "member_count": 55,
+    "member_order": "lexical POSIX path",
+    "member_permissions": "regular files, 0644, Unix create_system=3",
+    "member_timestamp": [
+      1980,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "original_path_strings": "Preserved as historical provenance; never dereferenced by portable replay.",
+    "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]",
+    "recipe_sha256": "dd6e9efb1758c6a41a782c2444b6b4f7ddc2ad76322275ee8a2a3282e1897566",
+    "two_archive_serializations_byte_identical": true,
+    "uncompressed_bytes": 111796067,
+    "zlib": "1.2.13"
+  },
+  "portable_replay": {
+    "all_three_recomputed_comparisons_byte_identical": true,
+    "bundle_manifest_sha256": "147e2b874974e2a99586570315bf72f9a0e97aac1647285e8a97533d3c9b300a",
+    "completion_review_in_archive": "original630-bundle/parent-review.json",
+    "completion_review_sha256": "10065630657944b2c1e35f7e0e14825a21930e997963980d9a250a9e4b53bfc7",
+    "historical_analysis_sha256": "cb6992cda28895fa42791ad3969df5cbafd48a71b4ab8362ecc180cfeb4f2cc0",
+    "parent_review": {
+      "checked_utc": "2026-10-16T07:53:34.534654+00:00",
+      "local_evidence": "original630-portable-generation-20261016/parent-validation.json",
+      "script_sha256": "46eb671e3db957a4269c5e9d805a1e84a371018dc5fe35e709fcfc56203158bb",
+      "sha256": "0d912f1fc6bd4dce5c08f5c2d15dc001c68b25345ed76aa7de4d7c3e35a761c1"
+    },
+    "published_replay_validation_sha256": "87a0210ea63fedd89d480850e5b205e26d1313aa6e66af258af21ef9dec1db94",
+    "replay_source_sha256": "9751209528300cdc38250d68c3a6a8748ed873362af1d1dabfa14ecbb2234113",
+    "runtime_checks": [
+      {
+        "name": "original-numpy",
+        "recomputed_sha256": {
+          "scaffold": "709115d6bc350295240d22fdaefb7404123c7c92a41a0b9357a6c4cd57d2ff25",
+          "target": "2890c0605385e0b8763e43d6d9e9308dfcb680a674faee91b25ddc78ab3d4c79",
+          "time": "5d009690c5dc516048110c29e986ac4dad4c261454ad7a74d092489ff008c14f"
+        },
+        "recorded_runtime": {
+          "numpy": "1.26.4",
+          "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+        },
+        "returncode": 0,
+        "validation_sha256": "87a0210ea63fedd89d480850e5b205e26d1313aa6e66af258af21ef9dec1db94"
+      },
+      {
+        "name": "minimum-numpy",
+        "recomputed_sha256": {
+          "scaffold": "709115d6bc350295240d22fdaefb7404123c7c92a41a0b9357a6c4cd57d2ff25",
+          "target": "2890c0605385e0b8763e43d6d9e9308dfcb680a674faee91b25ddc78ab3d4c79",
+          "time": "5d009690c5dc516048110c29e986ac4dad4c261454ad7a74d092489ff008c14f"
+        },
+        "recorded_runtime": {
+          "numpy": "1.24.4",
+          "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+        },
+        "returncode": 0,
+        "validation_sha256": "c5e78f4843d1838d6ff1e33df681db8ca715f43acbc914b7ef8d4cc480ee2903"
+      },
+      {
+        "name": "py312-numpy2",
+        "recomputed_sha256": {
+          "scaffold": "709115d6bc350295240d22fdaefb7404123c7c92a41a0b9357a6c4cd57d2ff25",
+          "target": "2890c0605385e0b8763e43d6d9e9308dfcb680a674faee91b25ddc78ab3d4c79",
+          "time": "5d009690c5dc516048110c29e986ac4dad4c261454ad7a74d092489ff008c14f"
+        },
+        "recorded_runtime": {
+          "numpy": "2.5.4",
+          "python": "3.12.13 (main, Apr 14 2026, 14:29:00) [Clang 22.1.3 ]"
+        },
+        "returncode": 0,
+        "validation_sha256": "c48468c6c27b5198eabfc1e83d1081b873b373eee3dc890e7dcfba815477241b"
+      }
+    ]
+  },
+  "presentation": {
+    "exporter_sha256": "9ff90a30557c678e0f5125272349f6b98450bd6428ff38445054dfb52b740d2d",
+    "manifest_sha256": "ae578d85e669f1024a64a6995794725eef67d1bd33de7bb2e6af2fab5fa5c8f4",
+    "null_numeric_rows_preserved": 756,
+    "parent_review": {
+      "checked_utc": "2026-10-16T07:54:53.625229+00:00",
+      "local_evidence": "original630-actual-presentation-parent-20261016.json",
+      "script_sha256": "efc80cce5e3f7104385a727729cd73c0b8b73caa80a9d4af81ceea5333772f18",
+      "sha256": "f6528c360f931ac5fbc95e9681d72173d6c8e790c3e35ebad462cc61a5e0466d"
+    },
+    "reviewed_exporter_commit": "784482339d6a13ca7eeac7d01ab9087cad4ecdc4",
+    "runtime": {
+      "matplotlib": "3.10.8",
+      "numpy": "1.26.4",
+      "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+    },
+    "table_rows_checked": {
+      "availability": 2565,
+      "infrastructure_bounds": 1866,
+      "metrics": 21440,
+      "paired_contrasts": 1405
+    },
+    "visual_inspection": "Parent inspected actual scaffold and target PNGs: target clusters wording, labels/counts, separate CI/bounds symbols, complete legend and caveats; no overlapping or clipped text observed."
+  },
+  "schema": "original630-publication-validation-v1",
+  "scope": "Byte-preserving packaging of parent-reviewed original630 statistical replay and figures/tables; no generation, neural inference, chemistry, 3D rescoring, or supplementary270 analysis.",
+  "splits": {
+    "scaffold": {
+      "attempts": 360,
+      "methods": 10,
+      "queries": 12,
+      "target_clusters": 6
+    },
+    "target": {
+      "attempts": 90,
+      "methods": 5,
+      "queries": 6,
+      "target_clusters": 3
+    },
+    "time": {
+      "attempts": 180,
+      "methods": 5,
+      "queries": 12,
+      "target_clusters": 6
+    }
+  },
+  "status": "completed_original_study_packaged",
+  "total_attempts": 630
+}
