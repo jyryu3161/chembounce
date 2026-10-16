@@ -14,7 +14,7 @@ import time
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
-PINS_SHA256 = "2bec9937d4df0195c57dc308471929c1773a4cf1fa066ae8b9c82e646ea13de6"
+PINS_SHA256 = "42cfee5362719a936aba4487c8019e8f67adb53d39db2f3edf8c4634cf311df7"
 CANCELLED = False
 INSTALL_ORDER = {
     "research": ["research-pypi.txt"],
@@ -130,7 +130,9 @@ class Diagnostic:
 
     def check_time(self):
         if CANCELLED or time.monotonic() >= self.deadline:
-            raise RuntimeError("Cancelled or overall 3600-second budget exhausted; no retry")
+            raise RuntimeError(
+                f"Cancelled or overall {self.pins['limits']['total_seconds']}-second budget exhausted; no retry"
+            )
 
     def run(self, name, argv, *, cwd=None, stdin=None, environment=None):
         self.check_time()

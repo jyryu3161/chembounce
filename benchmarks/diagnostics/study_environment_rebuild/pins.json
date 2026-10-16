@@ -16,8 +16,8 @@
     "validation.json": "0a4d8a4e86a455cdee45f5f4f9268a574814c1f8eae591f18c03020aad96016e"
   },
   "limits": {
-    "stage_seconds": 900,
-    "total_seconds": 3600
+    "stage_seconds": 3600,
+    "total_seconds": 14400
   },
   "python": {
     "sha256": "0812c05967309d1cf936120184b79f15162fc5bcbe4b7787945ed51be28a23e9",

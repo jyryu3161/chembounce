@@ -1,0 +1,94 @@
+{
+  "amendment": {
+    "driver_sha256": "8c35ed371c5eb45b8fe4df88f310f2e756983002f0db3562452b90d2e59e7cbf",
+    "execution_status_at_preparation": "not_launched",
+    "new_limits": {
+      "stage_seconds": 3600,
+      "total_seconds": 14400
+    },
+    "only_behavior_changes": [
+      "Increase stage and total wall budgets",
+      "Read configured total budget in cancellation/timeout error message"
+    ],
+    "original_limits": {
+      "stage_seconds": 900,
+      "total_seconds": 3600
+    },
+    "pins_sha256": "42cfee5362719a936aba4487c8019e8f67adb53d39db2f3edf8c4634cf311df7",
+    "requires_separate_fresh_assets_directory_and_cache": true,
+    "unchanged": [
+      "All package versions and source commits/hashes",
+      "Requirement channel and installation order",
+      "Download/build concurrency and no-retry policy",
+      "Cache isolation and fresh-directory requirement",
+      "Process-group cleanup",
+      "Scientific campaigns and their attempts"
+    ]
+  },
+  "interpretation": "Observed first-attempt installation wall-budget exhaustion during downloads; successful complete installation and functional/numerical equivalence are not established.",
+  "original_driver_commit": "85ece6bef10019a28e7e21d4ab6ecb2099e0df5d",
+  "original_failure": {
+    "evidence_scope": "Hash-bound local original output retained unchanged; full local reports/logs are not bundled",
+    "log_observations": {
+      "completed_downloads": [
+        "torch",
+        "nvidia-cudnn-cu12"
+      ],
+      "download_in_progress_at_termination": "nvidia-cublas-cu12",
+      "resolution_seconds": 3.82,
+      "resolved_packages": 63,
+      "resolver_conflict_reported": false
+    },
+    "overall_status": "failed_no_retry",
+    "retained_evidence": {
+      "driver-pins.json": {
+        "bytes": 137000,
+        "sha256": "2bec9937d4df0195c57dc308471929c1773a4cf1fa066ae8b9c82e646ea13de6"
+      },
+      "driver.py": {
+        "bytes": 17091,
+        "sha256": "d6b66509bf1a5d28bafec24a02b0ecc84c73d6a26e7f2596ae0e305c7d811ba6"
+      },
+      "launch.json": {
+        "bytes": 2407,
+        "sha256": "53f1b03f0a5dcbef251ccd92a9c85fa50dc9c4099771d54955b966f646237254"
+      },
+      "status.json": {
+        "bytes": 73667,
+        "sha256": "3affc909b82adb5dad955d00207b0afb24077224fa4f4a932e42f93aae2a9340"
+      },
+      "steps/27-research-research-pypi/record.json": {
+        "bytes": 2692,
+        "sha256": "bdfc1bf944eea8d6952c46a6b0a31a518c9948391a6f5e4c357aca98d386a7e0"
+      },
+      "steps/27-research-research-pypi/stderr.log": {
+        "bytes": 242,
+        "sha256": "547e63d6cc640ab737b4921669940faca4d8dfcc78bb366292260e39a9e8287b"
+      },
+      "steps/27-research-research-pypi/stdout.log": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "step": {
+      "cleanup": {
+        "leader_reaped": true,
+        "process_group_absent": true,
+        "signals": [
+          "SIGTERM"
+        ]
+      },
+      "ended_utc": "2026-10-16T04:36:30.518367+00:00",
+      "name": "research-research-pypi",
+      "returncode": -15,
+      "stage_cap_seconds": 900,
+      "started_utc": "2026-10-16T04:21:30.449762+00:00",
+      "status": "timeout",
+      "wall_seconds": 900.064808677882
+    },
+    "updated_utc": "2026-10-16T04:36:30.523504+00:00"
+  },
+  "prepared_utc": "2026-10-16T04:39:15.434978+00:00",
+  "schema_version": 1,
+  "scope": "Same-host environment installation diagnostic budget amendment; no scientific campaign rerun or methodological change"
+}
