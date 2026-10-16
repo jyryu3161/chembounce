@@ -1,0 +1,51 @@
+{
+  "api": "official Mol2MolModel.sample + Dataset/tokenizer, no high-level MolVS charge_parent conversion",
+  "budget": {
+    "max_candidates": 3,
+    "max_evaluations": 256,
+    "max_memory_mb": 24000,
+    "wall_seconds": 360
+  },
+  "executed_attempts": 0,
+  "future_attempts": 90,
+  "method": "Official REINVENT4 Mol2Mol pretrained sampling plus declared selection",
+  "panel_sha256": {
+    "direct-human-scaffold": "e87a3b539b8c41dde4887a7d52ec67b29a7a63f688584b579272398ef6522204",
+    "direct-human-target": "8d87129ebc096d122fb581eb1721b9893243cec958434b5720a94df83c2d074e",
+    "direct-human-time": "5402b98837c4abba4ab85606f8354736ec2ef20e23e1e0e8c6dadfbd0c8f7269"
+  },
+  "parent_decision_created_utc": "2026-10-16T01:49:28.520579+00:00",
+  "parent_decision_sha256": "d18a3fc280201f933b9c2f7a0ae4151c8bdf165cf9577e947c8d16deb8606faf",
+  "pending_gate": [
+    "parent exact prepared artifacts review",
+    "separate fixed non-benchmark checkpoint observer equivalence/CUDA preflight",
+    "final protocol source/model/runtime pins and explicit activation"
+  ],
+  "query_counts": {
+    "scaffold": 12,
+    "target": 6,
+    "time": 12
+  },
+  "route_evidence": "no supplied route; unassessed, not synthetic failure",
+  "schema": "mol2mol-pretrained-followup-proposal-v1",
+  "scope": "Post hoc follow-up after earlier controls/partial original study observations, before this comparator inference; not preregistration",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "selection": "common RDKit2025.09.6 connected valid ring products; input family and unchanged normalized Murcko excluded; native NLL ascending/canonical tie; family dedup; at most3",
+  "settings": {
+    "batch_reserve_multiplier": 1.25,
+    "batch_size": 32,
+    "device": "cuda:0",
+    "filter_margin_seconds": 15.0,
+    "input_randomization": false,
+    "protocol": "mol2mol-pretrained-v1-proposal",
+    "raw_sample_cap": 256,
+    "strategy": "multinomial",
+    "temperature": 1.0
+  },
+  "status": "preparation_only_no_inference_authorized",
+  "training_inventory": "unknown"
+}
