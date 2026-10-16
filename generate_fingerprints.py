@@ -12,6 +12,8 @@ from rdkit import Chem, rdBase
 from rdkit.SimDivFilters import MaxMinPicker
 from rdkit import DataStructs
 
+from chembounce_synthesis.common import parse_absolute_smiles
+
 from fingerprint_db import (
     CANONICALIZATION_MAX_ROUNDTRIPS,
     CANONICALIZATION_POLICY,
@@ -76,10 +78,21 @@ def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch
                 if not smiles:
                     blanks += 1
                     continue
-                with rdBase.BlockLogs():
-                    mol = Chem.MolFromSmiles(smiles)
-                reason = None
-                if mol is None or not mol.GetNumAtoms():
+                reason, detail = None, None
+                try:
+                    with rdBase.BlockLogs():
+                        mol = parse_absolute_smiles(smiles)
+                except ValueError as exc:
+                    mol = None
+                    detail = str(exc)
+                    reason = (
+                        "invalid_smiles"
+                        if detail.startswith("Invalid SMILES:")
+                        else "unsupported_molecular_representation"
+                    )
+                if reason:
+                    pass
+                elif mol is None or not mol.GetNumAtoms():
                     reason = "invalid_smiles"
                 elif len(Chem.GetMolFrags(mol)) != 1:
                     reason = "multiple_components"
@@ -89,7 +102,14 @@ def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch
                     rejected += 1
                     rejection_counts[reason] = rejection_counts.get(reason, 0) + 1
                     if len(rejection_examples) < 10:
-                        rejection_examples.append({"line": line_number, "smiles": smiles, "reason": reason})
+                        rejection_examples.append(
+                            {
+                                "line": line_number,
+                                "smiles": smiles,
+                                "reason": reason,
+                                **({"detail": detail} if detail else {}),
+                            }
+                        )
                     continue
                 try:
                     stable_smiles, mol, roundtrips = stable_canonical_molecule(mol)
@@ -112,6 +132,20 @@ def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch
                             }
                         )
                     continue
+                except ValueError as exc:
+                    rejected += 1
+                    reason = "unsupported_molecular_representation"
+                    rejection_counts[reason] = rejection_counts.get(reason, 0) + 1
+                    if len(rejection_examples) < 10:
+                        rejection_examples.append(
+                            {
+                                "line": line_number,
+                                "smiles": smiles,
+                                "reason": reason,
+                                "detail": str(exc),
+                            }
+                        )
+                    continue
                 canonicalization_adjusted_lines += roundtrips > 1
                 smiles = stable_smiles
                 if smiles in rows:
@@ -131,7 +165,12 @@ def generate_fingerprints(input_file, output_file, fp_size=2048, radius=2, batch
                 if canonicalization_failure_counts
                 else ""
             )
-            raise ValueError("No valid connected scaffolds in input" + details)
+            raise ValueError(
+                "No valid connected scaffolds in input"
+                + details
+                + f"; rejection counts: {json.dumps(rejection_counts, sort_keys=True)}"
+                + f"; original input rejection examples: {json.dumps(rejection_examples)}"
+            )
         smiles = np.asarray(sorted(rows), dtype=str)
         order = np.asarray([rows[s] for s in smiles])
         stage = scratch / "database"
@@ -191,9 +230,10 @@ def verify_fingerprints(fp_file, sample_size=100, seed=42, trust_legacy=False):
     count = len(data["smiles"])
     indices = np.random.default_rng(seed).choice(count, min(sample_size, count), replace=False)
     for index in indices:
-        mol = Chem.MolFromSmiles(data["smiles"][index])
-        if mol is None:
-            raise ValueError(f"Invalid database SMILES at row {index}")
+        try:
+            mol = parse_absolute_smiles(str(data["smiles"][index]))
+        except ValueError as exc:
+            raise ValueError(f"Invalid or unsupported database SMILES at row {index}: {exc}") from exc
         expected = generate_query_fingerprint(mol, data["radius"], data["fp_size"])
         if data["packed"]:
             expected = np.packbits(expected)

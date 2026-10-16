@@ -80,6 +80,20 @@ row order, including when canonical spellings change between versions.
 Empty-vector similarity follows the installed RDKit convention
 (1 for two empty vectors in 2023.09; 0 in the tested 2025.09/2026.09 releases).
 Legacy databases retain their stored row order at score ties.
+
+Before any potentially lossy parse/write, fingerprint building and selected legacy
+rows reuse the exact-state stereo parser; raw query and fixed-point helpers reuse
+the raw-Mol guard. Supported tetrahedral ABS is normalized with ordinary hydrogen
+handling; OR/AND, unsupported axial states and other CX/name metadata are rejected
+without choosing an absolute state. A selected row containing `|` or whitespace
+cannot use the string-only shortcut, regardless of its metadata claims; guarded
+normalization, exact-query/duplicate exclusion and bounded refill apply instead.
+Ordinary canonical selected strings retain their existing no-reparse work path.
+No full-library molecular parsing or new search cache is added. This is a check
+against annotated-state/name bypass, not universal authentication of arbitrary
+ordinary-SMILES metadata. Representation rejection counts/reasons are separate
+from canonicalization cycle/limit diagnostics. Neither these checks nor sampled
+bit verification can restore source annotations already erased upstream.
 The text path uses canonical SMILES tie ordering.
 
 Final candidate Tanimoto uses unfolded Morgan radius-2 **counts**, retaining the

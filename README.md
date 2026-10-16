@@ -143,7 +143,22 @@ come from that exact reparsed molecule. Unresolved inputs are excluded as
 `canonicalization_unstable`; metadata records cycle/limit counts and original
 input examples. Stereo is not removed to force convergence. New assets declare
 `canonicalization_policy=rdkit-roundtrip-fixed-point-v1`; only this policy with a
-matching RDKit version enables the canonical-string fast path.
+matching RDKit version enables the canonical-string fast path for selected plain
+strings without CX delimiters or whitespace. Annotated/name-bearing selected rows
+always use guarded normalization and refill, even if metadata claims canonical
+storage. This prevents annotation bypass; it does not certify arbitrary forged
+metadata for ordinary strings.
+
+Fingerprint input uses the same exact-state stereo guards as synthesis: ordinary
+SMILES and supported tetrahedral ABS-only CX are accepted; OR/AND, axial CX,
+other CX metadata and trailing names are unsupported. Builders check text before
+parsing; raw-Mol query/serialization helpers check retained stereo before use.
+Unsupported rows count separately as `unsupported_molecular_representation`,
+with original one-based line numbers and reasons in the first ten rejection
+examples. All-invalid input publishes no database. Existing bits, roundtrip
+limits and ranking budgets are unchanged. Already-erased upstream annotations
+cannot be recovered from stored ordinary SMILES; sampled verification also checks
+raw text but certifies only its selected sample.
 
 Fingerprint bits and canonical SMILES can differ between RDKit releases. Search
 rejects a database with a known different RDKit version before ranking. Build a

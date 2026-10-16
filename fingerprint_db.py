@@ -8,6 +8,8 @@ import pandas as pd
 from rdkit import Chem, rdBase, DataStructs
 from rdkit.Chem import rdFingerprintGenerator
 
+from chembounce_synthesis.common import absolute_smiles, parse_absolute_smiles, require_absolute_stereo
+
 POPCOUNT = np.array([i.bit_count() for i in range(256)], dtype=np.uint8)
 CANONICALIZATION_POLICY = "rdkit-roundtrip-fixed-point-v1"
 CANONICALIZATION_MAX_ROUNDTRIPS = 8
@@ -33,17 +35,18 @@ def stable_canonical_molecule(mol, max_roundtrips=CANONICALIZATION_MAX_ROUNDTRIP
     """
     if isinstance(max_roundtrips, bool) or not isinstance(max_roundtrips, int) or max_roundtrips < 1:
         raise ValueError("max_roundtrips must be a positive integer")
+    require_absolute_stereo(mol)
     mol = Chem.Mol(mol)
     for atom in mol.GetAtoms():
         atom.SetAtomMapNum(0)
-    current = Chem.MolToSmiles(mol)
+    current = absolute_smiles(mol)
     seen = {current}
     for count in range(1, max_roundtrips + 1):
         with rdBase.BlockLogs():
             parsed = Chem.MolFromSmiles(current)
         if parsed is None:
             raise CanonicalizationError("invalid_roundtrip", count)
-        rewritten = Chem.MolToSmiles(parsed)
+        rewritten = absolute_smiles(parsed)
         if rewritten == current:
             return current, parsed, count
         if rewritten in seen:
@@ -59,6 +62,7 @@ def _generator(radius, fp_size):
 
 
 def generate_query_fingerprint(mol, radius=2, fp_size=2048):
+    require_absolute_stereo(mol)
     return _generator(radius, fp_size).GetFingerprintAsNumPy(mol)
 
 
@@ -220,15 +224,26 @@ def search_similar_scaffolds_fast(
             packed=packed,
             exclude=exclude | duplicate,
         )
-        if canonical_db:
+        # The builder's plain fixed-point strings contain neither CX blocks nor
+        # names. Metadata alone must not authorize potentially lossy annotations.
+        # Check only selected text, not the entire DB; annotated supported ABS
+        # goes through normal normalization/exact-query exclusion and refill.
+        if canonical_db and all(
+            "|" not in str(smiles[i]) and not any(c.isspace() for c in str(smiles[i])) for i in indices
+        ):
             return pd.Series(scores, index=smiles[indices], name="Tanimoto Similarity", dtype=float)
         # Legacy or unversioned libraries may contain equivalent SMILES. Validate
         # only selected hits and refill top-k after invalid/identity exclusions.
         valid = {}
         rejected = fp_db.setdefault("_legacy_rejected_rows", set())
         for index, score in zip(indices, scores):
-            with rdBase.BlockLogs():
-                mol = Chem.MolFromSmiles(str(smiles[index]))
+            try:
+                with rdBase.BlockLogs():
+                    mol = parse_absolute_smiles(str(smiles[index]))
+            except ValueError as exc:
+                rejected.add(int(index))
+                fp_db.setdefault("_representation_rejected_rows", {})[int(index)] = str(exc)
+                continue
             if (
                 mol is None
                 or not mol.GetNumAtoms()
