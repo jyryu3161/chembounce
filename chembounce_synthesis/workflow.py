@@ -45,6 +45,8 @@ COLUMNS = [
     "rank",
     "recommendation_status",
     "qualification_policy",
+    "scoring_objective",
+    "ranking_policy",
     "smiles",
     "design",
     "score",
@@ -139,6 +141,7 @@ def _config(config):
         "recommendation",
         "route_search_policy",
         "route_search_cache_size",
+        "ranking_policy",
     }
     if set(config) - permitted:
         raise ValueError(f"Unknown synthesis configuration keys: {sorted(set(config) - permitted)}")
@@ -233,7 +236,18 @@ def _config(config):
     effective_policy(config)
     selection_policy(config)
     search_policy(config)
+    _ranking_policy(config)
     return config
+
+
+def _ranking_policy(config):
+    objective = config.get("conformers", {}).get("scoring_objective", "joint-v1")
+    policy = config.get("ranking_policy", objective)
+    if policy not in ("joint-v1", "original-hit-v1"):
+        raise ValueError("ranking_policy must be joint-v1 or original-hit-v1")
+    if policy == "original-hit-v1" and objective != "original-hit-v1":
+        raise ValueError("original-hit-v1 ranking requires original-hit-v1 scoring_objective")
+    return policy
 
 
 def load_config(filename):
@@ -341,7 +355,23 @@ def _pareto(rows):
     modes = {r.get("scoring_stage") == "2d_screening" for r in rows}
     if len(modes) > 1:
         raise ValueError("Cannot mix 2D and 3D candidates in one ranking")
-    if modes == {True}:
+    policies = {r.get("ranking_policy", "joint-v1") for r in rows}
+    if len(policies) != 1:
+        raise ValueError("Cannot mix ranking policies")
+    if policies == {"original-hit-v1"}:
+        if modes == {True}:
+            raise ValueError("original-hit-v1 ranking requires 3D scoring")
+        points = np.asarray(
+            [
+                (
+                    r["hit_tanimoto"],
+                    r.get("ranking_metrics", {}).get("hit_shape", r["hit_shape"]),
+                    r.get("ranking_metrics", {}).get("hit_pharmacophore", r["hit_pharmacophore"]),
+                )
+                for r in rows
+            ]
+        )
+    elif modes == {True}:
         points = np.asarray([(r["hit_tanimoto"], r["design_tanimoto"], -r["reaction_steps"]) for r in rows])
     else:
         points = np.asarray(
@@ -378,17 +408,37 @@ def _pareto(rows):
         level += 1
 
 
-def _rank(rows):
-    _pareto(rows)
-    rows.sort(
-        key=lambda r: (
+def _rank_key(r):
+    if r.get("ranking_policy", "joint-v1") == "original-hit-v1":
+        secondary = (
+            r["seed_score_range"],
+            r["design_tanimoto"],
+            r.get("ranking_metrics", {}).get("design_shape", r["design_shape"]),
+            r.get("ranking_metrics", {}).get("design_pharmacophore", r["design_pharmacophore"]),
+        )
+        if not all(math.isfinite(value) for value in (r["ranking_score"], *secondary)):
+            raise ValueError("Original-hit ranking requires finite scalar and secondary metrics")
+        return (
             r["pareto_front"],
-            -r.get("ranking_score", r["seed_score_median"]),
+            -r["ranking_score"],
+            secondary[0],
+            *(-v for v in secondary[1:]),
             r["reaction_steps"],
             r["smiles"],
             r["design"],
         )
+    return (
+        r["pareto_front"],
+        -r.get("ranking_score", r["seed_score_median"]),
+        r["reaction_steps"],
+        r["smiles"],
+        r["design"],
     )
+
+
+def _rank(rows):
+    _pareto(rows)
+    rows.sort(key=_rank_key)
     for rank, row in enumerate(rows, 1):
         row["rank"] = rank
     return rows
@@ -447,6 +497,9 @@ def _family_groups(rows):
     for row in rows:
         groups.setdefault(row["family_smiles"], []).append(row)
     for alternatives in groups.values():
+        if alternatives[0].get("ranking_policy") == "original-hit-v1":
+            alternatives.sort(key=_rank_key)
+            continue
         alternatives.sort(
             key=lambda row: (
                 row["pareto_front"],
@@ -553,6 +606,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         config = _resolve_paths(_config(config), Path.cwd())
         policy = effective_policy(config)
         qualified = policy["mode"] == "qualified"
+        ranking_policy = _ranking_policy(config)
+        if ranking_policy == "original-hit-v1" and scoring_mode != "3d":
+            raise ValueError("original-hit-v1 ranking requires 3D scoring")
         route_policy = search_policy(config)
         summary["recommendation_mode"] = policy["mode"]
         if qualified and scoring_mode != "3d":
@@ -815,6 +871,16 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         manifest = _manifest(config, hit, capped_designs)
         manifest["recommendation_policy"] = policy
         manifest["route_search_policy"] = route_policy
+        manifest["ranking_policy"] = ranking_policy
+        if ranking_policy == "original-hit-v1":
+            manifest["ranking_metrics"] = [
+                "hit_tanimoto",
+                "minimum_seed_hit_shape",
+                "minimum_seed_hit_pharmacophore",
+            ]
+            manifest["ranking_scope"] = (
+                "Original-hit Pareto dominance; minimum seed hit-objective scalar, then observed score range, design similarity, route steps and deterministic identities. Screening uses its single seed. No activity probability or convergence claim."
+            )
         manifest["design_preflight"] = {
             **design_preflight,
             "reject_unspecified_stereo": settings.reject_unspecified_stereo,
@@ -1216,6 +1282,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             row = {
                 "smiles": product,
                 "design": design,
+                "scoring_objective": settings.scoring_objective if scoring_mode == "3d" else "2d",
+                "ranking_policy": ranking_policy,
                 "score": info["score"],
                 **scores,
                 "hit_morgan": tanimoto["hit_tanimoto"],
@@ -1393,10 +1461,17 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                             )
                         },
                     }
-                    if refinement.ranking_statistic == "minimum":
+                    if refinement.ranking_statistic == "minimum" or ranking_policy == "original-hit-v1":
                         row["ranking_metrics"] = {
                             key: values["max" if key == "relative_energy" else "min"]
                             for key, values in report["metric_ranges"].items()
+                        }
+                    if ranking_policy == "original-hit-v1":
+                        row["ranking_score"] = min(trial["score"] for trial in report["trials"])
+                        row["ranking_metrics"] = {
+                            f"{role}_{metric}": min(trial[role][metric] for trial in report["trials"])
+                            for role in ("hit", "design")
+                            for metric in ("shape", "pharmacophore")
                         }
                     if any(row[k] < v for k, v in config.get("minimum_scores", {}).items()):
                         evidence["status"] = "3d_threshold_rejected"

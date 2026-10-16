@@ -37,8 +37,11 @@ class ConformerSettings:
     max_iterations: int = 500
     pharmacophore_sigma: float = 1.0
     reject_unspecified_stereo: bool = True
+    scoring_objective: str = "joint-v1"
 
     def __post_init__(self):
+        if self.scoring_objective not in ("joint-v1", "original-hit-v1"):
+            raise ValueError("scoring_objective must be joint-v1 or original-hit-v1")
         if not isinstance(self.reject_unspecified_stereo, bool):
             raise ValueError("reject_unspecified_stereo must be true or false")
         positive(self.num_conformers, "num_conformers")
@@ -282,11 +285,13 @@ def _overlay(reference, candidate, cid, settings):
 
 
 def score_candidate(smiles, hit, design, settings=ConformerSettings(), hit_pose=None, pose_constraints=None):
-    """Select one candidate conformer using both references, with strain penalty.
+    """Select one candidate conformer under the versioned strain-adjusted objective.
 
     Each reference overlay computes shape and pharmacophore on one common pose.
-    The same candidate conformation must support both references, although its
-    rigid-body orientation can differ. Scores are heuristics, not probabilities.
+    joint-v1 uses both references. original-hit-v1 selects solely against the
+    original hit, then overlays the actual design on that selected conformation.
+    Both retain reference and candidate energy penalties and first-on-tie choice.
+    Rigid-body orientation can differ. Scores are heuristics, not probabilities.
     Identical reference ensemble objects share an alignment calculation; their
     returned comparison dictionaries and pose molecules remain independent.
     """
@@ -297,10 +302,11 @@ def score_candidate(smiles, hit, design, settings=ConformerSettings(), hit_pose=
     hit_ref = hit_pose if hit_pose is not None else ensemble(canonical(hit), settings)
     design_ref = ensemble(canonical(design), settings)
     shared_reference = hit_ref is design_ref
+    hit_only = settings.scoring_objective == "original-hit-v1"
     best, rejected_poses = None, []
     for cid in candidate.relative_energies:
         hit_info, hit_aligned = _overlay(hit_ref, candidate, cid, settings)
-        if shared_reference:
+        if shared_reference and not hit_only:
             # Equal SMILES do not imply equal bound/generated reference poses.
             # Copy before pocket assessment so either exported pose can be
             # annotated or modified independently, as with two overlays.
@@ -309,14 +315,18 @@ def score_candidate(smiles, hit, design, settings=ConformerSettings(), hit_pose=
         if pocket is not None and not pocket["passed"]:
             rejected_poses.append({"candidate_conformer_id": cid, **pocket})
             continue
-        if not shared_reference:
+        if not shared_reference and not hit_only:
             design_info, design_aligned = _overlay(design_ref, candidate, cid, settings)
         relative_energy = candidate.relative_energies[cid]
-        score = math.sqrt(
-            hit_info["reference_adjusted_joint"] * design_info["reference_adjusted_joint"]
-        ) * math.exp(-settings.strain_penalty * relative_energy)
+        objective = (
+            hit_info["reference_adjusted_joint"]
+            if hit_only
+            else math.sqrt(hit_info["reference_adjusted_joint"] * design_info["reference_adjusted_joint"])
+        )
+        score = objective * math.exp(-settings.strain_penalty * relative_energy)
         info = {
             "score": score,
+            "scoring_objective": settings.scoring_objective,
             "candidate_smiles": canonical(smiles),
             "hit_smiles": canonical(hit),
             "design_smiles": canonical(design),
@@ -325,7 +335,12 @@ def score_candidate(smiles, hit, design, settings=ConformerSettings(), hit_pose=
             "candidate_relative_energy": relative_energy,
             "force_field": candidate.force_field,
             "hit": hit_info,
-            "design": design_info,
+            **({"design": design_info} if not hit_only else {}),
+            "ensemble_sizes": {
+                "candidate": len(candidate.relative_energies),
+                "hit": len(hit_ref.relative_energies),
+                "design": len(design_ref.relative_energies),
+            },
             "ensemble_diagnostics": {
                 "candidate": candidate.failures,
                 "hit": hit_ref.failures,
@@ -336,11 +351,21 @@ def score_candidate(smiles, hit, design, settings=ConformerSettings(), hit_pose=
         if pocket is not None:
             info["pocket"] = pocket
         if best is None or score > best[0]["score"]:
-            best = (info, hit_aligned, design_aligned)
+            best = (info, hit_aligned, design_aligned if not hit_only else None)
     if best is None and pose_constraints is not None:
         raise ValueError(
             f"No candidate conformation satisfies bound-pocket constraints ({len(rejected_poses)} rejected)"
         )
+    if hit_only and best is not None:
+        info, hit_aligned, _ = best
+        if shared_reference:
+            design_info, design_aligned = dict(info["hit"]), Chem.Mol(hit_aligned)
+        else:
+            design_info, design_aligned = _overlay(
+                design_ref, candidate, info["candidate_conformer_id"], settings
+            )
+        info["design"] = design_info
+        best = (info, hit_aligned, design_aligned)
     if pose_constraints is not None:
         best[0]["pocket_selection"] = {
             "candidate_conformations_evaluated": len(candidate.relative_energies),

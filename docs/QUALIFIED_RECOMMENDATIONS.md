@@ -12,7 +12,7 @@ biological activity, or experimental synthesizability.
 | --- | --- | --- |
 | 1. Unified final qualification | One versioned conjunction at the real API/CLI export boundary; final-product/original-hit similarity, normalized hop, anchor, exact selected route, requested evidence and complete scoring/seed checks. Adversarial workflow tests, alternative survival, continuation, and matching JSON/TSV/SDF selection. | Engineering gate passed at `e47c38a1734bab4f154fc47b4f4fb7fb5493aa43`; explicit engineering thresholds only. |
 | 2. Stereo/design eligibility and bounded refill | Explicit stereo/design eligibility with an auditable, bounded replacement supply when designs fail; preserve caps and complete rejection denominators. | Engineering gate passed at `8461d9a492d181165df53f031f5c12f6a3dde167`. No scientific yield claim. |
-| 3. Similarity-aware route/search | Search and route construction retain original-hit similarity while finding changed scaffolds and viable route products; compare yield and compute under fixed budgets. | Implemented; engineering review pending. Controlled toy diagnostics only; scientific yield/compute benchmark remains Stage 6. |
+| 3. Similarity-aware route/search | Search and route construction retain original-hit similarity while finding changed scaffolds and viable route products; compare yield and compute under fixed budgets. | Engineering gate passed at `6adc2cedd73c14cf5a0ab88fbcd61004f3267ef6`. Controlled toy diagnostics only; scientific yield/compute benchmark remains Stage 6. |
 | 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | Pending. No calibrated cutoffs or production recommendation preset is supplied by Stage 1. |
 | 5. Independent synthesis evidence | Establish independent, route-specific evidence and provenance beyond catalog/rule replay; define treatment of unknowns, missing context, atom sources, model disagreement and observation quality. Never present a heuristic as a synthesis probability. | Pending. Stage 1 enforces the existing explicitly requested evidence policy. |
 | 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Pending. No scientific campaign or performance improvement claimed. |
@@ -38,6 +38,13 @@ still applies. The final narrow unique-route-counter correction passed **45**
 root tests and **17** unchanged independent tests. Root gate record:
 `qualified-development-20261016/stage2-gate.json`, SHA-256
 `2b8be505ad9ba2cb5f67714d2520e9e52ba41db7352f50c9a51054b98c613df7`.
+
+Stage 3 root validation: full research suite **917 passed, 11 skipped**;
+focused Python 3.12 **142 passed**; final minimum runtime **59 passed,
+22 skipped**; independent review **14 passed**. Modern 3D integration tests
+remain skipped on the minimum RDKit runtime. Gate record:
+`qualified-development-20261016/stage3-gate.json`, SHA-256
+`827ad5b9f5adcbb3d6b33fe9fbad7a2d2ae12f0dccb428b44c9b6843de9881ac`.
 
 ## Stage 1 interface
 
@@ -194,3 +201,41 @@ with equal actual combination counts. Its explicit 0.5 threshold is an
 engineering diagnostic, not a production cutoff. Separate two-round seed
 recovery tests use equal configured caps. These tests establish bounded search
 behavior, not global recall, general scientific improvement or calibrated yield.
+
+## Stage 4a scorer and ranking interface (calibration pending)
+
+`conformers.scoring_objective` defaults to historical `joint-v1`.
+`original-hit-v1` selects each candidate conformation using only its original-hit
+overlay: `sqrt(hit_shape * hit_pharmacophore)` multiplied by separate exponential
+penalties for the selected hit-reference and candidate relative energies. It
+retains the legacy strict first-on-tie choice and equals the historical scorer
+with the hit supplied as both references. The actual design is overlaid only
+after selecting the candidate conformation, with the same internal geometry.
+Both real-design ensemble generation and the secondary overlay must still
+succeed; otherwise existing scoring/refinement failure counts include that
+candidate. This availability requirement is not a hit-similarity failure.
+
+The explicit `ranking_policy` defaults to the selected scoring objective.
+`original-hit-v1` ranking requires the corresponding scorer and uses only
+original-hit bitMorgan and minimum-over-final-seed hit shape/pharmacophore for
+Pareto dominance. Within a front, minimum seed hit-objective scalar precedes
+observed score spread, design similarity, route steps and deterministic identity
+ties. Screening uses its one assessed seed. Robust ranking metrics remain
+separate from the exported representative seed's pose metrics. The same policy
+orders alternative designs before family selection. Design/route advantages
+cannot rescue a hit-dominated candidate. Dispersion is not a convergence or
+confidence claim.
+
+Both CLIs expose `--scoring-objective` and `--ranking-policy`; API configurations
+use the fields above. Saved settings and scoring results record the objective;
+strict validation checks seed identity, realized ensemble counts, finite pose
+metrics and consistency of both energy penalties. Refinement preserves the
+objective across every requested seed and final-ensemble stage.
+
+This interface alone is **not Stage 4 completion**. The named usable preset,
+positive fitted thresholds, full calibration artifact/digest and override
+provenance remain pending. The planned calibration protocol uses fixed eight
+conformers with seeds 42/43/44, matching eight-conformer seed-42 screening, no
+adaptive enlargement and no arbitrary range tolerance. Previously inspected
+controls are development data only. No fitted cutoffs or empirical claims are
+introduced by this scorer change.

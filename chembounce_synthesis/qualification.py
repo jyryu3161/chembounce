@@ -43,6 +43,9 @@ def effective_policy(config):
         "evidence_policy": asdict(EvidencePolicy(**config.get("synthesis_evidence", {}).get("policy", {}))),
         "evidence_product_matching": config.get("synthesis_evidence", {}).get("product_matching", "exact"),
         "conformers": asdict(ConformerSettings(**config.get("conformers", {}))),
+        "ranking_policy": config.get(
+            "ranking_policy", config.get("conformers", {}).get("scoring_objective", "joint-v1")
+        ),
         "refinement": asdict(RefinementSettings(**config.get("refinement", {}))),
         "constraints": {
             key: config.get(key, default)
@@ -64,16 +67,16 @@ def finite(value):
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
 
 
-def validate_result(result, product, settings, *, hit=None, design=None):
-    """Check the scorer's actual export poses and complete score payload."""
+def _validate_score_info(info, settings):
+    """Validate score protocol/energy metadata, including persisted seed reports."""
     try:
-        info, hit_pose, design_pose = result
-        for key, expected in (("candidate_smiles", product), ("hit_smiles", hit), ("design_smiles", design)):
-            if expected is not None and info.get(key) != expected:
-                raise ValueError(f"Scoring reference/product identity mismatch: {key}")
-        _check_stereo(molecule(product), ConformerSettings())
         if info["settings"] != asdict(settings):
             raise ValueError("Scoring settings do not match the requested seed/ensemble")
+        if info.get("scoring_objective") != settings.scoring_objective:
+            raise ValueError("Scoring objective does not match the requested protocol")
+        cid = info["candidate_conformer_id"]
+        if isinstance(cid, bool) or not isinstance(cid, int) or cid < 0:
+            raise ValueError("Missing or invalid candidate conformer identity")
         for value in (info["score"], info["candidate_relative_energy"], info["candidate_energy"]):
             if not finite(value):
                 raise ValueError("Missing or nonfinite scoring/energy value")
@@ -87,6 +90,48 @@ def validate_result(result, product, settings, *, hit=None, design=None):
                 value = info[role][metric]
                 if not finite(value) or not 0 <= value <= 1:
                     raise ValueError("Missing, nonfinite or out-of-range pose score")
+        if settings.scoring_objective == "original-hit-v1":
+            for count in info["ensemble_sizes"].values():
+                if (
+                    isinstance(count, bool)
+                    or not isinstance(count, int)
+                    or not 1 <= count <= settings.num_conformers
+                ):
+                    raise ValueError("Invalid realized ensemble size")
+            if set(info["ensemble_sizes"]) != {"candidate", "hit", "design"}:
+                raise ValueError("Incomplete realized ensemble sizes")
+            for role in ("hit", "design"):
+                overlay = info[role]
+                if overlay["reference_relative_energy"] < 0:
+                    raise ValueError("Negative reference relative energy")
+                joint = math.sqrt(overlay["shape"] * overlay["pharmacophore"])
+                adjusted = joint * math.exp(-settings.strain_penalty * overlay["reference_relative_energy"])
+                if any(
+                    not finite(overlay.get(key))
+                    or not math.isclose(overlay[key], expected, rel_tol=1e-10, abs_tol=1e-12)
+                    for key, expected in (("joint", joint), ("reference_adjusted_joint", adjusted))
+                ):
+                    raise ValueError("Overlay objective disagrees with pose metrics/reference energy")
+            expected = info["hit"]["reference_adjusted_joint"] * math.exp(
+                -settings.strain_penalty * info["candidate_relative_energy"]
+            )
+            if info["candidate_relative_energy"] < 0 or not math.isclose(
+                info["score"], expected, rel_tol=1e-10, abs_tol=1e-12
+            ):
+                raise ValueError("Original-hit score disagrees with reference/candidate energy objective")
+    except (KeyError, TypeError, AttributeError, RuntimeError) as exc:
+        raise ValueError(f"Incomplete scoring metadata: {exc}") from exc
+
+
+def validate_result(result, product, settings, *, hit=None, design=None):
+    """Check the scorer's actual export poses and complete score payload."""
+    try:
+        info, hit_pose, design_pose = result
+        for key, expected in (("candidate_smiles", product), ("hit_smiles", hit), ("design_smiles", design)):
+            if expected is not None and info.get(key) != expected:
+                raise ValueError(f"Scoring reference/product identity mismatch: {key}")
+        _check_stereo(molecule(product), ConformerSettings())
+        _validate_score_info(info, settings)
         for pose in (hit_pose, design_pose):
             if pose is None or canonical(Chem.MolToSmiles(pose)) != product:
                 raise ValueError("Output pose does not match the exact final product")
@@ -167,6 +212,8 @@ def decide(row, record, result, policy, settings, refinement, report=None, *, hi
     info = result[0]
     if (
         row.get("pose_seed") != settings.seed
+        or row.get("scoring_objective") != settings.scoring_objective
+        or row.get("ranking_policy") != policy["ranking_policy"]
         or row.get("score") != info.get("score")
         or row.get("relative_energy") != info.get("candidate_relative_energy")
         or any(
@@ -207,10 +254,17 @@ def decide(row, record, result, policy, settings, refinement, report=None, *, hi
         ):
             reasons.append("Required final refinement seed block is incomplete")
         for trial in trials:
+            try:
+                _validate_score_info(
+                    trial, ConformerSettings(**{**expected_settings, "seed": trial.get("seed")})
+                )
+            except (ValueError, TypeError) as exc:
+                reasons.append(f"Required seed score metadata: {exc}")
             if (
                 trial.get("status") != "success"
                 or not finite(trial.get("score"))
                 or trial.get("settings", {}).get("seed") != trial.get("seed")
+                or trial.get("scoring_objective") != settings.scoring_objective
                 or trial.get("candidate_smiles") != row["smiles"]
                 or trial.get("hit_smiles") != hit
                 or trial.get("design_smiles") != row["design"]
