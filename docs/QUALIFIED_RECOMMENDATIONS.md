@@ -38,6 +38,31 @@ are retained in provenance and are validated against the canonical original hit
 before generation or synthesis assets are loaded. Supplying landmarks alone does
 not replace the default score or polar-recall floors.
 
+Selective runs also apply a cheap **necessary-condition polar capacity check**
+to complete regenerated products. For each typed polar feature family it counts
+at most `min(hit_count, candidate_count)` available matches, then divides their
+sum by the original hit's polar feature count. A bound below the configured
+polar recall cannot pass any pose, so the root is ineligible before beam pruning
+and, after fresh route replay, before evidence/scoring allocation. Equality passes;
+no-polar hits remain not applicable after ordinary feature/state/core preflight.
+Feature identities, including overlapping typed features, retain the scorer's
+existing semantics. Capacity is not geometric acceptance or biological evidence.
+
+Raw designs and intermediate products are not capacity-filtered. Existing bounded
+seed-only roots can still expand into eligible final products. Explicit `design-v1`
+search keeps its ranking; its finals and carried routes receive the same fresh
+post-replay check. Existing seed, score, route-support, export and hard-budget gates
+remain unchanged, with no top-ups. A per-run cache is bounded by
+`route_search_cache_size`; decisions are attached to retained routes and a bounded
+sample/counters are saved in `summary.json`. Feature/preflight errors are separate
+from proven capacity deficits. Deadline records distinguish completed perception
+from a decision not used; completed work is counted, and timeout outcomes are not
+cached as chemistry. Model initialization, raw design generation and search costs
+can still occur, so this change claims avoided calls and possible fixed-budget
+opportunity, not demonstrated scientific yield. The manifest binds the new helper
+and orchestration source separately; the five numerical kernels and profile
+artifact are unchanged. Frozen earlier campaigns retain their original source.
+
 The scorer/constraint source gate passed at `094d0c2`, and the separate workflow
 gate passed at `68750e0` (integrated as `7161ff3`): root 208 tests, independent 60
 and author 27 passed. The corrected named preset and benchmark integration passed

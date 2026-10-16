@@ -311,11 +311,24 @@ def test_screening_failure_accounting_distinguishes_preflight_from_post_score(
 
         monkeypatch.setattr(selective_scoring, "validate_result", fail)
     out = tmp_path / phase
-    assert workflow.run(HIT, [DESIGN], config_for(tmp_path, assets, proposal), out) == []
-    failure = read(out, "routes.json")["routes"][0]["similarity_failure"]
-    assert failure["phase"] == phase
-    assert failure["ensemble_request_status"] == ("none_requested" if phase == "preflight" else "requested")
-    assert (failure["scorer_audit"] is None) == (phase == "preflight")
+    config = config_for(tmp_path, assets, proposal)
+    # Design-only search retains the route so the common fresh-replay boundary
+    # records the new early preflight rejection before evidence or screening.
+    if phase == "preflight":
+        config["route_search_policy"] = "design-v1"
+    assert workflow.run(HIT, [DESIGN], config, out) == []
+    record = read(out, "routes.json")["routes"][0]
+    if phase == "preflight":
+        assert record["selection_status"] == "selective_preflight_rejected"
+        assert record["polar_capacity"]["status"] == "preflight_rejected"
+        assert not record["eligible_for_evidence"] and not record["eligible_for_scoring"]
+        assert "synthesis_evidence" not in record
+        assert read(out, "summary.json")["scored_products"] == 0
+    else:
+        failure = record["similarity_failure"]
+        assert failure["phase"] == phase
+        assert failure["ensemble_request_status"] == "requested"
+        assert failure["scorer_audit"] is not None
 
 
 @pytest.mark.parametrize(
