@@ -5,6 +5,7 @@ No supplied path, SMILES or artifact text is executed or used to load external d
 """
 
 import argparse
+import copy
 import hashlib
 import html
 import json
@@ -774,6 +775,164 @@ def _candidate(row, docs, policy):
     return result
 
 
+_IDENTITY_POLICY = "protonation-tautomer-family-v1"
+_IDENTITY_RECORDED = (
+    "original_hit",
+    "final_product",
+    "change_class",
+    "atom_aware_scaffold_changed",
+    "generic_ring_linker_topology_changed",
+    "scaffold_presence_change",
+)
+
+
+def _nonempty_string(value, label):
+    _require(isinstance(value, str) and bool(value), f"Invalid {label}")
+
+
+def _identity_descriptor(manifest):
+    """Validate only saved provenance copies, never the installed producer/runtime."""
+    result = {"status": "not_exported", "warnings": [], "record": None}
+    if "identity_comparison_policy" not in manifest:
+        return result
+    result["status"] = "unusable"
+    result["record"] = copy.deepcopy(manifest["identity_comparison_policy"])
+    try:
+        descriptor = result["record"]
+        _require(isinstance(descriptor, dict), "Identity descriptor is not an object")
+        _require(
+            type(descriptor["schema_version"]) is int and descriptor["schema_version"] == 1,
+            "Unsupported identity descriptor schema",
+        )
+        _equal(descriptor["policy_version"], _IDENTITY_POLICY, "identity descriptor policy")
+        _nonempty_string(descriptor["rdkit_version"], "identity descriptor runtime")
+        for key in ("tautomer_limit", "transform_limit"):
+            _require(type(descriptor[key]) is int and descriptor[key] > 0, f"Invalid identity {key}")
+        for key in ("identity.py", "common.py"):
+            value = descriptor["code_sha256"][key]
+            _require(
+                isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value),
+                f"Invalid identity source hash {key}",
+            )
+            _equal(value, manifest["code_sha256"][key], f"saved identity source {key}")
+        result["status"] = "recorded"
+    except (KeyError, TypeError, ValueError, AttributeError) as exc:
+        result["warnings"].append(f"Identity descriptor unavailable or unsupported: {exc}")
+    if manifest.get("sources_changed_since_import"):
+        result["warnings"].append(
+            "Producer sources changed since import; saved copies do not authenticate source execution."
+        )
+    return result
+
+
+def _identity_comparison(row, manifest, policy, descriptor):
+    """Check implications of a supplied label; never reconstruct a missing identity/class."""
+    view = {"status": "not_exported", "issues": [], "record": None}
+    try:
+        if "hit_identity_comparison" not in row:
+            _require(
+                descriptor["status"] == "not_exported",
+                "Declared identity comparison missing from selected row",
+            )
+            return view
+        view["status"] = "inconsistent_metadata"
+        record = row["hit_identity_comparison"]
+        _require(isinstance(record, dict), "Identity comparison is not an object")
+        _require(
+            type(record["schema_version"]) is int and record["schema_version"] == 1,
+            "Unsupported identity comparison schema",
+        )
+        _equal(record["reference_role"], "original_hit", "identity reference role")
+        for key, expected in (
+            ("original_hit_smiles", manifest["hit"]),
+            ("final_product_smiles", row["smiles"]),
+        ):
+            _nonempty_string(record[key], key)
+            _equal(record[key], expected, f"identity {key}")
+        if record["status"] == "unavailable":
+            _require(
+                not any(key in record for key in _IDENTITY_RECORDED),
+                "Unavailable identity contains recorded-only fields",
+            )
+            for key in ("reason_code", "reason"):
+                _nonempty_string(record[key], f"identity {key}")
+            if "error_type" in record:
+                _require(isinstance(record["error_type"], str), "Invalid identity error_type")
+            view.update(status="unavailable", record=copy.deepcopy(record))
+            return view
+        _equal(record["status"], "recorded", "identity status")
+        _require(
+            not any(k in record for k in ("reason_code", "reason", "error_type")),
+            "Recorded identity contains unavailable fields",
+        )
+        _equal(descriptor["status"], "recorded", "usable identity descriptor")
+        saved_policy = descriptor["record"]
+        hit, product = record["original_hit"], record["final_product"]
+        for identity, exact in ((hit, manifest["hit"]), (product, row["smiles"])):
+            _require(isinstance(identity, dict), "Identity is not an object")
+            for key in ("exact_smiles", "family_smiles", "policy_version", "rdkit_version"):
+                _nonempty_string(identity[key], f"identity {key}")
+            _equal(identity["exact_smiles"], exact, "retained exact identity")
+            for key in ("policy_version", "rdkit_version"):
+                _equal(identity[key], saved_policy[key], f"retained identity {key}")
+            _require(type(identity["has_scaffold"]) is bool, "Invalid has_scaffold boolean")
+            for key in ("scaffold_family_smiles", "ring_skeleton_smiles"):
+                _require(
+                    isinstance(identity[key], str) and bool(identity[key]) == identity["has_scaffold"],
+                    f"Identity scaffold presence contradicts {key}",
+                )
+        for key in ("family_smiles", "scaffold_family_smiles"):
+            _equal(product[key], row[key], f"selected product identity {key}")
+        exact_same = hit["exact_smiles"] == product["exact_smiles"]
+        family_same = hit["family_smiles"] == product["family_smiles"]
+        scaffold_same = hit["scaffold_family_smiles"] == product["scaffold_family_smiles"]
+        generic_same = hit["ring_skeleton_smiles"] == product["ring_skeleton_smiles"]
+        _require(not exact_same or family_same, "Equal exact identities have different families")
+        _require(not family_same or scaffold_same, "Equal families have different scaffolds")
+        _require(
+            not scaffold_same or generic_same, "Equal atom-aware scaffolds have different generic graphs"
+        )
+        for key, expected in (
+            ("atom_aware_scaffold_changed", not scaffold_same),
+            ("generic_ring_linker_topology_changed", not generic_same),
+        ):
+            _require(type(record[key]) is bool, f"Invalid {key} boolean")
+            _equal(record[key], expected, f"saved {key}")
+        presence = {
+            (True, True): "both_present",
+            (False, False): "both_absent",
+            (False, True): "gained",
+            (True, False): "lost",
+        }
+        _equal(
+            record["scaffold_presence_change"],
+            presence[hit["has_scaffold"], product["has_scaffold"]],
+            "saved scaffold presence",
+        )
+        supplied = record["change_class"]
+        _require(
+            isinstance(supplied, str) and supplied in ("unchanged", "state_only", "decoration", "scaffold"),
+            "Missing or unsupported recorded change class",
+        )
+        implications = {
+            "unchanged": exact_same,
+            "state_only": not exact_same and family_same,
+            "decoration": not exact_same and not family_same and scaffold_same,
+            "scaffold": not exact_same and not family_same and not scaffold_same,
+        }
+        _require(implications[supplied], "Recorded change class contradicts retained identities")
+        if (
+            row.get("recommendation_status") == "qualified"
+            and _mapping(_mapping(policy).get("constraints")).get("mode") == "hop"
+        ):
+            _equal(supplied, "scaffold", "qualified hop identity class")
+        view.update(status="recorded", record=copy.deepcopy(record))
+    except (KeyError, TypeError, ValueError, AttributeError) as exc:
+        view["status"] = "inconsistent_metadata"
+        view["issues"].append(f"Saved identity comparison incomplete or inconsistent: {exc}")
+    return view
+
+
 def _assemble(docs, inventory, issues):
     view = {
         "schema_version": 1,
@@ -839,11 +998,17 @@ def _assemble(docs, inventory, issues):
             )
     except (KeyError, TypeError, ValueError, AttributeError) as exc:
         view["issues"].append(f"Bundle incomplete or inconsistent: {exc}")
+    view["identity_descriptor"] = _identity_descriptor(_mapping(view["manifest"]))
     raw_rows = docs.get("results.json", {}).get("results", [])
     if isinstance(raw_rows, list):
         for row in raw_rows:
             if isinstance(row, dict):
-                view["candidates"].append(_candidate(row, docs, view["policy"] or {}))
+                candidate = _candidate(row, docs, view["policy"] or {})
+                candidate["identity_comparison"] = _identity_comparison(
+                    row, _mapping(view["manifest"]), view["policy"], view["identity_descriptor"]
+                )
+                candidate["issues"].extend(candidate["identity_comparison"]["issues"])
+                view["candidates"].append(candidate)
     view["policy"] = _mapping(view["policy"])
     view["artifact_consistency"] = (
         "consistent_recorded_bundle"
@@ -1057,8 +1222,13 @@ def render_html(view, *, artifact_links=None):
     ]
     for issue in view["issues"]:
         parts.append(f"<p class='notice'>{_escape(issue)}</p>")
+    for warning in _mapping(view.get("identity_descriptor")).get("warnings", []):
+        parts.append(f"<p class='notice'>{_escape(warning)}</p>")
     for index, candidate in enumerate(view["candidates"], 1):
         row = candidate["row"]
+        comparison = _mapping(candidate.get("identity_comparison"))
+        identity = _mapping(comparison.get("record"))
+        original_identity = _mapping(identity.get("original_hit"))
         consistent = view["artifact_consistency"] == "consistent_recorded_bundle"
         parts += [
             f"<article><h2>Candidate {index}</h2>",
@@ -1072,14 +1242,25 @@ def render_html(view, *, artifact_links=None):
                     ("Regenerated product — exact SMILES", row.get("smiles", UNKNOWN)),
                     ("Secondary design — exact SMILES", row.get("design", UNKNOWN)),
                     ("Product normalized scaffold", row.get("scaffold_family_smiles", UNKNOWN)),
-                    ("Original-hit normalized scaffold", UNKNOWN),
+                    (
+                        "Original-hit normalized scaffold",
+                        original_identity.get("scaffold_family_smiles", UNKNOWN),
+                    ),
+                    ("Identity comparison availability", comparison.get("status", "not_exported")),
+                    ("Unavailable comparison reason", identity.get("reason", UNKNOWN)),
                     (
                         "Scaffold change type",
-                        "Workflow hop requirement recorded; explicit comparison not recorded"
-                        if _mapping(policy.get("constraints")).get("mode") == "hop"
-                        else UNKNOWN,
+                        identity.get("change_class", UNKNOWN),
                     ),
-                    ("Generic topology comparison", UNKNOWN),
+                    (
+                        "Atom-aware scaffold changed (recorded)",
+                        identity.get("atom_aware_scaffold_changed", UNKNOWN),
+                    ),
+                    (
+                        "Generic topology comparison — ring/linker graph changed (recorded)",
+                        identity.get("generic_ring_linker_topology_changed", UNKNOWN),
+                    ),
+                    ("Scaffold presence (recorded)", identity.get("scaffold_presence_change", UNKNOWN)),
                 ]
             ),
         ]
@@ -1162,7 +1343,11 @@ def render_html(view, *, artifact_links=None):
                     )
                 }
             )
-        parts += [_details("Pose and route bindings (recorded)", bindings), "</article>"]
+        parts += [
+            _details("Saved original-hit identity comparison", _fields(identity)),
+            _details("Pose and route bindings (recorded)", bindings),
+            "</article>",
+        ]
     if not view["candidates"]:
         parts.append(
             "<h2>No selected candidates</h2><p>This is not proof that no suitable molecule exists. Only recorded run diagnostics are shown.</p>"
@@ -1194,6 +1379,10 @@ def render_html(view, *, artifact_links=None):
     parts += [
         _details("Complete recorded run diagnostics", _fields(summary)),
         _details("Effective policy and provenance", _fields(policy)),
+        _details(
+            "Saved identity descriptor (not source authentication)",
+            _fields(_mapping(_mapping(view.get("identity_descriptor")).get("record"))),
+        ),
         "<details><summary>Rendered artifact bytes and local files</summary><p>Hashes identify rendered bytes; they do not authenticate a self-consistent bundle. SDF/TSV files are linked for review, not parsed or scientifically validated by this report.</p>",
     ]
     for name, item in sorted(view["artifacts"].items()):
