@@ -1,0 +1,136 @@
+{
+  "scaffold": {
+    "crem_train_partial_exo": {
+      "accepted_attempts": 36,
+      "attempts": 36,
+      "counts_are_comparable_between_methods": false,
+      "native_evaluations_observed": 36,
+      "native_unit_counts": {
+        "CReM API-yielded products": 36
+      },
+      "raw_count_scope_counts": {
+        "complete": 36
+      },
+      "raw_response_unavailable_or_unparseable": 0,
+      "resource_scope": "Runner sampled process-tree RSS/CPU; GPU memory not uniformly measured. Shared host, not a controlled hardware speed benchmark"
+    },
+    "mol2mol_pretrained": {
+      "accepted_attempts": 36,
+      "attempts": 36,
+      "counts_are_comparable_between_methods": false,
+      "native_evaluations_observed": 36,
+      "native_unit_counts": {
+        "official Mol2Mol raw sampled sequences": 36
+      },
+      "raw_count_scope_counts": {
+        "complete": 36
+      },
+      "raw_response_unavailable_or_unparseable": 0,
+      "resource_scope": "Runner sampled process-tree RSS/CPU; GPU memory not uniformly measured. Shared host, not a controlled hardware speed benchmark"
+    },
+    "pipeline_current": {
+      "accepted_attempts": 33,
+      "attempts": 36,
+      "counts_are_comparable_between_methods": false,
+      "native_evaluations_observed": 33,
+      "native_unit_counts": {
+        "synthesis product/design 3D screens (refinement separately reported)": 33,
+        "unavailable": 3
+      },
+      "raw_count_scope_counts": {
+        "unavailable": 36
+      },
+      "raw_response_unavailable_or_unparseable": 3,
+      "resource_scope": "Runner sampled process-tree RSS/CPU; GPU memory not uniformly measured. Shared host, not a controlled hardware speed benchmark"
+    }
+  },
+  "target": {
+    "crem_train_partial_exo": {
+      "accepted_attempts": 18,
+      "attempts": 18,
+      "counts_are_comparable_between_methods": false,
+      "native_evaluations_observed": 18,
+      "native_unit_counts": {
+        "CReM API-yielded products": 18
+      },
+      "raw_count_scope_counts": {
+        "complete": 18
+      },
+      "raw_response_unavailable_or_unparseable": 0,
+      "resource_scope": "Runner sampled process-tree RSS/CPU; GPU memory not uniformly measured. Shared host, not a controlled hardware speed benchmark"
+    },
+    "mol2mol_pretrained": {
+      "accepted_attempts": 18,
+      "attempts": 18,
+      "counts_are_comparable_between_methods": false,
+      "native_evaluations_observed": 18,
+      "native_unit_counts": {
+        "official Mol2Mol raw sampled sequences": 18
+      },
+      "raw_count_scope_counts": {
+        "complete": 18
+      },
+      "raw_response_unavailable_or_unparseable": 0,
+      "resource_scope": "Runner sampled process-tree RSS/CPU; GPU memory not uniformly measured. Shared host, not a controlled hardware speed benchmark"
+    },
+    "pipeline_current": {
+      "accepted_attempts": 15,
+      "attempts": 18,
+      "counts_are_comparable_between_methods": false,
+      "native_evaluations_observed": 15,
+      "native_unit_counts": {
+        "synthesis product/design 3D screens (refinement separately reported)": 15,
+        "unavailable": 3
+      },
+      "raw_count_scope_counts": {
+        "unavailable": 18
+      },
+      "raw_response_unavailable_or_unparseable": 3,
+      "resource_scope": "Runner sampled process-tree RSS/CPU; GPU memory not uniformly measured. Shared host, not a controlled hardware speed benchmark"
+    }
+  },
+  "time": {
+    "crem_train_partial_exo": {
+      "accepted_attempts": 36,
+      "attempts": 36,
+      "counts_are_comparable_between_methods": false,
+      "native_evaluations_observed": 36,
+      "native_unit_counts": {
+        "CReM API-yielded products": 36
+      },
+      "raw_count_scope_counts": {
+        "complete": 36
+      },
+      "raw_response_unavailable_or_unparseable": 0,
+      "resource_scope": "Runner sampled process-tree RSS/CPU; GPU memory not uniformly measured. Shared host, not a controlled hardware speed benchmark"
+    },
+    "mol2mol_pretrained": {
+      "accepted_attempts": 36,
+      "attempts": 36,
+      "counts_are_comparable_between_methods": false,
+      "native_evaluations_observed": 36,
+      "native_unit_counts": {
+        "official Mol2Mol raw sampled sequences": 36
+      },
+      "raw_count_scope_counts": {
+        "complete": 36
+      },
+      "raw_response_unavailable_or_unparseable": 0,
+      "resource_scope": "Runner sampled process-tree RSS/CPU; GPU memory not uniformly measured. Shared host, not a controlled hardware speed benchmark"
+    },
+    "pipeline_current": {
+      "accepted_attempts": 36,
+      "attempts": 36,
+      "counts_are_comparable_between_methods": false,
+      "native_evaluations_observed": 36,
+      "native_unit_counts": {
+        "synthesis product/design 3D screens (refinement separately reported)": 36
+      },
+      "raw_count_scope_counts": {
+        "unavailable": 36
+      },
+      "raw_response_unavailable_or_unparseable": 0,
+      "resource_scope": "Runner sampled process-tree RSS/CPU; GPU memory not uniformly measured. Shared host, not a controlled hardware speed benchmark"
+    }
+  }
+}

@@ -1,0 +1,314 @@
+{
+  "scaffold": {
+    "crem_train_partial_exo": {
+      "annotations": {
+        "core_retaining_scaffold_expansion": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 12,
+          "qualifying_occurrences": 16,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 7
+        },
+        "query_generic_ring_skeleton_subgraph_retained": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 18,
+          "qualifying_occurrences": 34,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 13
+        },
+        "query_scaffold_not_contained": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 34,
+          "qualifying_occurrences": 92,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 32
+        },
+        "query_scaffold_subgraph_retained": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 12,
+          "qualifying_occurrences": 16,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 7
+        }
+      },
+      "attempts": 36,
+      "valid_candidate_occurrences": 108
+    },
+    "mol2mol_pretrained": {
+      "annotations": {
+        "core_retaining_scaffold_expansion": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 6,
+          "qualifying_occurrences": 12,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 4
+        },
+        "query_generic_ring_skeleton_subgraph_retained": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 12,
+          "qualifying_occurrences": 30,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 10
+        },
+        "query_scaffold_not_contained": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 33,
+          "qualifying_occurrences": 96,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 32
+        },
+        "query_scaffold_subgraph_retained": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 6,
+          "qualifying_occurrences": 12,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 4
+        }
+      },
+      "attempts": 36,
+      "valid_candidate_occurrences": 108
+    },
+    "pipeline_current": {
+      "annotations": {
+        "core_retaining_scaffold_expansion": {
+          "assessed_occurrences": 46,
+          "attempts_with_qualifying_output": 0,
+          "qualifying_occurrences": 0,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 0
+        },
+        "query_generic_ring_skeleton_subgraph_retained": {
+          "assessed_occurrences": 46,
+          "attempts_with_qualifying_output": 1,
+          "qualifying_occurrences": 1,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 1
+        },
+        "query_scaffold_not_contained": {
+          "assessed_occurrences": 46,
+          "attempts_with_qualifying_output": 19,
+          "qualifying_occurrences": 46,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 23
+        },
+        "query_scaffold_subgraph_retained": {
+          "assessed_occurrences": 46,
+          "attempts_with_qualifying_output": 0,
+          "qualifying_occurrences": 0,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 0
+        }
+      },
+      "attempts": 36,
+      "valid_candidate_occurrences": 46
+    }
+  },
+  "target": {
+    "crem_train_partial_exo": {
+      "annotations": {
+        "core_retaining_scaffold_expansion": {
+          "assessed_occurrences": 54,
+          "attempts_with_qualifying_output": 9,
+          "qualifying_occurrences": 21,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 7
+        },
+        "query_generic_ring_skeleton_subgraph_retained": {
+          "assessed_occurrences": 54,
+          "attempts_with_qualifying_output": 10,
+          "qualifying_occurrences": 22,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 8
+        },
+        "query_scaffold_not_contained": {
+          "assessed_occurrences": 54,
+          "attempts_with_qualifying_output": 12,
+          "qualifying_occurrences": 33,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 15
+        },
+        "query_scaffold_subgraph_retained": {
+          "assessed_occurrences": 54,
+          "attempts_with_qualifying_output": 9,
+          "qualifying_occurrences": 21,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 7
+        }
+      },
+      "attempts": 18,
+      "valid_candidate_occurrences": 54
+    },
+    "mol2mol_pretrained": {
+      "annotations": {
+        "core_retaining_scaffold_expansion": {
+          "assessed_occurrences": 54,
+          "attempts_with_qualifying_output": 6,
+          "qualifying_occurrences": 18,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 7
+        },
+        "query_generic_ring_skeleton_subgraph_retained": {
+          "assessed_occurrences": 54,
+          "attempts_with_qualifying_output": 12,
+          "qualifying_occurrences": 24,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 9
+        },
+        "query_scaffold_not_contained": {
+          "assessed_occurrences": 54,
+          "attempts_with_qualifying_output": 12,
+          "qualifying_occurrences": 36,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 12
+        },
+        "query_scaffold_subgraph_retained": {
+          "assessed_occurrences": 54,
+          "attempts_with_qualifying_output": 6,
+          "qualifying_occurrences": 18,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 7
+        }
+      },
+      "attempts": 18,
+      "valid_candidate_occurrences": 54
+    },
+    "pipeline_current": {
+      "annotations": {
+        "core_retaining_scaffold_expansion": {
+          "assessed_occurrences": 11,
+          "attempts_with_qualifying_output": 0,
+          "qualifying_occurrences": 0,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 0
+        },
+        "query_generic_ring_skeleton_subgraph_retained": {
+          "assessed_occurrences": 11,
+          "attempts_with_qualifying_output": 0,
+          "qualifying_occurrences": 0,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 0
+        },
+        "query_scaffold_not_contained": {
+          "assessed_occurrences": 11,
+          "attempts_with_qualifying_output": 4,
+          "qualifying_occurrences": 11,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 7
+        },
+        "query_scaffold_subgraph_retained": {
+          "assessed_occurrences": 11,
+          "attempts_with_qualifying_output": 0,
+          "qualifying_occurrences": 0,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 0
+        }
+      },
+      "attempts": 18,
+      "valid_candidate_occurrences": 11
+    }
+  },
+  "time": {
+    "crem_train_partial_exo": {
+      "annotations": {
+        "core_retaining_scaffold_expansion": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 3,
+          "qualifying_occurrences": 3,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 1
+        },
+        "query_generic_ring_skeleton_subgraph_retained": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 12,
+          "qualifying_occurrences": 15,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 6
+        },
+        "query_scaffold_not_contained": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 36,
+          "qualifying_occurrences": 105,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 42
+        },
+        "query_scaffold_subgraph_retained": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 3,
+          "qualifying_occurrences": 3,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 1
+        }
+      },
+      "attempts": 36,
+      "valid_candidate_occurrences": 108
+    },
+    "mol2mol_pretrained": {
+      "annotations": {
+        "core_retaining_scaffold_expansion": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 15,
+          "qualifying_occurrences": 18,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 6
+        },
+        "query_generic_ring_skeleton_subgraph_retained": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 15,
+          "qualifying_occurrences": 24,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 8
+        },
+        "query_scaffold_not_contained": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 36,
+          "qualifying_occurrences": 90,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 30
+        },
+        "query_scaffold_subgraph_retained": {
+          "assessed_occurrences": 108,
+          "attempts_with_qualifying_output": 15,
+          "qualifying_occurrences": 18,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 6
+        }
+      },
+      "attempts": 36,
+      "valid_candidate_occurrences": 108
+    },
+    "pipeline_current": {
+      "annotations": {
+        "core_retaining_scaffold_expansion": {
+          "assessed_occurrences": 56,
+          "attempts_with_qualifying_output": 3,
+          "qualifying_occurrences": 6,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 2
+        },
+        "query_generic_ring_skeleton_subgraph_retained": {
+          "assessed_occurrences": 56,
+          "attempts_with_qualifying_output": 6,
+          "qualifying_occurrences": 14,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 5
+        },
+        "query_scaffold_not_contained": {
+          "assessed_occurrences": 56,
+          "attempts_with_qualifying_output": 24,
+          "qualifying_occurrences": 50,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 26
+        },
+        "query_scaffold_subgraph_retained": {
+          "assessed_occurrences": 56,
+          "attempts_with_qualifying_output": 3,
+          "qualifying_occurrences": 6,
+          "unassessed_occurrences": 0,
+          "unique_qualifying_families": 2
+        }
+      },
+      "attempts": 36,
+      "valid_candidate_occurrences": 56
+    }
+  }
+}

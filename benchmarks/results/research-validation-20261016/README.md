@@ -43,6 +43,32 @@ remain explicit. Earlier engineering/pending records below retain their original
 historical statements. No new model/chemistry/statistical rerun was performed for
 this publication package.
 
+## Completed supplementary 270-attempt study — separate follow-up
+
+The fixed current 41-file pipeline and the CReM/Mol2Mol comparators have completed
+all **270 planned attempts**: 227 success, 37 no-candidate and 6 worker-error
+outcomes, without retries. The current pipeline succeeded in 47/90 attempts;
+each comparator succeeded in 90/90. The pipeline had lower hop delivery,
+common-3D slot coverage and conditional common-3D means in every split.
+[All nine method/split results, exact paired contrasts and eligibility](../../../docs/RESEARCH_VALIDATION.md#completed-supplementary-comparator-study)
+retain these negative findings, the different native work budgets and the few
+shared target clusters. Structural annotations distinguish core-retaining expansion
+from query-scaffold non-containment without claiming activity.
+
+The [separate portable ZIP](supplementary-comparator-study/statistical-bundle.zip),
+[final comparison](supplementary-comparator-study/analysis/comparison.json),
+[complete-precision method CSV](supplementary-comparator-study/method_metrics.csv),
+[validation](supplementary-comparator-study/validation.json) and
+[checksums](supplementary-comparator-study/SHA256SUMS) preserve the independently
+reviewed final records and all 69 metrics. Three stored-statistical runtime replays
+were byte-identical. This study freezes scientific commit `2328588d`, separate
+from original frozen39 `d972124d`; it supports no causal old/new improvement claim.
+No fresh uniform forward re-inference was performed for the supplementary study;
+declared pipeline evidence reuses its selection gate. Missing routes are absent
+evidence, not failed chemical synthesis. Earlier partial/pending records below
+retain their historical state. This publication performed no new inference,
+chemical/3D scoring or statistical calculation and assigns no new license.
+
 ## Scope and provenance
 
 The strict scaffold panel contains 5,567 target–chemical-family records, with two public queries for each of EGFR (CHEMBL203), CA2 (CHEMBL205), PIM1 (CHEMBL2147), AChE (CHEMBL220), A2a (CHEMBL251) and JNK3 (CHEMBL2637). Its SHA-256 is `e87a3b539b8c41dde4887a7d52ec67b29a7a63f688584b579272398ef6522204`. Scaffold assignment uses seed 42 and the versioned chemical-family policy in the [protocol](../../../docs/RESEARCH_VALIDATION.md).

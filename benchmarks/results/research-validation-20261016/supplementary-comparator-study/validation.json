@@ -1,0 +1,397 @@
+{
+  "attempt_status_counts": {
+    "no_candidates": 37,
+    "success": 227,
+    "worker_error": 6
+  },
+  "attempts": 270,
+  "bootstrap": {
+    "draws": 10000,
+    "multiplicity": "descriptive unadjusted intervals; no confirmatory significance claim",
+    "quantiles": [
+      0.025,
+      0.975
+    ],
+    "seed": 20261016,
+    "single_target": "no CI",
+    "unit": "target"
+  },
+  "candidate_occurrences": 653,
+  "common3d": {
+    "all_seed_success_occurrences": 590,
+    "failed_or_unassessed_occurrences": 63,
+    "scope": "Stored all-seed success medians and spread diagnostics; missing values remain missing; no new scoring during publication.",
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "unique_exact_query_candidate_pairs": 252
+  },
+  "csv_projection": {
+    "historical_independent_targets": "Unmodified JSON field; user-facing target_clusters counts clusters without asserting independence",
+    "metrics_per_method_or_pair": 69,
+    "null_encoding": "Blank CSV cell; never imputed as zero",
+    "population": "Primary all-planned and infrastructure-only complete-case secondary populations; all metrics included. Per-query/per-target and per-query seed availability remain in comparison JSON.",
+    "precision": "Python round-trip integer/float strings, no decimal rounding",
+    "rows": {
+      "attempt_status": 9,
+      "availability": 2070,
+      "infrastructure_bounds": 210,
+      "method_metrics": 1242,
+      "paired_metrics": 828
+    },
+    "status_counts": "Absent status-count keys are count zero; missing metric values remain blank."
+  },
+  "design": "Post hoc supplementary comparison; not preregistered; original 630 remain separate",
+  "files_sha256": {
+    "analysis/analysis-plan.json": "d5f3d826f7b155fac980bfe82ec4907bebd42dd7cd295c8f9c4f2b61505caae2",
+    "analysis/attempts.json": "8b2a816d4174bb50b8c22f004e4f2eb83b8e5567fbdd1f7486bb8c1a1e6ab76e",
+    "analysis/comparison.json": "7c692e5bdb7c9b4e51cc323c7880bc214324287d52cc7e70a8a99ee413e24a7f",
+    "analysis/manifest.json": "7a375915c6babfee80bd0da777e594d2d6290800a62da4444a4afe5caf4ffd1a",
+    "analysis/raw-accounting-summary.json": "865e370d89f52fa3bc782f3a05a1e8d8249e9cbb1027278cabbfb3b415a5095e",
+    "analysis/recomputed-attempts.json": "1817dea5e5be3910c303fd312ca0580bba5c3057809684a61f17b95fc3f3ac7b",
+    "analysis/scaffold-retention-occurrences.json": "09923b554decb4a6c5c9b1f1eee7a9084b5f110f274453bc638d7cf67850c399",
+    "analysis/scaffold-retention-summary.json": "4065171895c8d6d23591ecb8f9aaa30f18e0d417f66426e394b3c945ffed3974",
+    "analysis/unique-identities.json": "de0d45c2f4c1de2fa5d186d836875100abd417c58179279daa46914dc69bb839",
+    "attempt_status.csv": "f1752f58ae358628ad3f944474760d28fd1d598eb535923186efacb1e13c7bf9",
+    "availability.csv": "24d3031cef4698ae34add6c715d63b2fe035a7bb2649b9e7da3067cf0fcb9177",
+    "infrastructure_bounds.csv": "330d447012536cd00ccd4b9ea6a2ac69d56d6769c5199578b23f543073eeee98",
+    "method_metrics.csv": "fa9f7d298c36a8bd46783b36945c8027de53b5afe3d0de9d7c166033b3fca8c9",
+    "paired_metrics.csv": "a6caa1b44ea5139007a0b2b670a0f5467f1c426b20dfe01b062e1e9dbad633bb",
+    "pipeline-failure-diagnostic.json": "2bda31fbc8891459c589a2500b314978580b0b07d617c5901cafaa716f90f2e6",
+    "replay-validation.json": "bb61d4c320eb744c25cd207a719ab6da55fe9d01c7806724414a24bfed7bb4f8",
+    "statistical-bundle.zip": "96a5a6bf53ded18a3096a1de7298ffac10b22b5e21f5421de1836ed469893dcc"
+  },
+  "hierarchy": "Within each split: seed mean per query, query mean per target, equal target macro; paired method differences at identical query/seed slots before aggregation",
+  "historical_native_budget_label": "Pinned preparation retains proposal evaluations wording; actual adapter budget.max_evaluations caps initial synthesis product/design 3D screens; refinement is separately bounded/reported. Historical source/plan bytes are unmodified.",
+  "limitations": [
+    "Pipeline current had lower hop delivery, common3D coverage and common3D conditional means than both comparators; no superiority claim.",
+    "Different eligible conditional populations and few target clusters limit comparison. Exact query/seed paired contrasts require both observations available.",
+    "Native caps differ: up to 12 initial synthesis product/design 3D screens, with refinement separately bounded/reported, versus 256 CReM products or Mol2Mol sequences; 360s cold-start/24000MB/cap3 are resource limits, not universal compute equality.",
+    "Train-only CReM library and unknown complete Mol2Mol/model pretraining inventory do not establish clean held-out novelty.",
+    "Declared pipeline forward evidence reuses its selection-gate model; no fresh uniform forward re-inference for this270 study.",
+    "No supplied route is absence of evidence, not chemical failure. Replay and forward agreement establish no synthesis probability, yield or experimental success.",
+    "Core-retaining expansion and query-scaffold-not-contained indicators can both occur in one attempt from different outputs; no activity claim.",
+    "Post hoc descriptive analysis, not preregistration. Targets/shared inputs recur within and across splits; bootstrap intervals are unadjusted.",
+    "Infrastructure identification bounds are not CIs; complete-case sensitivities can be selection-biased. All failures and missing conditional scores retained.",
+    "Separate fixed current41 supplementary study, not original frozen39; no causal old/new improvement claim.",
+    "Computational methodology focus; experimental collaboration remains undecided. No biological activity or journal-readiness claim.",
+    "Original attribution preserved and no new license assigned. Historical absolute paths in copied records are inert provenance."
+  ],
+  "method_split_status": [
+    {
+      "attempts": 36,
+      "budget_exceeded": 0,
+      "infrastructure_interruption": 0,
+      "method": "crem_train_partial_exo",
+      "no_candidates": 0,
+      "split": "scaffold",
+      "success": 36,
+      "timeout": 0,
+      "valid_candidate_occurrences": 108,
+      "worker_error": 0
+    },
+    {
+      "attempts": 36,
+      "budget_exceeded": 0,
+      "infrastructure_interruption": 0,
+      "method": "mol2mol_pretrained",
+      "no_candidates": 0,
+      "split": "scaffold",
+      "success": 36,
+      "timeout": 0,
+      "valid_candidate_occurrences": 108,
+      "worker_error": 0
+    },
+    {
+      "attempts": 36,
+      "budget_exceeded": 0,
+      "infrastructure_interruption": 0,
+      "method": "pipeline_current",
+      "no_candidates": 14,
+      "split": "scaffold",
+      "success": 19,
+      "timeout": 0,
+      "valid_candidate_occurrences": 46,
+      "worker_error": 3
+    },
+    {
+      "attempts": 36,
+      "budget_exceeded": 0,
+      "infrastructure_interruption": 0,
+      "method": "crem_train_partial_exo",
+      "no_candidates": 0,
+      "split": "time",
+      "success": 36,
+      "timeout": 0,
+      "valid_candidate_occurrences": 108,
+      "worker_error": 0
+    },
+    {
+      "attempts": 36,
+      "budget_exceeded": 0,
+      "infrastructure_interruption": 0,
+      "method": "mol2mol_pretrained",
+      "no_candidates": 0,
+      "split": "time",
+      "success": 36,
+      "timeout": 0,
+      "valid_candidate_occurrences": 108,
+      "worker_error": 0
+    },
+    {
+      "attempts": 36,
+      "budget_exceeded": 0,
+      "infrastructure_interruption": 0,
+      "method": "pipeline_current",
+      "no_candidates": 12,
+      "split": "time",
+      "success": 24,
+      "timeout": 0,
+      "valid_candidate_occurrences": 56,
+      "worker_error": 0
+    },
+    {
+      "attempts": 18,
+      "budget_exceeded": 0,
+      "infrastructure_interruption": 0,
+      "method": "crem_train_partial_exo",
+      "no_candidates": 0,
+      "split": "target",
+      "success": 18,
+      "timeout": 0,
+      "valid_candidate_occurrences": 54,
+      "worker_error": 0
+    },
+    {
+      "attempts": 18,
+      "budget_exceeded": 0,
+      "infrastructure_interruption": 0,
+      "method": "mol2mol_pretrained",
+      "no_candidates": 0,
+      "split": "target",
+      "success": 18,
+      "timeout": 0,
+      "valid_candidate_occurrences": 54,
+      "worker_error": 0
+    },
+    {
+      "attempts": 18,
+      "budget_exceeded": 0,
+      "infrastructure_interruption": 0,
+      "method": "pipeline_current",
+      "no_candidates": 11,
+      "split": "target",
+      "success": 4,
+      "timeout": 0,
+      "valid_candidate_occurrences": 11,
+      "worker_error": 3
+    }
+  ],
+  "packaging": {
+    "archive": "statistical-bundle.zip",
+    "archive_bytes": 1998384,
+    "archive_members_match_reviewed_bundle": true,
+    "archive_root": "supplementary270-bundle/",
+    "archive_sha256": "96a5a6bf53ded18a3096a1de7298ffac10b22b5e21f5421de1836ed469893dcc",
+    "bundle_source_bytes_rechecked_after_packaging": true,
+    "compression": "ZIP_DEFLATED",
+    "compression_level": 9,
+    "member_count": 291,
+    "member_order": "lexical POSIX path",
+    "member_permissions": "regular files, 0644, Unix create_system=3",
+    "member_timestamp": [
+      1980,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]",
+    "recipe_sha256": "909e905087bb5dba77df73395297f3bb30a46ecbef285dad2e8f4f65643afaf4",
+    "two_serializations_byte_identical": true,
+    "uncompressed_bytes": 18329416,
+    "zlib": "1.2.13"
+  },
+  "parent_final_review": {
+    "checked_utc": "2026-10-16T08:40:42.430707+00:00",
+    "common3d_and_generation_numeric_cells_checked": 27927,
+    "common3d_failed_occurrences": 63,
+    "common3d_successful_occurrences": 590,
+    "evidence": "comparator270-completion-parent-20261016/final-review.json",
+    "evidence_records": [
+      {
+        "artifact": "evidence/generation_parent_gate.json",
+        "role": "generation_parent_gate",
+        "sha256": "b9d1bc72af859c40cc2b8df67b3a156f71b21ebb4c3a9309eb9dc7b122f4c776"
+      },
+      {
+        "artifact": "evidence/normalization_integrity.json",
+        "role": "normalization_integrity",
+        "sha256": "f046937662cead4f78041c92d4551098bfa493a650245673c1e162a886852e4e"
+      },
+      {
+        "artifact": "evidence/independent_statistics.json",
+        "role": "independent_statistics",
+        "sha256": "f6a23a83a513cc8dde725be5ca509ef6f816730aabb7fe89427d5d21e1080509"
+      },
+      {
+        "artifact": "evidence/independent_graph_annotations.json",
+        "role": "independent_graph_annotations",
+        "sha256": "3f3115a4b7342abda550d9dcb58cda02d92f895b49a817063d216838e57ee479"
+      },
+      {
+        "artifact": "evidence/direct_routes_and_similarity.json",
+        "role": "direct_routes_and_similarity",
+        "sha256": "e2dd88ad821728cbd3f13447b732cbcd4c8b21e4873df280770f292ea7624548"
+      },
+      {
+        "artifact": "evidence/common3d_cache_integrity.json",
+        "role": "common3d_cache_integrity",
+        "sha256": "9af7d07537eb5e2d01049c66e00567269f34199f57cad76f165465cbaff7c41f"
+      }
+    ],
+    "independent_graph_checks_including_controls": 393,
+    "independent_similarity_values_checked": 1306,
+    "no_route_supplied_occurrences": 540,
+    "numeric_statistics_cells_independently_checked": 92398,
+    "scope": "Final parent review of separate completed current41 supplementary270 generation/common3D/analysis. Direct bit/count arithmetic and route traversal, NetworkX scaffold containment with shared pinned identity/RDKit, full saved-seed arithmetic and independent pandas statistical reconstruction passed. No rerun of neural inference or empirical activity/synthesis claim. All failures, method-specific native budgets, selected conditional populations, few-target/crosssplit dependence and pretraining unknowns remain. Results do not establish pipeline superiority.",
+    "sha256": "c99e77ff0ab2132536340040ddf9ac80ebc8a390a17332236a9b8a9924712a85"
+  },
+  "parent_portable_review": {
+    "all_three_comparisons_byte_identical_to_original": true,
+    "checked_utc": "2026-10-16T08:41:49.287354+00:00",
+    "evidence": "comparator270-portable-statistics-20261016/parent-validation.json",
+    "helper_sha256": "b4d0450968aabe6b35eb642fb2c20880a70e965070541ddf5750cb6a3fe205e7",
+    "runtime_checks": [
+      {
+        "comparison_sha256": "7c692e5bdb7c9b4e51cc323c7880bc214324287d52cc7e70a8a99ee413e24a7f",
+        "name": "original-numpy",
+        "recorded_runtime": {
+          "numpy": "1.26.4",
+          "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+        },
+        "returncode": 0,
+        "validation_sha256": "bb61d4c320eb744c25cd207a719ab6da55fe9d01c7806724414a24bfed7bb4f8"
+      },
+      {
+        "comparison_sha256": "7c692e5bdb7c9b4e51cc323c7880bc214324287d52cc7e70a8a99ee413e24a7f",
+        "name": "minimum-numpy",
+        "recorded_runtime": {
+          "numpy": "1.24.4",
+          "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+        },
+        "returncode": 0,
+        "validation_sha256": "35b272893befd7e476cf1566ebf0efa7f6d8025e7ec7ec4afc8eb8d7107bdd8c"
+      },
+      {
+        "comparison_sha256": "7c692e5bdb7c9b4e51cc323c7880bc214324287d52cc7e70a8a99ee413e24a7f",
+        "name": "py312-numpy2",
+        "recorded_runtime": {
+          "numpy": "2.5.4",
+          "python": "3.12.13 (main, Apr 14 2026, 14:29:00) [Clang 22.1.3 ]"
+        },
+        "returncode": 0,
+        "validation_sha256": "8f28a5b3e881056c013928cbb7696ce190668d9284746b5fc5b464a073ee110d"
+      }
+    ],
+    "sha256": "090686ba5a9b9217992c7af942fd6d2b23094ffaca5f19045e343bb971097684"
+  },
+  "pipeline_preflight_failures": {
+    "no_retry": true,
+    "reason": "Strict unspecified-stereo reference preflight rejection",
+    "slots": [
+      {
+        "query_id": "CHEMBL205-query-2",
+        "seeds": [
+          42,
+          43,
+          44
+        ],
+        "split": "scaffold"
+      },
+      {
+        "query_id": "CHEMBL220-query-2",
+        "seeds": [
+          42,
+          43,
+          44
+        ],
+        "split": "target"
+      }
+    ],
+    "status": "worker_error"
+  },
+  "posthoc_pipeline_failure_diagnostic": {
+    "artifact": "pipeline-failure-diagnostic.json",
+    "parent_evidence_sha256": "662ecd07057fa178a64fbb701547493e0574ca1f187cfcf9caf14e8814a87ea8",
+    "scope": "Aggregate projection of a separate post hoc native-stage diagnostic; not part of the frozen 69-metric comparison or statistical ZIP. No new analysis or evaluation performed for publication.",
+    "separate_from_frozen69_metrics_and_statistical_zip": true
+  },
+  "primary_definition": "Engineering delivery endpoint: attempt_with_hop = int(evaluation.metrics.hop_families > 0). This measures delivery of at least one structurally changed output, not biological or synthetic utility",
+  "primary_metric": "attempt_with_hop",
+  "route_and_similarity_validation": {
+    "catalog_leaf_occurrences": 250,
+    "distinct_serialized_route_product_inputs": 58,
+    "fingerprint_values_checked": 1306,
+    "matched_route_occurrences": 113,
+    "max_absolute_similarity_error": 0.0,
+    "no_route_supplied_occurrences": 540,
+    "scope": "Direct parent traversal/replay and bit/count arithmetic; shared RDKit chemistry kernel, bounded4096 products/step. Not 58 independent syntheses or validation of all catalog/rule chemistry.",
+    "step_occurrences": 137
+  },
+  "route_policy": "No route supplied is unassessed; a CReM graph-edit reaction is not a synthetic route. Forward support uses the same predictor as pipeline selection, with selection bias; not independent experimental validation",
+  "schema": "supplementary270-publication-v1",
+  "scientific_files": 41,
+  "scope": "Byte-preserving package of completed supplementary270 generation/common3D/stored statistics; direct CSV projection only. No new science or statistical execution during publication.",
+  "separate_original630_source_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+  "similarity": {
+    "aggregation": "Attempt mean of valid candidate occurrence similarities, then seed/query/target hierarchy; no-output/failed-score attempts are null for conditional means and remain in coverage denominators",
+    "bit": "Morgan radius 2, 2048 bits, includeChirality=True",
+    "candidate_fields": [
+      "hit_bit_tanimoto",
+      "hit_count_tanimoto"
+    ],
+    "common_3d": "Fixed common CONFORMERS and seeds 42/43/44 in common-3d-plan.json; ligand-only exact canonical query/product inputs; all-seed success required, median over seeds for hit_shape/hit_pharmacophore/score and score_stability summaries",
+    "count": "Count Morgan radius 2, includeChirality=False",
+    "paired_missing": "For conditional score contrasts, pair only identical query/seed slots with observed scores for both methods; report excluded slot/query/target counts. Bounded output indicators retain every planned slot",
+    "score_scope": "The common 3D score retains the pinned conformer energy/strain term; it is not a calibrated probability or pure shape score"
+  },
+  "source_commit": "2328588d0969369e694d9293a1dccc89392a8203",
+  "split_attempts": {
+    "scaffold": 108,
+    "target": 54,
+    "time": 108
+  },
+  "status": "completed_supplementary270_parent_reviewed",
+  "structural_definitions": {
+    "active_scaffold_precision_proxy": "Number of unique returned hop families whose scaffold matches an active reference / hop_families; zero if no hops",
+    "active_scaffold_recall_proxy": "recovered_active_scaffolds / reference_active_scaffolds; null when reference set is empty. No Tanimoto >= 0.5 gate or other similarity threshold is applied",
+    "deduplication": "First accepted valid occurrence per chemical family, preserving returned rank; invalid/duplicate raw-output accounting is retained separately",
+    "exact_known_active_matches": "Unique returned families represented by first-ranked valid output whose exact canonical isomeric SMILES matches an active same-target test record",
+    "hop": "Candidate has a ring scaffold, differs from input chemical family, and differs from normalized Murcko scaffold family; generic ring-skeleton change is separately counted",
+    "identity": "Common RDKit 2025.09.6 protonation-tautomer-family-v1 policy; family ignores stereo/isotopes, exact canonical isomeric identity retains them",
+    "interpretation": "Scaffold/family recovery is a retrospective structural proxy, not measured or predicted activity of new products; earlier control prefilter recall at T >= 0.5 is a different endpoint",
+    "known_inactive_family_matches": "Unique returned families present in inactive same-target test records; this is family-level, not exact inactive identity",
+    "recovered_active_scaffolds": "Distinct returned hop scaffold families intersecting reference_active_scaffolds",
+    "reference_active_scaffolds": "Unique normalized active scaffold families among same-target test partition, excluding input family and input scaffold and requiring a ring scaffold"
+  },
+  "target_clusters": {
+    "scaffold": 6,
+    "target": 3,
+    "time": 6
+  },
+  "trust_anchors": {
+    "analysis_helper_sha256": "b9e24075c3940121c0dea6f0a6323a826824f372ca00129fe576194494f4a295",
+    "analysis_manifest_sha256": "7a375915c6babfee80bd0da777e594d2d6290800a62da4444a4afe5caf4ffd1a",
+    "analysis_plan_sha256": "d5f3d826f7b155fac980bfe82ec4907bebd42dd7cd295c8f9c4f2b61505caae2",
+    "bundle_manifest_sha256": "9ed59273170348c0b910957e6c43989313a64143acdb6e8b0a24fe66a0332b69",
+    "comparison_sha256": "7c692e5bdb7c9b4e51cc323c7880bc214324287d52cc7e70a8a99ee413e24a7f",
+    "completion_sha256": "91e266ec1c442d3d98d54f6feed6cd4fa3571763b2a14b00f51df58788f88bf0",
+    "extracted_statistics_sha256": "737c13a0ccf8014459e7eb524c6fcbe12a6f13e48f72e1e2ec54fb1238c3d293",
+    "replay_tool_sha256": "4a90c3fd2498436b747e53dc85ad25ece962b7bf743a09722ec8621802981b6b",
+    "replay_validation_sha256": "bb61d4c320eb744c25cd207a719ab6da55fe9d01c7806724414a24bfed7bb4f8"
+  }
+}

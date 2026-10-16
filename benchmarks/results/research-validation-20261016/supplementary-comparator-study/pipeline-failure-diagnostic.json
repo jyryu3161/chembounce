@@ -1,0 +1,66 @@
+{
+  "attempts": 90,
+  "checked_utc": "2026-10-16T08:53:13.948974+00:00",
+  "diagnostic_category_counts": {
+    "all_capped_designs_stereochemistry_preflight_rejected": 12,
+    "eligible_design_but_no_verified_route": 17,
+    "query_stereochemistry_preflight_worker_error": 6,
+    "returned_candidates": 47,
+    "verified_route_but_no_returned_candidate": 8
+  },
+  "interpretation": [
+    "The categories describe observed saved stage outcomes, not causal effects of changing a stage.",
+    "Design stereochemistry preflight failures and query preflight worker errors are distinct.",
+    "Verified route and route rejection counters are native search events with repeated products/routes; they are not unique molecules, experimental synthesis probabilities or denominators comparable to other methods.",
+    "The frozen 69-metric analysis and scientific input/source files remain unchanged.",
+    "Query preflight classification refers to the separately reviewed raw stderr; no missing synthesis summary is interpreted as an attempted route search."
+  ],
+  "no_candidate_native_route_rejection_event_counts": {
+    "3d_failed": 20,
+    "constraint_rejected": 2,
+    "evidence_rejected": 1070
+  },
+  "parent_evidence": {
+    "artifact": "comparator270-pipeline-failures-parent-20261016.json",
+    "sha256": "662ecd07057fa178a64fbb701547493e0574ca1f187cfcf9caf14e8814a87ea8"
+  },
+  "parent_helper_sha256": "8e8ba52ce08478bbd53d3fb6d2c08290f60b3d3cd533c15df858aff685429ef9",
+  "parent_input_files": {
+    "exact_planned_pipeline_slots": 90,
+    "hash_pins": 176,
+    "native_synthesis_summaries": 84,
+    "requests": 90
+  },
+  "passed": true,
+  "publication_scope": "Aggregate projection of a separate post hoc native-stage diagnostic; not part of the frozen 69-metric comparison or statistical ZIP. No new analysis or evaluation performed for publication.",
+  "schema_version": 1,
+  "scope": "Post hoc descriptive audit of already saved pipeline native summaries; no new molecular evaluation, generation, threshold tuning or benchmark metric changes.",
+  "source_commit": "2328588d0969369e694d9293a1dccc89392a8203",
+  "split_diagnostic_category_counts": {
+    "scaffold": {
+      "all_capped_designs_stereochemistry_preflight_rejected": 5,
+      "eligible_design_but_no_verified_route": 6,
+      "query_stereochemistry_preflight_worker_error": 3,
+      "returned_candidates": 19,
+      "verified_route_but_no_returned_candidate": 3
+    },
+    "target": {
+      "all_capped_designs_stereochemistry_preflight_rejected": 5,
+      "eligible_design_but_no_verified_route": 4,
+      "query_stereochemistry_preflight_worker_error": 3,
+      "returned_candidates": 4,
+      "verified_route_but_no_returned_candidate": 2
+    },
+    "time": {
+      "all_capped_designs_stereochemistry_preflight_rejected": 2,
+      "eligible_design_but_no_verified_route": 7,
+      "returned_candidates": 24,
+      "verified_route_but_no_returned_candidate": 3
+    }
+  },
+  "status_counts": {
+    "no_candidates": 37,
+    "success": 47,
+    "worker_error": 6
+  }
+}
