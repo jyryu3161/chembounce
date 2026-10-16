@@ -105,7 +105,11 @@ and `forward_all_steps_matched`. The replay checks:
 The independent normalization assessment must bind both normalized-file hashes,
 630 attempts, occurrence and unique-route counts. Raw run and audit-input hashes
 must agree between that assessment, the original validation, and progress. The
-original validation must report the fixed helper/plan, frozen 39-source inventory
+assessment's original `forward-cpu-runtime/final-analysis-20261016/analysis.json`
+and `validation.json` hashes must also match the two bundled recorded files, using
+one unambiguous historical path-suffix match per file. Verification diagnostics
+record both checked hashes. The original validation must report the fixed
+helper/plan, frozen 39-source inventory
 and commit, completed grids, and matching model provenance. No recorded path is
 dereferenced: absolute paths remain historical strings.
 

@@ -163,7 +163,7 @@ def fixture_data():
         "attempts": 630,
         "candidate_occurrences": len(occurrences),
         "unique_routes": progress["unique_cached_routes"],
-        "files_sha256_verified_before_after": hashes,
+        "files_sha256_verified_before_after": dict(hashes),
         "outputs_sha256": {n: io.sha(blobs[n]) for n in ("attempts.json", "normalized-occurrences.json")},
         "scope": "SYNTHETIC fixture; no raw chemistry or scientific study was evaluated",
     }
@@ -182,6 +182,15 @@ def fixture_data():
         },
     }
     blobs["recorded-analysis.json"] = io.encoded(result)
+    integrity["files_sha256_verified_before_after"].update(
+        {
+            f"/synthetic/study/forward-cpu-runtime/final-analysis-20261016/{role}.json": io.sha(
+                blobs[f"recorded-{role}.json"]
+            )
+            for role in ("validation", "analysis")
+        }
+    )
+    blobs["integrity-validation.json"] = io.encoded(integrity)
     evidence = io.encoded({"scope": "SYNTHETIC test assessment only", "passed": True})
     blobs["parent-review-evidence/statistical-audit.json"] = evidence
     blobs["parent-review.json"] = io.encoded(
@@ -230,6 +239,10 @@ def refresh(blobs):
     integrity["outputs_sha256"] = {
         n: io.sha(blobs[n]) for n in ("attempts.json", "normalized-occurrences.json")
     }
+    for role in ("validation", "analysis"):
+        integrity["files_sha256_verified_before_after"][
+            f"/synthetic/study/forward-cpu-runtime/final-analysis-20261016/{role}.json"
+        ] = io.sha(blobs[f"recorded-{role}.json"])
     blobs["integrity-validation.json"] = io.encoded(integrity)
     review = io.parse(blobs["parent-review.json"])
     review["input_sha256"] = {n: io.sha(blobs[n]) for n in tool.DATA}
@@ -287,6 +300,9 @@ def test_pack_relocation_and_complete_analysis_replay(tmp_path, synthetic, monke
     )
     result = tool.check(relocated, packed["manifest_sha256"], tmp_path / "replayed", True)
     assert result["comparison_recomputed"] is True and result["attempts"] == 630
+    assert result["integrity_recorded_analysis_sha256"] == {
+        n: io.sha(synthetic[n]) for n in ("recorded-validation.json", "recorded-analysis.json")
+    }
     for name, raw in synthetic.items():
         assert (relocated / name).read_bytes() == raw
     io.same(
@@ -484,6 +500,20 @@ def test_real_plan_and_archive_pins_cannot_be_replaced(fixture_blobs):
         changed[name] += b"\n"
         with pytest.raises(ValueError):
             tool.check_fixed(changed)
+
+
+@pytest.mark.parametrize("role", ["validation", "analysis"])
+def test_integrity_must_bind_each_original_recorded_file(synthetic, role):
+    integrity = io.parse(synthetic["integrity-validation.json"])
+    integrity["files_sha256_verified_before_after"][
+        f"/synthetic/study/forward-cpu-runtime/final-analysis-20261016/{role}.json"
+    ] = "0" * 64
+    synthetic["integrity-validation.json"] = io.encoded(integrity)
+    review = io.parse(synthetic["parent-review.json"])
+    review["input_sha256"] = {n: io.sha(synthetic[n]) for n in tool.DATA}
+    synthetic["parent-review.json"] = io.encoded(review)
+    with pytest.raises(ValueError, match="normalization/original recorded " + role + " hash"):
+        tool.validate(synthetic, calculate=False)
 
 
 @pytest.mark.parametrize("raw", [b'{"x":1,"x":1}', b'{"x":NaN}', b'{"x":1e309}', b'{"x":Infinity}'])

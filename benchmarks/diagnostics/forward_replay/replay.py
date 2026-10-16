@@ -381,6 +381,14 @@ def validate(blobs, calculate=False):
     }.items():
         io.same(integrity[key], expected, "normalization integrity " + key)
     integrity_hashes = integrity["files_sha256_verified_before_after"]
+    for role in ("validation", "analysis"):
+        io.same(
+            historical_source_hash(
+                integrity_hashes, f"forward-cpu-runtime/final-analysis-20261016/{role}.json"
+            ),
+            io.sha(blobs[f"recorded-{role}.json"]),
+            "normalization/original recorded " + role + " hash",
+        )
     for folder, value in progress["input_run_sha256"].items():
         io.same(
             historical_source_hash(integrity_hashes, folder + "/runs.json"),
@@ -515,6 +523,9 @@ def check(bundle, manifest_sha256, output, calculate):
         "analysis_helper_sha256": HELPER_SHA,
         "extracted_statistics_sha256": EXTRACTED_SHA,
         "absolute_tolerance": 1e-12,
+        "integrity_recorded_analysis_sha256": {
+            n: io.sha(blobs[n]) for n in ("recorded-validation.json", "recorded-analysis.json")
+        },
         "input_before_after_sha256": {n: io.sha(v) for n, v in sorted(before.items())},
     }
     if calculate:
