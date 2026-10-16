@@ -298,6 +298,7 @@ def collect_generation(study):
                     "run": tagged,
                     "request": read_json(directory / "request.json"),
                     "protocol": read_json(protocol),
+                    "protocol_path": str(protocol.resolve()),
                     "panel": str(panel),
                     "directory": str(directory),
                 }
@@ -602,8 +603,12 @@ def recompute(study, records, api):
         dataset, queries = datasets[split]
         query = queries[run["query_id"]]
         method = copy.deepcopy(protocol["methods"][0])
+        # Match runner.load_protocol: resolve the protocol itself first, then
+        # resolve file/directory assets against its physical parent directory.
+        protocol_base = Path(record["protocol_path"]).resolve().parent
         method["resolved_assets"] = {
-            k: v.get("artifact", v.get("directory")) for k, v in method["assets"].items()
+            k: str((protocol_base / (v["directory"] if "directory" in v else v["artifact"])).resolve())
+            for k, v in method["assets"].items()
         }
         expected_request = api.public_request(
             dataset, query, method, run["seed"], protocol["budget"], slot["output_dir"]
