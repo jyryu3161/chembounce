@@ -63,13 +63,13 @@ def load_carried_routes(directories, hit, designs, *, include_excluded=False):
                     source["excluded_design_routes"] += 1
                     continue
                 candidates[design] = []
-            if include_excluded and design not in designs:
-                source["unselected_design_routes_retained"] += 1
             key = (design, json.dumps(record["route"], sort_keys=True))
             if key in seen:
                 source["duplicate_routes"] += 1
                 continue
             seen.add(key)
+            if include_excluded and design not in designs:
+                source["unselected_design_routes_retained"] += 1
             candidates[design].append(
                 {
                     "route": record["route"],

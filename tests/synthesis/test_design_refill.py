@@ -312,6 +312,34 @@ def test_standalone_tsv_intake_is_bounded_before_reading_tail(tmp_path, assets, 
     assert read(out, "manifest.json")["design_preflight"]["counts"]["raw_consumed"] == 3
 
 
+def test_duplicate_unselected_carried_graph_is_counted_once_across_sources(
+    tmp_path, assets, proposal, route, monkeypatch
+):
+    config = config_for(tmp_path, assets, proposal)
+    sources = [tmp_path / name for name in ("source-a", "source-b")]
+    for source in sources:
+        source.mkdir()
+        (source / "manifest.json").write_text(
+            json.dumps({"schema_version": 1, "hit": HIT, "designs": [DESIGN], "config": config})
+        )
+        (source / "routes.json").write_text(
+            json.dumps(
+                {"schema_version": 1, "routes": [{"route_id": "prior", "design": DESIGN, "route": route}]}
+            )
+        )
+    config["carry_forward"] = [str(source) for source in sources]
+    forbid_assets(monkeypatch)
+    out = tmp_path / "deduplicated"
+    assert workflow.run(HIT, [UNSPECIFIED], config, out) == []
+    provenance = read(out, "manifest.json")["carry_forward"]
+    assert [source["loaded_routes"] for source in provenance] == [1, 0]
+    assert [source["duplicate_routes"] for source in provenance] == [0, 1]
+    assert [source["unselected_design_routes_retained"] for source in provenance] == [1, 0]
+    retained = read(out, "routes.json")["routes"]
+    assert len(retained) == read(out, "summary.json")["carried_routes_loaded"] == 1
+    assert retained[0]["route"] == route and retained[0]["selection_status"] == "design_not_assessed"
+
+
 @pytest.mark.parametrize("explicit_cap", [None, 1])
 def test_real_integrated_cli_supplies_refill_pool_and_honors_explicit_cap(
     tmp_path, assets, proposal, explicit_cap
