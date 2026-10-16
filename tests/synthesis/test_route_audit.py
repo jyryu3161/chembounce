@@ -12,6 +12,28 @@ from chembounce_synthesis.reactions import Rules
 from chembounce_synthesis.route_audit import atom_origins, audit_route
 
 
+def has_concrete_origin_metadata():
+    """Probe mapped/off-template atoms and two distinct slots, not a version string."""
+    from rdkit.Chem import rdChemReactions
+
+    reaction = rdChemReactions.ReactionFromSmarts("[C:1].[C:2]>>[C:1][C:2]")
+    product = reaction.RunReactants((Chem.MolFromSmiles("CC"), Chem.MolFromSmiles("C")))[0][0]
+    atoms = list(product.GetAtoms())
+    return (
+        all(a.HasProp("react_idx") and a.HasProp("react_atom_idx") for a in atoms)
+        and {a.GetIntProp("react_idx") for a in atoms} == {0, 1}
+        and any(not a.HasProp("old_mapno") for a in atoms)
+    )
+
+
+@pytest.fixture(scope="session")
+def concrete_origin_metadata():
+    if not has_concrete_origin_metadata():
+        pytest.skip(
+            "RDKit lacks concrete slot/atom metadata; positive witness checks require that capability"
+        )
+
+
 def fixture(tmp_path, smiles, smarts, *, product=None, repeated=False):
     catalog_path = tmp_path / "audit-catalog.tsv"
     catalog_path.write_text(
@@ -61,6 +83,7 @@ def changes(result, kind="tetrahedral"):
     ]
 
 
+@pytest.mark.usefixtures("concrete_origin_metadata")
 def test_amide_audits_off_template_atoms_and_lost_oxygen(assets, route):
     result = audit_route(route, *assets)
     assert result["strict_eligible"] is True
@@ -89,6 +112,7 @@ def test_missing_template_donor_is_unsupported_even_with_same_element_in_input(t
     )
 
 
+@pytest.mark.usefixtures("concrete_origin_metadata")
 def test_identical_reactant_instances_are_distinct_equivalents(tmp_path):
     result = audit_fixture(tmp_path, ["C"], "[C:1].[C:2]>>[C:1][C:2]", repeated=True)
     assert result["strict_eligible"]
@@ -99,6 +123,7 @@ def test_identical_reactant_instances_are_distinct_equivalents(tmp_path):
     ] == [(0, 0), (1, 0)]
 
 
+@pytest.mark.usefixtures("concrete_origin_metadata")
 def test_shared_dag_intermediate_reused_in_two_slots_keeps_parent_binding(tmp_path):
     route, catalog, rules = fixture(tmp_path, ["C"], "[C:1].[C:2]>>[C:1][C:2]", repeated=True)
     route["nodes"][-1]["id"] = "middle"
@@ -115,6 +140,7 @@ def test_shared_dag_intermediate_reused_in_two_slots_keeps_parent_binding(tmp_pa
     assert {a["reactant_slot"] for a in second["witnesses"][0]["atom_origins"]["atoms"]} == {0, 1}
 
 
+@pytest.mark.usefixtures("concrete_origin_metadata")
 def test_symmetric_origin_ambiguity_and_bounded_truncation_retained(tmp_path):
     route, catalog, rules = fixture(tmp_path, ["CCC"], "[C:1]>>[C:1]")
     result = audit_route(route, catalog, rules)
@@ -129,6 +155,7 @@ def test_symmetric_origin_ambiguity_and_bounded_truncation_retained(tmp_path):
 
 
 @pytest.mark.parametrize("smiles", ["[13CH3]C", "[2H]C([2H])C", "[3H]CC"])
+@pytest.mark.usefixtures("concrete_origin_metadata")
 def test_isotopes_and_explicit_isotope_hydrogens_have_concrete_origins(tmp_path, smiles):
     result = audit_fixture(tmp_path, [smiles], "[C:1]>>[C:1]")
     assert result["strict_eligible"]
@@ -137,6 +164,7 @@ def test_isotopes_and_explicit_isotope_hydrogens_have_concrete_origins(tmp_path,
     assert all(a["isotope"] == a["source_isotope"] for a in atoms)
 
 
+@pytest.mark.usefixtures("concrete_origin_metadata")
 def test_isotope_transmutation_is_not_a_valid_donor(tmp_path):
     result = audit_fixture(tmp_path, ["C"], "[C:1]>>[13C:1]")
     assert not result["strict_eligible"]
@@ -174,6 +202,7 @@ def test_duplicate_donor_and_lost_metadata_fail_closed():
         ("OC/C(CN)=C(/Cl)Br", "[CH2:1][OH:2]>>[CH3:1]", "double_bond"),
     ],
 )
+@pytest.mark.usefixtures("concrete_origin_metadata")
 def test_retained_geometry_uses_mapped_neighbors_not_priority_labels(tmp_path, smiles, smarts, kind):
     result = audit_fixture(tmp_path, [smiles], smarts)
     assert result["strict_eligible"]
@@ -181,6 +210,7 @@ def test_retained_geometry_uses_mapped_neighbors_not_priority_labels(tmp_path, s
     assert {c["classification"] for c in changes(result, kind)} == {"retained"}
 
 
+@pytest.mark.usefixtures("concrete_origin_metadata")
 def test_retained_tetra_geometry_can_change_cip_label(tmp_path):
     result = audit_fixture(tmp_path, ["OC[C@H](CN)F"], "[CH2:1][OH:2]>>[CH3:1]")
     before = Chem.FindMolChiralCenters(Chem.MolFromSmiles(result["building_blocks"][0]["smiles"]))
@@ -189,6 +219,7 @@ def test_retained_tetra_geometry_can_change_cip_label(tmp_path):
     assert changes(result)[0]["classification"] == "retained"
 
 
+@pytest.mark.usefixtures("concrete_origin_metadata")
 def test_template_specified_inversion_requires_external_stereo_support(tmp_path):
     result = audit_fixture(
         tmp_path, ["F[C@H](Cl)Br"], "[C@:1]([F:2])([Cl:3])[Br:4]>>[C@@:1]([F:2])([Cl:3])[Br:4]"
@@ -211,6 +242,7 @@ def test_unspecified_route_state_stereo_is_not_rescued_by_exact_replay(tmp_path,
     assert result["stereo_status"] == "unsupported"
 
 
+@pytest.mark.usefixtures("concrete_origin_metadata")
 def test_new_specified_center_remains_template_asserted(tmp_path):
     # Alkene reactant is not stereogenic (two identical F); product tetrahedral
     # isotope substitution has explicit stereo but cannot pass atom-origin audit.
@@ -250,6 +282,7 @@ def test_product_limit_is_strictly_bounded(assets, route, limit):
         ("FC#CCl", "[F:3][C:1]#[C:2][Cl:4]>>[F:3]/[C:1]=[C:2]/[Cl:4]", "double_bond"),
     ],
 )
+@pytest.mark.usefixtures("concrete_origin_metadata")
 def test_new_stereo_with_complete_atom_origins_is_conditional_computational_support(
     tmp_path, smiles, smarts, kind
 ):
@@ -259,6 +292,7 @@ def test_new_stereo_with_complete_atom_origins_is_conditional_computational_supp
     assert {c["classification"] for c in changes(result, kind)} == {"new_or_template_asserted"}
 
 
+@pytest.mark.usefixtures("concrete_origin_metadata")
 def test_double_bond_inversion_is_mapped_geometry_not_label_assertion(tmp_path):
     result = audit_fixture(tmp_path, ["F/C=C/Cl"], r"[F:3]/[C:1]=[C:2]/[Cl:4]>>[F:3]/[C:1]=[C:2]\[Cl:4]")
     assert result["strict_eligible"]
@@ -290,3 +324,22 @@ def test_ordered_slots_with_identical_structures_have_distinct_bound_parent_ids(
     assert first["product"] == second["product"]
     assert first["steps"][0]["step_binding_sha256"] != second["steps"][0]["step_binding_sha256"]
     assert first["route_binding_sha256"] != second["route_binding_sha256"]
+
+
+def test_runtime_without_concrete_origin_metadata_fails_closed(tmp_path):
+    result = audit_fixture(tmp_path, ["CC"], "[C:1]>>[C:1]")
+    if has_concrete_origin_metadata():
+        assert result["strict_eligible"]
+        assert result["atom_origin_status"] == "complete"
+    else:
+        assert result["strict_eligible"] is False
+        assert result["atom_origin_status"] == "unsupported"
+        assert all(
+            p["reason"] == "missing_concrete_reactant_origin"
+            for step in result["steps"]
+            for witness in step["witnesses"]
+            for p in witness["atom_origins"]["problems"]
+        )
+        assert all(
+            witness["atom_origins"]["problems"] for step in result["steps"] for witness in step["witnesses"]
+        )
