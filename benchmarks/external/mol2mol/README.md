@@ -175,7 +175,15 @@ processes. Public aggregate results should omit molecular rows. A separate
 common evaluator is needed for 3D and reference comparisons; this generator does
 not secretly optimize those evaluator outputs.
 
-## Validation still required before execution
+## Model-free review and remaining validation
+
+An [independent parent review](implementation_review.json) of implementation
+commit `6e70ad9` passed 59 model-free tests and a separate ten-row literal
+selection oracle. The parent also checked the real checkpoint checksums,
+before/after source hashes and preservation of the original frozen 39 files.
+The checkpoint was not loaded. This engineering result leaves runtime readiness
+and actual checkpoint/GPU preflight pending; it does not validate scientific
+accuracy or performance.
 
 Run the model-free fixtures with the common runtime:
 

@@ -1,0 +1,61 @@
+{
+  "checked_utc": "2026-10-16T02:16:19.793791+00:00",
+  "checkpoint": {
+    "bytes": 80198341,
+    "loaded": false,
+    "sha256": "a0f40a2fb4baedaf51ae199bb38a61a8c8d26f03062977eaf06e34079e9f22ca",
+    "sha512": "6c7a1153aecfeef7fafe0774a66f305f1e1a7bebd4ef8781cd3bd1ef113ff5629ec502c23384e24b28b4796b4e3449cf90df0135dec18048250cf9c8b1bb7c41"
+  },
+  "implementation_commit": "6e70ad983945f5f149cb52e2e3a1a8eb1e53c9a3",
+  "independent_literal_selection_oracle": {
+    "checks": [
+      "native NLL order",
+      "invalid/input/unchanged-core/truncated rejection",
+      "charge/stereo exact state",
+      "stereo-family deduplication",
+      "no-route coverage only"
+    ],
+    "matched_expected_indices": true,
+    "molecular_rows_published": false,
+    "raw_fixture_rows": 10,
+    "selected_count": 3
+  },
+  "inference_executed": false,
+  "original_frozen39_unchanged": true,
+  "parent_source_report": {
+    "artifact_label": "benchmark-results/research-validation/mol2mol-implementation-parent-review-20261016/validation.json",
+    "sha256": "3b9d0aaf8a704c299f610182270e64682092303f36f1ed434307ec9be8d8ea18"
+  },
+  "parent_tests_and_oracle_wall_seconds": 6.642401807010174,
+  "pending": [
+    "completed isolated environment/pip check/import origins",
+    "real checkpoint observer ON/OFF numerical and RNG equality",
+    "GPU placement/process-group live preflight",
+    "exact final protocols and activation"
+  ],
+  "pytest": {
+    "attribution": "independent parent execution",
+    "failed": 0,
+    "log_sha256": "96eb4b6b3bac1e7717d7272f96864418cd8715189a5e921797e6478bc00a819f",
+    "passed": 59,
+    "wall_seconds": 5.76
+  },
+  "schema": "mol2mol-model-free-implementation-review-v1",
+  "scope": "Independent parent model-free engineering review. No checkpoint loaded, no benchmark inference, no scientific accuracy/performance claim.",
+  "source_sha256_before_after_equal": {
+    "benchmarks/external/mol2mol/__init__.py": "668e9bc22f430f24b85af419b118c4d367dbda9b85d2ef9789c3159590add0a7",
+    "benchmarks/external/mol2mol/adapter.py": "b0e3366d743598cf2c29713f6b5966ffd2555f3d9039d52805d8f749cdd6ca87",
+    "benchmarks/external/mol2mol/observation.py": "abd0b62874c1a8b738923f2aeecfd8c21e73d877f522e1ad8629c84be5b4392d",
+    "benchmarks/external/mol2mol/prepare.py": "8e8acba24a2ab2cad4fb7fe4d934cb26ace67ffae84dcd884508f2423ac1aab6",
+    "benchmarks/external/mol2mol/selection.py": "923b5fcda7bc121667e9fbf8e3c71c72a5f288fd9a43282f1f9ea9214eb8e738",
+    "benchmarks/external/mol2mol/support.py": "4dab932e76cff2b8a4fa99b4687b069ce3021d7dd7e827fa5b1d0cd2013f113e",
+    "benchmarks/external/mol2mol/worker.py": "a1c5d7ab64c40098167a67694b202ed430e1961d09c52af46970ea9a12f94772",
+    "benchmarks/research/protocol.py": "ebabb21494a8293353ed3a45b5832ea98542e4fddffa222a6aed92105bdbe09e",
+    "benchmarks/research/runner.py": "7b1cc8d6d7a3e1a7f454b8f93195e9d5618405500bb521e128689447601bb4e7",
+    "chembounce_synthesis/common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+    "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+    "tests/test_mol2mol_baseline.py": "e0c1cf040d1cce6b777d29d948b18bc53b559b2a5307f09f4acc059a8be518d5",
+    "tests/test_research_runner_signals.py": "5b1869bf5222ea77224c020d904cdae74763358f3a546d586df41c15858801b2"
+  },
+  "status": "model_free_implementation_review_passed_runtime_and_real_model_preflight_pending"
+}
