@@ -1,0 +1,5 @@
+# Compatible pins from the older official lock; all original pyproject
+# requirements, notably torch2.3.1+cu121/torchvision0.18.1+cu121, still apply.
+# This is a new resolution, NOT an exact reproduction of that upstream lock.
+rdkit==2023.9.5
+numpy==1.26.4
