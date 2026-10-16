@@ -2,10 +2,13 @@
 
 import copy
 from dataclasses import asdict
+from io import BytesIO
 import json
 from pathlib import Path
 import platform
 from urllib.parse import parse_qs, urlparse
+from urllib.request import HTTPSHandler, build_opener
+from urllib.response import addinfourl
 
 import pytest
 from rdkit import rdBase
@@ -488,3 +491,80 @@ def test_duplicate_json_fields_fail(tmp_path):
     path.write_text('{"target":1,"target":2}')
     with pytest.raises(ValueError, match="Duplicate JSON"):
         fresh.read(path)
+
+
+@pytest.mark.parametrize("status", [301, 302, 303, 307, 308])
+def test_real_transport_never_follows_redirect_and_preserves_response(
+    protocol, tmp_path, monkeypatch, status
+):
+    calls = []
+    body = b"redirect evidence\n"
+    destination = fresh.api_url("activity", activity_id__gte=1000000)
+
+    class FakeHTTPS(HTTPSHandler):
+        def https_open(self, request):
+            calls.append(request.full_url)
+            response = addinfourl(BytesIO(body), {"location": destination}, request.full_url, status)
+            response.msg = "Redirect"
+            return response
+
+    monkeypatch.setattr(fresh, "build_opener", lambda *handlers: build_opener(*handlers, FakeHTTPS()))
+    with pytest.raises(ValueError, match="response status"):
+        fresh.acquire(protocol, tmp_path / "raw")
+    assert calls == [fresh.api_url("status")]
+    record = fresh.read(tmp_path / "raw/requests.json")[0]
+    assert record["status"] == "failed" and record["http_status"] == status
+    assert record["headers"]["location"] == destination
+    assert (tmp_path / "raw" / record["artifact"]).read_bytes() == body
+
+
+@pytest.mark.parametrize("mutation", ["resource", "filter", "duplicate", "blank", "fragment"])
+def test_changed_final_endpoint_or_query_rejected_live_and_offline(protocol, tmp_path, mutation):
+    def changed(url):
+        if mutation == "resource":
+            return url.replace("activity.json", "molecule.json")
+        if mutation == "filter":
+            return url + "&activity_id__gte=1000000"
+        if mutation == "duplicate":
+            return url + "&offset=0"
+        if mutation == "blank":
+            return url + "&activity_id__gte="
+        return url + "#different"
+
+    calls = []
+    underlying = fake_transport(calls)
+
+    def redirect(url, timeout, maximum):
+        raw, final, status, headers = underlying(url, timeout, maximum)
+        return raw, changed(final) if "/activity.json?" in final else final, status, headers
+
+    with pytest.raises(ValueError, match="response status/location"):
+        fresh.acquire(protocol, tmp_path / "bad", transport=redirect)
+    assert len(calls) == 3
+    records = fresh.read(tmp_path / "bad/requests.json")
+    assert records[-1]["status"] == "failed"
+    assert (tmp_path / "bad" / records[-1]["artifact"]).exists()
+
+    fresh.acquire(protocol, tmp_path / "raw", transport=fake_transport([]))
+    path = tmp_path / "raw/snapshot.json"
+    snapshot = fresh.read(path)
+    source = snapshot["sources"][2]
+    source["final_url"] = changed(source["requested_url"])
+    write_json(path, snapshot)
+    with pytest.raises(ValueError, match="URL binding"):
+        fresh.select_offline(protocol, tmp_path / "raw", tmp_path / "selected")
+
+
+def test_semantic_query_order_and_encoding_preserved_in_acquisition_replay(protocol, tmp_path):
+    underlying = fake_transport([])
+
+    def reordered(url, timeout, maximum):
+        raw, final, status, headers = underlying(url, timeout, maximum)
+        if "?" in final:
+            base, query = final.split("?", 1)
+            final = base + "?" + "&".join(reversed(query.split("&"))).replace("+", "%20")
+        return raw, final, status, headers
+
+    fresh.acquire(protocol, tmp_path / "raw", transport=reordered)
+    selection = fresh.select_offline(protocol, tmp_path / "raw", tmp_path / "selected")
+    assert selection["status"] == "complete"

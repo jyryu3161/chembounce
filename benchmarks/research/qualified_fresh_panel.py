@@ -12,8 +12,8 @@ import json
 from pathlib import Path
 import time
 from urllib.error import HTTPError
-from urllib.parse import urlencode, urljoin, urlparse
-from urllib.request import Request, urlopen
+from urllib.parse import parse_qsl, urlencode, urljoin, urlparse
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from rdkit import Chem, rdBase
 
@@ -408,16 +408,40 @@ def api_url(resource, **query):
     return BASE + resource + ".json" + ("?" + urlencode(sorted(query.items())) if query else "")
 
 
+def same_api_request(actual, expected):
+    """Bind endpoint and complete query multimap, preserving blank/duplicate values."""
+
+    def query_items(query):
+        return sorted(parse_qsl(query, keep_blank_values=True, strict_parsing=True)) if query else []
+
+    try:
+        left, right = urlparse(actual), urlparse(expected)
+        return (
+            expected.startswith(BASE)
+            and not left.fragment
+            and not right.fragment
+            and (left.scheme, left.netloc, left.path, left.params)
+            == (right.scheme, right.netloc, right.path, right.params)
+            and query_items(left.query) == query_items(right.query)
+        )
+    except (TypeError, ValueError):
+        return False
+
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        # Let urllib expose the original HTTP error/body without a second request.
+        return None
+
+
 def official_transport(url, timeout, max_bytes):
     """One explicit official request; no retry and no response rewriting."""
     request = Request(
         url, headers={"User-Agent": "ChemBounce-qualified-fresh-panel/1", "Accept": "application/json"}
     )
     try:
-        with urlopen(request, timeout=timeout) as response:
+        with build_opener(NoRedirect()).open(request, timeout=timeout) as response:
             final_url = response.geturl()
-            if not final_url.startswith(BASE):
-                raise ValueError("ChEMBL response redirected outside official API")
             data = response.read(max_bytes + 1)
             return data, final_url, response.status, dict(response.headers)
     except HTTPError as exc:
@@ -495,7 +519,7 @@ class Acquisition:
             )
             self.total_bytes += len(raw)
             if (
-                not final.startswith(BASE)
+                not same_api_request(final, url)
                 or status != 200
                 or len(raw) > limits["max_response_bytes"]
                 or self.total_bytes > limits["max_total_bytes"]
@@ -712,9 +736,9 @@ def select_offline(protocol, snapshot_dir, output):
             or source["http_status"] != 200
         ):
             raise ValueError("Raw acquisition bytes/provenance changed")
-        if source["requested_url"] != api_url(source["resource"], **source["parameters"]) or not source[
-            "final_url"
-        ].startswith(BASE):
+        if source["requested_url"] != api_url(
+            source["resource"], **source["parameters"]
+        ) or not same_api_request(source["final_url"], source["requested_url"]):
             raise ValueError("Raw acquisition URL binding changed")
         payloads.append(read(path))
     for key in ("release_before", "release_after"):
