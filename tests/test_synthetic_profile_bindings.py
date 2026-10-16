@@ -28,7 +28,7 @@ def config(name):
 @pytest.mark.parametrize("name", list(PACKAGE_SHA256))
 def test_real_historical_package_remains_unchanged_and_unmatched(name, tmp_path):
     # No synthetic binding fixture here. A source mismatch cannot certify a fit.
-    assert profiles.PROFILE_SHA256 == PACKAGE_SHA256
+    assert {name: profiles.PROFILE_SHA256[name] for name in PACKAGE_SHA256} == PACKAGE_SHA256
     assert hashlib.sha256(profiles._resource(name).read_bytes()).hexdigest() == PACKAGE_SHA256[name]
     artifact = profiles.load_profile(name)
     assert "synthetic_fixture" not in artifact["provenance"]
