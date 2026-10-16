@@ -443,7 +443,11 @@ def _witness(trial, row, hit, policy):
     saved = trial["similarity_constraints"]
     witness, bound = saved["witness"], saved["policy"]
     _equal(bound["hit"], hit, "witness original hit")
-    _equal(bound["minimum_scores"], policy["minimum_scores"], "witness floors")
+    _equal(
+        bound["minimum_scores"],
+        {key: policy["minimum_scores"][key] for key in ("hit_tanimoto", "hit_shape", "hit_pharmacophore")},
+        "witness hit-only floors",
+    )
     selection = policy["similarity_constraints"]
     _equal(bound, selection["policy"], "complete bound similarity policy")
     _equal(_binding(bound), selection["sha256"], "effective similarity policy hash")

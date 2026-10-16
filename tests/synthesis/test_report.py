@@ -1010,3 +1010,65 @@ def test_cross_leaf_origin_borrowing_rejected(tmp_path, data):
     invalid = tmp_path / "swapped"
     invalid.mkdir()
     diagnostic(invalid, data)
+
+
+def selective_design_floor(data, key, floor):
+    policy = data["results.json"]["policy"]
+    # Producer BoundSimilarity owns the three-hit projection, not optional design floors.
+    policy["similarity_constraints"]["policy"]["minimum_scores"] = {
+        name: policy["minimum_scores"][name] for name in ("hit_tanimoto", "hit_shape", "hit_pharmacophore")
+    }
+    policy["minimum_scores"][key] = floor
+    row = data["results.json"]["results"][0]
+    row.setdefault("design_tanimoto", 0.9)
+    data["qualification.json"]["decisions"][0]["scores"][key] = row[key]
+    return data
+
+
+@pytest.mark.parametrize("key", ["design_shape", "design_pharmacophore", "design_tanimoto"])
+@pytest.mark.parametrize("floor", [0, 0.5])
+def test_selective_optional_design_floors_are_outside_hit_witness(tmp_path, data, key, floor):
+    selective_design_floor(data, key, floor)
+    assert r.build_report(save(tmp_path, data))["artifact_consistency"] == "consistent_recorded_bundle"
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda scores: scores.pop("hit_shape"),
+        lambda scores: scores.update(design_shape=0),
+        lambda scores: scores.update(hit_pharmacophore=0.6),
+    ],
+)
+def test_witness_requires_exact_hit_projection_even_with_rebound_hashes(tmp_path, data, mutation):
+    selective_design_floor(data, "design_shape", 0)
+    bound = data["results.json"]["policy"]["similarity_constraints"]["policy"]
+    mutation(bound["minimum_scores"])
+    digest = r._binding(bound)
+    data["results.json"]["policy"]["similarity_constraints"]["sha256"] = digest
+    for trial in data["refinement.json"]["candidates"][0]["trials"]:
+        trial["similarity_constraints"]["witness"]["policy_sha256"] = digest
+    row = data["results.json"]["results"][0]
+    row["similarity_constraint_sha256"] = digest
+    row["similarity_witness_sha256"] = r._binding(
+        data["refinement.json"]["candidates"][0]["trials"][1]["similarity_constraints"]["witness"]
+    )
+    view = diagnostic(tmp_path, data)
+    assert "witness hit-only floors" in str(view["candidates"][0]["issues"])
+
+
+@pytest.mark.parametrize("key", ["design_shape", "design_pharmacophore", "design_tanimoto"])
+def test_selective_selected_design_floors_still_enforced(tmp_path, data, key):
+    selective_design_floor(data, key, 0.5)
+    data["results.json"]["results"][0][key] = 0.4
+    data["qualification.json"]["decisions"][0]["scores"][key] = 0.4
+    view = diagnostic(tmp_path, data)
+    assert f"Selected {key} contradicts floor" in str(view["candidates"][0]["issues"])
+
+
+@pytest.mark.parametrize("metric", ["shape", "pharmacophore"])
+def test_selective_nonrepresentative_design_floor_still_enforced(tmp_path, data, metric):
+    selective_design_floor(data, f"design_{metric}", 0.5)
+    data["refinement.json"]["candidates"][0]["trials"][0]["design"][metric] = 0.4
+    view = diagnostic(tmp_path, data)
+    assert f"Required seed design_{metric} contradicts floor" in str(view["candidates"][0]["issues"])
