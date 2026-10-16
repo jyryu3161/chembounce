@@ -1036,3 +1036,8 @@ verification, audit and support records. These are record comparisons, not chemi
 replay. Final accepted/qualified counts may exceed returned counts under output
 caps, but cannot contradict them; partial running/error counters remain distinct
 from terminal no-candidate counts.
+Qualified reports require positive original-hit Tanimoto, shape and pharmacophore
+floors; optional design floors can be zero, as in the workflow policy. Each displayed
+catalog origin is joined through the saved route leaf's exact building-block ID to
+its catalog record ID. This prevents borrowing another leaf's recorded origins;
+it does not authenticate the identifier or infer supplier provenance from its text.

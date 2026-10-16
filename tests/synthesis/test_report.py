@@ -918,3 +918,95 @@ def test_stage_size_scalar_type_is_not_coerced(tmp_path, data):
 def test_policy_omissions_remain_diagnostic_not_filled_from_defaults(tmp_path, data):
     data["results.json"]["policy"]["conformers"].pop("energy_window")
     diagnostic(tmp_path, data)
+
+
+def nonselective_custom(data):
+    policy = data["results.json"]["policy"]
+    policy.pop("similarity_constraints")
+    policy["calibration"].update(name=None, status="custom_unvalidated", artifact_sha256=None)
+    data["manifest.json"]["effective_workflow"].pop("similarity_constraints")
+    data["qualification.json"]["decisions"][0].pop("similarity_constraints")
+    row = data["results.json"]["results"][0]
+    row.update(
+        recommendation_profile="none",
+        calibration_status="custom_unvalidated",
+        calibration_artifact_sha256="none",
+    )
+    for trial in data["refinement.json"]["candidates"][0]["trials"] + data["scores.json"]["scores"]:
+        for key in (
+            "similarity_constraints",
+            "selective_pose_evidence",
+            "pose_selection",
+            "pose_selection_policy",
+        ):
+            trial.pop(key, None)
+    for key in (
+        "pose_selection_policy",
+        "similarity_constraint_policy",
+        "similarity_constraint_sha256",
+        "similarity_witness_sha256",
+        "polar_reference_recall",
+    ):
+        row.pop(key, None)
+    return data
+
+
+@pytest.mark.parametrize("key", ["design_shape", "design_pharmacophore", "design_tanimoto"])
+@pytest.mark.parametrize("floor", [0, 0.5])
+def test_optional_design_floors_allow_zero_and_positive(tmp_path, data, key, floor):
+    nonselective_custom(data)
+    row = data["results.json"]["results"][0]
+    row.setdefault("design_tanimoto", 0.9)
+    data["results.json"]["policy"]["minimum_scores"][key] = floor
+    data["qualification.json"]["decisions"][0]["scores"][key] = row[key]
+    assert r.build_report(save(tmp_path, data))["artifact_consistency"] == "consistent_recorded_bundle"
+
+
+@pytest.mark.parametrize("floor", [-0.01, 1.01, True])
+def test_optional_design_floor_domain_not_relaxed(tmp_path, data, floor):
+    nonselective_custom(data)
+    data["results.json"]["policy"]["minimum_scores"]["design_shape"] = floor
+    data["qualification.json"]["decisions"][0]["scores"]["design_shape"] = 0.9
+    diagnostic(tmp_path, data)
+
+
+@pytest.mark.parametrize("key", ["hit_tanimoto", "hit_shape", "hit_pharmacophore"])
+def test_nonselective_required_hit_floors_still_positive(tmp_path, data, key):
+    nonselective_custom(data)
+    data["results.json"]["policy"]["minimum_scores"][key] = 0
+    diagnostic(tmp_path, data)
+
+
+@pytest.mark.parametrize("identifier", ["different-id", "", None, 7, ["generated-looking-001"]])
+def test_route_leaf_id_must_match_saved_catalog_record(tmp_path, data, identifier):
+    data["routes.json"]["routes"][0]["route"]["nodes"][0]["building_block_id"] = identifier
+    diagnostic(tmp_path, data)
+
+
+def test_catalog_identifier_cannot_be_missing(tmp_path, data):
+    del data["routes.json"]["routes"][0]["synthesis_evidence"]["route_audit"]["building_blocks"][0][
+        "catalog_record"
+    ]["id"]
+    diagnostic(tmp_path, data)
+
+
+def test_cross_leaf_origin_borrowing_rejected(tmp_path, data):
+    route = data["routes.json"]["routes"][0]
+    route["route"]["nodes"].insert(1, {"id": "bb2", "building_block_id": "second-id"})
+    route["route"]["nodes"][-1]["reactants"].append("bb2")
+    route["verification"]["steps"][0]["reactants"].append("CC(=O)O")
+    support = route["synthesis_evidence"]
+    support["steps"][0]["reactants"].append("CC(=O)O")
+    audit = support["route_audit"]
+    second = copy.deepcopy(audit["building_blocks"][0])
+    second["node_id"] = "bb2"
+    second["catalog_record"]["id"] = "second-id"
+    audit["building_blocks"].append(second)
+    audit["steps"][0]["reactant_slots"].append({"slot": 1, "node_id": "bb2", "smiles": "CC(=O)O"})
+    valid = tmp_path / "valid"
+    assert r.build_report(save(valid, data))["artifact_consistency"] == "consistent_recorded_bundle"
+    first = audit["building_blocks"][0]
+    first["catalog_record"], second["catalog_record"] = second["catalog_record"], first["catalog_record"]
+    invalid = tmp_path / "swapped"
+    invalid.mkdir()
+    diagnostic(invalid, data)

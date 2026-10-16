@@ -198,7 +198,12 @@ def _policy_scalars(policy):
     }
     _require(set(minimum) <= allowed, "Unsupported score floor")
     for key, value in minimum.items():
-        _unit(value, f"floor {key}", positive=policy["mode"] == "qualified")
+        _unit(
+            value,
+            f"floor {key}",
+            positive=policy["mode"] == "qualified"
+            and key in {"hit_tanimoto", "hit_shape", "hit_pharmacophore"},
+        )
     if policy["mode"] == "qualified":
         _require(
             {"hit_tanimoto", "hit_shape", "hit_pharmacophore"} <= set(minimum), "Missing qualified hit floors"
@@ -298,6 +303,10 @@ def _route_steps(route, audit, support, row):
     _equal(reachable, set(by_id), "root-reachable route graph")
     if "strict_eligible" in audit:
         _require(audit["strict_eligible"] is True, "Audit eligibility contradicts route support")
+    for block in blocks:
+        identifier = by_id[block["node_id"]]["building_block_id"]
+        _require(isinstance(identifier, str) and bool(identifier), "Invalid route building-block identifier")
+        _equal(block["catalog_record"]["id"], identifier, "route leaf/catalog identifier")
     products = {b["node_id"]: b["smiles"] for b in blocks}
     products.update({ident: node["product"] for ident, node in reactions.items()})
     layers = [_records(route["verification"], "steps"), _records(audit, "steps"), _records(support, "steps")]
