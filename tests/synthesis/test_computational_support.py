@@ -344,3 +344,18 @@ def test_alternate_route_rescues_without_borrowing_and_continuation_rechecks(
     strict_predictor.products = ["CC", "CO", "CN"]
     assert workflow.run(hit, designs, carried, tmp_path / "resumed") == []
     assert len(strict_predictor.calls) == 4
+
+
+def test_incomplete_pad_tokens_consume_full_output_budget(assets, route, strict_predictor):
+    strict_predictor.products = [[0] + [0] * 256 for _ in range(3)]
+    evaluator = ComputationalRouteSupport(strict_predictor, max_output_tokens=768)
+    report = evaluator.evaluate_route(route, *assets)
+    prediction = report["steps"][0]["forward_prediction"]
+    assert prediction["status"] == "partially_evaluated"
+    assert not report["eligibility"]["passed"]
+    assert prediction["raw"]["output_tokens"] == evaluator.usage["output_tokens"] == 768
+    assert all(not p["complete"] and len(p["content_token_ids"]) == 256 for p in prediction["predictions"])
+    second = evaluator._raw_prediction(["CCC(=O)O", "Nc1ccncc1"], {}, None)
+    assert second["status"] == "unknown" and "budget" in second["reason"]
+    assert evaluator.usage["predictor_calls"] == len(strict_predictor.calls) == 1
+    assert evaluator.usage["output_tokens"] == 768

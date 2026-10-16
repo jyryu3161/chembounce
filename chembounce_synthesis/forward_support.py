@@ -171,10 +171,10 @@ class PinnedReactionT5Forward(ReactionT5Forward):
                 tail_valid = all(i == pad for i in generated[end + 1 :])
                 charged = end + 1
             else:
+                # Without EOS every returned position was generated. PAD tokens
+                # can be model output, so neither hide them nor refund their cost.
                 content = list(generated)
-                while content and content[-1] == pad:
-                    content.pop()
-                tail_valid, charged = True, len(content)
+                tail_valid, charged = True, len(generated)
             output_tokens += charged
             raw = self.tokenizer.decode(
                 sequence, skip_special_tokens=False, clean_up_tokenization_spaces=False
