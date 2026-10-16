@@ -1,9 +1,12 @@
 # Mol2Mol fixed-example preflight plan
 
-This diagnostic is **implemented but not executed**. It requires a separate parent
-review and explicit activation after the isolated sampler environment passes
-preparation. It does not modify the [reviewed baseline](../external/mol2mol/README.md),
-its official weights, any original study protocol, or the running campaign.
+This diagnostic **passed on 2026-10-16 after separate parent review and explicit
+activation**. The [aggregate result and evidence hashes](../external/mol2mol/actual_preflight_review.json)
+preserve its scope: one fixed nonbenchmark input, observer comparison and one
+actual adapter attempt. The historical preparation records remain unchanged.
+Execution did not modify the [reviewed baseline](../external/mol2mol/README.md),
+its official weights, or any original study protocol. Comparative execution is
+a separate gate.
 
 The predeclared nonbenchmark input is `CCOc1ccccc1`, seed 42. Model-free inspection
 of the three SHA-pinned original panels found no exact canonical match among
@@ -60,7 +63,8 @@ and method fragment; this command imports no neural runtime or checkpoint:
 
 Review the resulting plan, its helper/source/model/runtime pins and fixed GPU
 identity before any execution. The explicit execution command below is provided
-for the later authorized step only; it has not been run:
+as a record of the separately authorized step. Existing result paths must never
+be reused or overwritten:
 
 ```bash
 "$COMMON_PYTHON" "$BASELINE_ROOT/benchmarks/diagnostics/mol2mol_preflight.py" \
@@ -72,7 +76,24 @@ for the later authorized step only; it has not been run:
 Model-free helper fixtures exercise scoped return-frame observation, original
 exception preservation, RNG neutrality, bitwise NLL comparison, complete RNG
 stream comparison, plan tampering, exact-query exclusion and immutable output
-refusal. They do not establish actual checkpoint numerical equivalence or GPU
-success. A successful future result would establish this one fixed example's
-engineering checks, not held-out accuracy, general CPU/GPU equivalence, synthesis
-success, or comparative runtime performance.
+refusal. The later actual execution passed all nine observer checks, confirmed
+260 parameter tensors, two buffers and the input/mask on `cuda:0`, and observed
+the official input capacity of 5000 and output sequence cap of 128. The actual
+adapter returned three candidates from 256 EOS-terminated raw rows. The parent
+independently checked exact strings/NLL bytes/tokens/RNG, selection, response
+provenance and 544 unchanged pins without repeating model inference.
+
+Live GPU evidence is the reviewed controller/worker recording with PID and
+creation-identity joins. The parent's additional manual SMI snapshot was taken
+after completion and observed an idle device; it is not another live observation.
+Comparison and adapter wall times were 4.4099 and 6.4980 seconds, respectively;
+sampled adapter host RSS was 979.68 MB. These are single shared-host observations,
+not performance comparisons. CUDA allocator peaks are separately scoped to
+PyTorch; actual Triton kernel execution was not assessed.
+
+All three outputs retained the query's normalized Murcko core despite having
+different normalized Murcko scaffolds. The hash-bound secondary annotation
+addendum in the aggregate report records this distinction without changing method
+eligibility. The diagnostic establishes this one example's engineering checks,
+not held-out accuracy, general observer or CPU/GPU equivalence, 3D preservation,
+activity, route replay, synthesis success, or comparative runtime performance.

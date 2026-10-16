@@ -1,0 +1,225 @@
+{
+  "actual_adapter_roundtrip": {
+    "allocator_scope": "PyTorch allocator in sampler only; not full device/process memory",
+    "batches": 8,
+    "budget": {
+      "max_candidates": 3,
+      "max_memory_mb": 24000,
+      "max_raw_sequences": 256,
+      "wall_seconds": 360
+    },
+    "eos_terminated_rows": 256,
+    "leader_reaped": true,
+    "leader_returncode": 0,
+    "raw_sequences": 256,
+    "response_hash_and_provenance_verified": true,
+    "returned_candidates": 3,
+    "route_evidence": "none; no route supplied, not a failed synthesis experiment",
+    "sampled_peak_host_rss_mb": 979.6796875,
+    "selection_independently_reconstructed": true,
+    "selection_output_cap_meaning": "Eligible family rows beyond the maximum three returned candidates; not token truncation",
+    "selection_reconstruction_scope": "Independent group minimum/top-three implementation; shared declared chemical-family normalization policy",
+    "selection_status_counts": {
+      "duplicate_family": 15,
+      "input_family": 4,
+      "invalid_disconnected_or_identity_failure": 1,
+      "output_cap": 42,
+      "selected": 3,
+      "unchanged_normalized_murcko": 191
+    },
+    "status": "success",
+    "torch_peak_allocated_bytes": 160424960,
+    "torch_peak_reserved_bytes": 174063616,
+    "truncated_rows": 0,
+    "wall_seconds": 6.497972683049738
+  },
+  "completed_utc": "2026-10-16T02:51:37.624172+00:00",
+  "descriptive_structural_finding": {
+    "annotation_timing": "Specified after this one nonbenchmark diagnostic, before any new270 comparative output; post hoc supplementary design, not preregistration",
+    "candidate_scaffolds_larger_than_query": 3,
+    "different_normalized_murcko_candidates": 3,
+    "eligibility_ranking_budgets_primary_unchanged": true,
+    "graph_test": "Candidate normalized Murcko HasSubstructMatch(query normalized Murcko), useChirality=False",
+    "interpretation": "Different Murcko scaffolds can retain the input core. This is descriptive graph structure, not activity, pharmacophore preservation, a reaction relationship or synthetic feasibility.",
+    "query_normalized_murcko_subgraph_retained_candidates": 3,
+    "secondary_annotation_addendum_sha256": "38d0505cd67eedb5f19cae68925794406f84e6d815e12887f5bedebb2a4878d2"
+  },
+  "gpu_evidence": {
+    "additional_manual_parent_snapshot": "After completion, no processes observed; not an additional live observation",
+    "compiled_cuda": "12.1",
+    "live_controller_and_worker_pid_creation_identity_join_verified": true,
+    "logical_device": "cuda:0",
+    "name": "NVIDIA L40",
+    "parent_independently_audited_recorded_live_evidence": true,
+    "physical_index": 0,
+    "triton_kernel_execution_assessed": false
+  },
+  "implementation": {
+    "adapter_commit": "6e70ad983945f5f149cb52e2e3a1a8eb1e53c9a3",
+    "checkpoint_bytes": 80198341,
+    "checkpoint_sha256": "a0f40a2fb4baedaf51ae199bb38a61a8c8d26f03062977eaf06e34079e9f22ca",
+    "checkpoint_sha512": "6c7a1153aecfeef7fafe0774a66f305f1e1a7bebd4ef8781cd3bd1ef113ff5629ec502c23384e24b28b4796b4e3449cf90df0135dec18048250cf9c8b1bb7c41",
+    "diagnostic_helper_commit": "787a3f84a2e09330a041d1447b8e741408e6c001",
+    "diagnostic_helper_sha256": "eef536f59df748e7bc58d25b0030537f803233fa68208536105037f71a0f345c",
+    "official_upstream_commit": "eb61443a1a93a8cbd06510548b25cc77cfd9d3a6",
+    "parent_actual_diagnostic_evaluator_sha256": "c5fc73a191c6c1ef1a177fdd27a7785aa783f4ad6b46055c6f9c67bcbf832945",
+    "parent_runtime_evaluator_sha256": "598c63e8ded51fceb10e6bcb49a77e86c9de1c1f6a05a0dda868a5071e50cc9f"
+  },
+  "integrity": {
+    "official_weights_source_and_protocol_unchanged": true,
+    "original_frozen_scientific_files_unchanged": 39,
+    "parent_assessment_performed_new_inference": false,
+    "parent_input_pins_before_after": 544
+  },
+  "limitations": [
+    "One fixed nonbenchmark example and seed; not general observer equivalence or CPU/GPU equivalence.",
+    "Observed wall times and sampled RSS describe this shared-host diagnostic only; no comparative performance or quality estimate.",
+    "Fixture failure-path tests are separate evidence; this successful actual roundtrip did not trigger a timeout or forced cleanup.",
+    "No 3D preservation, activity, yield, route replay or synthesis success was evaluated.",
+    "Full Mol2Mol training inventory is unknown; public-query exclusion does not establish clean holdout.",
+    "Plain pretrained sampling with declared selection, not full RL REINVENT or RuSH reproduction.",
+    "This diagnostic is separate from the original 630-attempt study and does not authorize or report comparative study results."
+  ],
+  "local_evidence": {
+    "adapter_controller_live_observations": {
+      "artifact": "isolated-mol2mol-assets/fixed-preflight-result/adapter-parent-live-observations.json",
+      "sha256": "7d5275c98b424e29fb36fb907997c8233f19dc5c69c958bce462070d63b4b295"
+    },
+    "adapter_result": {
+      "artifact": "isolated-mol2mol-assets/fixed-preflight-result/adapter-result.json",
+      "sha256": "d39142751eae2751ecf55b207a0a2796ff5771d9bddb9aaecc82ece4626011ae"
+    },
+    "build_artifact_relocation": {
+      "artifact": "isolated-mol2mol-assets/preparation/upstream-build-relocation-20261016.json",
+      "sha256": "9bdc3b7e7af16a0f6f2eddf824673d0916bded8dd746056923c716bdec74055e"
+    },
+    "comparison_controller_live_observations": {
+      "artifact": "isolated-mol2mol-assets/fixed-preflight-result/observer-comparison/parent-live-observations.json",
+      "sha256": "3ff0a1bb1258a8f5cf6a10ecc8a9f8dff5aa8be354d493390a925ff5598c554e"
+    },
+    "diagnostic_plan": {
+      "artifact": "isolated-mol2mol-assets/fixed-preflight-plan.json",
+      "sha256": "59ae51ed35cf6eafe2842349e858e00b13dd7637ab56ad3ce53a8914f3395c58"
+    },
+    "diagnostic_result": {
+      "artifact": "isolated-mol2mol-assets/fixed-preflight-result/validation.json",
+      "sha256": "ea598a984a129e33c73c3685e0e3ab6c911ba2010facaf3d92f43d0dafda42dc"
+    },
+    "method_fragment": {
+      "artifact": "isolated-mol2mol-assets/prepared-v1/method-fragment.json",
+      "sha256": "e33b730d9434e489483e241a511d8daadaac0be73a016ba54e8865c4cca6133a"
+    },
+    "observer_comparison_detail": {
+      "artifact": "isolated-mol2mol-assets/fixed-preflight-result/observer-comparison/comparison-detail.json",
+      "sha256": "06c77fc6e2cd14f53ced9d114de596b3424b4ead60c042125b3251b5fc6e9050"
+    },
+    "parent_activation": {
+      "artifact": "local-research-validation/mol2mol-fixed-preflight-parent-activation-20261016.json",
+      "sha256": "1468ec7e975361e6b27e0e7e3eb2f09c7b0275ebf8f52e0fced3b5cc0d89227b"
+    },
+    "parent_actual_diagnostic_assessment": {
+      "artifact": "local-research-validation/mol2mol-actual-preflight-parent-20261016/validation.json",
+      "sha256": "77b789e8581bde44829a7684b74ca8f0ec577e254983e146d800e5c9cf573bad"
+    },
+    "parent_runtime_assessment": {
+      "artifact": "local-research-validation/mol2mol-prepared-assets-parent-20261016-v2/validation.json",
+      "sha256": "36f006e8f9e3c8b32d5ef1c0f470a00c41f2026c69744c63ca424cf710f4e0e8"
+    },
+    "parent_structural_annotation_addendum": {
+      "artifact": "local-research-validation/comparator-scaffold-retention-parent-addendum-20261016.json",
+      "sha256": "38d0505cd67eedb5f19cae68925794406f84e6d815e12887f5bedebb2a4878d2"
+    },
+    "pip_install_report": {
+      "artifact": "isolated-mol2mol-assets/preparation/pip-install-report.json",
+      "sha256": "4b94cd62718159a40d476c6b62757136893337ccaa0b908ec6f0155787493996"
+    },
+    "prepared_bundle": {
+      "artifact": "isolated-mol2mol-assets/prepared-v1/bundle.json",
+      "sha256": "93b65e71add5dba81b1d8d0459b5e48655962fbaf231c83a939fdfcd762bf03d"
+    },
+    "raw_sampling_rows": {
+      "artifact": "isolated-mol2mol-assets/fixed-preflight-result/adapter-roundtrip/mol2mol-raw.json",
+      "sha256": "70719fefcbfc6705955b95530219d3f38fd3a8683d02f4ce1338cc3347e0501e"
+    },
+    "resolved_sampler_environment": {
+      "artifact": "isolated-mol2mol-assets/prepared-v1/resolved-environment.txt",
+      "sha256": "677ce5d2fea4896bcbe1138209908ee92c54076745c3e570b4805402fac26cbf"
+    },
+    "response": {
+      "artifact": "isolated-mol2mol-assets/fixed-preflight-result/adapter-roundtrip/response.json",
+      "sha256": "3de9d54754b5a678e6d7571a4395baf93e349e3ebac49ab2485d0d425044e98f"
+    },
+    "response_provenance": {
+      "artifact": "isolated-mol2mol-assets/fixed-preflight-result/adapter-roundtrip/mol2mol-response-provenance.json",
+      "sha256": "3cabb3fd21da4cf927b16e916d969499e2566307dc94e8c2a5dc5032f7b3ef2d"
+    },
+    "root_additional_postcompletion_observation": {
+      "artifact": "local-research-validation/mol2mol-fixed-preflight-root-live-observation-20261016.json",
+      "sha256": "0a2a994872ffde16ebe559c912053e5f8a5c29ef6d371fd5d9123ee98f3970e5"
+    },
+    "selection_rows": {
+      "artifact": "isolated-mol2mol-assets/fixed-preflight-result/adapter-roundtrip/mol2mol-selection.json",
+      "sha256": "2a72e49d0f4bf87f7db6652cf82bc30a792b972996a1d7b17261abc31fbb7755"
+    }
+  },
+  "observer_comparison": {
+    "actual_input_token_capacity": 5000,
+    "actual_output_sequence_cap": 128,
+    "all_checks_passed": true,
+    "checks": {
+      "decode_restored": true,
+      "input_strings": true,
+      "input_token_arrays": true,
+      "native_nll_bytes_dtype_shape": true,
+      "output_strings": true,
+      "output_token_arrays": true,
+      "post_rng_equal": true,
+      "pre_rng_restored": true,
+      "profiler_restored": true
+    },
+    "device": "cuda:0",
+    "input_and_mask_on_device": true,
+    "network_buffer_tensors_on_device": 2,
+    "network_parameter_tensors_on_device": 260,
+    "parent_independent_exact_replay": {
+      "full_output_tokens_identical": true,
+      "native_nll_bytes_shape_dtype": true,
+      "official_strings_identical": true,
+      "post_rng_states_identical": true
+    },
+    "rng_scope": "Python, NumPy, Torch CPU and every visible CUDA RNG state; reset saved pre-sample state before observer ON",
+    "wall_seconds": 4.409918300807476
+  },
+  "parent_checked_utc": "2026-10-16T02:54:09.662033+00:00",
+  "prepared_runtime": {
+    "actual_upstream_modules_after_sampling": 77,
+    "actual_upstream_modules_import_only": 76,
+    "common_distribution_versions_checked": 49,
+    "common_identity_rdkit": "2025.09.6",
+    "dependency_resolution": "Original pyproject-compliant isolated resolution; not reproduction of contradictory upstream lock",
+    "ignored_install_build_files_preserved_outside_source": 274,
+    "numpy": "1.26.4",
+    "official_tracked_python_files": 451,
+    "official_tracked_source_files": 455,
+    "parent_runtime_input_pins_before_after": 524,
+    "pip_check_passed": true,
+    "pyproject_requirements_checked": 29,
+    "sampler_python": "3.10.12",
+    "sampler_rdkit": "2023.9.5",
+    "torch": "2.3.1+cu121",
+    "torchvision": "0.18.1+cu121",
+    "triton": "2.3.1"
+  },
+  "schema": "mol2mol-fixed-example-validation-v1",
+  "scope": {
+    "actual_adapter_attempts": 1,
+    "input_exclusion_is_training_holdout_proof": false,
+    "nonbenchmark_inputs": 1,
+    "observer_comparison_batches": 2,
+    "official_batch_size": 32,
+    "public_exact_queries_checked_for_input_exclusion": 30,
+    "scientific_comparative_attempts": 0,
+    "seed": 42
+  },
+  "status": "passed_fixed_example_engineering_diagnostic"
+}
