@@ -176,6 +176,7 @@ def authority(tmp_path, monkeypatch):
     }
     review = add(tmp_path / "review.json", dict(status="synthetic"))
     clearance = add(tmp_path / "clearance.json", dict(status="synthetic"))
+    owner_source = add(tmp_path / "external-owner.py", "# synthetic reviewed owner, not executed\n")
     spec = dict(
         schema=p.SCHEMA,
         design=dict(path=design_path, sha256=pins[design_path]),
@@ -208,6 +209,14 @@ def authority(tmp_path, monkeypatch):
             clearance=spec["clearance"],
             allow_asset_hashing=True,
             allow_import_discovery=True,
+            external_owner=dict(
+                source=dict(path=owner_source, sha256=pins[owner_source]),
+                review=spec["reviews"][0],
+                success_seconds=300,
+                watchdog_seconds=330,
+                cleanup_seconds=30,
+                scope="owned-parent-and-descendants-through-cleanup-and-final-writes",
+            ),
         ),
     )
     args = SimpleNamespace(
@@ -284,6 +293,26 @@ def synthetic_discoveries(spec, queries):
 
 
 def test_actual_existing_prepare_with_full_synthetic_authority(tmp_path, monkeypatch):
+    # cpu_guard installs a permanent process-wide audit hook. Keep actual
+    # positive and rebound-negative composition in a disposable interpreter.
+    if os.environ.get("CAPACITY_PREP_COMPOSITION_CHILD") != "1":
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                f"{__file__}::test_actual_existing_prepare_with_full_synthetic_authority",
+                "-q",
+                "-p",
+                "no:cacheprovider",
+            ],
+            env={**os.environ, "CAPACITY_PREP_COMPOSITION_CHILD": "1"},
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+        return
     spec, _ = authority(tmp_path, monkeypatch)
     queries = p.queries_from_design(spec)
     plan = p.assemble_plan(spec, queries, synthetic_discoveries(spec, queries))
@@ -680,3 +709,140 @@ def test_all_declared_network_audit_events_are_durably_denied(tmp_path, event):
     row = json.loads((output / "guard-events.jsonl").read_text())
     assert row["kind"] == "network_denied" and row["event"] == event
     assert row["expected_blocked_ipv6_probe"] is False
+
+
+@pytest.mark.parametrize("asset_name", ["catalog.tsv", "rules.json", "catalog.tsv.manifest.json"])
+def test_exact_asset_lexical_path_remains_denied_after_retarget(tmp_path, asset_name):
+    output = tmp_path / "guard"
+    output.mkdir()
+    asset = tmp_path / asset_name
+    asset.write_text("original")
+    replacement = tmp_path / "replacement"
+    replacement.write_text("replacement")
+    script = """from pathlib import Path
+import sys
+from benchmarks.research.polar_capacity_prepare import ProbeGuard
+out, asset, replacement = map(Path, sys.argv[1:])
+g = ProbeGuard(out, {}, [asset]); g.install()
+asset.unlink(); asset.symlink_to(replacement)
+asset.read_text()
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", script, str(output), str(asset), str(replacement)],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 79, result.stderr
+    event = json.loads((output / "guard-events.jsonl").read_text())
+    assert event["kind"] == "asset_read_denied" and event["lexical"] == str(asset)
+
+
+@pytest.mark.parametrize(
+    "mutation", ["missing", "scope", "success", "watchdog", "cleanup", "source", "review"]
+)
+def test_external_owner_contract_required(tmp_path, monkeypatch, mutation):
+    _, args = authority(tmp_path, monkeypatch)
+    auth = d.read(args.authorization)
+    owner = auth["external_owner"]
+    if mutation == "missing":
+        del auth["external_owner"]
+    elif mutation in {"success", "watchdog", "cleanup"}:
+        owner[mutation + "_seconds"] += 1
+    elif mutation == "scope":
+        owner["scope"] = "children-only"
+    else:
+        owner[mutation]["sha256"] = "0" * 64
+    s.write(args.authorization, auth)
+    args.authorization_sha256 = d.digest(args.authorization)
+    with pytest.raises(ValueError):
+        p.authorize(args, files=False)
+
+
+@pytest.mark.parametrize(
+    "where", ["supervisor_raises", "supervisor_swallows", "persistence", "deadline_only"]
+)
+def test_expiry_never_starts_parent_correction_write(tmp_path, monkeypatch, where):
+    spec, args = authority(tmp_path, monkeypatch)
+    clock = [0.0]
+    expiry = {"expired": False}
+    monkeypatch.setattr(d, "cpu_guard", lambda: None)
+    monkeypatch.setattr(d, "runtime", lambda: spec["contexts"]["checker"])
+    monkeypatch.setattr(p.time, "monotonic", lambda: clock[0])
+    real_write = s.write
+    calls = []
+
+    def writing(path, value):
+        if Path(path).name == "preparation-receipt.json":
+            assert not expiry["expired"] and clock[0] < 360
+            calls.append(value["status"])
+            if where == "persistence" and len(calls) == 2:
+                expiry["expired"] = True
+                raise TimeoutError("controlled persistence interruption")
+        real_write(path, value)
+
+    def supervise(*a, **kw):
+        kw["output"].mkdir()
+        real_write(
+            kw["output"] / "terminal.json",
+            dict(status="candidate_requires_independent_review", study_launch_authorization_emitted=False),
+        )
+        if where == "deadline_only":
+            clock[0] = 360
+        elif where != "persistence":
+            expiry["expired"] = True
+            if where == "supervisor_raises":
+                raise TimeoutError("controlled ceiling")
+        return dict(status="completed")
+
+    monkeypatch.setattr(s, "write", writing)
+    monkeypatch.setattr(s, "supervise", supervise)
+    assert p._run(args, 0, expiry) == 1
+    assert calls == (
+        ["running", "candidate_requires_independent_review"] if where == "persistence" else ["running"]
+    )
+    receipt = d.read(Path(spec["output"]) / "preparation-receipt.json")
+    assert receipt["status"] == "running"  # partial evidence, never a terminal success
+
+
+@pytest.mark.parametrize("where", ["supervisor", "persistence"])
+def test_real_alarm_is_sticky_after_supervisor_catches_it(tmp_path, monkeypatch, where):
+    import time
+
+    spec, args = authority(tmp_path, monkeypatch)
+    monkeypatch.setattr(d, "cpu_guard", lambda: None)
+    monkeypatch.setattr(d, "runtime", lambda: spec["contexts"]["checker"])
+    monkeypatch.setattr(p, "startup_monotonic", time.monotonic)
+    monkeypatch.setattr(p, "CEILING_SECONDS", 0.08)
+    real_write = s.write
+    calls = []
+
+    def writing(path, value):
+        calls.append(value["status"])
+        if where == "persistence" and len(calls) == 2:
+            time.sleep(0.4)  # actual alarm interrupts durable-write stand-in
+        real_write(path, value)
+
+    def supervise(*a, **kw):
+        if where == "persistence":
+            kw["output"].mkdir()
+            real_write(
+                kw["output"] / "terminal.json",
+                dict(
+                    status="candidate_requires_independent_review", study_launch_authorization_emitted=False
+                ),
+            )
+            return dict(status="completed")
+        try:
+            time.sleep(0.4)
+        except TimeoutError:
+            return dict(status="completed")  # emulate a layer swallowing the one-shot alarm
+        raise AssertionError("alarm did not fire")
+
+    monkeypatch.setattr(s, "write", writing)
+    monkeypatch.setattr(s, "supervise", supervise)
+    assert p.run(args) == 1
+    assert calls == (
+        ["running"] if where == "supervisor" else ["running", "candidate_requires_independent_review"]
+    )
+    assert d.read(Path(spec["output"]) / "preparation-receipt.json")["status"] == "running"

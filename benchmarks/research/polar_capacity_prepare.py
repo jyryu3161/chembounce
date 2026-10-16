@@ -125,7 +125,7 @@ def authorize(args, *, files=True):
     spec, auth = d.read(args.spec), d.read(args.authorization)
     exact(
         auth,
-        "schema spec_sha256 source_review literal_review clearance allow_asset_hashing allow_import_discovery",
+        "schema spec_sha256 source_review literal_review clearance allow_asset_hashing allow_import_discovery external_owner",
     )
     if auth["schema"] != AUTH or auth["spec_sha256"] != args.spec_sha256:
         raise ValueError("Not preparation authority")
@@ -137,6 +137,21 @@ def authorize(args, *, files=True):
         or auth["clearance"] != spec["clearance"]
     ):
         raise ValueError("Preparation approval evidence differs")
+    owner = auth["external_owner"]
+    exact(owner, "source review success_seconds watchdog_seconds cleanup_seconds scope")
+    if (
+        owner["success_seconds"] != 300
+        or owner["watchdog_seconds"] != 330
+        or owner["cleanup_seconds"] != 30
+        or owner["scope"] != "owned-parent-and-descendants-through-cleanup-and-final-writes"
+        or owner["review"] not in spec["reviews"]
+    ):
+        raise ValueError("Reviewed external whole-process enforcement is required")
+    for record in (owner["source"], owner["review"]):
+        exact(record, "path sha256")
+        absolute(record["path"])
+        if spec["pins"].get(record["path"]) != record["sha256"]:
+            raise ValueError("External owner source/review pin missing or different")
     return validate_spec(spec, files=files)
 
 
@@ -255,7 +270,10 @@ class ProbeGuard:
     def __init__(self, output, pins, denied_paths, denied_roots=()):
         self.stream = (Path(output) / "guard-events.jsonl").open("x")
         self.pins = pins
-        self.denied = {str(Path(p).resolve()) for p in denied_paths}
+        denied_paths = tuple(denied_paths)
+        self.denied = {str(Path(os.path.abspath(p))) for p in denied_paths} | {
+            str(Path(p).resolve()) for p in denied_paths
+        }
         self.roots = {Path(os.path.abspath(p)) for p in denied_roots} | {
             Path(p).resolve() for p in denied_roots
         }
@@ -285,7 +303,7 @@ class ProbeGuard:
         if event == "open" and isinstance(args[0], (str, bytes, os.PathLike)):
             lexical = Path(os.path.abspath(os.fsdecode(args[0])))
             resolved = lexical.resolve()
-            if str(resolved) in self.denied or any(
+            if any(str(path) in self.denied for path in (lexical, resolved)) or any(
                 path == root or root in path.parents for path in (lexical, resolved) for root in self.roots
             ):
                 self.fatal("asset_read_denied", path=str(resolved), lexical=str(lexical))
@@ -750,7 +768,10 @@ def coordinator(args, spec):
 
 @contextmanager
 def administrative_alarm(deadline):
+    state = {"expired": False}
+
     def expired(number, frame):
+        state["expired"] = True
         raise TimeoutError("Administrative preparation360-second ceiling exhausted")
 
     old = signal.signal(signal.SIGALRM, expired)
@@ -760,7 +781,7 @@ def administrative_alarm(deadline):
         signal.signal(signal.SIGALRM, old)
         raise ValueError("Preexisting alarm conflicts with preparation")
     try:
-        yield
+        yield state
     finally:
         signal.setitimer(signal.ITIMER_REAL, 0)
         signal.signal(signal.SIGALRM, old)
@@ -770,18 +791,36 @@ def run(args):
     # Linux process start includes imports and parent startup; tick flooring is
     # conservative, unlike beginning the allocation after validation/hashing.
     started = startup_monotonic()
-    with administrative_alarm(started + CEILING_SECONDS):
-        return _run(args, started)
+    with administrative_alarm(started + CEILING_SECONDS) as expiry:
+        return _run(args, started, expiry)
 
 
-def _run(args, started):
+def _run(args, started, expiry=None):
+    expiry = expiry if expiry is not None else {"expired": False}
+
+    def expired():
+        # Sticky signal state survives a supervising layer catching TimeoutError.
+        # No new parent I/O/work after expiry; the reviewed external owner must
+        # own ceiling enforcement, including parent persistence and cleanup.
+        return expiry["expired"] or time.monotonic() >= started + CEILING_SECONDS
+
+    if expired():
+        return 1
     d.cpu_guard()
+    if expired():
+        return 1
     spec = authorize(args, files=False)
+    if expired():
+        return 1
     if d.runtime() != spec["contexts"]["checker"]:
         raise ValueError("Parent runtime/cwd differs from declared preparation context")
+    if expired():
+        return 1
     output = absolute(args.output)
     if str(output) != spec["output"]:
         raise ValueError("Preparation output differs")
+    if expired():
+        return 1
     output.mkdir(exist_ok=False)
     receipt = {
         "status": "running",
@@ -794,15 +833,21 @@ def _run(args, started):
     }
 
     def persist():
+        if expired():
+            raise TimeoutError("No persistence after administrative ceiling expiry")
         try:
             s.write(output / "preparation-receipt.json", receipt)
         except BaseException:
             receipt["status"] = "persistence_interrupted"
+            if expired():
+                raise
             s.write(output / "preparation-receipt.json", receipt)
             raise
 
-    persist()
     try:
+        persist()
+        if expired():
+            return 1
         remaining = started + SUCCESS_SECONDS - time.monotonic()
         if remaining <= 0:
             raise TimeoutError("No preparation allocation remains")
@@ -816,6 +861,8 @@ def _run(args, started):
             grace=30,
             blocked=spec["workloads"],
         )
+        if expired():
+            return 1
         receipt["child"] = child
         receipt["status"] = (
             "candidate_requires_independent_review" if child["status"] == "completed" else "failed"
@@ -832,14 +879,32 @@ def _run(args, started):
         receipt["status"] = "failed"
         receipt["error"] = dict(type=type(exc).__name__, message=str(exc))
     finally:
+        if expired():
+            # Keep the previous durable running/partial evidence. Neither an
+            # alarm nor failed cleanup grants time for another correction write.
+            return 1
         receipt["parent_elapsed_before_final_write"] = time.monotonic() - started
         if receipt["parent_elapsed_before_final_write"] > SUCCESS_SECONDS:
             receipt["status"] = "allocation_exceeded"
-        persist()
+        try:
+            persist()
+        except BaseException:
+            if expired():
+                return 1
+            raise
+        if expired():
+            return 1
         if time.monotonic() - started > SUCCESS_SECONDS:
             receipt["status"] = "allocation_exceeded"
             receipt["parent_elapsed_after_write"] = time.monotonic() - started
-            persist()
+            try:
+                persist()
+            except BaseException:
+                if expired():
+                    return 1
+                raise
+            if expired():
+                return 1
     return 0 if receipt["status"] == "candidate_requires_independent_review" else 1
 
 

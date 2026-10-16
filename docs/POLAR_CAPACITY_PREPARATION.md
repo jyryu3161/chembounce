@@ -37,8 +37,15 @@ The strict `polar-capacity-preparation-spec-v1` has these keys:
   current clearance; root must provide terminal/absence evidence before launch.
 
 `polar-capacity-preparation-authorization-v1` separately binds `spec_sha256`,
-`source_review`, `literal_review`, `clearance`, `allow_asset_hashing: true` and
-`allow_import_discovery: true`. Unknown fields and study-launch schemas are
+`source_review`, `literal_review`, `clearance`, `allow_asset_hashing: true`,
+`allow_import_discovery: true` and `external_owner`. The latter must bind pinned
+`source` and `review` path/hash records (the review must be in `reviews`), literal
+`success_seconds: 300`, `watchdog_seconds: 330`, `cleanup_seconds: 30`, and scope
+`owned-parent-and-descendants-through-cleanup-and-final-writes`. Missing or
+different enforcement contracts reject preparation authority. This declaration
+records required reviewed enforcement; it does not prove that owner is running.
+The later literal gate must verify the actual owner invocation and terminal
+receipt, including its PID/start ownership and all parent/descendant cleanup. Unknown fields and study-launch schemas are
 rejected. Both spec and authorization file hashes are command-line inputs.
 This tool never emits `polar-capacity-development-launch-v1` authorization.
 
@@ -77,8 +84,9 @@ Native/Boost.Python calls are not all visible to profiling: this is defense in
 depth for reviewed fixed code, **not a general native-code sandbox**. No arbitrary
 user Python or backend callback is accepted by the CLI.
 
-Catalog/rules/sidecar opens and all model-root descendants, including symlink
-aliases, are denied throughout probe runtime hashing/imports. Authorized model
+Catalog/rules/sidecar opens are denied using both declared lexical and initially
+resolved identities, including subsequent symlink retargeting. All model-root
+descendants, including symlink aliases, are denied throughout probe runtime hashing/imports. Authorized model
 and asset byte hashing occurs explicitly in the coordinator/handoff, without
 constructing assets. Feature-definition reading and its import-time RDKit feature
 factory are allowed; feature matching, molecule scoring and embedding are not.
@@ -104,8 +112,9 @@ allocation. Process boottime age is converted conservatively into the monotonic
 clock; clocks with different suspend offsets are never directly subtracted.
 Every nested child receives only the shared deadline's remaining time.
 
-The outer supervisor has a 330-second watchdog plus at most 30 seconds of
-cleanup. These are failure ceilings, never successful extra preparation time.
+The internal supervisor has a 330-second watchdog plus at most 30 seconds of
+cleanup. The separately reviewed external owner must enforce this ceiling over
+the entire preparation tree, including the parent and persistence/cleanup. These are failure ceilings, never successful extra preparation time.
 Owned-tree RSS is sampled with the existing 16 GiB limit; gaps and per-child
 usage remain explicit, and RSS is not an instantaneous memory guarantee. All
 processes use CPU threads 1, empty CUDA and offline libraries. Unexpected known
@@ -113,7 +122,19 @@ workload overlap fails preparation; no unrelated job is signaled.
 
 Parent final receipt persistence is checked after writing. Crossing 300 seconds
 or a controlled interrupted write makes the candidate ineligible even if files
-exist. Failure correction writes grant no new work allowance. A successful
+exist. Failure correction writes grant no new work allowance. The parent's one-shot
+alarm is cooperative defense, **not proof of hard process termination**: native
+calls or supervising cleanup may catch/delay it. Its sticky expiry state prevents
+new parent reads or receipt/correction writes after expiry, even when a lower
+layer catches the alarm. Deadline checks also apply before/after persistence.
+Expiry leaves existing running/partial evidence and returns nonzero; no new
+terminal receipt is required after the ceiling. An interrupted write may already
+have persisted bytes, so a file alone never establishes eligibility. External
+owned-tree enforcement and its terminal receipt remain mandatory. An owner
+cannot guarantee immediate termination/reaping of uninterruptible kernel work:
+unsafe or unreapable cleanup must remain an explicit failure, with retained
+identities and unknown terminal costs; never report that a ceiling held when it
+did not. A successful
 preparation requires its external process exit 0 and intact receipt/candidate,
 not a standalone file left by hard termination. Output reuse, missing pins,
 config disagreement, changed hooks, unsafe cleanup or timeout stops preparation
