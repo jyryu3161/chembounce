@@ -113,6 +113,25 @@
     "scope": "Completed frozen-generator index-substitution diagnostic; all planned calls retained. No models, synthesis reconstruction or 3D rerun, full-pipeline wall-budget equivalence, or efficacy/superiority claim.",
     "status": "completed_generator_only_comparison_independently_evaluated"
   },
+  "isolated_gpu_validation": {
+    "actual_gpu_execution_completed": true,
+    "frozen_campaign_changed": false,
+    "gpu_name": "NVIDIA L40",
+    "local_evidence_models_and_molecules_bundled": false,
+    "original_failures_promoted_to_success": false,
+    "original_gpu0_grid_attempts": 162,
+    "parent_assessed_utc": "2026-10-16T01:12:09.924986+00:00",
+    "parent_file_pins_checked_before_and_after_assessment": 454,
+    "physical_gpu_index": 0,
+    "reactiont5_calls": 2,
+    "results": "isolated_gpu_validation.json",
+    "scope": "Selected current-develop CUDA model diagnostics with parent provenance/product checks. Worker telemetry supplies live PID/UUID attribution; separate parent observation is post-exit only. No held-out accuracy, route replay/synthesis validity, performance or full-pipeline/campaign equivalence claim.",
+    "selected_retrospective_calls": 3,
+    "source_commit": "2328588d0969369e694d9293a1dccc89392a8203",
+    "status": "selected_cuda_diagnostics_completed_and_parent_evaluated",
+    "synllama_calls": 1,
+    "triton_kernel_execution_assessed": false
+  },
   "isolated_runtime_validation": {
     "actual_gpu_execution_assessed": false,
     "campaign_environment_changed": false,
@@ -138,7 +157,7 @@
     "status": "partial_sample_audit_independently_recomputed"
   },
   "published_compact_artifacts": {
-    "README.md": "b97870120aed913a859bed8c256a455e7fa83e45526aca06751e6943d750a094",
+    "README.md": "d7cfab8e4461b5a4f5e004a8e8ba8d6dbedd1e9b1f26f60c83f0094785ab828c",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
@@ -165,6 +184,7 @@
     "forward_audit_validation.json": "c0e12e44a60702008806415ad23c8914fe58ac451e837bc32f3b9fb1d357b504",
     "generator_scaffold_change_validation.json": "77531518dc164a6fbeafab29b75fec9ec8d64621205d9b3b4342a33b0581a86a",
     "index_sensitivity_validation.json": "e953155f54f48f0d53baa18d5b9c5270fa01b451b9cda27c827582f51f6982e5",
+    "isolated_gpu_validation.json": "ec70e3ffc5a3006ef8bcdd994920212763de68019fd3bf1c011b00dc88bf618a",
     "isolated_runtime_validation.json": "7bf5c6c837191c64d7e277b91c021ea0dab6a9ebf236c74935bc7dca595f58e5",
     "preflight_validation.json": "c810853f907c579fd858e3fa823671ccb11a17071ea25e62bab3c0134818e59c",
     "query_scope.json": "72c97730f9f76906bc1afcbd88a3f19009862f79af51f7ef18662f0e01fa972b",
