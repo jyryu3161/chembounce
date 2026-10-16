@@ -20,6 +20,28 @@ incorporated into both the stable and development lines. Python development vers
 [PEP 440 format](https://packaging.python.org/en/latest/specifications/version-specifiers/).
 See [changes](CHANGELOG.md) and [methods](docs/METHODS.md).
 
+For **qualified recommendations**, use the explicit `--recommend` shortcut:
+
+```bash
+chembounce -i "$HIT" -o NEW_RUN --recommend --synthesis-config my-strict-assets.json
+chembounce-synthesis --hit "$HIT" --design "$DESIGN" --recommend \
+  --config my-strict-assets.json --output NEW_SYNTHESIS_RUN
+```
+
+Start from the [strict asset template](examples/synthesis/strict-recommendation-config.json)
+and configure existing local catalog/rules, proposal provider and pinned ReactionT5
+assets. Saved proposals must cover the supplied designs; for newly generated designs,
+configure a local SynLlama provider as explained in [setup](docs/SYNTHESIS.md#request-qualified-recommendations).
+No assets are downloaded implicitly. The shortcut selects
+`qualified-selective-engineering-v2`: final original-hit Tanimoto/shape/pharmacophore
+floors **0.35/0.70/0.50**, polar recall **0.75**, changed normalized scaffold,
+complete three-seed geometry and concrete per-step computational route support.
+Supported explicit overrides survive and are labelled `custom_unvalidated`; the
+summary prints the actual thresholds. These engineering constraints do not guarantee
+activity or experimental synthesis. An empty final result is bounded abstention,
+with no exploratory fallback. Generic calls without a recommendation request retain
+the existing exploratory behavior. See the [Python API and conflict rules](docs/SYNTHESIS.md#request-qualified-recommendations).
+
 The optional [synthesis workflow](docs/SYNTHESIS.md) connects SynLlama proposals
 to a dated building-block catalog and an explicit reaction registry. It
 replays routes, expands compatible building blocks, reapplies scaffold/core constraints,

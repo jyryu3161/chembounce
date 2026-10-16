@@ -43,6 +43,10 @@ def main(argv=None):
             from .workflow import _config
 
             config = _config(apply_expansion_options(config, args))
+        if args.recommend:
+            from .workflow import preflight_recommendation
+
+            config = preflight_recommendation(args.hit or inherited_hit, config)
         designs = args.design
         if args.designs_tsv:
             stream = inputs.enter_context(open(args.designs_tsv, newline=""))

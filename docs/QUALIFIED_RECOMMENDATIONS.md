@@ -17,7 +17,16 @@ conformers at seed 42; final acceptance requires eight conformers at each of
 strict specified stereo and `computational-route-support-v1` remain mandatory.
 There is no adaptive embedding or threshold relaxation.
 
-Both CLIs accept `--recommendation-profile qualified-selective-engineering-v2`
+Both CLIs now expose `--recommend`, and the lazy public API exposes
+`recommend(hit, designs, config, output_dir, *, deadline_monotonic=None)`.
+These explicitly select the same fixed v2 policy and preflight the request before
+consuming designs or generating raw candidates. Generic defaults remain exploratory.
+See [entrypoint and conflict rules](SYNTHESIS.md#request-qualified-recommendations).
+Supported explicit custom values remain visible, with effective score/recall floors
+and matched/custom status in the CLI summary; conflicting profile declarations
+and unsupported effective settings reject rather than being overwritten.
+
+Both CLIs also accept `--recommendation-profile qualified-selective-engineering-v2`
 and `--forward-model-path /path/to/pinned/local/ReactionT5`; API configurations
 use `"recommendation_profile": "qualified-selective-engineering-v2"` and an
 explicit local predictor path. Omitting the option retains existing defaults.
@@ -62,6 +71,9 @@ can still occur, so this change claims avoided calls and possible fixed-budget
 opportunity, not demonstrated scientific yield. The manifest binds the new helper
 and orchestration source separately; the five numerical kernels and profile
 artifact are unchanged. Frozen earlier campaigns retain their original source.
+The capacity change merged into `develop` at `2556b14` after **1477 root tests
+passed, 11 skipped**, independent source review and all six CI checks passed.
+The ongoing fixed campaign remains on its earlier immutable source.
 
 The scorer/constraint source gate passed at `094d0c2`, and the separate workflow
 gate passed at `68750e0` (integrated as `7161ff3`): root 208 tests, independent 60
@@ -288,7 +300,7 @@ immutable.
 | 3. Similarity-aware route/search | Search and route construction retain original-hit similarity while finding changed scaffolds and viable route products; compare yield and compute under fixed budgets. | Engineering gate passed at `6adc2cedd73c14cf5a0ab88fbcd61004f3267ef6`. Controlled toy diagnostics only; scientific yield/compute benchmark remains Stage 6. |
 | 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | Full gate passed at `f6ab40e0d1d536636015d94c75f1b815898dc907`; reviewed development artifact and both CLI/API paths verified. Explicit opt-in, permissive development thresholds—not a strong-similarity guarantee. |
 | 5. Independent synthesis evidence | Establish independent, route-specific evidence and provenance beyond catalog/rule replay; define treatment of unknowns, missing context, atom sources, model disagreement and observation quality. Never present a heuristic as a synthesis probability. | Engineering and known-fixture execution gate passed at `4d47b30c925152198d2fb8e68cdad3b502bacc7d`. Conditional computational support; no experimental or post-selection independence claim. |
-| 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Ten-attempt inspected development pilot and separate 197-pair selective scoring evaluation completed. New preset/collector source gate passed at `d9402ab`. Separate known-route actual result gate passed after a preserved finalizer failure and independently audited saved verification. Fresh definition frozen; first acquisition failed before any target data returned. No scientific superiority claimed. |
+| 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Ten-attempt inspected development pilot and separate 197-pair selective scoring evaluation completed. New preset/collector source gate passed at `d9402ab`. Separate known-route actual result gate passed after a preserved finalizer failure and independently audited saved verification. Fresh 12-query panel selection and binding independently verified; the fixed 252-attempt campaign has started on immutable `d9402ab`. Complete scientific comparison remains pending; the original acquisition failure is preserved. No scientific superiority claimed. |
 
 Each stage requires implementation, focused validation and independent review
 before the next stage. Historical published results and source inventories are
@@ -1021,9 +1033,8 @@ delivery order and completion checks are:
 
 1. **Close the corrected software contract and integrate it.** The preset,
    workflow and collector source gate passed at `d9402ab`. The exact reviewed
-   source is integrated into the feature branch and its six CI jobs passed;
-   the separate actual result review also passed. Merging the reviewed change
-   closes software integration into develop. Preserve the old
+   source is integrated into develop and its six CI jobs passed;
+   the separate actual result review also passed. Preserve the old
    profile and its historical results. Numeric floors remain declared
    engineering settings, and inactive assay labels must never be treated as
    structural dissimilarity labels.
@@ -1035,17 +1046,15 @@ delivery order and completion checks are:
    The small synthetic catalog establishes fixture membership only, not vendor
    stock. This known example closes an integration check; it does not establish
    useful yield on new inputs or difficult stereochemical/multi-step cases.
-3. **Acquire and review the fresh evaluation panel.** The pilot audits,
-   catalog-equivalence diagnostic, augmented exclusion inventory and full v3
-   definition freeze are complete. The first acquisition failed before any
-   target data returned. Review a prospective transport-bound amendment before
-   another acquisition, then replay selection from the retained bytes and
-   review the actual panel. Keep source, assets, scientific selection and
-   analysis unchanged. Disclose normalization, incomplete inspection and
-   checkpoint-training gaps.
-4. **Measure useful candidate yield and full cost.** Run the proposed six-target,
-   two-query, three-generation-seed panel with five methods and two ablations
-   (252 planned attempts) only after panel and protocol review. The primary
+3. **Preserve the reviewed fresh evaluation panel.** The fresh 12-query panel
+   selection and binding are independently verified. The original failed
+   acquisition remains preserved. Keep the frozen source, assets, scientific
+   selection and analysis unchanged, and retain the disclosed normalization,
+   incomplete inspection and checkpoint-training gaps.
+4. **Complete useful candidate yield and cost measurement.** The fixed
+   252-attempt campaign has started on immutable `d9402ab`; the complete
+   scientific comparison remains pending. The planned six-target, two-query,
+   three-generation-seed panel covers five methods and two ablations. Its primary
    endpoint is at least one jointly qualified recommendation per planned
    attempt. Report unique yield, scaffold change including generic topology,
    separate 2D/3D/pharmacophore metrics, per-target behavior, route evidence,

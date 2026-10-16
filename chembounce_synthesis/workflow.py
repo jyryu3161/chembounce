@@ -296,6 +296,80 @@ def _resolve_paths(config, base):
     return config
 
 
+def preflight_recommendation(hit, config):
+    """Validate a strict request without consuming designs or constructing assets.
+
+    Path presence is not asset certification. Existing constructors still perform
+    authoritative contents/provenance validation when used, with no new trust cache.
+    """
+    from .conformers import require_alignment
+    from .profiles import request_recommendations
+
+    config = _config(request_recommendations(config))
+    try:
+        config = _resolve_paths(config, Path.cwd())
+    except TypeError as exc:
+        raise ValueError(f"Invalid recommendation asset path: {exc}") from exc
+    selective_scoring.configured_constraints(config, hit)
+    require_alignment()
+
+    def path(value, name, directory=False):
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"{name} requires an explicit local path")
+        candidate = Path(value)
+        if not (candidate.is_dir() if directory else candidate.is_file()):
+            raise ValueError(
+                f"{name} must be an existing local {'directory' if directory else 'file'}: {value}"
+            )
+
+    for key in ("catalog", "rules"):
+        path(config[key], key)
+    provider = config["provider"]
+    kind = provider.get("kind")
+    if kind == "saved":
+        if set(provider) != {"kind", "path"}:
+            raise ValueError("saved provider requires only kind and path")
+        path(provider["path"], "provider.path")
+    elif kind == "synllama":
+        if set(provider) - {
+            "kind",
+            "model_path",
+            "prompt_path",
+            "device",
+            "samples",
+            "max_new_tokens",
+            "seed",
+        }:
+            raise ValueError("Unknown SynLlama provider option")
+        path(provider.get("model_path"), "provider.model_path", directory=True)
+        path(provider.get("prompt_path"), "provider.prompt_path")
+        positive(provider.get("samples", 4), "provider.samples")
+        positive(provider.get("max_new_tokens", 1600), "provider.max_new_tokens")
+        seed = provider.get("seed", 42)
+        if type(seed) is not int or not 0 <= seed <= 2**31 - 1:
+            raise ValueError("Invalid provider.seed")
+        if not isinstance(provider.get("device", "cpu"), str) or not provider.get("device", "cpu").strip():
+            raise ValueError("provider.device must be a nonempty string")
+    else:
+        raise ValueError("Provider kind must be synllama or saved")
+    path(
+        config["synthesis_evidence"]["predictor"]["model_path"],
+        "synthesis_evidence.predictor.model_path",
+        directory=True,
+    )
+    return config
+
+
+def recommend(hit, designs, config, output_dir, *, deadline_monotonic=None):
+    """Request the fixed v2 conjunction; generic run remains exploratory by default.
+
+    Explicit supported positive overrides survive and are labelled custom in
+    outputs. No generation, retry, deadline extension or exploratory fallback.
+    """
+    config = preflight_recommendation(hit, config)
+    return run(hit, designs, config, output_dir, deadline_monotonic=deadline_monotonic, scoring_mode="3d")
+
+
 def _provider(config):
     config = dict(config)
     kind = config.pop("kind", None)

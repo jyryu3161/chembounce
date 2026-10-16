@@ -1,5 +1,88 @@
 # Synthesis-aware scaffold hopping
 
+## Request qualified recommendations
+
+Use `--recommend` on either CLI or `from chembounce_synthesis import recommend`
+for the version-fixed `qualified-selective-engineering-v2` contract. The
+[asset template](../examples/synthesis/strict-recommendation-config.json) declares
+the same profile, so selection is idempotent. Replace its placeholder paths with
+existing local files/directories; the example is not a ready-made vendor catalog,
+model download or promise that its proposals cover a new input.
+
+```python
+from chembounce_synthesis import recommend
+from chembounce_synthesis.workflow import load_config
+
+config = load_config("my-strict-assets.json")
+rows = recommend(hit, designs, config, "NEW_RUN", deadline_monotonic=None)
+```
+
+The API accepts supplied designs, including a lazy iterable. It validates the
+request before consuming them and delegates once to the existing final workflow;
+it does not generate designs or retry an empty result. JSON paths are relative to
+the JSON parent; direct API paths are relative to the current working directory.
+`--forward-model-path` is relative to the CLI working directory. Existing generic
+`run(...)`, hopping defaults and exploratory examples retain their behavior.
+
+The template uses saved proposals for known designs. To generate proposals for
+new hopping designs, replace only its `provider` section with an explicit local
+configuration, for example:
+
+```json
+{
+  "kind": "synllama",
+  "model_path": "/path/to/local/SynLlama",
+  "prompt_path": "/path/to/local/vars.py",
+  "device": "cpu",
+  "samples": 2,
+  "max_new_tokens": 1600,
+  "seed": 42
+}
+```
+
+Both provider choices still require the separate pinned local ReactionT5 bundle
+for strict route support. No model or dataset is acquired implicitly. Early
+preflight checks configuration, hit/core/landmarks, alignment capability and local
+path types without constructing catalogs, models, reference ensembles or consuming
+designs. Asset contents/hashes are still validated by their authoritative loaders;
+path presence alone is not certification.
+
+The default original-hit floors are Tanimoto **0.35**, shape **0.70**,
+pharmacophore **0.50** and polar reference recall **0.75**. Screening uses eight
+conformers at seed 42; final acceptance requires eight at each of 42/43/44. Final
+products must change the normalized atom-aware scaffold, which need not change
+generic ring topology, and have concrete conditional computational route support.
+The actual effective floors and matched/custom status appear in the CLI summary
+and complete effective policy remains in the output artifacts. They are engineering
+preferences, not activity predictions or experimental synthesis evidence.
+
+`--recommend` rejects a different profile declared in either the original JSON or
+CLI, even if ordinary CLI precedence would otherwise hide that declaration.
+Unsupported effective modes, seeds, stereo policies or evidence settings fail
+clearly. Supported explicit positive numerical/ranking/route-search overrides are
+preserved as `custom_unvalidated`; valid resource budgets and extra core/landmark/
+property vetoes retain their existing provenance categories. The shortcut never
+silently resets conflicting explicit 12/24-conformer settings in old exploratory
+examples. Use the new template or explicitly migrate those settings.
+
+`--no-synllama` conflicts with `--recommend`, including with an unavailable config.
+`--no-shape` only skips an upstream hopping descriptor; the final geometry gate
+still runs and requires an RDKit build with `rdShapeAlign`. The integrated CLI
+validates the exact intersection of upstream and synthesis property bounds before
+generation and passes that same configuration to final evaluation. It cannot
+silently relax an empty property interval.
+
+Continuation with `--recommend` preserves inherited explicit settings and rejects
+incompatible ones. An explicit replacement `--config` retains existing migration
+and carry-forward semantics. Saved routes are freshly verified/scored; saved
+scores, statuses or prior profile labels are never acceptance authority. Carry-only
+saved archives remain supported. Deadlines and budgets are unchanged, with no new
+top-ups or retries. CLI exit 0 requires final qualified rows, exit 3 means no qualified
+rows within the budget, and exit 2 reports an invalid/failed request. Raw hopping
+files remain exploratory; final recommendations are in `synthesis/results.*` for
+the integrated CLI or `results.*` for the standalone workflow.
+
+
 The optional synthesis workflow turns scaffold-hopping designs into **catalog and
 reaction verified computational candidates**. SynLlama supplies route proposals.
 The [SynLlama publication](https://doi.org/10.1021/acscentsci.5c01285) describes

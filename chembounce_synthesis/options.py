@@ -5,6 +5,11 @@ import copy
 
 def add_expansion_options(parser):
     parser.add_argument(
+        "--recommend",
+        action="store_true",
+        help="Request qualified-selective-engineering-v2: original-hit Tanimoto/shape/pharmacophore floors .35/.70/.50, polar recall .75, changed scaffold and computational route support; supported explicit overrides remain custom",
+    )
+    parser.add_argument(
         "--forward-model-path",
         help="Explicit local pinned ReactionT5 bundle required by the named recommendation profiles",
     )
@@ -85,6 +90,11 @@ def expansion_overrides(args):
 
 def apply_expansion_options(config, args):
     config = copy.deepcopy(config)
+    if getattr(args, "recommend", False):
+        from .profiles import request_recommendations
+
+        # Inspect both declarations before ordinary CLI precedence can hide one.
+        config = request_recommendations(config, getattr(args, "recommendation_profile", None))
     if getattr(args, "forward_model_path", None) is not None:
         from pathlib import Path
 

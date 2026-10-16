@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "recommendation_profile": "qualified-selective-engineering-v2",
+  "catalog": "/path/to/local/catalog.tsv",
+  "rules": "/path/to/local/rules.json",
+  "provider": {
+    "kind": "saved",
+    "path": "/path/to/local/proposals.json"
+  },
+  "synthesis_evidence": {
+    "predictor": {
+      "kind": "reactiont5",
+      "model_path": "/path/to/local/pinned/ReactionT5"
+    }
+  }
+}
