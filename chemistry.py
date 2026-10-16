@@ -46,6 +46,14 @@ def cut_scaffold(target, pattern):
     return sorted(outside, key=absolute_smiles)
 
 
+def _empty_absolute_group(group):
+    return (
+        group.GetGroupType() == Chem.StereoGroupType.STEREO_ABSOLUTE
+        and not group.GetAtoms()
+        and (not hasattr(group, "GetBonds") or not group.GetBonds())
+    )
+
+
 def _attach(state, site_idx, label):
     edit = Chem.RWMol(state)
     endpoint = next(a for a in edit.GetAtoms() if a.GetAtomicNum() == 0 and a.GetIsotope() == label)
@@ -64,6 +72,16 @@ def _attach(state, site_idx, label):
     product = Chem.molzip(edit.GetMol())
     Chem.SanitizeMol(product)
     Chem.AssignStereochemistry(product, cleanIt=True, force=True)
+    # RDKit 2023 molzip can create an empty ABS group on an ordinary product.
+    # It carries no atom/bond state. Normalize only this internal artifact;
+    # external empty groups and every nonempty/nonabsolute group still meet the
+    # unchanged representation guard. Use copied groups to retain atom ownership.
+    if any(_empty_absolute_group(group) for group in product.GetStereoGroups()):
+        copied = Chem.RWMol(product)
+        copied.SetStereoGroups(
+            [group for group in copied.GetStereoGroups() if not _empty_absolute_group(group)]
+        )
+        product = copied.GetMol()
     return product
 
 
