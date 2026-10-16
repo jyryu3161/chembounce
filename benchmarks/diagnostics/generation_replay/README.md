@@ -7,6 +7,13 @@ restricted to the original scaffold/time/target study: 360 + 180 + 90 attempts,
 It excludes the supplementary 270-attempt study and the separate common forward
 model re-inference audit. No real study results or bundle are supplied here.
 
+The [figure and table exporter](EXPORT.md) accepts only a completed, externally
+hash-pinned replay. It presents recorded statistics for the original frozen
+39-file study, with separate infrastructure bounds and explicit conditional-score
+limitations; its tests use synthetic data only. Displayed counts refer to target
+clusters, preserving the historical `independent_targets` field without asserting
+that reused targets and reaction inputs are statistically independent.
+
 `analyze_generation_historical.py` is a byte-identical archive of the original
 `analyze-generation.py`, SHA256
 `cb6992cda28895fa42791ad3969df5cbafd48a71b4ab8362ecc180cfeb4f2cc0`.
