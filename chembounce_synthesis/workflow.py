@@ -19,7 +19,14 @@ from rdkit.Chem.Scaffolds import MurckoScaffold
 
 from .catalog import Catalog
 from .common import FP, canonical, digest, molecule, positive, write_json
-from .conformers import ConformerSettings, ensemble, prepare_reference, reference_from_sdf, score_candidate
+from .conformers import (
+    ConformerSettings,
+    _check_stereo,
+    ensemble,
+    prepare_reference,
+    reference_from_sdf,
+    score_candidate,
+)
 from .continuation import load_carried_routes
 from .design_selection import select_designs, selection_policy, sized_count
 from .evidence import evaluator_from_config, validate_evidence_config
@@ -29,6 +36,7 @@ from .protocols import apply_synthesis_protocol, protocol_provenance
 from .qualification import decide, effective_policy, validate_result
 from .reactions import Rules
 from .refinement import RefinementBudget, RefinementSettings, refine_candidate
+from .route_objective import RootProductObjective, search_policy
 from .routes import SearchLimits, expand_route, resolve_proposal, verify_route
 from .synllama import SavedProposals, SynLlama
 
@@ -129,6 +137,8 @@ def _config(config):
         "synthesis_evidence",
         "pocket",
         "recommendation",
+        "route_search_policy",
+        "route_search_cache_size",
     }
     if set(config) - permitted:
         raise ValueError(f"Unknown synthesis configuration keys: {sorted(set(config) - permitted)}")
@@ -222,6 +232,7 @@ def _config(config):
     _validate_parameters(0.5, 0.3, 42, config.get("property_thresholds", {}))
     effective_policy(config)
     selection_policy(config)
+    search_policy(config)
     return config
 
 
@@ -526,6 +537,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
     rows, poses, similarity_cache, candidates_by_key = {}, {}, {}, {}
     evidence_evaluator = None
     policy = None
+    route_policy = None
+    root_objectives = {}
     selected = []
     projected_designs = set()
     try:
@@ -540,6 +553,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         config = _resolve_paths(_config(config), Path.cwd())
         policy = effective_policy(config)
         qualified = policy["mode"] == "qualified"
+        route_policy = search_policy(config)
         summary["recommendation_mode"] = policy["mode"]
         if qualified and scoring_mode != "3d":
             raise ValueError("Qualified recommendations require completed 3D scoring")
@@ -800,6 +814,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 evidence_evaluator = _evidence_evaluator(config)
         manifest = _manifest(config, hit, capped_designs)
         manifest["recommendation_policy"] = policy
+        manifest["route_search_policy"] = route_policy
         manifest["design_preflight"] = {
             **design_preflight,
             "reject_unspecified_stereo": settings.reject_unspecified_stereo,
@@ -891,11 +906,41 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         )
         from utils import _get_molecular_prop_extd_, determ_props
 
+        def check_final_product(product, design):
+            check_constraints(
+                product,
+                hit,
+                design,
+                config.get("mode", "hop"),
+                config.get("core_smiles"),
+                config.get("preserve_design_scaffold", False),
+            )
+            mol = molecule(product)
+            if qualified:
+                _check_stereo(mol, ConformerSettings())
+            props = _get_molecular_prop_extd_(mol)
+            accepted, reasons = determ_props(
+                props, config.get("property_thresholds", {}), w_all_failed_reason=True
+            )
+            if not accepted:
+                raise ValueError("Product property filter: " + "; ".join(reasons))
+            return props
+
         for design, proposals in _design_batches(
             designs, provider, deadline_monotonic, carried_only=carried_only
         ):
             LOGGER.info("Projecting design %s onto catalog reaction space", design)
             design_fp = FP.GetFingerprint(molecule(design))
+            if route_policy["version"] == "original-hit-v1" and design not in root_objectives:
+                root_objectives[design] = RootProductObjective(
+                    hit,
+                    design,
+                    config.get("minimum_scores", {}),
+                    lambda product, design=design: check_final_product(product, design),
+                    route_policy,
+                )
+            root_objective = root_objectives.get(design)
+            search_options = {"root_objective": root_objective} if root_objective is not None else {}
             expansion_cache = {}
             # Carry evidence first, before the fresh search can consume the scoring budget.
             for proposal in proposals:
@@ -922,7 +967,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         )
                         continue
                     try:
-                        projected, report = resolve_proposal(proposal["response"], catalog, rules, limits)
+                        projected, report = resolve_proposal(
+                            proposal["response"], catalog, rules, limits, **search_options
+                        )
                         summary["search_reports"].append(
                             {"proposal_id": proposal_id, "stage": "projection", **asdict(report)}
                         )
@@ -949,7 +996,13 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         cached = route_key in expansion_cache
                         if not cached:
                             expansion_cache[route_key] = expand_route(
-                                item["route"], catalog, rules, limits, target_smiles=design, **expansion
+                                item["route"],
+                                catalog,
+                                rules,
+                                limits,
+                                target_smiles=design,
+                                **expansion,
+                                **search_options,
                             )
                         expanded, report = expansion_cache[route_key]
                         candidates.extend(expanded)
@@ -990,21 +1043,16 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     record["verification"] = verification
                     product = verification["product"]
                     summary["verified_routes"] += 1
+                    if record.get("search_eligibility", {}).get("eligible") is False:
+                        record.update(
+                            selection_status="search_seed_only",
+                            eligible_for_evidence=False,
+                            eligible_for_scoring=False,
+                            reason="Root retained only as a bounded expansion seed; failed current cheap final-product requirements",
+                        )
+                        continue
                     try:
-                        check_constraints(
-                            product,
-                            hit,
-                            design,
-                            config.get("mode", "hop"),
-                            config.get("core_smiles"),
-                            config.get("preserve_design_scaffold", False),
-                        )
-                        props = _get_molecular_prop_extd_(molecule(product))
-                        accepted, reasons = determ_props(
-                            props, config.get("property_thresholds", {}), w_all_failed_reason=True
-                        )
-                        if not accepted:
-                            raise ValueError("Product property filter: " + "; ".join(reasons))
+                        props = check_final_product(product, design)
                     except ValueError as exc:
                         record.update(selection_status="constraint_rejected", reason=str(exc))
                         continue
@@ -1481,6 +1529,14 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         summary.update(status="error", error_type=type(exc).__name__, error=str(exc))
         raise
     finally:
+        write_json(
+            out / "search_objectives.json",
+            {
+                "schema_version": 1,
+                "policy": route_policy,
+                "design_objectives": [objective.snapshot() for objective in root_objectives.values()],
+            },
+        )
         for record in route_records:
             if "qualification" not in record:
                 record["qualification"] = {

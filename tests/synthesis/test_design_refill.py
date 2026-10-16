@@ -395,5 +395,6 @@ def test_real_integrated_cli_supplies_refill_pool_and_honors_explicit_cap(
     assert supply["effective_overall_max_n"] == (explicit_cap or 2)
     assert supply["explicit_overall_cap_limits_pool"] is bool(explicit_cap)
     counts = read(out / "synthesis", "manifest.json")["design_preflight"]["counts"]
+    assert read(out / "synthesis", "manifest.json")["route_search_policy"]["version"] == "original-hit-v1"
     assert counts["preflight_rejected"] == 1 and counts["eligible"] == (0 if explicit_cap else 1)
     assert read(out / "synthesis", "summary.json")["scored_products"] <= 1

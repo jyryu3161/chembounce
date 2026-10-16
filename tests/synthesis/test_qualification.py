@@ -134,6 +134,9 @@ def test_design_identity_cannot_compensate_for_low_original_hit_similarity(
 ):
     config = configuration(tmp_path, assets, proposal)
     config["minimum_scores"]["hit_tanimoto"] = 0.99
+    config["route_search_policy"] = (
+        "design-v1"  # Exercise the unchanged final gate, not early search rejection.
+    )
     monkeypatch.setattr(workflow, "score_candidate", lambda *a, **k: pytest.fail("2D cutoff must precede 3D"))
     out = tmp_path / "distant"
     assert workflow.run(HIT, [DESIGN], config, out) == []
@@ -145,7 +148,9 @@ def test_design_identity_cannot_compensate_for_low_original_hit_similarity(
 
 def test_state_only_change_is_not_a_qualified_hop(tmp_path, assets, proposal):
     out = tmp_path / "state"
-    assert workflow.run("CC(=O)Nc1cc[nH+]cc1", [DESIGN], configuration(tmp_path, assets, proposal), out) == []
+    config = configuration(tmp_path, assets, proposal)
+    config["route_search_policy"] = "design-v1"
+    assert workflow.run("CC(=O)Nc1cc[nH+]cc1", [DESIGN], config, out) == []
     assert read(out, "routes.json")["routes"][0]["selection_status"] == "constraint_rejected"
     assert_empty(out)
 
@@ -257,6 +262,7 @@ def test_complete_refined_protocol_qualifies_and_budget_shortfall_does_not(tmp_p
 def test_required_anchor_cannot_disappear_from_final_product(tmp_path, assets, proposal):
     config = configuration(tmp_path, assets, proposal)
     config["core_smiles"] = "c1ccccc1"
+    config["route_search_policy"] = "design-v1"
     out = tmp_path / "anchor"
     assert workflow.run(HIT, [DESIGN], config, out) == []
     assert "core/anchor" in read(out, "routes.json")["routes"][0]["reason"]

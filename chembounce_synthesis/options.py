@@ -10,6 +10,11 @@ def add_expansion_options(parser):
         help="qualified enforces qualified-v1 on final products using explicit positive hit similarity minima; exploratory results are not recommendations",
     )
     parser.add_argument(
+        "--route-search-policy",
+        choices=("original-hit-v1", "design-v1"),
+        help="Root-product search objective; qualified defaults to original-hit-v1; design-v1 is an explicit search ablation with unchanged final acceptance",
+    )
+    parser.add_argument(
         "--protocol",
         choices=("legacy", "research-v1"),
         help="Versioned computational defaults; explicit settings override them. research-v1 enables diverse search and uncertainty-aware bounded refinement",
@@ -63,6 +68,8 @@ def apply_expansion_options(config, args):
     config = copy.deepcopy(config)
     if getattr(args, "recommendation_mode", None) is not None:
         config.setdefault("recommendation", {}).update(mode=args.recommendation_mode)
+    if getattr(args, "route_search_policy", None) is not None:
+        config["route_search_policy"] = args.route_search_policy
     if getattr(args, "protocol", None) is not None:
         config["protocol"] = args.protocol
     overrides = expansion_overrides(args)

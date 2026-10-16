@@ -11,8 +11,8 @@ biological activity, or experimental synthesizability.
 | Stage | Required outcome and evidence gate | Status |
 | --- | --- | --- |
 | 1. Unified final qualification | One versioned conjunction at the real API/CLI export boundary; final-product/original-hit similarity, normalized hop, anchor, exact selected route, requested evidence and complete scoring/seed checks. Adversarial workflow tests, alternative survival, continuation, and matching JSON/TSV/SDF selection. | Engineering gate passed at `e47c38a1734bab4f154fc47b4f4fb7fb5493aa43`; explicit engineering thresholds only. |
-| 2. Stereo/design eligibility and bounded refill | Explicit stereo/design eligibility with an auditable, bounded replacement supply when designs fail; preserve caps and complete rejection denominators. | Implemented; review pending. No scientific yield claim. |
-| 3. Similarity-aware route/search | Search and route construction retain original-hit similarity while finding changed scaffolds and viable route products; compare yield and compute under fixed budgets. | Pending. Stage 1 gates outputs but does not improve search. |
+| 2. Stereo/design eligibility and bounded refill | Explicit stereo/design eligibility with an auditable, bounded replacement supply when designs fail; preserve caps and complete rejection denominators. | Engineering gate passed at `8461d9a492d181165df53f031f5c12f6a3dde167`. No scientific yield claim. |
+| 3. Similarity-aware route/search | Search and route construction retain original-hit similarity while finding changed scaffolds and viable route products; compare yield and compute under fixed budgets. | Implemented; engineering review pending. Controlled toy diagnostics only; scientific yield/compute benchmark remains Stage 6. |
 | 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | Pending. No calibrated cutoffs or production recommendation preset is supplied by Stage 1. |
 | 5. Independent synthesis evidence | Establish independent, route-specific evidence and provenance beyond catalog/rule replay; define treatment of unknowns, missing context, atom sources, model disagreement and observation quality. Never present a heuristic as a synthesis probability. | Pending. Stage 1 enforces the existing explicitly requested evidence policy. |
 | 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Pending. No scientific campaign or performance improvement claimed. |
@@ -30,6 +30,14 @@ reachable contract; synthetic post-refiner malformed-report persistence remains
 a nonblocking robustness limitation. Root validation record:
 `qualified-development-20261016/stage1-e47c38a-root/validation.json`, SHA-256
 `a357511436d0b3c6005636caf252855cbcb89c68747f0155a8dec4dc53aca122`.
+
+Stage 2 root validation: parent `bc12d92` full research suite **901 passed,
+11 skipped**; focused minimum runtime **63 passed, 22 skipped, 8 warnings**;
+focused Python 3.12 **146 passed**. The minimum-runtime 3D limitation above
+still applies. The final narrow unique-route-counter correction passed **45**
+root tests and **17** unchanged independent tests. Root gate record:
+`qualified-development-20261016/stage2-gate.json`, SHA-256
+`2b8be505ad9ba2cb5f67714d2520e9e52ba41db7352f50c9a51054b98c613df7`.
 
 ## Stage 1 interface
 
@@ -141,3 +149,48 @@ Other saved responses are replayed normally; malformed provider data still fails
 Historical benchmark adapters and frozen studies remain unchanged. Their
 upstream candidate caps and query-failure conventions must be addressed in the
 new Stage 6 benchmark profile before attributing any benchmark result to refill.
+
+## Stage 3 original-hit route search
+
+Qualified runs default to `route_search_policy: original-hit-v1`; exploratory
+runs retain `design-v1`. Both CLIs accept `--route-search-policy` for an explicit
+override, including `design-v1` as a qualified-mode search ablation. The final
+qualified-v1 acceptance contract and configured thresholds remain unchanged.
+
+Projection and expansion assess each complete regenerated root product before
+streaming and final beam/frontier truncation. Cheap eligibility reuses the
+configured hop, core, property and 2D checks, with strict specified stereo in
+qualified mode. Eligible roots rank first by original-hit binary Morgan, then
+actual workflow-design similarity and a deterministic route key. Distinct exact
+products precede alternate routes within each eligibility tier; spare slots
+retain route alternatives. Intermediate reactions and role-based catalog leaf
+shortlists keep their own targets, without whole-hit thresholds on fragments.
+
+When expansion is enabled, ineligible roots may fill remaining existing beam
+slots as explicit seed-only states. Earlier expansion rounds may retain them
+within the same frontier capacity; they do not consume cumulative eligible
+output slots. The final round discards them. They never receive evidence/3D
+scoring or recommendation status. This permits a bounded sequence of catalog
+substitutions to recover a qualifying hop. Combination limits, frontier widths,
+round limits and model calls are unchanged. Actual substitutions can increase
+relative to legacy early termination, while remaining within those limits.
+Existing workflow deadline boundaries remain in force; a single route call is
+bounded by its search limits rather than interrupted midway by the deadline.
+
+`manifest.json.route_search_policy` records the effective policy.
+`search_objectives.json` records each design's exact hit/design references,
+2D minima, LRU cache counts and bounded decision sample. The positive integer
+`route_search_cache_size` defaults to 4096 entries per design; the first
+`min(size, 256)` distinct product decisions are sampled separately. Evaluation
+counts are cache misses, including repeat evaluations after eviction, not an
+unbounded global unique-product count. Search reports count generated root
+states, repeated pruning visits, ineligible/filtered visits, capacity truncation,
+retained seed visits and per-round eligible/frontier counts. Samples are not
+complete failure inventories; aggregate counters retain all measured events.
+The cache and seed-only distinction are inactive under `design-v1`.
+
+The beam-one amide fixture tests original-hit guidance against legacy search
+with equal actual combination counts. Its explicit 0.5 threshold is an
+engineering diagnostic, not a production cutoff. Separate two-round seed
+recovery tests use equal configured caps. These tests establish bounded search
+behavior, not global recall, general scientific improvement or calibrated yield.

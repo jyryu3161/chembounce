@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from rdkit import DataStructs
 
 from .common import FP, canonical, molecule, positive
+from .route_objective import prioritize_products
 
 
 @dataclass
@@ -36,6 +37,15 @@ class SearchReport:
     combination_budget_scope: str = "unspecified"
     combination_limit: int | None = None
     budget_exhausted_nodes: list = field(default_factory=list)
+    root_states_generated: int = 0
+    root_prune_calls: int = 0
+    root_state_visits: int = 0
+    root_ineligible_state_visits: int = 0
+    root_filtered_state_visits: int = 0
+    root_states_truncated: int = 0
+    root_seed_only_retained_visits: int = 0
+    root_objective_evaluations: int = 0
+    root_objective_cache_hits: int = 0
 
 
 def _untag(value, tag):
@@ -210,13 +220,48 @@ def _proposal_graph(proposal, rules, limits):
     return products, bbs, root
 
 
-def _prune(states, target, width, report):
+def _root_prune(items, width, report, objective, product, route_key, *, allow_seed_only):
+    assessed = [(item, objective.assess(product(item), report)) for item in items]
+    report.root_prune_calls += 1
+    report.root_state_visits += len(assessed)
+    report.root_ineligible_state_visits += sum(not decision["eligible"] for _, decision in assessed)
+    ranked = []
+    for eligible in (True, False):
+        tier = [(item, decision) for item, decision in assessed if decision["eligible"] == eligible]
+        if not eligible and not allow_seed_only:
+            report.root_filtered_state_visits += len(tier)
+            continue
+        ranked.extend(
+            prioritize_products(
+                tier,
+                key=lambda pair: (-pair[1]["hit_tanimoto"], -pair[1]["design_tanimoto"], route_key(pair[0])),
+                product=lambda pair: product(pair[0]),
+            )
+        )
+    report.root_states_truncated += max(0, len(ranked) - width)
+    report.root_seed_only_retained_visits += sum(not decision["eligible"] for _, decision in ranked[:width])
+    return [item for item, _ in ranked[:width]], len(ranked) > width
+
+
+def _prune(states, target, width, report, root_objective=None):
     """Bound intermediate search; preserve different routes to the same molecule."""
-    fp = FP.GetFingerprint(molecule(target))
     unique = {}
     for state in states:
         key = json.dumps(state, sort_keys=True)
         unique.setdefault(key, state)
+    if root_objective is not None:
+        retained, truncated = _root_prune(
+            list(unique.values()),
+            width,
+            report,
+            root_objective,
+            lambda state: state["product"],
+            lambda state: json.dumps(state, sort_keys=True),
+            allow_seed_only=root_objective.policy["retain_seed_only"],
+        )
+        report.beam_truncations += int(truncated)
+        return retained
+    fp = FP.GetFingerprint(molecule(target))
     ranked = sorted(
         unique.values(),
         key=lambda s: (
@@ -229,7 +274,7 @@ def _prune(states, target, width, report):
     return ranked[:width]
 
 
-def resolve_proposal(proposal, catalog, rules, limits=None):
+def resolve_proposal(proposal, catalog, rules, limits=None, *, root_objective=None):
     """Project the proposed DAG onto real blocks and rules; keep regenerated products.
 
     Invalid rules/SMILES are rejected. Reactant permutations are enumerated rather
@@ -252,6 +297,7 @@ def resolve_proposal(proposal, catalog, rules, limits=None):
         if smiles in memo:
             return memo[smiles]
         step = graph[smiles]
+        objective = root_objective if smiles == root else None
         rule = rules.get(step["rule_id"])
         states = []
         stop = False
@@ -293,6 +339,8 @@ def resolve_proposal(proposal, catalog, rules, limits=None):
                 )
                 report.reaction_truncations += int(capped)
                 for product in generated:
+                    if objective is not None:
+                        report.root_states_generated += 1
                     new_nodes = nodes | {
                         step["id"]: {
                             "id": step["id"],
@@ -303,10 +351,10 @@ def resolve_proposal(proposal, catalog, rules, limits=None):
                     }
                     states.append({"root": step["id"], "product": product, "nodes": new_nodes})
                 if len(states) >= 4 * limits.beam_width:
-                    states = _prune(states, smiles, limits.beam_width, report)
+                    states = _prune(states, smiles, limits.beam_width, report, objective)
             if stop:
                 break
-        memo[smiles] = _prune(states, smiles, limits.beam_width, report)
+        memo[smiles] = _prune(states, smiles, limits.beam_width, report, objective)
         if not memo[smiles]:
             report.failures.append(
                 {
@@ -316,6 +364,8 @@ def resolve_proposal(proposal, catalog, rules, limits=None):
                     "reason": (
                         "Global proposal combination budget exhausted before this intermediate was resolved"
                         if report.budget_exhausted_nodes
+                        else "No root survived the original-hit objective within catalog and search limits"
+                        if objective is not None
                         else "No valid regenerated products within catalog and search limits"
                     ),
                 }
@@ -332,12 +382,17 @@ def resolve_proposal(proposal, catalog, rules, limits=None):
                 "verification": evidence,
                 "model_claimed_product": root,
                 "exact_model_product": evidence["product"] == root,
+                **(
+                    {"search_eligibility": root_objective.assess(evidence["product"])}
+                    if root_objective is not None
+                    else {}
+                ),
             }
         )
     return routes, report
 
 
-def _rebuild(route, catalog, rules, target, limits, report):
+def _rebuild(route, catalog, rules, target, limits, report, root_objective=None):
     order = _topology(route["nodes"], route["root"])
     states = [{"nodes": {}, "values": {}}]
     for node in order:
@@ -353,6 +408,8 @@ def _rebuild(route, catalog, rules, target, limits, report):
                 )
                 report.reaction_truncations += int(capped)
             for product in products:
+                if root_objective is not None and node["id"] == route["root"]:
+                    report.root_states_generated += 1
                 new_node = node if "building_block_id" in node else node | {"product": product}
                 expanded.append(
                     {
@@ -363,14 +420,26 @@ def _rebuild(route, catalog, rules, target, limits, report):
                 )
         # Intermediate products are compared to their own former product, not the final hit.
         comparison = node.get("product", target)
-        states = _prune(expanded, comparison, limits.beam_width, report)
+        objective = root_objective if node["id"] == route["root"] else None
+        states = _prune(expanded, comparison, limits.beam_width, report, objective)
         if not states:
             break
     return [{"schema_version": 1, "root": route["root"], "nodes": list(s["nodes"].values())} for s in states]
 
 
-def _expansion_frontier(items, width):
+def _expansion_frontier(items, width, root_objective=None, report=None, *, allow_seed_only=False):
     """Bound retained route evidence while preferring distinct products."""
+    if root_objective is not None:
+        retained, _ = _root_prune(
+            items,
+            width,
+            report,
+            root_objective,
+            lambda item: item["verification"]["product"],
+            lambda item: json.dumps(item["route"], sort_keys=True),
+            allow_seed_only=allow_seed_only,
+        )
+        return retained
     items.sort(key=lambda item: (-item["target_tanimoto"], json.dumps(item["route"], sort_keys=True)))
     unique, alternatives = {}, []
     for item in items:
@@ -394,12 +463,14 @@ def expand_route(
     building_block_top_k=None,
     min_tanimoto=0.0,
     target_smiles=None,
+    root_objective=None,
 ):
     """Replace compatible catalog blocks and replay the entire affected DAG.
 
     Each round changes one leaf per parent, allowing bounded combinatorial expansion.
-    Reserve search/result capacity for later rounds and rank each frontier against
-    the design. All returned pathways pass replay; protected leaves stay fixed.
+    Reserve search/result capacity for later rounds. An optional root objective
+    guides complete products; otherwise frontiers retain the legacy design target.
+    All returned pathways pass replay; protected leaves stay fixed.
     """
     limits = limits or SearchLimits()
     positive(rounds, "expansion_rounds")
@@ -494,7 +565,7 @@ def expand_route(
                         catalog.fps[old.smiles], catalog.fps[bb.smiles]
                     ),
                 }
-                for rebuilt in _rebuild(substituted, catalog, rules, target, limits, report):
+                for rebuilt in _rebuild(substituted, catalog, rules, target, limits, report, root_objective):
                     key = json.dumps(rebuilt, sort_keys=True)
                     if key in seen:
                         continue
@@ -513,16 +584,25 @@ def expand_route(
                             "expansion_round": round_index,
                             "substitutions": history + [substitution],
                             "target_tanimoto": product_scores[product],
+                            **(
+                                {"search_eligibility": root_objective.assess(product)}
+                                if root_objective is not None
+                                else {}
+                            ),
                         }
                     )
                     generated_count += 1
                     if len(generated) >= 4 * quota:
-                        generated = _expansion_frontier(generated, quota)
+                        generated = _expansion_frontier(
+                            generated, quota, root_objective, report, allow_seed_only=round_index < rounds
+                        )
                         report.beam_truncations += 1
             if capped:
                 break
         report.combination_truncations += int(capped)
-        selected = _expansion_frontier(generated, quota)
+        selected = _expansion_frontier(
+            generated, quota, root_objective, report, allow_seed_only=round_index < rounds
+        )
         report.beam_truncations += int(len(generated) > quota)
         report.rounds_completed += 1
         report.round_reports.append(
@@ -531,10 +611,16 @@ def expand_route(
                 "combinations": used,
                 "generated_routes": generated_count,
                 "retained_routes": len(selected),
+                "eligible_routes": sum(
+                    item.get("search_eligibility", {}).get("eligible", True) for item in selected
+                ),
+                "seed_only_frontier_routes": sum(
+                    not item.get("search_eligibility", {}).get("eligible", True) for item in selected
+                ),
                 "combination_limit_reached": capped,
             }
         )
-        results.extend(selected)
+        results.extend(item for item in selected if item.get("search_eligibility", {}).get("eligible", True))
         frontier = [(item["route"], item["substitutions"]) for item in selected]
         if not frontier:
             break
