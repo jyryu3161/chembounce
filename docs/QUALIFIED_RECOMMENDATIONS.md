@@ -627,17 +627,25 @@ strong similarity claim. Later source changes do not modify this completed pilot
 Revised protocol activation, fresh input selection, frozen final grids, execution
 and scientific interpretation remain pending.
 
-The later shared-catalog diagnostic reproduced all 18 ordered qualified records
+The first shared-catalog diagnostic reproduced all 18 ordered qualified records
 from seven saved attempts exactly, but its final guard assertion failed with one
-blocked operation. The original failed report is retained; output equality alone
-does not complete that diagnostic. A separate import-only probe reproduced one
-blocked `socket.bind` from urllib3's IPv6 loopback capability check, reached while
-importing Transformers. The operation was denied before binding, and the library
-caught the guard exception. This reproduces a mechanism consistent with the old
-counter failure; the old run did not retain a call stack. A new diagnostic must
-retain all operation blocks, record exact events, and separately recognize only
-the pinned, expected blocked import probe before accepting the optimization's
-execution contract.
+blocked operation. That failed report remains unchanged. A separate import-only
+probe reproduced one blocked `socket.bind` from urllib3's IPv6 loopback capability
+check while importing Transformers. The operation was denied before binding, and
+the library caught the guard exception. This is consistent with the old counter
+failure; the old run did not retain a call stack.
+
+The corrected diagnostic retained every operation block and recorded each event
+before raising the guard exception. It passed with exactly one expected, pinned
+IPv6 import probe blocked and no unexpected blocked operations. One shared
+read-only catalog, seven fresh rule sets/replay decoders, and 18 fresh route/raw
+prediction checks reproduced all 18 ordered outputs exactly; all 1,443 pinned
+input hashes were unchanged. Independent actual-result review passed 1,511 checks.
+The root result gate is
+`qualified-development-20261016/stage6-catalog-equivalence-result-gate-v2.json`,
+SHA-256 `6febbafb4f257f29d814fb5719f37c408007c542fbec713dd90d663f0f4143c1`.
+This establishes saved collector-output equivalence only. Its measured setup
+and collector costs do not establish an end-to-end speedup or retime the pilot.
 
 Fresh-panel preparation is implemented separately in
 `benchmarks.research.qualified_fresh_panel`; actual acquisition and selection
@@ -663,8 +671,22 @@ passed, 19 skipped** in each alternate runtime, plus **42** independent research
 checks. Its integration changes neither the live pilot nor child workflows.
 Retain `setup.json` or runner-produced `analysis.json` with cost reporting:
 regenerating the standalone pure-analysis report does not propagate optional
-administrative setup metadata. Real saved-output equivalence and exact future
-protocol activation remain separate gates.
+administrative setup metadata. Saved-output equivalence has passed as described
+above; exact future protocol activation remains pending.
+
+The finalized pilot's retained structured artifacts have also been added to the
+future-panel exclusion inventory. The reviewed union contains 17,563 exact
+chemical states, 17,021 normalized families and 7,240 nonempty normalized
+scaffolds, including 3,400 newly added exact states. Its immutable manifest has
+SHA-256 `1d9e5b99a13a217fb0ec004abf66f1cf7d7d3e9a115d494666ceb98eb4fd817c`;
+the later root gate is
+`qualified-development-20261016/stage6-pilot-augmented-inventory-root-gate-v1.json`,
+SHA-256 `b63ad7f86918d299186c361ce75a25fd8a4c4e7aa5520514e769c36474ee8053`.
+The inventory covers the declared retained artifacts, not every historical or
+model-training structure. Forty nonstructured artifacts were not newly parsed;
+unreturned/internal-filtered structures, unresolved normalization inputs and
+checkpoint-training overlap remain limitations. No fresh panel has been acquired
+or selected under this augmented inventory.
 
 The policy retains the complete ordered human single-protein target catalog
 (cap 25000), ranks eligible targets by the frozen SHA-256 rule, examines at
