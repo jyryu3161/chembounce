@@ -482,3 +482,90 @@ fixture using a saved proposal, not live end-to-end SynLlama generation, fresh
 benchmark performance, experimental synthesis or activity validation. The earlier
 zero-recommendation run remains unchanged. Fresh comparisons and ablations remain
 Stage 6, whose execution requires a separate gate.
+
+## Stage 6 source path (execution still pending)
+
+The new `benchmarks.research.qualified_runner` consumes an immutable
+`qualified-benchmark-protocol-v1` JSON with public `queries` (`id`, `target_id`,
+`smiles` only), generation `seeds`, ordered `methods`, pinned file/directory
+`assets`, complete `source_sha256`, and explicit stage budgets. Each method has
+an `arm` (`full`, `baseline`, `crem`, `mol2mol`, or `synllama`), common
+`synthesis_config`/catalog/rules assets, and settings. External native methods
+also declare their exact command, native asset aliases, settings and
+`request_kind`; the frozen baseline receives `pipeline`, while the external
+comparators receive `external`. Commands explicitly consume `{request}` and
+produce `{response}`. This is a new path; historical adapters/results are not
+relabelled or changed.
+
+```sh
+python -m benchmarks.research.qualified_runner \
+  --protocol frozen-qualified-protocol.json --output fresh-qualified-run
+```
+
+The complete query/seed/method grid is saved before work. Method order rotates
+cyclically by query/seed block, with the full order bound into the plan digest.
+Missing, failed, unsupported, interrupted and timed-out attempts remain in the
+planned denominator. No automatic retry, partial native rescue, cross-method
+prediction cache or fallback model is available. Source tests use synthetic
+inputs/controlled beams only; this command requires a separate execution gate.
+
+The prospective engineering pilot uses native **360 seconds**, common **600
+seconds**, outer **960 seconds**, one sequential attempt and 24000 MB host RSS.
+The earlier planning-only 300/600/900 allocation was revised before any pilot
+inference because unchanged native Mol2Mol validation requires a literal
+360-second budget. Its validator and sampling protocol are preserved. Native
+and common subprocess groups use the existing bounded runner, including cold
+imports, asset checks and model loading. Unused native time cannot enlarge the
+common 600-second allocation. The outer clock starts before native setup and
+includes both cleanup phases, collector and accounting; late outputs are
+rejected. Parent collector/hash/cleanup checks are cooperative and may finish
+after that clock, so this is not an exact wall-clock kill guarantee for parent
+work. Shared preflight asset hashing/config validation is separately timed;
+identical assets are hashed once in that preflight, without caching predictions.
+
+Current generation supplies at most twelve raw designs for three eligible
+inputs. CReM and Mol2Mol retain their complete fresh, in-budget raw pools (at
+most 256) and select twelve by their own count-Morgan or NLL ordering. The
+baseline preserves old native algorithms and diagnostics, then passes **only
+its selected primary three routes/products** through an empty SavedProposals
+carry bridge with zero expansion. No unselected baseline route, new proposal or
+current reconstruction can rescue it. Direct SynLlama receives the original
+hit with six proposal samples; other common generative arms use two samples
+per eligible design, at most six. Common screening/refinement remain eight
+conformers at fixed scoring seeds 42/43/44 regardless of generation seed.
+Common budgets are twelve screens, six refinement candidates/144 requested
+candidate conformers and 24 strict forward calls/12288 input/18432 reserved
+output tokens. The old baseline retains its separate 504-conformer native
+refinement allowance; these are bounded system comparisons, not equal actual
+work or isolated causal effects.
+
+The declared full-method ablations change only raw-attempt capacity (three
+instead of twelve, retaining the same supplied pool) or route-search policy
+(`design-v1`). The final numerical/evidence contract is unchanged; the latter
+is disclosed as a custom search configuration. Joint-objective ablation is
+not implemented because its screening/final-rescoring protocol needs a separate
+prospective design.
+
+The collector replays the selected DAG/atom/stereo audit, validates saved raw
+forward tensors with the pinned tokenizer only, checks source/request/config
+bindings, every final seed and JSON/TSV/SDF selection consistency, and computes
+bit-Morgan fingerprints and per-metric all-seed minima itself. It never loads
+model weights, calls a predictor, reconstructs an evaluator cache or promotes
+supplied accepted flags into live evidence. It attests integrity of trusted,
+pinned workflow artifacts; arbitrary invented token tensors cannot prove a
+model call. Robust seed-minimum metrics are reported separately from exported
+representative-pose scores.
+
+The analysis primary endpoint is at least one jointly qualified output per
+planned attempt, averaged over generation seeds within queries and then equally
+over targets. Secondary unique-family yield is divided by three, including
+unfilled slots. Structural diversity with insufficient outputs is unavailable,
+not zero. Paired target-cluster bootstrap uses shared draws; single-target
+intervals are unavailable. Sampled process-tree CPU is a **lower bound** and
+RSS is the sampled aggregate peak, not exact CPU time or memory. GPU time and
+memory remain null when unmeasured. Native/common work units and partial-file
+accounting failures remain explicit; missing work counts are not invented as
+zero. All retained costs include failed attempts. Collector CPU/RSS are outside
+the subprocess sampler and are disclosed as unmeasured separately from outer
+wall time. Source review, actual development pilot, fresh input selection,
+frozen final grids, execution and scientific interpretation remain pending.
