@@ -390,3 +390,96 @@ def test_plan_tampering_fails_before_backend(tmp_path, monkeypatch, field):
     with pytest.raises(ValueError):
         subject.run(plan_path, expected, tmp_path / "execution")
     assert not (tmp_path / "execution").exists()
+
+
+@pytest.mark.parametrize("phase", ["reference", "trial"])
+@pytest.mark.parametrize("exception", [SystemExit, KeyboardInterrupt])
+def test_durable_inflight_and_nonreturned_are_not_unstarted(tmp_path, phase, exception):
+    plan, old = fixture_rows()
+    output = tmp_path / "out"
+
+    class Abrupt(Fake):
+        def reference(self, pair, seed, deadline):
+            ledger = subject.read(output / "ledger.json")
+            assert ledger["reference_operations"][0]["status"] == "running"
+            assert ledger["reference_operations"][0]["affected_slots"] == [0, 1]
+            assert ledger["in_flight_slots"] == [0, 1]
+            assert ledger["trials"][0]["status"] == "reference_running"
+            assert ledger["trials"][1]["status"] == "reference_running"
+            assert ledger["reference_operations"][0]["costs"] == {
+                "wall_seconds": None,
+                "process_cpu_seconds": None,
+            }
+            assert all(r["status"] == "not_started" for r in ledger["trials"][2:])
+            if phase == "reference":
+                raise exception("abrupt reference")
+            return super().reference(pair, seed, deadline)
+
+        def trial(self, *args):
+            ledger = subject.read(output / "ledger.json")
+            assert ledger["trials"][0]["status"] == "running"
+            assert ledger["trials"][0]["trial_started"] is True
+            assert ledger["trials"][0]["costs"] == {"wall_seconds": None, "process_cpu_seconds": None}
+            assert ledger["trials"][1]["status"] == "not_started"
+            assert ledger["in_flight_slots"] == [0]
+            assert ledger["reference_operations"][0]["status"] == "completed"
+            raise exception("abrupt trial")
+
+    backend = Abrupt(output)
+    with pytest.raises(exception):
+        subject._execute(plan, old, output, backend, lambda: None, 30)
+    ledger = subject.read(output / "ledger.json")
+    summary = subject.read(output / "summary.json")
+    assert ledger["status"] == "failed"
+    assert len(ledger["trials"]) == 15
+    assert backend.closed
+    assert summary["valid_for_interpretation"] is False
+    assert summary["rates"]["new_joint"]["active_acceptance"]["denominator"] == 4
+    assert summary["rates"]["new_joint"]["active_acceptance"]["macro"] == 0
+    if phase == "reference":
+        assert ledger["reference_operations"][0]["status"] == "nonreturned"
+        assert ledger["trials"][0]["status"] == ledger["trials"][1]["status"] == "reference_nonreturned"
+        assert summary["trial_status_counts"]["not_started"] == 13
+    else:
+        assert ledger["trials"][0]["status"] == "nonreturned"
+        assert ledger["trials"][0]["costs"] == {"wall_seconds": None, "process_cpu_seconds": None}
+        assert summary["trial_status_counts"]["not_started"] == 14
+        assert subject.read(output / "trials/0000.json")["status"] == "nonreturned"
+
+
+@pytest.mark.parametrize("phase", ["reference", "trial"])
+def test_noncatchable_process_exit_preserves_running_marker(tmp_path, phase):
+    plan, old = fixture_rows()
+    output = tmp_path / "out"
+
+    class HardExit(Fake):
+        def reference(self, *args):
+            if phase == "reference":
+                os._exit(73)
+            return super().reference(*args)
+
+        def trial(self, *args):
+            os._exit(73)
+
+    pid = os.fork()
+    if pid == 0:
+        try:
+            subject._execute(plan, old, output, HardExit(output), lambda: None, 30)
+        finally:
+            os._exit(74)
+    _, status = os.waitpid(pid, 0)
+    assert os.waitstatus_to_exitcode(status) == 73
+    ledger = subject.read(output / "ledger.json")
+    assert ledger["status"] == "running"
+    assert len(ledger["trials"]) == 15
+    assert ledger["trials"][0]["costs"] == {"wall_seconds": None, "process_cpu_seconds": None}
+    if phase == "reference":
+        assert ledger["in_flight_slots"] == [0, 1]
+        assert ledger["reference_operations"][0]["status"] == "running"
+        assert ledger["trials"][0]["status"] == "reference_running"
+    else:
+        assert ledger["in_flight_slots"] == [0]
+        assert ledger["trials"][0]["status"] == "running"
+        assert ledger["trials"][0]["trial_started"] is True
+        assert ledger["reference_operations"][0]["status"] == "completed"
+    assert subject.read(output / "summary.json")["valid_for_interpretation"] is False

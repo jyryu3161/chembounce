@@ -371,6 +371,7 @@ def _execute(plan, old_rows, output, backend, verify, wall_seconds, clock=time.m
     group = None
     reference_error = None
     reference_artifact = None
+    reference_operations = []
 
     def checkpoint():
         ledger = [{k: v for k, v in row.items() if k not in {"info", "poses"}} for row in results.values()]
@@ -381,6 +382,12 @@ def _execute(plan, old_rows, output, backend, verify, wall_seconds, clock=time.m
                 "planned_pairs": len(pairs),
                 "planned_trials": len(slots),
                 "trials": ledger,
+                "reference_operations": reference_operations,
+                "in_flight_slots": [
+                    r["slot"]["index"]
+                    for r in results.values()
+                    if r["status"] in {"running", "reference_running"}
+                ],
             },
         )
         summary = summarize(plan["pairs"], slots, results, old_rows)
@@ -396,8 +403,16 @@ def _execute(plan, old_rows, output, backend, verify, wall_seconds, clock=time.m
             backend_costs=backend.costs(),
             interruption=interrupted[0],
             run_error=run_error,
+            reference_operations=reference_operations,
         )
         base.save(output / "summary.json", summary)
+
+    def persist_trial(row):
+        trial_path = output / "trials" / f"{row['slot']['index']:04d}.json"
+        base.save(trial_path, row)
+        row["artifact"] = {"path": str(trial_path), "sha256": base.file_hash(trial_path)}
+        results[row["slot"]["index"]] = row
+        checkpoint()
 
     def receive(signum, frame):
         interrupted[0] = signum
@@ -419,6 +434,26 @@ def _execute(plan, old_rows, output, backend, verify, wall_seconds, clock=time.m
                 if reference is not None:
                     backend.finish_reference(reference)
                 reference, reference_error, reference_artifact, group = None, None, None, current_group
+                affected = [s["index"] for s in slots if (tuple(s["query"]), s["seed"]) == group]
+                operation = {
+                    "index": len(reference_operations),
+                    "query": list(group[0]),
+                    "seed": group[1],
+                    "affected_slots": affected,
+                    "status": "running",
+                    "costs": {"wall_seconds": None, "process_cpu_seconds": None},
+                    "start_elapsed_seconds": clock() - started,
+                }
+                reference_operations.append(operation)
+                for index in affected:
+                    results[index].update(
+                        status="reference_running",
+                        reason="shared_query_reference_in_flight",
+                        reference_operation=operation["index"],
+                        costs={"wall_seconds": None, "process_cpu_seconds": None},
+                    )
+                checkpoint()
+                ref_start, ref_cpu = clock(), time.process_time()
                 try:
                     reference, record = backend.reference(pair, slot["seed"], deadline)
                     reference_path = output / "references" / f"{slot['index']:04d}.json"
@@ -427,9 +462,49 @@ def _execute(plan, old_rows, output, backend, verify, wall_seconds, clock=time.m
                         "path": str(reference_path),
                         "sha256": base.file_hash(reference_path),
                     }
+                    operation.update(status="completed", artifact=reference_artifact)
+                    for index in affected:
+                        results[index].update(
+                            status="not_started",
+                            reason="reference_available_trial_not_started",
+                            reference_artifact=reference_artifact,
+                        )
                 except Exception as exc:
                     reference_error = {"type": type(exc).__name__, "reason": str(exc)}
-            row = {"slot": slot, "status": "running"}
+                    operation.update(status="failed", error=reference_error)
+                    for index in affected:
+                        results[index].update(
+                            status="failed", reason="query_reference_failed", error=reference_error
+                        )
+                except BaseException as exc:
+                    operation.update(
+                        status="nonreturned",
+                        error={"type": type(exc).__name__, "reason": str(exc)},
+                        observed_until_handler={
+                            "wall_seconds": clock() - ref_start,
+                            "process_cpu_seconds": time.process_time() - ref_cpu,
+                        },
+                    )
+                    for index in affected:
+                        results[index].update(
+                            status="reference_nonreturned",
+                            reason="shared_query_reference_nonreturned",
+                            costs={"wall_seconds": None, "process_cpu_seconds": None},
+                        )
+                    checkpoint()
+                    raise
+                operation["costs"] = {
+                    "wall_seconds": clock() - ref_start,
+                    "process_cpu_seconds": time.process_time() - ref_cpu,
+                }
+                checkpoint()
+            row = {
+                "slot": slot,
+                "status": "not_started",
+                "reference_operation": operation["index"],
+                "reference_artifact": reference_artifact,
+                "trial_started": False,
+            }
             before, before_cpu = clock(), time.process_time()
             try:
                 if interrupted[0] is not None or clock() >= deadline:
@@ -437,6 +512,15 @@ def _execute(plan, old_rows, output, backend, verify, wall_seconds, clock=time.m
                 elif reference_error is not None:
                     row.update(status="failed", reason="query_reference_failed", error=reference_error)
                 else:
+                    row.update(
+                        status="running",
+                        reason="trial_in_flight",
+                        trial_started=True,
+                        start_elapsed_seconds=clock() - started,
+                        costs={"wall_seconds": None, "process_cpu_seconds": None},
+                    )
+                    results[slot["index"]] = row
+                    checkpoint()
                     row.update(
                         backend.trial(
                             pair,
@@ -449,6 +533,8 @@ def _execute(plan, old_rows, output, backend, verify, wall_seconds, clock=time.m
                     )
                     if row["slot"] != slot or row["status"] not in {"success", "abstained", "failed"}:
                         raise ValueError("Invalid backend trial status")
+                    if row.get("reason") == "trial_in_flight":
+                        row.pop("reason")
                     base.json_bytes(row)
             except Exception as exc:
                 row = {
@@ -457,7 +543,23 @@ def _execute(plan, old_rows, output, backend, verify, wall_seconds, clock=time.m
                     "reason": str(exc),
                     "error_type": type(exc).__name__,
                     "audit": _safe_audit(getattr(exc, "audit", None)),
+                    "trial_started": row.get("trial_started", False),
+                    "reference_operation": operation["index"],
                 }
+            except BaseException as exc:
+                row.update(
+                    status="nonreturned",
+                    reason="trial_interrupted_without_result",
+                    error_type=type(exc).__name__,
+                    error=str(exc),
+                    costs={"wall_seconds": None, "process_cpu_seconds": None},
+                    observed_until_handler={
+                        "wall_seconds": clock() - before,
+                        "process_cpu_seconds": time.process_time() - before_cpu,
+                    },
+                )
+                persist_trial(row)
+                raise
             row["reference_artifact"] = reference_artifact
             row["costs"] = {
                 "wall_seconds": clock() - before,
@@ -465,11 +567,7 @@ def _execute(plan, old_rows, output, backend, verify, wall_seconds, clock=time.m
             }
             if (interrupted[0] is not None or clock() >= deadline) and row["status"] == "success":
                 row.update(status="failed", reason="completed_after_deadline_or_signal")
-            trial_path = output / "trials" / f"{slot['index']:04d}.json"
-            base.save(trial_path, row)
-            row["artifact"] = {"path": str(trial_path), "sha256": base.file_hash(trial_path)}
-            results[slot["index"]] = row
-            checkpoint()
+            persist_trial(row)
         else:
             run_status = (
                 "interrupted"
