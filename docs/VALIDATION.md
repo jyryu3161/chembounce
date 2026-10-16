@@ -10,6 +10,10 @@ including timeouts and an infrastructure-missing outcome. Its all-method tables,
 separate uncertainty/bounds and portable statistical replay are distinct from
 current-pipeline validation and the supplementary comparator study. Route replay
 and common 3D coverage do not establish activity or experimental synthesis success.
+The separate [completed common-forward audit](RESEARCH_VALIDATION.md#completed-original-common-forward-audit)
+adds exact query/seed paired statistics with explicit route and conditional
+eligibility. Its predictor is also the selection gate, so agreement is not
+independent experimental synthesis validation.
 
 ## Legacy ADP defect
 

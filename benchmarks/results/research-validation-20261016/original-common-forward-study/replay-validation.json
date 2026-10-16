@@ -1,0 +1,39 @@
+{
+  "absolute_tolerance": 1e-12,
+  "analysis_helper_sha256": "01b4c9468d23bb2870083c0b8f66886fafbf0262b429e08e5e102e683e20d83e",
+  "attempts": 630,
+  "comparison_recomputed": true,
+  "extracted_statistics_sha256": "0bf96138f0a137a6048a700d78bc064f6b278766d8b09da87f3f54ca45739cd1",
+  "input_before_after_sha256": {
+    "analyze_forward_historical.py": "01b4c9468d23bb2870083c0b8f66886fafbf0262b429e08e5e102e683e20d83e",
+    "attempts.json": "ccbe45cf61e4b29d3cd38ed6d2fc81d185b1308512326fa4a8f4c831df111439",
+    "audit-progress.json": "6f95d40915e688dac948cad2a8216a23aa5bab1d86f43098d069258adb0b075b",
+    "audit-protocol.json": "b5c1ddc8c86fe50f59bcd9605404901ec2fef75f45bc1ff14efe56385153468c",
+    "chembl-source-provenance.json": "5d680d5dad8a273989d3548035d1e3352453e4939bd6fa22f041c7ad0da5f94b",
+    "extraction.json": "d9c53088f3f5cdf04fdbeecc4851a55a6517dc3088311740db09992178ca2e27",
+    "forward-analysis-plan.json": "385be03fee3d2df6cfc04975cb63b42717088eabe62077bdbd3c6db9ca5db529",
+    "frozen-campaign-code-provenance.json": "8c8d9a883fe29acc8ffc1d6c3826a0056def13a93fa852508617069f3d48075e",
+    "integrity-validation.json": "9a14e3ba92b2cda336a3aa3a93da7fd3dd9d96b7ec660ce11aca9bc48a8e3034",
+    "manifest.json": "9650f71cdd4a7e2de9f8b90a839be9477153fef94a938325e033b924572b05c8",
+    "normalized-occurrences.json": "22051dcbd363312905a90bd73c6aa1450e77d4c6e802939b4621a01ad99217af",
+    "parent-review-evidence/integrity-validation.json": "9a14e3ba92b2cda336a3aa3a93da7fd3dd9d96b7ec660ce11aca9bc48a8e3034",
+    "parent-review-evidence/statistics-validation.json": "b0dd1cac7731d115aad4f776d83f765868dbe8acdf9f6e2d219643628751d0d1",
+    "parent-review.json": "7ad93ff771faa79d88adaeda368d229e1a9453b30864f6f118d7bb1ba1934c96",
+    "recorded-analysis.json": "436eb85756d84caa87ae718244125a108786090bb7e35a59bac9ea521e6dd6ff",
+    "recorded-validation.json": "b046a5aafa3eb9d86508e6ede1d19c01e1bea9d5599ec31802465caf50d17f09",
+    "statistics_extracted.py": "0bf96138f0a137a6048a700d78bc064f6b278766d8b09da87f3f54ca45739cd1",
+    "transport_helpers.py": "9751209528300cdc38250d68c3a6a8748ed873362af1d1dabfa14ecbb2234113"
+  },
+  "integrity_recorded_analysis_sha256": {
+    "recorded-analysis.json": "436eb85756d84caa87ae718244125a108786090bb7e35a59bac9ea521e6dd6ff",
+    "recorded-validation.json": "b046a5aafa3eb9d86508e6ede1d19c01e1bea9d5599ec31802465caf50d17f09"
+  },
+  "manifest_sha256": "9650f71cdd4a7e2de9f8b90a839be9477153fef94a938325e033b924572b05c8",
+  "recomputed_analysis_sha256": "436eb85756d84caa87ae718244125a108786090bb7e35a59bac9ea521e6dd6ff",
+  "runtime": {
+    "numpy": "1.26.4",
+    "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+  },
+  "scope": "CPU statistics from parent-validated normalized original-630 attempts and common-forward occurrences. No chemistry, route replay, model inference, raw-prediction reinterpretation, or supplementary-270 analysis. Original validation/provenance is retained, not re-executed. Same forward model as selection gate; selected-subset agreement is not independent synthesis evidence, activity, yield, or synthesis probability. No-route-supplied is coverage absence, not chemical synthesis failure. Exact query/seed paired descriptive target-cluster uncertainty retains few-target, reused-input, and cross-target dependence limitations.",
+  "status": "passed"
+}

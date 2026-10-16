@@ -22,6 +22,27 @@ and conditional-score populations differ across methods. The earlier partial and
 pending statements below retain the state at their original observation times;
 they have not been rewritten as completed experiments.
 
+## Completed original common-forward audit — separate follow-up
+
+The common-forward audit of all 630 original attempts is complete and independently reviewed.
+The [all-method results and reproduction commands](../../../docs/RESEARCH_VALIDATION.md#completed-original-common-forward-audit)
+report full-attempt matched-route coverage, supplied/evaluated/no-route counts and
+conditional fractions with their eligible attempts, queries and target clusters.
+The [separate portable ZIP](original-common-forward-study/statistical-bundle.zip),
+[analysis](original-common-forward-study/analysis.json),
+[validation](original-common-forward-study/validation.json) and
+[checksums](original-common-forward-study/SHA256SUMS) retain the original records.
+
+This concerns the original 39-file source, separate from the later 41-file pipeline,
+the supplementary 270-attempt study and the generation-statistics bundle.
+The same predictor is used by the synthesis selection
+gate, so agreement is not independent experimental validation. Exact query/seed
+conditional pairing differs from the original generation target-mean contrast;
+missing eligibility, no-route controls, failed attempts and infrastructure bounds
+remain explicit. Earlier engineering/pending records below retain their original
+historical statements. No new model/chemistry/statistical rerun was performed for
+this publication package.
+
 ## Scope and provenance
 
 The strict scaffold panel contains 5,567 target–chemical-family records, with two public queries for each of EGFR (CHEMBL203), CA2 (CHEMBL205), PIM1 (CHEMBL2147), AChE (CHEMBL220), A2a (CHEMBL251) and JNK3 (CHEMBL2637). Its SHA-256 is `e87a3b539b8c41dde4887a7d52ec67b29a7a63f688584b579272398ef6522204`. Scaffold assignment uses seed 42 and the versioned chemical-family policy in the [protocol](../../../docs/RESEARCH_VALIDATION.md).

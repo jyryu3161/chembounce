@@ -147,6 +147,25 @@
     "selected_cpu_probes": 2
   },
   "observation_unit": "240 query-control pairs; 120 distinct target-family compound IDs, 119 distinct exact structures, reused across queries; 6 independent target groups",
+  "original_common_forward_study": {
+    "analysis": "original-common-forward-study/analysis.json",
+    "attempts": 630,
+    "bundle": "original-common-forward-study/statistical-bundle.zip",
+    "bundle_manifest_sha256": "9650f71cdd4a7e2de9f8b90a839be9477153fef94a938325e033b924572b05c8",
+    "bundle_sha256": "3964d6236d1262853aa1a077a9526499e9291c20412328f3d79dbe6ccbc9a768",
+    "candidate_occurrences": 1264,
+    "checksums": "original-common-forward-study/SHA256SUMS",
+    "historical_records_preserved": true,
+    "independently_checked_numeric_cells": 52514,
+    "paired_comparison_unit": "Exact matching query/seed slots, conditional metrics require both eligible",
+    "results": "original-common-forward-study/validation.json",
+    "scientific_files": 39,
+    "scope": "Byte-preserving parent-reviewed original630 common-forward normalized-record statistical package. Stored CSV projection only; no new model, chemistry, 3D or statistical calculation.",
+    "selection_gate_model_reused": true,
+    "source_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+    "status": "completed_original630_common_forward_parent_reviewed",
+    "supplementary270_included": false
+  },
   "original_generation_study": {
     "attempt_status_counts": {
       "infrastructure_interruption": 1,
@@ -180,7 +199,7 @@
     "status": "partial_sample_audit_independently_recomputed"
   },
   "published_compact_artifacts": {
-    "README.md": "cd8af83f4a7e98ab3ea70835c49268a0090adf18ab6323aa3ffa9cc27d8be89a",
+    "README.md": "e68366e90cca0060c0e38ced3c9df5527a27bd2f9e8ed2ebda06446810077085",
     "analyze_controls.py": "3c8e50fbb80152a1b53ac9ecefe5a58c286d14633fefb8e39b44bb0636a649e0",
     "analyze_secondary_controls.py": "ac44c1f537f177de07c03e069244de3c0b423bb537be45c6258e41648987007c",
     "assay_heterogeneity.json": "e571100768aa10433eb883065ea41d2963a9e45afc7d44f81c0914056ceedaed",
@@ -209,6 +228,15 @@
     "index_sensitivity_validation.json": "e953155f54f48f0d53baa18d5b9c5270fa01b451b9cda27c827582f51f6982e5",
     "isolated_gpu_validation.json": "ec70e3ffc5a3006ef8bcdd994920212763de68019fd3bf1c011b00dc88bf618a",
     "isolated_runtime_validation.json": "7bf5c6c837191c64d7e277b91c021ea0dab6a9ebf236c74935bc7dca595f58e5",
+    "original-common-forward-study/SHA256SUMS": "41b7a8b480abe2d33dd764a09dddab1bd8fb06231ecba1bdec81331f332ba2d0",
+    "original-common-forward-study/analysis.json": "436eb85756d84caa87ae718244125a108786090bb7e35a59bac9ea521e6dd6ff",
+    "original-common-forward-study/infrastructure_bounds.csv": "1e4561e8deb7980c235c820f42c07a3c9ac00f85465d3ef5ed0436219082e6a2",
+    "original-common-forward-study/method_metrics.csv": "e8caef314544cd1a6e7f12dc180bd6e522ed368ffc199be6340c69f808d10ac8",
+    "original-common-forward-study/paired_metrics.csv": "6c05e568a7a226f42b6c58184b3f91c57435ef104746292877b1dae1c6373859",
+    "original-common-forward-study/replay-validation.json": "5227a9e67e071d6bd10b07d37d020920d9e4cd7fba943d64d37b8445e06f9df6",
+    "original-common-forward-study/route_coverage.csv": "5af6fc3f80cb56f46f0284bdadfeaca7268abeaff5ac761f880c7b4d3f8b2696",
+    "original-common-forward-study/statistical-bundle.zip": "3964d6236d1262853aa1a077a9526499e9291c20412328f3d79dbe6ccbc9a768",
+    "original-common-forward-study/validation.json": "d373a057a7e01020f56816a05775345a5d71dd760d9dffb306c51a6e98be6f28",
     "original-generation-study/SHA256SUMS": "84d45938866acf031cf3810c76542db23298234ec7c4d2f79abc6455c2f82381",
     "original-generation-study/presentation/availability.csv": "0bdbd7a06117e441f29f79c686636a35964f4ba63f161023aff15577c46257dd",
     "original-generation-study/presentation/infrastructure_bounds.csv": "12f4ce33ea48bb1bba1c429c56b7f5eff704c0164f539660e48c79c938fe6950",
@@ -296,5 +324,5 @@
     "scope": "Bundled portable ChEMBL raw sources and manifests only; model generation assets and non-ChEMBL integration cases remain separate",
     "sha256": "72fde29b4fc9f6a7b896745781820d0c255c52e6a1e7036ad4036442e2a4c518"
   },
-  "status": "Labelled controls and original frozen39 generation study complete; supplementary270 and common-forward statistics are separate records"
+  "status": "Labelled controls, original frozen39 generation study and separate common-forward audit complete; supplementary270 remains a separate study"
 }
