@@ -189,6 +189,7 @@ def refine_candidate(
     pose_constraints=None,
     deadline_monotonic=None,
     result_validator=None,
+    similarity=None,
 ):
     """Refine reproducibly; all exported pose components belong to one real pose.
 
@@ -265,11 +266,37 @@ def refine_candidate(
                 break
             seeded = replace(settings, num_conformers=num_conformers, seed=seed)
             budget.score_calls += 1
+            candidate, phase = None, "preflight"
             try:
                 scoring_options = (
                     {"pose_constraints": pose_constraints} if pose_constraints is not None else {}
                 )
-                candidate = score_candidate(smiles, hit, design, seeded, hit_pose, **scoring_options)
+                if similarity is not None:
+                    from . import selective_scoring
+
+                    if (
+                        hit_pose is not None
+                        or pose_constraints is not None
+                        or maximum != 8
+                        or num_conformers != 8
+                    ):
+                        raise ValueError("Selective refinement requires fixed8 generated reference poses")
+                    similarity.preflight_candidate(smiles)
+                    phase = "scoring"
+                    candidate = selective_scoring.score_candidate(
+                        smiles,
+                        hit,
+                        design,
+                        seeded,
+                        similarity=similarity,
+                        deadline_monotonic=deadline_monotonic,
+                    )
+                    phase = "validation"
+                    selective_scoring.validate_result(
+                        candidate, smiles, seeded, hit=hit, design=design, similarity=similarity
+                    )
+                else:
+                    candidate = score_candidate(smiles, hit, design, seeded, hit_pose, **scoring_options)
                 if result_validator is not None:
                     result_validator(candidate, smiles, seeded)
                 if not math.isfinite(candidate[0]["score"]) or not all(
@@ -279,9 +306,12 @@ def refine_candidate(
                 trials.append({"seed": seed, "status": "success", **candidate[0]})
                 results.append((seed, candidate))
             except (ValueError, RuntimeError) as exc:
-                trials.append(
-                    {"seed": seed, "status": "failed", "reason": str(exc), "settings": asdict(seeded)}
-                )
+                failure = {"seed": seed, "status": "failed", "reason": str(exc), "settings": asdict(seeded)}
+                if similarity is not None:
+                    from .selective_scoring import failure_record
+
+                    failure["similarity_failure"] = failure_record(exc, phase=phase, result=candidate)
+                trials.append(failure)
         result, report = _summarize(trials, results, refinement, minimum_scores)
         report["num_conformers"] = num_conformers
         if deadline_interrupted:

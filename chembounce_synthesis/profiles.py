@@ -199,6 +199,11 @@ def profile_provenance(config):
         numerical_changes["reference_sdf"] = {"profile": None, "effective": config["reference_sdf"]}
     if config.get("pocket"):
         numerical_changes["pocket"] = {"profile": None, "effective": config["pocket"]}
+    if "similarity_constraints" in config:
+        numerical_changes["similarity_constraints"] = {
+            "profile": None,
+            "effective": config["similarity_constraints"],
+        }
     # A profile match requires an actual complete qualified acceptance protocol.
     if config.get("refinement", {}).get("top_n", 0) <= 0:
         numerical_changes["refinement.top_n"] = {
@@ -256,9 +261,17 @@ def profile_provenance(config):
 
 
 def profile_label(config):
+    selective = (
+        " [selector=joint-feasible-hit-pose-v2; explicit engineering constraints, not a calibrated similarity or activity claim]"
+        if "similarity_constraints" in config
+        else ""
+    )
     if not config.get("recommendation_profile"):
         return (
             " [evidence=" + config.get("synthesis_evidence", {}).get("profile", "legacy-conditional-v1") + "]"
-        )
+        ) + selective
     provenance = profile_provenance(config)
-    return f" [profile={provenance['name']}; {provenance['status']}; computational-route-support-v1 conditional selection support; permissive development thresholds, not strong-similarity or activity guarantees]"
+    return (
+        f" [profile={provenance['name']}; {provenance['status']}; computational-route-support-v1 conditional selection support; permissive development thresholds, not strong-similarity or activity guarantees]"
+        + selective
+    )

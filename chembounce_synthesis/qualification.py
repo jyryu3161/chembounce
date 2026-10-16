@@ -71,6 +71,11 @@ def effective_policy(config):
         "reference": "original_hit_and_regenerated_final_product",
         "fingerprint": "binary Morgan radius=2 bits=2048 chirality=true; not sparse-count Morgan",
         "seed_acceptance": "every requested seed at the final ensemble size",
+        **(
+            {"similarity_constraints": config["similarity_constraints"]}
+            if "similarity_constraints" in config
+            else {}
+        ),
         "scope": "Explicit engineering thresholds or reviewed development fit as recorded in calibration provenance; requested computational evidence, no activity or synthesis probability",
     }
 
@@ -154,7 +159,19 @@ def validate_result(result, product, settings, *, hit=None, design=None):
         raise ValueError(f"Incomplete final scoring result: {exc}") from exc
 
 
-def decide(row, record, result, policy, settings, refinement, report=None, *, hit, evidence_validator=None):
+def decide(
+    row,
+    record,
+    result,
+    policy,
+    settings,
+    refinement,
+    report=None,
+    *,
+    hit,
+    evidence_validator=None,
+    similarity=None,
+):
     """Conjunction over final-route identity, requested evidence, scores and seeds.
 
     Chemical constraints use workflow.check_constraints before this call. Route
@@ -327,6 +344,46 @@ def decide(row, record, result, policy, settings, refinement, report=None, *, hi
             for k in ("score", "hit", "design", "candidate_conformer_id", "settings")
         ):
             reasons.append("Exported pose scores do not match the accepted representative seed")
+    if "similarity_constraints" in policy:
+        from . import selective_scoring
+
+        try:
+            if similarity is None or policy["similarity_constraints"] != {
+                "policy": similarity.policy,
+                "sha256": similarity.sha256,
+            }:
+                raise ValueError("Missing or mismatched bound selective policy")
+            selective_scoring.validate_result(
+                result, row["smiles"], settings, hit=hit, design=row["design"], similarity=similarity
+            )
+            if any(row.get(key) != value for key, value in selective_scoring.result_fields(info).items()):
+                raise ValueError("Final row selective policy/witness does not match the exported pose")
+            if not refinement.top_n or not report:
+                raise ValueError("Selective acceptance requires the complete final seed block")
+            for trial in report.get("trials", []):
+                seeded = ConformerSettings(
+                    **{
+                        **policy["conformers"],
+                        "seed": trial.get("seed"),
+                        "num_conformers": refinement.num_conformers,
+                    }
+                )
+                selective_scoring.validate_result(
+                    selective_scoring.restore_result(trial),
+                    row["smiles"],
+                    seeded,
+                    hit=hit,
+                    design=row["design"],
+                    similarity=similarity,
+                )
+            selected = next((t for t in report.get("trials", []) if t.get("seed") == settings.seed), None)
+            if selected is None or any(
+                selected.get(key) != info.get(key)
+                for key in ("similarity_constraints", "selective_pose_evidence", "pose_selection")
+            ):
+                raise ValueError("Exported selective geometry differs from its retained representative seed")
+        except (ValueError, TypeError) as exc:
+            reasons.append(f"Selective final contract: {exc}")
     return {
         "policy_version": VERSION,
         "calibration": {key: policy["calibration"][key] for key in ("name", "status", "artifact_sha256")},
@@ -335,4 +392,9 @@ def decide(row, record, result, policy, settings, refinement, report=None, *, hi
         "reasons": reasons,
         "scores": {key: row.get(key) for key in minimum},
         "route_id": record["route_id"],
+        **(
+            {"similarity_constraints": policy["similarity_constraints"]}
+            if "similarity_constraints" in policy
+            else {}
+        ),
     }

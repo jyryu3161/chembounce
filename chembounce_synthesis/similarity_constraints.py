@@ -105,6 +105,29 @@ def pose_binding(mol, cid):
     return {**value, "sha256": binding(value)}
 
 
+def restore_pose(saved):
+    """Restore and check a full indexed pose; never embed or realign it."""
+    try:
+        cid = saved["conformer_id"]
+        if type(cid) is not int or cid < 0:
+            raise ValueError("Invalid saved conformer ID")
+        mol = molecule(saved["smiles"])
+        xyz = np.asarray(saved["coordinates"], dtype=float)
+        if xyz.shape != (mol.GetNumAtoms(), 3) or not np.isfinite(xyz).all():
+            raise ValueError("Invalid saved pose coordinates")
+        conformer = Chem.Conformer(mol.GetNumAtoms())
+        conformer.SetId(cid)
+        conformer.Set3D(True)
+        for atom, position in enumerate(xyz):
+            conformer.SetAtomPosition(atom, position.tolist())
+        mol.AddConformer(conformer, assignId=False)
+        if binding(pose_binding(mol, cid)) != binding(saved):
+            raise ValueError("Saved pose identity, atom ordering or coordinate binding mismatch")
+        return mol
+    except (KeyError, TypeError, AttributeError, RuntimeError) as exc:
+        raise ValueError(f"Incomplete saved pose: {exc}") from exc
+
+
 class BoundSimilarity:
     """Bind selectors and query identity before any generation or embedding."""
 
@@ -312,18 +335,7 @@ class BoundSimilarity:
         try:
             saved = witness["reference_pose"]
             cid = saved["conformer_id"]
-            if type(cid) is not int or cid < 0:
-                raise ValueError("Invalid reference conformer ID")
-            reference = molecule(self.hit)
-            xyz = np.asarray(saved["coordinates"], dtype=float)
-            if xyz.shape != (reference.GetNumAtoms(), 3) or not np.isfinite(xyz).all():
-                raise ValueError("Invalid saved reference coordinates")
-            conformer = Chem.Conformer(reference.GetNumAtoms())
-            conformer.SetId(cid)
-            conformer.Set3D(True)
-            for atom, position in enumerate(xyz):
-                conformer.SetAtomPosition(atom, position.tolist())
-            reference.AddConformer(conformer, assignId=False)
+            reference = restore_pose(saved)
             actual = self.assess(reference, aligned, cid, candidate_cid)
             if not actual["passed"] or binding(actual) != binding(witness):
                 raise ValueError("Selective constraint witness mismatch or failed joint geometry")

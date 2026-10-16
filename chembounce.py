@@ -1093,6 +1093,10 @@ def main(argv=None):
                 if synthesis_config.get("core_smiles") not in (None, options.core_smiles):
                     raise ValueError("core_smiles conflicts with the synthesis configuration")
                 synthesis_config["core_smiles"] = options.core_smiles
+            if "similarity_constraints" in synthesis_config:
+                from chembounce_synthesis.selective_scoring import configured_constraints
+
+                configured_constraints(synthesis_config, options.input_smiles)
             synthesis_out = Path(options.output_dir) / "synthesis"
             if synthesis_out.exists() and (not synthesis_out.is_dir() or any(synthesis_out.iterdir())):
                 raise ValueError(

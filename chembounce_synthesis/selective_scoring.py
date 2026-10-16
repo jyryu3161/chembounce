@@ -12,12 +12,106 @@ from rdkit import Chem, DataStructs
 
 from .common import FP, canonical, molecule
 from .conformers import ConformerSettings, _overlay, ensemble, pharmacophore_overlap, require_alignment
-from .similarity_constraints import BoundSimilarity, feature_records
+from .similarity_constraints import VERSION as CONSTRAINT_VERSION
+from .similarity_constraints import BoundSimilarity, binding, feature_records, pose_binding, restore_pose
 
 VERSION = "joint-feasible-hit-pose-v2"
 MAX_CONFORMERS = 8
 MAX_HIT_PAIRS = 64
 DEFAULT_SETTINGS = ConformerSettings(num_conformers=8, scoring_objective="original-hit-v1")
+
+
+def configured_constraints(config, hit=None):
+    """Validate opt-in orchestration before assets; bind query selectors when known."""
+    from .refinement import RefinementSettings
+
+    if "similarity_constraints" not in config:
+        return None
+    request = config["similarity_constraints"]
+    if (
+        not isinstance(request, dict)
+        or set(request) - {"version", "polar_recall", "landmarks"}
+        or request.get("version") != CONSTRAINT_VERSION
+    ):
+        raise ValueError("similarity_constraints requires the selective-similarity-constraints-v2 schema")
+    settings = ConformerSettings(**config.get("conformers", {}))
+    refinement = RefinementSettings(**config.get("refinement", {}))
+    if (
+        config.get("recommendation", {}).get("mode") != "qualified"
+        or config.get("mode", "hop") != "hop"
+        or settings.num_conformers != 8
+        or settings.seed != 42
+        or settings.scoring_objective != "original-hit-v1"
+        or settings.pharmacophore_sigma != 1.0
+        or not settings.reject_unspecified_stereo
+        or refinement.top_n <= 0
+        or refinement.num_conformers != 8
+        or tuple(refinement.seeds) != (42, 43, 44)
+        or refinement.threshold_policy != "all_seeds"
+        or refinement.adaptive_max_conformers is not None
+        or config.get("reference_sdf")
+        or "pocket" in config
+    ):
+        raise ValueError(
+            "Selective constraints require qualified hop mode, fixed8 seed42 screening and complete42/43/44 refinement, original-hit-v1/sigma1/strict stereo, with no adaptive, reference-SDF or pocket override"
+        )
+    minimum = {
+        key: config.get("minimum_scores", {}).get(key)
+        for key in ("hit_tanimoto", "hit_shape", "hit_pharmacophore")
+    }
+    if hit is not None:
+        return BoundSimilarity(
+            hit,
+            minimum,
+            polar_recall=request.get("polar_recall", 0.75),
+            core_smiles=config.get("core_smiles"),
+            landmarks=request.get("landmarks", []),
+        )
+    return None
+
+
+def failure_record(exc, *, phase, result=None):
+    audit = getattr(exc, "audit", None)
+    if audit is None and result is not None:
+        audit = result[0].get("pose_selection")
+    return {
+        "phase": phase,
+        "reason": str(exc),
+        "reason_code": getattr(exc, "reason", None),
+        "ensemble_request_status": "none_requested"
+        if phase == "preflight" or (isinstance(audit, dict) and audit.get("ensemble_requests") == [])
+        else "requested"
+        if audit is not None
+        else "unknown",
+        "scorer_audit": audit,
+    }
+
+
+def result_fields(info):
+    witness = info["similarity_constraints"]["witness"]
+    return {
+        "pose_selection_policy": VERSION,
+        "similarity_constraint_policy": CONSTRAINT_VERSION,
+        "similarity_constraint_sha256": witness["policy_sha256"],
+        "similarity_witness_sha256": binding(witness),
+        "polar_reference_recall": witness["polar"]["recall"],
+    }
+
+
+def preflight_design(design):
+    """Check secondary-reference eligibility without imposing candidate cores."""
+    mol = molecule(canonical(design))
+    BoundSimilarity._check_state(mol)
+    feature_records(mol)
+
+
+def restore_result(info):
+    """Materialize saved seed coordinates for consistency checking, never scoring."""
+    try:
+        poses = info["selective_pose_evidence"]
+        return info, restore_pose(poses["hit_candidate"]), restore_pose(poses["design_candidate"])
+    except (KeyError, TypeError) as exc:
+        raise ValueError(f"Missing retained selective seed geometry: {exc}") from exc
 
 
 class SimilarityAbstention(ValueError):
@@ -94,8 +188,7 @@ def score_candidate(
     similarity.preflight_candidate(smiles)
     # Design availability remains a secondary-diagnostic prerequisite. This
     # does not require the design itself to satisfy candidate core/feature gates.
-    BoundSimilarity._check_state(molecule(design))
-    feature_records(molecule(design))
+    preflight_design(design)
     policy = similarity.policy
     audit = {
         "policy": VERSION,
@@ -242,6 +335,11 @@ def score_candidate(
         },
         "settings": asdict(settings),
         "similarity_constraints": {"policy": policy, "witness": witness},
+        "selective_pose_evidence": {
+            "hit_candidate": pose_binding(aligned, cid),
+            "design_candidate": pose_binding(design_aligned, cid),
+            "design_reference": pose_binding(design_ref.mol, design_info["reference_conformer_id"]),
+        },
         "pose_selection": audit,
     }
     return info, aligned, design_aligned
@@ -271,12 +369,27 @@ def validate_result(result, product, settings, *, hit, design, similarity):
             raise ValueError("Selective result policy mismatch")
         witness = info["similarity_constraints"]["witness"]
         cid, rid = info["candidate_conformer_id"], info["hit"]["reference_conformer_id"]
+        for role, pose in (("hit_candidate", aligned), ("design_candidate", result[2])):
+            if binding(info["selective_pose_evidence"][role]) != binding(pose_binding(pose, cid)):
+                raise ValueError("Retained selective seed geometry does not describe the actual pose")
         reference = similarity.validate_witness(witness, aligned, cid)
         if rid != witness["reference_pose"]["conformer_id"]:
             raise ValueError("Hit metric and joint witness reference pose differ")
         pharm, _ = pharmacophore_overlap(reference, aligned, rid, cid, settings.pharmacophore_sigma)
         if not math.isclose(pharm, info["hit"]["pharmacophore"], abs_tol=1e-12, rel_tol=1e-12):
             raise ValueError("Hit pharmacophore metric does not match selected coordinates")
+        design_reference = restore_pose(info["selective_pose_evidence"]["design_reference"])
+        if canonical(Chem.MolToSmiles(design_reference)) != design:
+            raise ValueError("Retained design reference identity changed")
+        design_pharm, _ = pharmacophore_overlap(
+            design_reference,
+            result[2],
+            info["design"]["reference_conformer_id"],
+            cid,
+            settings.pharmacophore_sigma,
+        )
+        if not math.isclose(design_pharm, info["design"]["pharmacophore"], abs_tol=1e-12, rel_tol=1e-12):
+            raise ValueError("Design pharmacophore metric does not match selected coordinates")
         actual = {
             "hit_tanimoto": float(
                 DataStructs.TanimotoSimilarity(

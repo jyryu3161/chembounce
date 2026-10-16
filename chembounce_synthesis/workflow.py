@@ -39,6 +39,7 @@ from .refinement import RefinementBudget, RefinementSettings, refine_candidate
 from .route_objective import RootProductObjective, search_policy
 from .routes import SearchLimits, expand_route, resolve_proposal, verify_route
 from .synllama import SavedProposals, SynLlama
+from . import selective_scoring
 
 LOGGER = logging.getLogger(__name__)
 COLUMNS = [
@@ -83,6 +84,13 @@ COLUMNS = [
     "seed_score_std",
     "convergence_status",
     "refinement_conformers",
+]
+SELECTIVE_COLUMNS = [
+    "pose_selection_policy",
+    "similarity_constraint_policy",
+    "similarity_constraint_sha256",
+    "similarity_witness_sha256",
+    "polar_reference_recall",
 ]
 
 
@@ -148,6 +156,7 @@ def _config(config):
         "route_search_cache_size",
         "ranking_policy",
         "recommendation_profile",
+        "similarity_constraints",
     }
     if set(config) - permitted:
         raise ValueError(f"Unknown synthesis configuration keys: {sorted(set(config) - permitted)}")
@@ -174,6 +183,7 @@ def _config(config):
     SearchLimits(**config.get("search", {}))
     ConformerSettings(**config.get("conformers", {}))
     RefinementSettings(**config.get("refinement", {}))
+    selective_scoring.configured_constraints(config)
     validate_evidence_config(config.get("synthesis_evidence", {}))
     if "pocket" in config:
         validate_pocket_config(config["pocket"])
@@ -455,9 +465,14 @@ def _rank(rows):
     return rows
 
 
-def _write_table(path, rows):
+def _write_table(path, rows, *, selective=False):
     with path.open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=COLUMNS, delimiter="\t", extrasaction="ignore")
+        writer = csv.DictWriter(
+            stream,
+            fieldnames=COLUMNS + (SELECTIVE_COLUMNS if selective else []),
+            delimiter="\t",
+            extrasaction="ignore",
+        )
         writer.writeheader()
         for row in rows:
             writer.writerow(
@@ -635,6 +650,19 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 )
         requested_hit = hit
         hit = canonical(hit)
+        similarity = None
+        if "similarity_constraints" in config:
+            try:
+                similarity = selective_scoring.configured_constraints(config, hit)
+            except ValueError as exc:
+                summary["similarity_preflight"] = selective_scoring.failure_record(exc, phase="preflight")
+                raise
+            policy["similarity_constraints"] = {"policy": similarity.policy, "sha256": similarity.sha256}
+            summary["similarity_preflight"] = {
+                "status": "eligible",
+                "policy_sha256": similarity.sha256,
+                "ensemble_request_status": "none_requested",
+            }
         hit_fp = FP.GetFingerprint(molecule(hit))
         design_policy = selection_policy(config)
         bounded_refill = design_policy["version"] == "bounded-refill-v1"
@@ -700,6 +728,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     )
                     if policy["evidence_profile"] == "computational-route-support-v1"
                     else None,
+                    similarity=similarity,
                 )
                 if constraint_error:
                     decision.update(status="rejected", qualified=False)
@@ -766,10 +795,16 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 },
             )
         if bounded_refill:
+
+            def prepare_design_reference(design):
+                if similarity is not None:
+                    selective_scoring.preflight_design(design)
+                return prepare_reference(design, settings) if scoring_mode == "3d" else None
+
             design_preflight = select_designs(
                 raw_designs,
                 design_policy,
-                lambda design: prepare_reference(design, settings) if scoring_mode == "3d" else None,
+                prepare_design_reference,
                 deadline_reached,
             )
             requested_designs = design_preflight["requested_designs"]
@@ -974,6 +1009,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             "minimum_scores": config.get("minimum_scores", {}),
             "property_thresholds": config.get("property_thresholds", {}),
             "refinement": asdict(refinement),
+            **(
+                {"similarity_constraints": policy["similarity_constraints"]} if similarity is not None else {}
+            ),
         }
         pose_constraints = (
             constraints_from_config(config["pocket"], hit_pose, config.get("reference_sdf"))
@@ -1271,13 +1309,34 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 }
             )
             if scoring_mode == "3d":
+                result, phase = None, "preflight"
                 try:
-                    result = score_candidate(product, hit, design, settings, hit_pose, **scoring_options)
-                    if qualified:
+                    if similarity is not None:
+                        similarity.preflight_candidate(product)
+                        phase = "scoring"
+                        result = selective_scoring.score_candidate(
+                            product,
+                            hit,
+                            design,
+                            settings,
+                            similarity=similarity,
+                            deadline_monotonic=deadline_monotonic,
+                        )
+                        phase = "validation"
+                        selective_scoring.validate_result(
+                            result, product, settings, hit=hit, design=design, similarity=similarity
+                        )
+                    else:
+                        result = score_candidate(product, hit, design, settings, hit_pose, **scoring_options)
+                    if qualified and similarity is None:
                         validate_result(result, product, settings, hit=hit, design=design)
                 except (ValueError, RuntimeError) as exc:
                     for record in records:
                         record.update(selection_status="3d_failed", reason=str(exc))
+                        if similarity is not None:
+                            record["similarity_failure"] = selective_scoring.failure_record(
+                                exc, phase=phase, result=result
+                            )
                     continue
                 info, hit_aligned, design_aligned = result
                 scores = {
@@ -1355,6 +1414,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 "qualification_policy": None,
                 "evidence_profile": policy["evidence_profile"],
                 "route_support_binding": primary["synthesis_evidence"].get("route_binding_sha256", ""),
+                **(selective_scoring.result_fields(info) if similarity is not None else {}),
             }
             if qualified and not refinement.top_n:
                 row = qualify(row, records, result, settings)
@@ -1364,12 +1424,12 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             if scoring_mode == "3d":
                 poses[(product, design)] = (info, hit_aligned, design_aligned)
         all_screened = _rank(list(rows.values()))
-        _write_table(out / "screening_alternatives.tsv", all_screened)
+        _write_table(out / "screening_alternatives.tsv", all_screened, selective=similarity is not None)
         groups = _family_groups(all_screened)
         ranked = _rank(
             [_with_alternative_routes(alternatives[0], alternatives) for alternatives in groups.values()]
         )
-        _write_table(out / "screening.tsv", ranked)
+        _write_table(out / "screening.tsv", ranked, selective=similarity is not None)
         summary["screened_products"] = len(ranked)
         summary["screened_product_design_pairs"] = len(all_screened)
         summary["screened_scaffold_families"] = len({row["scaffold_family_smiles"] for row in ranked})
@@ -1440,9 +1500,10 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                                     result, product, settings, hit=hit, design=coarse["design"]
                                 )
                             }
-                            if qualified
+                            if qualified and similarity is None
                             else {}
                         ),
+                        **({"similarity": similarity} if similarity is not None else {}),
                         **scoring_options,
                         **(
                             {"deadline_monotonic": deadline_monotonic}
@@ -1493,6 +1554,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         "relative_energy": info["candidate_relative_energy"],
                         "scoring_stage": "refined",
                         "refinement_conformers": info["settings"]["num_conformers"],
+                        **(selective_scoring.result_fields(info) if similarity is not None else {}),
                         **{
                             key: report[key]
                             for key in (
@@ -1563,7 +1625,12 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 design_writer = stack.enter_context(Chem.SDWriter(str(out / "poses_design.sdf")))
                 hit_ref_writer = stack.enter_context(Chem.SDWriter(str(out / "references_hit.sdf")))
                 design_ref_writer = stack.enter_context(Chem.SDWriter(str(out / "references_design.sdf")))
-            writer = csv.DictWriter(stream, fieldnames=COLUMNS, delimiter="\t", extrasaction="ignore")
+            writer = csv.DictWriter(
+                stream,
+                fieldnames=COLUMNS + (SELECTIVE_COLUMNS if similarity is not None else []),
+                delimiter="\t",
+                extrasaction="ignore",
+            )
             writer.writeheader()
             for rank, row in enumerate(selected, 1):
                 row["rank"] = rank
@@ -1597,6 +1664,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         "calibration_artifact_sha256",
                     ):
                         mol.SetProp(key, row[key])
+                    if similarity is not None:
+                        for key, value in selective_scoring.result_fields(info).items():
+                            mol.SetProp(key, str(value) if value is not None else "not_applicable")
                     mol.SetIntProp("pose_seed", row["pose_seed"])
                     for metric in ("seed_score_median", "seed_score_min", "seed_score_max"):
                         mol.SetDoubleProp(metric, row[metric])
@@ -1613,18 +1683,39 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     mol.SetProp("recommendation_status", row["recommendation_status"])
                     mol.SetProp("qualification_policy", row["qualification_policy"] or "not_assessed")
                     sdf.write(mol, confId=info["candidate_conformer_id"])
-                for role, reference, sdf in (
-                    (
-                        "hit",
-                        hit_pose if hit_pose is not None else ensemble(hit, pose_settings),
-                        hit_ref_writer,
-                    ),
-                    ("design", ensemble(row["design"], pose_settings), design_ref_writer),
-                ):
-                    mol = Chem.Mol(reference.mol)
+                if similarity is not None:
+                    from .similarity_constraints import restore_pose
+
+                    references = (
+                        (
+                            "hit",
+                            restore_pose(info["similarity_constraints"]["witness"]["reference_pose"]),
+                            hit_ref_writer,
+                        ),
+                        (
+                            "design",
+                            restore_pose(info["selective_pose_evidence"]["design_reference"]),
+                            design_ref_writer,
+                        ),
+                    )
+                else:
+                    references = (
+                        (
+                            "hit",
+                            (hit_pose if hit_pose is not None else ensemble(hit, pose_settings)).mol,
+                            hit_ref_writer,
+                        ),
+                        ("design", ensemble(row["design"], pose_settings).mol, design_ref_writer),
+                    )
+                for role, reference, sdf in references:
+                    mol = Chem.Mol(reference)
                     mol.SetProp("_Name", row["route_id"])
                     mol.SetProp("reference_role", role)
                     mol.SetProp("scoring_objective", pose_settings.scoring_objective)
+                    if similarity is not None:
+                        mol.SetProp("ranking_policy", row["ranking_policy"])
+                        for key, value in selective_scoring.result_fields(info).items():
+                            mol.SetProp(key, str(value) if value is not None else "not_applicable")
                     for key in (
                         "recommendation_profile",
                         "evidence_profile",

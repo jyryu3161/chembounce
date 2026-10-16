@@ -6,6 +6,113 @@ preserve configured anchors, and have concrete synthetic-route evidence. A
 qualification filter alone does not establish useful yield, search quality,
 biological activity, or experimental synthesizability.
 
+## Selective similarity v2: explicit engineering configuration
+
+The separately versioned `joint-feasible-hit-pose-v2` selector is available only
+through an explicit `similarity_constraints` configuration. No named v2 profile
+is released yet. Its first scorer/constraint source gate passed at `094d0c2`:
+root 144 tests and independent research/Python 3.12 50 tests each; minimum runtime
+37 passed and 13 skipped. Workflow integration is awaiting its separate source
+review. No 197-pair evaluation, model execution or fresh-data performance claim
+is part of this source change.
+
+For example, add the following fields to an existing synthesis configuration
+with explicit catalog, rules, provider and evidence settings:
+
+```json
+{
+  "recommendation": {"mode": "qualified"},
+  "minimum_scores": {
+    "hit_tanimoto": 0.35,
+    "hit_shape": 0.70,
+    "hit_pharmacophore": 0.50
+  },
+  "similarity_constraints": {
+    "version": "selective-similarity-constraints-v2",
+    "polar_recall": 0.75,
+    "landmarks": []
+  },
+  "conformers": {
+    "num_conformers": 8,
+    "seed": 42,
+    "scoring_objective": "original-hit-v1",
+    "pharmacophore_sigma": 1.0,
+    "reject_unspecified_stereo": true
+  },
+  "refinement": {
+    "top_n": 10,
+    "num_conformers": 8,
+    "seeds": [42, 43, 44],
+    "threshold_policy": "all_seeds",
+    "adaptive_max_conformers": null,
+    "ranking_statistic": "minimum",
+    "max_total_conformers": 240
+  }
+}
+```
+
+These are declared engineering preferences, not fitted universal similarity
+cutoffs or activity thresholds. `minimum_scores` remains the single authority
+for score floors, and `core_smiles` remains the single authority for the optional
+chiral substructure requirement. Explicit positive custom floors remain
+engineering settings. Both CLIs read this same section from their existing
+configuration files. Combining it with `qualified-development-v1` always reports
+`custom_unvalidated`, including when the numerical floors have not changed;
+the old profile's calibration does not cover the changed pose selector. Its
+artifact and the original numerical kernel files remain unchanged.
+
+The selector considers at most 64 hit-reference/candidate conformer pairs from
+the existing eight-conformer ensembles. All three score floors, typed polar
+coverage, core membership and required landmarks must hold on one aligned pose.
+It maximizes the original-hit scalar only among feasible pairs, retaining both
+reference and candidate strain penalties and first-on-tie ordering. The actual
+design overlay is a secondary diagnostic on that same candidate conformer and
+must still be available. It can examine up to eight design reference conformers;
+the 64-pair limit refers specifically to hit comparisons. There are no extra
+seeds, adaptive embeddings or threshold relaxations. The additional matching
+work is measured, not claimed to have equal elapsed cost to the old selector.
+
+Polar recall uses Donor, Acceptor, PosIonizable and NegIonizable features, with
+Gaussian positional weights at sigma 1 Å divided by the number of hit polar
+features. Optional landmarks have the form
+`{"id":"amide-oxygen","family":"Acceptor","hit_atom_ids":[2],"max_distance":1.0}`.
+Atom IDs refer to the canonical original-hit full atom order, including explicit
+isotopic hydrogen positions; feature perception removes hydrogen but maps
+feature atom IDs back to that order. A selector must identify one distinct
+existing feature. At most 256 features per molecule and 32 landmarks are allowed.
+Typed coverage does not establish that any feature is biologically essential.
+
+One joint one-to-one assignment satisfies all mandatory landmarks and maximizes
+polar weight. Candidate features cannot be reused between these requirements.
+Required nonpolar landmarks impose feasibility without contributing to polar
+recall. The unchanged global pharmacophore metric has its own full-feature
+assignment on the same pose. No hit polar features means explicitly
+`not_applicable`; an empty global feature set is ineligible. Invalid selectors
+or absent hit cores fail before generation or synthesis assets are loaded.
+Bound-reference SDFs, pocket overrides, adaptive/non-eight-conformer settings,
+permissive stereo, missing final seeds and unqualified modes are rejected.
+
+Screening uses seed 42; final acceptance requires fresh validated results for
+all three seeds 42/43/44. Each retained seed saves exact hit-aligned and
+design-aligned candidate coordinates, selected hit and design reference
+coordinates, identity/coordinate bindings and the joint feature witness in
+`refinement.json`. Final qualification restores this geometry without embedding
+and rechecks every seed, including nonrepresentative seeds. Exported JSON, TSV
+and all four SDFs identify the same selected route, representative seed,
+constraint policy and witness. Exact coordinate hashes refer to JSON geometry;
+SDF coordinate precision is lower. Shape scores and search logs remain evidence
+of the trusted pinned scorer execution, not an attestation of arbitrary external
+score payloads. A collector must bind that execution's source and artifacts.
+
+Continuation imports route graphs and saved proposal supply, then recomputes
+current constraints and scores. Old acceptance flags or geometry are not reused
+as current evidence. Scoring/refinement abstentions retain their bounded search
+audit; preflight failures are distinguished from validation failures after
+embedding. No jointly feasible candidate produces empty result artifacts with
+an explicit bounded-protocol outcome. Evidence requirements are still exactly
+those requested in the configuration: explicit legacy engineering fixtures do
+not acquire computational-route support merely by enabling this selector.
+
 ## Six-stage delivery tracker
 
 | Stage | Required outcome and evidence gate | Status |
