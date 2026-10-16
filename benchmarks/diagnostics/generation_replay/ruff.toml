@@ -1,0 +1,5 @@
+extend = "../../../pyproject.toml"
+
+[format]
+# Historical evaluator bytes are hash-bound; all new code remains formatted/linted.
+exclude = ["analyze_generation_historical.py"]
