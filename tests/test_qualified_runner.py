@@ -140,6 +140,7 @@ def test_crem_complete_raw_pool_reselects_beyond_native_three(tmp_path):
 def protocol():
     return {
         "schema": "qualified-benchmark-protocol-v1",
+        "collector_catalog_policy": runner.CATALOG_POLICY,
         "run_id": "synthetic",
         "budget": runner.BUDGET,
         "source_sha256": {},
@@ -296,9 +297,10 @@ def test_runner_executes_full_rotated_grid_and_checkpoints(tmp_path, monkeypatch
     path = tmp_path / "protocol.json"
     write_json(path, p)
     monkeypatch.setattr(runner, "resolve_protocol", lambda raw, base: p)
+    monkeypatch.setattr(runner, "preload_catalogs", lambda *args: {m["id"]: None for m in p["methods"]})
     called = []
 
-    def attempted(method, query, seed, output, plan, termination):
+    def attempted(method, query, seed, output, plan, termination, **kwargs):
         called.append((method["id"], query["id"], seed))
         return {
             "method_id": method["id"],
@@ -415,6 +417,7 @@ def test_common_cleanup_overrun_preserves_costs_and_continues_next_slot(tmp_path
     path = tmp_path / "protocol.json"
     write_json(path, p)
     monkeypatch.setattr(runner, "resolve_protocol", lambda raw, base: p)
+    monkeypatch.setattr(runner, "preload_catalogs", lambda *args: {m["id"]: None for m in p["methods"]})
     clock, requests, collected = SimpleNamespace(now=1000.0), [], []
     monkeypatch.setattr(runner.time, "monotonic", lambda: clock.now)
 

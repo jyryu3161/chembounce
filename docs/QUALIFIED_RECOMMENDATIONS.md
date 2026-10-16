@@ -488,7 +488,10 @@ Stage 6, whose execution requires a separate gate.
 The new `benchmarks.research.qualified_runner` consumes an immutable
 `qualified-benchmark-protocol-v1` JSON with public `queries` (`id`, `target_id`,
 `smiles` only), generation `seeds`, ordered `methods`, pinned file/directory
-`assets`, complete `source_sha256`, and explicit stage budgets. Each method has
+`assets`, complete `source_sha256`, explicit stage budgets, and
+`collector_catalog_policy: "runner-preload-catalog-v1"`. This policy requires a
+new reviewed protocol freeze; older pilot protocols are not silently upgraded.
+Each method has
 an `arm` (`full`, `baseline`, `crem`, `mol2mol`, or `synllama`), common
 `synthesis_config`/catalog/rules assets, and settings. External native methods
 also declare their exact command, native asset aliases, settings and
@@ -510,7 +513,9 @@ prediction cache or fallback model is available. Source tests use synthetic
 inputs/controlled beams only; this command requires a separate execution gate.
 
 The prospective engineering pilot uses native **360 seconds**, common **600
-seconds**, outer **960 seconds**, one sequential attempt and 24000 MB host RSS.
+seconds**, outer **960 seconds**, one sequential attempt and a 24000 MB
+limit on each sampled child process tree. This limit does not enforce combined
+parent-plus-child host memory.
 The earlier planning-only 300/600/900 allocation was revised before any pilot
 inference because unchanged native Mol2Mol validation requires a literal
 360-second budget. Its validator and sampling protocol are preserved. Native
@@ -520,8 +525,30 @@ common 600-second allocation. The outer clock starts before native setup and
 includes both cleanup phases, collector and accounting; late outputs are
 rejected. Parent collector/hash/cleanup checks are cooperative and may finish
 after that clock, so this is not an exact wall-clock kill guarantee for parent
-work. Shared preflight asset hashing/config validation is separately timed;
-identical assets are hashed once in that preflight, without caching predictions.
+work. Shared administrative setup measures preflight asset validation plus one
+full eager catalog construction per unique pinned path/checksum. The runner owns
+these read-only catalog snapshots for this campaign only. Each method must pin
+`catalog_manifest` to the adjacent `<catalog>.manifest.json` path and SHA256, or
+set `catalog_manifest_absent: true` when that sidecar is absent. Presence, path,
+TSV/sidecar hashes, source and runtime are checked before reuse; per-route catalog
+digest checks remain. Earlier protocols that pinned only the TSV have a narrower
+provenance scope and are not retroactively relabelled.
+
+Only collector record lookup is shared. Every nonempty collector call constructs fresh
+Rules, and native/common children remain independent cold invocations, including
+their own catalog costs. No reaction-result, fingerprint-search, prediction,
+score, route or artifact cache is shared. Setup failure or cancellation starts no
+attempts and preserves the full planned denominator. Cancellation during eager
+construction is cooperative and is checked after that validation completes.
+
+`setup.json`, collection and analysis record setup wall/parent CPU time, parent
+RSS point observations and its lifetime high-water mark. Setup cost is reported
+separately and allocated equally over **all planned attempts** for accounting;
+it is not free compute and cannot enlarge any attempt budget. Each `phases.json`
+likewise records parent CPU/RSS separately from sampled child-tree resources.
+These distinct RSS maxima are never summed into a purported simultaneous peak;
+combined parent-plus-child peak memory remains unknown. Total campaign wall time
+through checkpoint includes setup and attempts.
 
 Current generation supplies at most twelve raw designs for three eligible
 inputs. CReM and Mol2Mol retain their complete fresh, in-budget raw pools (at
@@ -565,9 +592,10 @@ intervals are unavailable. Sampled process-tree CPU is a **lower bound** and
 RSS is the sampled aggregate peak, not exact CPU time or memory. GPU time and
 memory remain null when unmeasured. Native/common work units and partial-file
 accounting failures remain explicit; missing work counts are not invented as
-zero. All retained costs include failed attempts. Collector CPU/RSS are outside
-the subprocess sampler and are disclosed as unmeasured separately from outer
-wall time. Source review, actual development pilot, fresh input selection,
+zero. All retained costs include failed attempts. Parent CPU/RSS observations
+include collector work and retained shared catalogs, with the separate scope
+described above; subprocess metrics remain unchanged. Source review, revised
+protocol activation, actual development pilot, fresh input selection,
 frozen final grids, execution and scientific interpretation remain pending.
 
 Fresh-panel preparation is implemented separately in

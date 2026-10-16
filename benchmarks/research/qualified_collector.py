@@ -6,18 +6,20 @@ saved identities, route replay, actual tensors, seed metrics and export agreemen
 """
 
 import csv
+from dataclasses import asdict, dataclass, field
 import importlib.metadata
 import math
 from pathlib import Path
 import platform
 import time
-from types import SimpleNamespace
+from types import MappingProxyType, SimpleNamespace
 
-from rdkit import Chem, DataStructs
+from rdkit import Chem, DataStructs, rdBase
 
 from benchmarks.research.protocol import digest
 from benchmarks.research.qualified_adapter import read, common_config
 from chembounce_synthesis.common import FP, canonical, molecule
+from chembounce_synthesis.catalog import Catalog
 from chembounce_synthesis.forward_support import (
     GENERATION_SOURCE_SHA256,
     PADDING_POLICY,
@@ -31,6 +33,81 @@ from chembounce_synthesis.profiles import FIXED_CONFORMERS, METRICS, PROFILE_SHA
 from chembounce_synthesis.qualification import _validate_score_info
 from chembounce_synthesis.conformers import ConformerSettings
 from chembounce_synthesis.route_audit import audit_route
+
+
+@dataclass(frozen=True, init=False)
+class BoundCatalog:
+    """Runner-owned full snapshot with only read-only collector lookup exposed.
+
+    The complete Catalog remains owned here, but no molecule, fingerprint,
+    nearest-neighbor or reaction-result cache is available through this API.
+    This object is never global, serialized, or reused across campaigns.
+    """
+
+    path: Path
+    sha256: str
+    _sidecar_sha256: object
+    _source: object
+    _runtime: tuple
+    _collector_sha256: str
+    _catalog: object = field(repr=False, compare=False)
+    _records: object = field(repr=False, compare=False)
+
+    def __init__(self, filename, expected_sha256, expected_source, *, sidecar_sha256):
+        object.__setattr__(self, "path", Path(filename).resolve())
+        object.__setattr__(self, "sha256", expected_sha256)
+        object.__setattr__(self, "_sidecar_sha256", sidecar_sha256)
+        source = {name: expected_source[name] for name in ("catalog.py", "common.py")}
+        object.__setattr__(self, "_source", MappingProxyType(source))
+        object.__setattr__(self, "_runtime", (platform.python_version(), rdBase.rdkitVersion))
+        object.__setattr__(self, "_collector_sha256", digest(__file__))
+        self.validate(filename, expected_source)
+        catalog = Catalog(self.path)  # Full eager validation, never selective parsing.
+        if catalog.sha256 != expected_sha256:
+            raise ValueError("Catalog changed during shared construction")
+        object.__setattr__(self, "_catalog", catalog)
+        # Frozen BuildingBlock values and a private immutable mapping prevent a
+        # lookup caller from modifying the retained authoritative record set.
+        object.__setattr__(self, "_records", MappingProxyType(dict(catalog.blocks)))
+        self.validate(filename, expected_source)
+
+    def validate(self, filename, expected_source):
+        if Path(filename).resolve() != self.path or digest(self.path) != self.sha256:
+            raise ValueError("Shared catalog path or checksum differs from the pinned snapshot")
+        sidecar = self.path.with_suffix(self.path.suffix + ".manifest.json")
+        actual = digest(sidecar) if sidecar.exists() else None
+        if actual != self._sidecar_sha256:
+            raise ValueError("Shared catalog sidecar presence/checksum changed")
+        source_root = Path(__file__).resolve().parents[2] / "chembounce_synthesis"
+        if digest(__file__) != self._collector_sha256:
+            raise ValueError("Shared catalog collector source changed")
+        if any(
+            expected_source.get(name) != value or digest(source_root / name) != value
+            for name, value in self._source.items()
+        ) or self._runtime != (platform.python_version(), rdBase.rdkitVersion):
+            raise ValueError("Shared catalog source/runtime binding changed")
+
+    def get(self, ident):
+        block = self._records.get(ident)
+        if block is None or block.availability == "unavailable":
+            raise ValueError(f"Building block is absent or unavailable: {ident}")
+        return block
+
+    def evidence(self, ident):
+        return asdict(self.get(ident)) | {"catalog_sha256": self.sha256}
+
+    def binding(self):
+        return {
+            "catalog_path": str(self.path),
+            "catalog_sha256": self.sha256,
+            "catalog_manifest_path": str(self.path.with_suffix(self.path.suffix + ".manifest.json")),
+            "catalog_manifest_sha256": self._sidecar_sha256,
+            "source_sha256": dict(self._source),
+            "collector_source_sha256": self._collector_sha256,
+            "python": self._runtime[0],
+            "rdkit": self._runtime[1],
+            "records": len(self._records),
+        }
 
 
 class TokenReplay(PinnedReactionT5Forward):
@@ -119,10 +196,16 @@ def verify_route_support(record, catalog, rules, limit, decoder):
 
 
 def checked_products(
-    directory, response, query, expected_source, *, decoder_factory=TokenReplay, deadline=None
+    directory,
+    response,
+    query,
+    expected_source,
+    *,
+    decoder_factory=TokenReplay,
+    deadline=None,
+    bound_catalog=None,
 ):
     """Return collector-computed chemistry/robust scores from complete consistent exports."""
-    from chembounce_synthesis.catalog import Catalog
     from chembounce_synthesis.reactions import Rules
     from chembounce_synthesis.workflow import check_constraints
 
@@ -184,6 +267,10 @@ def checked_products(
         raise ValueError("Live qualification selection/policy mismatch")
     if policy["minimum_scores"] != load_profile("qualified-development-v1")["minimum_scores"]:
         raise ValueError("Common minima differ from the frozen calibration artifact")
+    if bound_catalog is not None:
+        if type(bound_catalog) is not BoundCatalog:
+            raise ValueError("Collector requires a runner-owned bound catalog")
+        bound_catalog.validate(config["catalog"], expected_source)
     if not rows:
         return []
     exports = {
@@ -208,7 +295,8 @@ def checked_products(
     records = read(out / "routes.json")["routes"]
     refinements = read(out / "refinement.json")["candidates"]
     selected, decoder = [], None
-    catalog, rules = Catalog(config["catalog"]), Rules(config["rules"])
+    catalog = bound_catalog if bound_catalog is not None else Catalog(config["catalog"])
+    rules = Rules(config["rules"])  # Fresh per call: no cross-attempt Rules.apply cache.
     for index, row in enumerate(rows):
         check_deadline()
         if row.get("rank") != index + 1 or row.get("recommendation_status") != "qualified":
@@ -320,5 +408,7 @@ def checked_products(
                 "margins": margins,
             }
         )
+    if bound_catalog is not None:
+        bound_catalog.validate(config["catalog"], expected_source)
     check_deadline()
     return selected

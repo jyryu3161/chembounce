@@ -1,14 +1,18 @@
 """Fresh query/seed-blocked qualified benchmark with a complete planned denominator.
 
 Two sequential owned process groups reuse the existing bounded_method controller.
-No retries, cross-method caches, partial-native rescue, or automatic budget changes.
+Only fully validated catalog records are shared in measured administrative setup.
+No prediction/search caches, retries, partial-native rescue, or budget changes.
 """
 
 import argparse
 import copy
 from pathlib import Path
+import resource
 import sys
 import time
+
+import psutil
 
 from benchmarks.research.protocol import digest, write_json, synthesis_asset_paths
 from benchmarks.research.qualified_adapter import ARMS, read
@@ -17,6 +21,81 @@ from benchmarks.research import qualified_collector
 from benchmarks.research.runner import bounded_method, _termination_scope, _write_checkpoint
 
 BUDGET = {"wall_seconds": 960, "native_wall_seconds": 360, "common_wall_seconds": 600, "max_memory_mb": 24000}
+CATALOG_POLICY = "runner-preload-catalog-v1"
+
+
+def parent_memory():
+    """Parent point observation and lifetime high-water mark, not a tree peak."""
+    try:
+        current = psutil.Process().memory_info().rss / (1024 * 1024)
+    except psutil.Error:
+        current = None
+    peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    peak_mb = peak / (1024 * 1024 if sys.platform == "darwin" else 1024)
+    return {"rss_mb": current, "lifetime_peak_rss_mb": peak_mb}
+
+
+def synthesis_sources(source):
+    root = Path(qualified_collector.__file__).resolve().parents[2] / "chembounce_synthesis"
+    return {Path(path).name: value for path, value in source.items() if Path(path).parent == root}
+
+
+def preload_catalogs(protocol, termination, setup):
+    """One full catalog per pinned path/checksum, owned only by this run.
+
+    Sidecar provenance is explicitly pinned or explicitly absent. Cancellation
+    is cooperative between full validations; no attempt starts after a signal.
+    """
+    cached, methods = {}, {}
+    expected_source = synthesis_sources(protocol["source_sha256"])
+    for method in protocol["methods"]:
+        if termination.signal_number is not None:
+            raise InterruptedError("Interrupted during shared catalog setup")
+        assets = method["resolved_assets"]
+        path = Path(assets["catalog"]).resolve()
+        expected = method["assets"]["catalog"]["sha256"]
+        sidecar = path.with_suffix(path.suffix + ".manifest.json")
+        if "catalog_manifest" in assets:
+            if (
+                method.get("catalog_manifest_absent", False) is not False
+                or Path(assets["catalog_manifest"]).resolve() != sidecar
+            ):
+                raise ValueError("Catalog sidecar path/absence binding conflicts")
+            sidecar_sha = method["assets"]["catalog_manifest"]["sha256"]
+        else:
+            if method.get("catalog_manifest_absent") is not True:
+                raise ValueError("Catalog requires pinned sidecar or explicit absence binding")
+            sidecar_sha = None
+        key = str(path), expected, sidecar_sha
+        if key not in cached:
+            entry = {"catalog_path": str(path), "status": "started", "method_ids": []}
+            setup["catalogs"].append(entry)
+            started, cpu = time.monotonic(), time.process_time()
+            entry["parent_before"] = parent_memory()
+            try:
+                cached[key] = qualified_collector.BoundCatalog(
+                    path, expected, expected_source, sidecar_sha256=sidecar_sha
+                )
+                entry.update(binding=cached[key].binding(), status="completed")
+            except BaseException as exc:
+                entry.update(status="failed", error={"type": type(exc).__name__, "message": str(exc)})
+                raise
+            finally:
+                entry.update(
+                    wall_seconds=time.monotonic() - started,
+                    cpu_seconds=time.process_time() - cpu,
+                    parent_after=parent_memory(),
+                )
+        else:
+            # Recheck even when methods reuse the same preloaded snapshot.
+            cached[key].validate(path, expected_source)
+        next(e for e in setup["catalogs"] if e.get("binding") == cached[key].binding())["method_ids"].append(
+            method["id"]
+        )
+        methods[method["id"]] = cached[key]
+        if termination.signal_number is not None:
+            raise InterruptedError("Interrupted during shared catalog setup")
+    return methods
 
 
 def make_plan(protocol, protocol_sha256):
@@ -36,6 +115,7 @@ def make_plan(protocol, protocol_sha256):
         "collector_source_sha256": digest(qualified_collector.__file__),
         "budget": protocol["budget"],
         "source_sha256": protocol["source_sha256"],
+        "collector_catalog_policy": protocol.get("collector_catalog_policy"),
     }
     plan["order_rule"] = "query/seed blocks; cyclic method rotation by block index"
     plan["slot_order"] = []
@@ -59,6 +139,8 @@ def resolve_protocol(protocol, base):
     protocol = copy.deepcopy(protocol)
     if protocol.get("schema") != "qualified-benchmark-protocol-v1" or protocol["budget"] != BUDGET:
         raise ValueError("Unknown protocol or unfrozen stage budgets")
+    if protocol.get("collector_catalog_policy") != CATALOG_POLICY:
+        raise ValueError("Protocol must explicitly freeze the shared catalog setup policy")
     source = protocol["source_sha256"]
     root = Path(__file__).resolve().parents[2]
     required = list((root / "chembounce_synthesis").glob("*.py")) + [
@@ -224,10 +306,11 @@ def unit_counts(directory):
     return counts
 
 
-def attempt(method, query, seed, output, plan, termination):
+def attempt(method, query, seed, output, plan, termination, *, bound_catalog=None):
     output.mkdir(parents=True, exist_ok=False)
     started = time.monotonic()
     outer_deadline = started + BUDGET["wall_seconds"]
+    parent_cpu_started, parent_before = time.process_time(), parent_memory()
     identity = {
         "method_id": method["id"],
         "target_id": query["target_id"],
@@ -304,14 +387,14 @@ def attempt(method, query, seed, output, plan, termination):
         collector_started = time.monotonic()
         if collector_started >= outer_deadline:
             raise TimeoutError("Outer budget exhausted before collector")
-        expected_source = {
-            Path(path).name: value
-            for path, value in plan["source_sha256"].items()
-            if Path(path).parent
-            == Path(qualified_collector.__file__).resolve().parents[2] / "chembounce_synthesis"
-        }
+        expected_source = synthesis_sources(plan["source_sha256"])
         result["qualified"] = qualified_collector.checked_products(
-            common_dir, phases["common"]["response"], query, expected_source, deadline=outer_deadline
+            common_dir,
+            phases["common"]["response"],
+            query,
+            expected_source,
+            deadline=outer_deadline,
+            bound_catalog=bound_catalog,
         )
         phases["collector"] = {
             "wall_seconds": time.monotonic() - collector_started,
@@ -387,6 +470,13 @@ def attempt(method, query, seed, output, plan, termination):
                 "phases": phases,
                 "resources_scope": "CPU sampled lower bound; GPU time/memory unavailable; no zero imputation",
                 "native_files_sha256": native_files,
+                "parent_resources": {
+                    "cpu_seconds": time.process_time() - parent_cpu_started,
+                    "before": parent_before,
+                    "after": parent_memory(),
+                    "scope": "Parent process only, including retained shared catalog; excludes child CPU/RSS. RSS points and lifetime high-water mark are not simultaneous tree peaks.",
+                    "simultaneous_parent_plus_child_peak_rss_mb": None,
+                },
             },
         )
         result["costs"]["wall_seconds"] = time.monotonic() - started
@@ -400,6 +490,7 @@ def attempt(method, query, seed, output, plan, termination):
 
 
 def run(protocol_path, output):
+    campaign_started = time.monotonic()
     output = Path(output).resolve()
     output.mkdir(parents=True, exist_ok=False)
     raw = read(protocol_path)
@@ -410,35 +501,70 @@ def run(protocol_path, output):
         "plan_sha256": canonical_sha256(plan),
         "collector_source_sha256": plan["collector_source_sha256"],
         "attempts": [],
+        "administrative_setup": {"status": "not_started"},
         "measurement_policy": {
             "cpu_seconds": "sum of phase sampled process-tree CPU lower bounds; collector CPU excluded",
             "peak_rss_mb": "maximum sampled aggregate process-tree RSS across phases; collector RSS excluded",
             "gpu_seconds": "not measured; null",
             "peak_gpu_mb": "not measured; null",
-            "wall_seconds": "outer elapsed including native/common cleanup and collector",
+            "wall_seconds": "per-attempt outer elapsed including native/common cleanup and collector; shared administrative setup reported separately, never free compute",
+            "shared_setup": "Full catalog validation/preload plus integrity preflight outside attempt clocks; measured wall/parent CPU/RSS. No prediction/search/rule-result cache shared.",
+            "parent_memory": "Setup and per-attempt parent point RSS/lifetime high-water marks are separate from sampled child-tree peaks. Simultaneous parent+child peak unmeasured; separate maxima are not summed.",
+            "memory_limit": "Existing 24000MB controller applies to each child process tree, not a measured combined parent+child peak.",
         },
     }
 
     def checkpoint():
+        collection["campaign_wall_seconds_through_checkpoint"] = time.monotonic() - campaign_started
         _write_checkpoint(output / "collection.json", collection)
         report = analyze(plan, collection)
         report["measurement_policy"] = collection["measurement_policy"]
+        report["administrative_setup"] = collection["administrative_setup"]
+        report["campaign_wall_seconds_through_checkpoint"] = collection[
+            "campaign_wall_seconds_through_checkpoint"
+        ]
         _write_checkpoint(output / "analysis.json", report)
 
     checkpoint()
     with _termination_scope() as termination:
         try:
-            setup_started = time.monotonic()
+            setup_started, setup_cpu = time.monotonic(), time.process_time()
+            setup = {
+                "policy": CATALOG_POLICY,
+                "status": "started",
+                "catalogs": [],
+                "parent_before": parent_memory(),
+                "scope": "Shared full catalog validation/preload and integrity preflight outside attempt clocks. Common/native children remain independent cold invocations and pay their own catalog construction costs.",
+            }
+            catalogs = None
             try:
+                if termination.signal_number is not None:
+                    raise InterruptedError("Interrupted before shared setup")
                 protocol = resolve_protocol(raw, Path(protocol_path).resolve().parent)
+                catalogs = preload_catalogs(protocol, termination, setup)
+                setup["status"] = "completed"
+            except InterruptedError as exc:
+                setup.update(status="interrupted", error={"type": type(exc).__name__, "message": str(exc)})
+            except BaseException as exc:
+                setup.update(status="failed", error={"type": type(exc).__name__, "message": str(exc)})
+                raise
             finally:
-                write_json(
-                    output / "setup.json",
-                    {
-                        "wall_seconds": time.monotonic() - setup_started,
-                        "scope": "Shared preflight integrity hashing/config validation outside attempt clocks; each unique asset is hashed once here, never a prediction cache",
-                    },
+                setup.update(
+                    wall_seconds=time.monotonic() - setup_started,
+                    cpu_seconds=time.process_time() - setup_cpu,
+                    parent_after=parent_memory(),
+                    simultaneous_parent_plus_child_peak_rss_mb=None,
                 )
+                setup["accounting_share_per_planned_attempt"] = {
+                    "denominator": len(plan["slot_order"]),
+                    "wall_seconds": setup["wall_seconds"] / len(plan["slot_order"]),
+                    "cpu_seconds": setup["cpu_seconds"] / len(plan["slot_order"]),
+                    "scope": "Administrative cost allocation only; includes every planned slot and never extends any attempt budget.",
+                }
+                collection["administrative_setup"] = setup
+                write_json(output / "setup.json", setup)
+            if catalogs is None or termination.signal_number is not None:
+                return collection
             methods = {m["id"]: m for m in protocol["methods"]}
             queries = {(q["target_id"], q["id"]): q for q in protocol["queries"]}
             for index, slot in enumerate(plan["slot_order"]):
@@ -451,6 +577,7 @@ def run(protocol_path, output):
                     output / f"attempt-{index:04d}",
                     plan,
                     termination,
+                    bound_catalog=catalogs[slot["method_id"]],
                 )
                 collection["attempts"].append(row)
                 checkpoint()

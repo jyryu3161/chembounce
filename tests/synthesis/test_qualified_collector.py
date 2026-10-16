@@ -101,7 +101,7 @@ def completed(tmp_path, assets, route, strict_predictor):
     return out, response, strict_predictor
 
 
-def collect(data):
+def collect(data, bound_catalog=None):
     out, response, decoder = data
     return collector.checked_products(
         out,
@@ -109,6 +109,7 @@ def collect(data):
         {"id": "fixture", "target_id": "synthetic", "smiles": HIT},
         workflow._SOURCE_HASHES,
         decoder_factory=lambda *args: decoder,
+        bound_catalog=bound_catalog,
     )
 
 
@@ -162,3 +163,27 @@ def test_token_replay_cannot_call_model():
     replay = object.__new__(collector.TokenReplay)
     with pytest.raises(RuntimeError, match="inference is forbidden"):
         replay.predict_raw({})
+
+
+def test_bound_catalog_preserves_outputs_with_fresh_rules(completed, assets, monkeypatch):
+    from chembounce_synthesis import reactions as rules
+
+    bound = collector.BoundCatalog(
+        assets[0].path, assets[0].sha256, workflow._SOURCE_HASHES, sidecar_sha256=None
+    )
+    original = collect(completed)
+    instances = []
+    constructor = rules.Rules
+
+    def fresh(*args, **kwargs):
+        instance = constructor(*args, **kwargs)
+        instances.append(instance)
+        return instance
+
+    monkeypatch.setattr(rules, "Rules", fresh)
+    assert collect(completed, bound) == original
+    assert collect(completed, bound) == original
+    assert len(instances) == 2 and instances[0] is not instances[1]
+    assert bound._catalog.nearest.cache_info().currsize == 0
+    assert all(v is bound._catalog.fps._PENDING for v in bound._catalog.fps._values.values())
+    assert len(completed[2].calls) == 1
