@@ -1,0 +1,193 @@
+{
+  "attempt_status_counts": {
+    "infrastructure_interruption": 1,
+    "no_candidates": 140,
+    "success": 434,
+    "timeout": 55
+  },
+  "attempts": 630,
+  "bootstrap": {
+    "draws": 10000,
+    "hierarchy": "Within every split: mean matched generation seeds per query, mean queries per target, equal target macro. Paired pipeline-minus-each-comparator differences at identical query/seed slots before aggregation. Single target: no CI. No pooling targets across splits.",
+    "quantiles": [
+      0.025,
+      0.975
+    ],
+    "seed": 20261016,
+    "unit": "target"
+  },
+  "candidate_occurrences": 1264,
+  "conditional_metric": "Within each attempt having >=1 supplied replay-verified fully evaluated route, matched occurrences / fully evaluated route occurrences. Aggregate observed attempt ratios by query then target, retaining eligibility counts. Null without eligible routes, never fabricate zero; secondary selected-subset descriptive statistic only. Also report pooled occurrence fraction descriptively without occurrence-independent CI.",
+  "csv_projection": {
+    "level": "Recorded target-macro summaries plus exact coverage counts; per-query/per-target records remain in analysis.json. No new estimates.",
+    "missing_status_count_keys": "An absent status-count key is displayed as count zero; missing metric values remain blank.",
+    "null_encoding": "Blank CSV cell; never replaced by zero",
+    "precision": "Python round-trip integer/float strings, no decimal rounding",
+    "rows": {
+      "infrastructure_bounds": 333,
+      "method_metrics": 760,
+      "paired_metrics": 646,
+      "route_coverage": 20
+    }
+  },
+  "dependence": "Occurrences sharing routes or identical reactant/context inputs are reuse, not independent samples; report unique route/input keys and repeated occurrences descriptively. No candidate-, reaction-, route- or seed-level iid uncertainty; cluster at target with query/seed hierarchy. Few-target and cross-target shared-input limitations remain explicit.",
+  "files_sha256": {
+    "analysis.json": "436eb85756d84caa87ae718244125a108786090bb7e35a59bac9ea521e6dd6ff",
+    "infrastructure_bounds.csv": "1e4561e8deb7980c235c820f42c07a3c9ac00f85465d3ef5ed0436219082e6a2",
+    "method_metrics.csv": "e8caef314544cd1a6e7f12dc180bd6e522ed368ffc199be6340c69f808d10ac8",
+    "paired_metrics.csv": "6c05e568a7a226f42b6c58184b3f91c57435ef104746292877b1dae1c6373859",
+    "replay-validation.json": "5227a9e67e071d6bd10b07d37d020920d9e4cd7fba943d64d37b8445e06f9df6",
+    "route_coverage.csv": "5af6fc3f80cb56f46f0284bdadfeaca7268abeaff5ac761f880c7b4d3f8b2696",
+    "statistical-bundle.zip": "3964d6236d1262853aa1a077a9526499e9291c20412328f3d79dbe6ccbc9a768"
+  },
+  "interpretation": "Product-blind reactant-only input; same model as selection gate so selection-related enrichment is expected. Missing reagents/conditions and absent empirical context remain explicit. No predicted activity, biological validation, experimental synthesis, yield or synthesis probability claim.",
+  "limitations": [
+    "Same forward model as selection gate; agreement is selection-related evidence, not independent experimental validation.",
+    "No route supplied is absence of evidence, not a chemical failure. Failed generation slots remain in all-attempt metrics.",
+    "Conditional fractions require evaluated routes and report their eligibility; they are not synthesis-success probabilities.",
+    "Exact query/seed pairing before target aggregation differs from the original generation target-mean contrasts.",
+    "Few target clusters, shared inputs and cross-split dependence limit unadjusted descriptive bootstrap intervals.",
+    "Infrastructure identification bounds are not CIs; infrastructure-only complete cases are selection-biased.",
+    "Original frozen39 only; current41, supplementary270, and new generation or model inference are excluded.",
+    "No activity, yield, experimental synthesis, 3D or pipeline-superiority claim; full training inventories remain unknown.",
+    "Existing source attribution preserved; no new license assigned. Historical absolute paths are metadata, not replay input locations."
+  ],
+  "original_scientific_files": 39,
+  "original_source_commit": "d972124d587e647ef48455cf1a038e6be96e5b04",
+  "packaging": {
+    "archive": "statistical-bundle.zip",
+    "archive_bytes": 585224,
+    "archive_members_match_reviewed_bundle": true,
+    "archive_root": "original630-forward-bundle/",
+    "archive_sha256": "3964d6236d1262853aa1a077a9526499e9291c20412328f3d79dbe6ccbc9a768",
+    "bundle_source_bytes_rechecked_after_packaging": true,
+    "compression": "ZIP_DEFLATED",
+    "compression_level": 9,
+    "member_count": 18,
+    "member_order": "lexical POSIX path",
+    "member_permissions": "regular files, 0644, Unix create_system=3",
+    "member_timestamp": [
+      1980,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]",
+    "recipe_sha256": "3e5e89367ef4da5e5952f328250dc41ad30b2b2fb7c3e30710d9b2dd770c79d3",
+    "two_serializations_byte_identical": true,
+    "uncompressed_bytes": 5734481,
+    "zlib": "1.2.13"
+  },
+  "paired_scope": "Exact matching query/seed differences before aggregation; conditional metric requires both observations eligible",
+  "parent_integrity_review": {
+    "checked_utc": "2026-10-16T07:44:16.941540+00:00",
+    "evidence": "original630-forward-parent-20261016/integrity-validation.json",
+    "inference_usage_reconstructed": {
+      "cache_hits": 31,
+      "input_tokens": 20480,
+      "output_tokens": 53531,
+      "predictor_calls": 513
+    },
+    "parent_helper_sha256": "5ff9b50a12b4e58bf3de6fb61142206d3640e6a9f4279c3a56c189fd2311a235",
+    "raw_predictions_reinterpreted": 1632,
+    "scope": "Independent direct RDKit route traversal and saved raw-product canonicalization/complete/rank/status interpretation, exact accepted-output joins, terminal lifecycle and retained file hashes. Same RDKit kernel; no model inference or neural prediction reproduction, no activity, yield or empirical synthesis claim. Full statistical reconstruction is a separate gate.",
+    "sha256": "9a14e3ba92b2cda336a3aa3a93da7fd3dd9d96b7ec660ce11aca9bc48a8e3034",
+    "step_status_counts": {
+      "matched": 319,
+      "mismatched": 225
+    },
+    "unique_route_step_occurrences": 544,
+    "unique_routes": 484
+  },
+  "parent_portable_review": {
+    "all_three_analysis_outputs_byte_identical": true,
+    "checked_utc": "2026-10-16T08:15:42.067567+00:00",
+    "completion_sha256": "7ad93ff771faa79d88adaeda368d229e1a9453b30864f6f118d7bb1ba1934c96",
+    "evidence": "original630-portable-forward-20261016/parent-validation.json",
+    "focused_tests": {
+      "minimum_numpy": {
+        "passed": 40,
+        "seconds": 17.1
+      },
+      "original_numpy": {
+        "passed": 40,
+        "seconds": 15.33
+      },
+      "py312_numpy2": {
+        "passed": 40,
+        "seconds": 14.6
+      }
+    },
+    "runtime_checks": [
+      {
+        "analysis_sha256": "436eb85756d84caa87ae718244125a108786090bb7e35a59bac9ea521e6dd6ff",
+        "name": "original-numpy",
+        "recorded_runtime": {
+          "numpy": "1.26.4",
+          "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+        },
+        "returncode": 0,
+        "validation_sha256": "5227a9e67e071d6bd10b07d37d020920d9e4cd7fba943d64d37b8445e06f9df6"
+      },
+      {
+        "analysis_sha256": "436eb85756d84caa87ae718244125a108786090bb7e35a59bac9ea521e6dd6ff",
+        "name": "minimum-numpy",
+        "recorded_runtime": {
+          "numpy": "1.24.4",
+          "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]"
+        },
+        "returncode": 0,
+        "validation_sha256": "a714da6d7d777fc75ecab4e3f8a4b6c07c44ce24b88a946a78e148aed6befc63"
+      },
+      {
+        "analysis_sha256": "436eb85756d84caa87ae718244125a108786090bb7e35a59bac9ea521e6dd6ff",
+        "name": "py312-numpy2",
+        "recorded_runtime": {
+          "numpy": "2.5.4",
+          "python": "3.12.13 (main, Apr 14 2026, 14:29:00) [Clang 22.1.3 ]"
+        },
+        "returncode": 0,
+        "validation_sha256": "78064c29065005ca19ec1f1fb9294c653e1d0190b0d55e917b84da8100ca4616"
+      }
+    ],
+    "script_sha256": "a06654ffb6b95a181ae4b80fa6906744a86daa0b8cd642f116dcc73663ef0a52",
+    "sha256": "5e1ad48ce443732347c69dbf63cbb00a10741c80593f32667da7b4105caaf513"
+  },
+  "parent_statistics_review": {
+    "absolute_tolerance": 1e-12,
+    "checked_utc": "2026-10-16T07:46:02.970611+00:00",
+    "evidence": "original630-forward-parent-20261016/statistics-validation.json",
+    "independent_implementation": "Pandas dataframe groupby/reindex means and matched query/seed subtraction; integer bootstrap indices and NumPy percentile with frozen seed20261016/10000 draws. Original analyzer not imported or called. Normalized saved outputs originate in separately retained root raw-record/route/prediction audit.",
+    "numeric_cells_compared": 52514,
+    "parent_helper_sha256": "2d5b040dd57cbf15c665b4216bbc62258cbc2b5953e7367519a9ef75e2dd7a23",
+    "scope": "All method and paired query/seed conditional summaries, count/slot/any-route metrics, target bootstrap intervals, infrastructure identification bounds, complete-case secondary availability and shared-input diagnostics. No neural inference, new chemistry, model accuracy or experimental synthesis proof.",
+    "sha256": "b0dd1cac7731d115aad4f776d83f765868dbe8acdf9f6e2d219643628751d0d1"
+  },
+  "plan_design": "Post hoc analysis plan specified while all generation and common forward assessment were incomplete; not preregistered confirmatory evidence. No comparative results computed to choose endpoints or subsets.",
+  "primary_definition": "Indicator: at least one accepted returned candidate supplies a raw route that replays to the exact candidate and has a nonempty set of reaction steps, every common forward prediction status matched and all steps evaluated. All planned attempts remain in denominator; timeout/no_candidates/other terminal failures have no accepted returns.",
+  "primary_metric": "attempt_with_common_forward_matched_route",
+  "schema": "original630-common-forward-publication-v1",
+  "scope": "Byte-preserving parent-reviewed original630 common-forward normalized-record statistical package. Stored CSV projection only; no new model, chemistry, 3D or statistical calculation.",
+  "split_attempts": {
+    "scaffold": 360,
+    "target": 90,
+    "time": 180
+  },
+  "status": "completed_original_common_forward_packaged",
+  "target_clusters": {
+    "scaffold": 6,
+    "target": 3,
+    "time": 6
+  },
+  "trust_anchors": {
+    "analysis_helper_sha256": "01b4c9468d23bb2870083c0b8f66886fafbf0262b429e08e5e102e683e20d83e",
+    "analysis_plan_sha256": "385be03fee3d2df6cfc04975cb63b42717088eabe62077bdbd3c6db9ca5db529",
+    "analysis_sha256": "436eb85756d84caa87ae718244125a108786090bb7e35a59bac9ea521e6dd6ff",
+    "bundle_manifest_sha256": "9650f71cdd4a7e2de9f8b90a839be9477153fef94a938325e033b924572b05c8",
+    "extracted_statistics_sha256": "0bf96138f0a137a6048a700d78bc064f6b278766d8b09da87f3f54ca45739cd1",
+    "replay_tool_sha256": "390a2f2118e6faaa5c271d0fe6fd1fd9f26a6d06dddc7420dd83d05856327f80",
+    "replay_validation_sha256": "5227a9e67e071d6bd10b07d37d020920d9e4cd7fba943d64d37b8445e06f9df6"
+  }
+}

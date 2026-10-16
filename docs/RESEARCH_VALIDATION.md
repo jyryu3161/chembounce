@@ -333,6 +333,167 @@ conditional-population contrast scope, and separate infrastructure bounds and
 availability. The publication archive preserves existing source attribution; it
 does not assign a new license to project code, models or third-party artifacts.
 
+## Completed original common-forward audit
+
+This separate audit covers the original 39-file study at
+`d972124d587e647ef48455cf1a038e6be96e5b04`: all 630 planned attempts and 1,264
+accepted candidate occurrences. It does not measure the later 41-file pipeline or
+the supplementary 270-attempt study. The generation statuses remain 434 success, 140
+no-candidate outcomes, 55 timeouts and one infrastructure-missing outcome. A
+failed generation attempt has no accepted returns; the audit cannot promote it to
+success because a diagnostic or partial file exists.
+
+The common ReactionT5v2-forward predictor is also the synthesis selection-gate
+model. Agreement after selection is therefore not independent experimental
+validation. Missing reagents, conditions and empirical context remain limitations.
+No-route controls show absent supplied evidence, not failed chemical synthesis.
+This audit establishes neither activity, yield, synthesis-success probability nor
+superiority of the pipeline or 3D scoring.
+
+### All-method forward coverage and eligible fractions
+
+The primary metric, `attempt_with_common_forward_matched_route`, is an indicator
+that an accepted candidate supplies a nonempty exact replay-verified route with
+all steps evaluated and matched by the common forward model. Its denominator
+retains every planned attempt. The conditional metric,
+`matched_fraction_given_evaluable_routes`, first divides matched route occurrences
+by fully evaluated route occurrences **within each eligible attempt**, then averages
+by query and target. It is a secondary selected-subset summary, not the pooled
+fraction across routes and not a synthesis-success probability.
+
+Each table keeps every method in alphabetical order. Primary and conditional
+values are recorded target-macro means with descriptive, unadjusted 95%
+target-cluster bootstrap CIs, rounded here to three decimals. S/E/N reports exact
+candidate-occurrence counts with a supplied route / a fully evaluated route / no
+supplied route. A/Q/T reports eligible attempts / queries / target clusters for
+the conditional fraction. Planned query counts are 12, 12 and 6 for the scaffold,
+publication-year and held-out-target splits. `NA` means no eligible observations; a single target
+cluster has no CI. Complete-precision records remain in the CSVs and analysis JSON.
+
+**Scaffold split: 360 attempts, 6 target clusters.**
+
+| Method | Attempts | Primary matched-route indicator [95% CI] | S/E/N occurrences | Conditional fraction [95% CI] | Eligible A/Q/T |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `nearest_3d` | 36 | 0.000 [0.000, 0.000] | 0/0/78 | NA | 0/0/0 |
+| `nearest_catalog` | 36 | 0.000 [0.000, 0.000] | 0/0/108 | NA | 0/0/0 |
+| `pipeline` | 36 | 0.167 [0.028, 0.333] | 15/15/0 | 1.000 [1.000, 1.000] | 6/4/3 |
+| `pipeline_encounter_allocation` | 36 | 0.417 [0.278, 0.556] | 34/34/0 | 1.000 [1.000, 1.000] | 15/7/6 |
+| `pipeline_legacy_search` | 36 | 0.361 [0.139, 0.639] | 37/37/0 | 1.000 [1.000, 1.000] | 13/6/5 |
+| `pipeline_no_3d` | 36 | 0.806 [0.667, 0.944] | 82/82/0 | 1.000 [1.000, 1.000] | 29/11/6 |
+| `pipeline_no_refinement` | 36 | 0.444 [0.306, 0.556] | 43/43/0 | 1.000 [1.000, 1.000] | 16/7/6 |
+| `pipeline_rule_only` | 36 | 0.306 [0.139, 0.500] | 29/29/0 | 0.817 [0.683, 0.950] | 11/6/5 |
+| `reaction_enumeration` | 36 | 0.556 [0.417, 0.694] | 90/90/0 | 0.375 [0.241, 0.528] | 30/11/6 |
+| `synllama_only` | 36 | 0.611 [0.333, 0.861] | 90/90/0 | 0.653 [0.375, 0.875] | 30/12/6 |
+
+**Publication-year split: 180 attempts, 6 target clusters.**
+
+| Method | Attempts | Primary matched-route indicator [95% CI] | S/E/N occurrences | Conditional fraction [95% CI] | Eligible A/Q/T |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `nearest_3d` | 36 | 0.000 [0.000, 0.000] | 0/0/108 | NA | 0/0/0 |
+| `nearest_catalog` | 36 | 0.000 [0.000, 0.000] | 0/0/108 | NA | 0/0/0 |
+| `pipeline` | 36 | 0.444 [0.250, 0.639] | 41/41/0 | 1.000 [1.000, 1.000] | 16/7/5 |
+| `reaction_enumeration` | 36 | 0.722 [0.556, 0.861] | 108/108/0 | 0.417 [0.306, 0.500] | 36/12/6 |
+| `synllama_only` | 36 | 0.667 [0.444, 0.861] | 105/105/0 | 0.593 [0.343, 0.843] | 35/12/6 |
+
+**Held-out-target split: 90 attempts, 3 target clusters.**
+
+| Method | Attempts | Primary matched-route indicator [95% CI] | S/E/N occurrences | Conditional fraction [95% CI] | Eligible A/Q/T |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `nearest_3d` | 18 | 0.000 [0.000, 0.000] | 0/0/45 | NA | 0/0/0 |
+| `nearest_catalog` | 18 | 0.000 [0.000, 0.000] | 0/0/54 | NA | 0/0/0 |
+| `pipeline` | 18 | 0.056 [0.000, 0.167] | 2/2/0 | 1.000 [CI unavailable] | 1/1/1 |
+| `reaction_enumeration` | 18 | 0.667 [0.500, 0.833] | 51/51/0 | 0.380 [0.194, 0.500] | 17/6/3 |
+| `synllama_only` | 18 | 0.333 [0.167, 0.500] | 36/36/0 | 0.444 [0.111, 0.667] | 12/4/3 |
+
+For the original `pipeline`, conditional agreement is 1.000, but the eligible
+population is only 6/36 scaffold attempts and 1/18 held-out-target attempts.
+The target conditional value comes from one target cluster and has no CI.
+These selected populations do not support a general synthesis-success claim.
+Retrieval methods have no supplied routes: their primary coverage is zero and
+their conditional fraction is missing, even when generation returned molecules.
+
+[Method metrics](../benchmarks/results/research-validation-20261016/original-common-forward-study/method_metrics.csv),
+[coverage/status counts](../benchmarks/results/research-validation-20261016/original-common-forward-study/route_coverage.csv),
+[paired metrics](../benchmarks/results/research-validation-20261016/original-common-forward-study/paired_metrics.csv) and
+[infrastructure bounds](../benchmarks/results/research-validation-20261016/original-common-forward-study/infrastructure_bounds.csv) are direct projections
+of recorded values, with nulls left blank and no additional statistical calculation.
+Method/paired CSVs include all 19 target-macro metrics, their eligibility and the
+secondary complete-case population. Full per-query and per-target records remain
+in [analysis.json](../benchmarks/results/research-validation-20261016/original-common-forward-study/analysis.json).
+
+Unlike the original generation target-mean contrasts above, the forward audit
+forms pipeline-minus-comparator differences at **identical query/seed slots before
+aggregation**. A conditional contrast requires both observations to be eligible;
+its pair eligibility is preserved. This pairing does not make selected conditional
+populations representative or establish an independent chemical experiment.
+The fixed hierarchy averages seeds within queries, queries within targets and
+targets equally, with 10,000 bootstrap draws and seed 20261016. Only 6/6/3 target
+clusters support the three splits. Reused routes, reactant/context inputs and
+targets create within- and cross-target dependence; repeated splits are not new
+independent cohorts. Intervals are descriptive and unadjusted, not significance
+or superiority tests.
+
+The infrastructure interruption retains an unknown counterfactual outcome.
+Recorded lower/upper identification bounds are **not CIs**. Secondary complete
+cases exclude only infrastructure-missing slots, retain other terminal failures,
+and are selection-biased; paired complete cases require both outcomes observed.
+The post hoc analysis plan was fixed before comparative analysis while generation
+and the audit were unfinished. It is not preregistered confirmatory evidence.
+Unknown complete model-training inventories and the original panels' assay/source
+limitations remain unresolved; model selection/evaluation reuse cannot establish
+clean holdout or independent experimental validation.
+
+### Forward replay artifacts and verification scope
+
+The [18-file portable ZIP](../benchmarks/results/research-validation-20261016/original-common-forward-study/statistical-bundle.zip),
+[checksums](../benchmarks/results/research-validation-20261016/original-common-forward-study/SHA256SUMS),
+[publication validation](../benchmarks/results/research-validation-20261016/original-common-forward-study/validation.json) and
+[copied replay validation](../benchmarks/results/research-validation-20261016/original-common-forward-study/replay-validation.json) preserve the reviewed
+normalized attempts, occurrences, original analysis and provenance. Existing source
+attribution is retained; no new project or model license is assigned. Historical
+absolute path strings remain metadata and are never opened during portable replay.
+Model weights, raw per-route predictions, catalogs and generation environments are
+not included. The original generation-statistics bundle remains separate.
+
+The parent independently checked accepted-output joins, saved raw prediction
+interpretation and route records using the same RDKit kernel, without rerunning
+the neural model. Its separate arithmetic implementation checked all **52,514
+numeric cells**, including exact query/seed conditional pairing, eligibility,
+bounds and dependence diagnostics. Portable replay then reproduced the original
+`analysis.json` byte-for-byte under Python 3.10.12 / NumPy 1.26.4,
+Python 3.10.12 / NumPy 1.24.4 and Python 3.12.13 / NumPy 2.5.4. This validates
+stored statistical replay; it does not reproduce neural inference or substitute
+for the raw integrity assessment.
+
+From the repository root, use fresh destinations:
+
+```bash
+FORWARD_ARTIFACTS=benchmarks/results/research-validation-20261016/original-common-forward-study
+(cd "$FORWARD_ARTIFACTS" && sha256sum -c SHA256SUMS)
+mkdir /tmp/original630-forward-reproduction
+python -m zipfile -e "$FORWARD_ARTIFACTS/statistical-bundle.zip" /tmp/original630-forward-reproduction
+
+python -B benchmarks/diagnostics/forward_replay/replay.py verify \
+  --bundle /tmp/original630-forward-reproduction/original630-forward-bundle \
+  --expected-manifest-sha256 9650f71cdd4a7e2de9f8b90a839be9477153fef94a938325e033b924572b05c8 \
+  --output /tmp/original630-forward-reproduction/verification.json
+
+python -B benchmarks/diagnostics/forward_replay/replay.py replay \
+  --bundle /tmp/original630-forward-reproduction/original630-forward-bundle \
+  --expected-manifest-sha256 9650f71cdd4a7e2de9f8b90a839be9477153fef94a938325e033b924572b05c8 \
+  --output /tmp/original630-forward-reproduction/recomputed
+
+cmp "$FORWARD_ARTIFACTS/analysis.json" /tmp/original630-forward-reproduction/recomputed/analysis.json
+```
+
+Python and NumPy suffice: no chemistry/model imports, network, GPU or new inference
+are required. The [replay contract](../benchmarks/diagnostics/forward_replay/README.md)
+describes the pinned statistical extraction and strict full-grid, normalization
+and hash gates. Retain the external manifest SHA from this reviewed publication;
+a hash obtained only from an untrusted archive does not authenticate that archive.
+Runtime metadata can change a new `replay-validation.json` hash even when its
+`analysis.json` matches the published bytes.
+
 ## Publication interpretation
 
 A separately selected [same-assay follow-up](../benchmarks/results/assay-matched-controls-20261016/README.md) now contains 197 pairs, 12 queries and 12 assays across those same six targets. Selection/scoring criteria were fixed before its chemical scores were calculated, after the initial heterogeneity findings. Three pairs failed the stereo policy; all failures remain in the denominators and bounds. Paired complete-case target-macro ROC AUC was 0.7392 for bit Tanimoto, 0.7370 for shape and 0.7131 for joint 3D. The paired joint-minus-bit difference was −0.0261 (target-bootstrap 95% interval −0.1017 to +0.0402), so this evaluation does not establish additional 3D discrimination. All hierarchical ROC/AP estimates and missing-score bounds matched independent scikit-learn calculations within `1e-12`. Reconstruction from the published raw ZIP reproduced all chemical records and selected pairs. Same assay ID narrows context without resolving every metadata ambiguity or establishing new-molecule activity; changed cohorts prevent attributing differences from earlier panels to assay matching alone.
