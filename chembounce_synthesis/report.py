@@ -156,6 +156,256 @@ def _equal(actual, expected, label):
     _require(actual == expected, f"Mismatch: {label}")
 
 
+def _integer(value, label, minimum=0):
+    _require(type(value) is int and value >= minimum, f"Invalid integer {label}")
+
+
+def _unit(value, label, *, positive=False):
+    _require(
+        _number(value) and (0 < value if positive else 0 <= value) and value <= 1,
+        f"Invalid [0,1] scalar {label}",
+    )
+
+
+def _settings(value):
+    keys = {
+        "num_conformers",
+        "seed",
+        "energy_window",
+        "strain_penalty",
+        "max_iterations",
+        "pharmacophore_sigma",
+        "reject_unspecified_stereo",
+        "scoring_objective",
+    }
+    _require(isinstance(value, dict) and set(value) == keys, "Incomplete or unsupported conformer settings")
+    for key in ("num_conformers", "max_iterations"):
+        _integer(value[key], key, 1)
+    _integer(value["seed"], "seed")
+    _require(value["seed"] <= 2**31 - 1, "Seed outside supported range")
+    for key in ("energy_window", "strain_penalty", "pharmacophore_sigma"):
+        _require(_number(value[key]) and value[key] >= 0, f"Invalid setting {key}")
+    _require(value["pharmacophore_sigma"] > 0, "Invalid pharmacophore sigma")
+    _require(type(value["reject_unspecified_stereo"]) is bool, "Invalid stereo setting")
+    _require(value["scoring_objective"] in ("joint-v1", "original-hit-v1"), "Unsupported scoring objective")
+
+
+def _policy_scalars(policy):
+    minimum = policy["minimum_scores"]
+    _require(isinstance(minimum, dict), "Missing minimum scores")
+    allowed = {
+        f"{role}_{metric}" for role in ("hit", "design") for metric in ("shape", "pharmacophore", "tanimoto")
+    }
+    _require(set(minimum) <= allowed, "Unsupported score floor")
+    for key, value in minimum.items():
+        _unit(value, f"floor {key}", positive=policy["mode"] == "qualified")
+    if policy["mode"] == "qualified":
+        _require(
+            {"hit_tanimoto", "hit_shape", "hit_pharmacophore"} <= set(minimum), "Missing qualified hit floors"
+        )
+        _require(
+            policy["conformers"]["reject_unspecified_stereo"] is True,
+            "Qualified policy contradicts strict stereo",
+        )
+        _equal(policy["refinement"]["threshold_policy"], "all_seeds", "qualified threshold policy")
+    _settings(policy["conformers"])
+    if "similarity_constraints" in policy:
+        bound = policy["similarity_constraints"]["policy"]
+        _unit(bound["minimum_polar_reference_recall"], "polar recall floor", positive=True)
+
+
+def _final_settings(policy, refinement, row):
+    protocol = policy["refinement"]
+    base, final = protocol["num_conformers"], refinement["num_conformers"]
+    _integer(base, "initial refinement size", 1)
+    _integer(final, "final refinement size", 1)
+    _integer(row["refinement_conformers"], "selected final size", 1)
+    _equal(row["refinement_conformers"], final, "selected/report final size")
+    maximum = protocol.get("adaptive_max_conformers")
+    maximum = base if maximum is None else maximum
+    growth = protocol["conformer_growth_factor"]
+    _integer(maximum, "adaptive maximum", 1)
+    _integer(growth, "conformer growth", 2)
+    _require(base <= final <= maximum, "Final size outside recorded refinement bounds")
+    sizes = [base]
+    while sizes[-1] < final:
+        _require(len(sizes) < 128, "Unsupported refinement stage count")
+        sizes.append(min(maximum, sizes[-1] * growth))
+    _equal(sizes[-1], final, "final size on recorded adaptive schedule")
+    _equal(refinement["threshold_policy"], protocol["threshold_policy"], "refinement threshold policy")
+    _require(protocol["threshold_policy"] in ("all_seeds", "representative"), "Unsupported threshold policy")
+    stages = refinement.get("stages")
+    if stages is not None:
+        _require(
+            isinstance(stages, list) and bool(stages) and all(isinstance(s, dict) for s in stages),
+            "Malformed refinement stages",
+        )
+        for stage in stages:
+            _integer(stage.get("num_conformers"), "saved stage size", 1)
+        _equal([s.get("num_conformers") for s in stages], sizes, "saved adaptive stages")
+        if "adaptive_stages" in refinement:
+            _integer(refinement["adaptive_stages"], "adaptive stage count", 1)
+            _equal(refinement["adaptive_stages"], len(stages), "adaptive stage count")
+        for key in (
+            "trials",
+            "status",
+            "pose_seed",
+            "num_conformers",
+            "threshold_policy",
+            "seed_count",
+            "seed_successes",
+        ):
+            _equal(stages[-1].get(key), refinement.get(key), f"final stage {key}")
+    else:
+        _require(final == base, "Adaptive final evidence lacks recorded stages")
+    return {**policy["conformers"], "num_conformers": final}
+
+
+def _route_steps(route, audit, support, row):
+    """Compare saved graph records only; no reaction or molecular interpretation."""
+    nodes = _records(route["route"], "nodes")
+    ids = [n.get("id") for n in nodes]
+    _require(
+        all(isinstance(i, str) and i for i in ids) and len(set(ids)) == len(ids),
+        "Invalid route node identifiers",
+    )
+    by_id = dict(zip(ids, nodes))
+    reactions = {n["id"]: n for n in nodes if "rule_id" in n}
+    _require(bool(reactions) and route["route"]["root"] in reactions, "No recorded reaction root")
+    _integer(row["reaction_steps"], "reaction step count", 1)
+    _equal(row["reaction_steps"], len(reactions), "selected reaction count")
+    blocks = _records(audit, "building_blocks")
+    block_ids = [b.get("node_id") for b in blocks]
+    expected_blocks = {n["id"] for n in nodes if "building_block_id" in n}
+    _require(
+        len(block_ids) == len(set(block_ids)) and set(block_ids) == expected_blocks,
+        "Audit building-block coverage differs from route",
+    )
+    _require(
+        set(by_id) == set(reactions) | expected_blocks and not (set(reactions) & expected_blocks),
+        "Unsupported route node kind",
+    )
+    reachable, pending = set(), [route["route"]["root"]]
+    while pending:
+        ident = pending.pop()
+        _require(isinstance(ident, str) and ident in by_id, "Unknown route dependency")
+        if ident not in reachable:
+            reachable.add(ident)
+            if ident in reactions:
+                refs = reactions[ident]["reactants"]
+                _require(isinstance(refs, list), "Invalid reaction dependencies")
+                pending.extend(refs)
+    _equal(reachable, set(by_id), "root-reachable route graph")
+    if "strict_eligible" in audit:
+        _require(audit["strict_eligible"] is True, "Audit eligibility contradicts route support")
+    products = {b["node_id"]: b["smiles"] for b in blocks}
+    products.update({ident: node["product"] for ident, node in reactions.items()})
+    layers = [_records(route["verification"], "steps"), _records(audit, "steps"), _records(support, "steps")]
+    for layer in layers:
+        step_ids = [s.get("node_id") for s in layer]
+        _require(
+            len(step_ids) == len(set(step_ids)) and set(step_ids) == set(reactions),
+            "Recorded reaction step coverage differs",
+        )
+    _equal(
+        [s["node_id"] for s in layers[0]], [s["node_id"] for s in layers[1]], "verification/audit step order"
+    )
+    _equal([s["node_id"] for s in layers[1]], [s["node_id"] for s in layers[2]], "audit/support step order")
+    seen = set(expected_blocks)
+    for verified, audited, step in zip(*layers):
+        ident = verified["node_id"]
+        node = reactions[ident]
+        refs = node["reactants"]
+        _require(
+            isinstance(refs, list)
+            and bool(refs)
+            and all(isinstance(ref, str) and ref in seen for ref in refs),
+            "Reaction dependency/order mismatch",
+        )
+        expected = [products[ref] for ref in refs]
+        for record in (verified, audited, step):
+            _equal(record["product"], node["product"], "reaction node/product correspondence")
+        _equal(verified["rule_id"], node["rule_id"], "verification rule")
+        _equal(audited["rule_id"], node["rule_id"], "audit rule")
+        _equal(verified["reactants"], expected, "verified reactants")
+        _equal(step["reactants"], expected, "supported reactants")
+        slots = _records(audited, "reactant_slots")
+        _equal([s.get("node_id") for s in slots], refs, "audit reactant node slots")
+        for index, slot in enumerate(slots):
+            _integer(slot["slot"], "reactant slot")
+            _equal(slot["slot"], index, "reactant slot order")
+        _equal([s["smiles"] for s in slots], expected, "audit reactant identities")
+        if "strict_eligible" in audited:
+            _require(audited["strict_eligible"] is True, "Audited step eligibility contradicts support")
+        _equal(step["rule_replay"], "matched", "recorded rule replay")
+        _require(step["eligibility"]["passed"] is True, "Step eligibility contradicts route support")
+        if "unmet_requirements" in step["eligibility"]:
+            _equal(step["eligibility"]["unmet_requirements"], [], "eligible step unmet requirements")
+        seen.add(ident)
+
+
+def _summary_counts(summary, rows, policy):
+    counters = (
+        "proposals",
+        "verified_routes",
+        "scored_products",
+        "accepted_products",
+        "returned_products",
+        "qualified_products",
+        "screened_products",
+        "screened_product_design_pairs",
+        "screened_scaffold_families",
+        "refinement_shortlisted_families",
+        "refinement_budgeted_families",
+        "refinement_attempted",
+        "refinement_accepted",
+        "eligible_products",
+        "carried_eligible_products",
+        "new_eligible_products",
+        "carried_screened_products",
+        "accepted_scaffold_families",
+        "returned_scaffold_families",
+        "synthesis_evidence_evaluated_routes",
+    )
+    for key in counters:
+        if key in summary:
+            _integer(summary[key], f"summary {key}")
+    if "route_rejections" in summary:
+        _require(isinstance(summary["route_rejections"], dict), "Invalid route rejection counts")
+        for count in summary["route_rejections"].values():
+            _integer(count, "route rejection count")
+    returned = len(rows)
+    _equal(summary["returned_products"], returned, "returned product count")
+    # These final counters describe accepted rows before output truncation, not
+    # all discovered/scored molecules or numbers of route records.
+    accepted = summary["accepted_products"]
+    if summary.get("status") == "no_candidates":
+        _equal(accepted, 0, "terminal no-candidate accepted count")
+    _require(accepted >= returned, "Accepted count below returned count")
+    qualified = summary.get("qualified_products")
+    if rows or summary.get("status") in ("success", "no_candidates"):
+        _require(qualified is not None, "Missing final qualified count")
+    if qualified is not None:
+        _require(
+            qualified >= sum(row.get("recommendation_status") == "qualified" for row in rows),
+            "Qualified count below returned qualified count",
+        )
+        if summary.get("status") in ("success", "no_candidates"):
+            _equal(
+                qualified,
+                accepted if policy["mode"] == "qualified" else 0,
+                "qualified/accepted count relationship",
+            )
+    for lower, upper in (
+        ("returned_scaffold_families", "accepted_scaffold_families"),
+        ("accepted_scaffold_families", "accepted_products"),
+        ("returned_scaffold_families", "returned_products"),
+        ("refinement_budgeted_families", "refinement_shortlisted_families"),
+    ):
+        if lower in summary and upper in summary:
+            _require(summary[lower] <= summary[upper], f"Counter relationship {lower}/{upper}")
+
+
 def _pose(saved, smiles, label):
     _require(isinstance(saved, dict), f"Missing saved {label}")
     _equal(saved.get("smiles"), smiles, f"{label} exact identity")
@@ -194,11 +444,15 @@ def _witness(trial, row, hit, policy):
         "Witness is not recorded as passing",
     )
     polar = witness["polar"]
+    _integer(polar["reference_count"], "polar reference count")
     if polar["status"] == "not_applicable":
         _require(polar["reference_count"] == 0 and polar["recall"] is None, "Contradictory no-polar witness")
     else:
+        _require(polar["reference_count"] > 0, "Applicable polar witness has no reference features")
+        _unit(polar["recall"], "saved polar recall")
         _require(
-            polar["status"] == "passed" and _number(polar["recall"]), "Missing finite recorded polar recall"
+            polar["status"] == "passed" and polar["recall"] >= bound["minimum_polar_reference_recall"],
+            "Recorded polar recall contradicts floor",
         )
     evidence = trial["selective_pose_evidence"]
     for key, smiles in (
@@ -285,6 +539,19 @@ def _candidate(row, docs, policy):
             for key in policy["minimum_scores"]:
                 _require(_number(row.get(key)), f"Missing finite selected {key}")
                 _equal(decision["scores"][key], row[key], f"decision score {key}")
+        for key in (
+            "hit_tanimoto",
+            "hit_morgan",
+            "design_tanimoto",
+            "hit_shape",
+            "hit_pharmacophore",
+            "design_shape",
+            "design_pharmacophore",
+        ):
+            if key in row:
+                _unit(row[key], f"selected {key}")
+        for key, cutoff in policy["minimum_scores"].items():
+            _require(_number(row.get(key)) and row[key] >= cutoff, f"Selected {key} contradicts floor")
         profile = policy["calibration"]
         if row.get("recommendation_status") == "qualified":
             _equal(decision["policy_version"], policy["policy_version"], "decision policy version")
@@ -332,6 +599,7 @@ def _candidate(row, docs, policy):
                 for flag in ("supplier_sku_verified", "current_stock_verified"):
                     if flag in record:
                         _require(type(record[flag]) is bool, f"Malformed {flag}")
+            _route_steps(route, audit, support, row)
             steps = support["steps"]
             _require(
                 isinstance(steps, list) and len(steps) == len(audit["steps"]), "Support step count differs"
@@ -363,6 +631,7 @@ def _candidate(row, docs, policy):
             "successful exact product/design refinement",
         )
         result["refinement"] = refinement
+        final_settings = _final_settings(policy, refinement, row)
         trials = _records(refinement, "trials")
         result["seed_rows"] = [_seed_row(t) for t in trials]
         required = policy["refinement"]["seeds"]
@@ -376,6 +645,20 @@ def _candidate(row, docs, policy):
         _equal([t.get("seed") for t in trials], required, "required seed identities/order")
         _require(all(t.get("status") == "success" for t in trials), "Incomplete required seeds")
         for trial in trials:
+            _settings(trial["settings"])
+            _equal(
+                trial["settings"], {**final_settings, "seed": trial["seed"]}, "complete saved trial settings"
+            )
+            _equal(trial["scoring_objective"], final_settings["scoring_objective"], "trial scoring objective")
+            for role in ("hit", "design"):
+                for metric in ("shape", "pharmacophore"):
+                    value = trial[role][metric]
+                    _unit(value, f"seed {trial['seed']} {role}_{metric}")
+                    if policy["refinement"]["threshold_policy"] == "all_seeds":
+                        _require(
+                            value >= policy["minimum_scores"].get(f"{role}_{metric}", 0),
+                            f"Required seed {role}_{metric} contradicts floor",
+                        )
             for key, identity in (
                 ("candidate_smiles", row["smiles"]),
                 ("hit_smiles", hit),
@@ -519,6 +802,10 @@ def _assemble(docs, inventory, issues):
             "summary profile",
         )
         _equal(summary["recommendation_mode"], policy["mode"], "summary mode")
+        _policy_scalars(policy)
+        _settings(manifest["effective_conformers"])
+        _equal(manifest["effective_conformers"], policy["conformers"], "manifest complete conformer settings")
+        _summary_counts(summary, rows, policy)
         _require(isinstance(manifest["hit"], str) and bool(manifest["hit"]), "Original hit missing")
         _equal(qualification["selected_route_ids"], [r["route_id"] for r in rows], "selected route IDs")
         for key in ("route_id", "smiles"):

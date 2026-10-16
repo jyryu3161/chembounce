@@ -1025,3 +1025,14 @@ Exit 0 means the recorded bundle passed the report's consistency checks, **not**
 that the workflow succeeded or chemistry was revalidated; exit 3 means a diagnostic
 report was written for incomplete/inconsistent artifacts; exit 2 means the report
 could not safely be written. These report exits are separate from workflow exits.
+
+Saved scalar consistency includes `[0, 1]` similarity domains, configured floors,
+complete conformer settings, and recorded final-stage size/seed correspondence.
+Custom fixed sizes are compared with their policy; adaptive sizes require the
+recorded growth sequence and final-stage evidence. Missing or unsupported settings
+remain diagnostic rather than being filled from current defaults. Step coverage,
+products, rules and reactant slots are compared across the saved route graph,
+verification, audit and support records. These are record comparisons, not chemical
+replay. Final accepted/qualified counts may exceed returned counts under output
+caps, but cannot contradict them; partial running/error counters remain distinct
+from terminal no-candidate counts.

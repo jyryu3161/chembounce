@@ -54,6 +54,16 @@ def bundle():
         "constraints": {"mode": "hop", "core_smiles": None},
         "similarity_constraints": {"policy": bound, "sha256": r._binding(bound)},
     }
+    policy["conformers"].update(
+        num_conformers=8,
+        seed=42,
+        energy_window=5.0,
+        strain_penalty=0.05,
+        max_iterations=500,
+        pharmacophore_sigma=1.0,
+        reject_unspecified_stereo=True,
+    )
+    policy["refinement"].update(num_conformers=8, adaptive_max_conformers=None, conformer_growth_factor=2)
     trials = []
     for seed, score, shape in [(42, 0.6, 0.72), (43, 0.7, 0.88), (44, 0.8, 0.81)]:
         candidate, reference = pose(PRODUCT, seed), pose(HIT, seed + 100)
@@ -90,6 +100,8 @@ def bundle():
                 },
             }
         )
+    for trial in trials:
+        trial["settings"] = {**policy["conformers"], "seed": trial["seed"]}
     rep = trials[1]
     scores = [t["score"] for t in trials]
     summary_fields = {
@@ -228,10 +240,20 @@ def bundle():
         "selection_status": "qualified",
         "synthesis_evidence": support,
     }
+    row["reaction_steps"] = 1
+    route["route"]["nodes"] = [
+        {"id": "bb1", "building_block_id": "generated-looking-001"},
+        {"id": "rxn", "rule_id": "amide", "reactants": ["bb1"], "product": PRODUCT},
+    ]
+    route["verification"]["steps"] = [
+        {"node_id": "rxn", "rule_id": "amide", "product": PRODUCT, "reactants": ["CC(=O)O"]}
+    ]
+    support["steps"][0]["eligibility"] = {"passed": True, "unmet_requirements": []}
     return {
         "manifest.json": {
             "schema_version": 1,
             "hit": HIT,
+            "effective_conformers": policy["conformers"],
             "recommendation_policy": policy,
             "recommendation_profile": policy["calibration"],
             "config": {"minimum_scores": minimum},
@@ -269,6 +291,8 @@ def bundle():
                     "design": PRODUCT,
                     "status": "success",
                     "trials": trials,
+                    "num_conformers": 8,
+                    "threshold_policy": "all_seeds",
                     **summary_fields,
                 }
             ],
@@ -631,3 +655,266 @@ def test_read_bound_and_presence_race(tmp_path, data, monkeypatch):
     with pytest.raises(ValueError):
         r.write_report(tmp_path)
     assert not (tmp_path / "review.html").exists()
+
+
+def diagnostic(tmp_path, data):
+    view = r.write_report(save(tmp_path, data))
+    assert view["artifact_consistency"] == "incomplete_or_inconsistent"
+    assert "Unconfirmed recorded claim" in (tmp_path / "review.html").read_text()
+    return view
+
+
+@pytest.mark.parametrize(
+    "role,metric",
+    [("hit", "shape"), ("hit", "pharmacophore"), ("design", "shape"), ("design", "pharmacophore")],
+)
+@pytest.mark.parametrize("value", [-0.01, 1.01, True])
+def test_similarity_domains_all_seeds(tmp_path, data, role, metric, value):
+    data["refinement.json"]["candidates"][0]["trials"][0][role][metric] = value
+    diagnostic(tmp_path, data)
+
+
+@pytest.mark.parametrize("field,value", [("shape", 0.699), ("pharmacophore", 0.499)])
+def test_nonrepresentative_below_floor(tmp_path, data, field, value):
+    data["refinement.json"]["candidates"][0]["trials"][0]["hit"][field] = value
+    diagnostic(tmp_path, data)
+
+
+@pytest.mark.parametrize("value", [-0.01, 0.749, 1.01, True])
+def test_nonrepresentative_polar_domain_and_floor(tmp_path, data, value):
+    data["refinement.json"]["candidates"][0]["trials"][0]["similarity_constraints"]["witness"]["polar"][
+        "recall"
+    ] = value
+    diagnostic(tmp_path, data)
+
+
+@pytest.mark.parametrize("value", [-0.01, 0.349, 1.01, True])
+def test_selected_tanimoto_domain_and_floor(tmp_path, data, value):
+    data["results.json"]["results"][0]["hit_tanimoto"] = value
+    data["qualification.json"]["decisions"][0]["scores"]["hit_tanimoto"] = value
+    diagnostic(tmp_path, data)
+
+
+def test_floor_equality_is_permitted(tmp_path, data):
+    trial = data["refinement.json"]["candidates"][0]["trials"][0]
+    trial["hit"].update(shape=0.7, pharmacophore=0.5)
+    trial["similarity_constraints"]["witness"]["polar"]["recall"] = 0.75
+    assert r.build_report(save(tmp_path, data))["artifact_consistency"] == "consistent_recorded_bundle"
+
+
+@pytest.mark.parametrize("value", [0, -0.1, 1.1, True])
+def test_invalid_synchronized_floors(tmp_path, data, value):
+    # Existing aliases synchronize every saved copy; refresh claimed hashes too.
+    policy = data["results.json"]["policy"]
+    policy["minimum_scores"]["hit_shape"] = value
+    bound = policy["similarity_constraints"]["policy"]
+    policy["similarity_constraints"]["sha256"] = r._binding(bound)
+    for trial in data["refinement.json"]["candidates"][0]["trials"]:
+        trial["similarity_constraints"]["witness"]["policy_sha256"] = r._binding(bound)
+    row = data["results.json"]["results"][0]
+    row["similarity_constraint_sha256"] = r._binding(bound)
+    row["similarity_witness_sha256"] = r._binding(
+        data["refinement.json"]["candidates"][0]["trials"][1]["similarity_constraints"]["witness"]
+    )
+    diagnostic(tmp_path, data)
+
+
+@pytest.mark.parametrize(
+    "key,value",
+    [
+        ("energy_window", 6.0),
+        ("strain_penalty", 0.2),
+        ("max_iterations", 501),
+        ("pharmacophore_sigma", 2.0),
+        ("reject_unspecified_stereo", False),
+        ("num_conformers", 1),
+        ("scoring_objective", "joint-v1"),
+        ("seed", 40),
+    ],
+)
+def test_complete_trial_settings_are_policy_bound(tmp_path, data, key, value):
+    data["refinement.json"]["candidates"][0]["trials"][0]["settings"][key] = value
+    diagnostic(tmp_path, data)
+
+
+@pytest.mark.parametrize(
+    "key,value",
+    [
+        ("energy_window", True),
+        ("strain_penalty", -1),
+        ("max_iterations", 1.5),
+        ("pharmacophore_sigma", 0),
+        ("reject_unspecified_stereo", 1),
+        ("num_conformers", True),
+        ("seed", -1),
+    ],
+)
+def test_invalid_synchronized_settings(tmp_path, data, key, value):
+    policy = data["results.json"]["policy"]
+    policy["conformers"][key] = value
+    for trial in data["refinement.json"]["candidates"][0]["trials"]:
+        trial["settings"][key] = value
+    diagnostic(tmp_path, data)
+
+
+def set_final_size(data, size):
+    ref = data["refinement.json"]["candidates"][0]
+    ref["num_conformers"] = size
+    data["results.json"]["results"][0]["refinement_conformers"] = size
+    for trial in ref["trials"]:
+        trial["settings"]["num_conformers"] = size
+
+
+@pytest.mark.parametrize("size", [1, 12, 24])
+def test_custom_fixed_size_uses_policy_not_hardcoded_eight(tmp_path, data, size):
+    data["results.json"]["policy"]["refinement"]["num_conformers"] = size
+    set_final_size(data, size)
+    assert r.build_report(save(tmp_path, data))["artifact_consistency"] == "consistent_recorded_bundle"
+
+
+@pytest.mark.parametrize("size", [1, 9, True, 8.0])
+def test_final_size_must_follow_typed_policy(tmp_path, data, size):
+    set_final_size(data, size)
+    diagnostic(tmp_path, data)
+
+
+def adaptive_bundle(data):
+    ref = data["refinement.json"]["candidates"][0]
+    data["results.json"]["policy"]["refinement"]["adaptive_max_conformers"] = 24
+    set_final_size(data, 24)
+    stages = []
+    for size in (8, 16, 24):
+        stage = copy.deepcopy(ref)
+        stage["num_conformers"] = size
+        for trial in stage["trials"]:
+            trial["settings"]["num_conformers"] = size
+        stage["status"] = "failed" if size < 24 else "success"
+        stages.append(stage)
+    ref.update(stages=stages, adaptive_stages=3)
+    return data
+
+
+def test_adaptive_final_has_recorded_schedule_and_complete_final_stage(tmp_path, data):
+    assert (
+        r.build_report(save(tmp_path, adaptive_bundle(data)))["artifact_consistency"]
+        == "consistent_recorded_bundle"
+    )
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda ref: ref.pop("stages"),
+        lambda ref: ref["stages"][1].update(num_conformers=12),
+        lambda ref: ref["stages"][-1]["trials"][0].update(status="failed"),
+        lambda ref: ref.update(adaptive_stages=2),
+    ],
+)
+def test_adaptive_missing_or_contradictory_stages(tmp_path, data, mutation):
+    adaptive_bundle(data)
+    mutation(data["refinement.json"]["candidates"][0])
+    diagnostic(tmp_path, data)
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda route: route["synthesis_evidence"].update(steps=[]),
+        lambda route: route["synthesis_evidence"]["route_audit"].update(steps=[]),
+        lambda route: route["verification"].update(steps=[]),
+        lambda route: route["synthesis_evidence"]["steps"][0]["eligibility"].update(passed=False),
+        lambda route: route["synthesis_evidence"]["steps"][0].update(rule_replay="mismatched"),
+        lambda route: route["synthesis_evidence"]["steps"][0].update(product="CC"),
+        lambda route: route["synthesis_evidence"]["route_audit"]["steps"][0].update(product="CC"),
+        lambda route: route["verification"]["steps"][0].update(rule_id="other"),
+        lambda route: route["route"]["nodes"][-1].update(reactants=["rxn"]),
+        lambda route: route["synthesis_evidence"]["route_audit"]["steps"][0]["reactant_slots"][0].update(
+            node_id="rxn"
+        ),
+        lambda route: route["synthesis_evidence"]["route_audit"]["steps"][0]["reactant_slots"][0].update(
+            slot=True
+        ),
+        lambda route: route["synthesis_evidence"]["steps"].append(
+            copy.deepcopy(route["synthesis_evidence"]["steps"][0])
+        ),
+    ],
+)
+def test_graph_verification_audit_and_support_correspondence(tmp_path, data, mutation):
+    mutation(data["routes.json"]["routes"][0])
+    diagnostic(tmp_path, data)
+
+
+def test_repeated_reactant_slots_are_not_deduplicated(tmp_path, data):
+    route = data["routes.json"]["routes"][0]
+    route["route"]["nodes"][-1]["reactants"] = ["bb1", "bb1"]
+    route["verification"]["steps"][0]["reactants"] *= 2
+    route["synthesis_evidence"]["steps"][0]["reactants"] *= 2
+    slots = route["synthesis_evidence"]["route_audit"]["steps"][0]["reactant_slots"]
+    slots.append({**slots[0], "slot": 1})
+    assert r.build_report(save(tmp_path, data))["artifact_consistency"] == "consistent_recorded_bundle"
+
+
+@pytest.mark.parametrize(
+    "key",
+    [
+        "accepted_products",
+        "qualified_products",
+        "returned_products",
+        "verified_routes",
+        "scored_products",
+        "refinement_attempted",
+    ],
+)
+@pytest.mark.parametrize("value", [-1, True, 0.5])
+def test_counters_require_nonnegative_integers(tmp_path, data, key, value):
+    data["summary.json"][key] = value
+    diagnostic(tmp_path, data)
+
+
+@pytest.mark.parametrize("key", ["accepted_products", "qualified_products"])
+def test_selected_count_cannot_exceed_accepted_counts(tmp_path, data, key):
+    data["summary.json"][key] = 0
+    diagnostic(tmp_path, data)
+
+
+def test_partial_running_counts_do_not_require_terminal_equality(tmp_path, data):
+    data["results.json"]["results"] = []
+    data["qualification.json"]["selected_route_ids"] = []
+    data["summary.json"].update(status="running", returned_products=0, accepted_products=0)
+    data["summary.json"].pop("qualified_products")
+    assert r.build_report(save(tmp_path, data))["artifact_consistency"] == "consistent_recorded_bundle"
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda route: route["route"]["nodes"].append({"id": "unused", "building_block_id": "unused"}),
+        lambda route: route["synthesis_evidence"]["route_audit"].update(strict_eligible=False),
+        lambda route: route["synthesis_evidence"]["route_audit"]["steps"][0].update(strict_eligible=False),
+        lambda route: route["synthesis_evidence"]["steps"][0]["eligibility"].update(
+            unmet_requirements=["failed"]
+        ),
+    ],
+)
+def test_additional_direct_graph_claim_contradictions(tmp_path, data, mutation):
+    mutation(data["routes.json"]["routes"][0])
+    diagnostic(tmp_path, data)
+
+
+def test_no_candidate_terminal_counts_are_not_running_counts(tmp_path, data):
+    data["results.json"]["results"] = []
+    data["qualification.json"]["selected_route_ids"] = []
+    data["summary.json"].update(status="no_candidates", returned_products=0)
+    view = r.build_report(save(tmp_path, data))
+    assert view["artifact_consistency"] == "incomplete_or_inconsistent"
+
+
+def test_stage_size_scalar_type_is_not_coerced(tmp_path, data):
+    adaptive_bundle(data)
+    data["refinement.json"]["candidates"][0]["stages"][0]["num_conformers"] = 8.0
+    diagnostic(tmp_path, data)
+
+
+def test_policy_omissions_remain_diagnostic_not_filled_from_defaults(tmp_path, data):
+    data["results.json"]["policy"]["conformers"].pop("energy_window")
+    diagnostic(tmp_path, data)
