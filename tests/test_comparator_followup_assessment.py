@@ -357,7 +357,9 @@ def test_generation_gate_rejects_tampering(completed, alter):
         if alter == "source":
             manifest["code_sha256"] = {"old_source.py": "b" * 64}
         else:
-            manifest["versions"]["rdkit"] = "2026.9.1"
+            original_version = manifest["versions"]["rdkit"]
+            manifest["versions"]["rdkit"] = original_version + ".fixture-tampered"
+            assert manifest["versions"]["rdkit"] != original_version
         save(directory / "manifest.json", manifest)
     save(directory / "runs.json", runs)
     with pytest.raises(ValueError):
