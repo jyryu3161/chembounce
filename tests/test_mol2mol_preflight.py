@@ -8,6 +8,7 @@ from types import SimpleNamespace
 
 import numpy as np
 import pytest
+from rdkit import rdBase
 
 from benchmarks.diagnostics import mol2mol_preflight as preflight
 
@@ -115,6 +116,8 @@ def test_plan_tamper_rejected_before_any_runtime_import(tmp_path):
 
 
 def test_pinned_public_panel_check_rejects_replacing_fixed_example(tmp_path, monkeypatch):
+    # This synthetic panel fixture checks overlap, independently of the installed RDKit release.
+    monkeypatch.setattr(preflight, "COMMON_RDKIT", rdBase.rdkitVersion)
     paths = []
     for i in range(3):
         path = tmp_path / f"panel{i}.json"
@@ -129,6 +132,12 @@ def test_pinned_public_panel_check_rejects_replacing_fixed_example(tmp_path, mon
     monkeypatch.setattr(preflight, "PANEL_SHA256", {preflight.digest(p) for p in paths})
     with pytest.raises(ValueError, match="do not replace it"):
         preflight.panel_check(paths)
+
+
+def test_pinned_public_panel_check_rejects_wrong_runtime_before_reading_inputs(tmp_path, monkeypatch):
+    monkeypatch.setattr(preflight, "COMMON_RDKIT", rdBase.rdkitVersion + ".fixture-wrong")
+    with pytest.raises(ValueError, match="Wrong common RDKit runtime"):
+        preflight.panel_check([tmp_path / f"absent-{i}.json" for i in range(3)])
 
 
 def test_existing_diagnostic_evidence_is_not_modified_on_refused_launch(tmp_path, monkeypatch):

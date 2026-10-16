@@ -9,6 +9,7 @@ import signal
 import subprocess
 import sys
 import time
+import venv
 
 import pytest
 
@@ -321,7 +322,7 @@ def test_refuse_signal_if_birth_identity_changed(monkeypatch):
 
 
 def test_real_detached_worker_survives_launcher_and_uses_real_verifier(study, monkeypatch):
-    """Only synthetic runner code executes; preparation validation is not mocked."""
+    """Real isolation/validation with metadata-only fixtures; no scientific runtime is installed."""
     prepared, runtime = study
     plan = supervisor.read_json(prepared / "execution-plan.json")
     source = Path(plan["source"]["root"])
@@ -350,9 +351,35 @@ def test_real_detached_worker_survives_launcher_and_uses_real_verifier(study, mo
     prep = supervisor.preparation
     pins = prep.Pins()
     plan["source"] = prep.source_snapshot(source, commit, pins)
-    plan["runtimes"] = {sys.executable: prep.runtime_snapshot(sys.executable, pins)}
+    # Hosted CI Python need not be a venv. The fake runner needs only stdlib:
+    # create real isolation and explicitly synthetic distribution metadata, never RDKit code.
+    environment = prepared.parent / "synthetic-stdlib-venv"
+    venv.EnvBuilder(with_pip=False, system_site_packages=False).create(environment)
+    python = str(environment / "bin/python")
+    site_packages = Path(
+        subprocess.check_output(
+            [python, "-I", "-c", "import sysconfig; print(sysconfig.get_path('purelib'))"], text=True
+        ).strip()
+    )
+    metadata = site_packages / "rdkit-0.0.0.dist-info/METADATA"
+    metadata.parent.mkdir()
+    metadata.write_text(
+        "Metadata-Version: 2.1\nName: rdkit\nVersion: 0.0.0\n"
+        "Summary: Synthetic metadata-only supervisor fixture; not a scientific RDKit installation\n"
+    )
+    subprocess.run(
+        [python, "-I", "-c", "import importlib.util; assert importlib.util.find_spec('rdkit') is None"],
+        check=True,
+    )
+    with pytest.raises(ValueError, match="Runtime requires declared RDKit"):
+        prep.runtime_snapshot(python, prep.Pins())  # The real study default must reject the fixture.
+    runtime_info = prep.runtime_snapshot(python, pins, rdkit_version="0.0.0")
+    assert runtime_info["packages"] == {"rdkit": "0.0.0"}
+    plan["runtimes"] = {python: runtime_info}
+    pins.file(metadata)
     plan["input_files_sha256"].update(pins.files)
     for command in plan["commands"]:
+        command["argv"][0] = python
         path = Path(command["argv"][6])
         protocol = supervisor.read_json(path)
         protocol["source_sha256"] = plan["source"]["files_sha256"]
