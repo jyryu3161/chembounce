@@ -15,7 +15,7 @@ import time
 import psutil
 
 from benchmarks.research.protocol import digest, write_json, synthesis_asset_paths
-from benchmarks.research.qualified_adapter import ARMS, read
+from benchmarks.research.qualified_adapter import ARMS, read, benchmark_profile
 from benchmarks.research.qualified_analysis import canonical_sha256, analyze, validate_plan
 from benchmarks.research import qualified_collector
 from benchmarks.research.runner import bounded_method, _termination_scope, _write_checkpoint
@@ -117,6 +117,11 @@ def make_plan(protocol, protocol_sha256):
         "source_sha256": protocol["source_sha256"],
         "collector_catalog_policy": protocol.get("collector_catalog_policy"),
     }
+    if protocol.get("schema") == "qualified-benchmark-protocol-v2":
+        plan["benchmark_protocol"] = {
+            key: protocol[key] for key in ("schema", "recommendation_profile", "profile_artifact_sha256")
+        }
+        benchmark_profile(plan["benchmark_protocol"])
     plan["order_rule"] = "query/seed blocks; cyclic method rotation by block index"
     plan["slot_order"] = []
     for block, (query, seed) in enumerate((q, seed) for q in plan["queries"] for seed in plan["seeds"]):
@@ -137,8 +142,20 @@ def make_plan(protocol, protocol_sha256):
 
 def resolve_protocol(protocol, base):
     protocol = copy.deepcopy(protocol)
-    if protocol.get("schema") != "qualified-benchmark-protocol-v1" or protocol["budget"] != BUDGET:
+    if (
+        protocol.get("schema") not in {"qualified-benchmark-protocol-v1", "qualified-benchmark-protocol-v2"}
+        or protocol["budget"] != BUDGET
+    ):
         raise ValueError("Unknown protocol or unfrozen stage budgets")
+    if protocol["schema"] == "qualified-benchmark-protocol-v2":
+        benchmark_profile(
+            {
+                key: protocol.get(key)
+                for key in ("schema", "recommendation_profile", "profile_artifact_sha256")
+            }
+        )
+    elif "recommendation_profile" in protocol or "profile_artifact_sha256" in protocol:
+        raise ValueError("Explicit profile binding requires benchmark protocol v2")
     if protocol.get("collector_catalog_policy") != CATALOG_POLICY:
         raise ValueError("Protocol must explicitly freeze the shared catalog setup policy")
     source = protocol["source_sha256"]
@@ -188,6 +205,15 @@ def resolve_protocol(protocol, base):
         for name, path in synthesis_asset_paths(assets["synthesis_config"]).items():
             if path not in assets.values():
                 raise ValueError(f"Unpinned common nested asset: {name}")
+        from chembounce_synthesis.workflow import load_config
+
+        expected_profile = benchmark_profile(
+            {key: protocol[key] for key in ("schema", "recommendation_profile", "profile_artifact_sha256")}
+            if protocol["schema"] == "qualified-benchmark-protocol-v2"
+            else None
+        )
+        if load_config(assets["synthesis_config"]).get("recommendation_profile") != expected_profile:
+            raise ValueError("Method config profile differs from benchmark protocol")
         method["resolved_assets"] = assets
         if method["arm"] in {"baseline", "crem", "mol2mol"}:
             native = method["native_method"]
@@ -230,6 +256,11 @@ def request_for(method, query, seed, output, seconds, phase, plan):
     # Keep native schemas unchanged. The outer phase manifest binds the plan.
     return {
         "schema_version": 1,
+        **(
+            {"benchmark_protocol": plan["benchmark_protocol"]}
+            if phase == "common" and "benchmark_protocol" in plan
+            else {}
+        ),
         "kind": native.get("request_kind", "external"),
         "method_id": method["id"],
         "query": query,
@@ -395,6 +426,7 @@ def attempt(method, query, seed, output, plan, termination, *, bound_catalog=Non
             expected_source,
             deadline=outer_deadline,
             bound_catalog=bound_catalog,
+            **({"benchmark_protocol": plan["benchmark_protocol"]} if "benchmark_protocol" in plan else {}),
         )
         phases["collector"] = {
             "wall_seconds": time.monotonic() - collector_started,

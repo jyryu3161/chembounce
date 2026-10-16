@@ -258,7 +258,7 @@ def test_profile_api_cli_exports_and_continuation_recheck(
     ]
 
 
-@pytest.fixture(params=["synthetic", "reviewed_release"])
+@pytest.fixture(params=["synthetic", "reviewed_release", "selective_engineering"])
 def integrated_profile(request):
     if request.param == "synthetic":
         request.getfixturevalue("synthetic_profile")
@@ -271,6 +271,9 @@ def test_integrated_cli_profile_uses_refill_and_cannot_disable_synthesis(
     pytest.importorskip("rdkit.Chem.rdShapeAlign")
     import chembounce
 
+    profile_name = (
+        profiles.SELECTIVE_PROFILE if integrated_profile == "selective_engineering" else profiles.PROFILE
+    )
     config = configuration(tmp_path, assets, proposal)
     config.pop("recommendation_profile")
     forward_path = config["synthesis_evidence"]["predictor"].pop("model_path")
@@ -314,7 +317,7 @@ def test_integrated_cli_profile_uses_refill_and_cannot_disable_synthesis(
         "--synthesis-config",
         str(path),
         "--recommendation-profile",
-        profiles.PROFILE,
+        profile_name,
         "--forward-model-path",
         forward_path,
     ]
@@ -325,7 +328,7 @@ def test_integrated_cli_profile_uses_refill_and_cannot_disable_synthesis(
         workflow._config(
             {
                 **config,
-                "recommendation_profile": profiles.PROFILE,
+                "recommendation_profile": profile_name,
                 "synthesis_evidence": {"predictor": {"kind": "reactiont5", "model_path": forward_path}},
             }
         )
@@ -335,10 +338,11 @@ def test_integrated_cli_profile_uses_refill_and_cannot_disable_synthesis(
     manifest = read(out / "synthesis", "manifest.json")
     assert manifest["recommendation_profile"]["status"] == status
     assert manifest["effective_conformers"] == profiles.FIXED_CONFORMERS
-    assert read(out / "synthesis", "results.json")["results"][0]["recommendation_profile"] == profiles.PROFILE
+    assert read(out / "synthesis", "results.json")["results"][0]["recommendation_profile"] == profile_name
 
 
-def test_wheel_includes_profile_resource_without_installing(tmp_path):
+@pytest.mark.parametrize("profile_name", [profiles.PROFILE, profiles.SELECTIVE_PROFILE])
+def test_wheel_includes_profile_resource_without_installing(tmp_path, profile_name):
     pytest.importorskip("setuptools")
     pytest.importorskip("wheel")
     build = tmp_path / "source"
@@ -352,10 +356,10 @@ def test_wheel_includes_profile_resource_without_installing(tmp_path):
         build / "chembounce_synthesis",
         ignore=shutil.ignore_patterns("__pycache__"),
     )
-    resource = build / "chembounce_synthesis/data" / (profiles.PROFILE + ".json")
+    resource = build / "chembounce_synthesis/data" / (profile_name + ".json")
     assert resource.exists(), "The reviewed real profile must ship in the package"
     expected = hashlib.sha256(resource.read_bytes()).hexdigest()
-    assert expected == profiles.PROFILE_SHA256[profiles.PROFILE]
+    assert expected == profiles.PROFILE_SHA256[profile_name]
     env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
     result = subprocess.run(
         [sys.executable, "-c", "import setuptools.build_meta; setuptools.build_meta.build_wheel('dist')"],
@@ -375,7 +379,7 @@ def test_wheel_includes_profile_resource_without_installing(tmp_path):
         [
             sys.executable,
             "-c",
-            "from importlib.resources import files; import hashlib; print(hashlib.sha256(files('chembounce_synthesis').joinpath('data','qualified-development-v1.json').read_bytes()).hexdigest())",
+            f"from importlib.resources import files; import hashlib; print(hashlib.sha256(files('chembounce_synthesis').joinpath('data',{profile_name + '.json'!r}).read_bytes()).hexdigest())",
         ],
         cwd=tmp_path,
         env=env,
@@ -387,14 +391,18 @@ def test_wheel_includes_profile_resource_without_installing(tmp_path):
         [
             sys.executable,
             "-c",
-            "from chembounce_synthesis.profiles import load_profile,PROFILE; print(load_profile(PROFILE)['status'])",
+            f"from chembounce_synthesis.profiles import load_profile; print(load_profile({profile_name!r})['status'])",
         ],
         cwd=tmp_path,
         env=env,
         capture_output=True,
         text=True,
     )
-    assert loaded.returncode == 0 and loaded.stdout.strip() == "reviewed_development_fit", loaded.stderr
+    assert loaded.returncode == 0 and loaded.stdout.strip() == (
+        "declared_engineering_policy"
+        if profile_name == profiles.SELECTIVE_PROFILE
+        else "reviewed_development_fit"
+    ), loaded.stderr
 
 
 def test_reviewed_release_reconstructs_the_exact_unchanged_fit_candidate():
@@ -502,3 +510,124 @@ def test_real_profile_cli_runs_without_manual_cutoffs_and_exports_review_digest(
         pose = next(iter(Chem.SDMolSupplier(str(out / name))))
         assert pose.GetProp("_Name") == rows[0]["route_id"]
         assert pose.GetProp("calibration_artifact_sha256") == provenance["artifact_sha256"]
+
+
+def test_selective_profile_is_engineering_and_preserves_optional_constraints(tmp_path, assets, proposal):
+    from chembounce_synthesis.selective_scoring import configured_constraints
+
+    config = configuration(tmp_path, assets, proposal)
+    config.update(recommendation_profile=profiles.SELECTIVE_PROFILE, core_smiles="CC(=O)N")
+    landmark = {"id": "amide-oxygen", "family": "Acceptor", "hit_atom_ids": [2], "max_distance": 1.0}
+    config["similarity_constraints"] = {"landmarks": [landmark]}
+    effective = workflow._config(config)
+    assert effective["similarity_constraints"] == profiles.SELECTIVE_CONSTRAINTS | {"landmarks": [landmark]}
+    assert effective["core_smiles"] == "CC(=O)N"
+    bound = configured_constraints(effective, HIT)
+    assert bound.policy["core_smiles"] == "CC(N)=O"
+    provenance = profiles.profile_provenance(effective)
+    assert provenance["status"] == (
+        "custom_unvalidated" if provenance["runtime_source_mismatches"] else "engineering_policy_matched"
+    )
+    assert not provenance["material_overrides"]
+    assert not {"fit_sha256", "review", "calibration_spec", "calibration_provenance"} & provenance.keys()
+    assert set(provenance["source_match_scope"]) == {
+        "chembounce_synthesis/" + name for name in profiles.KERNEL_FILES + profiles.SELECTIVE_KERNEL_FILES
+    }
+    assert set(profiles.numerical_runtime()["source_sha256"]) == {
+        "chembounce_synthesis/" + name for name in profiles.KERNEL_FILES
+    }
+    assert "permissive" not in profiles.profile_label(effective)
+    assert "not fitted/calibrated" in profiles.profile_label(effective)
+
+
+@pytest.mark.parametrize(
+    "change,field",
+    [
+        ({"minimum_scores": {"hit_shape": 0.8}}, "minimum_scores.hit_shape"),
+        ({"similarity_constraints": {"polar_recall": 0.8}}, "similarity_constraints.polar_recall"),
+        ({"route_search_policy": "design-v1"}, "route_search_policy"),
+        ({"ranking_policy": "joint-v1"}, "ranking_policy"),
+    ],
+)
+def test_selective_profile_material_overrides_survive_and_are_custom(
+    tmp_path, assets, proposal, change, field
+):
+    config = configuration(tmp_path, assets, proposal)
+    config.update(recommendation_profile=profiles.SELECTIVE_PROFILE, **change)
+    effective = workflow._config(config)
+    provenance = profiles.profile_provenance(effective)
+    assert provenance["status"] == "custom_unvalidated"
+    assert field in provenance["material_overrides"]
+    for section, value in change.items():
+        assert (
+            effective[section] == value
+            if not isinstance(value, dict)
+            else all(effective[section][k] == v for k, v in value.items())
+        )
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"conformers": {"num_conformers": 9}},
+        {"conformers": {"reject_unspecified_stereo": False}},
+        {"refinement": {"seeds": [42, 43]}},
+        {"similarity_constraints": None},
+        {"synthesis_evidence": {"profile": "legacy-conditional-v1"}},
+    ],
+)
+def test_selective_profile_unsupported_overrides_reject(tmp_path, assets, proposal, change):
+    config = configuration(tmp_path, assets, proposal)
+    config.update(recommendation_profile=profiles.SELECTIVE_PROFILE, **change)
+    with pytest.raises(ValueError):
+        workflow._config(config)
+
+
+@pytest.mark.parametrize("kind", ["runtime", "selective_scoring.py", "similarity_constraints.py"])
+def test_selective_profile_binds_new_sources_and_runtime(tmp_path, assets, proposal, monkeypatch, kind):
+    config = configuration(tmp_path, assets, proposal)
+    config["recommendation_profile"] = profiles.SELECTIVE_PROFILE
+    effective = workflow._config(config)
+    current = profiles.numerical_runtime(profiles.SELECTIVE_PROFILE)
+    if kind == "runtime":
+        current["packages"]["rdkit"] = "changed"
+    else:
+        current["source_sha256"]["chembounce_synthesis/" + kind] = "0" * 64
+    monkeypatch.setattr(profiles, "numerical_runtime", lambda name=None: current)
+    assert profiles.profile_provenance(effective)["status"] == "custom_unvalidated"
+
+
+def test_named_selective_api_and_synthesis_cli_use_same_final_contract(tmp_path, assets, proposal, capsys):
+    pytest.importorskip("rdkit.Chem.rdShapeAlign")
+    config = configuration(tmp_path, assets, proposal)
+    config["recommendation_profile"] = profiles.SELECTIVE_PROFILE
+    expected = profiles.profile_provenance(workflow._config(config))["status"]
+    api = workflow.run(HIT, [DESIGN], config, tmp_path / "api-selective")
+    assert len(api) == 1 and api[0]["calibration_status"] == expected
+    config.pop("recommendation_profile")
+    path = tmp_path / "cli-selective.json"
+    path.write_text(json.dumps(config))
+    out = tmp_path / "cli-selective"
+    assert (
+        main(
+            [
+                "--hit",
+                HIT,
+                "--design",
+                DESIGN,
+                "--config",
+                str(path),
+                "--recommendation-profile",
+                profiles.SELECTIVE_PROFILE,
+                "--output",
+                str(out),
+            ]
+        )
+        == 0
+    )
+    label = capsys.readouterr().out
+    assert expected in label and "permissive" not in label and "not fitted/calibrated" in label
+    row = read(out, "results.json")["results"][0]
+    assert row["similarity_witness_sha256"] == api[0]["similarity_witness_sha256"]
+    assert row["recommendation_profile"] == profiles.SELECTIVE_PROFILE
+    assert [t["seed"] for t in read(out, "refinement.json")["candidates"][0]["trials"]] == [42, 43, 44]

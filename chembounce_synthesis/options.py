@@ -6,12 +6,12 @@ import copy
 def add_expansion_options(parser):
     parser.add_argument(
         "--forward-model-path",
-        help="Explicit local pinned ReactionT5 bundle required by the named development recommendation profile",
+        help="Explicit local pinned ReactionT5 bundle required by the named recommendation profiles",
     )
     parser.add_argument(
         "--recommendation-profile",
-        choices=("qualified-development-v1",),
-        help="Explicit opt-in development profile with permissive fitted minima and a fixed three-seed protocol; not strong-similarity or activity guarantees",
+        choices=("qualified-development-v1", "qualified-selective-engineering-v2"),
+        help="Explicit opt-in profile: permissive development fit or selective engineering constraints (not fitted); fixed three-seed scoring and computational route support, no activity guarantee",
     )
     parser.add_argument(
         "--scoring-objective",

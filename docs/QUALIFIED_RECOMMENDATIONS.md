@@ -8,13 +8,42 @@ biological activity, or experimental synthesizability.
 
 ## Selective similarity v2: explicit engineering configuration
 
-The separately versioned `joint-feasible-hit-pose-v2` selector is available only
-through an explicit `similarity_constraints` configuration. No named v2 profile
-is released yet. Its first scorer/constraint source gate passed at `094d0c2`:
-root 144 tests and independent research/Python 3.12 50 tests each; minimum runtime
-37 passed and 13 skipped. Workflow integration is awaiting its separate source
-review. No 197-pair evaluation, model execution or fresh-data performance claim
-is part of this source change.
+The explicit opt-in preset `qualified-selective-engineering-v2` uses
+`joint-feasible-hit-pose-v2` with Tanimoto/shape/pharmacophore floors
+0.35/0.70/0.50 and polar reference recall 0.75. These are declared engineering
+preferences, not fitted or calibrated thresholds. Screening uses eight
+conformers at seed 42; final acceptance requires eight conformers at each of
+42/43/44. Original-hit scoring, search and ranking, normalized scaffold change,
+strict specified stereo and `computational-route-support-v1` remain mandatory.
+There is no adaptive embedding or threshold relaxation.
+
+Both CLIs accept `--recommendation-profile qualified-selective-engineering-v2`
+and `--forward-model-path /path/to/pinned/local/ReactionT5`; API configurations
+use `"recommendation_profile": "qualified-selective-engineering-v2"` and an
+explicit local predictor path. Omitting the option retains existing defaults.
+The packaged `qualified-selective-engineering-profile-v2` artifact has status
+`declared_engineering_policy`. A matching effective runtime/policy reports
+`engineering_policy_matched`; it contains no fit or calibration review claim.
+The legacy JSON/TSV field names `calibration` and `calibration_status` remain for
+compatibility, but their v2 values identify this engineering policy explicitly.
+
+The artifact binds Python, RDKit, NumPy, SciPy, feature definitions and the
+unchanged three legacy numerical kernels plus `selective_scoring.py` and
+`similarity_constraints.py`. It does not hash its loader or itself. The v1
+artifact and its three-kernel provenance scope remain unchanged. Supported
+numeric/search/ranking overrides are retained and labelled `custom_unvalidated`;
+unsupported seed, ensemble, stereo, reference-pose or evidence overrides reject.
+Optional `core_smiles` and required landmarks remain additional selection vetoes,
+are retained in provenance and are validated against the canonical original hit
+before generation or synthesis assets are loaded. Supplying landmarks alone does
+not replace the default score or polar-recall floors.
+
+The scorer/constraint source gate passed at `094d0c2`, and the separate workflow
+gate passed at `68750e0` (integrated as `7161ff3`): root 208 tests, independent 60
+and author 27 passed. The named preset and benchmark integration in this change
+remain subject to their own source review. Known-fixture actual inference and
+fresh scientific evaluation are separate gates; no performance or experimental
+synthesis claim follows from these source tests.
 
 For example, add the following fields to an existing synthesis configuration
 with explicit catalog, rules, provider and evidence settings:
@@ -112,6 +141,30 @@ embedding. No jointly feasible candidate produces empty result artifacts with
 an explicit bounded-protocol outcome. Evidence requirements are still exactly
 those requested in the configuration: explicit legacy engineering fixtures do
 not acquire computational-route support merely by enabling this selector.
+
+### Selective benchmark protocol
+
+Fresh selective studies use `qualified-benchmark-protocol-v2`, with explicit
+`recommendation_profile: qualified-selective-engineering-v2` and the packaged
+`profile_artifact_sha256`. The runner retains this binding in its plan and common
+requests and passes it independently to the collector. Version 1 continues to
+use the unchanged development profile; it cannot silently activate v2. Budget,
+method, source/asset pins, complete failure denominators and ablations are
+otherwise unchanged. Core and landmark additions are permitted when explicitly
+frozen in the common configuration. Scientific-floor or polar-recall overrides
+cannot pass the benchmark profile match.
+
+For v2, the collector checks the complete effective policy and numerical source
+provenance against the frozen configuration/source, restores every saved seed's
+pose and rechecks its joint witness and pharmacophore metric without embedding,
+realignment or model calls. It retains seed witness/pose hashes and all-seed
+minimum polar recall separately from representative-pose metrics. It also checks
+selected route/seed/profile bindings across JSON, TSV and four SDF exports, with
+SDF coordinates compared at their four-decimal output precision. Missing,
+failed or altered seed evidence cannot yield a selected recommendation. Shape
+and pose-search logs remain trusted frozen-scorer outputs, not independent
+attestations of arbitrary external logs. No actual fresh campaign has been run
+by this implementation change.
 
 ## Six-stage delivery tracker
 
@@ -830,24 +883,26 @@ exact SMILES, separate from private activity/assay/selection evidence.
 
 ## Remaining delivery and research decisions
 
-1. The inspected pilot root result gate is closed with the final independent
-   ledger and all ten selected-output audits. Preserve the negative comparisons
-   above. Finish a revised catalog diagnostic with exact blocked-operation
-   telemetry; the original failed run must not be relabelled as passed.
-2. Review the new, source-bound pilot exclusion inventory for actual coverage,
-   including retained structures in previously unclassified fields.
-   Freeze the reviewed selection source, exclusion mappings, models, assets,
-   runtime, methods, budgets and analysis before fresh acquisition. Resolve
-   known target aliases from official records and disclose normalization,
-   incomplete inspection and checkpoint-training gaps.
+1. Completed prerequisite: the inspected pilot root result gate is closed with
+   the final independent ledger and all ten selected-output audits. The revised
+   catalog-equivalence diagnostic also passed its root and independent result
+   gates with blocked-operation telemetry. Preserve the negative comparisons
+   and the original failed diagnostic unchanged.
+2. Completed prerequisite: the augmented pilot exclusion inventory passed its
+   source-bound root gate with the coverage limitations documented above.
+   The next freeze must bind the reviewed new profile, workflow/collector and
+   selection sources, exclusion mappings, models, assets, runtime, methods,
+   budgets and analysis before fresh acquisition. Resolve known target aliases
+   from official records and disclose normalization, incomplete inspection and
+   checkpoint-training gaps.
 3. Evaluate the proposed six-target/two-query/three-seed panel with five methods
    and two ablations (252 planned attempts), only after the complete panel and
    protocol pass review. Measure joint recommendation success, unique output
    yield, per-target behavior, scaffold changes, similarity distributions and
    full costs. Failures and missing attempts stay in the denominator; six target
    clusters support descriptive uncertainty, not a strong significance claim.
-4. Before fresh acquisition, establish and freeze a separately versioned stricter
-   structural acceptance policy. The existing development profile is deliberately
+4. Before fresh acquisition, finish independent source review and freeze the
+   separately versioned selective engineering policy and its benchmark protocol. The existing development profile is deliberately
    permissive and does not guarantee high
    similarity or retained activity. A stricter profile needs a separately
    declared acceptance objective and frozen external evaluation;

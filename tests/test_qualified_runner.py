@@ -20,10 +20,10 @@ def request(tmp_path, arm="full", seed=97):
     }
 
 
-def config_file(tmp_path):
+def config_file(tmp_path, profile="qualified-development-v1"):
     config = {
         "schema_version": 1,
-        "recommendation_profile": "qualified-development-v1",
+        "recommendation_profile": profile,
         "catalog": "catalog.tsv",
         "rules": "rules.json",
         "provider": {
@@ -60,7 +60,9 @@ def config_file(tmp_path):
     from chembounce_synthesis.workflow import load_config
     from chembounce_synthesis.profiles import profile_provenance
 
-    if profile_provenance(load_config(path))["status"] != "development_protocol_matched":
+    if profile_provenance(load_config(path))["status"] != (
+        "engineering_policy_matched" if profile.endswith("v2") else "development_protocol_matched"
+    ):
         pytest.skip("Runtime does not match reviewed development calibration")
     return path
 
@@ -451,3 +453,101 @@ def test_common_cleanup_overrun_preserves_costs_and_continues_next_slot(tmp_path
     assert first["costs"]["wall_seconds"] == 601 and first["costs"]["cpu_seconds"] == 5
     assert second["status"] == "no_candidates"
     assert adapter.read(tmp_path / "run/attempt-0000/phases.json")["phases"]["common"]["allocation_exceeded"]
+
+
+def selective_binding():
+    from chembounce_synthesis.profiles import SELECTIVE_PROFILE, PROFILE_SHA256
+
+    return {
+        "schema": "qualified-benchmark-protocol-v2",
+        "recommendation_profile": SELECTIVE_PROFILE,
+        "profile_artifact_sha256": PROFILE_SHA256[SELECTIVE_PROFILE],
+    }
+
+
+def test_selective_protocol_binding_reaches_only_common_request(tmp_path):
+    p = protocol() | selective_binding()
+    plan = runner.make_plan(p, "a" * 64)
+    assert plan["benchmark_protocol"] == selective_binding()
+    assert len(plan["slot_order"]) == 10
+    for phase in ("native", "common"):
+        req = runner.request_for(p["methods"][0], p["queries"][0], 97, tmp_path, 360, phase, plan)
+        assert ("benchmark_protocol" in req) == (phase == "common")
+        if phase == "common":
+            assert req["benchmark_protocol"] == selective_binding()
+
+
+@pytest.mark.parametrize("mutation", ["missing_name", "wrong_digest", "v1_upgrade", "wrong_profile"])
+def test_selective_protocol_rejects_missing_or_mismatched_binding(tmp_path, mutation):
+    p = protocol() | selective_binding()
+    if mutation == "missing_name":
+        p.pop("recommendation_profile")
+    elif mutation == "wrong_digest":
+        p["profile_artifact_sha256"] = "0" * 64
+    elif mutation == "v1_upgrade":
+        p["schema"] = "qualified-benchmark-protocol-v1"
+    else:
+        p["recommendation_profile"] = "qualified-development-v1"
+    with pytest.raises(ValueError, match="binding|protocol v2"):
+        runner.resolve_protocol(p, tmp_path)
+
+
+def test_selective_common_config_requires_exact_profile_and_preserves_anchors(tmp_path):
+    r = request(tmp_path)
+    r["assets"]["synthesis_config"] = str(
+        config_file(tmp_path, selective_binding()["recommendation_profile"])
+    )
+    with pytest.raises(ValueError, match="protocol-bound"):
+        adapter.common_config(r)
+    r["benchmark_protocol"] = selective_binding()
+    cfg = adapter.common_config(r)
+    assert cfg["minimum_scores"] == {"hit_tanimoto": 0.35, "hit_shape": 0.70, "hit_pharmacophore": 0.50}
+    assert cfg["similarity_constraints"]["polar_recall"] == 0.75
+    config = adapter.read(r["assets"]["synthesis_config"])
+    config["core_smiles"] = "CC(=O)N"
+    landmark = {"id": "oxygen", "family": "Acceptor", "hit_atom_ids": [2], "max_distance": 1.0}
+    config["similarity_constraints"] = {"landmarks": [landmark]}
+    write_json(r["assets"]["synthesis_config"], config)
+    anchored = adapter.common_config(r)
+    assert anchored["core_smiles"] == "CC(=O)N"
+    assert anchored["similarity_constraints"]["landmarks"] == [landmark]
+    config["similarity_constraints"]["polar_recall"] = 0.5
+    write_json(r["assets"]["synthesis_config"], config)
+    with pytest.raises(ValueError, match="frozen engineering profile"):
+        adapter.common_config(r)
+
+
+def test_selective_runner_failure_keeps_denominator_and_fixed_budgets(tmp_path, monkeypatch):
+    from benchmarks.research.qualified_analysis import analyze
+
+    p = protocol() | selective_binding()
+    plan = runner.make_plan(p, "a" * 64)
+    calls = []
+
+    def failed(method, req, out, **kwargs):
+        calls.append(req)
+        out.mkdir()
+        write_json(out / "request.json", req)
+        return {
+            "status": "error",
+            "response": {},
+            "resources": {"sampled_cpu_seconds_lower_bound": 0, "sampled_peak_rss_mb": 0},
+        }
+
+    monkeypatch.setattr(runner, "bounded_method", failed)
+    result = runner.attempt(
+        p["methods"][-1], p["queries"][0], 97, tmp_path / "failed", plan, SimpleNamespace(signal_number=None)
+    )
+    assert len(calls) == 1 and calls[0]["benchmark_protocol"] == selective_binding()
+    assert calls[0]["budget"]["wall_seconds"] <= 600
+    assert result["status"] == "error" and result["qualified"] == []
+    report = analyze(
+        plan,
+        {
+            "schema": "qualified-benchmark-collection-v1",
+            "plan_sha256": runner.canonical_sha256(plan),
+            "collector_source_sha256": plan["collector_source_sha256"],
+            "attempts": [result],
+        },
+    )
+    assert report["planned_attempts"] == 10

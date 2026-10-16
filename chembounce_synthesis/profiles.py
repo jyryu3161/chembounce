@@ -1,4 +1,4 @@
-"""Reviewed development profile assets, effective defaults, and scope provenance."""
+"""Versioned development-fit and declared engineering profiles with provenance."""
 
 import copy
 import hashlib
@@ -10,8 +10,19 @@ from importlib.resources import files
 from pathlib import Path
 
 PROFILE = "qualified-development-v1"
+SELECTIVE_PROFILE = "qualified-selective-engineering-v2"
+ENGINEERING_SCHEMA = "qualified-selective-engineering-profile-v2"
+SELECTIVE_KERNEL_FILES = ("selective_scoring.py", "similarity_constraints.py")
+SELECTIVE_CONSTRAINTS = {
+    "version": "selective-similarity-constraints-v2",
+    "polar_recall": 0.75,
+    "landmarks": [],
+}
 # Reviewed development release; the untouched fit candidate remains separately bound.
-PROFILE_SHA256 = {PROFILE: "9d3c60a895912b28c13a29aac0a04f385ddb8a0effc9fcd81d64a50a3d48bdd2"}
+PROFILE_SHA256 = {
+    SELECTIVE_PROFILE: "a8b47a409a21518dd482acbefdce38774414ae0b65f28d6ea7cb52ab63e1ef52",
+    PROFILE: "9d3c60a895912b28c13a29aac0a04f385ddb8a0effc9fcd81d64a50a3d48bdd2",
+}
 KERNEL_FILES = ("conformers.py", "common.py", "identity.py")
 METRICS = ("hit_tanimoto", "hit_shape", "hit_pharmacophore")
 FIXED_CONFORMERS = {
@@ -62,6 +73,9 @@ def load_profile(name):
     if _sha(raw) != expected:
         raise ValueError("Packaged recommendation profile SHA-256 mismatch")
     artifact = json.loads(raw)
+    if name == SELECTIVE_PROFILE:
+        _validate_engineering_artifact(artifact)
+        return artifact
     minima = artifact.get("minimum_scores")
     spec = artifact.get("calibration_spec", {})
     if (
@@ -97,7 +111,7 @@ def load_profile(name):
 
 
 def profile_defaults(artifact):
-    return {
+    defaults = {
         "recommendation": {"mode": "qualified", "policy_version": "qualified-v1"},
         "mode": "hop",
         "conformers": copy.deepcopy(FIXED_CONFORMERS),
@@ -116,6 +130,36 @@ def profile_defaults(artifact):
             "policy": {"require_forward_agreement": True},
         },
     }
+
+    if artifact["schema"] == ENGINEERING_SCHEMA:
+        defaults["similarity_constraints"] = copy.deepcopy(SELECTIVE_CONSTRAINTS)
+    return defaults
+
+
+def _validate_engineering_artifact(artifact):
+    if (
+        artifact.get("schema") != ENGINEERING_SCHEMA
+        or artifact.get("name") != SELECTIVE_PROFILE
+        or artifact.get("status") != "declared_engineering_policy"
+        or artifact.get("scope") != "explicit_engineering_preferences_not_fitted"
+        or artifact.get("minimum_scores")
+        != {"hit_tanimoto": 0.35, "hit_shape": 0.70, "hit_pharmacophore": 0.50}
+        or artifact.get("engineering_spec")
+        != {
+            "conformers": FIXED_CONFORMERS,
+            "refinement": FIXED_REFINEMENT,
+            "similarity_constraints": SELECTIVE_CONSTRAINTS,
+            "pose_selection_policy": "joint-feasible-hit-pose-v2",
+            "ranking_policy": "original-hit-v1",
+            "route_search_policy": "original-hit-v1",
+            "evidence_profile": "computational-route-support-v1",
+            "fingerprint": {"kind": "binary_morgan", "radius": 2, "bits": 2048, "chirality": True},
+        }
+        or any(key in artifact for key in ("fit_sha256", "review", "calibration_spec"))
+        or set(artifact.get("provenance", {}).get("source_sha256", {}))
+        != {"chembounce_synthesis/" + name for name in KERNEL_FILES + SELECTIVE_KERNEL_FILES}
+    ):
+        raise ValueError("Packaged engineering profile lacks its declared fixed policy/source scope")
 
 
 def apply_profile_defaults(config):
@@ -145,7 +189,7 @@ def apply_profile_defaults(config):
     return result
 
 
-def numerical_runtime():
+def numerical_runtime(name=None):
     from rdkit.Chem import RDConfig
 
     feature_path = Path(RDConfig.RDDataDir) / "BaseFeatures.fdef"
@@ -158,7 +202,7 @@ def numerical_runtime():
         },
         "source_sha256": {
             "chembounce_synthesis/" + name: _sha(files("chembounce_synthesis").joinpath(name).read_bytes())
-            for name in KERNEL_FILES
+            for name in (KERNEL_FILES + SELECTIVE_KERNEL_FILES if name == SELECTIVE_PROFILE else KERNEL_FILES)
         },
     }
 
@@ -181,7 +225,7 @@ def profile_provenance(config):
         return {"name": None, "status": "not_requested", "artifact_sha256": None}
     artifact = load_profile(name)
     defaults = profile_defaults(artifact)
-    # Route support is an additional selection constraint, outside the fitted numerical protocol.
+    # Strict route support remains a mandatory additional selection constraint.
     defaults.pop("synthesis_evidence", None)
     effective = {key: config.get(key) for key in defaults}
     differences = _differences(defaults, effective)
@@ -199,7 +243,7 @@ def profile_provenance(config):
         numerical_changes["reference_sdf"] = {"profile": None, "effective": config["reference_sdf"]}
     if config.get("pocket"):
         numerical_changes["pocket"] = {"profile": None, "effective": config["pocket"]}
-    if "similarity_constraints" in config:
+    if name != SELECTIVE_PROFILE and "similarity_constraints" in config:
         numerical_changes["similarity_constraints"] = {
             "profile": None,
             "effective": config["similarity_constraints"],
@@ -213,27 +257,40 @@ def profile_provenance(config):
     budget = config.get("refinement", {}).get("max_total_conformers")
     if budget is None or budget < 24:
         numerical_changes["refinement.max_total_conformers"] = {"profile": "at least 24", "effective": budget}
-    current = numerical_runtime()
+    # Optional declared landmarks are additional vetoes, not replacement floors.
+    if name == SELECTIVE_PROFILE:
+        numerical_changes.pop("similarity_constraints.landmarks", None)
+    current = numerical_runtime(name) if name == SELECTIVE_PROFILE else numerical_runtime()
     recorded = artifact["provenance"]
     mismatches = {}
+    provenance_key = "engineering_policy" if name == SELECTIVE_PROFILE else "calibration"
     for field in ("python", "packages"):
         if current[field] != recorded["runtime"][field]:
-            mismatches[field] = {"calibration": recorded["runtime"][field], "current": current[field]}
+            mismatches[field] = {provenance_key: recorded["runtime"][field], "current": current[field]}
     feature = "pharmacophore_feature_definition"
     if current[feature]["sha256"] != recorded["runtime"][feature]["sha256"]:
-        mismatches[feature] = {"calibration": recorded["runtime"][feature], "current": current[feature]}
+        mismatches[feature] = {provenance_key: recorded["runtime"][feature], "current": current[feature]}
     for path, digest in current["source_sha256"].items():
         if digest != recorded["source_sha256"].get(path):
-            mismatches[path] = {"calibration": recorded["source_sha256"].get(path), "current": digest}
+            mismatches[path] = {provenance_key: recorded["source_sha256"].get(path), "current": digest}
+    engineering = name == SELECTIVE_PROFILE
     return {
         "name": name,
-        "status": "custom_unvalidated" if numerical_changes or mismatches else "development_protocol_matched",
+        "status": "custom_unvalidated"
+        if numerical_changes or mismatches
+        else ("engineering_policy_matched" if engineering else "development_protocol_matched"),
         "artifact_sha256": PROFILE_SHA256[name],
-        "fit_sha256": artifact["fit_sha256"],
-        "review": artifact["review"],
+        **(
+            {"engineering_spec": artifact["engineering_spec"], "engineering_provenance": recorded}
+            if engineering
+            else {
+                "fit_sha256": artifact["fit_sha256"],
+                "review": artifact["review"],
+                "calibration_spec": artifact["calibration_spec"],
+                "calibration_provenance": recorded,
+            }
+        ),
         "scope": artifact["scope"],
-        "calibration_spec": artifact["calibration_spec"],
-        "calibration_provenance": recorded,
         "current_numerical_runtime": current,
         "material_overrides": numerical_changes,
         "runtime_source_mismatches": mismatches,
@@ -247,13 +304,18 @@ def profile_provenance(config):
                 "search",
                 "expansion",
                 "synthesis_evidence",
+                *(("similarity_constraints",) if engineering else ()),
             )
             if key in config
         },
-        "source_match_scope": ["chembounce_synthesis/" + name for name in KERNEL_FILES],
+        "source_match_scope": list(current["source_sha256"]),
         "limitations": artifact.get("limitations", [])
         + [
-            "Profile match describes the development scoring/acceptance protocol, not pipeline retention or biological activity",
+            (
+                "Profile match describes declared engineering constraints, not fitted thresholds, activity or experimental synthesis"
+                if engineering
+                else "Profile match describes the development scoring/acceptance protocol, not pipeline retention or biological activity"
+            ),
             "Real-design diagnostic availability, anchors/properties, finite budgets and route evidence impose additional vetoes",
             "Observed three-seed minima do not establish future-seed robustness or convergence",
         ],
@@ -271,6 +333,11 @@ def profile_label(config):
             " [evidence=" + config.get("synthesis_evidence", {}).get("profile", "legacy-conditional-v1") + "]"
         ) + selective
     provenance = profile_provenance(config)
+    if provenance["name"] == SELECTIVE_PROFILE:
+        return (
+            f" [profile={provenance['name']}; {provenance['status']}; explicit engineering preferences, not fitted/calibrated; computational-route-support-v1 conditional support, no experimental synthesis or activity claim]"
+            + selective
+        )
     return (
         f" [profile={provenance['name']}; {provenance['status']}; computational-route-support-v1 conditional selection support; permissive development thresholds, not strong-similarity or activity guarantees]"
         + selective

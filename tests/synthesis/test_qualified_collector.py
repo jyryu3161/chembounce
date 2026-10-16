@@ -11,8 +11,9 @@ from chembounce_synthesis import workflow
 HIT, DESIGN = "CC(=O)Nc1ccccc1", "CC(=O)Nc1ccncc1"
 
 
-@pytest.fixture
-def completed(tmp_path, assets, route, strict_predictor):
+@pytest.fixture(params=["qualified-development-v1", "qualified-selective-engineering-v2"])
+def completed(tmp_path, assets, route, strict_predictor, request):
+    profile_name = request.param
     pytest.importorskip("rdkit.Chem.rdShapeAlign")
     from rdkit.Chem import rdChemReactions
     from rdkit import Chem
@@ -35,7 +36,7 @@ def completed(tmp_path, assets, route, strict_predictor):
             "samples": 2,
             "max_new_tokens": 1200,
         },
-        "recommendation_profile": "qualified-development-v1",
+        "recommendation_profile": profile_name,
         "max_design_attempts": 12,
         "max_designs": 3,
         "max_results": 3,
@@ -59,7 +60,10 @@ def completed(tmp_path, assets, route, strict_predictor):
     }
     path = tmp_path / "config.json"
     write_json(path, config)
-    if profile_provenance(workflow.load_config(path))["status"] != "development_protocol_matched":
+    expected_status = (
+        "engineering_policy_matched" if profile_name.endswith("v2") else "development_protocol_matched"
+    )
+    if profile_provenance(workflow.load_config(path))["status"] != expected_status:
         pytest.skip("Runtime does not match reviewed development calibration")
     native, out = tmp_path / "native", tmp_path / "common"
     (native / "synthesis").mkdir(parents=True)
@@ -95,8 +99,18 @@ def completed(tmp_path, assets, route, strict_predictor):
         "deadline_monotonic": 999999999999,
         "finalization_margin_seconds": 2,
     }
+    if profile_name.endswith("v2"):
+        from chembounce_synthesis.profiles import PROFILE_SHA256
+
+        request["benchmark_protocol"] = {
+            "schema": "qualified-benchmark-protocol-v2",
+            "recommendation_profile": profile_name,
+            "profile_artifact_sha256": PROFILE_SHA256[profile_name],
+        }
     write_json(out / "request.json", request)
     response = adapter.common(request)
+    if "benchmark_protocol" in request:
+        response["metadata"]["benchmark_protocol"] = request["benchmark_protocol"]
     assert len(response["candidates"]) == 1
     return out, response, strict_predictor
 
@@ -110,6 +124,7 @@ def collect(data, bound_catalog=None):
         workflow._SOURCE_HASHES,
         decoder_factory=lambda *args: decoder,
         bound_catalog=bound_catalog,
+        benchmark_protocol=response["metadata"].get("benchmark_protocol"),
     )
 
 
@@ -187,3 +202,123 @@ def test_bound_catalog_preserves_outputs_with_fresh_rules(completed, assets, mon
     assert bound._catalog.nearest.cache_info().currsize == 0
     assert all(v is bound._catalog.fps._PENDING for v in bound._catalog.fps._values.values())
     assert len(completed[2].calls) == 1
+
+
+def is_selective(data):
+    out, _, _ = data
+    return json.loads((out / "request.json").read_text()).get("benchmark_protocol") is not None
+
+
+def test_selective_collector_retains_all_seed_evidence_without_embedding(completed, monkeypatch):
+    if not is_selective(completed):
+        return
+    from chembounce_synthesis import conformers, selective_scoring
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Collector may not embed, align or score new poses")
+
+    monkeypatch.setattr(conformers, "ensemble", forbidden)
+    monkeypatch.setattr(selective_scoring, "ensemble", forbidden)
+    monkeypatch.setattr(selective_scoring, "score_candidate", forbidden)
+    result = collect(completed)[0]["selective_evidence"]
+    assert set(result["seed_witness_sha256"]) == {"42", "43", "44"}
+    assert set(result["seed_pose_evidence_sha256"]) == {"42", "43", "44"}
+    assert result["all_seed_min_polar_reference_recall"] >= 0.75
+    assert len(completed[2].calls) == 1
+
+
+@pytest.mark.parametrize(
+    "kind",
+    [
+        "missing_pose",
+        "nonrepresentative_witness",
+        "policy",
+        "provenance",
+        "seed_missing",
+        "seed_failed",
+        "row_witness",
+        "pose_coordinates",
+        "protocol",
+    ],
+)
+def test_selective_collector_rejects_evidence_tamper(completed, kind):
+    if not is_selective(completed):
+        return
+    if kind in {"missing_pose", "nonrepresentative_witness", "seed_missing", "seed_failed"}:
+
+        def change(value):
+            trials = value["candidates"][0]["trials"]
+            if kind == "missing_pose":
+                trials[2].pop("selective_pose_evidence")
+            elif kind == "nonrepresentative_witness":
+                row = json.loads((completed[0] / "synthesis/results.json").read_text())["results"][0]
+                trial = next(t for t in trials if t["seed"] != row["pose_seed"])
+                trial["similarity_constraints"]["witness"]["polar"]["recall"] = 1
+            elif kind == "seed_missing":
+                trials.pop()
+            else:
+                trials[2]["status"] = "failed"
+
+        update(completed, "refinement.json", change)
+    elif kind in {"policy", "provenance"}:
+
+        def change(value):
+            if kind == "policy":
+                value["policy"]["similarity_constraints"]["policy"]["polar_recall"] = 0.01
+            else:
+                value["policy"]["calibration"]["current_numerical_runtime"]["source_sha256"].pop(
+                    "chembounce_synthesis/selective_scoring.py"
+                )
+
+        update(completed, "results.json", change)
+    elif kind == "row_witness":
+        update(
+            completed, "results.json", lambda v: v["results"][0].update(similarity_witness_sha256="0" * 64)
+        )
+    elif kind == "protocol":
+        path = completed[0] / "request.json"
+        request = json.loads(path.read_text())
+        request.pop("benchmark_protocol")
+        path.write_text(json.dumps(request))
+    else:
+        from rdkit import Chem
+
+        path = completed[0] / "synthesis/references_hit.sdf"
+        mol = next(iter(Chem.SDMolSupplier(str(path), removeHs=False)))
+        xyz = mol.GetConformer().GetAtomPosition(0)
+        xyz.x += 0.1
+        mol.GetConformer().SetAtomPosition(0, xyz)
+        with Chem.SDWriter(str(path)) as writer:
+            writer.write(mol)
+        completed[1]["metadata"]["files_sha256"]["synthesis/references_hit.sdf"] = digest(path)
+    with pytest.raises((ValueError, KeyError)):
+        collect(completed)
+
+
+def test_selective_failed_seed_exports_empty_and_collector_keeps_failure(completed, tmp_path, monkeypatch):
+    if not is_selective(completed):
+        return
+    from benchmarks.research import qualified_adapter as adapter
+    from chembounce_synthesis import selective_scoring
+
+    original = selective_scoring.score_candidate
+
+    def fail_final_seed(smiles, hit, design, settings, **kwargs):
+        if settings.seed == 44:
+            raise ValueError("controlled final seed failure")
+        return original(smiles, hit, design, settings, **kwargs)
+
+    monkeypatch.setattr(selective_scoring, "score_candidate", fail_final_seed)
+    request = adapter.read(completed[0] / "request.json")
+    out = tmp_path / "failed-seed-common"
+    out.mkdir()
+    request["output_dir"] = str(out)
+    (out / "request.json").write_text(json.dumps(request))
+    response = adapter.common(request)
+    response["metadata"]["benchmark_protocol"] = request["benchmark_protocol"]
+    assert response["candidates"] == []
+    assert collect((out, response, completed[2])) == []
+    trials = adapter.read(out / "synthesis/refinement.json")["candidates"][0]["trials"]
+    assert [t["seed"] for t in trials] == [42, 43, 44]
+    assert trials[-1]["status"] == "failed"
+    assert adapter.read(out / "synthesis/summary.json")["status"] == "no_candidates"

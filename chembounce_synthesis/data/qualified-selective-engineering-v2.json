@@ -1,0 +1,82 @@
+{
+  "engineering_spec": {
+    "conformers": {
+      "energy_window": 5.0,
+      "max_iterations": 500,
+      "num_conformers": 8,
+      "pharmacophore_sigma": 1.0,
+      "reject_unspecified_stereo": true,
+      "scoring_objective": "original-hit-v1",
+      "seed": 42,
+      "strain_penalty": 0.05
+    },
+    "evidence_profile": "computational-route-support-v1",
+    "fingerprint": {
+      "bits": 2048,
+      "chirality": true,
+      "kind": "binary_morgan",
+      "radius": 2
+    },
+    "pose_selection_policy": "joint-feasible-hit-pose-v2",
+    "ranking_policy": "original-hit-v1",
+    "refinement": {
+      "adaptive_max_conformers": null,
+      "borderline_margin": 0.0,
+      "conformer_growth_factor": 2,
+      "max_metric_range": null,
+      "max_score_range": null,
+      "max_total_conformers": 240,
+      "num_conformers": 8,
+      "ranking_statistic": "minimum",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "threshold_policy": "all_seeds",
+      "top_n": 10
+    },
+    "route_search_policy": "original-hit-v1",
+    "similarity_constraints": {
+      "landmarks": [],
+      "polar_recall": 0.75,
+      "version": "selective-similarity-constraints-v2"
+    }
+  },
+  "limitations": [
+    "Thresholds are declared engineering preferences, not fitted or calibrated similarity/activity cutoffs.",
+    "Polar feature coverage and optional user landmarks do not establish biological essentiality.",
+    "Pinned local ReactionT5 agreement and concrete route replay establish conditional computational support only, not experimental feasibility, conditions, yield or selectivity.",
+    "Fresh benchmark execution and scientific performance evaluation remain separate gates."
+  ],
+  "minimum_scores": {
+    "hit_pharmacophore": 0.5,
+    "hit_shape": 0.7,
+    "hit_tanimoto": 0.35
+  },
+  "name": "qualified-selective-engineering-v2",
+  "provenance": {
+    "runtime": {
+      "packages": {
+        "numpy": "1.26.4",
+        "rdkit": "2025.9.6",
+        "scipy": "1.13.1"
+      },
+      "pharmacophore_feature_definition": {
+        "path": "/data2/home/jyryu/chembounce/.venv-research/lib/python3.10/site-packages/rdkit/Data/BaseFeatures.fdef",
+        "sha256": "87ab54bd717af50a78a710d23e7737a2cafc96e5293bf6257ecdda86b6da3f65"
+      },
+      "python": "3.10.12"
+    },
+    "source_sha256": {
+      "chembounce_synthesis/common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+      "chembounce_synthesis/conformers.py": "aba699db1bc04db517c4275862c08ed73e9ae20c753a72ffa042c34bd907add8",
+      "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+      "chembounce_synthesis/selective_scoring.py": "77c1bd37f183fe85a074ef499f0d9dca1947f2cfbcaf3a7963cd4ad1748b3208",
+      "chembounce_synthesis/similarity_constraints.py": "1b06a7c004ee760b43bb64d1231f21f28dbabd68e285d2ed71092e31c93b82cf"
+    }
+  },
+  "schema": "qualified-selective-engineering-profile-v2",
+  "scope": "explicit_engineering_preferences_not_fitted",
+  "status": "declared_engineering_policy"
+}

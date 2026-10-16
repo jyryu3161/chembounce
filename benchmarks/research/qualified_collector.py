@@ -9,6 +9,8 @@ import csv
 from dataclasses import asdict, dataclass, field
 import importlib.metadata
 import math
+
+import numpy as np
 from pathlib import Path
 import platform
 import time
@@ -17,7 +19,7 @@ from types import MappingProxyType, SimpleNamespace
 from rdkit import Chem, DataStructs, rdBase
 
 from benchmarks.research.protocol import digest
-from benchmarks.research.qualified_adapter import read, common_config
+from benchmarks.research.qualified_adapter import read, common_config, benchmark_profile
 from chembounce_synthesis.common import FP, canonical, molecule
 from chembounce_synthesis.catalog import Catalog
 from chembounce_synthesis.forward_support import (
@@ -29,7 +31,13 @@ from chembounce_synthesis.forward_support import (
     validate_bundle,
 )
 from chembounce_synthesis.identity import chemical_identity
-from chembounce_synthesis.profiles import FIXED_CONFORMERS, METRICS, PROFILE_SHA256, load_profile
+from chembounce_synthesis.profiles import (
+    FIXED_CONFORMERS,
+    METRICS,
+    PROFILE_SHA256,
+    SELECTIVE_PROFILE,
+    load_profile,
+)
 from chembounce_synthesis.qualification import _validate_score_info
 from chembounce_synthesis.conformers import ConformerSettings
 from chembounce_synthesis.route_audit import audit_route
@@ -204,6 +212,7 @@ def checked_products(
     decoder_factory=TokenReplay,
     deadline=None,
     bound_catalog=None,
+    benchmark_protocol=None,
 ):
     """Return collector-computed chemistry/robust scores from complete consistent exports."""
     from chembounce_synthesis.reactions import Rules
@@ -240,6 +249,8 @@ def checked_products(
         raise ValueError("Common hit differs from planned query")
     config, rows, policy = manifest["config"], result["results"], result["policy"]
     request = read(directory / "request.json")
+    if request.get("benchmark_protocol") != benchmark_protocol:
+        raise ValueError("Common request benchmark profile differs from frozen runner authority")
     if request["query"] != query:
         raise ValueError("Common request differs from planned public query")
     bridge = directory / "selected-primary-bridge" if request["settings"]["arm"] == "baseline" else None
@@ -253,11 +264,33 @@ def checked_products(
         or [{"smiles": r["smiles"], "route_id": r["route_id"]} for r in rows] != response["candidates"]
     ):
         raise ValueError("Response selected identities differ from final JSON")
+    name = benchmark_profile(request.get("benchmark_protocol"))
+    selective = name == SELECTIVE_PROFILE
+    similarity = None
+    if selective:
+        from chembounce_synthesis import selective_scoring
+        from chembounce_synthesis.qualification import effective_policy
+
+        similarity = selective_scoring.configured_constraints(config, manifest["hit"])
+        expected_policy = effective_policy(config)
+        expected_policy["similarity_constraints"] = {"policy": similarity.policy, "sha256": similarity.sha256}
+        if (
+            policy != expected_policy
+            or manifest.get("recommendation_policy") != expected_policy
+            or manifest.get("recommendation_profile") != expected_policy["calibration"]
+            or any(
+                expected_source.get(Path(path).name) != value
+                for path, value in expected_policy["calibration"]["current_numerical_runtime"][
+                    "source_sha256"
+                ].items()
+            )
+        ):
+            raise ValueError("Selective policy/provenance differs from frozen effective protocol/source")
     if (
         policy["mode"] != "qualified"
         or policy["evidence_profile"] != PROFILE
         or policy["conformers"] != FIXED_CONFORMERS
-        or policy["calibration"]["artifact_sha256"] != PROFILE_SHA256["qualified-development-v1"]
+        or policy["calibration"]["artifact_sha256"] != PROFILE_SHA256[name]
     ):
         raise ValueError("Common final policy is not the frozen qualified protocol")
     qualification = read(out / "qualification.json")
@@ -265,12 +298,18 @@ def checked_products(
         r["route_id"] for r in rows
     ]:
         raise ValueError("Live qualification selection/policy mismatch")
-    if policy["minimum_scores"] != load_profile("qualified-development-v1")["minimum_scores"]:
+    if policy["minimum_scores"] != load_profile(name)["minimum_scores"]:
         raise ValueError("Common minima differ from the frozen calibration artifact")
     if bound_catalog is not None:
         if type(bound_catalog) is not BoundCatalog:
             raise ValueError("Collector requires a runner-owned bound catalog")
         bound_catalog.validate(config["catalog"], expected_source)
+    if selective:
+        summary = read(out / "summary.json")
+        if summary.get("status") != ("success" if rows else "no_candidates") or summary.get(
+            "returned_products"
+        ) != len(rows):
+            raise ValueError("Selective outcome/selected count mismatch")
     if not rows:
         return []
     exports = {
@@ -344,6 +383,27 @@ def checked_products(
                 or trial.get("design_smiles") != row["design"]
             ):
                 raise ValueError("Seed failure or scoring identity mismatch")
+        if selective:
+            if (
+                record.get("design") != row["design"]
+                or record["qualification"].get("similarity_constraints") != policy["similarity_constraints"]
+                or record["qualification"].get("calibration")
+                != {key: policy["calibration"][key] for key in ("name", "status", "artifact_sha256")}
+                or report.get("num_conformers") != 8
+                or report.get("seed_count") != 3
+                or report.get("seed_successes") != 3
+                or report.get("failed_thresholds") != []
+            ):
+                raise ValueError("Selective decision or complete seed report mismatch")
+            for trial in trials:
+                selective_scoring.validate_result(
+                    selective_scoring.restore_result(trial),
+                    row["smiles"],
+                    ConformerSettings(**(FIXED_CONFORMERS | {"seed": trial["seed"]})),
+                    hit=manifest["hit"],
+                    design=row["design"],
+                    similarity=similarity,
+                )
         fp = FP.GetFingerprint(molecule(row["smiles"]))
         metrics = {
             "hit_tanimoto": DataStructs.TanimotoSimilarity(fp, FP.GetFingerprint(molecule(manifest["hit"]))),
@@ -359,6 +419,20 @@ def checked_products(
             row["hit_" + key] != representative["hit"][key] for key in ("shape", "pharmacophore")
         ):
             raise ValueError("Exported score is not the representative seed's pose score")
+        selective_fields = {}
+        if selective:
+            from chembounce_synthesis.similarity_constraints import binding
+
+            selective_fields = selective_scoring.result_fields(representative)
+            if (
+                any(row.get(key) != value for key, value in selective_fields.items())
+                or row["pose_seed"] != sorted(trials, key=lambda t: (t["score"], t["seed"]))[1]["seed"]
+                or row["score"] != representative["score"]
+                or row.get("recommendation_profile") != name
+                or row.get("calibration_status") != policy["calibration"]["status"]
+                or row.get("calibration_artifact_sha256") != PROFILE_SHA256[name]
+            ):
+                raise ValueError("Selective representative identity/policy/witness mismatch")
         for key in (
             "smiles",
             "route_id",
@@ -368,24 +442,38 @@ def checked_products(
         ):
             if table[index][key] != str(row[key]):
                 raise ValueError("TSV selected binding differs from JSON")
-        for name, values in poses.items():
+        if selective:
+            for key in (
+                "pose_seed",
+                "recommendation_profile",
+                "calibration_status",
+                "calibration_artifact_sha256",
+                "scoring_objective",
+                "ranking_policy",
+            ):
+                if table[index].get(key) != str(row[key]):
+                    raise ValueError("TSV selective representative/profile differs from JSON")
+        for key, value in selective_fields.items():
+            if table[index].get(key) != (str(value) if value is not None else ""):
+                raise ValueError("TSV selective evidence differs from JSON")
+        for pose_name, values in poses.items():
             mol = values[index]
-            if name.startswith("poses") and mol.GetProp("smiles") != row["smiles"]:
+            if pose_name.startswith("poses") and mol.GetProp("smiles") != row["smiles"]:
                 raise ValueError("SDF declared product differs from JSON")
             if not mol.GetConformer().Is3D() or not all(
                 math.isfinite(float(v)) for xyz in mol.GetConformer().GetPositions() for v in xyz
             ):
                 raise ValueError("SDF pose has invalid coordinates")
-            if name.startswith("poses") and any(
+            if pose_name.startswith("poses") and any(
                 not math.isclose(float(mol.GetProp(key)), row[key], rel_tol=1e-12, abs_tol=1e-12)
                 for key in ("score", "hit_tanimoto", "hit_shape", "hit_pharmacophore")
             ):
                 raise ValueError("SDF pose scores differ from JSON")
             expected = (
                 row["smiles"]
-                if name.startswith("poses")
+                if pose_name.startswith("poses")
                 else manifest["hit"]
-                if name == "references_hit.sdf"
+                if pose_name == "references_hit.sdf"
                 else row["design"]
             )
             if (
@@ -395,7 +483,61 @@ def checked_products(
                 or int(mol.GetProp("pose_seed")) != row["pose_seed"]
             ):
                 raise ValueError("SDF selected identity/route/pose differs from JSON")
+            if selective:
+                for key, value in selective_fields.items():
+                    if not mol.HasProp(key) or mol.GetProp(key) != (
+                        str(value) if value is not None else "not_applicable"
+                    ):
+                        raise ValueError("SDF selective policy/witness differs from JSON")
+                saved_poses = representative["selective_pose_evidence"]
+                saved = {
+                    "poses_hit.sdf": saved_poses["hit_candidate"],
+                    "poses_design.sdf": saved_poses["design_candidate"],
+                    "references_hit.sdf": representative["similarity_constraints"]["witness"][
+                        "reference_pose"
+                    ],
+                    "references_design.sdf": saved_poses["design_reference"],
+                }[pose_name]
+                from chembounce_synthesis.similarity_constraints import indexed_topology
+
+                # SDF writes four decimals; exact hashes apply to retained JSON only.
+                if (
+                    indexed_topology(mol) != saved["atom_order_sha256"]
+                    or not np.allclose(
+                        mol.GetConformer().GetPositions(), saved["coordinates"], rtol=0, atol=0.000051
+                    )
+                    or any(
+                        mol.GetProp(key) != row[key]
+                        for key in (
+                            "recommendation_profile",
+                            "calibration_status",
+                            "calibration_artifact_sha256",
+                        )
+                    )
+                ):
+                    raise ValueError("SDF retained representative geometry/provenance mismatch")
         identity = chemical_identity(row["smiles"])
+        selective_evidence = {}
+        if selective:
+            polar = [t["similarity_constraints"]["witness"]["polar"]["recall"] for t in trials]
+            selective_evidence = {
+                "selective_evidence": {
+                    "profile": name,
+                    "profile_artifact_sha256": PROFILE_SHA256[name],
+                    "policy_sha256": similarity.sha256,
+                    "pose_seed": row["pose_seed"],
+                    "all_seed_min_polar_reference_recall": min(polar)
+                    if all(v is not None for v in polar)
+                    else None,
+                    "polar_status": "not_applicable" if all(v is None for v in polar) else "assessed",
+                    "seed_witness_sha256": {
+                        str(t["seed"]): binding(t["similarity_constraints"]["witness"]) for t in trials
+                    },
+                    "seed_pose_evidence_sha256": {
+                        str(t["seed"]): binding(t["selective_pose_evidence"]) for t in trials
+                    },
+                }
+            }
         selected.append(
             {
                 "rank": index + 1,
@@ -406,6 +548,7 @@ def checked_products(
                 "bit_morgan_bits": list(fp.GetOnBits()),
                 "metrics": metrics,
                 "margins": margins,
+                **selective_evidence,
             }
         )
     if bound_catalog is not None:

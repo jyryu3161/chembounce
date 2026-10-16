@@ -149,26 +149,46 @@ def baseline_bridge(native, response, request, output):
     return designs, bridge, {"raw_count": len(results), "policy": "selected primary three only; no rescue"}
 
 
+def benchmark_profile(binding=None):
+    """Versioned benchmark identity; absent binding preserves legacy requests."""
+    from chembounce_synthesis.profiles import PROFILE, SELECTIVE_PROFILE, PROFILE_SHA256
+
+    if binding is None:
+        return PROFILE
+    if binding != {
+        "schema": "qualified-benchmark-protocol-v2",
+        "recommendation_profile": SELECTIVE_PROFILE,
+        "profile_artifact_sha256": PROFILE_SHA256[SELECTIVE_PROFILE],
+    }:
+        raise ValueError("Unknown or incomplete benchmark profile/artifact binding")
+    return SELECTIVE_PROFILE
+
+
 def common_config(request, bridge=None):
     from chembounce_synthesis.workflow import load_config
     from chembounce_synthesis.profiles import (
         FIXED_CONFORMERS,
         FIXED_REFINEMENT,
-        PROFILE,
+        SELECTIVE_PROFILE,
         load_profile,
         profile_provenance,
     )
 
     config = load_config(request["assets"]["synthesis_config"])
-    if config.get("recommendation_profile") != PROFILE:
-        raise ValueError("Common assessment requires the named reviewed development profile")
+    name = benchmark_profile(request.get("benchmark_protocol"))
+    if config.get("recommendation_profile") != name:
+        raise ValueError("Common assessment requires the protocol-bound named recommendation profile")
     if (
-        config.get("minimum_scores") != load_profile(PROFILE)["minimum_scores"]
+        config.get("minimum_scores") != load_profile(name)["minimum_scores"]
         or config.get("ranking_policy") != "original-hit-v1"
         or config.get("route_search_policy") != "original-hit-v1"
-        or profile_provenance(config)["status"] != "development_protocol_matched"
+        or profile_provenance(config)["status"]
+        != ("engineering_policy_matched" if name == SELECTIVE_PROFILE else "development_protocol_matched")
     ):
-        raise ValueError("Common numerical kernel/runtime/minima/objective must match frozen calibration")
+        raise ValueError(
+            "Common numerical kernel/runtime/minima/objective must match "
+            + ("frozen engineering profile" if name == SELECTIVE_PROFILE else "frozen calibration")
+        )
     if config["conformers"] != FIXED_CONFORMERS:
         raise ValueError("Common screening must retain fixed seed42/eight-conformer protocol")
     for key, value in FIXED_REFINEMENT.items():
