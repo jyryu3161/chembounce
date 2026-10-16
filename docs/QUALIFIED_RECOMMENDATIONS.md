@@ -14,7 +14,7 @@ biological activity, or experimental synthesizability.
 | 2. Stereo/design eligibility and bounded refill | Explicit stereo/design eligibility with an auditable, bounded replacement supply when designs fail; preserve caps and complete rejection denominators. | Engineering gate passed at `8461d9a492d181165df53f031f5c12f6a3dde167`. No scientific yield claim. |
 | 3. Similarity-aware route/search | Search and route construction retain original-hit similarity while finding changed scaffolds and viable route products; compare yield and compute under fixed budgets. | Engineering gate passed at `6adc2cedd73c14cf5a0ab88fbcd61004f3267ef6`. Controlled toy diagnostics only; scientific yield/compute benchmark remains Stage 6. |
 | 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | Full gate passed at `f6ab40e0d1d536636015d94c75f1b815898dc907`; reviewed development artifact and both CLI/API paths verified. Explicit opt-in, permissive development thresholds—not a strong-similarity guarantee. |
-| 5. Independent synthesis evidence | Establish independent, route-specific evidence and provenance beyond catalog/rule replay; define treatment of unknowns, missing context, atom sources, model disagreement and observation quality. Never present a heuristic as a synthesis probability. | Active strict computational-support path implemented; source/independent review and authorized CPU adapter smoke pending. No experimental or post-selection independence claim. |
+| 5. Independent synthesis evidence | Establish independent, route-specific evidence and provenance beyond catalog/rule replay; define treatment of unknowns, missing context, atom sources, model disagreement and observation quality. Never present a heuristic as a synthesis probability. | Engineering and known-fixture execution gate passed at `4d47b30c925152198d2fb8e68cdad3b502bacc7d`. Conditional computational support; no experimental or post-selection independence claim. |
 | 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Pending. No scientific campaign or performance improvement claimed. |
 
 Each stage requires implementation, focused validation and independent review
@@ -361,7 +361,7 @@ availability, anchors/properties, finite search/refinement budgets and synthesis
 evidence introduce additional vetoes. No biological activity, future-seed
 robustness, experimental synthesis or held-out validation claim follows.
 
-## Stage 5 computational route support (review and adapter smoke pending)
+## Stage 5 computational route support (gate passed)
 
 The named `qualified-development-v1` recommendation flow now requires
 `synthesis_evidence.profile="computational-route-support-v1"`. The API supplies
@@ -451,14 +451,34 @@ replays and predicts under the current policy rather than trusting prior reports
 JSON/TSV and selected pose/reference SDFs identify the effective evidence profile
 and selected route-support binding, with complete evidence in `routes.json`.
 
-The original metadata-only load failure and first two-call adapter exercise are
-preserved. The latter returned zero recommendations under the old decoder and
+The initial source-review failure for undercounted unfinished PAD tokens was
+corrected before execution. The metadata-only load failure and first two-call
+adapter exercise are preserved. The latter returned zero recommendations under the old decoder and
 exposed its incorrect assumption that unused suffixes contain PAD0. That run
 discarded beam ancestry and cannot be retroactively certified. The correction
 changes interpretation of witnessed tensor padding, not SMILES normalization,
 chemical thresholds or model settings. A separately frozen correction regression
-permits only the same two known inputs after a new source/independent review gate.
+then repeated only the same two known inputs with actual returned ancestry.
 
-Stage 5 remains pending until corrected source/independent review and the separately
-authorized bounded CPU adapter regression pass. No new scientific campaign or Stage 6
-benchmark is included in this implementation.
+Stage 5 passed at `4d47b30`: root research **1113 passed, 11 skipped**, focused
+minimum **102 passed, 36 skipped**, Python 3.12 **181 passed, 1 skipped**.
+Independent source tests passed **65** on research and **65** on Python 3.12;
+minimum **41 passed, 24 skipped**. Minimum-runtime skips do not establish support
+for the modern concrete-origin or qualified 3D path. Independent actual-artifact
+review passed **321 checks**. Root gate:
+`qualified-development-20261016/stage5-gate.json`, SHA-256
+`3e980bca062871f177e253c80cf3abe06474d9e7f475b1275f26f3889f5aba8b`;
+independent actual audit SHA-256
+`2653824c74f26afe40a9258f1fc2fd15bf6490f52c1bfac383b48689e429c244`.
+
+The corrected CPU regression used **two new calls**, 75 input tokens and 120
+output tokens in 16.64 seconds; cumulative actual calls across the preserved
+runs were **four**. The known model-card example matched at rank 1. The existing
+saved-proposal amide fixture produced **one qualified recommendation** through
+the actual named-profile workflow, eight conformers at each of seeds 42/43/44,
+with matching JSON/TSV and all four SDF bindings. This benzene-to-pyridine change
+is an atom-aware scaffold hop with unchanged generic topology. It is a known
+fixture using a saved proposal, not live end-to-end SynLlama generation, fresh
+benchmark performance, experimental synthesis or activity validation. The earlier
+zero-recommendation run remains unchanged. Fresh comparisons and ablations remain
+Stage 6, whose execution requires a separate gate.
