@@ -976,3 +976,68 @@ and independently checked exported coordinates accompany the results; increasing
 conformer sampling changes earlier low-budget 3D conclusions. These historical
 artifacts describe their pinned versions and settings, not an evaluation of the
 new `research-v1` preset.
+
+### Offline candidate review
+
+Create a static, human-readable report from a saved synthesis run:
+
+```bash
+python -m chembounce_synthesis.report path/to/synthesis-run
+# Or write a new HTML file elsewhere:
+python -m chembounce_synthesis.report path/to/synthesis-run --output review.html
+```
+
+The default output is a new `review.html` inside the run directory. Existing files
+are never overwritten. The Python API is `chembounce_synthesis.report.write_report(
+run_dir, output=None)`, returning a structured review view. `build_report(run_dir)`
+returns that view without writing; `render_html(view)` renders it without links.
+No chemistry library, model, catalog, route replay, scoring or network access is
+needed. This opt-in command leaves generation, acceptance and existing exports
+unchanged.
+
+Candidate cards show the exact original hit and regenerated product, recorded
+scaffold information, effective floors and profile status, representative pose
+metrics, each final seed, concrete route steps and catalog identifier origins.
+Each seed has its own common-pose witness; the report does not claim that different
+seeds share one pose. Minima are labelled arithmetic derived from the saved final
+seed values, separately from the representative exported pose. Missing original-hit
+scaffold or generic-topology comparisons stay **not recorded**; no chemical
+identities or scores are recomputed. Legacy catalog provenance remains unknown,
+and recorded availability or supplier labels do not verify SKU or current stock.
+
+The report distinguishes **workflow-recorded qualification** from **artifact
+consistency**. It checks supported JSON schemas, exact product/design joins,
+primary route bindings, saved representative/seed values and witness references.
+It does not scientifically validate geometry, chemical identity, reactions or
+forward predictions. SDF and TSV files are linked but not parsed or verified.
+Hashes identify the same bytes used for the report; they do not authenticate a
+self-consistent bundle. An inconsistent or partial bundle displays diagnostics and
+unconfirmed recorded claims. Zero-result reports retain error, rejection, budget
+and deadline distinctions without inferring new chemical causes.
+
+Only the seven named JSON artifacts and the optional `results.tsv` and four pose/
+reference SDF files are read. Each file is limited to 64 MiB and the bundle to
+256 MiB. Unsafe symlinks, changes during rendering and output collisions are
+refused. Local links are emitted only when the output is directly in the run
+directory; an external output shows filenames and hashes instead. Technical
+provenance is collapsible, with no scripts, external fonts or other resources.
+Exit 0 means the recorded bundle passed the report's consistency checks, **not**
+that the workflow succeeded or chemistry was revalidated; exit 3 means a diagnostic
+report was written for incomplete/inconsistent artifacts; exit 2 means the report
+could not safely be written. These report exits are separate from workflow exits.
+
+Saved scalar consistency includes `[0, 1]` similarity domains, configured floors,
+complete conformer settings, and recorded final-stage size/seed correspondence.
+Custom fixed sizes are compared with their policy; adaptive sizes require the
+recorded growth sequence and final-stage evidence. Missing or unsupported settings
+remain diagnostic rather than being filled from current defaults. Step coverage,
+products, rules and reactant slots are compared across the saved route graph,
+verification, audit and support records. These are record comparisons, not chemical
+replay. Final accepted/qualified counts may exceed returned counts under output
+caps, but cannot contradict them; partial running/error counters remain distinct
+from terminal no-candidate counts.
+Qualified reports require positive original-hit Tanimoto, shape and pharmacophore
+floors; optional design floors can be zero, as in the workflow policy. Each displayed
+catalog origin is joined through the saved route leaf's exact building-block ID to
+its catalog record ID. This prevents borrowing another leaf's recorded origins;
+it does not authenticate the identifier or infer supplier provenance from its text.
