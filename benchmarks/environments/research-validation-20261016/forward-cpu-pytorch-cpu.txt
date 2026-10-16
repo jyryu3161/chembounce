@@ -1,0 +1,2 @@
+# Observed installed versions; no wheel hashes or cold rebuild guarantee.
+torch==2.8.0+cpu

@@ -1,0 +1,68 @@
+{
+  "all_direct_sources_explicit": true,
+  "checked_utc": "2026-10-16T03:55:25.832911+00:00",
+  "cold_rebuild_executed": false,
+  "crem_augmented_unique_map_matches_prepared_plan": true,
+  "crem_generated_source_hashes_verified": true,
+  "current_external_installer_version": "uv 0.11.7 (x86_64-unknown-linux-gnu); observed now, not an assertion about every historical installation",
+  "downloads_or_installs_executed": false,
+  "gpu_calls_or_model_inference_executed": false,
+  "local_readme_links_resolve": true,
+  "no_private_absolute_paths_in_bundle": true,
+  "prepared_execution_plan_runtime_maps_match": true,
+  "profile_counts": {
+    "crem": 25,
+    "forward-cpu": 49,
+    "mol2mol": 108,
+    "research": 64
+  },
+  "requirements_plus_direct_sources_exactly_cover_installed_maps": true,
+  "requirements_validation": {
+    "crem": {
+      "direct_source_packages": 1,
+      "installable_requirement_pins": 24,
+      "metadata_before_after_equal": true,
+      "requirement_files": 1
+    },
+    "forward-cpu": {
+      "direct_source_packages": 1,
+      "installable_requirement_pins": 48,
+      "metadata_before_after_equal": true,
+      "requirement_files": 2
+    },
+    "mol2mol": {
+      "direct_source_packages": 1,
+      "installable_requirement_pins": 107,
+      "metadata_before_after_equal": true,
+      "requirement_files": 4
+    },
+    "research": {
+      "direct_source_packages": 1,
+      "installable_requirement_pins": 63,
+      "metadata_before_after_equal": true,
+      "requirement_files": 1
+    }
+  },
+  "requires_dist_checks": {
+    "crem": 22,
+    "forward-cpu": 68,
+    "mol2mol": 171,
+    "research": 90
+  },
+  "requires_python_and_active_dependency_constraints_passed": true,
+  "source_file_pins_verified": {
+    "chembounce_current": 41,
+    "chembounce_frozen": 39,
+    "crem_adapter": 11,
+    "crem_upstream": 0,
+    "mol2mol_adapter": 10,
+    "mol2mol_upstream": 0
+  },
+  "source_state_changes": "None; read-only metadata/source inspection, only new worktree artifacts written",
+  "status": "metadata_and_source_checks_passed",
+  "upstream_file_pins_verified": {
+    "crem_tracked": 80,
+    "mol2mol_additional_original_artifacts": 4,
+    "mol2mol_prepared_python_and_metadata": 455
+  }
+}

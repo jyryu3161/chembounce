@@ -1,0 +1,18 @@
+{
+  "files_sha256": {
+    "README.md": "48a6b20367ce9a7d48cd36e58256fc48e9481a7f7371a5a71a21c2f53e1a1395",
+    "crem-pypi.txt": "087e9a327fff74e7b62d18838751049840de9907356251243df6243267b0ead9",
+    "forward-cpu-pypi.txt": "91a1ecae71f6beb28151a366f5719bc3bd792c40e4a704299890b573d8146adc",
+    "forward-cpu-pytorch-cpu.txt": "38e0dcdc5105754fc849f83397f9cb1d6e2ee6e1dd2f77d9b74f8bbc647ba3c4",
+    "installation-origins.json": "27060cac20c6c9b30309b66561a359f12d0c163f185e6415c41433292c31d64e",
+    "mol2mol-nvidia.txt": "a0193b149a7243f696f5fa0ac848a7e33e4626cdef5ca5e6a29d79557057ae3a",
+    "mol2mol-openeye.txt": "d1de78c793d662bb30f11e95fd220ed0e6dd114f13713e889185afcca398d43d",
+    "mol2mol-pypi.txt": "f510b1df8f166a6dd2a06ad4d2b49ecdccfe699aa37f2e96653be7e055833bb4",
+    "mol2mol-pytorch-cu121.txt": "5d642e06acc33bb9e1ef94335f327d7374608409a01021e22b6a7961155a6033",
+    "profiles.json": "464242908f0bb94b48510f0ca9ef2b6901eeca1edee833e5d272e7c0f6817a16",
+    "research-pypi.txt": "542b3e3d5f1624beaaf40a46a558eda2bedb21d6adb216776a345cc20c60b574",
+    "validation.json": "0a4d8a4e86a455cdee45f5f4f9268a574814c1f8eae591f18c03020aad96016e"
+  },
+  "schema_version": 1,
+  "scope": "Version specification and metadata/source assessment; no cold rebuild or scientific execution"
+}
