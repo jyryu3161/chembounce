@@ -494,6 +494,262 @@ a hash obtained only from an untrusted archive does not authenticate that archiv
 Runtime metadata can change a new `replay-validation.json` hash even when its
 `analysis.json` matches the published bytes.
 
+## Completed supplementary comparator study
+
+This separate **270-attempt study** uses the fixed 41-file scientific source at
+`2328588d0969369e694d9293a1dccc89392a8203`. It is not the original 630-attempt
+study at `d972124d587e647ef48455cf1a038e6be96e5b04`; their results are neither pooled
+nor a causal old-versus-new improvement estimate. Each of three methods used the
+same 12 scaffold, 12 publication-year and 6 held-out-target public query slots,
+with seeds 42/43/44. The three splits have 6/6/3 target clusters; repeated targets,
+inputs, routes and cached exact pairs are not independent replications.
+
+**The current pipeline was not superior in this comparison.** It delivered hops
+less often and had lower common-3D output coverage and lower conditional common
+shape, pharmacophore and joint means than both comparators in each split. All six
+paired joint-score point estimates were negative; both publication-year intervals
+include zero. Selected conditional populations and few target clusters preclude
+sweeping superiority or equivalence conclusions in either direction.
+
+There were **227 success, 37 no-candidate and 6 worker-error outcomes**, with no
+retries or backfill. Pipeline success was 47/90: 19/36 scaffold, 24/36 publication-year
+and 4/18 held-out-target attempts. Its six errors were the strict unspecified-stereo
+reference preflight rejections for `CHEMBL205-query-2` (scaffold) and
+`CHEMBL220-query-2` (held-out-target), each at all three seeds. They remain failures
+in the planned denominator. CReM and Mol2Mol each returned valid outputs in all
+90 attempts, with 270 valid candidate occurrences per method.
+
+A separate [post hoc native-stage diagnostic](../benchmarks/results/research-validation-20261016/supplementary-comparator-study/pipeline-failure-diagnostic.json)
+joins all 90 pipeline slots to their saved requests and 84 available synthesis
+summaries. Of the 37 no-candidate outcomes, 12 had all capped design references
+rejected by stereochemistry preflight, 17 had an eligible design but no verified
+route, and 8 had a verified route but no final candidate. The six query-preflight
+worker errors are separate. Native no-candidate rejection counters record 1,070
+`evidence_rejected`, 2 `constraint_rejected` and 20 `3d_failed` **search events**,
+which can repeat products or routes. They are not unique molecules, causal effects,
+synthesis probabilities or comparable method-level denominators. This diagnostic
+changes none of the 69 metrics, original stage records or planned failures.
+
+### All-method delivery, routes and common-3D coverage
+
+Methods are ordered alphabetically, not by their results. S/N/E are exact success /
+no-candidate / worker-error counts. All nine combinations have zero timeout,
+budget-exceeded and infrastructure-interruption counts. Hop and rule-route
+indicators retain every planned attempt. A hop here requires a ring scaffold,
+a different chemical family and a different normalized Murcko scaffold family;
+it does not require generic ring topology replacement or measured activity.
+Rule-route coverage means at least one supplied catalog/rule-verified route,
+not experimental synthesis. Common-3D slot coverage is the number of returned
+candidates with all three common-scoring seeds successful divided by **cap 3**
+within each attempt; it is not conditional similarity quality.
+
+Values below are recorded target-macro means [descriptive 95% target-cluster
+bootstrap CI], displayed to three decimals. The hierarchy averages seeds within
+queries, queries within targets, then targets equally. There are 10,000 bootstrap
+draws with seed 20261016. Historical JSON `independent_targets` fields count target
+clusters; they do not demonstrate statistical independence. Intervals are
+unadjusted descriptions, not significance tests.
+
+| Split | Method | Attempts | S/N/E | Hop indicator [95% CI] | Rule-route indicator [95% CI] | Common-3D slot coverage [95% CI] |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| Scaffold | `crem_train_partial_exo` | 36 | 36/0/0 | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 0.852 [0.685, 0.991] |
+| Scaffold | `mol2mol_pretrained` | 36 | 36/0/0 | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 0.833 [0.667, 0.972] |
+| Scaffold | `pipeline_current` | 36 | 19/14/3 | 0.528 [0.333, 0.750] | 0.528 [0.333, 0.750] | 0.426 [0.241, 0.676] |
+| Publication-year | `crem_train_partial_exo` | 36 | 36/0/0 | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
+| Publication-year | `mol2mol_pretrained` | 36 | 36/0/0 | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
+| Publication-year | `pipeline_current` | 36 | 24/12/0 | 0.667 [0.333, 0.917] | 0.667 [0.333, 0.917] | 0.519 [0.278, 0.731] |
+| Held-out-target | `crem_train_partial_exo` | 18 | 18/0/0 | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 0.796 [0.500, 1.000] |
+| Held-out-target | `mol2mol_pretrained` | 18 | 18/0/0 | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 0.667 [0.500, 1.000] |
+| Held-out-target | `pipeline_current` | 18 | 4/11/3 | 0.222 [0.000, 0.500] | 0.222 [0.000, 0.500] | 0.204 [0.000, 0.500] |
+
+Of 653 accepted valid candidate occurrences, 113 supplied routes and 540 supplied
+no route. All 113 supplied routes matched direct parent catalog/rule replay:
+58 distinct serialized route/product inputs, 137 step occurrences and 250 catalog
+leaf occurrences within the assessed 4,096-product step cap.
+Those are not 58 independent syntheses or exhaustive validation of every catalog
+molecule or registered rule. CReM graph edits are not synthetic routes; absent
+routes in either comparator are unassessed evidence, not chemical failure.
+Declared pipeline forward evidence uses its own selection-gate predictor.
+**No fresh uniform forward re-inference was performed for these 270 attempts.**
+The separate original-630 common-forward audit does not supply that missing check.
+Neither route replay nor forward agreement establishes synthesis probability,
+yield, reagent/condition completeness or experimental success.
+
+### Conditional similarity and exact paired comparisons
+
+The common scorer evaluated 252 unique exact query/candidate pairs, reused across
+653 candidate occurrences. All three seeds succeeded for 590 occurrences; 63
+failed or unassessed occurrences retain their reasons and missing scores. A
+successful pair contributes its recorded median over seeds. The attempt then
+averages eligible candidate occurrences before the same query/target hierarchy.
+Seed spreads describe algorithmic stability, not calibrated uncertainty.
+
+Binary Tanimoto uses Morgan radius 2, 2,048 bits and chirality; sparse-count
+Tanimoto uses radius 2 without chirality. These are distinct representations,
+not interchangeable thresholds. The common ligand-only joint score also retains
+the pinned energy/strain term; it is neither pure shape similarity nor a calibrated
+probability. No universal activity cutoff is inferred. Structural active-scaffold
+recovery uses scaffold intersection with eligible references, without a Tanimoto
+0.5 gate; it differs from the earlier prefilter-recall endpoint.
+
+A/Q/T below reports eligible attempts / queries / target clusters separately for
+2D and 3D. Means are rounded only for display; the complete-precision CSV includes
+all recorded CIs and eligibility. Missing values are `NA`, never similarity zero.
+
+| Split | Method | Bit T | Count T | Eligible 2D A/Q/T | Shape | Pharmacophore | Joint [95% CI] | Eligible 3D A/Q/T |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Scaffold | `crem_train_partial_exo` | 0.705 | 0.740 | 36/12/6 | 0.809 | 0.554 | 0.624 [0.538, 0.703] | 33/11/6 |
+| Scaffold | `mol2mol_pretrained` | 0.560 | 0.569 | 36/12/6 | 0.794 | 0.579 | 0.640 [0.521, 0.751] | 33/11/6 |
+| Scaffold | `pipeline_current` | 0.347 | 0.392 | 19/7/6 | 0.646 | 0.330 | 0.427 [0.322, 0.520] | 19/7/6 |
+| Publication-year | `crem_train_partial_exo` | 0.828 | 0.839 | 36/12/6 | 0.761 | 0.530 | 0.585 [0.499, 0.676] | 36/12/6 |
+| Publication-year | `mol2mol_pretrained` | 0.559 | 0.580 | 36/12/6 | 0.735 | 0.549 | 0.585 [0.495, 0.676] | 36/12/6 |
+| Publication-year | `pipeline_current` | 0.463 | 0.472 | 24/8/5 | 0.671 | 0.372 | 0.484 [0.394, 0.613] | 24/8/5 |
+| Held-out-target | `crem_train_partial_exo` | 0.725 | 0.745 | 18/6/3 | 0.761 | 0.496 | 0.568 [0.394, 0.750] | 15/5/3 |
+| Held-out-target | `mol2mol_pretrained` | 0.511 | 0.530 | 18/6/3 | 0.717 | 0.467 | 0.560 [0.395, 0.745] | 12/4/3 |
+| Held-out-target | `pipeline_current` | 0.469 | 0.466 | 4/2/2 | 0.663 | 0.317 | 0.424 [0.391, 0.456] | 4/2/2 |
+
+Method conditional means use different selected populations. The paired summaries
+instead subtract comparator from `pipeline_current` at **identical query/seed
+slots with both values observed**, before seed/query/target aggregation. They are
+not subtraction of the displayed method means. All-slot coverage contrasts retain
+failures; conditional joint contrasts exclude unavailable scores in either arm.
+This differs from the original-630 generation target-mean contrast and does not
+remove selection bias.
+
+| Split | Comparator | Paired hop difference [95% CI] | Paired common-3D coverage difference [95% CI] | Paired joint difference [95% CI] | Joint eligible A/Q/T |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Scaffold | `crem_train_partial_exo` | -0.472 [-0.667, -0.250] | -0.426 [-0.630, -0.204] | -0.175 [-0.246, -0.117] | 19/7/6 |
+| Scaffold | `mol2mol_pretrained` | -0.472 [-0.667, -0.250] | -0.407 [-0.611, -0.204] | -0.217 [-0.420, -0.076] | 19/7/6 |
+| Publication-year | `crem_train_partial_exo` | -0.333 [-0.667, -0.083] | -0.481 [-0.722, -0.269] | -0.048 [-0.138, 0.046] | 24/8/5 |
+| Publication-year | `mol2mol_pretrained` | -0.333 [-0.667, -0.083] | -0.481 [-0.722, -0.269] | -0.064 [-0.130, 0.003] | 24/8/5 |
+| Held-out-target | `crem_train_partial_exo` | -0.778 [-1.000, -0.500] | -0.593 [-1.000, 0.000] | -0.068 [-0.134, -0.003] | 4/2/2 |
+| Held-out-target | `mol2mol_pretrained` | -0.778 [-1.000, -0.500] | -0.463 [-0.889, 0.000] | -0.034 [-0.064, -0.004] | 4/2/2 |
+
+### Scaffold retention is a separate structural diagnostic
+
+A Murcko change can retain the query core. The secondary **core-retaining scaffold
+expansion** annotation requires the query normalized Murcko scaffold to be an
+atom/bond-aware subgraph of a larger candidate scaffold, in addition to the
+existing hop definition. **Query scaffold not contained** requires that directed
+query-within-candidate test to fail for a hop. The match is asymmetric and uses
+`useChirality=False`; generic ring-skeleton containment is separately recorded.
+Neither annotation establishes pharmacophore retention, target activity or a
+universally accepted scaffold-hop class.
+
+These attempt indicators can **both be true for the same attempt**, because
+different returned candidates can meet the two definitions. They are not mutually
+exclusive attempt categories and must not be summed as a partition. The annotation
+was specified after a fixed-example diagnostic, before supplementary comparative
+output, without changing primary eligibility, ranking or budgets.
+All 653 retained occurrences were assessable for these annotations; missing
+annotations would remain null and separately counted.
+
+| Split | Method | Attempt with core-retaining expansion [95% CI] | Attempt with query scaffold not contained [95% CI] |
+| --- | --- | ---: | ---: |
+| Scaffold | `crem_train_partial_exo` | 0.333 [0.167, 0.500] | 0.944 [0.833, 1.000] |
+| Scaffold | `mol2mol_pretrained` | 0.167 [0.000, 0.333] | 0.917 [0.750, 1.000] |
+| Scaffold | `pipeline_current` | 0.000 [0.000, 0.000] | 0.528 [0.333, 0.750] |
+| Publication-year | `crem_train_partial_exo` | 0.083 [0.000, 0.250] | 1.000 [1.000, 1.000] |
+| Publication-year | `mol2mol_pretrained` | 0.417 [0.083, 0.750] | 1.000 [1.000, 1.000] |
+| Publication-year | `pipeline_current` | 0.083 [0.000, 0.250] | 0.667 [0.333, 0.917] |
+| Held-out-target | `crem_train_partial_exo` | 0.500 [0.000, 1.000] | 0.667 [0.500, 1.000] |
+| Held-out-target | `mol2mol_pretrained` | 0.333 [0.000, 0.500] | 0.667 [0.500, 1.000] |
+| Held-out-target | `pipeline_current` | 0.000 [0.000, 0.000] | 0.222 [0.000, 0.500] |
+
+### Scope, budgets and interpretation
+
+The [CReM baseline](../benchmarks/external/README-crem.md) uses its declared train-only
+fragment library and partial/exocyclic mutation settings. The
+[official REINVENT4 Mol2Mol baseline](../benchmarks/external/mol2mol/README.md) is plain
+pretrained sampling with declared selection, not full reinforcement-learning
+REINVENT or RuSH reproduction. Complete Mol2Mol and other model pretraining
+inventories remain unknown. A public split or train-only CReM construction does
+not prove a clean holdout across all models and sources.
+
+The native work caps differ: up to 12 initial synthesis product/design 3D screens
+for the pipeline, with refinement separately bounded and reported, versus 256
+CReM API-yielded products or 256 Mol2Mol sampled sequences. The pinned preparation
+plan retains its historical "proposal evaluations" label; the actual adapter
+counts initial 3D screens, not generated proposals. Each attempt has the declared 360-second
+cold-start wall limit, 24,000 MB memory limit and output cap 3. These are resource
+constraints, not equal amounts of scientific search or universal compute equality.
+Shared-host process-tree RSS/CPU measurements and nonuniform GPU-memory observation
+are not a controlled hardware performance comparison. Full native/raw accounting
+is retained; unavailable pipeline raw counts are not invented.
+
+This is a post hoc computational-method study. The recorded analysis/annotation
+plans were fixed before their comparative calculation; that is not preregistration.
+There are only 6/6/3 target clusters, with shared inputs and cross-split dependence.
+Infrastructure identification bounds are **not CIs**, and infrastructure-only
+complete-case sensitivity can be selection-biased. No infrastructure outcome is
+missing in this supplementary grid, so these stored sensitivities coincide with
+their observed counterparts. Other failures remain in full-attempt denominators;
+conditional scores and unbounded resource metrics are never zero-imputed.
+
+The negative delivery and similarity findings remain part of the conclusion.
+Structural recovery and 3D proxies do not establish new-compound activity,
+experimental synthesizability, 3D superiority or journal readiness. Experimental
+collaboration remains undecided; a computational-method claim must stand on the
+stated evidence and limits. The original frozen39, fixed current41 and separate
+original common-forward records remain distinct.
+
+### Supplementary artifacts and reproduction
+
+The [291-file portable ZIP](../benchmarks/results/research-validation-20261016/supplementary-comparator-study/statistical-bundle.zip),
+[checksums](../benchmarks/results/research-validation-20261016/supplementary-comparator-study/SHA256SUMS), [publication validation](../benchmarks/results/research-validation-20261016/supplementary-comparator-study/validation.json)
+and [copied replay validation](../benchmarks/results/research-validation-20261016/supplementary-comparator-study/replay-validation.json) bind the completed
+study. The [final comparison](../benchmarks/results/research-validation-20261016/supplementary-comparator-study/analysis/comparison.json) and all eight
+companion analysis files are byte-preserving copies. [Method metrics](../benchmarks/results/research-validation-20261016/supplementary-comparator-study/method_metrics.csv),
+[paired metrics](../benchmarks/results/research-validation-20261016/supplementary-comparator-study/paired_metrics.csv), [availability](../benchmarks/results/research-validation-20261016/supplementary-comparator-study/availability.csv),
+[separate infrastructure bounds](../benchmarks/results/research-validation-20261016/supplementary-comparator-study/infrastructure_bounds.csv) and
+[attempt/status counts](../benchmarks/results/research-validation-20261016/supplementary-comparator-study/attempt_status.csv) directly project stored values.
+The first three CSVs include all 69 target-macro metrics and both primary and
+secondary complete-case populations. No new estimates were calculated for this
+publication. Numeric precision is preserved and nulls are blank; complete
+per-query/per-target and per-query seed availability remain in the JSON.
+
+Parent assessment checked all **92,398 statistical numeric cells**, full normalized
+joins for 653 candidates, 393 independent graph checks including controls, and
+1,306 directly calculated bit/count fingerprint values with maximum error zero.
+The direct route/fingerprint checks and graph checks retain their shared RDKit
+chemistry kernel and pinned identity-policy limitations. Common-score cache
+integrity and saved-seed arithmetic were checked separately; these checks do not
+turn cached values into fresh chemical or experimental validation.
+
+The stored comparison replay was then byte-identical in Python 3.10.12 / NumPy
+1.26.4, Python 3.10.12 / NumPy 1.24.4 and Python 3.12.13 / NumPy 2.5.4. The bundle
+retains normalized occurrences, common-score caches and failures, original plans,
+extracted statistics and parent evidence. Historical absolute paths are inert
+provenance; model weights, live runtimes and full catalog assets are not bundled.
+Existing source attribution is preserved; no new license is assigned.
+
+From the repository root, use fresh destinations:
+
+```bash
+SUPPLEMENT_ARTIFACTS=benchmarks/results/research-validation-20261016/supplementary-comparator-study
+(cd "$SUPPLEMENT_ARTIFACTS" && sha256sum -c SHA256SUMS)
+mkdir /tmp/supplementary270-reproduction
+python -m zipfile -e "$SUPPLEMENT_ARTIFACTS/statistical-bundle.zip" /tmp/supplementary270-reproduction
+
+python -B benchmarks/diagnostics/supplement_replay/replay.py verify \
+  --bundle /tmp/supplementary270-reproduction/supplementary270-bundle \
+  --expected-manifest-sha256 9ed59273170348c0b910957e6c43989313a64143acdb6e8b0a24fe66a0332b69 \
+  --output /tmp/supplementary270-reproduction/verification.json
+
+python -B benchmarks/diagnostics/supplement_replay/replay.py replay \
+  --bundle /tmp/supplementary270-reproduction/supplementary270-bundle \
+  --expected-manifest-sha256 9ed59273170348c0b910957e6c43989313a64143acdb6e8b0a24fe66a0332b69 \
+  --output /tmp/supplementary270-reproduction/recomputed
+
+cmp "$SUPPLEMENT_ARTIFACTS/analysis/comparison.json" /tmp/supplementary270-reproduction/recomputed/comparison.json
+```
+
+The [replay contract](../benchmarks/diagnostics/supplement_replay/README.md) requires
+Python and NumPy only and rejects incomplete grids, stale hashes and unsafe inputs.
+It performs stored statistical replay, not new model/chemistry/3D calculation.
+Keep the externally reviewed manifest SHA as the trust anchor. Runtime metadata
+can change a new validation-file hash even when comparison bytes match.
+
 ## Publication interpretation
 
 A separately selected [same-assay follow-up](../benchmarks/results/assay-matched-controls-20261016/README.md) now contains 197 pairs, 12 queries and 12 assays across those same six targets. Selection/scoring criteria were fixed before its chemical scores were calculated, after the initial heterogeneity findings. Three pairs failed the stereo policy; all failures remain in the denominators and bounds. Paired complete-case target-macro ROC AUC was 0.7392 for bit Tanimoto, 0.7370 for shape and 0.7131 for joint 3D. The paired joint-minus-bit difference was −0.0261 (target-bootstrap 95% interval −0.1017 to +0.0402), so this evaluation does not establish additional 3D discrimination. All hierarchical ROC/AP estimates and missing-score bounds matched independent scikit-learn calculations within `1e-12`. Reconstruction from the published raw ZIP reproduced all chemical records and selected pairs. Same assay ID narrows context without resolving every metadata ambiguity or establishing new-molecule activity; changed cohorts prevent attributing differences from earlier panels to assay matching alone.

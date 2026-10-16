@@ -1,0 +1,21 @@
+{
+  "assessment_code_sha256": "b9e24075c3940121c0dea6f0a6323a826824f372ca00129fe576194494f4a295",
+  "common_scores_manifest_sha256": "3156c1c54997ac4768a00661be90ce4dc0410310f27de91201836dd6e6bf1b41",
+  "complete_requires_parent_review": true,
+  "expected_attempts": 270,
+  "files_sha256": {
+    "analysis-plan.json": "d5f3d826f7b155fac980bfe82ec4907bebd42dd7cd295c8f9c4f2b61505caae2",
+    "attempts.json": "8b2a816d4174bb50b8c22f004e4f2eb83b8e5567fbdd1f7486bb8c1a1e6ab76e",
+    "comparison.json": "7c692e5bdb7c9b4e51cc323c7880bc214324287d52cc7e70a8a99ee413e24a7f",
+    "raw-accounting-summary.json": "865e370d89f52fa3bc782f3a05a1e8d8249e9cbb1027278cabbfb3b415a5095e",
+    "recomputed-attempts.json": "1817dea5e5be3910c303fd312ca0580bba5c3057809684a61f17b95fc3f3ac7b",
+    "scaffold-retention-occurrences.json": "09923b554decb4a6c5c9b1f1eee7a9084b5f110f274453bc638d7cf67850c399",
+    "scaffold-retention-summary.json": "4065171895c8d6d23591ecb8f9aaa30f18e0d417f66426e394b3c945ffed3974",
+    "unique-identities.json": "de0d45c2f4c1de2fa5d186d836875100abd417c58179279daa46914dc69bb839"
+  },
+  "generation_manifest_sha256": "7d01e374c6e4e2a983f0c322b3036afc9258e3e0c7d7da334bf0403ab8f4d2f2",
+  "interpretation": "Engineering delivery and retrospective structural proxies; no activity/synthesis probability claim. No-route is unassessed coverage. Declared forward evidence is not fresh independent inference and shares pipeline selection bias",
+  "schema_version": 1,
+  "stage": "final_comparison",
+  "study_manifest_sha256": "db76ab6355526ce833c06b443ccf9bd9b1222cbb26e253441f2f23ee2d4d9004"
+}

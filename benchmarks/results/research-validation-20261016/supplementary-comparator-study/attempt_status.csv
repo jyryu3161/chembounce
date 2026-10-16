@@ -1,0 +1,10 @@
+split,method,attempts,valid_candidate_occurrences,success,no_candidates,worker_error,timeout,budget_exceeded,infrastructure_interruption
+scaffold,crem_train_partial_exo,36,108,36,0,0,0,0,0
+scaffold,mol2mol_pretrained,36,108,36,0,0,0,0,0
+scaffold,pipeline_current,36,46,19,14,3,0,0,0
+time,crem_train_partial_exo,36,108,36,0,0,0,0,0
+time,mol2mol_pretrained,36,108,36,0,0,0,0,0
+time,pipeline_current,36,56,24,12,0,0,0,0
+target,crem_train_partial_exo,18,54,18,0,0,0,0,0
+target,mol2mol_pretrained,18,54,18,0,0,0,0,0
+target,pipeline_current,18,11,4,11,3,0,0,0

@@ -1,0 +1,53 @@
+{
+  "scaffold": {
+    "crem_train_partial_exo": {
+      "exact_query_candidate_pairs": 40,
+      "families": 39,
+      "serialized_routes": 0
+    },
+    "mol2mol_pretrained": {
+      "exact_query_candidate_pairs": 36,
+      "families": 36,
+      "serialized_routes": 0
+    },
+    "pipeline_current": {
+      "exact_query_candidate_pairs": 23,
+      "families": 23,
+      "serialized_routes": 23
+    }
+  },
+  "target": {
+    "crem_train_partial_exo": {
+      "exact_query_candidate_pairs": 22,
+      "families": 22,
+      "serialized_routes": 0
+    },
+    "mol2mol_pretrained": {
+      "exact_query_candidate_pairs": 19,
+      "families": 19,
+      "serialized_routes": 0
+    },
+    "pipeline_current": {
+      "exact_query_candidate_pairs": 7,
+      "families": 7,
+      "serialized_routes": 7
+    }
+  },
+  "time": {
+    "crem_train_partial_exo": {
+      "exact_query_candidate_pairs": 43,
+      "families": 43,
+      "serialized_routes": 0
+    },
+    "mol2mol_pretrained": {
+      "exact_query_candidate_pairs": 36,
+      "families": 36,
+      "serialized_routes": 0
+    },
+    "pipeline_current": {
+      "exact_query_candidate_pairs": 28,
+      "families": 28,
+      "serialized_routes": 28
+    }
+  }
+}
