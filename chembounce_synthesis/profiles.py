@@ -58,6 +58,24 @@ def _resource(name):
     return files("chembounce_synthesis").joinpath("data", name + ".json")
 
 
+def request_recommendations(config, cli_profile=None):
+    """Select a fixed policy without concealing either explicit declaration."""
+    if not isinstance(config, dict):
+        raise ValueError("Recommendation configuration must be an object")
+    for origin, value, present in (
+        ("configuration", config.get("recommendation_profile"), "recommendation_profile" in config),
+        ("CLI", cli_profile, cli_profile is not None),
+    ):
+        if present and value != SELECTIVE_PROFILE:
+            raise ValueError(
+                f"--recommend/recommend() conflicts with {origin} recommendation_profile={value!r}; "
+                f"requires {SELECTIVE_PROFILE}"
+            )
+    result = copy.deepcopy(config)
+    result["recommendation_profile"] = SELECTIVE_PROFILE
+    return result
+
+
 def load_profile(name):
     if not isinstance(name, str) or name not in PROFILE_SHA256:
         raise ValueError(f"Unknown recommendation_profile: {name!r}")
@@ -335,7 +353,12 @@ def profile_label(config):
     provenance = profile_provenance(config)
     if provenance["name"] == SELECTIVE_PROFILE:
         return (
-            f" [profile={provenance['name']}; {provenance['status']}; explicit engineering preferences, not fitted/calibrated; computational-route-support-v1 conditional support, no experimental synthesis or activity claim]"
+            f" [profile={provenance['name']}; {provenance['status']}; "
+            f"hit_tanimoto>={config['minimum_scores']['hit_tanimoto']}; "
+            f"hit_shape>={config['minimum_scores']['hit_shape']}; "
+            f"hit_pharmacophore>={config['minimum_scores']['hit_pharmacophore']}; "
+            f"polar_recall>={config['similarity_constraints']['polar_recall']}; "
+            "explicit engineering preferences, not fitted/calibrated; computational-route-support-v1 conditional support, no experimental synthesis or activity claim]"
             + selective
         )
     return (

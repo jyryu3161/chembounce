@@ -1043,6 +1043,25 @@ def chembounce(
         raise
 
 
+def _synthesis_property_intersection(config, thresholds, *, strict=False):
+    """Reapply both property bounds to regenerated products without mutation."""
+    import copy
+
+    config = copy.deepcopy(config)
+    bounds = dict(config.get("property_thresholds", {}))
+    for key, (lo, hi) in thresholds.items():
+        extra_lo, extra_hi = bounds.get(key, (None, None))
+        if strict and (
+            any(v == math.inf for v in (lo, extra_lo)) or any(v == -math.inf for v in (hi, extra_hi))
+        ):
+            raise ValueError(f"{key} property bounds define an empty finite interval")
+        lows = [v for v in (lo, extra_lo) if v is not None and math.isfinite(v)]
+        highs = [v for v in (hi, extra_hi) if v is not None and math.isfinite(v)]
+        bounds[key] = [max(lows) if lows else None, min(highs) if highs else None]
+    config["property_thresholds"] = bounds
+    return config
+
+
 def main(argv=None):
     parser = cli.argument_parser()
     options = parser.parse_args(argv)
@@ -1050,6 +1069,14 @@ def main(argv=None):
     from chembounce_synthesis.options import has_synthesis_overrides
 
     synthesis_config = None
+    if options.recommend:
+        from chembounce_synthesis.profiles import request_recommendations
+
+        try:
+            request_recommendations({}, options.recommendation_profile)
+        except ValueError as exc:
+            LOGGER.error("Recommendation configuration: %s", exc)
+            return 2
     if options.synllama is False:
         try:
             # Historical --no-synllama permits an unavailable config. Read only
@@ -1067,7 +1094,8 @@ def main(argv=None):
                 declaration.get("mode") if isinstance(declaration, dict) else None
             )
             if (
-                requested_mode == "qualified"
+                options.recommend
+                or requested_mode == "qualified"
                 or options.recommendation_profile
                 or (isinstance(disabled_config, dict) and disabled_config.get("recommendation_profile"))
             ):
@@ -1124,6 +1152,20 @@ def main(argv=None):
                 lo if lo is not None else previous[0],
                 hi if hi is not None else previous[1],
             )
+    if options.recommend:
+        from chembounce_synthesis.workflow import preflight_recommendation
+
+        try:
+            _validate_parameters(
+                options.tanimoto_threshold, options.search_threshold, options.seed, thresholds
+            )
+            synthesis_config = preflight_recommendation(
+                options.input_smiles,
+                _synthesis_property_intersection(synthesis_config, thresholds, strict=True),
+            )
+        except (ValueError, OSError, KeyError, TypeError, RuntimeError) as exc:
+            LOGGER.error("Recommendation configuration: %s", exc)
+            return 2
     design_supply = None
     overall_limit = options.overall_max_n
     if synthesis_config is not None:
@@ -1187,15 +1229,8 @@ def main(argv=None):
 
         try:
             config = synthesis_config
-            # Projection can change molecular properties. Reapply the intersection
-            # of hopping and synthesis bounds to the regenerated final products.
-            bounds = dict(config.get("property_thresholds", {}))
-            for key, (lo, hi) in thresholds.items():
-                extra_lo, extra_hi = bounds.get(key, (None, None))
-                lows = [v for v in (lo, extra_lo) if v is not None and math.isfinite(v)]
-                highs = [v for v in (hi, extra_hi) if v is not None and math.isfinite(v)]
-                bounds[key] = [max(lows) if lows else None, min(highs) if highs else None]
-            config["property_thresholds"] = bounds
+            if not options.recommend:
+                config = _synthesis_property_intersection(config, thresholds)
             verified = run(
                 options.input_smiles,
                 results["Final structure"].tolist(),
