@@ -569,3 +569,46 @@ zero. All retained costs include failed attempts. Collector CPU/RSS are outside
 the subprocess sampler and are disclosed as unmeasured separately from outer
 wall time. Source review, actual development pilot, fresh input selection,
 frozen final grids, execution and scientific interpretation remain pending.
+
+Fresh-panel preparation is implemented separately in
+`benchmarks.research.qualified_fresh_panel`; actual acquisition and selection
+remain gated. Its `acquire --protocol ... --output ...` command is the only
+network path. `select --protocol ... --snapshot ... --output ...` verifies and
+replays retained bytes offline. A `qualified-fresh-panel-protocol-v1` binds the
+literal selection policy, source hashes, Python/RDKit versions, exclusion
+manifest and official target-mapping source hashes, plus explicit request,
+response-byte, total-byte, timeout and wall limits. There are no automatic
+retries or changed-release fallbacks.
+
+The policy retains the complete ordered human single-protein target catalog
+(cap 25000), ranks eligible targets by the frozen SHA-256 rule, examines at
+most sixty, and retains only the first thousand ordered activities per target.
+Every referenced assay ID is joined through lexicographic batches of fifty.
+Both release checks must report `ChEMBL_37` and `UP`. Exact raw bytes, URLs,
+parameters, response status, pagination and failures remain in the acquisition
+ledger. The shared pure selector controls the preregistered stop after six
+qualifying targets; offline replay must reproduce that decision ledger exactly.
+
+Activity labeling and direct-human-assay assignment reuse the existing strict
+helpers. Query structures require specified stereo, a connected sanitized
+structure and nonempty normalized atom/bond scaffold. Family label/endpoint
+conflicts reject the family; the earliest surviving publication-year/activity-ID
+record supplies its exact state. Deterministic query ranks select two globally
+distinct scaffolds per target, twelve across the panel. A target lacking two
+available scaffolds is skipped without reserving its tentative scaffold. An
+infeasible panel exports no executable public queries, while its partial
+selection and complete rejection ledger remain private. No model vocabulary,
+3D score, route feasibility or method outcome enters selection.
+
+Known excluded IDs and every declared target alias must first resolve against
+hash-bound official target records. Matching accession/component identities
+exclude renamed target IDs; missing or conflicting mapping fails clearly.
+These endpoint records establish accession/component mapping, not sequence-byte
+or protein-family independence. Exact, normalized-family and atom/bond-scaffold
+exclusions use the named preparation inventory and reviewed identity kernel;
+known unresolved normalization strings and the remaining inventory gaps are
+retained explicitly. Generic topology overlap is a reported stratum, not a
+rejection. The claim remains absence from the named resolved inventory and
+explicitly target-labeled studies, never exhaustive unseen inspection or model
+training independence. Public query output contains only IDs, target IDs and
+exact SMILES, separate from private activity/assay/selection evidence.
