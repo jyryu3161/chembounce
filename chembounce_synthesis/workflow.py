@@ -14,7 +14,7 @@ from dataclasses import asdict, replace
 from pathlib import Path
 
 import numpy as np
-from rdkit import Chem, DataStructs
+from rdkit import Chem, DataStructs, rdBase
 from rdkit.Chem.Scaffolds import MurckoScaffold
 
 from .catalog import Catalog
@@ -30,7 +30,8 @@ from .conformers import (
 from .continuation import load_carried_routes
 from .design_selection import select_designs, selection_policy, sized_count
 from .evidence import evaluator_from_config, validate_evidence_config
-from .identity import classify_change, family_key, scaffold_family_key
+from .identity import chemical_identity, classify_change, scaffold_family_key
+from . import identity as identity_module
 from .pocket import constraints_from_config, validate_pocket_config
 from .polar_capacity import PolarCapacity
 from .protocols import apply_synthesis_protocol, protocol_provenance
@@ -100,7 +101,13 @@ def scaffold(smiles, *, isomeric=True):
 
 
 def check_constraints(product, hit, design, mode="hop", core_smiles=None, preserve_design_scaffold=False):
+    _check_constraints(product, hit, design, mode, core_smiles, preserve_design_scaffold)
+
+
+def _check_constraints(product, hit, design, mode, core_smiles, preserve_design_scaffold):
+    """Same mandatory checks; privately retain the actual hop classification."""
     mol = molecule(product)
+    change = None
     if canonical(product) == canonical(hit) and mode == "hop":
         raise ValueError("Reconstruction returned the original hit")
     if mode == "hop":
@@ -122,6 +129,7 @@ def check_constraints(product, hit, design, mode="hop", core_smiles=None, preser
         raise ValueError("Reconstruction did not preserve the selected design scaffold")
     if core_smiles and not mol.HasSubstructMatch(molecule(core_smiles), useChirality=True):
         raise ValueError("Reconstructed product lost the required core/anchor substructure")
+    return change
 
 
 def _config(config):
@@ -394,6 +402,194 @@ def _source_snapshot():
 
 # Snapshot at import, as with the main workflow, to detect edits in a running process.
 _SOURCE_HASHES = _source_snapshot()
+_IDENTITY_COMPARISON_POLICY = {
+    "schema_version": 1,
+    "policy_version": identity_module.IDENTITY_POLICY,
+    "rdkit_version": rdBase.rdkitVersion,
+    "tautomer_limit": identity_module.TAUTOMER_LIMIT,
+    "transform_limit": identity_module.TRANSFORM_LIMIT,
+    "code_sha256": {name: _SOURCE_HASHES[name] for name in ("identity.py", "common.py")},
+}
+
+
+def _identity_signature():
+    return (
+        identity_module.IDENTITY_POLICY,
+        rdBase.rdkitVersion,
+        identity_module.TAUTOMER_LIMIT,
+        identity_module.TRANSFORM_LIMIT,
+    )
+
+
+_IDENTITY_SIGNATURE = _identity_signature()
+
+
+class _SelectedIdentityEvidence:
+    """Run-owned retained values; selected-row export never calls chemistry."""
+
+    def __init__(self, hit, deadline):
+        self.hit, self.deadline = hit, deadline
+        self.descriptor = copy.deepcopy(_IDENTITY_COMPARISON_POLICY)
+        self.hit_identity = None
+        self.hit_signature = None
+        self.hit_attempted = False
+        self.hit_problem = {
+            "reason_code": "original_hit_not_retained",
+            "reason": "Original-hit identity was not retained by an existing hop constraint check",
+        }
+        self.products, self.conflicts = {}, set()
+        self.lookup_count, self.capture_seconds, self.cache_miss_delta = 0, 0.0, 0
+        self.completed_after_deadline = False
+        self.serialization_seconds = 0.0
+        self.recorded_count, self.unavailable_counts = 0, {}
+
+    def capture_hit(self):
+        """Once, adjacent to successful admission-time hop constraints only."""
+        if self.hit_attempted:
+            return
+        self.hit_attempted = True
+        if self.deadline is not None and time.monotonic() >= self.deadline:
+            self.hit_problem = {
+                "reason_code": "deadline_before_hit_capture",
+                "reason": "Existing deadline expired before optional identity retention",
+            }
+            return
+        before = identity_module.identity_cache_info()["identities_including_failures"]["misses"]
+        started = time.monotonic()
+        self.lookup_count += 1
+        signature = _identity_signature()
+        try:
+            self.hit_identity = chemical_identity(self.hit)
+            self.hit_signature = signature if signature == _identity_signature() else None
+        except ValueError as exc:
+            self.hit_problem = {
+                "reason_code": "hit_capture_failed",
+                "error_type": type(exc).__name__,
+                "reason": str(exc),
+            }
+        finally:
+            finished = time.monotonic()
+            self.capture_seconds += finished - started
+            self.completed_after_deadline = self.deadline is not None and finished >= self.deadline
+            self.cache_miss_delta += (
+                identity_module.identity_cache_info()["identities_including_failures"]["misses"] - before
+            )
+
+    def retain_product(self, product, identity, admission, signature, *, conflict=False):
+        value = (
+            admission["original_hit_smiles"],
+            admission["final_product_smiles"],
+            admission["change_class"],
+            identity,
+            signature if signature == _identity_signature() else None,
+        )
+        if conflict or (product in self.products and self.products[product] != value):
+            self.conflicts.add(product)
+        self.products.setdefault(product, value)
+
+    def comparison(self, row):
+        """Only compare retained strings/flags and copy frozen dataclass values."""
+        product = row["smiles"]
+        base = {
+            "schema_version": 1,
+            "reference_role": "original_hit",
+            "original_hit_smiles": self.hit,
+            "final_product_smiles": product,
+        }
+
+        def unavailable(code, reason, **extra):
+            return {**base, "status": "unavailable", "reason_code": code, "reason": reason, **extra}
+
+        if product in self.conflicts:
+            return unavailable("retained_identity_conflict", "Repeated exact-product evidence conflicts")
+        if self.hit_identity is None:
+            return {**base, "status": "unavailable", **self.hit_problem}
+        if product not in self.products:
+            return unavailable(
+                "final_product_not_retained", "Selected exact-product identity was not retained"
+            )
+        reference, checked_product, change, candidate, signature = self.products[product]
+        original = self.hit_identity
+        if (
+            reference != self.hit
+            or checked_product != product
+            or original.exact_smiles != self.hit
+            or candidate.exact_smiles != product
+            or row.get("family_smiles") != candidate.family_smiles
+            or row.get("scaffold_family_smiles") != candidate.scaffold_family_smiles
+        ):
+            return unavailable(
+                "retained_identity_binding_mismatch",
+                "Retained identities do not bind the original hit and selected exact product",
+            )
+        if change not in {"unchanged", "state_only", "decoration", "scaffold"}:
+            return unavailable(
+                "original_hit_classification_not_retained",
+                "No actual original-hit classification was retained",
+            )
+        if (
+            self.hit_signature != _IDENTITY_SIGNATURE
+            or signature != _IDENTITY_SIGNATURE
+            or self.descriptor != _IDENTITY_COMPARISON_POLICY
+            or any(
+                value.policy_version != self.descriptor["policy_version"]
+                or value.rdkit_version != self.descriptor["rdkit_version"]
+                for value in (original, candidate)
+            )
+        ):
+            return unavailable(
+                "retained_identity_policy_mismatch",
+                "Retained identities disagree with the import-time identity policy",
+            )
+        return {
+            **base,
+            "status": "recorded",
+            "original_hit": asdict(original),
+            "final_product": asdict(candidate),
+            "change_class": change,
+            "atom_aware_scaffold_changed": original.scaffold_family_smiles
+            != candidate.scaffold_family_smiles,
+            "generic_ring_linker_topology_changed": original.ring_skeleton_smiles
+            != candidate.ring_skeleton_smiles,
+            "scaffold_presence_change": (
+                "both_present"
+                if original.has_scaffold and candidate.has_scaffold
+                else "both_absent"
+                if not original.has_scaffold and not candidate.has_scaffold
+                else "gained"
+                if candidate.has_scaffold
+                else "lost"
+            ),
+        }
+
+    def attach_selected(self, selected):
+        started = time.monotonic()
+        for row in selected:
+            comparison = self.comparison(row)
+            row["hit_identity_comparison"] = comparison
+            if comparison["status"] == "recorded":
+                self.recorded_count += 1
+            else:
+                reason = comparison["reason_code"]
+                self.unavailable_counts[reason] = self.unavailable_counts.get(reason, 0) + 1
+        self.serialization_seconds += time.monotonic() - started
+
+    def snapshot(self):
+        return {
+            "retained_hit_count": int(self.hit_identity is not None),
+            "retained_unique_product_count": len(self.products),
+            "conflicting_unique_product_count": len(self.conflicts),
+            "recorded_selected_count": self.recorded_count,
+            "unavailable_selected_count_by_reason": dict(self.unavailable_counts),
+            "optional_hit_capture_lookup_count": self.lookup_count,
+            "optional_hit_capture_elapsed_seconds": self.capture_seconds,
+            "optional_hit_capture_completed_after_deadline": self.completed_after_deadline,
+            "observed_optional_hit_capture_identity_cache_miss_delta": self.cache_miss_delta,
+            "cache_counter_scope": "Observed process identity-cache interval; not attribution across concurrent threads or a wall-time guarantee",
+            "selected_comparison_serialization_seconds": self.serialization_seconds,
+            "post_selection_identity_resolution_calls": 0,
+            "post_selection_identity_resolution_scope": "Export implementation invariant, not a measured process-wide call count",
+        }
 
 
 def _manifest(config, hit, designs):
@@ -416,6 +612,7 @@ def _manifest(config, hit, designs):
         "config": config,
         "protocol": protocol_provenance(config.get("protocol", "legacy")),
         "code_sha256": _SOURCE_HASHES,
+        "identity_comparison_policy": copy.deepcopy(_IDENTITY_COMPARISON_POLICY),
         "sources_changed_since_import": _source_snapshot() != _SOURCE_HASHES,
         "git_revision": revision,
         "git_dirty": dirty,
@@ -694,6 +891,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
     route_policy = None
     root_objectives = {}
     polar_capacity = None
+    identity_evidence = None
     selected = []
     projected_designs = set()
     try:
@@ -726,6 +924,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 )
         requested_hit = hit
         hit = canonical(hit)
+        identity_evidence = _SelectedIdentityEvidence(hit, deadline_monotonic)
         similarity = None
         if "similarity_constraints" in config:
             try:
@@ -1127,8 +1326,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         )
         from utils import _get_molecular_prop_extd_, determ_props
 
-        def check_final_product(product, design):
-            check_constraints(
+        def check_final_product(product, design, *, retain_identity=False):
+            change = (_check_constraints if retain_identity else check_constraints)(
                 product,
                 hit,
                 design,
@@ -1136,6 +1335,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 config.get("core_smiles"),
                 config.get("preserve_design_scaffold", False),
             )
+            if retain_identity and config.get("mode", "hop") == "hop":
+                identity_evidence.capture_hit()
             mol = molecule(product)
             if qualified:
                 _check_stereo(mol, ConformerSettings())
@@ -1147,6 +1348,12 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             )
             if not accepted:
                 raise ValueError("Product property filter: " + "; ".join(reasons))
+            if retain_identity:
+                return props, {
+                    "original_hit_smiles": hit,
+                    "final_product_smiles": product,
+                    "change_class": change,
+                }
             return props
 
         for design, proposals in _design_batches(
@@ -1290,7 +1497,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                         )
                         continue
                     try:
-                        props = check_final_product(product, design)
+                        props, admission_identity = check_final_product(product, design, retain_identity=True)
                     except ValueError as exc:
                         record.update(selection_status="constraint_rejected", reason=str(exc))
                         continue
@@ -1317,8 +1524,11 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                             "properties": props,
                             "tanimoto": tanimoto,
                             "records": [],
+                            "identity_check": admission_identity,
                         },
                     )
+                    if entry["identity_check"] != admission_identity:
+                        entry["identity_check_conflict"] = True
                     entry["records"].append(record)
         # Collect before allocating expensive 3D work so one early design cannot
         # exhaust the global budget. Routes remain fully auditable when unscored.
@@ -1481,6 +1691,15 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             primary = min(
                 records, key=lambda record: (len(record["verification"]["steps"]), record["route_id"])
             )
+            identity_signature = _identity_signature()
+            product_identity = chemical_identity(product)
+            identity_evidence.retain_product(
+                product,
+                product_identity,
+                entry["identity_check"],
+                identity_signature,
+                conflict=entry.get("identity_check_conflict", False),
+            )
             row = {
                 "smiles": product,
                 "design": design,
@@ -1503,8 +1722,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 "seed_score_max": info["score"] if scoring_mode == "3d" else None,
                 "seed_successes": 1 if scoring_mode == "3d" else 0,
                 "seed_count": 1 if scoring_mode == "3d" else 0,
-                "family_smiles": family_key(product),
-                "scaffold_family_smiles": scaffold_family_key(product),
+                "family_smiles": product_identity.family_smiles,
+                "scaffold_family_smiles": product_identity.scaffold_family_smiles,
                 "ranking_score": info["score"],
                 "seed_score_range": 0.0 if scoring_mode == "3d" else None,
                 "seed_score_std": 0.0 if scoring_mode == "3d" else None,
@@ -1718,6 +1937,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         if len(ranked) > config.get("max_results", 50):
             summary["limits_reached"].append("max_results")
         selected = ranked[: config.get("max_results", 50)]
+        identity_evidence.attach_selected(selected)
         with ExitStack() as stack:
             stream = stack.enter_context((out / "results.tsv").open("w", newline=""))
             if scoring_mode == "3d":
@@ -1862,6 +2082,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         summary.update(status="error", error_type=type(exc).__name__, error=str(exc))
         raise
     finally:
+        if identity_evidence is not None:
+            summary["identity_comparison_export"] = identity_evidence.snapshot()
         if polar_capacity is not None:
             summary["polar_capacity"] = polar_capacity.snapshot()
         write_json(

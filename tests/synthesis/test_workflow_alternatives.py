@@ -60,6 +60,12 @@ def test_failed_primary_design_cannot_erase_refinable_alternative(tmp_path, asse
     records = json.loads((out / "routes.json").read_text())["routes"]
     assert [r["selection_status"] for r in records] == ["refinement_failed", "accepted"]
     assert rows[0]["alternative_route_ids"] == [records[0]["route_id"]]
+    comparison = rows[0]["hit_identity_comparison"]
+    assert comparison["status"] == "recorded"
+    assert comparison["original_hit_smiles"] == HIT
+    assert comparison["final_product_smiles"] == rows[0]["smiles"] == DESIGN
+    assert comparison["final_product"]["exact_smiles"] != rows[0]["design"]
+    assert comparison["change_class"] == "scaffold"
     report = json.loads((out / "summary.json").read_text())
     assert report["screened_products"] == 1
     assert report["screened_product_design_pairs"] == 2
