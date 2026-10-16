@@ -424,13 +424,44 @@ def test_constraint_witness_can_be_revalidated_without_embedding():
         bound.validate_witness(changed, candidate, 0)
 
 
-def test_v1_kernels_and_released_profile_bytes_are_unchanged():
+def test_historical_v1_binding_is_preserved_while_guarded_source_reports_drift():
+    from chembounce_synthesis import profiles, workflow
+
     root = Path(__file__).resolve().parents[2] / "chembounce_synthesis"
-    expected = {
+    historical_kernels = {
         "conformers.py": "aba699db1bc04db517c4275862c08ed73e9ae20c753a72ffa042c34bd907add8",
         "common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
         "identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
-        "data/qualified-development-v1.json": "9d3c60a895912b28c13a29aac0a04f385ddb8a0effc9fcd81d64a50a3d48bdd2",
     }
-    for name, digest in expected.items():
-        assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest
+    artifact_bytes = (root / "data/qualified-development-v1.json").read_bytes()
+    assert hashlib.sha256(artifact_bytes).hexdigest() == (
+        "9d3c60a895912b28c13a29aac0a04f385ddb8a0effc9fcd81d64a50a3d48bdd2"
+    )
+    artifact = profiles.load_profile(profiles.PROFILE)
+    # The historical artifact also retains its development-tool source inventory.
+    assert {
+        name: artifact["provenance"]["source_sha256"]["chembounce_synthesis/" + name]
+        for name in historical_kernels
+    } == historical_kernels
+    assert (
+        hashlib.sha256((root / "identity.py").read_bytes()).hexdigest() == historical_kernels["identity.py"]
+    )
+    for name in ("common.py", "conformers.py"):
+        assert hashlib.sha256((root / name).read_bytes()).hexdigest() != historical_kernels[name]
+    config = workflow._config(
+        {
+            "schema_version": 1,
+            "recommendation_profile": profiles.PROFILE,
+            "catalog": "unused.tsv",
+            "rules": "unused.json",
+            "provider": {"kind": "saved", "path": "unused.json"},
+            "synthesis_evidence": {"predictor": {"kind": "reactiont5", "model_path": "unused"}},
+        }
+    )
+    provenance = profiles.profile_provenance(config)
+    assert provenance["status"] == "custom_unvalidated"
+    assert {"chembounce_synthesis/common.py", "chembounce_synthesis/conformers.py"} <= (
+        provenance["runtime_source_mismatches"].keys()
+    )
+    # Source drift is not a numerical-equivalence or empirical recalibration proof.
+    assert not provenance["material_overrides"]
