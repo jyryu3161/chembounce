@@ -564,3 +564,115 @@ def test_reportable_memory_error_has_explicit_incomplete_receipt(plan, monkeypat
     assert failure["error_type"] == "MemoryError" and failure["status"] == "incomplete"
     assert failure["complete_source"] is False
     assert "MemoryError" in capsys.readouterr().err
+
+
+STEREO_PLAIN = "[H][C@](F)(Cl)Br"
+STEREO_RECORDS = (
+    STEREO_PLAIN + " |a:1|",
+    STEREO_PLAIN + " |o1:1|",
+    STEREO_PLAIN,
+    STEREO_PLAIN + " |&1:1|",
+    "CC1=CC=CC(I)=C1N1C(C)=CC=C1Br |wU:7.7|",
+)
+
+
+@pytest.fixture
+def stereo_plan(plan, monkeypatch):
+    """Synthetic processed strings, never a reconstruction of supplier records."""
+    path = save_pickle(Path(plan["input"]["path"]), monkeypatch, STEREO_RECORDS)
+    plan["input"].update(sha256=digest(path), bytes=path.stat().st_size)
+    smiles = canonical(STEREO_PLAIN)
+    ident = "structure-sha256:" + hashlib.sha256(smiles.encode()).hexdigest()
+    baseline = path.parent / "stereo-expected.tsv"
+    with baseline.open("w", newline="") as stream:
+        writer = csv.writer(stream, delimiter="\t")
+        writer.writerow(["id", "smiles", "source", "snapshot", "availability"])
+        writer.writerow([ident, smiles, plan["labels"]["source"], plan["labels"]["snapshot"], "catalogued"])
+    rejected = []
+    for coordinate in (1, 3, 4):
+        with pytest.raises(ValueError) as exc:
+            canonical(STEREO_RECORDS[coordinate])
+        rejected.append({"record": coordinate, "reason": str(exc.value)})
+    plan["baseline"] = {
+        "output_sha256": digest(baseline),
+        "unique_records": 1,
+        "rejected_records": rejected,
+    }
+    return plan
+
+
+@pytest.mark.parametrize("isolated", [False, True])
+def test_stereo_processed_index_full_partition_and_exact_origins(stereo_plan, isolated):
+    from chembounce_synthesis.catalog import Catalog
+
+    if isolated:
+        path, pinned = write_plan(stereo_plan)
+        assert migration.run(path, pinned, started=time.monotonic()) == 0
+        output = Path(stereo_plan["output_dir"])
+        result = json.loads((output / "validator.json").read_text())
+        assert json.loads((output / "terminal.json").read_text())["status"] == "validated"
+    else:
+        output = converted(stereo_plan)
+        result = migration.validate_output(stereo_plan, output)
+    assert {key: result[key] for key in ("N", "A", "R", "U")} == {"N": 5, "A": 2, "R": 3, "U": 1}
+    assert result["duplicate_accepted_occurrences"] == 1
+    assert [r["record_index"] for r in result["rejections"]] == [1, 3, 4]
+    assert all("nonabsolute enhanced" in r["reason"] for r in result["rejections"][:2])
+    assert "Unsupported CXSMILES" in result["rejections"][2]["reason"]
+    smiles = canonical(STEREO_PLAIN)
+    ident = "structure-sha256:" + hashlib.sha256(smiles.encode()).hexdigest()
+    catalog = Catalog(output / "catalog.tsv")
+    assert catalog.get(ident).smiles == smiles == canonical(STEREO_RECORDS[0])
+    evidence = catalog.evidence(ident)
+    origins = evidence["identifier_provenance"]["source_records"]
+    assert [origin["record_index"] for origin in origins] == [0, 2]
+    assert all(origin["input_index"] == 0 for origin in origins)
+    assert all(origin["identifier_origin"] == "generated_structure_sha256" for origin in origins)
+    assert not evidence["supplier_sku_verified"] and not evidence["current_stock_verified"]
+
+
+def test_new_stereo_rejections_cannot_be_hidden_to_force_old_baseline(stereo_plan):
+    output = converted(stereo_plan)
+    # Mimic a pre-fix baseline that accepted unsupported states. Even matching
+    # TSV bytes cannot hide the different raw-coordinate rejection partition.
+    stereo_plan["baseline"]["rejected_records"] = []
+    with pytest.raises(ValueError, match="frozen legacy baseline"):
+        migration.validate_output(stereo_plan, output)
+
+
+@pytest.mark.parametrize("suffix", [".tsv", ".smi", ".sdf"])
+def test_stereo_ingress_keeps_explicit_h_abs_and_logical_coordinates(tmp_path, suffix):
+    from rdkit import Chem
+    from chembounce_synthesis.catalog import Catalog
+
+    source = tmp_path / ("synthetic" + suffix)
+    if suffix == ".smi":
+        source.write_text(
+            "# logical record coordinates exclude this comment\n\n" + "\n".join(STEREO_RECORDS) + "\n"
+        )
+    elif suffix == ".tsv":
+        with source.open("w", newline="") as stream:
+            writer = csv.writer(stream, delimiter="\t")
+            writer.writerow(["smiles", "id"])
+            writer.writerows((text, "") for text in STEREO_RECORDS)
+    else:
+        # Write explicit-H ABS/OR/AND states without dropping the input graph.
+        params = Chem.SmilesParserParams()
+        params.removeHs = False
+        with Chem.SDWriter(str(source)) as writer:
+            writer.SetForceV3000(True)
+            for text in STEREO_RECORDS[:4]:
+                writer.write(Chem.MolFromSmiles(text, params))
+        # Literal atrop SDF survives old parsers via unresolved wedge metadata.
+        atrop = Path(__file__).parent / "fixtures" / "atrop-up-v3000.sdf"
+        source.write_bytes(source.read_bytes() + atrop.read_bytes())
+    before = source.read_bytes()
+    output = tmp_path / "catalog.tsv"
+    manifest = convert_catalog([source], output, "synthetic only", "stereo-integration")
+    assert manifest["records"] == 1
+    assert [r["record"] for r in manifest["rejected_records"]] == [1, 3, 4]
+    assert all(r["input_index"] == 0 for r in manifest["rejected_records"])
+    ident = "structure-sha256:" + hashlib.sha256(canonical(STEREO_PLAIN).encode()).hexdigest()
+    assert [o["record_index"] for o in manifest["record_origins"][ident]] == [0, 2]
+    assert Catalog(output).get(ident).smiles == canonical(STEREO_PLAIN)
+    assert source.read_bytes() == before

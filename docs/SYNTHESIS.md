@@ -1252,4 +1252,3 @@ states. A change to ingress/state policy requires a new source pin and baseline
 review before migration; newly rejected states must remain visible. Obtaining
 original supplier exports and authenticating SKU/current-stock claims are
 separate dependencies.
->>>>>>> 91774bc... Add bounded source-validated catalog lineage migration
