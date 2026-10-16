@@ -37,8 +37,11 @@ on `cuda:0`, actual input positional capacity and output length cap, its own PID
 and `nvidia-smi` match, driver/device identity and Torch allocator peaks. Before
 sampling, its separate controller must observe that PID alive on the approved
 GPU and write an acknowledgement. The controller also polls live compute-apps
-while the real adapter runs. No inference on GPUs2/3 is permitted; read-only
-process listing can include unrelated GPUs and is not evidence of using them.
+while the real adapter runs. No inference or process-detail collection on GPUs2/3 is permitted.
+All SMI queries are restricted to the approved GPU. A busy GPU at either stage
+entry causes refusal without killing any foreign process. Controller and worker
+PID creation times/start ticks are recorded to distinguish process reuse. Actual
+upstream module origins are checked again after checkpoint loading and sampling.
 Host limits, owned process-group termination and failure artifacts are explicit.
 Existing diagnostic outputs are refused. Raw strings and RNG details stay in
 local diagnostic artifacts; public reports should use aggregate checks/hashes.

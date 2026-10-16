@@ -157,3 +157,39 @@ def test_comparison_worker_refuses_existing_results_before_official_import(tmp_p
     (tmp_path / "comparison-detail.json").write_text("immutable")
     with pytest.raises(FileExistsError, match="Refusing to replace"):
         preflight.comparison_worker({}, tmp_path)
+
+
+def test_smi_queries_only_approved_gpu_and_records_process_start_identity(monkeypatch):
+    import os
+    import psutil
+
+    calls = []
+
+    def fake_command(argv, **kwargs):
+        calls.append(argv)
+        assert argv[argv.index("-i") + 1] in {"0", preflight.GPU_UUID}
+        if any(arg.startswith("--query-gpu=") for arg in argv):
+            return f"0, {preflight.GPU_UUID}, NVIDIA L40, driver-fixture, bus-fixture\n"
+        return f"{os.getpid()}, {preflight.GPU_UUID}, 12\n"
+
+    monkeypatch.setattr(preflight.subprocess, "check_output", fake_command)
+    record = preflight.smi_snapshot()
+    assert len(calls) == 2
+    identity = record["processes"][0]["process_identity"]
+    assert identity["pid"] == os.getpid() and identity["start_ticks"] > 0
+    assert identity["create_time"] == pytest.approx(psutil.Process().create_time(), abs=0.000001)
+
+
+def test_busy_gpu_refuses_without_killing_any_process(monkeypatch):
+    monkeypatch.setattr(preflight.os, "killpg", lambda *args: pytest.fail("Foreign group must not be killed"))
+    preflight.require_idle_gpu({"processes": []})
+    with pytest.raises(RuntimeError, match="none killed"):
+        preflight.require_idle_gpu({"processes": [{"pid": 1234}]})
+
+
+def test_prepare_plan_preserves_dangling_output_link(tmp_path):
+    path = tmp_path / "plan.json"
+    path.symlink_to(tmp_path / "missing")
+    with pytest.raises(FileExistsError):
+        preflight.prepare_plan(None, None, [], path)
+    assert path.is_symlink() and not (tmp_path / "missing").exists()

@@ -26,6 +26,7 @@ from benchmarks.external.mol2mol.support import (
     digest,
     read_json,
     verify_bundle,
+    upstream_origins,
     write_json,
 )
 
@@ -100,7 +101,7 @@ def panel_check(paths):
 
 
 def prepare_plan(bundle_path, fragment_path, panels, output):
-    if output.exists():
+    if output.exists() or output.is_symlink():
         raise FileExistsError("Use a new diagnostic plan path")
     bundle = read_json(bundle_path)
     verify_bundle(bundle)
@@ -167,6 +168,31 @@ def checked_plan(path, expected):
     return plan
 
 
+def process_identity(pid=None):
+    """Linux PID start ticks plus wall create time, independent of model packages."""
+    pid = os.getpid() if pid is None else pid
+    stat = Path(f"/proc/{pid}/stat").read_text()
+    fields = stat[stat.rfind(")") + 2 :].split()
+    start_ticks = int(fields[19])
+    boot = next(
+        int(line.split()[1])
+        for line in Path("/proc/stat").read_text().splitlines()
+        if line.startswith("btime ")
+    )
+    return {
+        "pid": pid,
+        "start_ticks": start_ticks,
+        "create_time": boot + start_ticks / os.sysconf("SC_CLK_TCK"),
+    }
+
+
+def require_idle_gpu(snapshot):
+    if snapshot["processes"]:
+        raise RuntimeError(
+            "Approved GPU0 already has a compute process; no inference started and none killed"
+        )
+
+
 def smi_snapshot():
     gpu = subprocess.check_output(
         [
@@ -183,7 +209,13 @@ def smi_snapshot():
     if fields[0] != "0" or fields[1] != GPU_UUID:
         raise RuntimeError("Physical GPU0 UUID changed")
     apps = subprocess.check_output(
-        ["nvidia-smi", "--query-compute-apps=pid,gpu_uuid,used_memory", "--format=csv,noheader,nounits"],
+        [
+            "nvidia-smi",
+            "-i",
+            GPU_UUID,
+            "--query-compute-apps=pid,gpu_uuid,used_memory",
+            "--format=csv,noheader,nounits",
+        ],
         text=True,
         timeout=5,
     )
@@ -191,7 +223,14 @@ def smi_snapshot():
     for line in apps.splitlines():
         values = [v.strip() for v in line.split(",")]
         if len(values) == 3 and values[0].isdigit():
-            processes.append({"pid": int(values[0]), "gpu_uuid": values[1], "used_memory_mb": values[2]})
+            pid = int(values[0])
+            try:
+                identity = process_identity(pid)
+            except (OSError, StopIteration):
+                identity = None
+            processes.append(
+                {"pid": pid, "gpu_uuid": values[1], "used_memory_mb": values[2], "process_identity": identity}
+            )
     return {
         "utc": utc(),
         "gpu": {
@@ -283,6 +322,8 @@ def comparison_worker(plan, output):
         "src": str(src.device),
         "src_mask": str(mask.device),
     }
+    if not devices["parameters"]:
+        raise RuntimeError("Official model has no recorded parameters")
     if (
         not all(
             value == "cuda:0"
@@ -298,7 +339,13 @@ def comparison_worker(plan, output):
         raise RuntimeError("Worker PID absent from physical GPU0 compute-apps")
     write_json(
         output / "worker-ready.json",
-        {"pid": os.getpid(), "process_group": os.getpgrp(), "own_smi": own_smi, "devices": devices},
+        {
+            "pid": os.getpid(),
+            "process_group": os.getpgrp(),
+            "process_identity": process_identity(),
+            "own_smi": own_smi,
+            "devices": devices,
+        },
     )
     ack_deadline = time.monotonic() + 20
     while not (output / "parent-live-ack.json").exists():
@@ -361,7 +408,8 @@ def comparison_worker(plan, output):
             "input_capacity": capacity,
             "output_max_sequence_length": model.max_sequence_length,
             "devices": devices,
-            "upstream_origins": origins,
+            "upstream_origins_before_load": origins,
+            "upstream_origins_after_load_and_sampling": upstream_origins(bundle),
             "pid": os.getpid(),
             "cuda_peak_allocated": torch.cuda.max_memory_allocated(device),
             "cuda_peak_reserved": torch.cuda.max_memory_reserved(device),
@@ -395,7 +443,7 @@ def execute_plan(plan_path, expected, output):
     panel_check([Path(record["path"]) for record in plan["panels"]])
     bundle = read_json(plan["bundle"])
     verify_bundle(bundle)
-    smi_snapshot()  # Validate physical identity before creating any CUDA worker.
+    require_idle_gpu(smi_snapshot())  # Never kill or share an occupied GPU for this diagnostic.
     output.mkdir(parents=True, exist_ok=False)
     comparison = output / "observer-comparison"
     comparison.mkdir()
@@ -432,6 +480,16 @@ def execute_plan(plan_path, expected, output):
             start = time.monotonic()
             peak_rss = 0
             process = subprocess.Popen(command, stdout=stdout, stderr=stderr, env=env, start_new_session=True)
+            launch_identity = process_identity(process.pid)
+            write_json(
+                comparison / "controller-launch.json",
+                {
+                    "utc": utc(),
+                    "command": command,
+                    "controller": process_identity(),
+                    "worker": launch_identity,
+                },
+            )
             while process.poll() is None:
                 if time.monotonic() - start >= plan["comparison_wall_seconds"]:
                     raise TimeoutError("Comparison exceeded outer diagnostic deadline")
@@ -455,8 +513,10 @@ def execute_plan(plan_path, expected, output):
                 ready = comparison / "worker-ready.json"
                 if ready.exists() and not (comparison / "parent-live-ack.json").exists():
                     pid = read_json(ready)["pid"]
-                    if pid == process.pid and any(
-                        p["pid"] == pid and p["gpu_uuid"] == GPU_UUID for p in snapshot["processes"]
+                    if (
+                        read_json(ready)["process_identity"] == launch_identity
+                        and pid == process.pid
+                        and any(p["pid"] == pid and p["gpu_uuid"] == GPU_UUID for p in snapshot["processes"])
                     ):
                         write_json(comparison / "parent-live-ack.json", {"pid": pid, "snapshot": snapshot})
                 time.sleep(0.25)
@@ -476,6 +536,7 @@ def execute_plan(plan_path, expected, output):
             for s, handler in previous.items():
                 signal.signal(s, handler)
     # Separate actual adapter lifecycle, same nonbenchmark input and unchanged declared budget.
+    require_idle_gpu(smi_snapshot())
     fragment = read_json(plan["method_fragment"])
     assets = {name: spec["artifact"] for name, spec in fragment["assets"].items()}
     for spec in fragment["assets"].values():
