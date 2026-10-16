@@ -16,6 +16,8 @@ import subprocess
 
 DECISION_SHA = "d18a3fc280201f933b9c2f7a0ae4151c8bdf165cf9577e947c8d16deb8606faf"
 AMENDMENT_SHA = "7f43d5b06f5525005ba851bffcfbbf70f9f362ac8916ef1c81a0f99a1634654f"
+RETENTION_ADDENDUM_SHA = "38d0505cd67eedb5f19cae68925794406f84e6d815e12887f5bedebb2a4878d2"
+RETENTION_ADDENDUM_FILE = "comparator-scaffold-retention-parent-addendum-20261016.json"
 ORIGINAL_PROTOCOLS = {
     "scaffold": (
         "main-protocol-gpu0.json",
@@ -490,7 +492,7 @@ def external_method(spec, base, method_id, split, decision, panel_sha, pins):
     return method, fragment
 
 
-def analysis_plan(grid, source):
+def analysis_plan(grid, source, retention_addendum, retention_spec):
     return {
         "schema_version": 1,
         "status": "specified_not_executed",
@@ -498,6 +500,8 @@ def analysis_plan(grid, source):
         "design": "Post hoc supplementary comparison; not preregistered; original 630 remain separate",
         "split_attempts": {s: COUNTS[s] * 9 for s in SPLITS},
         "expected_grid": grid,
+        "parent_scaffold_retention_addendum": retention_spec,
+        "secondary_scaffold_retention": retention_addendum,
         "gate": "All 270 unique planned slots, completed common scoring, response/source hashes and candidate occurrence joins verified before comparative estimates",
         "primary": "Engineering delivery endpoint: attempt_with_hop = int(evaluation.metrics.hop_families > 0). This measures delivery of at least one structurally changed output, not biological or synthetic utility",
         "evaluator_metrics": [
@@ -601,6 +605,8 @@ def prepare(decision_path, amendment_path, fragments_path, output):
     output = validate_output_location(output, decision, amendment)
     run_root = validate_output_location(run_root, decision, amendment)
     base = Path(decision_path).resolve().parent
+    retention_spec = pins.file(base / RETENTION_ADDENDUM_FILE, RETENTION_ADDENDUM_SHA)
+    retention_addendum = read_json(retention_spec["artifact"])
     if amendment["previous_decision"]["sha256"] != DECISION_SHA:
         raise ValueError("Amendment does not bind the parent decision")
     if (
@@ -723,7 +729,7 @@ def prepare(decision_path, amendment_path, fragments_path, output):
     if len(grid) != 270 or len({(g["split"], g["method_id"], g["query_id"], g["seed"]) for g in grid}) != 270:
         raise ValueError("The exact 270-slot grid is required")
     documents["grid.json"] = grid
-    documents["analysis-plan.json"] = analysis_plan(grid, source)
+    documents["analysis-plan.json"] = analysis_plan(grid, source, retention_addendum, retention_spec)
     documents["common-3d-plan.json"] = {
         "status": "specified_not_executed",
         "function": "benchmarks.research.controls.similarity_scores",

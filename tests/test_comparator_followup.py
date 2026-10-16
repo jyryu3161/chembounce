@@ -140,6 +140,14 @@ def study(tmp_path, monkeypatch):
         protocols[split] = (original_path.name, original_spec["sha256"])
     monkeypatch.setattr(prep, "ORIGINAL_PROTOCOLS", protocols)
     decision_path = base / "decision.json"
+    retention = {
+        "schema": "supplementary-scaffold-retention-annotation-v1",
+        "eligibility_ranking_budgets_primary_unchanged": True,
+        "candidate_annotations": {"query_scaffold_subgraph_retained": "synthetic definition"},
+    }
+    monkeypatch.setattr(
+        prep, "RETENTION_ADDENDUM_SHA", save(base / prep.RETENTION_ADDENDUM_FILE, retention)["sha256"]
+    )
     decision_sha = save(decision_path, decision)["sha256"]
     monkeypatch.setattr(prep, "DECISION_SHA", decision_sha)
     amendment = {
@@ -482,6 +490,13 @@ def test_analysis_plan_retains_failures_and_separate_common_3d(study):
     assert scoring["basic_runner_computes_3d"] is False
     assert scoring["conformers"] == prep.CONFORMERS
     assert scoring["seeds"] == [42, 43, 44]
+    assert analysis["secondary_scaffold_retention"]["eligibility_ranking_budgets_primary_unchanged"]
+    assert analysis["parent_scaffold_retention_addendum"]["sha256"] == prep.RETENTION_ADDENDUM_SHA
+    plan = prep.read_json(study["output"] / "execution-plan.json")
+    assert (
+        plan["input_files_sha256"][analysis["parent_scaffold_retention_addendum"]["artifact"]]
+        == prep.RETENTION_ADDENDUM_SHA
+    )
 
 
 def test_duplicate_json_keys_rejected(tmp_path):
