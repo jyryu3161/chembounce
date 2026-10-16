@@ -1,9 +1,11 @@
 # Official Mol2Mol pretrained sampling follow-up
 
-This is a **preparation-stage, separate proposed study**. No benchmark sampling,
-checkpoint inference or GPU preflight has been executed by this change. It does
-not alter the frozen 630-attempt study. Parent review of the prepared artifacts
-and a separate fixed-example preflight must precede inference. The prior decision
+This is a **separate proposed comparative study**. A separately authorized
+[fixed-example GPU diagnostic passed](actual_preflight_review.json) on
+2026-10-16; it contains no benchmark attempts and does not activate the comparative
+study. The original preparation and model-free review preceded that execution;
+their records remain unchanged. This work does not alter the frozen 630-attempt
+study. The prior decision
 was made after observing earlier controls and partial original-campaign results;
 this is post hoc study design, not preregistration.
 
@@ -91,6 +93,13 @@ set repository-local `filter.lfs.process=''`, `filter.lfs.clean=cat`,
 `filter.lfs.smudge=cat`, `filter.lfs.required=false`; do not rewrite file bytes or
 change global Git configuration. Preparation compares tracked bytes directly.
 
+Installation can leave ignored `upstream/build` copies of Python modules. Before
+checking exact source membership, verify these are entirely untracked installation
+artifacts and preserve them outside the checkout with before/after hashes. The
+reviewed preparation moved 274 such files, including 273 Python copies; the
+checkout then contained exactly its 451 pinned Python files and 455 pinned source
+and original configuration files. No tracked source or model bytes changed.
+
 `prepare.py` performs import-only inspection with CUDA hidden. It never unpickles
 the model or calls sampling. It emits an immutable preparation bundle, actual
 import origins, new resolved environment, full pyproject requirement checks and
@@ -131,8 +140,8 @@ rejected explicitly because upstream encoding otherwise silently drops them or
 maps them to UNK. Input BOS/EOS-inclusive length must fit the official encoder's positional
 buffer capacity (5000 in this source). The checkpoint's `max_sequence_length`
 controls generated output and does not become an extra input restriction. Both
-actual loaded values remain to be observed during the separately authorized
-checkpoint preflight.
+actual loaded values were confirmed as 5000 input positions and an output
+sequence cap of 128 in the fixed-example checkpoint diagnostic.
 
 Upstream sampling starts with BOS and makes at most `max_sequence_length - 1`
 decoding steps. Rows that reach EOS receive zero padding while other rows finish;
@@ -142,8 +151,9 @@ object, exception and RNG. It binds the N input rows and N output rows in their
 original order, validates token/text correspondence and padding, and labels
 no-EOS length-limit rows as truncated. All raw strings, token IDs, NLLs, duplicate,
 invalid and truncated records remain in local artifacts. Truncation is ineligible.
-Fixture tests establish the observer contract, **not actual checkpoint ON/OFF
-numerical equivalence**; the latter is a pending independent preflight.
+Fixture tests establish the observer contract. The later actual checkpoint
+diagnostic additionally established exact ON/OFF equality for its one fixed
+example and seed; it does not establish equality for every input or runtime.
 
 Before starting another batch, reserve 15 seconds for filtering plus 1.25 times
 the longest completed batch, in addition to the runner's 2-second finalization
@@ -175,15 +185,42 @@ processes. Public aggregate results should omit molecular rows. A separate
 common evaluator is needed for 3D and reference comparisons; this generator does
 not secretly optimize those evaluator outputs.
 
-## Model-free review and remaining validation
+## Model-free review and actual fixed-example validation
 
 An [independent parent review](implementation_review.json) of implementation
 commit `6e70ad9` passed 59 model-free tests and a separate ten-row literal
 selection oracle. The parent also checked the real checkpoint checksums,
 before/after source hashes and preservation of the original frozen 39 files.
-The checkpoint was not loaded. This engineering result leaves runtime readiness
-and actual checkpoint/GPU preflight pending; it does not validate scientific
-accuracy or performance.
+The checkpoint was not loaded during that review. Its historical pending-runtime
+status is preserved in the original record.
+
+The [subsequent aggregate diagnostic record](actual_preflight_review.json) binds
+the prepared-runtime and actual-execution parent assessments. The dedicated
+Torch 2.3.1+cu121 environment satisfied all 29 original pyproject requirements;
+the parent checked 524 preparation pins and 544 pins around its actual-result
+assessment. On physical GPU0 (NVIDIA L40), two official batches of 32 produced
+identical observer OFF/ON strings, token arrays, native NLL bytes/dtype/shape and
+post-call RNG states. Decode/profiler restoration and CUDA placement passed. One
+real bounded adapter attempt then generated 256 EOS-terminated rows, no truncated
+rows, and three selected candidates. The parent independently reconstructed
+family minima and native-NLL ranking and checked response provenance.
+
+Live GPU evidence comes from the reviewed controller and worker recordings,
+joined by PID and process creation identity. The parent's additional manual SMI
+snapshot occurred after completion and saw no processes. Observed wall times
+(4.4099 seconds for the comparison and 6.4980 seconds for the adapter) and sampled
+adapter host RSS (979.68 MB) describe this single shared-host diagnostic; they are
+not performance estimates or comparisons. The actual successful run did not
+exercise timeout or forced-cleanup paths, which have separate fixture coverage.
+
+All three returned candidates had a different normalized Murcko scaffold while
+retaining the query's normalized Murcko core as a subgraph. This descriptive
+finding motivated a secondary annotation addendum, SHA256
+`38d0505cd67eedb5f19cae68925794406f84e6d815e12887f5bedebb2a4878d2`,
+recorded after the diagnostic and before comparative output. It does not change
+eligibility, ranking, budgets or primary endpoints. Scaffold difference and core
+replacement are distinct structural descriptions; neither establishes biological
+activity or synthetic feasibility.
 
 Run the model-free fixtures with the common runtime:
 
@@ -191,9 +228,7 @@ Run the model-free fixtures with the common runtime:
 "$COMMON_PYTHON" -m pytest -q tests/test_mol2mol_baseline.py
 ```
 
-After parent review, a separate fixed, non-benchmark input must establish official
-checkpoint observer ON/OFF raw strings, token arrays, NLL and RNG-state equality,
-actual max sequence semantics, CUDA placement/memory evidence and deadline/group
-cleanup. Only then may the explicitly pinned new 90-attempt protocol be activated.
-No claim of benchmark accuracy, synthesis success, GPU performance, or completed
-REINVENT/RuSH reproduction follows from preparation and synthetic fixtures.
+Comparative activation still requires separate review of the explicitly pinned
+90-attempt Mol2Mol protocol. This one-example diagnostic establishes neither
+held-out accuracy, general CPU/GPU equivalence, synthesis success, comparative
+performance, nor a completed REINVENT/RuSH reproduction.
