@@ -9,7 +9,9 @@
     "Unspecified stereo retained at 2D selection; no arbitrary total atom or element filter",
     "Independent direct RDKit count-Morgan score comparison and family deduplication",
     "Train exact membership, nontrain family exclusion, retained public train queries, source/TSV/manifest hash guards",
-    "Private request fields and output overwrite refused; failed/timeout raw artifacts retained without accepted candidates"
+    "Private request fields and output overwrite refused; failed/timeout raw artifacts retained without accepted candidates",
+    "Externally fixed original input hashes and complete deterministic TSV export reject rehashed member subsets",
+    "Method fragment contains exact project-source allowlist; independent existing runner rejects compromised adapter before launch"
   ],
   "environment": {
     "CUDA_VISIBLE_DEVICES": "",
@@ -20,10 +22,11 @@
     "PYTHONHASHSEED": "0"
   },
   "files_sha256": {
-    "benchmarks/external/crem-proposal.json": "bfda5c319934f18415a771670886cc3112620365113a19c944a2767b88e6439d",
-    "benchmarks/external/crem_baseline.py": "ee16a54e9a612b399eec6e164c0db418291fc5531908cb87763c8f0453501f27",
+    "benchmarks/external/README-crem.md": "c38ddf727da0ba636a27e3514f3fbfca2a34e0a8647cdb206a341645913bab8e",
+    "benchmarks/external/crem-proposal.json": "d11514b966f00acf3a86325301594fa256bd6146aebd5411a29adbba8e93ad15",
+    "benchmarks/external/crem_baseline.py": "df41757d8e8e4145a755a6be91929c11a52b7ee0bc4a59c9426957ffd2804d00",
     "benchmarks/external/requirements-crem.txt": "f632dc0b4f4b16a70dde674ae751476abe16585b2f8ac2d8b0aabef5eeed8839",
-    "tests/test_crem_baseline.py": "0e89aa1eab13a2567414cd108887d8da721659d75abff1b952eb13342ac1ab45"
+    "tests/test_crem_baseline.py": "ff914bf63737f526fb2dcb32f6404ee1a4a12981d52b2ba0ab6b037dbd5765c2"
   },
   "generated_version_source_sha256": {
     "crem/_version.py": "f7f77dde668112f7a85677d186666ee3630ecc6cd5cd3be59ca95fa3d06bd82d"
@@ -36,10 +39,10 @@
     "Published preparation/ranking choices are post hoc follow-up, not preregistration"
   ],
   "local_provenance_record": {
-    "artifact": "benchmark-results/crem-baseline/implementation-runtime.json",
+    "artifact": "benchmark-results/crem-baseline/implementation-runtime-source-pins.json",
     "bundled": false,
     "scope": "Actual isolated imports/paths, distribution metadata, upstream/project file hashes; local evidence, not self-contained replay",
-    "sha256": "a8016256c6d6e97c512b05b81716b48d147cbcafcf8f5af29882136900150edb"
+    "sha256": "dc5acbdda1e4ad02c39803fdcd8b7ac08c04556f2ee24c5423e61c3d93faf1e2"
   },
   "not_executed": {
     "actual_benchmark_queries": 0,
@@ -50,9 +53,9 @@
   },
   "official_api_fixture_tests": {
     "command": "CHEMBOUNCE_CREM_SOURCE=/path/to/pinned/upstream <dedicated-python> -m pytest -q tests/test_crem_baseline.py",
-    "log_sha256": "ec16515e6da7be9758f179e84862f2ea269af44a3d10fb07a1b97a9303a5654d",
-    "passed": 44,
-    "seconds": 9.68,
+    "log_sha256": "0954bf1bf7d8a88840da9823e504025ef74737a479d9507188b6dbe12aafbf50",
+    "passed": 46,
+    "seconds": 9.89,
     "skipped": 0
   },
   "pip_freeze_all": [
@@ -86,6 +89,23 @@
   "rdkit": "2025.09.6",
   "schema_version": 1,
   "scope": "Agent engineering validation only; parent independent assessment pending",
+  "source_binding": {
+    "fixture": "Existing runner.load_protocol rejects altered adapter bytes regardless of its self-checks",
+    "independent_runner_pin_assets": 11,
+    "project_python_files": [
+      "benchmarks/external/crem_baseline.py",
+      "chembounce_synthesis/common.py",
+      "chembounce_synthesis/identity.py",
+      "fingerprint_db.py",
+      "benchmarks/research/protocol.py",
+      "benchmarks/research/runner.py",
+      "benchmarks/research/evaluation.py",
+      "chemistry.py",
+      "chembounce_synthesis/exploration.py",
+      "chembounce_synthesis/__init__.py",
+      "benchmarks/research/__init__.py"
+    ]
+  },
   "upstream_code_license": "BSD-3-Clause",
   "upstream_commit": "b84003cd8c84bc2afe98b5473570b7328e703ead",
   "upstream_source_sha256": {
@@ -171,10 +191,10 @@
     "tests/test_spiro_cycles.py": "0d84b2eae523547b2da4d1cdd7b19d97b98f68361526a0e92e5d9863bd218ce2"
   },
   "without_opt_in_source": {
-    "log_sha256": "8f72d06c40e3773b7443bc3874c9526e1942abf25bbc4bcae3617e6c9cec022f",
-    "passed": 34,
+    "log_sha256": "ba85cafbc6a97cc478b4b3d1b418d9d0c9ac0ef4a25416255f6950d4965b70f0",
+    "passed": 36,
     "scope": "Same dedicated CPU venv but CHEMBOUNCE_CREM_SOURCE omitted; optional official integration fixtures skip explicitly",
-    "seconds": 0.99,
+    "seconds": 1.0,
     "skipped": 10
   }
 }

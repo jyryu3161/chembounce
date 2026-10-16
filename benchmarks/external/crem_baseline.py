@@ -91,7 +91,10 @@ PROJECT_FILES = (
     "benchmarks/research/evaluation.py",
     "chemistry.py",
     "chembounce_synthesis/exploration.py",
+    "chembounce_synthesis/__init__.py",
+    "benchmarks/research/__init__.py",
 )
+SOURCE_ASSETS = {"source__" + p.replace("/", "__").replace(".", "_"): p for p in PROJECT_FILES}
 COUNT_FP = rdFingerprintGenerator.GetMorganGenerator(radius=2, includeChirality=False)
 
 
@@ -290,6 +293,28 @@ def train_inventory(dataset_path, train_tsv, provenance_path):
         rows = list(reader)
     if not rows or len(rows) != provenance.get("records"):
         raise ValueError("Train TSV row count is inconsistent")
+    # Reproduce the *complete* existing training_library.export_library policy,
+    # including first representative per family, ordering and IDs. Membership
+    # alone would permit a silently reduced library with a rewritten row count.
+    original_private = {
+        dataset.identities[r["id"]].family_smiles
+        for r in dataset["compounds"]
+        if r["split"] in {"test", "query"}
+    }
+    expected_families = {}
+    for row in dataset["compounds"]:
+        identity = dataset.identities[row["id"]]
+        if row["split"] == "train" and identity.family_smiles not in original_private:
+            expected_families.setdefault(identity.family_smiles, identity.exact_smiles)
+    expected_rows = [
+        {
+            "id": f"train-{index:06d}",
+            "smiles": smiles,
+            "source": "Benchmark development compound; not supplier availability",
+            "snapshot": audit["dataset_sha256"],
+        }
+        for index, smiles in enumerate(sorted(expected_families.values()))
+    ]
     records, exclusions, seen_ids, seen_exact, seen_family = [], [], set(), set(), set()
     for index, row in enumerate(rows):
         if not row["id"] or row["id"] in seen_ids or row["snapshot"] != audit["dataset_sha256"]:
@@ -336,6 +361,8 @@ def train_inventory(dataset_path, train_tsv, provenance_path):
         raise ValueError("Nontrain public-query family unexpectedly retained")
     if not records:
         raise ValueError("No supported training compounds remain")
+    if rows != expected_rows:
+        raise ValueError("TSV differs from the exact complete deterministic training-library export")
     summary = {
         "input_records": len(rows),
         "input_exact_inventory_sha256": json_hash(sorted(seen_exact)),
@@ -356,10 +383,15 @@ def train_inventory(dataset_path, train_tsv, provenance_path):
     return records, summary
 
 
-def prepare(dataset, train_tsv, provenance, upstream, output):
+def prepare(dataset, train_tsv, provenance, upstream, output, *, expected_hashes):
     output = Path(output).resolve()
     if output.exists():
         raise ValueError("Output already exists; preparation does not overwrite")
+    original_inputs = {"dataset": dataset, "train_tsv": train_tsv, "provenance": provenance}
+    if set(expected_hashes) != set(original_inputs) or any(
+        digest(path) != expected_hashes[name] for name, path in original_inputs.items()
+    ):
+        raise ValueError("Parent-declared dataset/train TSV/provenance SHA-256 mismatch")
     source = source_snapshot(upstream)
     runtime = runtime_snapshot(upstream)
     records, inventory = train_inventory(dataset, train_tsv, provenance)
@@ -374,6 +406,7 @@ def prepare(dataset, train_tsv, provenance, upstream, output):
         "schema_version": 1,
         "policy": POLICY,
         "stage": "prepared_not_built",
+        "parent_declared_input_sha256": expected_hashes,
         "inputs": {
             "dataset": artifact(dataset),
             "train_tsv": artifact(train_tsv),
@@ -420,6 +453,10 @@ def verify_plan(path):
         raise ValueError("Unsupported or changed preparation policy")
     for spec in plan["inputs"].values():
         verify_artifact(spec)
+    if plan.get("parent_declared_input_sha256") != {
+        k: plan["inputs"][k]["sha256"] for k in ("dataset", "train_tsv", "provenance")
+    }:
+        raise ValueError("Prepared inputs differ from parent-declared original hashes")
     verify_implementation(plan["implementation"])
     if source_snapshot(plan["upstream"]["root"]) != plan["upstream"]:
         raise ValueError("Upstream source changed")
@@ -616,8 +653,8 @@ def validate_request(request):
         raise ValueError("Only the external public-request schema is accepted")
     if set(request.get("query", {})) - {"id", "smiles", "target_id", "reference_sdf", "reference_sdf_sha256"}:
         raise ValueError("Query contains private/unknown fields")
-    if set(request.get("assets", {})) != {"crem_db", "crem_manifest"}:
-        raise ValueError("Sampler assets must be exactly DB and public manifest")
+    if set(request.get("assets", {})) != {"crem_db", "crem_manifest", *SOURCE_ASSETS}:
+        raise ValueError("Sampler assets must be exactly DB, manifest and the project source allowlist")
     settings = request.get("settings", {})
     if set(settings) != {"policy", "manifest_sha256"} or settings["policy"] != POLICY:
         raise ValueError("Unrecognized or mutable sampler settings")
@@ -658,12 +695,55 @@ def verify_database(request):
         raise ValueError("Incomplete or incompatible train-only database")
     if digest(assets["crem_db"]) != manifest["db_sha256"]:
         raise ValueError("CReM database changed")
+    for name, relative in SOURCE_ASSETS.items():
+        if Path(assets[name]).resolve() != (ROOT / relative).resolve():
+            raise ValueError("Pinned project source asset points outside the executing checkout")
+        if digest(assets[name]) != manifest["implementation"]["files_sha256"][relative]:
+            raise ValueError("Pinned project source asset changed")
     verify_implementation(manifest["implementation"])
     if source_snapshot(manifest["upstream"]["root"]) != manifest["upstream"]:
         raise ValueError("Upstream CReM source changed")
     if runtime_snapshot(manifest["upstream"]["root"]) != manifest["runtime"]:
         raise ValueError("Sampler/build runtime mismatch")
     return manifest
+
+
+def method_fragment(database, manifest_path, manifest_sha256, output):
+    """Emit independent runner asset pins; no query, labels or private inventory is read."""
+    output = Path(output).resolve()
+    if output.exists():
+        raise ValueError("Method fragment output already exists")
+    assets = {
+        "crem_db": str(Path(database).resolve()),
+        "crem_manifest": str(Path(manifest_path).resolve()),
+        **{key: str(ROOT / rel) for key, rel in SOURCE_ASSETS.items()},
+    }
+    settings = {"policy": POLICY, "manifest_sha256": manifest_sha256}
+    manifest = verify_database({"assets": assets, "settings": settings})
+    method = {
+        "id": "crem_train_partial_exo",
+        "kind": "external",
+        "command": [
+            sys.executable,
+            str(Path(__file__).resolve()),
+            "sample",
+            "--request",
+            "{request}",
+            "--response",
+            "{response}",
+        ],
+        "assets": {key: {"artifact": value, "sha256": digest(value)} for key, value in assets.items()},
+        "settings": settings,
+        "budget_overrides": {"max_evaluations": 256},
+        "source_binding": {
+            "scope": "Existing runner independently hashes this exact project-source asset allowlist before launch",
+            "relative_project_files": list(PROJECT_FILES),
+            "upstream_commit": manifest["upstream"]["commit"],
+        },
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    write_json(output, method)
+    return method
 
 
 def select_products(query, products, max_candidates=3):
@@ -841,24 +921,43 @@ def main(argv=None):
     p = subs.add_parser("prepare")
     for name in ("dataset", "train-tsv", "provenance", "upstream", "output"):
         p.add_argument("--" + name, type=Path, required=True)
+    for name in ("dataset", "train-tsv", "provenance"):
+        p.add_argument("--" + name + "-sha256", required=True)
     p = subs.add_parser("build")
     p.add_argument("--plan", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--wall-seconds", type=float, default=3600)
     p.add_argument("--max-memory-mb", type=float, default=24000)
+    p = subs.add_parser("method")
+    for name in ("database", "manifest", "output"):
+        p.add_argument("--" + name, type=Path, required=True)
+    p.add_argument("--manifest-sha256", required=True)
     for name in ("sample", "build-worker"):
         p = subs.add_parser(name)
         p.add_argument("--request", type=Path, required=True)
         p.add_argument("--response", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.action == "prepare":
-        prepare(args.dataset, args.train_tsv, args.provenance, args.upstream, args.output)
+        prepare(
+            args.dataset,
+            args.train_tsv,
+            args.provenance,
+            args.upstream,
+            args.output,
+            expected_hashes={
+                "dataset": args.dataset_sha256,
+                "train_tsv": args.train_tsv_sha256,
+                "provenance": args.provenance_sha256,
+            },
+        )
     elif args.action == "build":
         if not 0 < args.wall_seconds <= 86400 or not 0 < args.max_memory_mb <= 24000:
             parser.error("Build limits must be positive; maximum 86400 seconds / 24000 MB")
         build(args.plan, args.output, args.wall_seconds, args.max_memory_mb)
     elif args.action == "build-worker":
         build_worker(args.request, args.response)
+    elif args.action == "method":
+        method_fragment(args.database, args.manifest, args.manifest_sha256, args.output)
     else:
         sample(read_json(args.request), args.response)
 

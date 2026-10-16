@@ -87,6 +87,10 @@ def test_training_inventory_preserves_public_train_queries(panel):
     assert all("label" not in row for row in records)
 
 
+def input_hashes(panel):
+    return dict(zip(("dataset", "train_tsv", "provenance"), map(cb.digest, panel)))
+
+
 def rewrite_train(panel, transform):
     dataset, train, provenance = panel
     with train.open(newline="") as f:
@@ -162,6 +166,21 @@ def test_label_column_never_accepted(panel):
     rewrite_train(panel, add)
     with pytest.raises(ValueError, match="unlabelled"):
         cb.train_inventory(*panel)
+
+
+def test_rehashed_member_subset_is_not_the_expected_complete_library(panel):
+    rewrite_train(panel, lambda rows, fields: rows.pop())
+    with pytest.raises(ValueError, match="exact complete deterministic"):
+        cb.train_inventory(*panel)
+
+
+def test_parent_input_pins_cannot_be_silently_recomputed(panel, tmp_path):
+    expected = input_hashes(panel)
+    with panel[1].open("a") as stream:
+        stream.write("\n")
+    with pytest.raises(ValueError, match="Parent-declared"):
+        cb.prepare(*panel, "unused-upstream", tmp_path / "preparation", expected_hashes=expected)
+    assert not (tmp_path / "preparation").exists()
 
 
 @pytest.mark.parametrize(
@@ -245,7 +264,11 @@ def request(tmp_path):
         "query": {"id": "q", "smiles": "CC1CCCCC1", "target_id": "fixture"},
         "seed": 42,
         "budget": {"wall_seconds": 360, "max_memory_mb": 24000, "max_candidates": 3, "max_evaluations": 256},
-        "assets": {"crem_db": str(tmp_path / "db"), "crem_manifest": str(tmp_path / "manifest")},
+        "assets": {
+            "crem_db": str(tmp_path / "db"),
+            "crem_manifest": str(tmp_path / "manifest"),
+            **{key: str(cb.ROOT / rel) for key, rel in cb.SOURCE_ASSETS.items()},
+        },
         "settings": {"policy": cb.POLICY, "manifest_sha256": "0" * 64},
         "output_dir": str(tmp_path),
         "deadline_monotonic": time.monotonic() + 360,
@@ -304,12 +327,13 @@ def official():
 @pytest.fixture
 def real_prepared(panel, official, tmp_path):
     out = tmp_path / "prepared"
-    cb.prepare(*panel, official, out)
+    cb.prepare(*panel, official, out, expected_hashes=input_hashes(panel))
     return out / "plan.json"
 
 
 def test_actual_official_builder_adapter_roundtrip(real_prepared, tmp_path):
-    from benchmarks.research.runner import bounded_method
+    from benchmarks.research.runner import bounded_method, load_protocol
+    from benchmarks.research.protocol import load_dataset
 
     db_dir = tmp_path / "built"
     manifest = cb.build(real_prepared, db_dir, wall_seconds=60, max_memory_mb=1000)
@@ -319,24 +343,36 @@ def test_actual_official_builder_adapter_roundtrip(real_prepared, tmp_path):
     assert "heldout" not in serialized and "Cc1nccs1" not in serialized
     assert manifest["public_train_query_overlap_count"] == 1
     req = request(tmp_path)
-    req["assets"] = {
-        "crem_db": str(db_dir / "fragments.db"),
-        "crem_manifest": str(db_dir / "database-manifest.json"),
-    }
+    req["assets"].update(
+        {
+            "crem_db": str(db_dir / "fragments.db"),
+            "crem_manifest": str(db_dir / "database-manifest.json"),
+        }
+    )
     req["settings"]["manifest_sha256"] = cb.digest(req["assets"]["crem_manifest"])
     req["budget"].update(wall_seconds=30, max_memory_mb=1000)
-    method = {
-        "kind": "external",
-        "command": [
-            sys.executable,
-            str(Path(cb.__file__).resolve()),
-            "sample",
-            "--request",
-            "{request}",
-            "--response",
-            "{response}",
-        ],
-    }
+    method = cb.method_fragment(
+        req["assets"]["crem_db"],
+        req["assets"]["crem_manifest"],
+        req["settings"]["manifest_sha256"],
+        tmp_path / "method.json",
+    )
+    assert set(method["assets"]) == {"crem_db", "crem_manifest", *cb.SOURCE_ASSETS}
+    dataset, _ = load_dataset(cb.read_json(real_prepared)["inputs"]["dataset"]["path"])
+    protocol = {"schema_version": 1, "budget": req["budget"], "seeds": [42], "methods": [method]}
+    protocol_path = tmp_path / "protocol.json"
+    cb.write_json(protocol_path, protocol)
+    assert load_protocol(protocol_path, dataset)["methods"][0]["resolved_assets"] == req["assets"]
+    # Independent runner preflight detects compromised adapter bytes even if
+    # that copy removes every in-adapter verification. No source file is edited.
+    changed = copy.deepcopy(protocol)
+    key = next(k for k, p in cb.SOURCE_ASSETS.items() if p.endswith("crem_baseline.py"))
+    compromised = tmp_path / "compromised_adapter.py"
+    compromised.write_text("raise RuntimeError('all checks removed')\n")
+    changed["methods"][0]["assets"][key]["artifact"] = str(compromised)
+    cb.write_json(tmp_path / "tampered-protocol.json", changed)
+    with pytest.raises(ValueError, match="SHA-256 mismatch"):
+        load_protocol(tmp_path / "tampered-protocol.json", dataset)
     reports = [bounded_method(method, copy.deepcopy(req), tmp_path / f"run{i}") for i in range(2)]
     assert all(r["status"] == "success" for r in reports), reports
     assert reports[0]["response"]["candidates"] == reports[1]["response"]["candidates"]
@@ -411,7 +447,7 @@ def test_wrong_rdkit_is_rejected_before_source_import(monkeypatch):
 def test_plan_input_tamper_and_overwrite_rejected(real_prepared, panel, official, tmp_path):
     cb.verify_plan(real_prepared)
     with pytest.raises(ValueError, match="exists"):
-        cb.prepare(*panel, official, real_prepared.parent)
+        cb.prepare(*panel, official, real_prepared.parent, expected_hashes=input_hashes(panel))
     (real_prepared.parent / "train.smi").write_text("C1CCCCC1\n")
     with pytest.raises(ValueError, match="Artifact changed"):
         cb.verify_plan(real_prepared)

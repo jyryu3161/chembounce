@@ -43,8 +43,26 @@
     ]
   },
   "parent_decision_sha256": "d18a3fc280201f933b9c2f7a0ae4151c8bdf165cf9577e947c8d16deb8606faf",
+  "preparation_input_binding": "Require externally declared dataset/TSV/provenance SHA-256; reconstruct complete deterministic exported rows, not merely train membership.",
   "ranking": "count Morgan radius2 includeChirality=False descending Tanimoto, canonical exact SMILES tie",
   "roles": "Keep public train-query families; exclude all nontrain partition families; no labels/reference inventory in sampler",
+  "runner_source_binding": {
+    "independent_verifier": "Existing runner.load_protocol file asset SHA-256 validation before launching adapter",
+    "method_fragment_cli": "method --database --manifest --manifest-sha256 --output",
+    "project_python_allowlist": [
+      "benchmarks/external/crem_baseline.py",
+      "chembounce_synthesis/common.py",
+      "chembounce_synthesis/identity.py",
+      "fingerprint_db.py",
+      "benchmarks/research/protocol.py",
+      "benchmarks/research/runner.py",
+      "benchmarks/research/evaluation.py",
+      "chemistry.py",
+      "chembounce_synthesis/exploration.py",
+      "chembounce_synthesis/__init__.py",
+      "benchmarks/research/__init__.py"
+    ]
+  },
   "schema_version": 1,
   "scope": "Post hoc follow-up; no change to original 630 runs; no matched-training-data, synthesis, activity or global-optimality claim",
   "source_sha256": {

@@ -76,12 +76,14 @@ are supported. This distinction is directly visible in
 and [builder normalization](https://github.com/DrrDom/crem/blob/b84003cd8c84bc2afe98b5473570b7328e703ead/crem/scripts/cremdb_create.py#L422).
 
 `prepare` verifies original source hashes through the existing dataset validator,
-TSV/provenance/dataset hashes, exact train membership, and absence of every
+Externally declared TSV/provenance/dataset hashes, exact train membership, and absence of every
 nontrain partition family (test, validation and query partitions). Public queries
 in the **train partition remain permitted** in the DB; their IDs, families and
 hashes are explicitly counted in the private preparation inventory. The existing
 scaffold/time panels use public train queries; target queries have query roles.
 No broad “query contamination absent” or pretrained clean-holdout claim follows.
+The complete deterministic `training_library.export_library` rows are also
+reconstructed: a member subset with updated row counts/hashes is insufficient.
 The adapter never opens the panel, labelled references or preparation inventory.
 
 Known fragments can recombine into new full Murcko scaffolds. This does not
@@ -119,12 +121,16 @@ export PYTHONHASHSEED=0
 
 nice -n 19 /path/to/new-crem-venv/bin/python benchmarks/external/crem_baseline.py prepare \
   --dataset /path/to/panels/direct-human-scaffold/panel.json \
+  --dataset-sha256 PARENT_REVIEWED_DATASET_SHA256 \
   --train-tsv /path/to/train-direct-human-scaffold.tsv \
+  --train-tsv-sha256 PARENT_REVIEWED_TSV_SHA256 \
   --provenance /path/to/train-direct-human-scaffold.tsv.provenance.json \
+  --provenance-sha256 PARENT_REVIEWED_PROVENANCE_SHA256 \
   --upstream /path/to/crem-upstream --output /path/to/fresh-preparation
 ```
 
-Repeat preparation separately for `time` and `target`. Review and pin each
+Use previously reviewed original input hashes, not hashes silently recomputed
+from a changed input. Repeat preparation separately for `time` and `target`. Review and pin each
 `plan.json` before building. The normalized inventory is private; hashes and
 counts can be published separately without distributing chemical lists. Existing
 output paths are refused. After independent review, the bounded **offline** build
@@ -147,30 +153,38 @@ as part of this implementation.
 
 ## Existing runner integration
 
-Use `kind: external`; do not modify the runner. Its command should be an absolute
-path to the dedicated interpreter and this exact helper, followed by `sample
---request {request} --response {response}`. Declare only these two assets:
+Use `kind: external`; do not modify the runner. After each reviewed DB build,
+generate a method object with actual asset hashes:
 
-```json
-{
-  "id": "crem_train_partial_exo",
-  "kind": "external",
-  "command": ["/path/to/new-crem-venv/bin/python", "/path/to/checkout/benchmarks/external/crem_baseline.py",
-              "sample", "--request", "{request}", "--response", "{response}"],
-  "assets": {
-    "crem_db": {"artifact": "/path/to/fresh-build/fragments.db", "sha256": "ACTUAL_DB_SHA256"},
-    "crem_manifest": {"artifact": "/path/to/fresh-build/database-manifest.json", "sha256": "ACTUAL_MANIFEST_SHA256"}
-  },
-  "settings": {"policy": "crem-train-only-partial-exo-v1", "manifest_sha256": "ACTUAL_MANIFEST_SHA256"},
-  "budget_overrides": {"max_evaluations": 256}
-}
+```bash
+/path/to/new-crem-venv/bin/python benchmarks/external/crem_baseline.py method \
+  --database /path/to/fresh-build/fragments.db \
+  --manifest /path/to/fresh-build/database-manifest.json \
+  --manifest-sha256 PARENT_REVIEWED_MANIFEST_SHA256 --output /path/to/new-method.json
 ```
 
-This is a schema example, not an executable protocol. Use the parent-approved
-actual hashes, seeds, matched wall/memory/output caps, and source provenance.
-`public_request` can include a public query pose; the adapter deliberately does
-not open it, use target IDs to select a DB subset, or accept added labels/reference
-fields. It uses one DB per split, never a query-specific DB. The sampler requires
+Insert the generated object into the reviewed protocol's `methods` list. Its
+command is the absolute dedicated interpreter and helper followed by `sample
+--request {request} --response {response}`. Assets contain exactly `crem_db`,
+`crem_manifest`, and the 11 named `source__...` project Python files listed in
+`PROJECT_FILES`/`source_binding.relative_project_files`, each with `artifact` and
+`sha256`. Settings are `policy: crem-train-only-partial-exo-v1` and the manifest
+SHA; `budget_overrides.max_evaluations` is 256. Use seeds 42/43/44 and the reviewed
+matched wall/memory/output caps. This command refuses absent or unverified DBs;
+it does not build them or generate compounds.
+
+The **existing runner's `load_protocol` independently hashes every source asset**
+before launching this adapter. This protects against an altered adapter that
+removes its own checks; calling `bounded_method` alone bypasses that independent
+preflight. The sampler also enforces the exact source-asset key/path allowlist.
+Private labels/reference inventories are never included as assets.
+
+`public_request` may include the public query's `reference_sdf` and
+`reference_sdf_sha256`; these fields are accepted for compatibility but never
+opened by this ligand-only adapter. It does not use target IDs to select a DB
+subset or accept additional label/reference fields. The source must still be the
+public query, as validated by the parent dataset loader. It uses one DB per split,
+never a query-specific DB. The sampler requires
 the runner's monotonic deadline; standalone untimed sampling is not supported.
 
 `response.raw.jsonl` retains every yielded string; `response.progress.json` keeps
@@ -195,8 +209,8 @@ retrosynthesis planner for every method's final products. No planner is added he
 
 ## Engineering checks
 
-The dedicated CPU fixture run passed **44 tests in 9.68 seconds**. Without the
-explicit upstream opt-in, 34 passed and 10 optional integrations skipped (0.99 s).
+The dedicated CPU fixture run passed **46 tests in 9.89 seconds**. Without the
+explicit upstream opt-in, 10 optional integrations skip explicitly.
 [Validation record](crem-engineering-validation.json) binds source versions,
 file/log hashes and scope; independent parent assessment is pending.
 
