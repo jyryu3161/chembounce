@@ -1,0 +1,77 @@
+{
+  "builder": {
+    "fragmentation": "both_optimal",
+    "keep_stereo": true,
+    "max_heavy_atoms": 15,
+    "ncpu": 1,
+    "radii": [
+      3
+    ]
+  },
+  "geometry": {
+    "failure_policy": "official exceptions fail open; no validity guarantee",
+    "maxIterations": 4,
+    "rdkit_etkdg_seed": 42
+  },
+  "implementation_review_correction": "Parent clarified that stereo-hard-gate meant state preservation, not all-stereo-specified prefilter. Removed agent-added organic/size/radical and unspecified-stereo exclusions after synthetic fixtures only; no benchmark generation observed.",
+  "limits": {
+    "max_candidates": 3,
+    "max_process_tree_rss_mb": 24000,
+    "wall_seconds_including_import": 360
+  },
+  "mutation": {
+    "discard_ring_geometry": true,
+    "max_inc": 2,
+    "max_rel_size": 1,
+    "max_replacements": 256,
+    "max_size": 15,
+    "min_freq": 1,
+    "min_inc": -2,
+    "min_rel_size": 0,
+    "min_size": 1,
+    "ncores": 1,
+    "operation": "one-step mutate_mol",
+    "radius": 3,
+    "replace_cycles": "partial_exo",
+    "seed": [
+      42,
+      43,
+      44
+    ],
+    "set_names": [
+      "train"
+    ]
+  },
+  "parent_decision_sha256": "d18a3fc280201f933b9c2f7a0ae4151c8bdf165cf9577e947c8d16deb8606faf",
+  "ranking": "count Morgan radius2 includeChirality=False descending Tanimoto, canonical exact SMILES tie",
+  "roles": "Keep public train-query families; exclude all nontrain partition families; no labels/reference inventory in sampler",
+  "schema_version": 1,
+  "scope": "Post hoc follow-up; no change to original 630 runs; no matched-training-data, synthesis, activity or global-optimality claim",
+  "source_sha256": {
+    "LICENSE.txt": "279bbc6e406deed06e09f763a121fb1100499ccbceea0cb089785dcf81393ccb",
+    "crem/crem.py": "28b9a005df5e9060ccd698a4afd81f2254801184bec07f86f354ca98890aea58",
+    "crem/db.py": "646522903834d8f69b9f914dbb693eff6d6fa49ecd770775623325972e11bb8a",
+    "crem/mol_context.py": "314841d1d953e62788f74c4c64752115ff062bda5e86f23efef114fdf891ffb7",
+    "crem/ring_fragments.py": "e0851fa68d74857ef819a4825e5c2ab756f011e8cfbe0bdd45ad21fb94893fd1",
+    "crem/scripts/cremdb_create.py": "ece69825bc85ec76e8ba68cebe275218ef77b4092a539e45f99be16ae664e938",
+    "docs/fragment-databases/build-v2.md": "c2cc854ed0815980e08b7ded600403b20b2edb764e30d300c1646de06bb0f7f9",
+    "docs/fragment-databases/schema.md": "a702fc6edea4e3ecae9a00b108f9781d6b164c40265f3a8e2827c29fa05b4bf6",
+    "docs/operations/mutate-grow-link.md": "86a7b914098d0f64b0a40b70cdd857b13d8169f9f752981a7c200f548987a085",
+    "pyproject.toml": "9077f0490c24bc15073cf8731ab9bd5a5e02a7358ffd6f1f5de565917ae823af"
+  },
+  "status": "settings fixed before engineering-fixture generation; no full DB or benchmark execution",
+  "structure_policy": {
+    "common": "connected valid ring-containing; query family and unchanged normalized Murcko excluded; family dedup",
+    "exact_state": "remove atom maps only; preserve charge/stereo/isotopes; bounded canonical fixedpoint; no protonation/tautomer/stereo enumeration",
+    "no_arbitrary_filters": [
+      "total heavy atom cap",
+      "organic element list",
+      "radical exclusion"
+    ],
+    "query_isotopes": "supported via official property backup/restore; generated fragments are unlabelled",
+    "training_isotopes": "exclude with original exact/family identity because official DB builder strips isotopes",
+    "unspecified_stereo": "recorded, not excluded at 2D selection; common later3D failures retained",
+    "upstream_maxCutBonds": "ordinary heavy acyclic fragmenter limit30 recorded; not blanket query rejection"
+  },
+  "upstream_commit": "b84003cd8c84bc2afe98b5473570b7328e703ead"
+}
