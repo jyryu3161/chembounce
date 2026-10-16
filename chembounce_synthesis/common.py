@@ -72,6 +72,10 @@ def parse_absolute_smiles(smiles):
     params = Chem.SmilesParserParams()
     params.parseName = False
     params.allowCXSMILES = absolute_indices is not None
+    # CX atom indices refer to the input graph, before ordinary explicit H is
+    # removed. Validate that graph first; default parsing may renumber centers.
+    if absolute_indices is not None:
+        params.removeHs = False
     mol = Chem.MolFromSmiles(text, params)
     if mol is None or mol.GetNumAtoms() == 0:
         raise ValueError(f"Invalid SMILES: {smiles!r}")
@@ -80,6 +84,15 @@ def parse_absolute_smiles(smiles):
         retained = {a.GetIdx() for group in mol.GetStereoGroups() for a in group.GetAtoms()}
         if len(set(absolute_indices)) != len(absolute_indices) or set(absolute_indices) != retained:
             raise ValueError("ABS atom references are invalid, duplicated, or not retained by the parser")
+        # Reparse validated text with the established default H handling, rather
+        # than approximating it with a separately configured RemoveHs operation.
+        params.removeHs = True
+        mol = Chem.MolFromSmiles(text, params)
+        if mol is None or mol.GetNumAtoms() == 0:
+            raise ValueError(f"Invalid SMILES after ordinary hydrogen normalization: {smiles!r}")
+        require_absolute_stereo(mol)
+        if sum(len(group.GetAtoms()) for group in mol.GetStereoGroups()) != len(absolute_indices):
+            raise ValueError("ABS centers were not retained during ordinary hydrogen normalization")
     return mol
 
 

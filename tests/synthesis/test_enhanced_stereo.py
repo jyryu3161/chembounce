@@ -385,3 +385,54 @@ def test_reaction_template_cx_not_silently_ignored_by_old_parser(tmp_path, annot
     )
     with pytest.raises(ValueError, match="CX reaction SMARTS annotations are unsupported"):
         Rules(path)
+
+
+@pytest.mark.parametrize(
+    "plain,indices",
+    [
+        ("[H][C@](N)(C)C(=O)O", "1"),
+        ("[H][C@](F)(Cl)Br", "1"),
+        ("[2H][C@](F)(Cl)Br", "1"),
+        ("[H:7][C@](F)(Cl)Br", "1"),
+        ("[H][C@:9](F)(Cl)Br", "1"),
+        ("[H][C@](F)(Cl)[C@]([H])(Br)I", "1,4"),
+        ("C[C@H](F)[B]1[H-][B]1", "1"),
+    ],
+)
+def test_abs_input_indices_precede_default_hydrogen_removal(plain, indices):
+    from chembounce_synthesis.common import parse_absolute_smiles
+
+    text = plain + " |a:" + indices + "|"
+    before = Chem.SmilesParserParams()
+    before.removeHs = False
+    raw = Chem.MolFromSmiles(text, before)
+    assert {a.GetIdx() for g in raw.GetStereoGroups() for a in g.GetAtoms()} == {
+        int(i) for i in indices.split(",")
+    }
+    expected = Chem.MolFromSmiles(plain)
+    actual = parse_absolute_smiles(text)
+    assert Chem.MolToSmiles(actual) == Chem.MolToSmiles(expected)
+    assert actual.GetNumAtoms() == expected.GetNumAtoms()
+    assert [(a.GetAtomicNum(), a.GetIsotope(), a.GetAtomMapNum()) for a in actual.GetAtoms()] == [
+        (a.GetAtomicNum(), a.GetIsotope(), a.GetAtomMapNum()) for a in expected.GetAtoms()
+    ]
+    assert canonical(text) == canonical(plain)
+    assert _component_smiles(text) == _component_smiles(plain)
+    assert stereo_state(actual)["fully_specified"]
+
+
+@pytest.mark.parametrize("indices", ["0", "2", "99", "1,1", "0,1", "1,99"])
+def test_abs_pre_removal_index_validation_still_rejects_invalid_references(indices):
+    # Atom zero is removed H; accepting the post-removal center index zero would
+    # validate the wrong input atom. Unknown/duplicate/noncenter indices reject.
+    with pytest.raises(ValueError):
+        canonical("[H][C@](F)(Cl)Br |a:" + indices + "|")
+
+
+def test_abs_explicit_h_catalog_conversion_preserves_normalized_state_and_id(tmp_path):
+    source = tmp_path / "explicit-h.smi"
+    source.write_text("[H][C@](F)(Cl)Br |a:1| provided-id\n")
+    output = tmp_path / "converted.tsv"
+    result = convert_catalog([source], output, "synthetic", "2026-10-17")
+    assert result["records"] == 1 and result["rejected_records"] == []
+    assert Catalog(output).get("provided-id").smiles == canonical("[H][C@](F)(Cl)Br")
