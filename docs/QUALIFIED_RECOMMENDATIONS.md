@@ -483,7 +483,7 @@ benchmark performance, experimental synthesis or activity validation. The earlie
 zero-recommendation run remains unchanged. Fresh comparisons and ablations remain
 Stage 6, whose execution requires a separate gate.
 
-## Stage 6 source path (execution still pending)
+## Stage 6 source path (inspected pilot running; fresh evaluation pending)
 
 The new `benchmarks.research.qualified_runner` consumes an immutable
 `qualified-benchmark-protocol-v1` JSON with public `queries` (`id`, `target_id`,
@@ -594,9 +594,12 @@ memory remain null when unmeasured. Native/common work units and partial-file
 accounting failures remain explicit; missing work counts are not invented as
 zero. All retained costs include failed attempts. Parent CPU/RSS observations
 include collector work and retained shared catalogs, with the separate scope
-described above; subprocess metrics remain unchanged. Source review, revised
-protocol activation, actual development pilot, fresh input selection,
-frozen final grids, execution and scientific interpretation remain pending.
+described above; subprocess metrics remain unchanged. The bounded runner and
+collector passed source review at `1841ed8`; the two-input, ten-attempt inspected
+development pilot uses that immutable source. Its outputs are engineering
+evidence only. Later source changes do not modify the running pilot. Revised
+protocol activation, fresh input selection, frozen final grids, execution and
+scientific interpretation remain pending.
 
 Fresh-panel preparation is implemented separately in
 `benchmarks.research.qualified_fresh_panel`; actual acquisition and selection
@@ -607,6 +610,23 @@ literal selection policy, source hashes, Python/RDKit versions, exclusion
 manifest and official target-mapping source hashes, plus explicit request,
 response-byte, total-byte, timeout and wall limits. There are no automatic
 retries or changed-release fallbacks.
+
+Independent review of `7b073f2` found that a same-origin redirect could change
+the frozen activity query. Correction `f4ca7cd` rejects redirects before any
+follow-up request and binds the endpoint and full query multimap in both live
+acquisition and offline replay. Harmless parameter-order/encoding differences
+are allowed; extra filters, duplicate/blank changes and fragments reject. Root
+focused tests passed **73** in each of research, minimum and Python 3.12;
+independent review passed **40**, including the original 29 regression
+assertions. These were synthetic/local tests, not fresh-panel acquisition.
+
+Catalog-only setup commit `d7b24f5` passed **94** root research tests and **75
+passed, 19 skipped** in each alternate runtime, plus **42** independent research
+checks. Its integration changes neither the live pilot nor child workflows.
+Retain `setup.json` or runner-produced `analysis.json` with cost reporting:
+regenerating the standalone pure-analysis report does not propagate optional
+administrative setup metadata. Real saved-output equivalence and exact future
+protocol activation remain separate gates.
 
 The policy retains the complete ordered human single-protein target catalog
 (cap 25000), ranks eligible targets by the frozen SHA-256 rule, examines at
@@ -640,3 +660,40 @@ rejection. The claim remains absence from the named resolved inventory and
 explicitly target-labeled studies, never exhaustive unseen inspection or model
 training independence. Public query output contains only IDs, target IDs and
 exact SMILES, separate from private activity/assay/selection evidence.
+
+## Remaining delivery and research decisions
+
+1. Finish all ten inspected pilot attempts and audit the complete failure,
+   selection and cost ledgers. Preserve negative comparisons. On the first
+   inspected input, the full method, CReM and direct SynLlama produced the same
+   three final products under the common backend; this supplies no unique-output
+   advantage for the full generator on that input.
+2. Add all retained pilot structures to a new, source-bound exclusion inventory.
+   Freeze the reviewed selection source, exclusion mappings, models, assets,
+   runtime, methods, budgets and analysis before fresh acquisition. Resolve
+   known target aliases from official records and disclose normalization,
+   incomplete inspection and checkpoint-training gaps.
+3. Evaluate the proposed six-target/two-query/three-seed panel with five methods
+   and two ablations (252 planned attempts), only after the complete panel and
+   protocol pass review. Measure joint recommendation success, unique output
+   yield, per-target behavior, scaffold changes, similarity distributions and
+   full costs. Failures and missing attempts stay in the denominator; six target
+   clusters support descriptive uncertainty, not a strong significance claim.
+4. Establish what a stronger similarity claim would require. The existing
+   development profile is deliberately permissive and does not guarantee high
+   similarity or retained activity. A stricter profile needs a separately
+   declared development calibration objective and frozen external evaluation;
+   it must not be fitted to the fresh benchmark outcomes or retroactively
+   relabel the existing profile. Keep 2D, 3D shape and pharmacophore evidence
+   separate, and report the tradeoff with changed scaffolds and output yield.
+5. Keep practical synthesis questions explicit: model/rule agreement does not
+   supply reaction conditions, yield, selectivity or current purchasing stock.
+   Computational route support is the current delivered evidence level.
+   Experimental synthesis/activity validation and an additional independent
+   synthesis assessment are separate research extensions, with collaboration
+   still undecided.
+
+The publication claim must follow these results. If generator ablations and
+comparators do not show an advantage, report that outcome and reconsider which
+component is the methodological contribution. Source correctness and successful
+known examples alone do not establish a top-journal contribution.
