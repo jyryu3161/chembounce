@@ -99,11 +99,28 @@ not launch work that cannot retain its full ceiling plus finalization reserve.
 Uninterruptible kernel operations can prevent cleanup; this is an explicit
 unsafe failure, never evidence of completed bounded work.
 
+Parent receipt persistence is checked after the write returns, including fsync.
+The ledger's phase elapsed time observes that completed write; the phase file's
+timestamp is the observation before its own final persistence, not a claim to
+measure its own fsync. Both have the same eligibility: a crossed allocation is
+durably corrected to failure before an assessor is launched. Controlled write
+interruptions also invalidate the receipt. Finalization starts before its first
+checkpoint, subtracts bookkeeping from its 300-second child allowance, and
+checks its last ledger write against both administrative and outer deadlines.
+Failure correction writes grant no work allowance. A completed study requires
+the external parent exit-0 receipt and an intact returned ledger; a standalone
+file left by hard termination never certifies completion.
+
 The Linux x86_64 supervisor uses pidfds (explicit syscalls for the pinned Python
 build), identity rechecks, a subreaper and anchored session/descendant ownership.
 It never falls back to an unverified `kill(pid)` or unconditional `killpg`.
 Preexisting children prevent launch. Owned children must be gone before another
 phase; unsafe setup cleanup also prevents finalization.
+Escalation uses a fresh clock after process/RSS scans. Final cleanup makes at
+most two nonblocking wait4 passes after observing owned processes, so a zombie
+appearing after the loop's wait can be reaped with its usage retained. Remaining
+live or unreapable children are still unsafe; observed scheduling overruns stay
+in reported elapsed time. Subreaper state is restored only after complete cleanup.
 
 Owned-tree RSS is sampled every 0.2 seconds with a 16 GiB limit. An observed
 exceedance or inaccessible live observation fails the phase. This is not an

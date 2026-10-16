@@ -52,6 +52,40 @@ def same(left, right):
     return left is not None and right is not None and all(left[k] == right[k] for k in ("pid", "start_ticks"))
 
 
+def reap_owned(process, records, resources):
+    """One nonblocking pass; retain each owned child's actual wait4 usage.
+
+    A snapshot is not evidence of reaping. Missing/unwaitable children remain
+    visible to the caller's next ownership snapshot and cannot certify cleanup.
+    """
+    leader_usage = None
+    for pid, entry in records.items():
+        if entry["ppid"] != os.getpid() or not same(identity(pid), entry):
+            continue
+        if pid == process.pid and process.returncode is not None:
+            continue
+        try:
+            reaped, status, usage = os.wait4(pid, os.WNOHANG)
+        except ChildProcessError:
+            continue
+        if not reaped:
+            continue
+        code = os.waitstatus_to_exitcode(status)
+        if pid == process.pid:
+            process.returncode = code
+            leader_usage = usage
+        else:
+            resources["adopted_child_usage"].append(
+                {
+                    "identity": entry,
+                    "ru_maxrss_kib": usage.ru_maxrss,
+                    "cpu_seconds": usage.ru_utime + usage.ru_stime,
+                    "returncode": code,
+                }
+            )
+    return leader_usage
+
+
 def subreaper(value=None):
     libc = ctypes.CDLL(None, use_errno=True)
     if value is None:
@@ -322,29 +356,14 @@ def supervise(
                         )
                         if observation["rss_bytes"] > memory_bytes:
                             reason = "memory_limit"
-                if process.returncode is None:
-                    pid, status, current_usage = os.wait4(process.pid, os.WNOHANG)
-                    if pid:
-                        process.returncode = os.waitstatus_to_exitcode(status)
-                        usage = current_usage
-                # Reap adopted descendants without ever consuming another job.
-                for pid in list(records):
-                    if pid != process.pid and records[pid]["ppid"] == os.getpid():
-                        try:
-                            reaped, status, child_usage = os.wait4(pid, os.WNOHANG)
-                            if reaped:
-                                receipt["resources"]["adopted_child_usage"].append(
-                                    {
-                                        "identity": records[pid],
-                                        "ru_maxrss_kib": child_usage.ru_maxrss,
-                                        "cpu_seconds": child_usage.ru_utime + child_usage.ru_stime,
-                                        "returncode": os.waitstatus_to_exitcode(status),
-                                    }
-                                )
-                        except ChildProcessError:
-                            pass
+                current_usage = reap_owned(process, records, receipt["resources"])
+                if current_usage is not None:
+                    usage = current_usage
                 records = owned_snapshot(leader, known)
                 live = {p: i for p, i in records.items() if i["state"] != "Z"}
+                # /proc scans and RSS sampling can overrun a polling interval.
+                # Never make escalation decisions with the pre-scan timestamp.
+                now = clock()
                 if process.returncode is not None and not records:
                     break
                 if now - t0 >= watchdog and reason is None:
@@ -373,15 +392,18 @@ def supervise(
     finally:
         for number, handler in old_handlers.items():
             signal.signal(number, handler)
-        if process and process.returncode is None:
-            try:
-                pid, status, current_usage = os.wait4(process.pid, os.WNOHANG)
-                if pid:
-                    process.returncode = os.waitstatus_to_exitcode(status)
-                    usage = current_usage
-            except ChildProcessError:
-                pass
         remaining = owned_snapshot(leader, known) if leader else {}
+        # A child may become a zombie between wait4(WNOHANG) and snapshot.
+        # Observe, reap, then observe again, with at most two nonblocking passes
+        # and no sleep/new work allowance. Live or unreapable owned processes
+        # still make cleanup unsafe. Any deadline overrun stays in wall time.
+        for _ in range(2):
+            if not process or not remaining:
+                break
+            current_usage = reap_owned(process, remaining, receipt["resources"])
+            if current_usage is not None:
+                usage = current_usage
+            remaining = owned_snapshot(leader, known)
         cleaned = not remaining
         if cleaned and subreaper_changed:
             subreaper(previous_subreaper)

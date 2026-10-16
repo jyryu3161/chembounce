@@ -3,6 +3,7 @@
 import copy
 import json
 import os
+import signal
 from pathlib import Path
 import sys
 from types import ModuleType, SimpleNamespace
@@ -232,7 +233,7 @@ def launch(tmp_path, body, **kwargs):
         output=out,
         allocation=kwargs.pop("allocation", 2),
         watchdog=kwargs.pop("watchdog", 3),
-        grace=0.15,
+        grace=kwargs.pop("grace", 0.15),
         interval=0.02,
         **kwargs,
     )
@@ -252,10 +253,17 @@ def test_real_fake_timeout_ignoring_term(tmp_path):
         "signal.signal(signal.SIGTERM,signal.SIG_IGN)\ntime.sleep(10)",
         allocation=0.05,
         watchdog=0.1,
+        grace=1.0,
     )
     assert r["status"] == "watchdog_timeout"
     assert r["cleanup"]["kill_monotonic"] is not None
-    assert r["wall_seconds"] < 1
+    assert r["cleanup"]["complete"] and r["cleanup"]["remaining"] == []
+    assert r["returncode"] == -signal.SIGKILL
+    assert r["resources"]["child_cpu_seconds"] is not None
+    assert r["subreaper"]["after"] == r["subreaper"]["before"]
+    # This real scheduling smoke has a declared one-second grace. Precise
+    # boundary/race behavior is covered separately with deterministic clocks.
+    assert r["wall_seconds"] < 1.6
 
 
 def test_reuse_output_refused(tmp_path):
@@ -1089,3 +1097,193 @@ def test_subreaper_restored_after_success_and_preexisting_rejection(tmp_path):
     finally:
         child.terminate()
         child.wait()
+
+
+@pytest.mark.parametrize(
+    "late",
+    [
+        "worker",
+        "assessor",
+        "setup",
+        "finalization",
+        "final_checkpoint",
+        "outer_checkpoint",
+        "interrupted_worker",
+    ],
+)
+def test_durable_parent_boundaries_fail_closed(tmp_path, monkeypatch, late):
+    plan = complete_plan(tmp_path)
+    path, auth = tmp_path / "plan.json", tmp_path / "auth.json"
+    supervisor.write(path, plan)
+    sha = study.digest(path)
+    supervisor.write(
+        auth,
+        dict(
+            schema="polar-capacity-development-launch-v1",
+            plan_sha256=sha,
+            source_review_passed=True,
+            resource_clearance=True,
+        ),
+    )
+    clock, delayed = [0.0], [False]
+    monkeypatch.setattr(study.time, "monotonic", lambda: clock[0])
+    monkeypatch.setattr(study, "runtime", lambda: plan["administrative_runtime"])
+    real_write = study.write
+
+    def writing(destination, value):
+        destination = Path(destination)
+        real_write(destination, value)
+        phase = destination.parent.name
+        if delayed[0]:
+            return
+        if destination.name == "receipt.json" and (
+            phase == late or (late == "interrupted_worker" and phase == "worker")
+        ):
+            delayed[0] = True
+            if late == "interrupted_worker":
+                raise KeyboardInterrupt("after durable phase write")
+            clock[0] += 2
+        if destination.name == "ledger.json" and "parent_finalization_seconds" in value.get(
+            "administration", {}
+        ):
+            if late in {"final_checkpoint", "outer_checkpoint"}:
+                delayed[0] = True
+                clock[0] = 4681.0 if late == "outer_checkpoint" else clock[0] + 301
+
+    monkeypatch.setattr(study, "write", writing)
+
+    def fake(argv, **kw):
+        out = kw["output"]
+        out.mkdir()
+        phase = out.name
+        elapsed = kw["allocation"] - 1 if phase == late else 0.01
+        clock[0] += elapsed
+        payload = {"status": "verified"}
+        if phase == "worker":
+            payload = {"status": "returned"}
+        if phase == "assessor":
+            request = study.read(argv[argv.index("--request") + 1])
+            payload = dict(
+                status="validated", index=request["index"], coverage_failures=[], qualified=[product("same")]
+            )
+        real_write(out / "terminal.json", payload)
+        receipt = valid_receipt(kw["allocation"])
+        receipt["wall_seconds"] = elapsed
+        return receipt
+
+    monkeypatch.setattr(study, "supervise", fake)
+    args = SimpleNamespace(
+        plan=str(path),
+        plan_sha256=sha,
+        authorization=str(auth),
+        authorization_sha256=study.digest(auth),
+        output=plan["output"],
+    )
+    code = study._run(args, 0.0, 4680.0)
+    ledger = study.read(Path(plan["output"]) / "ledger.json")
+    assert delayed[0]
+    if late in {"worker", "assessor"}:
+        row = ledger["rows"][0]
+        disk = study.read(Path(plan["output"]) / "slot-0000" / late / "receipt.json")
+        assert row[late]["status"] == disk["status"] == "allocation_exceeded"
+        assert ledger["summary"]["rows"][0]["primary"] == 0
+    elif late == "setup":
+        assert code == 1
+        assert ledger["administration"]["before"]["status"] == "allocation_exceeded"
+        assert all(row["status"] == "not_started" for row in ledger["rows"])
+    elif late == "interrupted_worker":
+        assert code == 1 and ledger["summary"]["rows"][0]["primary"] == 0
+        assert "worker" not in ledger["rows"][0]
+        disk = study.read(Path(plan["output"]) / "slot-0000/worker/receipt.json")
+        assert disk["status"] == "persistence_interrupted"
+        assert not study.receipt_eligible(disk, 600)
+    else:
+        assert code == 1 and ledger["status"] == "integrity_incomplete"
+        if late == "finalization":
+            assert ledger["administration"]["after"]["status"] == "allocation_exceeded"
+        elif late == "final_checkpoint":
+            assert ledger["administration"]["parent_finalization_seconds"] > 300
+        else:
+            assert ledger["parent_total_wall_seconds"] > 4680
+
+
+def test_owned_reaping_retains_individual_usage_and_never_sums_peaks(monkeypatch):
+    parent = os.getpid()
+    records = {p: dict(pid=p, start_ticks=p, ppid=parent, state="Z") for p in (101, 102, 103)}
+    proc = SimpleNamespace(pid=101, returncode=None)
+    resources = {"adopted_child_usage": []}
+    usages = {p: SimpleNamespace(ru_maxrss=p * 10, ru_utime=p / 10, ru_stime=p / 100) for p in records}
+    monkeypatch.setattr(supervisor, "identity", lambda p: records.get(p))
+    waits = []
+
+    def wait(pid, flags):
+        waits.append((pid, flags))
+        return pid, 0, usages[pid]
+
+    monkeypatch.setattr(supervisor.os, "wait4", wait)
+    leader = supervisor.reap_owned(proc, records, resources)
+    assert leader is usages[101] and proc.returncode == 0
+    assert waits == [(p, os.WNOHANG) for p in (101, 102, 103)]
+    assert resources == {
+        "adopted_child_usage": [
+            dict(
+                identity=records[p],
+                ru_maxrss_kib=usages[p].ru_maxrss,
+                cpu_seconds=usages[p].ru_utime + usages[p].ru_stime,
+                returncode=0,
+            )
+            for p in (102, 103)
+        ]
+    }
+
+
+@pytest.mark.parametrize("unreapable", [False, True])
+def test_final_snapshot_zombie_is_reaped_or_remains_unsafe(tmp_path, monkeypatch, unreapable):
+    # Deterministic child exits between the loop's wait and its next snapshot.
+    pid = 987654
+    entry = dict(pid=pid, start_ticks=5, ppid=os.getpid(), state="Z", session=pid, pgrp=pid)
+    proc = SimpleNamespace(pid=pid, returncode=None)
+    clock, waits, sr = [0.0], [0], [0]
+    usage = SimpleNamespace(ru_maxrss=456, ru_utime=0.2, ru_stime=0.3)
+    monkeypatch.setattr(supervisor.time, "sleep", lambda seconds: None)
+    monkeypatch.setattr(supervisor, "identity", lambda p: entry if p == pid else dict(pid=p, start_ticks=1))
+    monkeypatch.setattr(
+        supervisor, "subreaper", lambda value=None: sr[0] if value is None else sr.__setitem__(0, value)
+    )
+    monkeypatch.setattr(supervisor.subprocess, "Popen", lambda *a, **k: proc)
+    monkeypatch.setattr(supervisor.psutil, "Process", lambda *a: SimpleNamespace(children=lambda **k: []))
+    monkeypatch.setattr(supervisor, "parent_memory", lambda: {})
+
+    def snapshot(*args):
+        clock[0] = 1.0  # scan crossed watchdog + cleanup; no stale-time decision
+        return {pid: entry} if proc.returncode is None else {}
+
+    monkeypatch.setattr(supervisor, "owned_snapshot", snapshot)
+
+    def wait(p, flags):
+        waits[0] += 1
+        assert flags == os.WNOHANG
+        return (0, 0, None) if waits[0] == 1 or unreapable else (pid, 0, usage)
+
+    monkeypatch.setattr(supervisor.os, "wait4", wait)
+    result = supervisor.supervise(
+        ["fake"],
+        cwd=tmp_path,
+        env={},
+        output=tmp_path / "out",
+        allocation=0.05,
+        watchdog=0.1,
+        grace=0.15,
+        clock=lambda: clock[0],
+        check_workload=lambda blocked: [],
+        sample=lambda records: dict(rss_bytes=0, gaps=[]),
+    )
+    if unreapable:
+        assert result["status"] == "unsafe_cleanup" and result["cleanup"]["remaining"]
+        assert result["returncode"] is None and sr[0] == 1
+        assert waits[0] == 3  # loop + exactly two bounded final passes
+    else:
+        assert result["status"] == "watchdog_timeout" and result["cleanup"]["complete"]
+        assert result["returncode"] == 0 and result["resources"]["lifetime_ru_maxrss_kib"] == 456
+        assert result["resources"]["child_cpu_seconds"] == 0.5 and sr[0] == 0
+        assert waits[0] == 2

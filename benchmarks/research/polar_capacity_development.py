@@ -1051,6 +1051,8 @@ def _run(args, outer_started, outer_deadline):
         # Administrative preparation includes parent plan/request overhead.
         if directory.name == "setup":
             allocation = watchdog = min(300, setup_deadline - phase_start)
+        elif finalizing:
+            allocation = watchdog = min(300, final_started + 300 - phase_start)
         needed = watchdog + (30 if command != "admin" else 0) + (0 if finalizing else 300)
         if allocation <= 0 or remaining < needed:
             return {"status": "outer_budget_exhausted", "cleanup": {"complete": True}, "resources": None}
@@ -1072,11 +1074,32 @@ def _run(args, outer_started, outer_deadline):
         result["parent_observed_phase_seconds"] = time.monotonic() - phase_start
         if result["status"] == "completed" and result["parent_observed_phase_seconds"] > allocation:
             result["status"] = "allocation_exceeded"
-        write(directory / "receipt.json", result)
+        try:
+            write(directory / "receipt.json", result)
+        except BaseException:
+            # A controlled interruption after replacement but during fsync must
+            # not leave a usable completed receipt. Hard termination still
+            # requires the enclosing terminal process/ledger authority.
+            result["status"] = "persistence_interrupted"
+            write(directory / "receipt.json", result)
+            raise
+        # Persistence belongs to this phase too. The returned record (and the
+        # enclosing ledger) observes the completed write; a late write is
+        # corrected durably before any assessor can consume it. Corrective
+        # failure writes cannot restore eligibility or grant more work time.
+        result["parent_observed_phase_seconds"] = time.monotonic() - phase_start
+        if result["status"] == "completed" and result["parent_observed_phase_seconds"] > allocation:
+            result["status"] = "allocation_exceeded"
+            write(directory / "receipt.json", result)
         return result
 
     def checkpoint():
-        write(output / "ledger.json", ledger)
+        try:
+            write(output / "ledger.json", ledger)
+        except BaseException:
+            ledger["status"] = "integrity_incomplete"
+            write(output / "ledger.json", ledger)
+            raise
 
     try:
         ledger["administration"]["before"] = phase("admin", output / "setup", plan["checker"], 300, 300)
@@ -1153,6 +1176,7 @@ def _run(args, outer_started, outer_deadline):
         ledger["status"] = "failed"
         ledger["error"] = {"type": type(exc).__name__, "message": str(exc)}
     finally:
+        final_started = time.monotonic()
         # Never launch finalization while owned processes are still unsafe.
         unsafe = (
             any(
@@ -1163,7 +1187,6 @@ def _run(args, outer_started, outer_deadline):
             or ledger["administration"].get("before", {}).get("cleanup", {}).get("complete") is False
         )
         checkpoint()
-        final_started = time.monotonic()
         if not unsafe:
             final_request = output / "final-request.json"
             write(
@@ -1189,6 +1212,15 @@ def _run(args, outer_started, outer_deadline):
         if final_elapsed > 300 or time.monotonic() > outer_deadline:
             ledger["status"] = "integrity_incomplete"
         checkpoint()
+        # The last success-record fsync is work, not free finalization. A
+        # crossed bound requires a failure correction; the outer watchdog
+        # remains active throughout both writes and the caller requires exit 0.
+        final_elapsed = time.monotonic() - final_started
+        ledger["administration"]["parent_finalization_seconds"] = final_elapsed
+        ledger["parent_total_wall_seconds"] = time.monotonic() - outer_started
+        if final_elapsed > 300 or time.monotonic() > outer_deadline:
+            ledger["status"] = "integrity_incomplete"
+            checkpoint()
     return 0 if ledger["status"] == "returned" else 1
 
 
