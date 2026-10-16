@@ -359,3 +359,39 @@ def test_incomplete_pad_tokens_consume_full_output_budget(assets, route, strict_
     assert second["status"] == "unknown" and "budget" in second["reason"]
     assert evaluator.usage["predictor_calls"] == len(strict_predictor.calls) == 1
     assert evaluator.usage["output_tokens"] == 768
+
+
+def test_bundle_allows_only_standard_download_metadata_without_loading(tmp_path, monkeypatch):
+    import hashlib
+
+    from chembounce_synthesis import forward_support
+
+    # Reproduce the actual local bundle/cache names with small controlled bytes;
+    # validation does not instantiate either the model or tokenizer.
+    pinned = {}
+    for name in forward_support.FILES:
+        path = tmp_path / name
+        path.write_text("controlled asset " + name)
+        pinned[name] = hashlib.sha256(path.read_bytes()).hexdigest()
+    monkeypatch.setattr(forward_support, "FILES", pinned)
+    download = tmp_path / ".cache/huggingface/download"
+    download.mkdir(parents=True)
+    for name in set(pinned) | {"README.md", "trainer_state.json"}:
+        (download / (name + ".metadata")).write_text("revision\nopaque-etag\n0\n")
+    (download.parent / ".gitignore").write_text("*\n")
+    ignored = forward_support.validate_bundle(tmp_path)
+    assert len(ignored) == len(pinned) + 3
+    assert ".cache/huggingface/download/model.safetensors.metadata" in ignored
+    for unexpected in (
+        tmp_path / "alternate.safetensors",
+        download / "tokenizer.json",
+        download / "adapter.py",
+    ):
+        unexpected.write_text("unexpected alternative model/config/code")
+        with pytest.raises(ValueError, match="Unexpected"):
+            forward_support.validate_bundle(tmp_path)
+        unexpected.unlink()
+    # Pinned numerical bytes still cannot drift when valid metadata exists.
+    (tmp_path / "config.json").write_text("changed model configuration")
+    with pytest.raises(ValueError, match="asset mismatch: config.json"):
+        forward_support.validate_bundle(tmp_path)

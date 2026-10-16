@@ -98,17 +98,49 @@ def validate_settings(provider):
         raise ValueError("Unsupported strict forward-model settings")
 
 
+def validate_bundle(model_path):
+    """Validate numerical assets without loading a model or tokenizer.
+
+    Hugging Face's local-download metadata is not a model search location. Only
+    its known directory layout and metadata for this bundle are allowed; nested
+    model/config/code files and symlinks remain unsupported.
+    """
+    path = Path(model_path).resolve()
+    if not path.is_dir():
+        raise ValueError("Pinned ReactionT5 model directory is missing")
+    auxiliary = {"README.md", "trainer_state.json"}
+    if set(p.name for p in path.iterdir()) - set(FILES) - auxiliary - {".cache"}:
+        raise ValueError("Unexpected files in pinned ReactionT5 bundle")
+    ignored = {}
+    cache = path / ".cache"
+    if cache.exists() or cache.is_symlink():
+        if cache.is_symlink() or not cache.is_dir():
+            raise ValueError("Unsupported ReactionT5 metadata cache")
+        directories = {"huggingface", "huggingface/download"}
+        metadata = {"huggingface/.gitignore"} | {
+            "huggingface/download/" + name + ".metadata" for name in set(FILES) | auxiliary
+        }
+        for entry in sorted(cache.rglob("*")):
+            relative = entry.relative_to(cache).as_posix()
+            if entry.is_symlink() or (
+                relative not in directories
+                if entry.is_dir()
+                else relative not in metadata or not entry.is_file()
+            ):
+                raise ValueError(f"Unexpected file in ReactionT5 metadata cache: {relative}")
+            if entry.is_file():
+                ignored[".cache/" + relative] = digest(entry)
+    for name, expected in FILES.items():
+        if not (path / name).is_file() or digest(path / name) != expected:
+            raise ValueError(f"Pinned ReactionT5 asset mismatch: {name}")
+    return ignored
+
+
 class PinnedReactionT5Forward(ReactionT5Forward):
     def __init__(self, model_path, **kwargs):
         validate_settings({"model_path": model_path, **kwargs})
         path = Path(model_path).resolve()
-        if not path.is_dir():
-            raise ValueError("Pinned ReactionT5 model directory is missing")
-        if set(p.name for p in path.iterdir()) - set(FILES) - {"README.md", "trainer_state.json"}:
-            raise ValueError("Unexpected files in pinned ReactionT5 bundle")
-        for name, expected in FILES.items():
-            if not (path / name).is_file() or digest(path / name) != expected:
-                raise ValueError(f"Pinned ReactionT5 asset mismatch: {name}")
+        ignored_metadata = validate_bundle(path)
         runtime = {name: importlib.metadata.version(name) for name in RUNTIME}
         if platform.python_version() != "3.10.12" or runtime != RUNTIME:
             raise ValueError(f"Pinned ReactionT5 runtime mismatch: {runtime}")
@@ -116,6 +148,7 @@ class PinnedReactionT5Forward(ReactionT5Forward):
         self.torch.set_num_threads(1)
         self.provenance.update(
             profile=PROFILE,
+            ignored_non_model_metadata_sha256=ignored_metadata,
             python=platform.python_version(),
             platform=platform.platform(),
             torch_threads=self.torch.get_num_threads(),
