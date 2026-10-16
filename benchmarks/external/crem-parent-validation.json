@@ -1,0 +1,69 @@
+{
+  "checked_utc": "2026-10-16T02:18:00.389434+00:00",
+  "implementation_commit": "27094f549558541e26347672455a390331cf3689",
+  "independent_count_similarity_oracle": {
+    "eligible_rows": 6,
+    "manual_family_classes": 4,
+    "no_route_not_synthetic_failure": true,
+    "raw_rows": 10,
+    "score_check": "Independent RDKit Morgan sparse counts and manual sum(min)/sum(max), tolerance1e-12",
+    "selected_indices": [
+      3,
+      6,
+      5
+    ]
+  },
+  "limits": [
+    "No benchmark chemistry or performance inference from these engineering fixtures.",
+    "No molecule strings, raw private predictions, or absolute private paths included.",
+    "Hash-bound local reports/logs are retained evidence, not a self-contained public replay.",
+    "Inventory preparation, full DB construction and new benchmark execution require distinct later assessment."
+  ],
+  "not_executed_at_parent_review": [
+    "full training inventory preparation",
+    "full fragment DB builds",
+    "actual benchmark query generation",
+    "GPU inference"
+  ],
+  "original_frozen39_unchanged": true,
+  "project_source_sha256": {
+    "benchmarks/external/crem_baseline.py": "df41757d8e8e4145a755a6be91929c11a52b7ee0bc4a59c9426957ffd2804d00",
+    "benchmarks/research/__init__.py": "327f267abf66df80902e31f0c50896eaf9b92a3122158bf0e061e8a5c52a15ae",
+    "benchmarks/research/evaluation.py": "4bc5f24c5f2e043b52c55e530ec35d68407b669a017804a9f5e75c67729a75e5",
+    "benchmarks/research/protocol.py": "ebabb21494a8293353ed3a45b5832ea98542e4fddffa222a6aed92105bdbe09e",
+    "benchmarks/research/runner.py": "7b1cc8d6d7a3e1a7f454b8f93195e9d5618405500bb521e128689447601bb4e7",
+    "chembounce_synthesis/__init__.py": "8d5968b9f40381dafd4b5b491c0d09f0f3536f08ba3bf56503a96df3df459435",
+    "chembounce_synthesis/common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+    "chembounce_synthesis/exploration.py": "e2dff768077c5957261660d8f4aeaa9434388c0a7a7e0a4504ab0f047dbdc315",
+    "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+    "chemistry.py": "bdd598d1255ce827fb6843e3d95f8ceb4a5cdafe33335086f0b270b04940f462",
+    "fingerprint_db.py": "3831ab3f05aafdb1f683a3edb6fcd0e1eb5e748c1b9e8c0e6f88e9d16a83285f",
+    "tests/test_crem_baseline.py": "ff914bf63737f526fb2dcb32f6404ee1a4a12981d52b2ba0ab6b037dbd5765c2"
+  },
+  "pytest": {
+    "exit_code": 0,
+    "log_sha256": "d6132770e4c9e4ef42520dfaffaaad6d7faa71464209eea67485d8eac0767b09",
+    "passed": 46,
+    "seconds": 9.68,
+    "skipped": 0
+  },
+  "related_files_sha256": {
+    "benchmarks/external/README-crem.md": "24e85054e8a93912d78aad982d6b82be3c9b09bbc0af3ded7e089b97748607a7",
+    "benchmarks/external/crem-engineering-validation.json": "d33ca206487e94950942b3b12997de9b8fff82f2b891f31ea32d064d40895286"
+  },
+  "runtime_record_sha256": "30c9b361c018c495957857c0bcc5d24d675c228613204a1b4a527b953ea0f94a",
+  "schema_version": 1,
+  "scope": "Parent engineering and literal chemistry selection assessment; real official tiny DB/API fixtures, not performance/activity/synthesis validation.",
+  "source_and_runtime_unchanged": true,
+  "source_report": {
+    "artifact": "benchmark-results/research-validation/crem-implementation-parent-review-20261016/validation.json",
+    "bundled": false,
+    "sha256": "d5ac38fe4e968a6609bcb9d34de784b9f1470773fabb6aba9f65e7f809c90ac9"
+  },
+  "status": "independent_parent_implementation_review_passed",
+  "upstream": {
+    "commit": "b84003cd8c84bc2afe98b5473570b7328e703ead",
+    "tracked_files_verified_against_git_blobs": 80,
+    "url": "https://github.com/DrrDom/crem"
+  }
+}
