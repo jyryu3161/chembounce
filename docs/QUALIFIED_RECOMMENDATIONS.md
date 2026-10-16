@@ -40,10 +40,19 @@ not replace the default score or polar-recall floors.
 
 The scorer/constraint source gate passed at `094d0c2`, and the separate workflow
 gate passed at `68750e0` (integrated as `7161ff3`): root 208 tests, independent 60
-and author 27 passed. The named preset and benchmark integration in this change
-remain subject to their own source review. Known-fixture actual inference and
-fresh scientific evaluation are separate gates; no performance or experimental
-synthesis claim follows from these source tests.
+and author 27 passed. The corrected named preset and benchmark integration passed
+their source gate at `d9402ab`: full research suite **1449 passed, 11 skipped**;
+independent unchanged regression **64 passed**, additional adversarial checks
+**33 passed**, and fresh-interpreter guard checks **5 passed**. Minimum-runtime
+compatibility was **69 passed, 9 skipped**, and Python 3.12 compatibility was
+**76 passed, 2 skipped**; skips do not establish qualified 3D support. The
+collector now rejects inconsistent empty outputs and representative metrics or
+SDF metadata that do not agree with the retained trials. The original failed
+review is preserved. Source gate SHA-256:
+`ae05b5fa7707b6fa400179275026742518b0e43d59c78c62362bdf3e90737b95`.
+Known-fixture actual inference with this new preset and fresh scientific
+evaluation remain separate gates; no performance or experimental synthesis
+claim follows from these source tests.
 
 For example, add the following fields to an existing synthesis configuration
 with explicit catalog, rules, provider and evidence settings:
@@ -166,6 +175,42 @@ and pose-search logs remain trusted frozen-scorer outputs, not independent
 attestations of arbitrary external logs. No actual fresh campaign has been run
 by this implementation change.
 
+## Selective development evaluation: completed, limited improvement
+
+The fixed 197 previously inspected pairs were evaluated once on frozen
+`86a8b02` using the first scorer from `094d0c2`, across seeds 42/43/44:
+**591 planned and returned trials**, with no retry or timeout. The new joint
+selector accepted **32/197 pairs** at all three seeds: 21/111 assay-active and
+11/86 assay-inactive. Applying the joint constraints to the old selected poses
+accepted 29 pairs; three old-pose comparisons were unavailable and remain in
+the full operational denominator. Among 194 assessed comparisons, 29 passed
+both selectors, 162 failed both, and three passed only the new selector. These
+three recoveries comprise one active and two inactive examples. Inactive assay
+labels are not structural-negative labels, and these results establish neither
+activity discrimination nor biological activity retention.
+
+Active acceptance was zero on both CHEMBL205 and CHEMBL220. The equal-target,
+equal-query active acceptance was 17.86% versus 17.02% for the old selected-pose
+joint check. The older global-floor-only comparison accepted 40 pairs, but it
+does not require polar coverage and is a different acceptance contract. Retain
+these heterogeneous and negative outcomes; do not tune the frozen policy to
+the future evaluation panel.
+
+The run took 1491.80 seconds wall time and 1446.57 seconds waited-child CPU time,
+with 420 actual embedding calls. Individual trial outcomes were 131 successes,
+451 abstentions and nine failures due to unspecified stereochemistry. A seed
+success alone is not a three-seed pair acceptance. No route generation, forward
+model or experimental validation occurred. This is development evidence for
+the earlier scorer, not execution evidence for the later integrated workflow
+or named preset, and the 32 pairs are not 32 route-qualified recommendations.
+
+The independent audit passed 36,302 checks, including retained-pose assignments
+and full-denominator calculations. Root result gate:
+`qualified-development-20261016/stage6-selective-development-actual-gate-86a8b02.json`,
+SHA-256 `b825ed7800ac5227f3a0d1de86815ad2d76cfa75fd1bf9f2aa05c7bf6f7c649c`.
+The source, raw outputs, original failed diagnostics and both audits remain
+immutable.
+
 ## Six-stage delivery tracker
 
 | Stage | Required outcome and evidence gate | Status |
@@ -175,7 +220,7 @@ by this implementation change.
 | 3. Similarity-aware route/search | Search and route construction retain original-hit similarity while finding changed scaffolds and viable route products; compare yield and compute under fixed budgets. | Engineering gate passed at `6adc2cedd73c14cf5a0ab88fbcd61004f3267ef6`. Controlled toy diagnostics only; scientific yield/compute benchmark remains Stage 6. |
 | 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | Full gate passed at `f6ab40e0d1d536636015d94c75f1b815898dc907`; reviewed development artifact and both CLI/API paths verified. Explicit opt-in, permissive development thresholds—not a strong-similarity guarantee. |
 | 5. Independent synthesis evidence | Establish independent, route-specific evidence and provenance beyond catalog/rule replay; define treatment of unknowns, missing context, atom sources, model disagreement and observation quality. Never present a heuristic as a synthesis probability. | Engineering and known-fixture execution gate passed at `4d47b30c925152198d2fb8e68cdad3b502bacc7d`. Conditional computational support; no experimental or post-selection independence claim. |
-| 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Ten-attempt inspected development pilot completed; fresh evaluation pending. No scientific performance improvement claimed. |
+| 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Ten-attempt inspected development pilot and separate 197-pair selective scoring evaluation completed. New preset/collector source gate passed at `d9402ab`; actual new-preset route integration and fresh evaluation remain pending. No scientific superiority claimed. |
 
 Each stage requires implementation, focused validation and independent review
 before the next stage. Historical published results and source inventories are
@@ -883,43 +928,57 @@ exact SMILES, separate from private activity/assay/selection evidence.
 
 ## Remaining delivery and research decisions
 
-1. Completed prerequisite: the inspected pilot root result gate is closed with
-   the final independent ledger and all ten selected-output audits. The revised
-   catalog-equivalence diagnostic also passed its root and independent result
-   gates with blocked-operation telemetry. Preserve the negative comparisons
-   and the original failed diagnostic unchanged.
-2. Completed prerequisite: the augmented pilot exclusion inventory passed its
-   source-bound root gate with the coverage limitations documented above.
-   The next freeze must bind the reviewed new profile, workflow/collector and
-   selection sources, exclusion mappings, models, assets, runtime, methods,
-   budgets and analysis before fresh acquisition. Resolve known target aliases
-   from official records and disclose normalization, incomplete inspection and
-   checkpoint-training gaps.
-3. Evaluate the proposed six-target/two-query/three-seed panel with five methods
-   and two ablations (252 planned attempts), only after the complete panel and
-   protocol pass review. Measure joint recommendation success, unique output
-   yield, per-target behavior, scaffold changes, similarity distributions and
-   full costs. Failures and missing attempts stay in the denominator; six target
-   clusters support descriptive uncertainty, not a strong significance claim.
-4. Before fresh acquisition, finish independent source review and freeze the
-   separately versioned selective engineering policy and its benchmark protocol. The existing development profile is deliberately
-   permissive and does not guarantee high
-   similarity or retained activity. A stricter profile needs a separately
-   declared acceptance objective and frozen external evaluation;
-   it must not be fitted to the fresh benchmark outcomes or retroactively
-   relabel the existing profile. Active/inactive labels alone do not establish
-   structural similarity: inactive compounds can be close structural analogues.
-   If structural reference labels are unavailable, explicitly identify any
-   stricter thresholds as engineering constraints and report development
-   tradeoffs without claiming a calibrated similarity classifier. Keep 2D, 3D
-   shape and pharmacophore evidence separate, and report the tradeoff with changed
-   scaffolds and output yield.
-5. Keep practical synthesis questions explicit: model/rule agreement does not
-   supply reaction conditions, yield, selectivity or current purchasing stock.
-   Computational route support is the current delivered evidence level.
-   Experimental synthesis/activity validation and an additional independent
-   synthesis assessment are separate research extensions, with collaboration
-   still undecided.
+The final recommendation must jointly satisfy original-hit similarity on the
+same retained pose, normalized scaffold change, all required feature/anchor
+constraints, complete three-seed validation and exact-product computational
+route support. Any missing required evidence produces an explicit rejection or
+empty result. Ranking applies only after these conditions pass. The immediate
+delivery order and completion checks are:
+
+1. **Close the corrected software contract and integrate it.** The preset,
+   workflow and collector source gate passed at `d9402ab`; integrate the exact
+   reviewed source and pass CI. Preserve the old profile and its historical
+   results. Numeric floors remain declared engineering settings, and inactive
+   assay labels must never be treated as structural dissimilarity labels.
+2. **Verify the actual new-preset route path.** Freeze and independently review
+   the known amide fixture, local forward model, effective configuration and
+   wrapper before one CPU execution. Require the exact regenerated product,
+   complete forward token evidence, all three final seeds and consistent
+   JSON/TSV/SDF exports. The small synthetic catalog establishes fixture
+   membership only, not vendor stock. A known example closes an integration
+   check; it does not establish useful yield on new inputs.
+3. **Freeze and acquire the fresh evaluation panel.** The pilot audits,
+   catalog-equivalence diagnostic and augmented exclusion inventory are
+   complete. Rebind the campaign definition to the reviewed selective profile,
+   v2 benchmark protocol and source, plus exclusion mappings, assets, runtime,
+   budgets and analysis before acquisition. Resolve known target aliases from
+   official records and replay selection from retained acquisition bytes.
+   Disclose normalization, incomplete inspection and checkpoint-training gaps.
+4. **Measure useful candidate yield and full cost.** Run the proposed six-target,
+   two-query, three-generation-seed panel with five methods and two ablations
+   (252 planned attempts) only after panel and protocol review. The primary
+   endpoint is at least one jointly qualified recommendation per planned
+   attempt. Report unique yield, scaffold change including generic topology,
+   separate 2D/3D/pharmacophore metrics, per-target behavior, route evidence,
+   failures and complete costs. Keep missing and failed attempts in denominators.
+   Six target clusters support descriptive uncertainty, not a strong
+   significance claim.
+5. **Improve generation from diagnosed failures.** The 32/197 development
+   acceptances and zero-active-acceptance targets show that software correctness
+   alone is insufficient. Use development-only failure attribution to separate
+   proposal supply, route construction, 3D feasibility and evidence failures.
+   Any search-budget, feature-conditioned generation, route-first proposal or
+   ranking change requires a new version and prospective comparison. Do not
+   lower the locked acceptance conditions to fill an output quota or tune on
+   the fresh test outcomes; further method development needs another held-out
+   evaluation. The current run does not justify a speed or yield advantage.
+6. **Establish the publication claim and practical synthesis evidence.** Select
+   representative successes and failures and test which components contribute
+   under declared budgets. Computational rule/model agreement does not provide
+   reaction conditions, yield, selectivity or current purchasing stock. An
+   additional independent synthesis assessment, experimental synthesis and
+   activity testing are separate extensions; collaboration remains undecided.
+   Claims about retained activity require evidence beyond structural similarity.
 
 The publication claim must follow these results. If generator ablations and
 comparators do not show an advantage, report that outcome and reconsider which
