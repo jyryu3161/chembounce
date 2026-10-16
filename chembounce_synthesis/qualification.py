@@ -42,7 +42,17 @@ def effective_policy(config):
         "mode": mode,
         "calibration": profile_provenance(config),
         "minimum_scores": dict(minimum),
-        "evidence_policy": asdict(EvidencePolicy(**config.get("synthesis_evidence", {}).get("policy", {}))),
+        "evidence_profile": config.get("synthesis_evidence", {}).get("profile", "legacy-conditional-v1"),
+        "evidence_policy": asdict(
+            EvidencePolicy(
+                **config.get("synthesis_evidence", {}).get(
+                    "policy",
+                    {"require_forward_agreement": True}
+                    if config.get("synthesis_evidence", {}).get("profile") == "computational-route-support-v1"
+                    else {},
+                )
+            )
+        ),
         "evidence_product_matching": config.get("synthesis_evidence", {}).get("product_matching", "exact"),
         "conformers": asdict(ConformerSettings(**config.get("conformers", {}))),
         "ranking_policy": config.get(
@@ -144,7 +154,7 @@ def validate_result(result, product, settings, *, hit=None, design=None):
         raise ValueError(f"Incomplete final scoring result: {exc}") from exc
 
 
-def decide(row, record, result, policy, settings, refinement, report=None, *, hit):
+def decide(row, record, result, policy, settings, refinement, report=None, *, hit, evidence_validator=None):
     """Conjunction over final-route identity, requested evidence, scores and seeds.
 
     Chemical constraints use workflow.check_constraints before this call. Route
@@ -173,6 +183,12 @@ def decide(row, record, result, policy, settings, refinement, report=None, *, hi
         or len(evidence.get("steps", [])) != len(verification.get("steps", []))
     ):
         reasons.append("Requested synthesis evidence is missing, failed or mismatched")
+    elif policy.get("evidence_profile") == "computational-route-support-v1":
+        try:
+            if evidence_validator is None or evidence_validator(record) is not True:
+                raise ValueError("Strict evidence requires fresh route/raw prediction validation")
+        except (ValueError, KeyError, TypeError, RuntimeError) as exc:
+            reasons.append(str(exc))
     else:
         for step, verified in zip(evidence["steps"], verification["steps"]):
             if (

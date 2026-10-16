@@ -58,6 +58,11 @@ def synthetic_profile(tmp_path, monkeypatch):
     return path, artifact
 
 
+@pytest.fixture(autouse=True)
+def controlled_profile_forward(strict_predictor):
+    return strict_predictor
+
+
 def configuration(tmp_path, assets, proposal):
     path = tmp_path / "saved.json"
     path.write_text(
@@ -69,6 +74,9 @@ def configuration(tmp_path, assets, proposal):
         "rules": str(assets[1].path),
         "provider": {"kind": "saved", "path": str(path)},
         "recommendation_profile": profiles.PROFILE,
+        "synthesis_evidence": {
+            "predictor": {"kind": "reactiont5", "model_path": str(tmp_path / "controlled-model")}
+        },
         "search": {"building_block_top_k": 1, "beam_width": 1},
         "max_designs": 1,
         "max_design_attempts": 4,
@@ -236,6 +244,8 @@ def test_profile_api_cli_exports_and_continuation_recheck(
             assert mol.GetProp("calibration_artifact_sha256") == digest
             assert mol.GetProp("recommendation_profile") == profiles.PROFILE
             assert mol.GetProp("calibration_status") == "development_protocol_matched"
+            assert mol.GetProp("evidence_profile") == "computational-route-support-v1"
+            assert mol.GetProp("route_support_binding") == table[0]["route_support_binding"]
     hit, designs, carried = continuation_inputs(cli)
     assert carried["recommendation_profile"] == profiles.PROFILE
     carried["minimum_scores"]["hit_shape"] = 0.02
@@ -263,6 +273,7 @@ def test_integrated_cli_profile_uses_refill_and_cannot_disable_synthesis(
 
     config = configuration(tmp_path, assets, proposal)
     config.pop("recommendation_profile")
+    forward_path = config["synthesis_evidence"]["predictor"].pop("model_path")
     # Hopping can emit any pyridyl regioisomer; provide their saved routes.
     proposals = []
     for amine in ("Nc1ccncc1", "Nc1cccnc1", "Nc1ccccn1"):
@@ -304,12 +315,20 @@ def test_integrated_cli_profile_uses_refill_and_cannot_disable_synthesis(
         str(path),
         "--recommendation-profile",
         profiles.PROFILE,
+        "--forward-model-path",
+        forward_path,
     ]
     assert chembounce.main(args + ["--no-synllama"]) == 2
     assert not out.exists()
     assert chembounce.main(args) == 0
     status = profiles.profile_provenance(
-        workflow._config({**config, "recommendation_profile": profiles.PROFILE})
+        workflow._config(
+            {
+                **config,
+                "recommendation_profile": profiles.PROFILE,
+                "synthesis_evidence": {"predictor": {"kind": "reactiont5", "model_path": forward_path}},
+            }
+        )
     )["status"]
     assert status in capsys.readouterr().out
     assert read(out, "run_manifest.json")["synthesis_design_supply"]["effective_overall_max_n"] == 4
@@ -446,6 +465,7 @@ def test_real_profile_cli_runs_without_manual_cutoffs_and_exports_review_digest(
     pytest.importorskip("rdkit.Chem.rdShapeAlign")
     config = configuration(tmp_path, assets, proposal)
     config.pop("recommendation_profile")
+    forward_path = config["synthesis_evidence"]["predictor"].pop("model_path")
     path = tmp_path / "actual.json"
     path.write_text(json.dumps(config))
     out = tmp_path / "actual"
@@ -460,6 +480,8 @@ def test_real_profile_cli_runs_without_manual_cutoffs_and_exports_review_digest(
                 str(path),
                 "--recommendation-profile",
                 profiles.PROFILE,
+                "--forward-model-path",
+                forward_path,
                 "--output",
                 str(out),
             ]

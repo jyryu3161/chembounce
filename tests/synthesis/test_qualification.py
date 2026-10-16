@@ -505,7 +505,7 @@ def test_standalone_and_integrated_cli_reach_qualified_contract(tmp_path, assets
         == 0
     )
     assert read(out / "synthesis", "results.json")["results"][0]["recommendation_status"] == "qualified"
-    assert capsys.readouterr().out.count("Qualified recommendations:") == 2
+    assert capsys.readouterr().out.count("Qualified recommendations [evidence=legacy-conditional-v1]:") == 2
     assert (
         chembounce.main(
             [

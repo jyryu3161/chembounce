@@ -13,8 +13,8 @@ biological activity, or experimental synthesizability.
 | 1. Unified final qualification | One versioned conjunction at the real API/CLI export boundary; final-product/original-hit similarity, normalized hop, anchor, exact selected route, requested evidence and complete scoring/seed checks. Adversarial workflow tests, alternative survival, continuation, and matching JSON/TSV/SDF selection. | Engineering gate passed at `e47c38a1734bab4f154fc47b4f4fb7fb5493aa43`; explicit engineering thresholds only. |
 | 2. Stereo/design eligibility and bounded refill | Explicit stereo/design eligibility with an auditable, bounded replacement supply when designs fail; preserve caps and complete rejection denominators. | Engineering gate passed at `8461d9a492d181165df53f031f5c12f6a3dde167`. No scientific yield claim. |
 | 3. Similarity-aware route/search | Search and route construction retain original-hit similarity while finding changed scaffolds and viable route products; compare yield and compute under fixed budgets. | Engineering gate passed at `6adc2cedd73c14cf5a0ab88fbcd61004f3267ef6`. Controlled toy diagnostics only; scientific yield/compute benchmark remains Stage 6. |
-| 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | Scorer/ranking and frozen development fit gates passed. Reviewed artifact packaged; release integration gate pending. Explicit opt-in, permissive development thresholds—not a strong-similarity guarantee. |
-| 5. Independent synthesis evidence | Establish independent, route-specific evidence and provenance beyond catalog/rule replay; define treatment of unknowns, missing context, atom sources, model disagreement and observation quality. Never present a heuristic as a synthesis probability. | Pending. Stage 1 enforces the existing explicitly requested evidence policy. |
+| 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | Full gate passed at `f6ab40e0d1d536636015d94c75f1b815898dc907`; reviewed development artifact and both CLI/API paths verified. Explicit opt-in, permissive development thresholds—not a strong-similarity guarantee. |
+| 5. Independent synthesis evidence | Establish independent, route-specific evidence and provenance beyond catalog/rule replay; define treatment of unknowns, missing context, atom sources, model disagreement and observation quality. Never present a heuristic as a synthesis probability. | Active strict computational-support path implemented; source/independent review and authorized CPU adapter smoke pending. No experimental or post-selection independence claim. |
 | 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Pending. No scientific campaign or performance improvement claimed. |
 
 Each stage requires implementation, focused validation and independent review
@@ -52,6 +52,15 @@ Stage 4a scorer/ranking gate passed after the SDF provenance correction at
 runtime **25 passed, 17 skipped**. The correction passed **16** objective/export
 tests and **19** unchanged independent tests. Gate record SHA-256:
 `792edba1c666d61a8f4bc7c6173325ea3ef980ed03d3cd39eab1acdf33ad3365`.
+
+Stage 4 full root gate at `f6ab40e`: **1028 passed, 11 skipped**; focused
+minimum runtime **35 passed, 7 skipped**; Python 3.12 **102 passed, 1 skipped**;
+Ruff lint/format passed for 140 files. Independent release review: **37 passed**
+on research, **30 passed, 7 skipped** on minimum, **35 passed, 2 skipped** on
+Python 3.12. Calibration, reporting-only sensitivity and release artifact chains
+were independently reviewed. Root gate record:
+`qualified-development-20261016/stage4-gate.json`, SHA-256
+`9b419280f4b19c996a0cff0290cf2eecaf5513b346376320832cb50daaf131a2`.
 
 ## Stage 1 interface
 
@@ -93,7 +102,7 @@ final product. `synthesis_evidence.policy` controls additional existing
 requirements. Missing or unknown **required** evidence fails; unrequested
 independent evidence can remain unknown and is reported as such. Passing the
 baseline policy does not claim independent or experimental synthesis validation.
-Stage 5 must establish the production evidence profile.
+The named development profile additionally requires the Stage 5 computational-support contract below; this legacy engineering policy is labelled `legacy-conditional-v1`.
 
 ## Artifacts and compatibility
 
@@ -246,12 +255,12 @@ adaptive enlargement and no arbitrary range tolerance. Previously inspected
 controls are development data only. The scorer change itself introduces no
 empirical cutoffs.
 
-## Stage 4c recommendation profile (release integration gate pending)
+## Stage 4c recommendation profile (gate passed)
 
 The API field `recommendation_profile: "qualified-development-v1"` and both
 CLIs' `--recommendation-profile qualified-development-v1` select one named
 development profile through **explicit opt-in**. Catalog, rules and
-proposal-provider configuration remain explicit; no manual cutoffs are needed.
+proposal-provider configuration remain explicit; no manual cutoffs are needed. The current recommendation flow also requires an explicit pinned local forward-model bundle for Stage 5 support.
 The default exploratory configuration and explicit engineering-qualified mode
 remain available. Missing or corrupt profile assets fail clearly rather than
 substituting values or falling back.
@@ -259,10 +268,11 @@ substituting values or falling back.
 ```sh
 chembounce-synthesis --hit "$HIT_SMILES" --design "$DESIGN_SMILES" \
   --config synthesis-assets.json --recommendation-profile qualified-development-v1 \
-  --output fresh-development-run
+  --forward-model-path "$REACTIONT5_LOCAL_BUNDLE" --output fresh-development-run
 chembounce -i "$HIT_SMILES" -o fresh-development-integrated \
   --synthesis-config synthesis-assets.json \
-  --recommendation-profile qualified-development-v1
+  --recommendation-profile qualified-development-v1 \
+  --forward-model-path "$REACTIONT5_LOCAL_BUNDLE"
 ```
 
 The [packaged reviewed profile](../chembounce_synthesis/data/qualified-development-v1.json)
@@ -350,3 +360,84 @@ are previously inspected development data, and real-design diagnostic
 availability, anchors/properties, finite search/refinement budgets and synthesis
 evidence introduce additional vetoes. No biological activity, future-seed
 robustness, experimental synthesis or held-out validation claim follows.
+
+## Stage 5 computational route support (review and adapter smoke pending)
+
+The named `qualified-development-v1` recommendation flow now requires
+`synthesis_evidence.profile="computational-route-support-v1"`. The API supplies
+`synthesis_evidence.predictor.model_path`; both CLIs accept
+`--forward-model-path`. Missing configuration/assets or an attempted evidence
+profile downgrade fails clearly. To reproduce historical exploratory or explicit
+engineering-qualified runs, omit the named recommendation profile and use the
+separately labelled `legacy-conditional-v1` evidence policy. Supplied observations
+or attribution prose in that legacy policy do not become verified evidence.
+
+The stronger profile adds selection constraints to the unchanged Stage 4
+numerical artifact and kernels. Its success rate does **not** inherit the
+calibration panel's retention figures. It requires every step of the exact
+selected route to have fresh catalog/rule replay, concrete atom/stereo audit,
+and at least one completed exact full-product hypothesis among three pinned
+ReactionT5 beams. A different model from SynLlama is useful selection support,
+but training independence is unknown, and using ReactionT5 during selection is
+not independent post-selection validation. No output is an experimental success
+claim or a synthesis probability.
+
+`route_audit.py` binds route topology, ordered reactant slots, parent/intermediate
+bindings, catalog/rule content digests, rule SMARTS and exact regenerated products.
+All retained heavy atoms and explicit isotopic hydrogens require concrete
+reactant-slot/atom origins; a template-created atom without a donor fails even
+when free-text attribution is supplied. Ordinary hydrogen/proton transfer,
+byproducts and reaction conditions are not mass-balanced. All observed matching
+replay witnesses must have consistent defined atom/stereo correspondence.
+Symmetry and bounded enumeration/truncation are explicit; this is not a claim
+of exhaustive reaction outcomes. Fully specified new/inverted/template-asserted
+stereo additionally requires exact forward-product agreement and is not a
+selectivity guarantee. Unspecified or unsupported route-state stereo fails.
+Older RDKit without concrete `react_idx` origin metadata fails closed.
+
+Only sorted canonical molecular reactant/reagent **multisets**, preserving
+duplicates, enter the predictor's documented `REACTANT:...REAGENT:...` payload.
+Ordered route slots remain separately recorded. Expected product, rule/template,
+original hit, design, source prose and physical conditions never enter the model.
+Supplied reagents must parse as molecular SMILES. Temperature/time remain
+unvalidated physical context; this model does not consume them. Verified physical
+context and empirical-success policies are unavailable in this profile, and
+supplied success records cannot enable them.
+
+The strict adapter pins the complete numerical checkpoint/tokenizer/config
+bundle and declared revision `933114058cb2604dc1bf536dbebdfcefbe83d4fc`, including
+weights SHA-256 `69c23ca364e63e0e2be22d114652aad9f3df4e161d43936eee0dc3ce74a87fb7`.
+It requires Python 3.10.12, Torch 2.8.0, Transformers 4.51.3, tokenizers 0.21.4,
+safetensors 0.6.2 and RDKit 2025.9.6. It uses local files only, no remote code,
+CPU with one Torch thread, deterministic top-three decoding, at most 256 new
+tokens per beam and 512 input tokens. Bundle, adapter, runtime, input-token,
+thread and decoding provenance is retained. Default global evidence limits are
+128 calls, 32768 input tokens and 32768 output tokens; explicit lower limits and
+the workflow deadline remain authoritative. A failed call charges its reserved
+output allowance and is not retried.
+
+The normalization policy was frozen before model smoke execution: remove ASCII
+tokenization spaces, canonicalize isomeric molecular SMILES and remove atom-map
+labels. Reject unknown/special content, other whitespace, empty components,
+names/CXSMILES and terminal dots; preserve every molecular component. The local
+model card documents trailing-dot cleanup, so this deliberately stricter policy
+may lose coverage. It is not a claim that upstream preprocessing is a bug.
+Original decoded text, full/content token IDs, EOS completion and every invalid
+or unfinished beam remain visible. One valid exact full-product beam can support
+a step; absent a match, invalid/unfinished beams mean partial evaluation, not
+complete model disagreement. There is no component-only match or punctuation
+repair.
+
+The cache stores actual molecular inputs, model/settings bindings and raw
+predictions, not expected-product decisions. Each route comparison is recomputed.
+Final qualification performs another fresh route audit and re-decodes/rechecks
+the input-bound cached token evidence without another generation call. Supplied
+matched flags, hashes, attribution claims or a different route's success cannot
+substitute for this check. Alternative routes qualify separately; continuation
+replays and predicts under the current policy rather than trusting prior reports.
+JSON/TSV and selected pose/reference SDFs identify the effective evidence profile
+and selected route-support binding, with complete evidence in `routes.json`.
+
+Stage 5 remains pending until source/independent review and the separately
+authorized bounded CPU adapter smoke pass. No new scientific campaign or Stage 6
+benchmark is included in this implementation.

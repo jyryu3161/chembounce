@@ -262,6 +262,7 @@ class SynthesisEvidenceEvaluator:
         self.observations = _observations([] if observations is None else observations)
         self.reaction_contexts = _reaction_contexts([] if reaction_contexts is None else reaction_contexts)
         self.provenance = {
+            "profile": "legacy-conditional-v1",
             "predictor": copy.deepcopy(predictor.provenance) if predictor is not None else None,
             "policy": asdict(self.policy),
             "product_matching": product_matching,
@@ -453,6 +454,7 @@ class SynthesisEvidenceEvaluator:
             )
         return {
             "schema_version": 1,
+            "profile": "legacy-conditional-v1",
             "evidence_level": "catalog_rule_replay_with_separately_reported_external_evidence",
             "product": canonical(verification["product"]),
             "steps": reports,
@@ -478,6 +480,7 @@ def validate_evidence_config(config):
     if not isinstance(config, dict):
         raise ValueError("synthesis_evidence must be an object")
     allowed = {
+        "profile",
         "predictor",
         "policy",
         "max_predictor_calls",
@@ -490,6 +493,13 @@ def validate_evidence_config(config):
     if set(config) - allowed:
         raise ValueError(f"Unknown synthesis_evidence keys: {sorted(set(config) - allowed)}")
     values = copy.deepcopy(config)
+    profile = values.pop("profile", "legacy-conditional-v1")
+    if profile not in {"legacy-conditional-v1", "computational-route-support-v1"}:
+        raise ValueError("Unknown synthesis evidence profile")
+    if profile == "computational-route-support-v1":
+        from .computational_support import validate_config
+
+        validate_config(config)
     provider = values.pop("predictor", None)
     if provider is not None:
         permitted = {
@@ -527,13 +537,18 @@ def validate_evidence_config(config):
     return copy.deepcopy(config)
 
 
-def evaluator_from_config(config):
+def evaluator_from_config(config, *, load_predictor=True):
     """Build the optional predictor once and share its budgets/cache across routes."""
     values = validate_evidence_config(config)
+    if values.get("profile") == "computational-route-support-v1":
+        from .computational_support import from_config
+
+        return from_config(values, load_predictor=load_predictor)
+    values.pop("profile", None)
     provider = values.pop("predictor", None)
     predictor = (
         ReactionT5Forward(**{key: value for key, value in provider.items() if key != "kind"})
-        if provider is not None
+        if provider is not None and load_predictor
         else None
     )
     return SynthesisEvidenceEvaluator(predictor=predictor, **values)

@@ -110,6 +110,11 @@ def profile_defaults(artifact):
         "max_scored_products": 256,
         "max_results": 10,
         "allocation_policy": "balanced",
+        "synthesis_evidence": {
+            "profile": "computational-route-support-v1",
+            "predictor": {"kind": "reactiont5"},
+            "policy": {"require_forward_agreement": True},
+        },
     }
 
 
@@ -119,12 +124,24 @@ def apply_profile_defaults(config):
     if "recommendation_profile" not in config:
         return result
     defaults = profile_defaults(load_profile(config["recommendation_profile"]))
-    for key, value in defaults.items():
-        if key not in result:
-            result[key] = copy.deepcopy(value)
-        elif isinstance(value, dict) and isinstance(result[key], dict):
-            for subkey, subvalue in value.items():
-                result[key].setdefault(subkey, copy.deepcopy(subvalue))
+    if not isinstance(result.get("synthesis_evidence", {}), dict):
+        raise ValueError("synthesis_evidence must be an object")
+    if (
+        result.get("synthesis_evidence", {}).get("profile", "computational-route-support-v1")
+        != "computational-route-support-v1"
+    ):
+        raise ValueError(
+            "The named recommendation profile requires computational-route-support-v1; use an explicit engineering configuration for legacy evidence"
+        )
+
+    def fill(target, source):
+        for key, value in source.items():
+            if key not in target:
+                target[key] = copy.deepcopy(value)
+            elif isinstance(value, dict) and isinstance(target[key], dict):
+                fill(target[key], value)
+
+    fill(result, defaults)
     return result
 
 
@@ -164,6 +181,8 @@ def profile_provenance(config):
         return {"name": None, "status": "not_requested", "artifact_sha256": None}
     artifact = load_profile(name)
     defaults = profile_defaults(artifact)
+    # Route support is an additional selection constraint, outside the fitted numerical protocol.
+    defaults.pop("synthesis_evidence", None)
     effective = {key: config.get(key) for key in defaults}
     differences = _differences(defaults, effective)
     resource_keys = {
@@ -238,6 +257,8 @@ def profile_provenance(config):
 
 def profile_label(config):
     if not config.get("recommendation_profile"):
-        return ""
+        return (
+            " [evidence=" + config.get("synthesis_evidence", {}).get("profile", "legacy-conditional-v1") + "]"
+        )
     provenance = profile_provenance(config)
-    return f" [profile={provenance['name']}; {provenance['status']}; permissive development thresholds, not strong-similarity or activity guarantees]"
+    return f" [profile={provenance['name']}; {provenance['status']}; computational-route-support-v1 conditional selection support; permissive development thresholds, not strong-similarity or activity guarantees]"

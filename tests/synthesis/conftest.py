@@ -75,3 +75,61 @@ def route():
             {"id": "r0", "rule_id": "amide", "reactants": ["b0", "b1"], "product": DESIGN},
         ],
     }
+
+
+@pytest.fixture
+def strict_predictor(monkeypatch):
+    """Controlled raw beams; real strict decoder/comparison/audit code remains active."""
+    import copy
+    from types import SimpleNamespace
+
+    from chembounce_synthesis import computational_support
+    from chembounce_synthesis.forward_support import PinnedReactionT5Forward, binding, molecular_input
+
+    class Tokenizer:
+        eos_token_id, pad_token_id = 1, 0
+        all_special_ids = [0, 1, 2]
+
+        def decode(self, ids, **kwargs):
+            special = {0: "<pad>", 1: "</s>", 2: "<unk>"}
+            return "".join(special[i] if i in special else chr(i - 3) for i in ids)
+
+    class Controlled(PinnedReactionT5Forward):
+        def __init__(self):
+            self.tokenizer = Tokenizer()
+            self.model = SimpleNamespace(config=SimpleNamespace(decoder_start_token_id=0))
+            self.max_new_tokens = 256
+            self.provenance = {
+                "profile": "computational-route-support-v1",
+                "fixture": "controlled raw beams; not model evidence",
+            }
+            self.calls = []
+            self.products = None
+
+        def prepare(self, reactants, reagents):
+            data = molecular_input(reactants, reagents)
+            ids = [ord(c) + 3 for c in data["prompt"]] + [1]
+            return {**data, "input_token_ids": ids, "input_tokens": len(ids)}
+
+        def predict_raw(self, prepared):
+            self.calls.append(copy.deepcopy(prepared))
+            amine = next((s for s in prepared["reactants"] if s.startswith("N")), "N")
+            products = self.products if self.products is not None else ["CC(=O)" + amine, "CC", "CO"]
+            if callable(products):
+                products = products(prepared)
+            sequences = [
+                ([0] + [ord(c) + 3 for c in value] + [1]) if isinstance(value, str) else value
+                for value in products
+            ]
+            predictions, tokens = self.inspect_sequences(sequences)
+            return {
+                "input": copy.deepcopy(prepared),
+                "sequences": sequences,
+                "predictions": predictions,
+                "output_tokens": tokens,
+                "predictor_binding_sha256": binding(self.provenance),
+            }
+
+    predictor = Controlled()
+    monkeypatch.setattr(computational_support, "PinnedReactionT5Forward", lambda **kwargs: predictor)
+    return predictor

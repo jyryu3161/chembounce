@@ -5,6 +5,10 @@ import copy
 
 def add_expansion_options(parser):
     parser.add_argument(
+        "--forward-model-path",
+        help="Explicit local pinned ReactionT5 bundle required by the named development recommendation profile",
+    )
+    parser.add_argument(
         "--recommendation-profile",
         choices=("qualified-development-v1",),
         help="Explicit opt-in development profile with permissive fitted minima and a fixed three-seed protocol; not strong-similarity or activity guarantees",
@@ -81,6 +85,12 @@ def expansion_overrides(args):
 
 def apply_expansion_options(config, args):
     config = copy.deepcopy(config)
+    if getattr(args, "forward_model_path", None) is not None:
+        from pathlib import Path
+
+        config.setdefault("synthesis_evidence", {}).setdefault("predictor", {}).update(
+            kind="reactiont5", model_path=str(Path(args.forward_model_path).resolve())
+        )
     if getattr(args, "recommendation_profile", None) is not None:
         config["recommendation_profile"] = args.recommendation_profile
     if getattr(args, "scoring_objective", None) is not None:

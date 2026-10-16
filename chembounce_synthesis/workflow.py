@@ -45,6 +45,8 @@ COLUMNS = [
     "rank",
     "recommendation_status",
     "qualification_policy",
+    "evidence_profile",
+    "route_support_binding",
     "scoring_objective",
     "ranking_policy",
     "recommendation_profile",
@@ -678,7 +680,27 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             )
             passed = []
             for record in records:
-                decision = decide(row, record, result, policy, pose_settings, refinement, report, hit=hit)
+                decision = decide(
+                    row,
+                    record,
+                    result,
+                    policy,
+                    pose_settings,
+                    refinement,
+                    report,
+                    hit=hit,
+                    evidence_validator=(
+                        lambda record: evidence_evaluator.validate_route(
+                            record["synthesis_evidence"],
+                            record["route"],
+                            catalog,
+                            rules,
+                            limits.reaction_product_limit,
+                        )
+                    )
+                    if policy["evidence_profile"] == "computational-route-support-v1"
+                    else None,
+                )
                 if constraint_error:
                     decision.update(status="rejected", qualified=False)
                     decision["reasons"].append(constraint_error)
@@ -699,6 +721,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 "alternative_family_candidates": [],
                 "recommendation_status": "qualified",
                 "qualification_policy": policy["policy_version"],
+                "evidence_profile": policy["evidence_profile"],
+                "route_support_binding": primary["synthesis_evidence"].get("route_binding_sha256", ""),
             }
 
         hit_pose = None
@@ -871,12 +895,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         else:
             catalog, rules = Catalog(config["catalog"]), Rules(config["rules"])
             if deadline_reached():
-                evidence_settings = {
-                    key: value
-                    for key, value in config.get("synthesis_evidence", {}).items()
-                    if key != "predictor"
-                }
-                evidence_evaluator = evaluator_from_config(evidence_settings)
+                evidence_evaluator = evaluator_from_config(
+                    config.get("synthesis_evidence", {}), load_predictor=False
+                )
                 summary["evidence_model_not_loaded_deadline"] = True
             else:
                 evidence_evaluator = _evidence_evaluator(config)
@@ -1200,10 +1221,19 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 if pending_routes:
                     evidence_queue.append((entry, pending_routes))
                 continue
-            evidence = evidence_evaluator.evaluate(
-                record["verification"],
-                **({"deadline_monotonic": deadline_monotonic} if deadline_monotonic is not None else {}),
-            )
+            if policy["evidence_profile"] == "computational-route-support-v1":
+                evidence = evidence_evaluator.evaluate_route(
+                    record["route"],
+                    catalog,
+                    rules,
+                    limits.reaction_product_limit,
+                    deadline_monotonic=deadline_monotonic,
+                )
+            else:
+                evidence = evidence_evaluator.evaluate(
+                    record["verification"],
+                    **({"deadline_monotonic": deadline_monotonic} if deadline_monotonic is not None else {}),
+                )
             record["synthesis_evidence"] = evidence
             if evidence["eligibility"]["passed"]:
                 record["eligible_for_scoring"] = True
@@ -1323,6 +1353,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 "refinement_conformers": settings.num_conformers if scoring_mode == "3d" else 0,
                 "recommendation_status": "exploratory_verified",
                 "qualification_policy": None,
+                "evidence_profile": policy["evidence_profile"],
+                "route_support_binding": primary["synthesis_evidence"].get("route_binding_sha256", ""),
             }
             if qualified and not refinement.top_n:
                 row = qualify(row, records, result, settings)
@@ -1559,6 +1591,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     mol.SetProp("ranking_policy", row["ranking_policy"])
                     for key in (
                         "recommendation_profile",
+                        "evidence_profile",
+                        "route_support_binding",
                         "calibration_status",
                         "calibration_artifact_sha256",
                     ):
@@ -1593,6 +1627,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     mol.SetProp("scoring_objective", pose_settings.scoring_objective)
                     for key in (
                         "recommendation_profile",
+                        "evidence_profile",
+                        "route_support_binding",
                         "calibration_status",
                         "calibration_artifact_sha256",
                     ):
