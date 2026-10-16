@@ -382,6 +382,66 @@ LLM proposals. Acyclic scaffolds are empty Murcko scaffolds: hop mode cannot
 certify an acyclic-to-acyclic scaffold change; use explicit cores and expansion
 mode for that case.
 
+Selected API rows and `results.json` include `hit_identity_comparison` (schema
+version 1). Its reference is always `manifest.hit`, and its product is the selected
+row's exact `smiles`, even after design or route fallback. A `recorded` comparison
+contains:
+
+- `reference_role: "original_hit"`, `original_hit_smiles`, `final_product_smiles`;
+- `original_hit` and `final_product`: retained identities with `exact_smiles`,
+  `family_smiles`, `scaffold_family_smiles`, `ring_skeleton_smiles`, `has_scaffold`,
+  `policy_version` and `rdkit_version`;
+- `change_class`: the existing classifier's actual result, with precedence
+  `unchanged`, then `state_only`, then `decoration`, then `scaffold`;
+- `atom_aware_scaffold_changed`: inequality of the normalized scaffold strings;
+- `generic_ring_linker_topology_changed`: inequality of the generic Murcko graph
+  strings, including ring atoms and their connecting linkers;
+- `scaffold_presence_change`: `both_present`, `both_absent`, `gained` or `lost`.
+
+The generic graph flag is descriptive; it adds no acceptance requirement. Both
+acyclic identities have empty scaffold strings and `both_absent`; different
+acyclic families are decoration changes, subject to the unchanged/state-only
+precedence. Ordinary accepted hop rows therefore record `scaffold`, while an
+atom substitution can leave the generic graph unchanged. These fields do not
+measure experimental feasibility, activity or synthesis yield.
+
+The producer retains the hit identity once next to an existing successful hop
+constraint check at candidate admission, and retains each scored exact product's
+identity at the existing family-field calculation. Root-search callbacks do not
+perform the optional capture. The product map is bounded by the scored-product
+allocation, and only final selected comparisons are serialized. After selection,
+export uses retained values only, even if identity caches have been evicted.
+Exploratory expansion does not normalize the original hit just for this export;
+carried routes receive current-run admission evidence.
+
+When retention, exact bindings, classification or policy agreement is missing or
+conflicting, the comparison is atomically `unavailable`. It retains the schema,
+reference role and exact SMILES fields, plus `reason_code`, `reason` and optionally
+`error_type`; it omits both identities, classification, graph flags and presence
+label. Missing legacy fields mean **not exported**, not a negative comparison.
+An unavailable comparison can be displayed without a usable policy descriptor;
+a recorded comparison requires the saved descriptor and exact bindings. A
+manifest descriptor with zero selected rows is valid.
+
+`manifest.identity_comparison_policy` records `schema_version: 1`, `policy_version`,
+the actual `rdkit_version`, `tautomer_limit`, `transform_limit`, and `code_sha256`
+for `identity.py` and `common.py`, captured at workflow import. Those hashes match
+the corresponding saved manifest source snapshot. Offline reports must use the
+saved identities and descriptor without reconstructing chemistry in another
+runtime. They must not substitute installed package-version spelling for the
+recorded RDKit runtime version.
+
+`summary.identity_comparison_export` records retained/selected counts, unavailable
+reasons, optional hit-capture lookup count and elapsed time, observed identity-cache
+miss delta, late completion, and comparison serialization time. The once-only
+optional lookup checks the existing deadline before starting and is not retried;
+a cache miss can still normalize and finish after that deadline. Its cache delta
+is a process observation interval, not attribution across concurrent threads or a
+wall-time guarantee. `post_selection_identity_resolution_calls: 0` states the
+export implementation invariant, not a measured process-wide call count. Added
+overhead can affect availability in wall-limited runs. Mandatory chemistry errors,
+selection/ranking rules, scores and TSV columns retain their existing behavior.
+
 `expansion` accepts `rounds` (0 disables it), `max_routes`,
 `building_block_top_k` (alternative blocks per mutable leaf), `min_tanimoto`
 (optional block-to-block cutoff, default 0), and
@@ -906,6 +966,8 @@ alignment does not prove that no feasible binding pose exists.
 - `results.tsv`: one selected exact product/design per chemical family, pose
   components, 2D similarities, route IDs, family/scaffold identities, ranking
   diagnostics, representative seed and observed seed spread.
+- `results.json`: selected API rows, including the retained original-hit identity
+  comparison described above; the TSV schema is unchanged.
 - `screening.tsv`: one representative per initially scored family, before refinement
   and `max_results` truncation.
 - `screening_alternatives.tsv`: all accepted initial exact-product/design scores,
