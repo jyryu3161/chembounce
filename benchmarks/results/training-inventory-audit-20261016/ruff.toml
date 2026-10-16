@@ -1,0 +1,5 @@
+extend = "../../../pyproject.toml"
+
+# Historical audit records bind these exact helper/test bytes. Lint still applies.
+[format]
+exclude = ["sample_overlap_audit.py", "test_sample_overlap_audit.py"]

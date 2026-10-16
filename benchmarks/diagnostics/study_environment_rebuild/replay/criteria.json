@@ -1,0 +1,51 @@
+{
+  "baseline_files_sha256": {
+    "crem.json": "0ed91083baead578e10f3b54d08e01ff55f534b4f3cbfb6522421f6590c0ffe4",
+    "forward-cpu.json": "73d8f98751be71b1719533d83ae711e587a3c3afe1158316c485bfe917f7f303",
+    "mol2mol.json": "ac3abed7a099ce5419334b1f0a3d98954a88105253030d4a3f51d65e627249e9",
+    "research.json": "27892b187eb399357e40d448476be66896602229bcece5e4a777bbb51bf065ac",
+    "validation.json": "019313f56eac9d05882cf9e5f3ab4a68d91c49f207e54a08b5e2cf1e0f1964c7"
+  },
+  "baseline_reexecution_required": false,
+  "comparison": {
+    "conformer_absolute_tolerance": 1e-10,
+    "conformer_exact_fields": [
+      "seed",
+      "minimize_status"
+    ],
+    "conformer_numeric_fields": [
+      "energy",
+      "positions"
+    ],
+    "conformer_relative_tolerance": 0,
+    "exact_fields": [
+      "profile",
+      "python",
+      "rdkit_version",
+      "identities",
+      "invalid_inputs_rejected",
+      "fingerprints",
+      "reaction_products",
+      "numpy_arithmetic",
+      "extra_api_checks",
+      "scope"
+    ],
+    "module_origins": "Exact module names and file SHA256; paths must be under newly installed matching profile, explicitly selected new current source, or matching new upstream. Original source and environment paths prohibited.",
+    "nonfinite_values": "reject",
+    "per_profile_only": true
+  },
+  "failure_handling": "Record and inspect differences; do not silently loosen criteria or edit original baseline.",
+  "probe_sha256": "bf5cdf24521145eea56ca1d80acae16316b953fabe94207c118ad675548aaa61",
+  "profiles": [
+    "research",
+    "forward-cpu",
+    "crem",
+    "mol2mol"
+  ],
+  "recorded_utc": "2026-10-16T04:39:33.385220+00:00",
+  "scope": "Parent comparison criteria for fixed same-host CPU cases after a successful four-profile fresh installation; no study endpoints, checkpoint inference, GPU use or general numerical equivalence claim. Criteria fixed before amended installation.",
+  "supplemental_installed_package_checks": {
+    "crem": "Confirm editable origin points to new upstream and generated version matches the original expected version.",
+    "reinvent": "Check installed non-editable package Python sources and declared package data against frozen upstream; assess import from installed package as well as explicit upstream path; do not execute SAScore or load checkpoint."
+  }
+}

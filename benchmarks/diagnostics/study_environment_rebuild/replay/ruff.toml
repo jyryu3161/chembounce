@@ -1,0 +1,7 @@
+extend = "../../../../pyproject.toml"
+
+[lint.per-file-ignores]
+"probe_scientific.py" = ["F401"]
+
+[format]
+exclude = ["probe_scientific.py", "audit_reinvent_installed.py"]
