@@ -1,0 +1,41 @@
+{
+  "criteria_sha256": "60543682c91968120059a9d12ed7134b68099702f706400b9f53466151e9e587",
+  "execution_scientific_files": 41,
+  "execution_source_commit": "2328588d0969369e694d9293a1dccc89392a8203",
+  "execution_source_id": "chembounce_current",
+  "expected_snapshots_sha256": {
+    "expected/crem.json": "298f5b34e82e5b046eeed5012046058a22f43ebf2b9fd4f5eeb1f083c8f2695b",
+    "expected/forward-cpu.json": "39255348669e0c5ed2fe20d949c4bf0e76bedd4e7fb7564b2b0af1df0600257b",
+    "expected/mol2mol.json": "5a4dd98adf1a6b101352cef3143159f36a5e173216280d535521fcc9355f6d34",
+    "expected/research.json": "798fe44846c4ac98c49e729fefbcde25c481bef785c9c145ffa920f1019d7230"
+  },
+  "helpers_copy_policy": "Byte-identical copies of retained parent evaluators; neither helper executed during packaging.",
+  "helpers_sha256": {
+    "audit_reinvent_installed.py": "f48d663356180bdf171100baee2538846a7f8ebcf3b3faf84d01ead3e6f3616a",
+    "probe_scientific.py": "bf5cdf24521145eea56ca1d80acae16316b953fabe94207c118ad675548aaa61"
+  },
+  "original_profile_reports": {
+    "crem.json": {
+      "bytes": 14565,
+      "sha256": "0ed91083baead578e10f3b54d08e01ff55f534b4f3cbfb6522421f6590c0ffe4"
+    },
+    "forward-cpu.json": {
+      "bytes": 15181,
+      "sha256": "73d8f98751be71b1719533d83ae711e587a3c3afe1158316c485bfe917f7f303"
+    },
+    "mol2mol.json": {
+      "bytes": 15346,
+      "sha256": "ac3abed7a099ce5419334b1f0a3d98954a88105253030d4a3f51d65e627249e9"
+    },
+    "research.json": {
+      "bytes": 15157,
+      "sha256": "27892b187eb399357e40d448476be66896602229bcece5e4a777bbb51bf065ac"
+    }
+  },
+  "parent_four_profile_validation_sha256": "3f8573916c2af11da087556df4a5f962233d91a6e668ff86d45fb094b846bca8",
+  "recorded_scope": "Same-host, each fresh profile versus its own original. No checkpoint/DB/model inference/GPU calls; no cross-profile or general numerical equivalence claim.",
+  "schema_version": 1,
+  "scope": "Portable selected fixed CPU cases and validation of saved reports; not an archive of all local reports or proof that an input report was freshly executed.",
+  "snapshot_projection": "Preserve all scientific fields and conformer arrays unchanged; replace module_origins entries with their SHA256 only; remove original absolute module paths.",
+  "source_pins_sha256": "42cfee5362719a936aba4487c8019e8f67adb53d39db2f3edf8c4634cf311df7"
+}

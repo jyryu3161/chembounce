@@ -1,0 +1,651 @@
+{
+  "conformer": {
+    "energy": 18.286757001249164,
+    "minimize_status": 0,
+    "positions": [
+      [
+        3.354577695530164,
+        0.051754577277367056,
+        -0.24500553023105653
+      ],
+      [
+        1.9444616747899384,
+        -0.49845803978257314,
+        -0.12726567103494957
+      ],
+      [
+        1.0382926913824557,
+        0.6021008526576168,
+        -0.1671373728580249
+      ],
+      [
+        -0.2954276654759227,
+        0.31330314010638516,
+        -0.07418363068491826
+      ],
+      [
+        -1.137864113092614,
+        1.4275482952369218,
+        -0.11848734745857513
+      ],
+      [
+        -2.52306462318636,
+        1.277129671630555,
+        -0.03382708572818179
+      ],
+      [
+        -3.075654020168765,
+        0.005585208166742577,
+        0.09620162593739902
+      ],
+      [
+        -2.242251227719744,
+        -1.1108315693290494,
+        0.14115340833345238
+      ],
+      [
+        -0.854381508586603,
+        -0.9588413927135797,
+        0.056226466660810014
+      ],
+      [
+        3.565723675713013,
+        0.7493190742345761,
+        0.5723128133304975
+      ],
+      [
+        3.4737628351739347,
+        0.6101392993980045,
+        -1.179451627130693
+      ],
+      [
+        4.091608665135522,
+        -0.7557752486986009,
+        -0.21953733909568585
+      ],
+      [
+        1.7549627854462315,
+        -1.1782583330301752,
+        -0.9659987805319133
+      ],
+      [
+        1.8488848639292428,
+        -1.0361058604419862,
+        0.8231611788984282
+      ],
+      [
+        -0.7094176289447527,
+        2.421570211224975,
+        -0.21995012244998813
+      ],
+      [
+        -3.1667501925065915,
+        2.151769494056507,
+        -0.06952837719881262
+      ],
+      [
+        -4.153609191995261,
+        -0.11566265003310333,
+        0.16241751576478608
+      ],
+      [
+        -2.6727160773358998,
+        -2.103850081147896,
+        0.2426430331074454
+      ],
+      [
+        -0.2411386380878787,
+        -1.852436648812668,
+        0.09503040815478259
+      ]
+    ],
+    "seed": 20261016
+  },
+  "extra_api_checks": {
+    "linear_assignment": [
+      [
+        0,
+        1,
+        2
+      ],
+      [
+        1,
+        0,
+        2
+      ]
+    ],
+    "torch": {
+      "compiled_cuda": "12.8",
+      "cpu_matmul": [
+        [
+          19.0,
+          22.0
+        ],
+        [
+          43.0,
+          50.0
+        ]
+      ],
+      "version": "2.8.0+cu128"
+    },
+    "transformers_classes": [
+      "transformers.models.t5.modeling_t5",
+      "transformers.models.auto.tokenization_auto"
+    ]
+  },
+  "fingerprints": {
+    "bit_on_bits": [
+      [
+        389,
+        1088,
+        1873
+      ],
+      [
+        389,
+        1088,
+        1873
+      ],
+      [
+        378,
+        383,
+        389,
+        437,
+        1088,
+        1155,
+        1603,
+        1866,
+        1873
+      ],
+      [
+        389,
+        736,
+        1088,
+        1160,
+        1199,
+        1380,
+        1750,
+        1873,
+        1964
+      ],
+      [
+        1,
+        124,
+        283,
+        389,
+        574,
+        786,
+        1057,
+        1088,
+        1171,
+        1199,
+        1365,
+        1380,
+        1537,
+        1581,
+        1750,
+        1873
+      ],
+      [
+        1,
+        118,
+        283,
+        389,
+        569,
+        786,
+        1057,
+        1088,
+        1171,
+        1199,
+        1365,
+        1380,
+        1581,
+        1683,
+        1750,
+        1873
+      ],
+      [
+        378,
+        448,
+        807,
+        840,
+        1088,
+        1155,
+        1195,
+        1199,
+        1380,
+        1452,
+        1495,
+        1602,
+        1750,
+        1866,
+        1873,
+        1879
+      ],
+      [
+        81,
+        218,
+        314,
+        650,
+        676,
+        806,
+        939,
+        1088,
+        1114,
+        1199,
+        1321,
+        1380,
+        1506,
+        1563,
+        1750,
+        1873
+      ],
+      [
+        389,
+        508,
+        650,
+        807,
+        1017,
+        1057,
+        1917
+      ],
+      [
+        650,
+        715,
+        807,
+        1017,
+        1057,
+        1226,
+        1809,
+        1917
+      ],
+      [
+        1057,
+        1171,
+        2034
+      ],
+      [
+        397,
+        1057,
+        1082
+      ],
+      [
+        166,
+        414,
+        628,
+        1057
+      ],
+      [
+        69,
+        80,
+        102,
+        237,
+        294,
+        322,
+        389,
+        562,
+        695,
+        1057,
+        1088,
+        1199,
+        1238,
+        1380,
+        1452,
+        1750,
+        1873
+      ]
+    ],
+    "count_sparse": [
+      {
+        "2763854213": 6,
+        "3218693969": 6,
+        "98513984": 6
+      },
+      {
+        "2763854213": 6,
+        "3218693969": 6,
+        "98513984": 6
+      },
+      {
+        "1207774339": 2,
+        "1343371647": 1,
+        "1821698485": 2,
+        "2041434490": 1,
+        "2763854213": 1,
+        "3118255683": 1,
+        "3218693969": 5,
+        "3776905034": 2,
+        "98513984": 3
+      },
+      {
+        "2353112200": 2,
+        "2763854213": 2,
+        "2984966880": 4,
+        "3217380708": 2,
+        "3218693969": 10,
+        "3999906991": 4,
+        "669222828": 2,
+        "951226070": 4,
+        "98513984": 6
+      },
+      {
+        "1350205442": 1,
+        "2245273601": 1,
+        "2246728737": 1,
+        "2247583760": 1,
+        "2599973650": 1,
+        "2763854213": 1,
+        "3217380708": 1,
+        "3218693969": 5,
+        "3387715662": 1,
+        "3537119515": 1,
+        "3579962709": 1,
+        "3999906991": 2,
+        "642367021": 2,
+        "847957139": 1,
+        "951226070": 2,
+        "98513984": 3
+      },
+      {
+        "1350205442": 1,
+        "2245273601": 1,
+        "2246728737": 1,
+        "2247583760": 1,
+        "2599973650": 1,
+        "2763854213": 1,
+        "3217380708": 1,
+        "3218693969": 5,
+        "3387715662": 1,
+        "3537119515": 1,
+        "3579962709": 1,
+        "3999906991": 2,
+        "642367021": 2,
+        "847957139": 1,
+        "951226070": 2,
+        "98513984": 3
+      },
+      {
+        "1100037548": 1,
+        "1207774339": 1,
+        "1633653576": 1,
+        "1765213355": 1,
+        "2041434490": 1,
+        "2614860224": 1,
+        "26234434": 1,
+        "3217380708": 1,
+        "3218693969": 4,
+        "3574150615": 1,
+        "3776905034": 1,
+        "3999906991": 1,
+        "623972183": 1,
+        "864662311": 1,
+        "951226070": 1,
+        "98513984": 2
+      },
+      {
+        "10565946": 1,
+        "116898731": 1,
+        "1753134377": 1,
+        "2132511834": 1,
+        "2297887526": 1,
+        "2753863138": 1,
+        "2776886811": 1,
+        "3217380708": 1,
+        "3218693969": 4,
+        "330223697": 1,
+        "3556168356": 1,
+        "3999906991": 1,
+        "4009486554": 1,
+        "864942730": 1,
+        "951226070": 1,
+        "98513984": 2
+      },
+      {
+        "1510328189": 1,
+        "1533864325": 1,
+        "2205501948": 1,
+        "2246699815": 1,
+        "2246728737": 1,
+        "3545365497": 1,
+        "864662311": 1,
+        "864942730": 1
+      },
+      {
+        "1510323402": 1,
+        "1510328189": 1,
+        "2246699815": 1,
+        "2246728737": 1,
+        "3219326737": 1,
+        "3545365497": 1,
+        "864942730": 1,
+        "864942795": 1
+      },
+      {
+        "2246728737": 1,
+        "2591080434": 1,
+        "847957139": 1
+      },
+      {
+        "2246728737": 1,
+        "2567926842": 1,
+        "847694221": 1
+      },
+      {
+        "2246728737": 4,
+        "3824347764": 4,
+        "4175736998": 1,
+        "847698334": 1
+      },
+      {
+        "2115476908": 1,
+        "2245384272": 1,
+        "2246728737": 1,
+        "2677858541": 1,
+        "2763854213": 1,
+        "3162837314": 1,
+        "3217380708": 1,
+        "3218693969": 5,
+        "3542456614": 1,
+        "3994088662": 1,
+        "3999906991": 2,
+        "4256524850": 2,
+        "804536389": 1,
+        "864674487": 1,
+        "910450790": 1,
+        "951226070": 2,
+        "98513984": 3
+      }
+    ],
+    "query_bit_similarities": [
+      1.0,
+      1.0,
+      0.3333333333333333,
+      0.3333333333333333,
+      0.1875,
+      0.1875,
+      0.11764705882352941,
+      0.11764705882352941,
+      0.1111111111111111,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.17647058823529413
+    ],
+    "query_count_similarities": [
+      1.0,
+      1.0,
+      0.3333333333333333,
+      0.35,
+      0.2647058823529412,
+      0.2647058823529412,
+      0.1875,
+      0.1875,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.2571428571428571
+    ]
+  },
+  "identities": [
+    {
+      "exact_smiles": "c1ccccc1",
+      "family_smiles": "c1ccccc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "c1ccccc1"
+    },
+    {
+      "exact_smiles": "c1cc[13cH]cc1",
+      "family_smiles": "c1ccccc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "c1ccccc1"
+    },
+    {
+      "exact_smiles": "c1ccncc1",
+      "family_smiles": "c1ccncc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "c1ccncc1"
+    },
+    {
+      "exact_smiles": "c1ccc(-c2ccccc2)cc1",
+      "family_smiles": "c1ccc(-c2ccccc2)cc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "C1CCC(C2CCCCC2)CC1",
+      "scaffold_family_smiles": "c1ccc(-c2ccccc2)cc1"
+    },
+    {
+      "exact_smiles": "C[C@@H](N)c1ccccc1",
+      "family_smiles": "CC(N)c1ccccc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "c1ccccc1"
+    },
+    {
+      "exact_smiles": "C[C@H](N)c1ccccc1",
+      "family_smiles": "CC(N)c1ccccc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "c1ccccc1"
+    },
+    {
+      "exact_smiles": "Oc1ccccn1",
+      "family_smiles": "O=c1cccc[nH]1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "O=c1cccc[nH]1"
+    },
+    {
+      "exact_smiles": "O=c1cccc[nH]1",
+      "family_smiles": "O=c1cccc[nH]1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "O=c1cccc[nH]1"
+    },
+    {
+      "exact_smiles": "CC(=O)O",
+      "family_smiles": "CC(=O)O",
+      "has_scaffold": false,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "",
+      "scaffold_family_smiles": ""
+    },
+    {
+      "exact_smiles": "CC(=O)[O-]",
+      "family_smiles": "CC(=O)O",
+      "has_scaffold": false,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "",
+      "scaffold_family_smiles": ""
+    },
+    {
+      "exact_smiles": "CN",
+      "family_smiles": "CN",
+      "has_scaffold": false,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "",
+      "scaffold_family_smiles": ""
+    },
+    {
+      "exact_smiles": "C[NH3+]",
+      "family_smiles": "CN",
+      "has_scaffold": false,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "",
+      "scaffold_family_smiles": ""
+    },
+    {
+      "exact_smiles": "C[N+](C)(C)C",
+      "family_smiles": "C[N+](C)(C)C",
+      "has_scaffold": false,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "",
+      "scaffold_family_smiles": ""
+    },
+    {
+      "exact_smiles": "CCOc1ccccc1",
+      "family_smiles": "CCOc1ccccc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2025.09.6",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "c1ccccc1"
+    }
+  ],
+  "invalid_inputs_rejected": {
+    "": "Expected a nonempty SMILES string",
+    "*c1ccccc1": "A connected molecule without dummy atoms is required: '*c1ccccc1'",
+    "CC.O": "A connected molecule without dummy atoms is required: 'CC.O'"
+  },
+  "module_origins": {
+    "chembounce_synthesis.common": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+    "chembounce_synthesis.identity": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+    "chemistry": "bdd598d1255ce827fb6843e3d95f8ceb4a5cdafe33335086f0b270b04940f462",
+    "numpy": "22cd1535fa14d74ef6f457cca149ffdc80875f460be313b8f895273f78bc402e",
+    "rdkit": "eca4a895c02c16eadbe7887ed1463c7ed75b86b222f0843d1c090c331e7c40a7",
+    "scipy": "f09d8a342acb52bb982073fbeb2594d9363ff55433d3dd710066142db7c0bee9",
+    "torch": "2f0deb66d5dff6b9c02a62832c3bf3824c2ee031c462a3afeb9ca170466da5bf",
+    "transformers": "c2d0df5eda0841cd18fd46dd0e869fb8b5373a4f97fb166ac4698bce5e3c9e4c"
+  },
+  "numpy_arithmetic": [
+    [
+      19.0,
+      22.0
+    ],
+    [
+      43.0,
+      50.0
+    ]
+  ],
+  "profile": "research",
+  "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]",
+  "rdkit_version": "2025.09.6",
+  "reaction_products": [
+    "CNC(C)=O"
+  ],
+  "scope": "Fixed same-host CPU smoke assessment; no checkpoint/DB access, learned inference, GPU API call, campaign execution, or comparative endpoint."
+}

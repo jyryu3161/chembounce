@@ -1,0 +1,640 @@
+{
+  "conformer": {
+    "energy": 18.286757000684524,
+    "minimize_status": 0,
+    "positions": [
+      [
+        3.35337775323527,
+        0.05797619745667016,
+        -0.2643976256919335
+      ],
+      [
+        1.944870383342368,
+        -0.4950096306369281,
+        -0.14055226725997794
+      ],
+      [
+        1.036696197884563,
+        0.6041998890620086,
+        -0.17087820955752916
+      ],
+      [
+        -0.2959865029003834,
+        0.31284957761994175,
+        -0.0712489647482978
+      ],
+      [
+        -1.1404770833342417,
+        1.4258677661689456,
+        -0.10632623385830568
+      ],
+      [
+        -2.5249122811452307,
+        1.2728419555917263,
+        -0.014153667608917078
+      ],
+      [
+        -3.074664688167714,
+        -0.00010271014682161363,
+        0.11418994354342041
+      ],
+      [
+        -2.2392002309633976,
+        -1.115309823111009,
+        0.1499586184091504
+      ],
+      [
+        -0.8520999600221244,
+        -0.9607071147009225,
+        0.057510983609853045
+      ],
+      [
+        3.568163056566038,
+        0.7527338605026982,
+        0.5543616264510722
+      ],
+      [
+        3.46619214587063,
+        0.620151601735101,
+        -1.1973602806315586
+      ],
+      [
+        4.091856702807372,
+        -0.7484295240103513,
+        -0.24635168103628016
+      ],
+      [
+        1.751576636773228,
+        -1.1718826324164375,
+        -0.9807855191344819
+      ],
+      [
+        1.8557256254748968,
+        -1.036474204778735,
+        0.8083316232910874
+      ],
+      [
+        -0.7142472807148262,
+        2.4209777390762666,
+        -0.20645121948159947
+      ],
+      [
+        -3.1702161118944447,
+        2.1465510400066203,
+        -0.04271464468657475
+      ],
+      [
+        -4.152015563211574,
+        -0.12338060296808913,
+        0.1862352931555159
+      ],
+      [
+        -2.6674497199067093,
+        -2.109419874913112,
+        0.25012599812473774
+      ],
+      [
+        -0.23718907969375713,
+        -1.8534335095376504,
+        0.08927979289545397
+      ]
+    ],
+    "seed": 20261016
+  },
+  "extra_api_checks": {
+    "official_api_classes": [
+      "reinvent.models.transformer.mol2mol.mol2mol",
+      "reinvent.models.transformer.core.dataset.dataset"
+    ],
+    "torch": {
+      "compiled_cuda": "12.1",
+      "cpu_matmul": [
+        [
+          19.0,
+          22.0
+        ],
+        [
+          43.0,
+          50.0
+        ]
+      ],
+      "version": "2.3.1+cu121"
+    }
+  },
+  "fingerprints": {
+    "bit_on_bits": [
+      [
+        389,
+        1088,
+        1873
+      ],
+      [
+        389,
+        1088,
+        1873
+      ],
+      [
+        378,
+        383,
+        389,
+        437,
+        1088,
+        1155,
+        1603,
+        1866,
+        1873
+      ],
+      [
+        389,
+        736,
+        1088,
+        1160,
+        1199,
+        1380,
+        1750,
+        1873,
+        1964
+      ],
+      [
+        1,
+        124,
+        283,
+        389,
+        574,
+        786,
+        1057,
+        1088,
+        1171,
+        1199,
+        1365,
+        1380,
+        1537,
+        1581,
+        1750,
+        1873
+      ],
+      [
+        1,
+        118,
+        283,
+        389,
+        569,
+        786,
+        1057,
+        1088,
+        1171,
+        1199,
+        1365,
+        1380,
+        1581,
+        1683,
+        1750,
+        1873
+      ],
+      [
+        378,
+        448,
+        807,
+        840,
+        1088,
+        1155,
+        1195,
+        1199,
+        1380,
+        1452,
+        1495,
+        1602,
+        1750,
+        1866,
+        1873,
+        1879
+      ],
+      [
+        81,
+        218,
+        314,
+        650,
+        676,
+        806,
+        939,
+        1088,
+        1114,
+        1199,
+        1321,
+        1380,
+        1506,
+        1563,
+        1750,
+        1873
+      ],
+      [
+        389,
+        508,
+        650,
+        807,
+        1017,
+        1057,
+        1917
+      ],
+      [
+        650,
+        715,
+        807,
+        1017,
+        1057,
+        1226,
+        1809,
+        1917
+      ],
+      [
+        1057,
+        1171,
+        2034
+      ],
+      [
+        397,
+        1057,
+        1082
+      ],
+      [
+        166,
+        414,
+        628,
+        1057
+      ],
+      [
+        69,
+        80,
+        102,
+        237,
+        294,
+        322,
+        389,
+        562,
+        695,
+        1057,
+        1088,
+        1199,
+        1238,
+        1380,
+        1452,
+        1750,
+        1873
+      ]
+    ],
+    "count_sparse": [
+      {
+        "2763854213": 6,
+        "3218693969": 6,
+        "98513984": 6
+      },
+      {
+        "2763854213": 6,
+        "3218693969": 6,
+        "98513984": 6
+      },
+      {
+        "1207774339": 2,
+        "1343371647": 1,
+        "1821698485": 2,
+        "2041434490": 1,
+        "2763854213": 1,
+        "3118255683": 1,
+        "3218693969": 5,
+        "3776905034": 2,
+        "98513984": 3
+      },
+      {
+        "2353112200": 2,
+        "2763854213": 2,
+        "2984966880": 4,
+        "3217380708": 2,
+        "3218693969": 10,
+        "3999906991": 4,
+        "669222828": 2,
+        "951226070": 4,
+        "98513984": 6
+      },
+      {
+        "1350205442": 1,
+        "2245273601": 1,
+        "2246728737": 1,
+        "2247583760": 1,
+        "2599973650": 1,
+        "2763854213": 1,
+        "3217380708": 1,
+        "3218693969": 5,
+        "3387715662": 1,
+        "3537119515": 1,
+        "3579962709": 1,
+        "3999906991": 2,
+        "642367021": 2,
+        "847957139": 1,
+        "951226070": 2,
+        "98513984": 3
+      },
+      {
+        "1350205442": 1,
+        "2245273601": 1,
+        "2246728737": 1,
+        "2247583760": 1,
+        "2599973650": 1,
+        "2763854213": 1,
+        "3217380708": 1,
+        "3218693969": 5,
+        "3387715662": 1,
+        "3537119515": 1,
+        "3579962709": 1,
+        "3999906991": 2,
+        "642367021": 2,
+        "847957139": 1,
+        "951226070": 2,
+        "98513984": 3
+      },
+      {
+        "1100037548": 1,
+        "1207774339": 1,
+        "1633653576": 1,
+        "1765213355": 1,
+        "2041434490": 1,
+        "2614860224": 1,
+        "26234434": 1,
+        "3217380708": 1,
+        "3218693969": 4,
+        "3574150615": 1,
+        "3776905034": 1,
+        "3999906991": 1,
+        "623972183": 1,
+        "864662311": 1,
+        "951226070": 1,
+        "98513984": 2
+      },
+      {
+        "10565946": 1,
+        "116898731": 1,
+        "1753134377": 1,
+        "2132511834": 1,
+        "2297887526": 1,
+        "2753863138": 1,
+        "2776886811": 1,
+        "3217380708": 1,
+        "3218693969": 4,
+        "330223697": 1,
+        "3556168356": 1,
+        "3999906991": 1,
+        "4009486554": 1,
+        "864942730": 1,
+        "951226070": 1,
+        "98513984": 2
+      },
+      {
+        "1510328189": 1,
+        "1533864325": 1,
+        "2205501948": 1,
+        "2246699815": 1,
+        "2246728737": 1,
+        "3545365497": 1,
+        "864662311": 1,
+        "864942730": 1
+      },
+      {
+        "1510323402": 1,
+        "1510328189": 1,
+        "2246699815": 1,
+        "2246728737": 1,
+        "3219326737": 1,
+        "3545365497": 1,
+        "864942730": 1,
+        "864942795": 1
+      },
+      {
+        "2246728737": 1,
+        "2591080434": 1,
+        "847957139": 1
+      },
+      {
+        "2246728737": 1,
+        "2567926842": 1,
+        "847694221": 1
+      },
+      {
+        "2246728737": 4,
+        "3824347764": 4,
+        "4175736998": 1,
+        "847698334": 1
+      },
+      {
+        "2115476908": 1,
+        "2245384272": 1,
+        "2246728737": 1,
+        "2677858541": 1,
+        "2763854213": 1,
+        "3162837314": 1,
+        "3217380708": 1,
+        "3218693969": 5,
+        "3542456614": 1,
+        "3994088662": 1,
+        "3999906991": 2,
+        "4256524850": 2,
+        "804536389": 1,
+        "864674487": 1,
+        "910450790": 1,
+        "951226070": 2,
+        "98513984": 3
+      }
+    ],
+    "query_bit_similarities": [
+      1.0,
+      1.0,
+      0.3333333333333333,
+      0.3333333333333333,
+      0.1875,
+      0.1875,
+      0.11764705882352941,
+      0.11764705882352941,
+      0.1111111111111111,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.17647058823529413
+    ],
+    "query_count_similarities": [
+      1.0,
+      1.0,
+      0.3333333333333333,
+      0.35,
+      0.2647058823529412,
+      0.2647058823529412,
+      0.1875,
+      0.1875,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.2571428571428571
+    ]
+  },
+  "identities": [
+    {
+      "exact_smiles": "c1ccccc1",
+      "family_smiles": "c1ccccc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "c1ccccc1"
+    },
+    {
+      "exact_smiles": "c1cc[13cH]cc1",
+      "family_smiles": "c1ccccc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "c1ccccc1"
+    },
+    {
+      "exact_smiles": "c1ccncc1",
+      "family_smiles": "c1ccncc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "c1ccncc1"
+    },
+    {
+      "exact_smiles": "c1ccc(-c2ccccc2)cc1",
+      "family_smiles": "c1ccc(-c2ccccc2)cc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "C1CCC(C2CCCCC2)CC1",
+      "scaffold_family_smiles": "c1ccc(-c2ccccc2)cc1"
+    },
+    {
+      "exact_smiles": "C[C@@H](N)c1ccccc1",
+      "family_smiles": "CC(N)c1ccccc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "c1ccccc1"
+    },
+    {
+      "exact_smiles": "C[C@H](N)c1ccccc1",
+      "family_smiles": "CC(N)c1ccccc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "c1ccccc1"
+    },
+    {
+      "exact_smiles": "Oc1ccccn1",
+      "family_smiles": "O=c1cccc[nH]1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "O=c1cccc[nH]1"
+    },
+    {
+      "exact_smiles": "O=c1cccc[nH]1",
+      "family_smiles": "O=c1cccc[nH]1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "O=c1cccc[nH]1"
+    },
+    {
+      "exact_smiles": "CC(=O)O",
+      "family_smiles": "CC(=O)O",
+      "has_scaffold": false,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "",
+      "scaffold_family_smiles": ""
+    },
+    {
+      "exact_smiles": "CC(=O)[O-]",
+      "family_smiles": "CC(=O)O",
+      "has_scaffold": false,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "",
+      "scaffold_family_smiles": ""
+    },
+    {
+      "exact_smiles": "CN",
+      "family_smiles": "CN",
+      "has_scaffold": false,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "",
+      "scaffold_family_smiles": ""
+    },
+    {
+      "exact_smiles": "C[NH3+]",
+      "family_smiles": "CN",
+      "has_scaffold": false,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "",
+      "scaffold_family_smiles": ""
+    },
+    {
+      "exact_smiles": "C[N+](C)(C)C",
+      "family_smiles": "C[N+](C)(C)C",
+      "has_scaffold": false,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "",
+      "scaffold_family_smiles": ""
+    },
+    {
+      "exact_smiles": "CCOc1ccccc1",
+      "family_smiles": "CCOc1ccccc1",
+      "has_scaffold": true,
+      "policy_version": "protonation-tautomer-family-v1",
+      "rdkit_version": "2023.09.5",
+      "ring_skeleton_smiles": "C1CCCCC1",
+      "scaffold_family_smiles": "c1ccccc1"
+    }
+  ],
+  "invalid_inputs_rejected": {
+    "": "Expected a nonempty SMILES string",
+    "*c1ccccc1": "A connected molecule without dummy atoms is required: '*c1ccccc1'",
+    "CC.O": "A connected molecule without dummy atoms is required: 'CC.O'"
+  },
+  "module_origins": {
+    "chembounce_synthesis.common": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+    "chembounce_synthesis.identity": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+    "chemistry": "bdd598d1255ce827fb6843e3d95f8ceb4a5cdafe33335086f0b270b04940f462",
+    "numpy": "22cd1535fa14d74ef6f457cca149ffdc80875f460be313b8f895273f78bc402e",
+    "rdkit": "e987eae7024995c10c605b3f101e7e5b49423280578cca2ce703487c4c5bbb82",
+    "reinvent": "44f037b15f8d41cfd9bff2e6be333c79dcb68fed74ebde5f88368d7eb1dcfa05",
+    "reinvent.models.transformer.core.dataset.dataset": "b0c4eaa30c68b8af145dd44e2c8057a20584840259e3abf045421e697be3a78d",
+    "reinvent.models.transformer.mol2mol.mol2mol": "fc2bea768ce4c39a9774f78960369dd9929e12400616a9e0d41c65619b44fff6",
+    "torch": "f02db401efe53dfb832234991b24b8e6ef8c92c93dd0a8a6c13adab0c1d9c00b"
+  },
+  "numpy_arithmetic": [
+    [
+      19.0,
+      22.0
+    ],
+    [
+      43.0,
+      50.0
+    ]
+  ],
+  "profile": "mol2mol",
+  "python": "3.10.12 (main, Jul  5 2023, 18:54:27) [GCC 11.2.0]",
+  "rdkit_version": "2023.09.5",
+  "reaction_products": [
+    "CNC(C)=O"
+  ],
+  "scope": "Fixed same-host CPU smoke assessment; no checkpoint/DB access, learned inference, GPU API call, campaign execution, or comparative endpoint."
+}
