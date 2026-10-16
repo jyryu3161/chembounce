@@ -276,6 +276,7 @@ def test_qualified_cli_defaults_to_hit_search_and_design_ablation_keeps_final_ga
 
 @pytest.mark.parametrize("requirement", ["similarity", "anchor", "property"])
 def test_default_workflow_records_early_root_failures_without_scoring(tmp_path, assets, requirement):
+    pytest.importorskip("rdkit.Chem.rdShapeAlign")
     assets = narrow_catalog(assets)
     config = config_for(tmp_path, assets, proposal_for())
     if requirement == "similarity":
@@ -296,6 +297,7 @@ def test_default_workflow_records_early_root_failures_without_scoring(tmp_path, 
 
 
 def test_qualified_root_rejects_unspecified_product_before_scoring(tmp_path, assets):
+    pytest.importorskip("rdkit.Chem.rdShapeAlign")
     with assets[0].path.open("a") as stream:
         stream.write("lactic-unknown\tCC(O)C(=O)O\ttest fixture\tfixture-date\n")
     config = config_for(
