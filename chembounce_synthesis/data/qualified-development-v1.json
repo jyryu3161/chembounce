@@ -1,0 +1,2423 @@
+{
+  "calibration_spec": {
+    "acceptance": "eligible_and_every_feature_greater_than_or_equal_to_cutoff",
+    "arithmetic": "exact_rational_weights_rates_constraints_and_objective_ties",
+    "bootstrap": {
+      "draws": 2000,
+      "generator": "numpy.random.Generator(numpy.random.PCG64(20261016))",
+      "interval": "inverse_empirical_cdf_no_interpolation",
+      "predictions": "fixed_final_fit_and_locked_oof_separately_no_refitting",
+      "quantiles": [
+        "1/40",
+        "39/40"
+      ],
+      "unit": "sorted_target_ids_with_replacement_same_number_as_targets"
+    },
+    "conformers": {
+      "energy_window": 5.0,
+      "max_iterations": 500,
+      "num_conformers": 8,
+      "pharmacophore_sigma": 1.0,
+      "reject_unspecified_stereo": true,
+      "scoring_objective": "original-hit-v1",
+      "strain_penalty": 0.05
+    },
+    "constraints": {
+      "active_macro": "4/5",
+      "each_target_active": "3/5",
+      "topology_active_macro": "4/5"
+    },
+    "features": [
+      "hit_tanimoto",
+      "all_seed_min_hit_shape",
+      "all_seed_min_hit_pharmacophore"
+    ],
+    "fingerprint": {
+      "bits": 2048,
+      "chirality": true,
+      "kind": "binary_morgan",
+      "radius": 2
+    },
+    "folds": "leave_one_target_out_sorted_target_ids",
+    "grid": "cartesian_product_positive_deduplicated_quantiles_in_feature_order",
+    "grid_support": "complete_validated_active_common_support_training_only",
+    "grid_weights": "1/(supported_targets*queries_in_target*scaffolds_in_query*rows_in_scaffold)",
+    "infeasible": "abstain_all_pairs_geometric_discrimination_not_assessed_no_goal_relaxation",
+    "performance_denominator": "all_original_labelled_pairs_including_computational_failures",
+    "primary_rates": "equal_supported_queries_within_target_then_equal_supported_targets",
+    "quantile_levels": [
+      "1/100",
+      "1/20",
+      "1/10",
+      "3/20",
+      "1/5"
+    ],
+    "quantile_rule": "inverse_cdf_observed_values_exact_rational_weights_grouped_ties_no_rounding",
+    "query_group": [
+      "target_id",
+      "assay_id",
+      "context_id",
+      "query_id"
+    ],
+    "scaffold_sensitivity": "equal_original_scaffolds_then_queries_then_targets_reporting_only",
+    "scope": "previously_inspected_development_only",
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "selection": [
+      "maximize_inactive_rejection",
+      "maximize_active_retention",
+      "ascending_cutoff_tuple"
+    ],
+    "stability": "report_only_no_hard_range_gate_convergence_not_assessed",
+    "version": "qualified-development-calibration-v1"
+  },
+  "final_development_report": {
+    "active_retention": {
+      "macro": 0.85,
+      "macro_rational": "17/20",
+      "queries": [
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL203",
+            "CHEMBL5046855",
+            "context-5ee8d3d2dbc6832c550fc069",
+            "query-aeb699155b5951331e3414c4"
+          ],
+          "rate": "9/10"
+        },
+        {
+          "denominator": 5,
+          "query": [
+            "CHEMBL203",
+            "CHEMBL5141216",
+            "context-b0835ae2c8b32155a0d25f35",
+            "query-3112fe8f62a9915e64c043dd"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL205",
+            "CHEMBL4842709",
+            "context-0877ed7ed11f53a5411e35f7",
+            "query-60be606ec9c7d73837d797c7"
+          ],
+          "rate": "9/10"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL205",
+            "CHEMBL5040919",
+            "context-9f17838f7fe0595c8263186d",
+            "query-558c73c70d162c6e27f51c6c"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2147",
+            "CHEMBL4845572",
+            "context-a8597534f3cbe9135f90fd6a",
+            "query-b7e1a42703821102f2b20148"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2147",
+            "CHEMBL957365",
+            "context-07741203664a5a1ab85e8943",
+            "query-e7cd32c492584e673ba7c9cc"
+          ],
+          "rate": "3/10"
+        },
+        {
+          "denominator": 9,
+          "query": [
+            "CHEMBL220",
+            "CHEMBL3047076",
+            "context-659e6e342eacc140fc6c6a2e",
+            "query-e2de92fe34e24d8b1f3dc835"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL220",
+            "CHEMBL5235525",
+            "context-ae4d778097316c985130d458",
+            "query-ca4f5ab71f884bc05ea9cd09"
+          ],
+          "rate": "1/5"
+        },
+        {
+          "denominator": 7,
+          "query": [
+            "CHEMBL251",
+            "CHEMBL2394446",
+            "context-635fc1e3c7d3b20cb558e32f",
+            "query-9a6a7884bdcc7b79d6a88389"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL251",
+            "CHEMBL5109848",
+            "context-3565895fa386e29340475aa1",
+            "query-f1965f0755e0bca9a6ee94ce"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2637",
+            "CHEMBL5318948",
+            "context-1cd8f6206d38fe3b32a34860",
+            "query-29d8276ad6b6076dba437051"
+          ],
+          "rate": "9/10"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2637",
+            "CHEMBL5732897",
+            "context-4065e169ce5abc92848b68cc",
+            "query-779b977dd327929e05e9918f"
+          ],
+          "rate": "1"
+        }
+      ],
+      "targets": {
+        "CHEMBL203": {
+          "rate": 0.95,
+          "rational": "19/20"
+        },
+        "CHEMBL205": {
+          "rate": 0.95,
+          "rational": "19/20"
+        },
+        "CHEMBL2147": {
+          "rate": 0.65,
+          "rational": "13/20"
+        },
+        "CHEMBL220": {
+          "rate": 0.6,
+          "rational": "3/5"
+        },
+        "CHEMBL251": {
+          "rate": 1.0,
+          "rational": "1"
+        },
+        "CHEMBL2637": {
+          "rate": 0.95,
+          "rational": "19/20"
+        }
+      },
+      "unsupported_queries": 0,
+      "unsupported_targets": 0
+    },
+    "computational_failure_pairs": 3,
+    "fit_coverage": {
+      "no_fit_pairs": 0,
+      "pairs": 197,
+      "targets": [
+        "CHEMBL203",
+        "CHEMBL205",
+        "CHEMBL2147",
+        "CHEMBL220",
+        "CHEMBL251",
+        "CHEMBL2637"
+      ]
+    },
+    "geometric_discrimination": {
+      "pairs": 194,
+      "rates": {
+        "active": {
+          "macro": 0.8518518518518519,
+          "macro_rational": "23/27",
+          "queries": [
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL203",
+                "CHEMBL5046855",
+                "context-5ee8d3d2dbc6832c550fc069",
+                "query-aeb699155b5951331e3414c4"
+              ],
+              "rate": "9/10"
+            },
+            {
+              "denominator": 5,
+              "query": [
+                "CHEMBL203",
+                "CHEMBL5141216",
+                "context-b0835ae2c8b32155a0d25f35",
+                "query-3112fe8f62a9915e64c043dd"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL205",
+                "CHEMBL4842709",
+                "context-0877ed7ed11f53a5411e35f7",
+                "query-60be606ec9c7d73837d797c7"
+              ],
+              "rate": "9/10"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL205",
+                "CHEMBL5040919",
+                "context-9f17838f7fe0595c8263186d",
+                "query-558c73c70d162c6e27f51c6c"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL2147",
+                "CHEMBL4845572",
+                "context-a8597534f3cbe9135f90fd6a",
+                "query-b7e1a42703821102f2b20148"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL2147",
+                "CHEMBL957365",
+                "context-07741203664a5a1ab85e8943",
+                "query-e7cd32c492584e673ba7c9cc"
+              ],
+              "rate": "3/10"
+            },
+            {
+              "denominator": 9,
+              "query": [
+                "CHEMBL220",
+                "CHEMBL3047076",
+                "context-659e6e342eacc140fc6c6a2e",
+                "query-e2de92fe34e24d8b1f3dc835"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 9,
+              "query": [
+                "CHEMBL220",
+                "CHEMBL5235525",
+                "context-ae4d778097316c985130d458",
+                "query-ca4f5ab71f884bc05ea9cd09"
+              ],
+              "rate": "2/9"
+            },
+            {
+              "denominator": 7,
+              "query": [
+                "CHEMBL251",
+                "CHEMBL2394446",
+                "context-635fc1e3c7d3b20cb558e32f",
+                "query-9a6a7884bdcc7b79d6a88389"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL251",
+                "CHEMBL5109848",
+                "context-3565895fa386e29340475aa1",
+                "query-f1965f0755e0bca9a6ee94ce"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL2637",
+                "CHEMBL5318948",
+                "context-1cd8f6206d38fe3b32a34860",
+                "query-29d8276ad6b6076dba437051"
+              ],
+              "rate": "9/10"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL2637",
+                "CHEMBL5732897",
+                "context-4065e169ce5abc92848b68cc",
+                "query-779b977dd327929e05e9918f"
+              ],
+              "rate": "1"
+            }
+          ],
+          "targets": {
+            "CHEMBL203": {
+              "rate": 0.95,
+              "rational": "19/20"
+            },
+            "CHEMBL205": {
+              "rate": 0.95,
+              "rational": "19/20"
+            },
+            "CHEMBL2147": {
+              "rate": 0.65,
+              "rational": "13/20"
+            },
+            "CHEMBL220": {
+              "rate": 0.6111111111111112,
+              "rational": "11/18"
+            },
+            "CHEMBL251": {
+              "rate": 1.0,
+              "rational": "1"
+            },
+            "CHEMBL2637": {
+              "rate": 0.95,
+              "rational": "19/20"
+            }
+          },
+          "unsupported_queries": 0,
+          "unsupported_targets": 0
+        },
+        "inactive": {
+          "macro": 0.24444444444444444,
+          "macro_rational": "11/45",
+          "queries": [
+            {
+              "denominator": 6,
+              "query": [
+                "CHEMBL203",
+                "CHEMBL5046855",
+                "context-5ee8d3d2dbc6832c550fc069",
+                "query-aeb699155b5951331e3414c4"
+              ],
+              "rate": "0"
+            },
+            {
+              "denominator": 5,
+              "query": [
+                "CHEMBL203",
+                "CHEMBL5141216",
+                "context-b0835ae2c8b32155a0d25f35",
+                "query-3112fe8f62a9915e64c043dd"
+              ],
+              "rate": "0"
+            },
+            {
+              "denominator": 6,
+              "query": [
+                "CHEMBL205",
+                "CHEMBL4842709",
+                "context-0877ed7ed11f53a5411e35f7",
+                "query-60be606ec9c7d73837d797c7"
+              ],
+              "rate": "2/3"
+            },
+            {
+              "denominator": 6,
+              "query": [
+                "CHEMBL205",
+                "CHEMBL5040919",
+                "context-9f17838f7fe0595c8263186d",
+                "query-558c73c70d162c6e27f51c6c"
+              ],
+              "rate": "1/6"
+            },
+            {
+              "denominator": 5,
+              "query": [
+                "CHEMBL2147",
+                "CHEMBL4845572",
+                "context-a8597534f3cbe9135f90fd6a",
+                "query-b7e1a42703821102f2b20148"
+              ],
+              "rate": "0"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL2147",
+                "CHEMBL957365",
+                "context-07741203664a5a1ab85e8943",
+                "query-e7cd32c492584e673ba7c9cc"
+              ],
+              "rate": "9/10"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL220",
+                "CHEMBL3047076",
+                "context-659e6e342eacc140fc6c6a2e",
+                "query-e2de92fe34e24d8b1f3dc835"
+              ],
+              "rate": "0"
+            },
+            {
+              "denominator": 3,
+              "query": [
+                "CHEMBL220",
+                "CHEMBL5235525",
+                "context-ae4d778097316c985130d458",
+                "query-ca4f5ab71f884bc05ea9cd09"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 8,
+              "query": [
+                "CHEMBL251",
+                "CHEMBL2394446",
+                "context-635fc1e3c7d3b20cb558e32f",
+                "query-9a6a7884bdcc7b79d6a88389"
+              ],
+              "rate": "0"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL251",
+                "CHEMBL5109848",
+                "context-3565895fa386e29340475aa1",
+                "query-f1965f0755e0bca9a6ee94ce"
+              ],
+              "rate": "0"
+            },
+            {
+              "denominator": 5,
+              "query": [
+                "CHEMBL2637",
+                "CHEMBL5318948",
+                "context-1cd8f6206d38fe3b32a34860",
+                "query-29d8276ad6b6076dba437051"
+              ],
+              "rate": "1/5"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL2637",
+                "CHEMBL5732897",
+                "context-4065e169ce5abc92848b68cc",
+                "query-779b977dd327929e05e9918f"
+              ],
+              "rate": "0"
+            }
+          ],
+          "targets": {
+            "CHEMBL203": {
+              "rate": 0.0,
+              "rational": "0"
+            },
+            "CHEMBL205": {
+              "rate": 0.4166666666666667,
+              "rational": "5/12"
+            },
+            "CHEMBL2147": {
+              "rate": 0.45,
+              "rational": "9/20"
+            },
+            "CHEMBL220": {
+              "rate": 0.5,
+              "rational": "1/2"
+            },
+            "CHEMBL251": {
+              "rate": 0.0,
+              "rational": "0"
+            },
+            "CHEMBL2637": {
+              "rate": 0.1,
+              "rational": "1/10"
+            }
+          },
+          "unsupported_queries": 0,
+          "unsupported_targets": 0
+        }
+      },
+      "status": "assessed_conditional_on_fit_and_complete_computation"
+    },
+    "inactive_operational_rejection": {
+      "macro": 0.24444444444444444,
+      "macro_rational": "11/45",
+      "queries": [
+        {
+          "denominator": 6,
+          "query": [
+            "CHEMBL203",
+            "CHEMBL5046855",
+            "context-5ee8d3d2dbc6832c550fc069",
+            "query-aeb699155b5951331e3414c4"
+          ],
+          "rate": "0"
+        },
+        {
+          "denominator": 5,
+          "query": [
+            "CHEMBL203",
+            "CHEMBL5141216",
+            "context-b0835ae2c8b32155a0d25f35",
+            "query-3112fe8f62a9915e64c043dd"
+          ],
+          "rate": "0"
+        },
+        {
+          "denominator": 6,
+          "query": [
+            "CHEMBL205",
+            "CHEMBL4842709",
+            "context-0877ed7ed11f53a5411e35f7",
+            "query-60be606ec9c7d73837d797c7"
+          ],
+          "rate": "2/3"
+        },
+        {
+          "denominator": 6,
+          "query": [
+            "CHEMBL205",
+            "CHEMBL5040919",
+            "context-9f17838f7fe0595c8263186d",
+            "query-558c73c70d162c6e27f51c6c"
+          ],
+          "rate": "1/6"
+        },
+        {
+          "denominator": 5,
+          "query": [
+            "CHEMBL2147",
+            "CHEMBL4845572",
+            "context-a8597534f3cbe9135f90fd6a",
+            "query-b7e1a42703821102f2b20148"
+          ],
+          "rate": "0"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2147",
+            "CHEMBL957365",
+            "context-07741203664a5a1ab85e8943",
+            "query-e7cd32c492584e673ba7c9cc"
+          ],
+          "rate": "9/10"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL220",
+            "CHEMBL3047076",
+            "context-659e6e342eacc140fc6c6a2e",
+            "query-e2de92fe34e24d8b1f3dc835"
+          ],
+          "rate": "0"
+        },
+        {
+          "denominator": 5,
+          "query": [
+            "CHEMBL220",
+            "CHEMBL5235525",
+            "context-ae4d778097316c985130d458",
+            "query-ca4f5ab71f884bc05ea9cd09"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 8,
+          "query": [
+            "CHEMBL251",
+            "CHEMBL2394446",
+            "context-635fc1e3c7d3b20cb558e32f",
+            "query-9a6a7884bdcc7b79d6a88389"
+          ],
+          "rate": "0"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL251",
+            "CHEMBL5109848",
+            "context-3565895fa386e29340475aa1",
+            "query-f1965f0755e0bca9a6ee94ce"
+          ],
+          "rate": "0"
+        },
+        {
+          "denominator": 5,
+          "query": [
+            "CHEMBL2637",
+            "CHEMBL5318948",
+            "context-1cd8f6206d38fe3b32a34860",
+            "query-29d8276ad6b6076dba437051"
+          ],
+          "rate": "1/5"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2637",
+            "CHEMBL5732897",
+            "context-4065e169ce5abc92848b68cc",
+            "query-779b977dd327929e05e9918f"
+          ],
+          "rate": "0"
+        }
+      ],
+      "targets": {
+        "CHEMBL203": {
+          "rate": 0.0,
+          "rational": "0"
+        },
+        "CHEMBL205": {
+          "rate": 0.4166666666666667,
+          "rational": "5/12"
+        },
+        "CHEMBL2147": {
+          "rate": 0.45,
+          "rational": "9/20"
+        },
+        "CHEMBL220": {
+          "rate": 0.5,
+          "rational": "1/2"
+        },
+        "CHEMBL251": {
+          "rate": 0.0,
+          "rational": "0"
+        },
+        "CHEMBL2637": {
+          "rate": 0.1,
+          "rational": "1/10"
+        }
+      },
+      "unsupported_queries": 0,
+      "unsupported_targets": 0
+    },
+    "rejection_counts": {
+      "computational_failure_in_fitted_targets": 3,
+      "geometric_threshold_rejection": 35,
+      "no_fit": 0
+    },
+    "rejection_counts_by_label": {
+      "active": {
+        "computational_failure_in_fitted_targets": 1,
+        "geometric_threshold_rejection": 17,
+        "no_fit": 0
+      },
+      "inactive": {
+        "computational_failure_in_fitted_targets": 2,
+        "geometric_threshold_rejection": 18,
+        "no_fit": 0
+      }
+    },
+    "scaffold_sensitivity": {
+      "active": {
+        "macro": 0.8668981481481481,
+        "macro_rational": "749/864",
+        "queries": [
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL203",
+              "CHEMBL5046855",
+              "context-5ee8d3d2dbc6832c550fc069",
+              "query-aeb699155b5951331e3414c4"
+            ],
+            "rate": "11/12"
+          },
+          {
+            "denominator": 5,
+            "query": [
+              "CHEMBL203",
+              "CHEMBL5141216",
+              "context-b0835ae2c8b32155a0d25f35",
+              "query-3112fe8f62a9915e64c043dd"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL205",
+              "CHEMBL4842709",
+              "context-0877ed7ed11f53a5411e35f7",
+              "query-60be606ec9c7d73837d797c7"
+            ],
+            "rate": "7/8"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL205",
+              "CHEMBL5040919",
+              "context-9f17838f7fe0595c8263186d",
+              "query-558c73c70d162c6e27f51c6c"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL2147",
+              "CHEMBL4845572",
+              "context-a8597534f3cbe9135f90fd6a",
+              "query-b7e1a42703821102f2b20148"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL2147",
+              "CHEMBL957365",
+              "context-07741203664a5a1ab85e8943",
+              "query-e7cd32c492584e673ba7c9cc"
+            ],
+            "rate": "11/18"
+          },
+          {
+            "denominator": 9,
+            "query": [
+              "CHEMBL220",
+              "CHEMBL3047076",
+              "context-659e6e342eacc140fc6c6a2e",
+              "query-e2de92fe34e24d8b1f3dc835"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL220",
+              "CHEMBL5235525",
+              "context-ae4d778097316c985130d458",
+              "query-ca4f5ab71f884bc05ea9cd09"
+            ],
+            "rate": "1/2"
+          },
+          {
+            "denominator": 7,
+            "query": [
+              "CHEMBL251",
+              "CHEMBL2394446",
+              "context-635fc1e3c7d3b20cb558e32f",
+              "query-9a6a7884bdcc7b79d6a88389"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL251",
+              "CHEMBL5109848",
+              "context-3565895fa386e29340475aa1",
+              "query-f1965f0755e0bca9a6ee94ce"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL2637",
+              "CHEMBL5318948",
+              "context-1cd8f6206d38fe3b32a34860",
+              "query-29d8276ad6b6076dba437051"
+            ],
+            "rate": "1/2"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL2637",
+              "CHEMBL5732897",
+              "context-4065e169ce5abc92848b68cc",
+              "query-779b977dd327929e05e9918f"
+            ],
+            "rate": "1"
+          }
+        ],
+        "targets": {
+          "CHEMBL203": {
+            "rate": 0.9583333333333334,
+            "rational": "23/24"
+          },
+          "CHEMBL205": {
+            "rate": 0.9375,
+            "rational": "15/16"
+          },
+          "CHEMBL2147": {
+            "rate": 0.8055555555555556,
+            "rational": "29/36"
+          },
+          "CHEMBL220": {
+            "rate": 0.75,
+            "rational": "3/4"
+          },
+          "CHEMBL251": {
+            "rate": 1.0,
+            "rational": "1"
+          },
+          "CHEMBL2637": {
+            "rate": 0.75,
+            "rational": "3/4"
+          }
+        },
+        "unsupported_queries": 0,
+        "unsupported_targets": 0
+      },
+      "inactive": {
+        "macro": 0.2423611111111111,
+        "macro_rational": "349/1440",
+        "queries": [
+          {
+            "denominator": 6,
+            "query": [
+              "CHEMBL203",
+              "CHEMBL5046855",
+              "context-5ee8d3d2dbc6832c550fc069",
+              "query-aeb699155b5951331e3414c4"
+            ],
+            "rate": "0"
+          },
+          {
+            "denominator": 5,
+            "query": [
+              "CHEMBL203",
+              "CHEMBL5141216",
+              "context-b0835ae2c8b32155a0d25f35",
+              "query-3112fe8f62a9915e64c043dd"
+            ],
+            "rate": "0"
+          },
+          {
+            "denominator": 6,
+            "query": [
+              "CHEMBL205",
+              "CHEMBL4842709",
+              "context-0877ed7ed11f53a5411e35f7",
+              "query-60be606ec9c7d73837d797c7"
+            ],
+            "rate": "2/3"
+          },
+          {
+            "denominator": 6,
+            "query": [
+              "CHEMBL205",
+              "CHEMBL5040919",
+              "context-9f17838f7fe0595c8263186d",
+              "query-558c73c70d162c6e27f51c6c"
+            ],
+            "rate": "1/6"
+          },
+          {
+            "denominator": 5,
+            "query": [
+              "CHEMBL2147",
+              "CHEMBL4845572",
+              "context-a8597534f3cbe9135f90fd6a",
+              "query-b7e1a42703821102f2b20148"
+            ],
+            "rate": "0"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL2147",
+              "CHEMBL957365",
+              "context-07741203664a5a1ab85e8943",
+              "query-e7cd32c492584e673ba7c9cc"
+            ],
+            "rate": "19/20"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL220",
+              "CHEMBL3047076",
+              "context-659e6e342eacc140fc6c6a2e",
+              "query-e2de92fe34e24d8b1f3dc835"
+            ],
+            "rate": "0"
+          },
+          {
+            "denominator": 5,
+            "query": [
+              "CHEMBL220",
+              "CHEMBL5235525",
+              "context-ae4d778097316c985130d458",
+              "query-ca4f5ab71f884bc05ea9cd09"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 8,
+            "query": [
+              "CHEMBL251",
+              "CHEMBL2394446",
+              "context-635fc1e3c7d3b20cb558e32f",
+              "query-9a6a7884bdcc7b79d6a88389"
+            ],
+            "rate": "0"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL251",
+              "CHEMBL5109848",
+              "context-3565895fa386e29340475aa1",
+              "query-f1965f0755e0bca9a6ee94ce"
+            ],
+            "rate": "0"
+          },
+          {
+            "denominator": 5,
+            "query": [
+              "CHEMBL2637",
+              "CHEMBL5318948",
+              "context-1cd8f6206d38fe3b32a34860",
+              "query-29d8276ad6b6076dba437051"
+            ],
+            "rate": "1/8"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL2637",
+              "CHEMBL5732897",
+              "context-4065e169ce5abc92848b68cc",
+              "query-779b977dd327929e05e9918f"
+            ],
+            "rate": "0"
+          }
+        ],
+        "targets": {
+          "CHEMBL203": {
+            "rate": 0.0,
+            "rational": "0"
+          },
+          "CHEMBL205": {
+            "rate": 0.4166666666666667,
+            "rational": "5/12"
+          },
+          "CHEMBL2147": {
+            "rate": 0.475,
+            "rational": "19/40"
+          },
+          "CHEMBL220": {
+            "rate": 0.5,
+            "rational": "1/2"
+          },
+          "CHEMBL251": {
+            "rate": 0.0,
+            "rational": "0"
+          },
+          "CHEMBL2637": {
+            "rate": 0.0625,
+            "rational": "1/16"
+          }
+        },
+        "unsupported_queries": 0,
+        "unsupported_targets": 0
+      }
+    },
+    "topology_active_retention": {
+      "macro": 0.8416666666666667,
+      "macro_rational": "101/120",
+      "queries": [
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL203",
+            "CHEMBL5046855",
+            "context-5ee8d3d2dbc6832c550fc069",
+            "query-aeb699155b5951331e3414c4"
+          ],
+          "rate": "9/10"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL205",
+            "CHEMBL4842709",
+            "context-0877ed7ed11f53a5411e35f7",
+            "query-60be606ec9c7d73837d797c7"
+          ],
+          "rate": "9/10"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL205",
+            "CHEMBL5040919",
+            "context-9f17838f7fe0595c8263186d",
+            "query-558c73c70d162c6e27f51c6c"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 4,
+          "query": [
+            "CHEMBL2147",
+            "CHEMBL4845572",
+            "context-a8597534f3cbe9135f90fd6a",
+            "query-b7e1a42703821102f2b20148"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2147",
+            "CHEMBL957365",
+            "context-07741203664a5a1ab85e8943",
+            "query-e7cd32c492584e673ba7c9cc"
+          ],
+          "rate": "3/10"
+        },
+        {
+          "denominator": 5,
+          "query": [
+            "CHEMBL220",
+            "CHEMBL3047076",
+            "context-659e6e342eacc140fc6c6a2e",
+            "query-e2de92fe34e24d8b1f3dc835"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL220",
+            "CHEMBL5235525",
+            "context-ae4d778097316c985130d458",
+            "query-ca4f5ab71f884bc05ea9cd09"
+          ],
+          "rate": "1/5"
+        },
+        {
+          "denominator": 7,
+          "query": [
+            "CHEMBL251",
+            "CHEMBL2394446",
+            "context-635fc1e3c7d3b20cb558e32f",
+            "query-9a6a7884bdcc7b79d6a88389"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 6,
+          "query": [
+            "CHEMBL251",
+            "CHEMBL5109848",
+            "context-3565895fa386e29340475aa1",
+            "query-f1965f0755e0bca9a6ee94ce"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2637",
+            "CHEMBL5318948",
+            "context-1cd8f6206d38fe3b32a34860",
+            "query-29d8276ad6b6076dba437051"
+          ],
+          "rate": "9/10"
+        },
+        {
+          "denominator": 2,
+          "query": [
+            "CHEMBL2637",
+            "CHEMBL5732897",
+            "context-4065e169ce5abc92848b68cc",
+            "query-779b977dd327929e05e9918f"
+          ],
+          "rate": "1"
+        }
+      ],
+      "targets": {
+        "CHEMBL203": {
+          "rate": 0.9,
+          "rational": "9/10"
+        },
+        "CHEMBL205": {
+          "rate": 0.95,
+          "rational": "19/20"
+        },
+        "CHEMBL2147": {
+          "rate": 0.65,
+          "rational": "13/20"
+        },
+        "CHEMBL220": {
+          "rate": 0.6,
+          "rational": "3/5"
+        },
+        "CHEMBL251": {
+          "rate": 1.0,
+          "rational": "1"
+        },
+        "CHEMBL2637": {
+          "rate": 0.95,
+          "rational": "19/20"
+        }
+      },
+      "unsupported_queries": 1,
+      "unsupported_targets": 0
+    }
+  },
+  "fit_sha256": "2294a4d86c38e2e3c5fede92ab5095f6f563693ee1fd76f04c7a19ee74aae77d",
+  "fold_statuses": [
+    {
+      "cutoff": [
+        0.08695652173913043,
+        0.5055221213607054,
+        0.11206335132501284
+      ],
+      "fit_status": "fitted",
+      "test_target": "CHEMBL203"
+    },
+    {
+      "cutoff": [
+        0.08695652173913043,
+        0.5081507741726942,
+        0.11206335132501284
+      ],
+      "fit_status": "fitted",
+      "test_target": "CHEMBL205"
+    },
+    {
+      "cutoff": [
+        0.3541666666666667,
+        0.41205091506597924,
+        0.11206335132501284
+      ],
+      "fit_status": "fitted",
+      "test_target": "CHEMBL2147"
+    },
+    {
+      "cutoff": [
+        0.08695652173913043,
+        0.563375345458564,
+        0.17672080685674624
+      ],
+      "fit_status": "fitted",
+      "test_target": "CHEMBL220"
+    },
+    {
+      "cutoff": [
+        0.08695652173913043,
+        0.5081507741726942,
+        0.11206335132501284
+      ],
+      "fit_status": "fitted",
+      "test_target": "CHEMBL251"
+    },
+    {
+      "cutoff": [
+        0.08695652173913043,
+        0.5081507741726942,
+        0.11206335132501284
+      ],
+      "fit_status": "fitted",
+      "test_target": "CHEMBL2637"
+    }
+  ],
+  "limitations": [
+    "Previously inspected development panel; LOTO is not unseen validation",
+    "Observed three-seed minima and spread are not calibrated uncertainty or convergence",
+    "Scalar pose selection may abstain despite another pose meeting component minima",
+    "Real-design overlay availability is an additional production veto not measured by these controls",
+    "No biological activity retention guarantee, synthesis probability, or established 3D advantage",
+    "The development fit passed the bound root and independent review records; this release is explicit opt-in and does not establish strong structural similarity, full-pipeline activity retention, or prospective validation",
+    "The permissive lower minima (including binary Morgan 0.08695652173913043) reflect this development operating rule, not a universal similarity standard"
+  ],
+  "minimum_scores": {
+    "hit_pharmacophore": 0.11206335132501284,
+    "hit_shape": 0.5055221213607054,
+    "hit_tanimoto": 0.08695652173913043
+  },
+  "oof_development_report": {
+    "active_retention": {
+      "macro": 0.8083333333333333,
+      "macro_rational": "97/120",
+      "queries": [
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL203",
+            "CHEMBL5046855",
+            "context-5ee8d3d2dbc6832c550fc069",
+            "query-aeb699155b5951331e3414c4"
+          ],
+          "rate": "9/10"
+        },
+        {
+          "denominator": 5,
+          "query": [
+            "CHEMBL203",
+            "CHEMBL5141216",
+            "context-b0835ae2c8b32155a0d25f35",
+            "query-3112fe8f62a9915e64c043dd"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL205",
+            "CHEMBL4842709",
+            "context-0877ed7ed11f53a5411e35f7",
+            "query-60be606ec9c7d73837d797c7"
+          ],
+          "rate": "4/5"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL205",
+            "CHEMBL5040919",
+            "context-9f17838f7fe0595c8263186d",
+            "query-558c73c70d162c6e27f51c6c"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2147",
+            "CHEMBL4845572",
+            "context-a8597534f3cbe9135f90fd6a",
+            "query-b7e1a42703821102f2b20148"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2147",
+            "CHEMBL957365",
+            "context-07741203664a5a1ab85e8943",
+            "query-e7cd32c492584e673ba7c9cc"
+          ],
+          "rate": "0"
+        },
+        {
+          "denominator": 9,
+          "query": [
+            "CHEMBL220",
+            "CHEMBL3047076",
+            "context-659e6e342eacc140fc6c6a2e",
+            "query-e2de92fe34e24d8b1f3dc835"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL220",
+            "CHEMBL5235525",
+            "context-ae4d778097316c985130d458",
+            "query-ca4f5ab71f884bc05ea9cd09"
+          ],
+          "rate": "1/10"
+        },
+        {
+          "denominator": 7,
+          "query": [
+            "CHEMBL251",
+            "CHEMBL2394446",
+            "context-635fc1e3c7d3b20cb558e32f",
+            "query-9a6a7884bdcc7b79d6a88389"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL251",
+            "CHEMBL5109848",
+            "context-3565895fa386e29340475aa1",
+            "query-f1965f0755e0bca9a6ee94ce"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2637",
+            "CHEMBL5318948",
+            "context-1cd8f6206d38fe3b32a34860",
+            "query-29d8276ad6b6076dba437051"
+          ],
+          "rate": "9/10"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2637",
+            "CHEMBL5732897",
+            "context-4065e169ce5abc92848b68cc",
+            "query-779b977dd327929e05e9918f"
+          ],
+          "rate": "1"
+        }
+      ],
+      "targets": {
+        "CHEMBL203": {
+          "rate": 0.95,
+          "rational": "19/20"
+        },
+        "CHEMBL205": {
+          "rate": 0.9,
+          "rational": "9/10"
+        },
+        "CHEMBL2147": {
+          "rate": 0.5,
+          "rational": "1/2"
+        },
+        "CHEMBL220": {
+          "rate": 0.55,
+          "rational": "11/20"
+        },
+        "CHEMBL251": {
+          "rate": 1.0,
+          "rational": "1"
+        },
+        "CHEMBL2637": {
+          "rate": 0.95,
+          "rational": "19/20"
+        }
+      },
+      "unsupported_queries": 0,
+      "unsupported_targets": 0
+    },
+    "computational_failure_pairs": 3,
+    "fit_coverage": {
+      "no_fit_pairs": 0,
+      "pairs": 197,
+      "targets": [
+        "CHEMBL203",
+        "CHEMBL205",
+        "CHEMBL2147",
+        "CHEMBL220",
+        "CHEMBL251",
+        "CHEMBL2637"
+      ]
+    },
+    "geometric_discrimination": {
+      "pairs": 194,
+      "rates": {
+        "active": {
+          "macro": 0.8092592592592592,
+          "macro_rational": "437/540",
+          "queries": [
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL203",
+                "CHEMBL5046855",
+                "context-5ee8d3d2dbc6832c550fc069",
+                "query-aeb699155b5951331e3414c4"
+              ],
+              "rate": "9/10"
+            },
+            {
+              "denominator": 5,
+              "query": [
+                "CHEMBL203",
+                "CHEMBL5141216",
+                "context-b0835ae2c8b32155a0d25f35",
+                "query-3112fe8f62a9915e64c043dd"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL205",
+                "CHEMBL4842709",
+                "context-0877ed7ed11f53a5411e35f7",
+                "query-60be606ec9c7d73837d797c7"
+              ],
+              "rate": "4/5"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL205",
+                "CHEMBL5040919",
+                "context-9f17838f7fe0595c8263186d",
+                "query-558c73c70d162c6e27f51c6c"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL2147",
+                "CHEMBL4845572",
+                "context-a8597534f3cbe9135f90fd6a",
+                "query-b7e1a42703821102f2b20148"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL2147",
+                "CHEMBL957365",
+                "context-07741203664a5a1ab85e8943",
+                "query-e7cd32c492584e673ba7c9cc"
+              ],
+              "rate": "0"
+            },
+            {
+              "denominator": 9,
+              "query": [
+                "CHEMBL220",
+                "CHEMBL3047076",
+                "context-659e6e342eacc140fc6c6a2e",
+                "query-e2de92fe34e24d8b1f3dc835"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 9,
+              "query": [
+                "CHEMBL220",
+                "CHEMBL5235525",
+                "context-ae4d778097316c985130d458",
+                "query-ca4f5ab71f884bc05ea9cd09"
+              ],
+              "rate": "1/9"
+            },
+            {
+              "denominator": 7,
+              "query": [
+                "CHEMBL251",
+                "CHEMBL2394446",
+                "context-635fc1e3c7d3b20cb558e32f",
+                "query-9a6a7884bdcc7b79d6a88389"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL251",
+                "CHEMBL5109848",
+                "context-3565895fa386e29340475aa1",
+                "query-f1965f0755e0bca9a6ee94ce"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL2637",
+                "CHEMBL5318948",
+                "context-1cd8f6206d38fe3b32a34860",
+                "query-29d8276ad6b6076dba437051"
+              ],
+              "rate": "9/10"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL2637",
+                "CHEMBL5732897",
+                "context-4065e169ce5abc92848b68cc",
+                "query-779b977dd327929e05e9918f"
+              ],
+              "rate": "1"
+            }
+          ],
+          "targets": {
+            "CHEMBL203": {
+              "rate": 0.95,
+              "rational": "19/20"
+            },
+            "CHEMBL205": {
+              "rate": 0.9,
+              "rational": "9/10"
+            },
+            "CHEMBL2147": {
+              "rate": 0.5,
+              "rational": "1/2"
+            },
+            "CHEMBL220": {
+              "rate": 0.5555555555555556,
+              "rational": "5/9"
+            },
+            "CHEMBL251": {
+              "rate": 1.0,
+              "rational": "1"
+            },
+            "CHEMBL2637": {
+              "rate": 0.95,
+              "rational": "19/20"
+            }
+          },
+          "unsupported_queries": 0,
+          "unsupported_targets": 0
+        },
+        "inactive": {
+          "macro": 0.3277777777777778,
+          "macro_rational": "59/180",
+          "queries": [
+            {
+              "denominator": 6,
+              "query": [
+                "CHEMBL203",
+                "CHEMBL5046855",
+                "context-5ee8d3d2dbc6832c550fc069",
+                "query-aeb699155b5951331e3414c4"
+              ],
+              "rate": "0"
+            },
+            {
+              "denominator": 5,
+              "query": [
+                "CHEMBL203",
+                "CHEMBL5141216",
+                "context-b0835ae2c8b32155a0d25f35",
+                "query-3112fe8f62a9915e64c043dd"
+              ],
+              "rate": "0"
+            },
+            {
+              "denominator": 6,
+              "query": [
+                "CHEMBL205",
+                "CHEMBL4842709",
+                "context-0877ed7ed11f53a5411e35f7",
+                "query-60be606ec9c7d73837d797c7"
+              ],
+              "rate": "2/3"
+            },
+            {
+              "denominator": 6,
+              "query": [
+                "CHEMBL205",
+                "CHEMBL5040919",
+                "context-9f17838f7fe0595c8263186d",
+                "query-558c73c70d162c6e27f51c6c"
+              ],
+              "rate": "1/6"
+            },
+            {
+              "denominator": 5,
+              "query": [
+                "CHEMBL2147",
+                "CHEMBL4845572",
+                "context-a8597534f3cbe9135f90fd6a",
+                "query-b7e1a42703821102f2b20148"
+              ],
+              "rate": "4/5"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL2147",
+                "CHEMBL957365",
+                "context-07741203664a5a1ab85e8943",
+                "query-e7cd32c492584e673ba7c9cc"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL220",
+                "CHEMBL3047076",
+                "context-659e6e342eacc140fc6c6a2e",
+                "query-e2de92fe34e24d8b1f3dc835"
+              ],
+              "rate": "1/10"
+            },
+            {
+              "denominator": 3,
+              "query": [
+                "CHEMBL220",
+                "CHEMBL5235525",
+                "context-ae4d778097316c985130d458",
+                "query-ca4f5ab71f884bc05ea9cd09"
+              ],
+              "rate": "1"
+            },
+            {
+              "denominator": 8,
+              "query": [
+                "CHEMBL251",
+                "CHEMBL2394446",
+                "context-635fc1e3c7d3b20cb558e32f",
+                "query-9a6a7884bdcc7b79d6a88389"
+              ],
+              "rate": "0"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL251",
+                "CHEMBL5109848",
+                "context-3565895fa386e29340475aa1",
+                "query-f1965f0755e0bca9a6ee94ce"
+              ],
+              "rate": "0"
+            },
+            {
+              "denominator": 5,
+              "query": [
+                "CHEMBL2637",
+                "CHEMBL5318948",
+                "context-1cd8f6206d38fe3b32a34860",
+                "query-29d8276ad6b6076dba437051"
+              ],
+              "rate": "1/5"
+            },
+            {
+              "denominator": 10,
+              "query": [
+                "CHEMBL2637",
+                "CHEMBL5732897",
+                "context-4065e169ce5abc92848b68cc",
+                "query-779b977dd327929e05e9918f"
+              ],
+              "rate": "0"
+            }
+          ],
+          "targets": {
+            "CHEMBL203": {
+              "rate": 0.0,
+              "rational": "0"
+            },
+            "CHEMBL205": {
+              "rate": 0.4166666666666667,
+              "rational": "5/12"
+            },
+            "CHEMBL2147": {
+              "rate": 0.9,
+              "rational": "9/10"
+            },
+            "CHEMBL220": {
+              "rate": 0.55,
+              "rational": "11/20"
+            },
+            "CHEMBL251": {
+              "rate": 0.0,
+              "rational": "0"
+            },
+            "CHEMBL2637": {
+              "rate": 0.1,
+              "rational": "1/10"
+            }
+          },
+          "unsupported_queries": 0,
+          "unsupported_targets": 0
+        }
+      },
+      "status": "assessed_conditional_on_fit_and_complete_computation"
+    },
+    "inactive_operational_rejection": {
+      "macro": 0.3277777777777778,
+      "macro_rational": "59/180",
+      "queries": [
+        {
+          "denominator": 6,
+          "query": [
+            "CHEMBL203",
+            "CHEMBL5046855",
+            "context-5ee8d3d2dbc6832c550fc069",
+            "query-aeb699155b5951331e3414c4"
+          ],
+          "rate": "0"
+        },
+        {
+          "denominator": 5,
+          "query": [
+            "CHEMBL203",
+            "CHEMBL5141216",
+            "context-b0835ae2c8b32155a0d25f35",
+            "query-3112fe8f62a9915e64c043dd"
+          ],
+          "rate": "0"
+        },
+        {
+          "denominator": 6,
+          "query": [
+            "CHEMBL205",
+            "CHEMBL4842709",
+            "context-0877ed7ed11f53a5411e35f7",
+            "query-60be606ec9c7d73837d797c7"
+          ],
+          "rate": "2/3"
+        },
+        {
+          "denominator": 6,
+          "query": [
+            "CHEMBL205",
+            "CHEMBL5040919",
+            "context-9f17838f7fe0595c8263186d",
+            "query-558c73c70d162c6e27f51c6c"
+          ],
+          "rate": "1/6"
+        },
+        {
+          "denominator": 5,
+          "query": [
+            "CHEMBL2147",
+            "CHEMBL4845572",
+            "context-a8597534f3cbe9135f90fd6a",
+            "query-b7e1a42703821102f2b20148"
+          ],
+          "rate": "4/5"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2147",
+            "CHEMBL957365",
+            "context-07741203664a5a1ab85e8943",
+            "query-e7cd32c492584e673ba7c9cc"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL220",
+            "CHEMBL3047076",
+            "context-659e6e342eacc140fc6c6a2e",
+            "query-e2de92fe34e24d8b1f3dc835"
+          ],
+          "rate": "1/10"
+        },
+        {
+          "denominator": 5,
+          "query": [
+            "CHEMBL220",
+            "CHEMBL5235525",
+            "context-ae4d778097316c985130d458",
+            "query-ca4f5ab71f884bc05ea9cd09"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 8,
+          "query": [
+            "CHEMBL251",
+            "CHEMBL2394446",
+            "context-635fc1e3c7d3b20cb558e32f",
+            "query-9a6a7884bdcc7b79d6a88389"
+          ],
+          "rate": "0"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL251",
+            "CHEMBL5109848",
+            "context-3565895fa386e29340475aa1",
+            "query-f1965f0755e0bca9a6ee94ce"
+          ],
+          "rate": "0"
+        },
+        {
+          "denominator": 5,
+          "query": [
+            "CHEMBL2637",
+            "CHEMBL5318948",
+            "context-1cd8f6206d38fe3b32a34860",
+            "query-29d8276ad6b6076dba437051"
+          ],
+          "rate": "1/5"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2637",
+            "CHEMBL5732897",
+            "context-4065e169ce5abc92848b68cc",
+            "query-779b977dd327929e05e9918f"
+          ],
+          "rate": "0"
+        }
+      ],
+      "targets": {
+        "CHEMBL203": {
+          "rate": 0.0,
+          "rational": "0"
+        },
+        "CHEMBL205": {
+          "rate": 0.4166666666666667,
+          "rational": "5/12"
+        },
+        "CHEMBL2147": {
+          "rate": 0.9,
+          "rational": "9/10"
+        },
+        "CHEMBL220": {
+          "rate": 0.55,
+          "rational": "11/20"
+        },
+        "CHEMBL251": {
+          "rate": 0.0,
+          "rational": "0"
+        },
+        "CHEMBL2637": {
+          "rate": 0.1,
+          "rational": "1/10"
+        }
+      },
+      "unsupported_queries": 0,
+      "unsupported_targets": 0
+    },
+    "rejection_counts": {
+      "computational_failure_in_fitted_targets": 3,
+      "geometric_threshold_rejection": 46,
+      "no_fit": 0
+    },
+    "rejection_counts_by_label": {
+      "active": {
+        "computational_failure_in_fitted_targets": 1,
+        "geometric_threshold_rejection": 22,
+        "no_fit": 0
+      },
+      "inactive": {
+        "computational_failure_in_fitted_targets": 2,
+        "geometric_threshold_rejection": 24,
+        "no_fit": 0
+      }
+    },
+    "scaffold_sensitivity": {
+      "active": {
+        "macro": 0.7743055555555556,
+        "macro_rational": "223/288",
+        "queries": [
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL203",
+              "CHEMBL5046855",
+              "context-5ee8d3d2dbc6832c550fc069",
+              "query-aeb699155b5951331e3414c4"
+            ],
+            "rate": "11/12"
+          },
+          {
+            "denominator": 5,
+            "query": [
+              "CHEMBL203",
+              "CHEMBL5141216",
+              "context-b0835ae2c8b32155a0d25f35",
+              "query-3112fe8f62a9915e64c043dd"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL205",
+              "CHEMBL4842709",
+              "context-0877ed7ed11f53a5411e35f7",
+              "query-60be606ec9c7d73837d797c7"
+            ],
+            "rate": "5/8"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL205",
+              "CHEMBL5040919",
+              "context-9f17838f7fe0595c8263186d",
+              "query-558c73c70d162c6e27f51c6c"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL2147",
+              "CHEMBL4845572",
+              "context-a8597534f3cbe9135f90fd6a",
+              "query-b7e1a42703821102f2b20148"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL2147",
+              "CHEMBL957365",
+              "context-07741203664a5a1ab85e8943",
+              "query-e7cd32c492584e673ba7c9cc"
+            ],
+            "rate": "0"
+          },
+          {
+            "denominator": 9,
+            "query": [
+              "CHEMBL220",
+              "CHEMBL3047076",
+              "context-659e6e342eacc140fc6c6a2e",
+              "query-e2de92fe34e24d8b1f3dc835"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL220",
+              "CHEMBL5235525",
+              "context-ae4d778097316c985130d458",
+              "query-ca4f5ab71f884bc05ea9cd09"
+            ],
+            "rate": "1/4"
+          },
+          {
+            "denominator": 7,
+            "query": [
+              "CHEMBL251",
+              "CHEMBL2394446",
+              "context-635fc1e3c7d3b20cb558e32f",
+              "query-9a6a7884bdcc7b79d6a88389"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL251",
+              "CHEMBL5109848",
+              "context-3565895fa386e29340475aa1",
+              "query-f1965f0755e0bca9a6ee94ce"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL2637",
+              "CHEMBL5318948",
+              "context-1cd8f6206d38fe3b32a34860",
+              "query-29d8276ad6b6076dba437051"
+            ],
+            "rate": "1/2"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL2637",
+              "CHEMBL5732897",
+              "context-4065e169ce5abc92848b68cc",
+              "query-779b977dd327929e05e9918f"
+            ],
+            "rate": "1"
+          }
+        ],
+        "targets": {
+          "CHEMBL203": {
+            "rate": 0.9583333333333334,
+            "rational": "23/24"
+          },
+          "CHEMBL205": {
+            "rate": 0.8125,
+            "rational": "13/16"
+          },
+          "CHEMBL2147": {
+            "rate": 0.5,
+            "rational": "1/2"
+          },
+          "CHEMBL220": {
+            "rate": 0.625,
+            "rational": "5/8"
+          },
+          "CHEMBL251": {
+            "rate": 1.0,
+            "rational": "1"
+          },
+          "CHEMBL2637": {
+            "rate": 0.75,
+            "rational": "3/4"
+          }
+        },
+        "unsupported_queries": 0,
+        "unsupported_targets": 0
+      },
+      "inactive": {
+        "macro": 0.3159722222222222,
+        "macro_rational": "91/288",
+        "queries": [
+          {
+            "denominator": 6,
+            "query": [
+              "CHEMBL203",
+              "CHEMBL5046855",
+              "context-5ee8d3d2dbc6832c550fc069",
+              "query-aeb699155b5951331e3414c4"
+            ],
+            "rate": "0"
+          },
+          {
+            "denominator": 5,
+            "query": [
+              "CHEMBL203",
+              "CHEMBL5141216",
+              "context-b0835ae2c8b32155a0d25f35",
+              "query-3112fe8f62a9915e64c043dd"
+            ],
+            "rate": "0"
+          },
+          {
+            "denominator": 6,
+            "query": [
+              "CHEMBL205",
+              "CHEMBL4842709",
+              "context-0877ed7ed11f53a5411e35f7",
+              "query-60be606ec9c7d73837d797c7"
+            ],
+            "rate": "2/3"
+          },
+          {
+            "denominator": 6,
+            "query": [
+              "CHEMBL205",
+              "CHEMBL5040919",
+              "context-9f17838f7fe0595c8263186d",
+              "query-558c73c70d162c6e27f51c6c"
+            ],
+            "rate": "1/6"
+          },
+          {
+            "denominator": 5,
+            "query": [
+              "CHEMBL2147",
+              "CHEMBL4845572",
+              "context-a8597534f3cbe9135f90fd6a",
+              "query-b7e1a42703821102f2b20148"
+            ],
+            "rate": "2/3"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL2147",
+              "CHEMBL957365",
+              "context-07741203664a5a1ab85e8943",
+              "query-e7cd32c492584e673ba7c9cc"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL220",
+              "CHEMBL3047076",
+              "context-659e6e342eacc140fc6c6a2e",
+              "query-e2de92fe34e24d8b1f3dc835"
+            ],
+            "rate": "1/6"
+          },
+          {
+            "denominator": 5,
+            "query": [
+              "CHEMBL220",
+              "CHEMBL5235525",
+              "context-ae4d778097316c985130d458",
+              "query-ca4f5ab71f884bc05ea9cd09"
+            ],
+            "rate": "1"
+          },
+          {
+            "denominator": 8,
+            "query": [
+              "CHEMBL251",
+              "CHEMBL2394446",
+              "context-635fc1e3c7d3b20cb558e32f",
+              "query-9a6a7884bdcc7b79d6a88389"
+            ],
+            "rate": "0"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL251",
+              "CHEMBL5109848",
+              "context-3565895fa386e29340475aa1",
+              "query-f1965f0755e0bca9a6ee94ce"
+            ],
+            "rate": "0"
+          },
+          {
+            "denominator": 5,
+            "query": [
+              "CHEMBL2637",
+              "CHEMBL5318948",
+              "context-1cd8f6206d38fe3b32a34860",
+              "query-29d8276ad6b6076dba437051"
+            ],
+            "rate": "1/8"
+          },
+          {
+            "denominator": 10,
+            "query": [
+              "CHEMBL2637",
+              "CHEMBL5732897",
+              "context-4065e169ce5abc92848b68cc",
+              "query-779b977dd327929e05e9918f"
+            ],
+            "rate": "0"
+          }
+        ],
+        "targets": {
+          "CHEMBL203": {
+            "rate": 0.0,
+            "rational": "0"
+          },
+          "CHEMBL205": {
+            "rate": 0.4166666666666667,
+            "rational": "5/12"
+          },
+          "CHEMBL2147": {
+            "rate": 0.8333333333333334,
+            "rational": "5/6"
+          },
+          "CHEMBL220": {
+            "rate": 0.5833333333333334,
+            "rational": "7/12"
+          },
+          "CHEMBL251": {
+            "rate": 0.0,
+            "rational": "0"
+          },
+          "CHEMBL2637": {
+            "rate": 0.0625,
+            "rational": "1/16"
+          }
+        },
+        "unsupported_queries": 0,
+        "unsupported_targets": 0
+      }
+    },
+    "topology_active_retention": {
+      "macro": 0.8,
+      "macro_rational": "4/5",
+      "queries": [
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL203",
+            "CHEMBL5046855",
+            "context-5ee8d3d2dbc6832c550fc069",
+            "query-aeb699155b5951331e3414c4"
+          ],
+          "rate": "9/10"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL205",
+            "CHEMBL4842709",
+            "context-0877ed7ed11f53a5411e35f7",
+            "query-60be606ec9c7d73837d797c7"
+          ],
+          "rate": "4/5"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL205",
+            "CHEMBL5040919",
+            "context-9f17838f7fe0595c8263186d",
+            "query-558c73c70d162c6e27f51c6c"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 4,
+          "query": [
+            "CHEMBL2147",
+            "CHEMBL4845572",
+            "context-a8597534f3cbe9135f90fd6a",
+            "query-b7e1a42703821102f2b20148"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2147",
+            "CHEMBL957365",
+            "context-07741203664a5a1ab85e8943",
+            "query-e7cd32c492584e673ba7c9cc"
+          ],
+          "rate": "0"
+        },
+        {
+          "denominator": 5,
+          "query": [
+            "CHEMBL220",
+            "CHEMBL3047076",
+            "context-659e6e342eacc140fc6c6a2e",
+            "query-e2de92fe34e24d8b1f3dc835"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL220",
+            "CHEMBL5235525",
+            "context-ae4d778097316c985130d458",
+            "query-ca4f5ab71f884bc05ea9cd09"
+          ],
+          "rate": "1/10"
+        },
+        {
+          "denominator": 7,
+          "query": [
+            "CHEMBL251",
+            "CHEMBL2394446",
+            "context-635fc1e3c7d3b20cb558e32f",
+            "query-9a6a7884bdcc7b79d6a88389"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 6,
+          "query": [
+            "CHEMBL251",
+            "CHEMBL5109848",
+            "context-3565895fa386e29340475aa1",
+            "query-f1965f0755e0bca9a6ee94ce"
+          ],
+          "rate": "1"
+        },
+        {
+          "denominator": 10,
+          "query": [
+            "CHEMBL2637",
+            "CHEMBL5318948",
+            "context-1cd8f6206d38fe3b32a34860",
+            "query-29d8276ad6b6076dba437051"
+          ],
+          "rate": "9/10"
+        },
+        {
+          "denominator": 2,
+          "query": [
+            "CHEMBL2637",
+            "CHEMBL5732897",
+            "context-4065e169ce5abc92848b68cc",
+            "query-779b977dd327929e05e9918f"
+          ],
+          "rate": "1"
+        }
+      ],
+      "targets": {
+        "CHEMBL203": {
+          "rate": 0.9,
+          "rational": "9/10"
+        },
+        "CHEMBL205": {
+          "rate": 0.9,
+          "rational": "9/10"
+        },
+        "CHEMBL2147": {
+          "rate": 0.5,
+          "rational": "1/2"
+        },
+        "CHEMBL220": {
+          "rate": 0.55,
+          "rational": "11/20"
+        },
+        "CHEMBL251": {
+          "rate": 1.0,
+          "rational": "1"
+        },
+        "CHEMBL2637": {
+          "rate": 0.95,
+          "rational": "19/20"
+        }
+      },
+      "unsupported_queries": 1,
+      "unsupported_targets": 0
+    }
+  },
+  "provenance": {
+    "counts": {
+      "active": 111,
+      "inactive": 86,
+      "pairs": 197,
+      "queries": 12,
+      "targets": 6,
+      "trials": 591
+    },
+    "procedure_sha256": "979302be7fe2aa667f70404c3e538335ab893ba3584388459ae350b1c8ed257f",
+    "runtime": {
+      "cuda_visible_devices": "",
+      "executable": "/data2/home/jyryu/chembounce/.venv-research/bin/python",
+      "packages": {
+        "numpy": "1.26.4",
+        "rdkit": "2025.9.6",
+        "scipy": "1.13.1"
+      },
+      "pharmacophore_feature_definition": {
+        "path": "/data2/home/jyryu/chembounce/.venv-research/lib/python3.10/site-packages/rdkit/Data/BaseFeatures.fdef",
+        "sha256": "87ab54bd717af50a78a710d23e7737a2cafc96e5293bf6257ecdda86b6da3f65"
+      },
+      "python": "3.10.12",
+      "threads": {
+        "MKL_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1"
+      }
+    },
+    "scoring_artifacts": {
+      "identity_manifest.json": "c6c28f2f00ec0fe4c306ac21179560784bf21ddf89c14131f4a589c95fb7caf9",
+      "pairs.json": "bb96b91767da475f313029e2e6a6432e774b1c3f664d7638e7e0df5c988d110f",
+      "panel.json": "464e71b8bc54ad9002a8ff02e08b249272ae43ce17a4aee3d53c394642439d33",
+      "parity.json": "d33a6355fff055352f2906780b2a401aa08db49bf09b9e524d4c1ba85e25d15e",
+      "procedure.json": "979302be7fe2aa667f70404c3e538335ab893ba3584388459ae350b1c8ed257f",
+      "progress.json": "b8c66759c87050a262cc6adc85a95cdaeb6fe678a9fb3de60ed8025d9b58c8d8",
+      "protocol.json": "6e28e5668d3cd98ebd0caddceec25769407ccca28f53502f6b719fac1318b5a5",
+      "scores.json": "4b685fda706b9f0ef337f8f2b149a41ea3a89747fac1d6fe8246018b5368fb2b"
+    },
+    "source_sha256": {
+      "benchmarks/research/assay_matched.py": "f65f7973c4c37f85b3e71b481c83dabb4ca0cadb4ed3c06897af9bbd74b9c00f",
+      "benchmarks/research/assay_metadata.py": "d3791a1a4b18f1506c3e37fcc8137b9a9fd1a077520570f91425facecb8e9629",
+      "benchmarks/research/import_chembl.py": "2ff61c961d077dafd6985ddb5c7c2eb824ddc993e2d2b2bf01636aa32b6472de",
+      "benchmarks/research/protocol.py": "ebabb21494a8293353ed3a45b5832ea98542e4fddffa222a6aed92105bdbe09e",
+      "benchmarks/research/qualified_calibration.py": "6266789dd717f76cca72a096199bcb4edda0334778941be1a000d9a53078396a",
+      "chembounce_synthesis/common.py": "f8fabab242db6e463ff8088676c7cedd59cfe3883ad37d1d4571d9a4c3b24d07",
+      "chembounce_synthesis/conformers.py": "aba699db1bc04db517c4275862c08ed73e9ae20c753a72ffa042c34bd907add8",
+      "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+      "chembounce_synthesis/qualification.py": "b05415113a3b5dba9aa39f4a0499301e38e8b0a1a7e725cc70a04574d33a8c85"
+    }
+  },
+  "review": {
+    "candidate_sha256": "56cc18999701745b89eca83a5798d3a5f67d1a2789e80d8b6c87aff3b6e7fad7",
+    "independent_review_sha256": "532faeb3c6e14929633f56063cdd579d7ed9dda7243b3d8835d1ceb0284f7a67",
+    "root_review_sha256": "264cfaaae02039680f7f12931eef6c9b2e4c8b948c1ac9cc27a5c4a7ad46e39b"
+  },
+  "schema": "qualified-development-reviewed-profile-v1",
+  "scope": "previously_inspected_development_only",
+  "status": "reviewed_development_fit"
+}

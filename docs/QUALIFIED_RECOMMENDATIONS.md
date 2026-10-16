@@ -13,7 +13,7 @@ biological activity, or experimental synthesizability.
 | 1. Unified final qualification | One versioned conjunction at the real API/CLI export boundary; final-product/original-hit similarity, normalized hop, anchor, exact selected route, requested evidence and complete scoring/seed checks. Adversarial workflow tests, alternative survival, continuation, and matching JSON/TSV/SDF selection. | Engineering gate passed at `e47c38a1734bab4f154fc47b4f4fb7fb5493aa43`; explicit engineering thresholds only. |
 | 2. Stereo/design eligibility and bounded refill | Explicit stereo/design eligibility with an auditable, bounded replacement supply when designs fail; preserve caps and complete rejection denominators. | Engineering gate passed at `8461d9a492d181165df53f031f5c12f6a3dde167`. No scientific yield claim. |
 | 3. Similarity-aware route/search | Search and route construction retain original-hit similarity while finding changed scaffolds and viable route products; compare yield and compute under fixed budgets. | Engineering gate passed at `6adc2cedd73c14cf5a0ab88fbcd61004f3267ef6`. Controlled toy diagnostics only; scientific yield/compute benchmark remains Stage 6. |
-| 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | In progress. Stage 4a scorer/ranking passed; profile integration is tested with synthetic fixtures only. Activation requires a feasible reviewed fit artifact. |
+| 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | Scorer/ranking and frozen development fit gates passed. Reviewed artifact packaged; release integration gate pending. Explicit opt-in, permissive development thresholds—not a strong-similarity guarantee. |
 | 5. Independent synthesis evidence | Establish independent, route-specific evidence and provenance beyond catalog/rule replay; define treatment of unknowns, missing context, atom sources, model disagreement and observation quality. Never present a heuristic as a synthesis probability. | Pending. Stage 1 enforces the existing explicitly requested evidence policy. |
 | 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Pending. No scientific campaign or performance improvement claimed. |
 
@@ -209,7 +209,7 @@ engineering diagnostic, not a production cutoff. Separate two-round seed
 recovery tests use equal configured caps. These tests establish bounded search
 behavior, not global recall, general scientific improvement or calibrated yield.
 
-## Stage 4a scorer and ranking interface (calibration pending)
+## Stage 4a scorer and ranking interface
 
 `conformers.scoring_objective` defaults to historical `joint-v1`.
 `original-hit-v1` selects each candidate conformation using only its original-hit
@@ -239,22 +239,62 @@ strict validation checks seed identity, realized ensemble counts, finite pose
 metrics and consistency of both energy penalties. Refinement preserves the
 objective across every requested seed and final-ensemble stage.
 
-This interface alone is **not Stage 4 completion**. The named usable preset,
-positive fitted thresholds, full calibration artifact/digest and override
-provenance remain pending. The planned calibration protocol uses fixed eight
+This interface alone is **not Stage 4 completion**. The reviewed development
+profile below adds fitted thresholds and provenance. Its protocol uses fixed eight
 conformers with seeds 42/43/44, matching eight-conformer seed-42 screening, no
 adaptive enlargement and no arbitrary range tolerance. Previously inspected
-controls are development data only. No fitted cutoffs or empirical claims are
-introduced by this scorer change.
+controls are development data only. The scorer change itself introduces no
+empirical cutoffs.
 
-## Stage 4c recommendation profile (activation pending)
+## Stage 4c recommendation profile (release integration gate pending)
 
 The API field `recommendation_profile: "qualified-development-v1"` and both
 CLIs' `--recommendation-profile qualified-development-v1` select one named
-development profile. Catalog, rules and proposal-provider configuration remain
-explicit. No minima need to be entered manually once the reviewed fit is
-packaged. Until then, this profile fails clearly as unavailable; it never
-substitutes test values, guessed cutoffs or an exploratory fallback.
+development profile through **explicit opt-in**. Catalog, rules and
+proposal-provider configuration remain explicit; no manual cutoffs are needed.
+The default exploratory configuration and explicit engineering-qualified mode
+remain available. Missing or corrupt profile assets fail clearly rather than
+substituting values or falling back.
+
+```sh
+chembounce-synthesis --hit "$HIT_SMILES" --design "$DESIGN_SMILES" \
+  --config synthesis-assets.json --recommendation-profile qualified-development-v1 \
+  --output fresh-development-run
+chembounce -i "$HIT_SMILES" -o fresh-development-integrated \
+  --synthesis-config synthesis-assets.json \
+  --recommendation-profile qualified-development-v1
+```
+
+The [packaged reviewed profile](../chembounce_synthesis/data/qualified-development-v1.json)
+sets these conjunctive minima, with both 3D criteria required for **every** final
+seed:
+
+| Original-hit metric | Minimum |
+| --- | --- |
+| Binary Morgan Tanimoto | 0.08695652173913043 |
+| Shape overlap | 0.5055221213607054 |
+| Pharmacophore overlap | 0.11206335132501284 |
+
+These are **permissive development thresholds**, especially the 2D and
+pharmacophore minima. Passing does not establish strong structural similarity,
+biological activity retention, or superiority of 3D scoring. CLI output states
+this scope explicitly. The fit is preserved unchanged; raising a threshold is
+an explicit custom policy, with no inherited calibration-retention claim.
+
+The frozen panel contains **197 pairs** (111 labelled active, 86 inactive),
+12 queries and **six previously inspected targets**. All three computationally
+failed pairs remain in performance denominators. Results are target-macro rates:
+
+| Development diagnostic | Active retention | Topology-changing active retention | Inactive rejection |
+| --- | --- | --- | --- |
+| Final fit on all development targets | 85.00% | 84.17% | 24.44% |
+| Locked leave-one-target-out rules | 80.83% | 80.00% | 32.78% |
+
+The six leave-one-target-out fits were feasible, but active retention on the
+excluded target was only **50% for CHEMBL2147** and **55% for CHEMBL220**. These
+retrospective development diagnostics are not unseen validation; operational
+inactive rejection includes computational failures and is distinct from purely
+geometric discrimination. No full-pipeline 80% retention promise follows.
 
 Profile defaults apply to raw configuration **before** generic protocol defaults
 and validation. CLI overrides are applied before this resolution, so an existing
@@ -277,6 +317,15 @@ untouched fit candidate and root/independent review record digests, and is pinne
 by its complete-file SHA-256. Its numerical values, procedure and provenance
 must match the reviewed candidate; packaging never fits or adjusts cutoffs.
 Package data and wheel-import tests cover the JSON resource.
+
+Release SHA-256:
+`9d3c60a895912b28c13a29aac0a04f385ddb8a0effc9fcd81d64a50a3d48bdd2`.
+The release binds candidate
+`56cc18999701745b89eca83a5798d3a5f67d1a2789e80d8b6c87aff3b6e7fad7`,
+fit `2294a4d86c38e2e3c5fede92ab5095f6f563693ee1fd76f04c7a19ee74aae77d`,
+root fit gate `264cfaaae02039680f7f12931eef6c9b2e4c8b948c1ac9cc27a5c4a7ad46e39b`
+and independent fit audit
+`532faeb3c6e14929633f56063cdd579d7ed9dda7243b3d8835d1ceb0284f7a67`.
 
 `development_protocol_matched` requires qualified mode, the complete fixed
 three-seed acceptance settings, matching minima, original-hit scoring/ranking,

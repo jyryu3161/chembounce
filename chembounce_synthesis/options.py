@@ -7,7 +7,7 @@ def add_expansion_options(parser):
     parser.add_argument(
         "--recommendation-profile",
         choices=("qualified-development-v1",),
-        help="Reviewed development recommendation profile: supplies fitted minima and a complete fixed three-seed protocol",
+        help="Explicit opt-in development profile with permissive fitted minima and a fixed three-seed protocol; not strong-similarity or activity guarantees",
     )
     parser.add_argument(
         "--scoring-objective",

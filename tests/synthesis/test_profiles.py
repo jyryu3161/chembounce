@@ -1,4 +1,4 @@
-"""Profile integration using explicitly synthetic temporary fit artifacts only."""
+"""Profile integration: reviewed release invariants and labelled synthetic overrides."""
 
 import csv
 import hashlib
@@ -248,8 +248,15 @@ def test_profile_api_cli_exports_and_continuation_recheck(
     ]
 
 
+@pytest.fixture(params=["synthetic", "reviewed_release"])
+def integrated_profile(request):
+    if request.param == "synthetic":
+        request.getfixturevalue("synthetic_profile")
+    return request.param
+
+
 def test_integrated_cli_profile_uses_refill_and_cannot_disable_synthesis(
-    tmp_path, assets, proposal, synthetic_profile, capsys
+    tmp_path, assets, proposal, integrated_profile, capsys
 ):
     pytest.importorskip("rdkit.Chem.rdShapeAlign")
     import chembounce
@@ -301,10 +308,13 @@ def test_integrated_cli_profile_uses_refill_and_cannot_disable_synthesis(
     assert chembounce.main(args + ["--no-synllama"]) == 2
     assert not out.exists()
     assert chembounce.main(args) == 0
-    assert "development_protocol_matched" in capsys.readouterr().out
+    status = profiles.profile_provenance(
+        workflow._config({**config, "recommendation_profile": profiles.PROFILE})
+    )["status"]
+    assert status in capsys.readouterr().out
     assert read(out, "run_manifest.json")["synthesis_design_supply"]["effective_overall_max_n"] == 4
     manifest = read(out / "synthesis", "manifest.json")
-    assert manifest["recommendation_profile"]["status"] == "development_protocol_matched"
+    assert manifest["recommendation_profile"]["status"] == status
     assert manifest["effective_conformers"] == profiles.FIXED_CONFORMERS
     assert read(out / "synthesis", "results.json")["results"][0]["recommendation_profile"] == profiles.PROFILE
 
@@ -324,11 +334,9 @@ def test_wheel_includes_profile_resource_without_installing(tmp_path):
         ignore=shutil.ignore_patterns("__pycache__"),
     )
     resource = build / "chembounce_synthesis/data" / (profiles.PROFILE + ".json")
-    resource.parent.mkdir(exist_ok=True)
-    if not resource.exists():
-        # Only a temporary packaging fixture while the empirical asset is unavailable.
-        resource.write_text('{"synthetic_packaging_fixture_only":true}\n')
+    assert resource.exists(), "The reviewed real profile must ship in the package"
     expected = hashlib.sha256(resource.read_bytes()).hexdigest()
+    assert expected == profiles.PROFILE_SHA256[profiles.PROFILE]
     env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
     result = subprocess.run(
         [sys.executable, "-c", "import setuptools.build_meta; setuptools.build_meta.build_wheel('dist')"],
@@ -356,3 +364,119 @@ def test_wheel_includes_profile_resource_without_installing(tmp_path):
         text=True,
     )
     assert probe.returncode == 0 and probe.stdout.strip() == expected, probe.stderr
+    loaded = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "from chembounce_synthesis.profiles import load_profile,PROFILE; print(load_profile(PROFILE)['status'])",
+        ],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+    )
+    assert loaded.returncode == 0 and loaded.stdout.strip() == "reviewed_development_fit", loaded.stderr
+
+
+def test_reviewed_release_reconstructs_the_exact_unchanged_fit_candidate():
+    artifact = profiles.load_profile(profiles.PROFILE)
+    candidate = json.loads(json.dumps(artifact))
+    review = candidate.pop("review")
+    candidate["schema"] = "qualified-development-preset-candidate-v1"
+    candidate["status"] = "development_fit_requires_independent_review"
+    candidate["limitations"] = artifact["limitations"][:5] + [
+        "Independent review and root stage gate remain required before publishing a preset"
+    ]
+    raw = (json.dumps(candidate, indent=2, sort_keys=True, allow_nan=False) + "\n").encode()
+    assert (
+        hashlib.sha256(raw).hexdigest()
+        == review["candidate_sha256"]
+        == "56cc18999701745b89eca83a5798d3a5f67d1a2789e80d8b6c87aff3b6e7fad7"
+    )
+    assert artifact["fit_sha256"] == "2294a4d86c38e2e3c5fede92ab5095f6f563693ee1fd76f04c7a19ee74aae77d"
+    assert review["root_review_sha256"] == "264cfaaae02039680f7f12931eef6c9b2e4c8b948c1ac9cc27a5c4a7ad46e39b"
+    assert (
+        review["independent_review_sha256"]
+        == "532faeb3c6e14929633f56063cdd579d7ed9dda7243b3d8835d1ceb0284f7a67"
+    )
+    assert (
+        artifact["provenance"]["procedure_sha256"]
+        == "979302be7fe2aa667f70404c3e538335ab893ba3584388459ae350b1c8ed257f"
+    )
+    assert artifact["provenance"]["counts"] == {
+        "active": 111,
+        "inactive": 86,
+        "pairs": 197,
+        "queries": 12,
+        "targets": 6,
+        "trials": 591,
+    }
+    assert artifact["final_development_report"]["computational_failure_pairs"] == 3
+    assert artifact["oof_development_report"]["computational_failure_pairs"] == 3
+
+
+def test_real_profile_matches_frozen_kernel_and_reports_runtime_scope(tmp_path, assets, proposal):
+    config = workflow._config(configuration(tmp_path, assets, proposal))
+    provenance = profiles.profile_provenance(config)
+    current = profiles.numerical_runtime()
+    artifact = profiles.load_profile(profiles.PROFILE)
+    assert all(
+        current["source_sha256"][path] == artifact["provenance"]["source_sha256"][path]
+        for path in current["source_sha256"]
+    )
+    assert config["minimum_scores"] == {
+        "hit_tanimoto": 0.08695652173913043,
+        "hit_shape": 0.5055221213607054,
+        "hit_pharmacophore": 0.11206335132501284,
+    }
+    assert config["conformers"] == profiles.FIXED_CONFORMERS
+    assert config["refinement"]["seeds"] == [42, 43, 44]
+    assert config["refinement"]["num_conformers"] == 8
+    assert config["refinement"]["adaptive_max_conformers"] is None
+    assert not provenance["material_overrides"]
+    expected = (
+        "custom_unvalidated" if provenance["runtime_source_mismatches"] else "development_protocol_matched"
+    )
+    assert provenance["status"] == expected
+
+
+def test_real_profile_cli_runs_without_manual_cutoffs_and_exports_review_digest(
+    tmp_path, assets, proposal, capsys
+):
+    pytest.importorskip("rdkit.Chem.rdShapeAlign")
+    config = configuration(tmp_path, assets, proposal)
+    config.pop("recommendation_profile")
+    path = tmp_path / "actual.json"
+    path.write_text(json.dumps(config))
+    out = tmp_path / "actual"
+    assert (
+        main(
+            [
+                "--hit",
+                HIT,
+                "--design",
+                DESIGN,
+                "--config",
+                str(path),
+                "--recommendation-profile",
+                profiles.PROFILE,
+                "--output",
+                str(out),
+            ]
+        )
+        == 0
+    )
+    output = capsys.readouterr().out
+    assert "permissive development thresholds" in output
+    assert "not strong-similarity or activity guarantees" in output
+    manifest = read(out, "manifest.json")
+    provenance = manifest["recommendation_profile"]
+    assert provenance["artifact_sha256"] == profiles.PROFILE_SHA256[profiles.PROFILE]
+    assert provenance["review"] == profiles.load_profile(profiles.PROFILE)["review"]
+    rows = read(out, "results.json")["results"]
+    assert len(rows) == 1 and rows[0]["recommendation_profile"] == profiles.PROFILE
+    assert rows[0]["calibration_status"] == provenance["status"]
+    for name in ("poses_hit.sdf", "poses_design.sdf"):
+        pose = next(iter(Chem.SDMolSupplier(str(out / name))))
+        assert pose.GetProp("_Name") == rows[0]["route_id"]
+        assert pose.GetProp("calibration_artifact_sha256") == provenance["artifact_sha256"]

@@ -10,8 +10,8 @@ from importlib.resources import files
 from pathlib import Path
 
 PROFILE = "qualified-development-v1"
-# Activated only after an independently reviewed feasible fit is packaged.
-PROFILE_SHA256 = {PROFILE: None}
+# Reviewed development release; the untouched fit candidate remains separately bound.
+PROFILE_SHA256 = {PROFILE: "9d3c60a895912b28c13a29aac0a04f385ddb8a0effc9fcd81d64a50a3d48bdd2"}
 KERNEL_FILES = ("conformers.py", "common.py", "identity.py")
 METRICS = ("hit_tanimoto", "hit_shape", "hit_pharmacophore")
 FIXED_CONFORMERS = {
@@ -240,4 +240,4 @@ def profile_label(config):
     if not config.get("recommendation_profile"):
         return ""
     provenance = profile_provenance(config)
-    return f" [profile={provenance['name']}; {provenance['status']}]"
+    return f" [profile={provenance['name']}; {provenance['status']}; permissive development thresholds, not strong-similarity or activity guarantees]"
