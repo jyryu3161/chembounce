@@ -1,0 +1,5 @@
+extend = "../../../pyproject.toml"
+
+# Recorded installation evidence pins these exact driver bytes. Lint still applies.
+[format]
+exclude = ["rebuild.py"]
