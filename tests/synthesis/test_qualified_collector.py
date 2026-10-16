@@ -322,3 +322,159 @@ def test_selective_failed_seed_exports_empty_and_collector_keeps_failure(complet
     assert [t["seed"] for t in trials] == [42, 43, 44]
     assert trials[-1]["status"] == "failed"
     assert adapter.read(out / "synthesis/summary.json")["status"] == "no_candidates"
+
+
+@pytest.fixture
+def empty_selective(completed, tmp_path, monkeypatch):
+    from benchmarks.research import qualified_adapter as adapter
+    from chembounce_synthesis import selective_scoring
+
+    assert is_selective(completed)
+    original = selective_scoring.score_candidate
+
+    def fail_seed(smiles, hit, design, settings, **kwargs):
+        if settings.seed == 44:
+            raise ValueError("controlled final-seed abstention")
+        return original(smiles, hit, design, settings, **kwargs)
+
+    monkeypatch.setattr(selective_scoring, "score_candidate", fail_seed)
+    request = adapter.read(completed[0] / "request.json")
+    out = tmp_path / "empty-selective"
+    out.mkdir()
+    request["output_dir"] = str(out)
+    (out / "request.json").write_text(json.dumps(request))
+    response = adapter.common(request)
+    response["metadata"]["benchmark_protocol"] = request["benchmark_protocol"]
+    data = out, response, completed[2]
+    assert collect(data) == []  # A genuine failed seed remains an auditable empty result.
+    return data
+
+
+@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v2"], indirect=True)
+@pytest.mark.parametrize(
+    "name",
+    ["results.tsv", "poses_hit.sdf", "poses_design.sdf", "references_hit.sdf", "references_design.sdf"],
+)
+@pytest.mark.parametrize("attack", ["missing", "nonempty"])
+def test_selective_empty_requires_complete_empty_exports(empty_selective, completed, name, attack):
+    path = empty_selective[0] / "synthesis" / name
+    if attack == "missing":
+        path.unlink()
+        del empty_selective[1]["metadata"]["files_sha256"]["synthesis/" + name]
+    else:
+        path.write_bytes((completed[0] / "synthesis" / name).read_bytes())
+        empty_selective[1]["metadata"]["files_sha256"]["synthesis/" + name] = digest(path)
+    with pytest.raises(ValueError):
+        collect(empty_selective)
+
+
+@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v2"], indirect=True)
+@pytest.mark.parametrize(
+    "attack", ["header", "qualified_count", "accepted_count", "routes", "refinements", "decision"]
+)
+def test_selective_empty_denominators_and_decisions_agree(empty_selective, attack):
+    if attack == "header":
+        path = empty_selective[0] / "synthesis/results.tsv"
+        path.write_text("smiles\n")
+        empty_selective[1]["metadata"]["files_sha256"]["synthesis/results.tsv"] = digest(path)
+    elif attack in {"qualified_count", "accepted_count"}:
+        key = "qualified_products" if attack == "qualified_count" else "accepted_products"
+        update(empty_selective, "summary.json", lambda v: v.update({key: 1}))
+    elif attack == "routes":
+        update(empty_selective, "routes.json", lambda v: v.update(routes=[]))
+    elif attack == "refinements":
+        update(empty_selective, "refinement.json", lambda v: v.update(candidates=[]))
+    else:
+        update(
+            empty_selective,
+            "qualification.json",
+            lambda v: v["decisions"][0].update(qualified=True, status="qualified"),
+        )
+    with pytest.raises(ValueError):
+        collect(empty_selective)
+
+
+@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v2"], indirect=True)
+@pytest.mark.parametrize(
+    "field",
+    [
+        "design_shape",
+        "design_pharmacophore",
+        "design_tanimoto",
+        "relative_energy",
+        "scoring_objective",
+        "ranking_policy",
+        "scoring_stage",
+        "seed_score_min",
+        "seed_score_max",
+        "seed_score_median",
+        "seed_score_std",
+        "ranking_score",
+        "refinement_conformers",
+    ],
+)
+def test_selective_representative_fields_match_actual_retained_trial(completed, field):
+    import csv
+
+    value = "forged" if field in {"scoring_objective", "ranking_policy", "scoring_stage"} else 0.123456789
+    update(completed, "results.json", lambda v: v["results"][0].update({field: value}))
+    path = completed[0] / "synthesis/results.tsv"
+    with path.open() as stream:
+        reader = csv.DictReader(stream, delimiter="\t")
+        fields, table = reader.fieldnames, list(reader)
+    table[0][field] = str(value)
+    with path.open("w") as stream:
+        writer = csv.DictWriter(stream, fieldnames=fields, delimiter="\t")
+        writer.writeheader()
+        writer.writerows(table)
+    completed[1]["metadata"]["files_sha256"]["synthesis/results.tsv"] = digest(path)
+    with pytest.raises(ValueError):
+        collect(completed)
+
+
+@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v2"], indirect=True)
+@pytest.mark.parametrize(
+    "name,field,value",
+    [
+        ("references_hit.sdf", "source_conformer_id", "999"),
+        ("references_design.sdf", "source_conformer_id", "999"),
+        ("references_hit.sdf", "reference_role", "design"),
+        ("references_design.sdf", "scoring_objective", "joint-v1"),
+        ("poses_hit.sdf", "ranking_policy", "joint-v1"),
+        ("poses_design.sdf", "design_shape", ".123456789"),
+        ("poses_design.sdf", "design_pharmacophore", ".123456789"),
+        ("poses_hit.sdf", "seed_score_min", ".123456789"),
+        ("poses_hit.sdf", "verification", "experimental_validation=true"),
+    ],
+)
+def test_selective_sdf_properties_match_retained_trial(completed, name, field, value):
+    from rdkit import Chem
+
+    path = completed[0] / "synthesis" / name
+    mol = next(iter(Chem.SDMolSupplier(str(path), removeHs=False)))
+    mol.SetProp(field, value)
+    with Chem.SDWriter(str(path)) as writer:
+        writer.write(mol)
+    completed[1]["metadata"]["files_sha256"]["synthesis/" + name] = digest(path)
+    with pytest.raises(ValueError):
+        collect(completed)
+
+
+@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v2"], indirect=True)
+def test_selective_false_empty_cannot_hide_qualified_routes(completed):
+    update(completed, "results.json", lambda value: value.update(results=[]))
+    update(completed, "qualification.json", lambda value: value.update(selected_route_ids=[]))
+    update(
+        completed,
+        "summary.json",
+        lambda value: value.update(
+            status="no_candidates",
+            returned_products=0,
+            accepted_products=0,
+            qualified_products=0,
+            refinement_accepted=0,
+        ),
+    )
+    completed[1]["candidates"] = []
+    with pytest.raises(ValueError):
+        collect(completed)

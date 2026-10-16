@@ -6,6 +6,7 @@ saved identities, route replay, actual tensors, seed metrics and export agreemen
 """
 
 import csv
+from collections import Counter
 from dataclasses import asdict, dataclass, field
 import importlib.metadata
 import math
@@ -13,6 +14,7 @@ import math
 import numpy as np
 from pathlib import Path
 import platform
+import statistics
 import time
 from types import MappingProxyType, SimpleNamespace
 
@@ -203,6 +205,73 @@ def verify_route_support(record, catalog, rules, limit, decoder):
     return audit
 
 
+def _selective_outcome(summary, rows, records, refinements, qualification):
+    """Cross-check saved outcome/denominators, including genuine empty runs."""
+    route_ids = [r["route_id"] for r in records]
+    accepted = summary.get("accepted_products")
+    if (
+        len(route_ids) != len(set(route_ids))
+        or qualification["decisions"] != [r["qualification"] for r in records]
+        or any(
+            type(r["qualification"].get("qualified")) is not bool
+            or (r["qualification"].get("status") == "qualified") != r["qualification"]["qualified"]
+            or (r["selection_status"] == "qualified") != r["qualification"]["qualified"]
+            for r in records
+        )
+        or summary.get("route_rejections") != dict(Counter(r["selection_status"] for r in records))
+        or summary.get("status") != ("success" if rows else "no_candidates")
+        or summary.get("returned_products") != len(rows)
+        or type(accepted) is not int
+        or accepted < len(rows)
+        or summary.get("qualified_products") != accepted
+        or summary.get("refinement_accepted") != accepted
+        or summary.get("refinement_attempted") != sum("alternative_index" in r for r in refinements)
+        or any(r["route_id"] not in route_ids for r in refinements)
+        or summary.get("refinement_budget", {}).get("candidate_conformer_requests")
+        != sum(r["candidate_conformer_requests"] for r in refinements)
+        or (not rows and (accepted != 0 or any(r["qualification"]["qualified"] for r in records)))
+    ):
+        raise ValueError("Selective outcome/route/refinement denominator or decision mismatch")
+
+
+def _representative_fields(representative, trials, policy, design_tanimoto, hit_tanimoto):
+    """Derive export metadata from retained validated trials, never new poses."""
+    scores = [t["score"] for t in trials]
+    return {
+        "score": representative["score"],
+        "relative_energy": representative["candidate_relative_energy"],
+        "scoring_objective": representative["settings"]["scoring_objective"],
+        "ranking_policy": policy["ranking_policy"],
+        "scoring_stage": "refined",
+        "qualification_policy": policy["policy_version"],
+        "evidence_profile": policy["evidence_profile"],
+        "pose_seed": sorted(trials, key=lambda t: (t["score"], t["seed"]))[1]["seed"],
+        "refinement_conformers": representative["settings"]["num_conformers"],
+        "hit_tanimoto": hit_tanimoto,
+        "hit_morgan": hit_tanimoto,
+        "design_tanimoto": design_tanimoto,
+        **{
+            f"{role}_{metric}": representative[role][metric]
+            for role in ("hit", "design")
+            for metric in ("shape", "pharmacophore")
+        },
+        "seed_score_median": statistics.median(scores),
+        "seed_score_min": min(scores),
+        "seed_score_max": max(scores),
+        "seed_score_range": max(scores) - min(scores),
+        "seed_score_std": statistics.pstdev(scores),
+        "seed_count": len(trials),
+        "seed_successes": len(trials),
+        "ranking_score": min(scores),
+        "ranking_metrics": {
+            f"{role}_{metric}": min(t[role][metric] for t in trials)
+            for role in ("hit", "design")
+            for metric in ("shape", "pharmacophore")
+        },
+        "convergence_status": "not_assessed",
+    }
+
+
 def checked_products(
     directory,
     response,
@@ -304,14 +373,12 @@ def checked_products(
         if type(bound_catalog) is not BoundCatalog:
             raise ValueError("Collector requires a runner-owned bound catalog")
         bound_catalog.validate(config["catalog"], expected_source)
+    if not rows and not selective:
+        return []  # Preserve the legacy collector's empty-result behavior.
+    records = read(out / "routes.json")["routes"]
+    refinements = read(out / "refinement.json")["candidates"]
     if selective:
-        summary = read(out / "summary.json")
-        if summary.get("status") != ("success" if rows else "no_candidates") or summary.get(
-            "returned_products"
-        ) != len(rows):
-            raise ValueError("Selective outcome/selected count mismatch")
-    if not rows:
-        return []
+        _selective_outcome(read(out / "summary.json"), rows, records, refinements, qualification)
     exports = {
         "results.tsv",
         "poses_hit.sdf",
@@ -322,17 +389,26 @@ def checked_products(
     if not {"synthesis/" + name for name in exports} <= files.keys():
         raise ValueError("Selected output lacks complete bound exports")
     with (out / "results.tsv").open() as stream:
-        table = list(csv.DictReader(stream, delimiter="\t"))
+        reader = csv.DictReader(stream, delimiter="\t")
+        table = list(reader)
+        if selective:
+            from chembounce_synthesis.workflow import COLUMNS, SELECTIVE_COLUMNS
+
+            if reader.fieldnames != COLUMNS + SELECTIVE_COLUMNS:
+                raise ValueError("Selective TSV header differs from the frozen export schema")
     if len(table) != len(rows):
         raise ValueError("TSV cardinality differs from JSON")
+    if not rows:
+        if any((out / name).read_text().strip() for name in exports - {"results.tsv"}):
+            raise ValueError("Empty selective result has nonempty pose/reference exports")
+        check_deadline()
+        return []
     poses = {
         name: list(Chem.SDMolSupplier(str(out / name), removeHs=False))
         for name in ("poses_hit.sdf", "poses_design.sdf", "references_hit.sdf", "references_design.sdf")
     }
     if any(len(values) != len(rows) or any(m is None for m in values) for values in poses.values()):
         raise ValueError("SDF cardinality/chemistry differs from JSON")
-    records = read(out / "routes.json")["routes"]
-    refinements = read(out / "refinement.json")["candidates"]
     selected, decoder = [], None
     catalog = bound_catalog if bound_catalog is not None else Catalog(config["catalog"])
     rules = Rules(config["rules"])  # Fresh per call: no cross-attempt Rules.apply cache.
@@ -419,10 +495,22 @@ def checked_products(
             row["hit_" + key] != representative["hit"][key] for key in ("shape", "pharmacophore")
         ):
             raise ValueError("Exported score is not the representative seed's pose score")
-        selective_fields = {}
+        selective_fields, representative_fields = {}, {}
         if selective:
             from chembounce_synthesis.similarity_constraints import binding
 
+            representative_fields = _representative_fields(
+                representative,
+                trials,
+                policy,
+                DataStructs.TanimotoSimilarity(fp, FP.GetFingerprint(molecule(row["design"]))),
+                metrics["hit_tanimoto"],
+            )
+            if any(
+                row.get(key) != value or isinstance(row.get(key), bool)
+                for key, value in representative_fields.items()
+            ):
+                raise ValueError("Selective final row differs from retained representative metrics/protocol")
             selective_fields = selective_scoring.result_fields(representative)
             if (
                 any(row.get(key) != value for key, value in selective_fields.items())
@@ -450,7 +538,14 @@ def checked_products(
                 "calibration_artifact_sha256",
                 "scoring_objective",
                 "ranking_policy",
+                *representative_fields,
             ):
+                if key == "ranking_metrics":
+                    import json
+
+                    if json.loads(table[index].get(key, "null")) != row[key]:
+                        raise ValueError("TSV selective ranking metrics differ from JSON")
+                    continue
                 if table[index].get(key) != str(row[key]):
                     raise ValueError("TSV selective representative/profile differs from JSON")
         for key, value in selective_fields.items():
@@ -484,6 +579,44 @@ def checked_products(
             ):
                 raise ValueError("SDF selected identity/route/pose differs from JSON")
             if selective:
+                shared = ("scoring_objective", "ranking_policy", "evidence_profile")
+                candidate_text = ("scoring_stage", "recommendation_status", "qualification_policy")
+                for key in shared + (candidate_text if pose_name.startswith("poses") else ()):
+                    if not mol.HasProp(key) or mol.GetProp(key) != row[key]:
+                        raise ValueError("SDF representative objective/status differs from final evidence")
+                if pose_name.startswith("poses"):
+                    if (
+                        not mol.HasProp("verification")
+                        or mol.GetProp("verification")
+                        != "catalog_and_rule_verified; experimental_validation=false"
+                    ):
+                        raise ValueError("SDF verification scope differs from computational evidence")
+                    for key in (
+                        "score",
+                        "hit_tanimoto",
+                        "design_tanimoto",
+                        "hit_shape",
+                        "hit_pharmacophore",
+                        "design_shape",
+                        "design_pharmacophore",
+                        "seed_score_median",
+                        "seed_score_min",
+                        "seed_score_max",
+                    ):
+                        if not mol.HasProp(key) or not math.isclose(
+                            float(mol.GetProp(key)), representative_fields[key], rel_tol=1e-12, abs_tol=1e-12
+                        ):
+                            raise ValueError("SDF representative metric differs from retained evidence")
+                else:
+                    role = "hit" if pose_name == "references_hit.sdf" else "design"
+                    if (
+                        not mol.HasProp("source_conformer_id")
+                        or mol.GetProp("source_conformer_id")
+                        != str(representative[role]["reference_conformer_id"])
+                        or not mol.HasProp("reference_role")
+                        or mol.GetProp("reference_role") != role
+                    ):
+                        raise ValueError("SDF reference role/conformer differs from retained evidence")
                 for key, value in selective_fields.items():
                     if not mol.HasProp(key) or mol.GetProp(key) != (
                         str(value) if value is not None else "not_applicable"
