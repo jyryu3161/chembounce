@@ -18,6 +18,7 @@ from rdkit.Chem.MolStandardize import rdMolStandardize
 from functools import lru_cache
 from numbers import Real
 from chemistry import count_fingerprint
+from chembounce_synthesis.common import absolute_smiles, parse_absolute_smiles
 
 #### Reference data ####
 
@@ -315,20 +316,21 @@ def init_mol(smiles):
     """
     if not isinstance(smiles, str) or not smiles.strip():
         raise SmilesInputError(smiles, "SMILES must be a nonempty string")
-    mol = Chem.MolFromSmiles(smiles.strip())
-    if mol is None or not mol.GetNumAtoms():
-        raise SmilesInputError(smiles)
+    try:
+        mol = parse_absolute_smiles(smiles)
+    except ValueError as exc:
+        raise SmilesInputError(smiles, str(exc)) from exc
     if any(a.GetAtomicNum() == 0 for a in mol.GetAtoms()):
         raise SmilesInputError(smiles, "Dummy atoms are not supported in input structures")
     for atom in mol.GetAtoms():
         atom.SetAtomMapNum(0)
-    return mol, Chem.MolToSmiles(mol, isomericSmiles=True)
+    return mol, absolute_smiles(mol, isomericSmiles=True)
 
 
 def get_standard_smiles(smiles):
     mol, _ = init_mol(smiles)
     standardized = rdMolStandardize.Cleanup(mol)
-    return Chem.MolToSmiles(standardized, isomericSmiles=True), []
+    return absolute_smiles(standardized, isomericSmiles=True), []
 
 
 def _get_molecular_prop_(mol):

@@ -4,9 +4,8 @@ import math
 from dataclasses import asdict
 
 import numpy as np
-from rdkit import Chem
 
-from .common import canonical, molecule
+from .common import absolute_smiles, canonical, molecule
 from .conformers import ConformerSettings, _check_stereo
 from .evidence import EvidencePolicy, evidence_requirements, matching_prediction_ranks
 from .refinement import RefinementSettings
@@ -150,7 +149,7 @@ def validate_result(result, product, settings, *, hit=None, design=None):
         _check_stereo(molecule(product), ConformerSettings())
         _validate_score_info(info, settings)
         for pose in (hit_pose, design_pose):
-            if pose is None or canonical(Chem.MolToSmiles(pose)) != product:
+            if pose is None or canonical(absolute_smiles(pose)) != product:
                 raise ValueError("Output pose does not match the exact final product")
             conformer = pose.GetConformer(info["candidate_conformer_id"])
             if not conformer.Is3D() or not np.isfinite(conformer.GetPositions()).all():

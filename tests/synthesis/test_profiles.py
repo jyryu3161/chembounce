@@ -442,15 +442,19 @@ def test_reviewed_release_reconstructs_the_exact_unchanged_fit_candidate():
     assert artifact["oof_development_report"]["computational_failure_pairs"] == 3
 
 
-def test_real_profile_matches_frozen_kernel_and_reports_runtime_scope(tmp_path, assets, proposal):
+def test_real_profile_reports_stereo_ingress_source_mismatch_without_rebinding(tmp_path, assets, proposal):
     config = workflow._config(configuration(tmp_path, assets, proposal))
     provenance = profiles.profile_provenance(config)
     current = profiles.numerical_runtime()
     artifact = profiles.load_profile(profiles.PROFILE)
-    assert all(
-        current["source_sha256"][path] == artifact["provenance"]["source_sha256"][path]
+    mismatched = {
+        path
         for path in current["source_sha256"]
-    )
+        if current["source_sha256"][path] != artifact["provenance"]["source_sha256"][path]
+    }
+    assert mismatched == {"chembounce_synthesis/common.py", "chembounce_synthesis/conformers.py"}
+    assert mismatched <= provenance["runtime_source_mismatches"].keys()
+    assert provenance["status"] == "custom_unvalidated"
     assert config["minimum_scores"] == {
         "hit_tanimoto": 0.08695652173913043,
         "hit_shape": 0.5055221213607054,

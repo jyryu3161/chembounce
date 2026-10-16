@@ -15,7 +15,7 @@ except ImportError:
     rdShapeAlign = None
 from scipy.optimize import linear_sum_assignment
 
-from .common import canonical, molecule, positive
+from .common import absolute_smiles, require_absolute_stereo, canonical, molecule, positive
 
 FEATURES = ChemicalFeatures.BuildFeatureFactory(str(Path(RDConfig.RDDataDir) / "BaseFeatures.fdef"))
 FAMILIES = {"Donor", "Acceptor", "Aromatic", "PosIonizable", "NegIonizable", "Hydrophobe", "LumpedHydrophobe"}
@@ -71,6 +71,7 @@ class Ensemble:
 
 
 def _check_stereo(mol, settings):
+    require_absolute_stereo(mol)
     unspecified = [s for s in Chem.FindPotentialStereo(mol) if str(s.specified) == "Unspecified"]
     if unspecified and settings.reject_unspecified_stereo:
         raise ValueError("3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly")
@@ -138,8 +139,9 @@ def reference_from_sdf(filename, expected_smiles, settings=ConformerSettings()):
     entries = list(Chem.SDMolSupplier(str(filename), removeHs=False))
     if len(entries) != 1 or entries[0] is None:
         raise ValueError("Reference SDF must contain exactly one valid molecule")
+    require_absolute_stereo(entries[0])
     mol = Chem.RemoveHs(entries[0])
-    if canonical(Chem.MolToSmiles(mol)) != canonical(expected_smiles):
+    if canonical(absolute_smiles(mol)) != canonical(expected_smiles):
         raise ValueError("Reference pose must match the hit's exact chemical state and stereochemistry")
     _check_stereo(mol, settings)
     if not mol.GetNumConformers() or not mol.GetConformer().Is3D():

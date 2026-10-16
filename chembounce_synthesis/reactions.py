@@ -8,7 +8,7 @@ from pathlib import Path
 from rdkit import Chem, rdBase
 from rdkit.Chem import rdChemReactions
 
-from .common import canonical, digest, molecule, positive
+from .common import absolute_smiles, canonical, digest, molecule, positive
 
 
 @dataclass
@@ -51,6 +51,8 @@ class Rules:
                 raise ValueError("Rules require nonempty id, smarts, source")
             if ident in self.rules or smarts in self.by_smarts:
                 raise ValueError("Duplicate reaction rule ID or SMARTS")
+            if "|" in smarts:
+                raise ValueError(f"Rule {ident}: CX reaction SMARTS annotations are unsupported")
             rxn = rdChemReactions.ReactionFromSmarts(smarts)
             if (
                 rxn is None
@@ -109,7 +111,7 @@ class Rules:
                 mol = entry[0]
                 Chem.SanitizeMol(mol)
                 Chem.AssignStereochemistry(mol, cleanIt=True, force=True)
-                products.add(canonical(Chem.MolToSmiles(mol, isomericSmiles=True)))
+                products.add(canonical(absolute_smiles(mol, isomericSmiles=True)))
             except (ValueError, RuntimeError):
                 continue
         return tuple(sorted(products)), len(raw) > product_limit

@@ -13,7 +13,7 @@ import numpy as np
 from rdkit import Chem
 from scipy.optimize import linear_sum_assignment
 
-from .common import canonical, molecule
+from .common import absolute_smiles, require_absolute_stereo, canonical, molecule
 from .conformers import FEATURES, FAMILIES, _heavy_view
 
 VERSION = "selective-similarity-constraints-v2"
@@ -91,13 +91,14 @@ def feature_records(mol, cid=None):
 
 
 def pose_binding(mol, cid):
+    require_absolute_stereo(mol)
     if not mol.GetConformer(cid).Is3D():
         raise ValueError("Similarity constraints require a 3D pose")
     positions = np.asarray(mol.GetConformer(cid).GetPositions(), dtype=float)
     if positions.shape != (mol.GetNumAtoms(), 3) or not np.isfinite(positions).all():
         raise ValueError("Nonfinite or malformed pose coordinates")
     value = {
-        "smiles": canonical(Chem.MolToSmiles(mol, isomericSmiles=True)),
+        "smiles": canonical(absolute_smiles(mol, isomericSmiles=True)),
         "atom_order_sha256": indexed_topology(mol),
         "conformer_id": cid,
         "coordinates": positions.tolist(),
@@ -199,6 +200,7 @@ class BoundSimilarity:
 
     @staticmethod
     def _check_state(mol):
+        require_absolute_stereo(mol)
         if any(str(s.specified) != "Specified" for s in Chem.FindPotentialStereo(mol)):
             raise ValueError("Selective similarity requires fully specified stereochemistry")
 
@@ -218,11 +220,11 @@ class BoundSimilarity:
         return features
 
     def assess(self, reference, aligned, ref_cid, candidate_cid):
-        if canonical(Chem.MolToSmiles(reference)) != self.hit or indexed_topology(
+        if canonical(absolute_smiles(reference)) != self.hit or indexed_topology(
             reference
         ) != indexed_topology(self._hit_mol):
             raise ValueError("Original-hit pose identity or canonical atom order changed")
-        self.preflight_candidate(Chem.MolToSmiles(aligned))
+        self.preflight_candidate(absolute_smiles(aligned))
         ref, cand = feature_records(reference, ref_cid), feature_records(aligned, candidate_cid)
         if not ref or not cand:
             raise ValueError("Empty global pharmacophore features")

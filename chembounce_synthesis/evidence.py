@@ -15,7 +15,7 @@ from pathlib import Path
 
 from rdkit import Chem
 
-from .common import canonical, digest, positive
+from .common import absolute_smiles, parse_absolute_smiles, canonical, digest, positive
 
 
 @dataclass(frozen=True)
@@ -63,12 +63,12 @@ def _component_smiles(smiles):
     """Canonicalize a reagent, allowing explicitly supplied salt components."""
     if not isinstance(smiles, str) or not smiles.strip():
         raise ValueError("Reagents require nonempty SMILES")
-    mol = Chem.MolFromSmiles(smiles)
+    mol = parse_absolute_smiles(smiles)
     if mol is None or not mol.GetNumAtoms() or any(a.GetAtomicNum() == 0 for a in mol.GetAtoms()):
         raise ValueError(f"Invalid reagent SMILES: {smiles!r}")
     for atom in mol.GetAtoms():
         atom.SetAtomMapNum(0)
-    return Chem.MolToSmiles(mol, isomericSmiles=True)
+    return absolute_smiles(mol, isomericSmiles=True)
 
 
 def _smiles_list(values, name, *, reagents=False):
@@ -348,7 +348,7 @@ class SynthesisEvidenceEvaluator:
                         raise ValueError("Product decoding exhausted its output-token limit")
                     item["product"] = _component_smiles(raw)
                     item["components"] = sorted(
-                        Chem.MolToSmiles(fragment, isomericSmiles=True)
+                        absolute_smiles(fragment, isomericSmiles=True)
                         for fragment in Chem.GetMolFrags(Chem.MolFromSmiles(item["product"]), asMols=True)
                     )
                     if len(item["components"]) > 1 and self.product_matching == "exact":

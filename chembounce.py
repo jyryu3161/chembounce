@@ -45,7 +45,7 @@ RESULT_FEATURES = [
 
 
 def remove_substructures(mol, pattern_mol):
-    return [Chem.MolToSmiles(part) for part in chemistry.cut_scaffold(mol, pattern_mol)]
+    return [utils.absolute_smiles(part) for part in chemistry.cut_scaffold(mol, pattern_mol)]
 
 
 def replace_molecule(
@@ -115,10 +115,12 @@ def search_similar_scaffolds(
     """Streaming reference implementation using the same bits as the fast path."""
     generator = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=fp_size)
     query = generator.GetFingerprint(original_scaffold)
-    original = Chem.MolToSmiles(original_scaffold)
+    original = utils.absolute_smiles(original_scaffold)
     scores = {}
     for entry in fragments_DB:
-        mol, smiles = utils.init_mol(entry) if isinstance(entry, str) else (entry, Chem.MolToSmiles(entry))
+        mol, smiles = (
+            utils.init_mol(entry) if isinstance(entry, str) else (entry, utils.absolute_smiles(entry))
+        )
         if mol is None or smiles == original:
             continue
         score = DataStructs.TanimotoSimilarity(query, generator.GetFingerprint(mol))
@@ -247,7 +249,7 @@ def _search_diverse_scaffolds(
     from chembounce_synthesis.exploration import hash_reservoir, select_diverse
     from chembounce_synthesis.identity import scaffold_family_key
 
-    original = Chem.MolToSmiles(frag)
+    original = utils.absolute_smiles(frag)
     try:
         scaffold_family_key(original)
     except (ValueError, RuntimeError) as exc:
@@ -264,7 +266,7 @@ def _search_diverse_scaffolds(
         iterator = entries() if callable(entries) else iter(entries)
 
     def as_smiles(item):
-        return item if isinstance(item, str) else Chem.MolToSmiles(item)
+        return item if isinstance(item, str) else utils.absolute_smiles(item)
 
     sample = hash_reservoir(
         (item for item in iterator if as_smiles(item) != original),
@@ -345,7 +347,7 @@ def _make_diverse_hopping(
     counters, local_counts, fragment_reports = Counter(), {}, []
     queues, prepared, originals = deque(), {}, {}
     for number, frag in enumerate(frags, 1):
-        original = Chem.MolToSmiles(frag)
+        original = utils.absolute_smiles(frag)
         originals[number] = original
         prepared[number] = chemistry.prepare_replacement(target_mol, frag)
         replacements = _read_replacements(
@@ -571,11 +573,11 @@ def get_frags_cands(
     )
     for frag in frags:
         if not target_mol.HasSubstructMatch(frag, useChirality=True):
-            raise ValueError(f"Fragment is not contained in input: {Chem.MolToSmiles(frag)}")
+            raise ValueError(f"Fragment is not contained in input: {utils.absolute_smiles(frag)}")
     if files and len(files) not in (1, len(frags)):
         raise ValueError("Supply one replacement file for all fragments or one per fragment")
     pd.DataFrame(
-        {"SMILES": [Chem.MolToSmiles(f) for f in frags]},
+        {"SMILES": [utils.absolute_smiles(f) for f in frags]},
         index=pd.Index(range(1, len(frags) + 1), name="Fragment_no"),
     ).to_csv(out / "fragment_info.tsv", sep="\t")
     limits = utils._scaffold_no_reassign_(
@@ -726,7 +728,7 @@ def make_scaffold_hopping(
             if overall_max_n is not None and counters["accepted"] >= overall_max_n:
                 break
             local = Counter()
-            original = Chem.MolToSmiles(frag)
+            original = utils.absolute_smiles(frag)
             prepared = chemistry.prepare_replacement(target_mol, frag)
             replacements = _read_replacements(out / f"replace_scaffold_list.fragment_{number:04d}.tsv")
             with (out / f"fragment_result_{number:04d}.txt").open("w", newline="") as stream:
@@ -1013,7 +1015,7 @@ def chembounce(
         manifest = _provenance(parameters, sources)
         manifest["protocol"] = protocol_provenance(protocol)
         if fragments_DB is not None:
-            values = [s if isinstance(s, str) else Chem.MolToSmiles(s) for s in fragments_DB]
+            values = [s if isinstance(s, str) else utils.absolute_smiles(s) for s in fragments_DB]
             manifest["in_memory_library_sha256"] = hashlib.sha256("\n".join(values).encode()).hexdigest()
         _json_write(out / "run_manifest.json", manifest)
         path = make_scaffold_hopping(

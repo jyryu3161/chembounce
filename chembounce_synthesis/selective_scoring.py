@@ -8,9 +8,9 @@ import math
 import time
 from dataclasses import asdict, replace
 
-from rdkit import Chem, DataStructs
+from rdkit import DataStructs
 
-from .common import FP, canonical, molecule
+from .common import absolute_smiles, FP, canonical, molecule
 from .conformers import ConformerSettings, _overlay, ensemble, pharmacophore_overlap, require_alignment
 from .similarity_constraints import VERSION as CONSTRAINT_VERSION
 from .similarity_constraints import BoundSimilarity, binding, feature_records, pose_binding, restore_pose
@@ -124,7 +124,7 @@ class SimilarityAbstention(ValueError):
 
 
 def _validate_ensemble(value, smiles):
-    if canonical(Chem.MolToSmiles(value.mol)) != smiles:
+    if canonical(absolute_smiles(value.mol)) != smiles:
         raise ValueError("Ensemble chemical identity changed")
     keys = set(value.relative_energies)
     if (
@@ -265,7 +265,7 @@ def score_candidate(
                         math.isfinite(hit_info[k]) and 0 <= hit_info[k] <= 1
                         for k in ("shape", "pharmacophore")
                     )
-                    or canonical(Chem.MolToSmiles(aligned)) != smiles
+                    or canonical(absolute_smiles(aligned)) != smiles
                 ):
                     raise ValueError("Invalid pair overlay or chemical identity")
                 witness = similarity.assess(hit_ref.mol, aligned, rid, cid)
@@ -379,7 +379,7 @@ def validate_result(result, product, settings, *, hit, design, similarity):
         if not math.isclose(pharm, info["hit"]["pharmacophore"], abs_tol=1e-12, rel_tol=1e-12):
             raise ValueError("Hit pharmacophore metric does not match selected coordinates")
         design_reference = restore_pose(info["selective_pose_evidence"]["design_reference"])
-        if canonical(Chem.MolToSmiles(design_reference)) != design:
+        if canonical(absolute_smiles(design_reference)) != design:
             raise ValueError("Retained design reference identity changed")
         design_pharm, _ = pharmacophore_overlap(
             design_reference,
