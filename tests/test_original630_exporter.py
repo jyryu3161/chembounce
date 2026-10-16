@@ -116,6 +116,7 @@ def test_synthetic_figures_scope_labels_and_manifest(completed, rendered):
     output, manifest, captured = rendered
     assert manifest["synthetic_fixture"] is True
     assert manifest["original_source_commit"] == replay.COMMIT and manifest["original_scientific_files"] == 39
+    assert manifest["target_clusters_by_split"] == {"scaffold": 6, "time": 6, "target": 3}
     assert len(manifest["files_sha256"]) == 10
     assert set(manifest["runtime"]) == {"python", "matplotlib", "numpy"}
     for name, expected in manifest["files_sha256"].items():
@@ -127,7 +128,9 @@ def test_synthetic_figures_scope_labels_and_manifest(completed, rendered):
         assert "SYNTHETIC FIXTURE" in text and "Original frozen generation study" in text
         assert "target-bootstrap 95% CI" in text and "NOT a CI" in text
         assert "Rule replay ≠ experimental synthesis or common-forward audit" in text
-        assert f"{exporter.TARGETS[split]} independent targets" in text
+        assert f"{exporter.TARGETS[split]} target clusters" in text
+        assert "n: target clusters with this metric" in text
+        assert "independent targets" not in text
         assert all(f"A={x['attempts']}" in text for x in report["methods"].values())
         assert (output / f"{split}.png").read_bytes().startswith(b"\x89PNG")
         assert (output / f"{split}.pdf").read_bytes().startswith(b"%PDF")

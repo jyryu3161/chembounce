@@ -614,7 +614,7 @@ def draw(split, report, output, synthetic_fixture=False):
     fig.subplots_adjust(left=0.27, right=0.95, bottom=0.28, top=0.80, wspace=0.35)
     fig.suptitle(
         f"Original frozen generation study — {split} split\n"
-        f"{report['grid_audit']['observed_runs']} attempts; {TARGETS[split]} independent targets; "
+        f"{report['grid_audit']['observed_runs']} attempts; {TARGETS[split]} target clusters; "
         "frozen d972124 (39 files)",
         fontsize=14,
         y=0.97,
@@ -680,7 +680,7 @@ def draw(split, report, output, synthetic_fixture=False):
     fig.text(
         0.5,
         0.065,
-        "A: all attempts; infra: missing infrastructure outcomes; n: independent targets with this metric.\n"
+        "A: all attempts; infra: missing infrastructure outcomes; n: target clusters with this metric.\n"
         "Rule replay ≠ experimental synthesis or common-forward audit. 3D coverage = available successful output slots / cap 3.\n"
         "Descriptive unadjusted CIs; overlap is not a test. Post hoc presentation; repeated split targets are not independent cohorts.",
         ha="center",
@@ -744,7 +744,7 @@ def export(directory, expected_validation_sha256, output, synthetic_fixture=Fals
             "numpy": np.__version__,
         },
         "method_order": {s: sorted(r["methods"]) for s, r in reports.items()},
-        "independent_targets_by_split": TARGETS,
+        "target_clusters_by_split": TARGETS,
         "plotted_metrics": list(METRICS),
         "table_rows": {name: len(values) for name, values in rows.items()},
         "null_encoding": "Blank CSV cell; missing plot values are labelled missing, never zero",

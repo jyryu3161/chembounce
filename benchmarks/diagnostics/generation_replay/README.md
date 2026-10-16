@@ -10,7 +10,9 @@ model re-inference audit. No real study results or bundle are supplied here.
 The [figure and table exporter](EXPORT.md) accepts only a completed, externally
 hash-pinned replay. It presents recorded statistics for the original frozen
 39-file study, with separate infrastructure bounds and explicit conditional-score
-limitations; its tests use synthetic data only.
+limitations; its tests use synthetic data only. Displayed counts refer to target
+clusters, preserving the historical `independent_targets` field without asserting
+that reused targets and reaction inputs are statistically independent.
 
 `analyze_generation_historical.py` is a byte-identical archive of the original
 `analyze-generation.py`, SHA256

@@ -8,8 +8,8 @@ synthetic fixtures only; they are not a completed study analysis or parent revie
 The scope is **Original frozen generation study**, source commit
 `d972124d587e647ef48455cf1a038e6be96e5b04` (39 scientific files). It is not current
 develop's 41-file pipeline or the supplementary 270-attempt comparison. The three
-splits remain separate: scaffold 360 attempts / 6 targets, time 180 / 6, and target
-90 / 3. Repeated targets across splits are not independent cohorts. Original method
+splits remain separate: scaffold 360 attempts / 6 target clusters, time 180 / 6,
+and target 90 / 3. Repeated targets across splits are not independent cohorts. Original method
 identifiers are retained and sorted alphabetically, never by observed results.
 
 ## Completed-input gate
@@ -44,11 +44,14 @@ descriptive, unadjusted target-bootstrap 95% CIs; the archived estimator used
 10,000 draws and seed 20261016. The exporter does not draw bootstrap samples or
 recalculate estimates. Orange dotted intervals and diamonds show infrastructure
 missing-outcome **identification bounds, not confidence intervals**. Attempt,
-infrastructure-interruption, and contributing independent-target counts are shown.
+infrastructure-interruption, and contributing target-cluster counts are shown.
 Missing means remain visibly missing.
 
-Only 6, 6, and 3 independent targets support the respective splits. There are no
-significance stars, rankings, tests of CI overlap, or superiority claims. This is
+Only 6, 6, and 3 target clusters support the respective splits. Reused reaction
+inputs and targets do not establish statistical independence. The historical
+`independent_targets` JSON field and corresponding CSV column are preserved
+verbatim; they count target clusters, not demonstrated independent observations.
+There are no significance stars, rankings, tests of CI overlap, or superiority claims. This is
 post hoc descriptive presentation, not preregistration. Common-3D slot coverage is
 an output availability measure, not a conditional quality score. Verified rule
 routes are bounded computational replay evidence, not experimental synthesis,
@@ -63,7 +66,7 @@ string representation without decimal rounding. No pooling, imputation, or new
 statistical calculation is performed.
 
 - `metrics.csv`: recorded per-query, per-target, and target-macro values, CIs and
-  contributing target counts, with primary or secondary population labels.
+  contributing target-cluster counts, with primary or secondary population labels.
 - `paired_contrasts.csv`: original pipeline-minus-comparator target-macro
   contrasts for all metrics, plus the recorded secondary complete-case bounded
   contrasts and their available query/target summaries. Each row names its scope.
