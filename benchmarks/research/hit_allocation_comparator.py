@@ -51,7 +51,12 @@ def read_observation(binding, candidate):
                 raise ValueError("Missing saved feasible result")
             return {"status": "feasible"}
         if status in {"abstained", "bounded_infeasible"}:
-            pairs = observed.get("audit", {}).get("pairs", [])
+            audit = observed.get("audit", {})
+            if not isinstance(audit, dict):
+                raise ValueError("Malformed saved pair audit")
+            pairs = audit.get("pairs", [])
+            if not isinstance(pairs, list) or any(not isinstance(p, dict) for p in pairs):
+                raise ValueError("Malformed saved audit pairs")
             if (
                 observed.get("reason") == "no_jointly_feasible_hit_pose"
                 and pairs

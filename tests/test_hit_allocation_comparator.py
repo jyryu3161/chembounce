@@ -3,6 +3,8 @@
 import hashlib
 import json
 
+import pytest
+
 from benchmarks.research import hit_allocation_comparator as c
 
 
@@ -96,6 +98,47 @@ def test_baseline_only_not_experimental_rescue(tmp_path):
         origin="paired_baseline",
     )
     assert c.read_observation(binding, row)["status"] == "bounded_infeasible"
+
+
+@pytest.mark.parametrize("origin", ["coverage", "paired_baseline"])
+@pytest.mark.parametrize(
+    "audit",
+    [
+        None,
+        [],
+        "invalid",
+        {"pairs": None},
+        {"pairs": {}},
+        {"pairs": [None]},
+        {"pairs": [{"status": "rejected"}, None]},
+    ],
+)
+def test_malformed_audit_stays_unknown_without_aborting_comparison(tmp_path, monkeypatch, origin, audit):
+    rows = population()
+    row = rows[0]
+    binding = saved(tmp_path, row, 42, "bounded_infeasible", "malformed.json")
+    path = tmp_path / "malformed.json"
+    condition = json.loads(path.read_text())
+    condition["audit"] = audit
+    if origin == "paired_baseline":
+        observed = {key: condition.pop(key) for key in ("status", "reason", "audit")}
+        condition["baseline"] = observed
+    path.write_text(json.dumps(condition))
+    binding.update(origin=origin, sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+    row["observations"] = [
+        binding,
+        *[saved(tmp_path, row, seed, "feasible", f"s{seed}.json") for seed in (43, 44)],
+    ]
+    monkeypatch.setattr(c, "describe", lambda _: {"error": "Controlled metadata-only test"})
+
+    assert c.read_observation(binding, row)["status"] == "unknown"
+    result = c.compare(rows, [r["product"] for r in rows[:12]])
+    assert len(result["outcomes"]) == 13
+    assert result["outcomes"][row["product"]]["all_three_feasible"] is None
+    assert not result["outcomes"][row["product"]]["assessment_complete"]
+    for arm in result["arms"].values():
+        assert arm["quota"] == 12 and arm["eligible_products"] == 13
+        assert row["product"] in arm["unknown_products"]
 
 
 def test_full_denominator_and_identity_failures_are_reported(monkeypatch):
