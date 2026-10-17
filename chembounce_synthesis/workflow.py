@@ -1328,6 +1328,11 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         manifest["provider"] = provider.provenance if provider else None
         if polar_capacity is not None:
             manifest["polar_capacity"] = polar_capacity.policy
+        manifest["review_visuals"] = {
+            "version": "saved-structure-pose-v1",
+            "status": "unavailable",
+            "reason": "optional_display_not_published",
+        }
         write_json(out / "manifest.json", manifest)
         write_json(
             out / "proposals.json", {"schema_version": 1, "provider": manifest["provider"], "proposals": []}
@@ -2142,3 +2147,35 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         write_json(out / "scores.json", {"schema_version": 1, "scores": score_records})
         write_json(out / "refinement.json", {"schema_version": 1, "candidates": refinement_records})
         write_json(out / "summary.json", summary)
+
+        # Optional display cannot change selected results or scientific evidence.
+        # Complete the core bundle first; helper uses only saved poses and 2D layout.
+        if summary.get("status") == "success" and (out / "manifest.json").is_file():
+            display_start = time.monotonic()
+            try:
+                from .review_visuals import LIMITS, publish_review_visuals
+
+                display_deadline = display_start + LIMITS["allowance_seconds"]
+                if deadline_monotonic is not None:
+                    display_deadline = min(display_deadline, deadline_monotonic)
+
+                display_result = publish_review_visuals(
+                    out, hit, selected, refinement_records, deadline_monotonic=display_deadline
+                )
+                display_result["workflow_display_elapsed_seconds"] = time.monotonic() - display_start
+                import logging
+
+                logging.getLogger(__name__).info(
+                    "Optional saved display completion (post-return observation): %s", display_result
+                )
+                if display_result["deadline_overrun"]:
+                    import warnings
+
+                    warnings.warn(
+                        f"Optional display exceeded its cooperative deadline: {display_result}",
+                        RuntimeWarning,
+                    )
+            except Exception:
+                # Even import/capability/persistence failure leaves the durable
+                # unavailable descriptor and every core scientific file intact.
+                pass

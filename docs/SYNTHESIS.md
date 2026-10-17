@@ -1339,3 +1339,64 @@ states. A change to ingress/state policy requires a new source pin and baseline
 review before migration; newly rejected states must remain visible. Obtaining
 original supplier exports and authenticating SKU/current-stock claims are
 separate dependencies.
+
+### Offline structure and saved-pose review
+
+New successful synthesis runs optionally export `review_visuals.json`. Use the
+existing offline report command, `python -m chembounce_synthesis.report RUN_DIR`,
+to see actual original-hit and final-product 2D PNG depictions and an interactive
+saved-pose overlay. The report itself remains standard-library-only. It does not
+parse chemistry, load models, align molecules, or calculate new scores. Old
+bundles remain readable with `not_exported` display status; they are not enriched.
+
+The seed selector defaults to the recorded representative seed. Each option uses
+that seed's own saved hit reference and aligned candidate, with one shared camera.
+Rotate by dragging/touch or arrow keys, zoom with the wheel, buttons or +/−, pan
+with shift-drag, and reset with 0 or Reset camera. An unavailable representative is
+not replaced automatically. Across-seed minima in the evidence tables remain
+separate from the selected seed's metrics. The 3D lines show connectivity; they
+are not a stereochemical or experimental selectivity certificate.
+
+The producer verifies exact isomeric structure identity around 2D preparation,
+exports indexed graph metadata, and reuses saved coordinates without embedding,
+optimization, alignment, feature scoring or route replay. The reader checks
+saved row/trial/pose bindings and the actual indexed topology projection. That
+projection binds elements, isotopes, charges and bond connectivity/types, **not
+stereo**. Stereo display labels have separate integrity bindings; PNG semantics
+remain the producer's responsibility. Fully rewritten self-consistent files are
+not independently authenticated by hashes. Display consistency is reported
+separately from the workflow-recorded recommendation and route support.
+
+Display is optional and cannot veto a recommendation. Its whole cooperative
+allowance is **5 seconds**, further capped by the original workflow deadline,
+even when no workflow deadline was supplied. Limits are 32 selected candidates,
+32 retained seeds per candidate, 512 atoms and 1,024 bonds per graph, 1 MiB per
+static RGB/RGBA PNG, 1,024 pixels per dimension and 1,048,576 total pixels, and
+16 MiB serialized display JSON. Coordinate magnitudes are bounded at 1,000,000;
+the shared camera clamps zoom to 0.25–8 and uses a finite shared scale for
+coincident coordinates. Limits restrict optional display, never scientific
+selection. Missing Cairo/PNG capability, missing saved geometry or other display
+failures remain explicit unavailable evidence. Published artifacts must cover
+every selected row and retained seed; no partial available artifact is accepted.
+
+Core results are written and flushed before optional work. The manifest starts
+with an unavailable display descriptor; only complete optional output is
+advertised through an atomic manifest extension. Known deadline exhaustion
+prevents starting further work or a commit. Native work and an already-started
+filesystem commit cannot be interrupted by this cooperative mechanism. A valid
+commit that returns late is content-available, with
+`publication_completion_within_budget: null` and
+`timing_scope: final_persistence_unverified`, never certified as within budget.
+`generation_elapsed_seconds` excludes publication; the workflow logger
+`chembounce_synthesis.workflow` reports observed post-return total display cost,
+and an actual overrun also emits a warning. Logging is best effort, not a durable
+completion receipt. Existing scientific summary timing is not relabeled to
+include this separate display phase. A failed metadata write can leave only the
+original unavailable descriptor or an unadvertised orphan, which the report
+ignores. No recursive completion receipt, rollback or scientific retry is used.
+
+The HTML contains only bounded data PNGs and fixed bundled viewer code with a
+restrictive content security policy; it fetches no external resources. Legacy
+reports without display evidence remain script-free. Conditions, activity,
+experimental feasibility, supplier SKU and current stock remain unverified
+unless separate evidence explicitly records them.
