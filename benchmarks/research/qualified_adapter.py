@@ -13,6 +13,7 @@ import time
 from benchmarks.research.protocol import digest, write_json
 
 ARMS = {"full", "baseline", "crem", "mol2mol", "synllama"}
+PROFILE_PROTOCOLS = ("qualified-benchmark-protocol-v2", "qualified-benchmark-protocol-v3")
 
 
 def read(path):
@@ -150,18 +151,35 @@ def baseline_bridge(native, response, request, output):
 
 
 def benchmark_profile(binding=None):
-    """Versioned benchmark identity; absent binding preserves legacy requests."""
-    from chembounce_synthesis.profiles import PROFILE, SELECTIVE_PROFILE, PROFILE_SHA256
+    """Explicit historical v2 or landmark v5 authority; never follow the default."""
+    from chembounce_synthesis.profiles import (
+        PROFILE,
+        SELECTIVE_PROFILE,
+        LANDMARK_SELECTIVE_PROFILE,
+        PROFILE_SHA256,
+    )
 
     if binding is None:
         return PROFILE
-    if binding != {
-        "schema": "qualified-benchmark-protocol-v2",
-        "recommendation_profile": SELECTIVE_PROFILE,
-        "profile_artifact_sha256": PROFILE_SHA256[SELECTIVE_PROFILE],
-    }:
-        raise ValueError("Unknown or incomplete benchmark profile/artifact binding")
-    return SELECTIVE_PROFILE
+    for schema, name in zip(PROFILE_PROTOCOLS, (SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE)):
+        if binding == {
+            "schema": schema,
+            "recommendation_profile": name,
+            "profile_artifact_sha256": PROFILE_SHA256[name],
+        }:
+            return name
+    raise ValueError("Unknown or incomplete benchmark profile/artifact binding")
+
+
+def selective_benchmark_profile(name):
+    """Both admitted engineering profiles require the complete selective evidence path."""
+    from chembounce_synthesis.profiles import PROFILE, SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE
+
+    if name == PROFILE:
+        return False
+    if name in (SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE):
+        return True
+    raise ValueError("Unsupported benchmark recommendation profile")
 
 
 def common_config(request, bridge=None):
@@ -169,13 +187,13 @@ def common_config(request, bridge=None):
     from chembounce_synthesis.profiles import (
         FIXED_CONFORMERS,
         FIXED_REFINEMENT,
-        SELECTIVE_PROFILE,
         load_profile,
         profile_provenance,
     )
 
     config = load_config(request["assets"]["synthesis_config"])
     name = benchmark_profile(request.get("benchmark_protocol"))
+    selective = selective_benchmark_profile(name)
     if config.get("recommendation_profile") != name:
         raise ValueError("Common assessment requires the protocol-bound named recommendation profile")
     if (
@@ -183,11 +201,11 @@ def common_config(request, bridge=None):
         or config.get("ranking_policy") != "original-hit-v1"
         or config.get("route_search_policy") != "original-hit-v1"
         or profile_provenance(config)["status"]
-        != ("engineering_policy_matched" if name == SELECTIVE_PROFILE else "development_protocol_matched")
+        != ("engineering_policy_matched" if selective else "development_protocol_matched")
     ):
         raise ValueError(
             "Common numerical kernel/runtime/minima/objective must match "
-            + ("frozen engineering profile" if name == SELECTIVE_PROFILE else "frozen calibration")
+            + ("frozen engineering profile" if selective else "frozen calibration")
         )
     if config["conformers"] != FIXED_CONFORMERS:
         raise ValueError("Common screening must retain fixed seed42/eight-conformer protocol")

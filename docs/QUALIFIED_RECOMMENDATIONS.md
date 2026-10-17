@@ -193,18 +193,22 @@ not acquire computational-route support merely by enabling this selector.
 
 ### Selective benchmark protocol
 
-Fresh selective studies use `qualified-benchmark-protocol-v2`, with explicit
-`recommendation_profile: qualified-selective-engineering-v2` and the packaged
-`profile_artifact_sha256`. The runner retains this binding in its plan and common
-requests and passes it independently to the collector. Version 1 continues to
-use the unchanged development profile; it cannot silently activate v2. Budget,
+Historical selective studies retain `qualified-benchmark-protocol-v2`, bound to
+`qualified-selective-engineering-v2`. Explicit new
+`qualified-benchmark-protocol-v3` requests bind only
+`qualified-selective-engineering-v5`. Each requires its exact packaged
+`profile_artifact_sha256`; neither follows the default recommendation profile
+nor admits profile v3/v4 or arbitrary future profiles. The runner retains this
+binding in its plan and common requests and passes it independently to the
+collector. Version 1 continues to use the unchanged development profile. Budget,
 method, source/asset pins, complete failure denominators and ablations are
 otherwise unchanged. Core and landmark additions are permitted when explicitly
 frozen in the common configuration. Scientific-floor or polar-recall overrides
-cannot pass the benchmark profile match.
+cannot pass the benchmark profile match. Enabling `landmark_pose_proposals`
+remains `custom_unvalidated` and is not admitted by protocol v3.
 
-For v2, the collector checks the complete effective policy and numerical source
-provenance against the frozen configuration/source, restores every saved seed's
+For both protocol v2 and v3, the collector checks the complete effective policy
+and numerical source provenance against the frozen configuration/source, restores every saved seed's
 pose and rechecks its joint witness and pharmacophore metric without embedding,
 realignment or model calls. It retains seed witness/pose hashes and all-seed
 minimum polar recall separately from representative-pose metrics. It also checks

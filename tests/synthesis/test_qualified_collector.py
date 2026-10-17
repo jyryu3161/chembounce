@@ -5,16 +5,18 @@ import json
 import pytest
 
 # Test-only artifacts retain real loaders, policy checks and collector validation.
-pytestmark = pytest.mark.usefixtures("synthetic_historical_profile_bindings")
+pytestmark = pytest.mark.usefixtures("synthetic_benchmark_profile_bindings")
 
 from benchmarks.research import qualified_collector as collector
 from benchmarks.research.protocol import digest
 from chembounce_synthesis import workflow
 
+SELECTIVE_PROFILES = ("qualified-selective-engineering-v2", "qualified-selective-engineering-v5")
+
 HIT, DESIGN = "CC(=O)Nc1ccccc1", "CC(=O)Nc1ccncc1"
 
 
-@pytest.fixture(params=["qualified-development-v1", "qualified-selective-engineering-v2"])
+@pytest.fixture(params=["qualified-development-v1", *SELECTIVE_PROFILES])
 def completed(tmp_path, assets, route, strict_predictor, request):
     profile_name = request.param
     pytest.importorskip("rdkit.Chem.rdShapeAlign")
@@ -64,7 +66,7 @@ def completed(tmp_path, assets, route, strict_predictor, request):
     path = tmp_path / "config.json"
     write_json(path, config)
     expected_status = (
-        "engineering_policy_matched" if profile_name.endswith("v2") else "development_protocol_matched"
+        "engineering_policy_matched" if profile_name in SELECTIVE_PROFILES else "development_protocol_matched"
     )
     assert profile_provenance(workflow.load_config(path))["status"] == expected_status
     native, out = tmp_path / "native", tmp_path / "common"
@@ -101,11 +103,12 @@ def completed(tmp_path, assets, route, strict_predictor, request):
         "deadline_monotonic": 999999999999,
         "finalization_margin_seconds": 2,
     }
-    if profile_name.endswith("v2"):
+    if profile_name in SELECTIVE_PROFILES:
         from chembounce_synthesis.profiles import PROFILE_SHA256
 
         request["benchmark_protocol"] = {
-            "schema": "qualified-benchmark-protocol-v2",
+            "schema": "qualified-benchmark-protocol-"
+            + ("v2" if profile_name == SELECTIVE_PROFILES[0] else "v3"),
             "recommendation_profile": profile_name,
             "profile_artifact_sha256": PROFILE_SHA256[profile_name],
         }
@@ -352,7 +355,7 @@ def empty_selective(completed, tmp_path, monkeypatch):
     return data
 
 
-@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v2"], indirect=True)
+@pytest.mark.parametrize("completed", SELECTIVE_PROFILES, indirect=True)
 @pytest.mark.parametrize(
     "name",
     ["results.tsv", "poses_hit.sdf", "poses_design.sdf", "references_hit.sdf", "references_design.sdf"],
@@ -370,7 +373,7 @@ def test_selective_empty_requires_complete_empty_exports(empty_selective, comple
         collect(empty_selective)
 
 
-@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v2"], indirect=True)
+@pytest.mark.parametrize("completed", SELECTIVE_PROFILES, indirect=True)
 @pytest.mark.parametrize(
     "attack", ["header", "qualified_count", "accepted_count", "routes", "refinements", "decision"]
 )
@@ -396,7 +399,7 @@ def test_selective_empty_denominators_and_decisions_agree(empty_selective, attac
         collect(empty_selective)
 
 
-@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v2"], indirect=True)
+@pytest.mark.parametrize("completed", SELECTIVE_PROFILES, indirect=True)
 @pytest.mark.parametrize(
     "field",
     [
@@ -434,7 +437,7 @@ def test_selective_representative_fields_match_actual_retained_trial(completed, 
         collect(completed)
 
 
-@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v2"], indirect=True)
+@pytest.mark.parametrize("completed", SELECTIVE_PROFILES, indirect=True)
 @pytest.mark.parametrize(
     "name,field,value",
     [
@@ -462,7 +465,7 @@ def test_selective_sdf_properties_match_retained_trial(completed, name, field, v
         collect(completed)
 
 
-@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v2"], indirect=True)
+@pytest.mark.parametrize("completed", SELECTIVE_PROFILES, indirect=True)
 def test_selective_false_empty_cannot_hide_qualified_routes(completed):
     update(completed, "results.json", lambda value: value.update(results=[]))
     update(completed, "qualification.json", lambda value: value.update(selected_route_ids=[]))
