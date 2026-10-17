@@ -105,6 +105,8 @@ LANDMARK_DECLARATION = {
 LANDMARK_FILE = "chembounce_synthesis/landmark_proposals.py"
 
 ENGINEERING_SCHEMA = "qualified-selective-engineering-profile-v2"
+EVIDENCE_ALLOCATION_INHERIT = "inherit-v1"
+DESIGN_EVIDENCE_ALLOCATION = "design-scaffold-round-robin-v1"
 SCREENING_ALLOCATION_INHERIT = "inherit-v1"
 HIT_SCREENING_ALLOCATION = "original-hit-tanimoto-distinct-first-v1"
 
@@ -432,6 +434,12 @@ def profile_provenance(config):
             "profile": SCREENING_ALLOCATION_INHERIT,
             "effective": screening_policy,
         }
+    evidence_policy = config.get("evidence_allocation_policy", EVIDENCE_ALLOCATION_INHERIT)
+    if evidence_policy != EVIDENCE_ALLOCATION_INHERIT:
+        numerical_changes["evidence_allocation_policy"] = {
+            "profile": EVIDENCE_ALLOCATION_INHERIT,
+            "effective": evidence_policy,
+        }
     if config.get("reference_sdf"):
         numerical_changes["reference_sdf"] = {"profile": None, "effective": config["reference_sdf"]}
     if config.get("pocket"):
@@ -497,6 +505,7 @@ def profile_provenance(config):
         else ("engineering_policy_matched" if engineering else "development_protocol_matched"),
         "artifact_sha256": PROFILE_SHA256[name],
         "screening_allocation_policy": screening_policy,
+        "evidence_allocation_policy": evidence_policy,
         **(
             {
                 "optional_landmark_proposals": {

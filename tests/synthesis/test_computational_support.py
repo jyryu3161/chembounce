@@ -95,6 +95,39 @@ def test_all_beams_retained_no_partial_disagreement_or_component_repair(
     assert all("original_decoded_text" in p and "token_ids" in p for p in prediction["predictions"])
 
 
+def test_one_prepared_request_cannot_transfer_match_between_two_replayed_products(
+    assets, strict_predictor, concrete_origins
+):
+    catalog, rules = assets
+    with catalog.path.open("a") as stream:
+        stream.write("diamine\tNCc1ccc(N)cc1\ttest fixture\t2026-10-17\n")
+    catalog = type(catalog)(catalog.path)
+    first, second = "CC(=O)NCc1ccc(N)cc1", "CC(=O)Nc1ccc(CN)cc1"
+    strict_predictor.products = [first, "CC", "CO"]
+    evaluator = ComputationalRouteSupport(strict_predictor, max_predictor_calls=1)
+
+    def route(product):
+        return {
+            "schema_version": 1,
+            "root": "r",
+            "nodes": [
+                {"id": "a", "building_block_id": "acetic"},
+                {"id": "n", "building_block_id": "diamine"},
+                {"id": "r", "rule_id": "amide", "reactants": ["a", "n"], "product": product},
+            ],
+        }
+
+    passed = evaluator.evaluate_route(route(first), catalog, rules)
+    failed = evaluator.evaluate_route(route(second), catalog, rules)
+    assert passed["eligibility"]["passed"] and not failed["eligibility"]["passed"]
+    assert failed["steps"][0]["forward_prediction"]["status"] == "mismatched"
+    assert evaluator.usage["predictor_calls"] == len(strict_predictor.calls) == 1
+    assert evaluator.usage["cache_hits"] == 1
+    assert evaluator.validate_route(passed, route(first), catalog, rules)
+    with pytest.raises(ValueError, match="did not pass"):
+        evaluator.validate_route(failed, route(second), catalog, rules)
+
+
 def test_payload_multiset_cache_ignores_conditions_but_not_molecular_reagents(
     assets, route, strict_predictor
 ):
@@ -164,9 +197,13 @@ def test_strict_parser_no_name_cxsmiles_or_empty_component_repair(text):
         strict_smiles(text)
 
 
-def test_actual_workflow_strict_support_exports_and_failure(tmp_path, assets, proposal, strict_predictor):
+@pytest.mark.parametrize("evidence_policy", ["inherit-v1", "design-scaffold-round-robin-v1"])
+def test_actual_workflow_strict_support_exports_and_failure(
+    tmp_path, assets, proposal, strict_predictor, evidence_policy
+):
     pytest.importorskip("rdkit.Chem.rdShapeAlign")
     configured = config(tmp_path, assets, proposal)
+    configured["evidence_allocation_policy"] = evidence_policy
     out = tmp_path / "accepted"
     rows = workflow.run(HIT, [DESIGN], configured, out)
     assert len(rows) == 1 and rows[0]["evidence_profile"] == PROFILE
@@ -295,8 +332,9 @@ def test_final_boundary_rejects_forged_report_after_scoring(
     assert "fresh route/input/raw-prediction" in " ".join(record["qualification"]["reasons"])
 
 
+@pytest.mark.parametrize("evidence_policy", ["inherit-v1", "design-scaffold-round-robin-v1"])
 def test_alternate_route_rescues_without_borrowing_and_continuation_rechecks(
-    tmp_path, assets, proposal, strict_predictor
+    tmp_path, assets, proposal, strict_predictor, evidence_policy
 ):
     pytest.importorskip("rdkit.Chem.rdShapeAlign")
     from chembounce_synthesis.continuation import continuation_inputs
@@ -314,6 +352,7 @@ def test_alternate_route_rescues_without_borrowing_and_continuation_rechecks(
     )
     rules.path.write_text(json.dumps(data))
     configured = config(tmp_path, assets, proposal)
+    configured["evidence_allocation_policy"] = evidence_policy
     alternative = {
         "reactions": [
             {"reaction_template": "anhydride", "reactants": ["CC(=O)OC(C)=O", "Nc1ccncc1"], "product": DESIGN}

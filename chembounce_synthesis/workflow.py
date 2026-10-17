@@ -34,7 +34,12 @@ from .identity import chemical_identity, classify_change, scaffold_family_key
 from . import identity as identity_module
 from .pocket import constraints_from_config, validate_pocket_config
 from .polar_capacity import PolarCapacity
-from .profiles import HIT_SCREENING_ALLOCATION, SCREENING_ALLOCATION_INHERIT
+from .profiles import (
+    DESIGN_EVIDENCE_ALLOCATION,
+    EVIDENCE_ALLOCATION_INHERIT,
+    HIT_SCREENING_ALLOCATION,
+    SCREENING_ALLOCATION_INHERIT,
+)
 from .protocols import apply_synthesis_protocol, protocol_provenance
 from .qualification import decide, effective_policy, validate_result
 from .reactions import Rules
@@ -185,6 +190,7 @@ def _config(config):
         "carry_forward",
         "allocation_policy",
         "screening_allocation_policy",
+        "evidence_allocation_policy",
         "synthesis_evidence",
         "pocket",
         "recommendation",
@@ -228,6 +234,11 @@ def _config(config):
         HIT_SCREENING_ALLOCATION,
     ):
         raise ValueError("Unknown screening_allocation_policy")
+    if config.get("evidence_allocation_policy", EVIDENCE_ALLOCATION_INHERIT) not in (
+        EVIDENCE_ALLOCATION_INHERIT,
+        DESIGN_EVIDENCE_ALLOCATION,
+    ):
+        raise ValueError("Unknown evidence_allocation_policy")
     SearchLimits(**config.get("search", {}))
     ConformerSettings(**config.get("conformers", {}))
     RefinementSettings(**config.get("refinement", {}))
@@ -829,6 +840,37 @@ def _candidate_order(candidates, policy):
     return ordered
 
 
+def _evidence_order(ordered, policy):
+    """Optional design/family rotation; never mutate the screening sequence.
+
+    Priority tiers containing one design retain their exact inherited order,
+    including encounter order. Route alternatives, actual per-step inference
+    budgets and configured cache semantics remain in the evaluator.
+    """
+    if policy == EVIDENCE_ALLOCATION_INHERIT:
+        return ordered
+    result = []
+    for carried in (True, False):
+        tier = [entry for entry in ordered if any(r.get("carried_from") for r in entry["records"]) == carried]
+        if len({entry["design"] for entry in tier}) <= 1:
+            result.extend(tier)
+            continue
+        groups = {}
+        for entry in tier:
+            families = groups.setdefault(entry["design"], {})
+            families.setdefault(scaffold_family_key(entry["product"]), deque()).append(entry)
+        designs = deque(deque(families.values()) for families in groups.values())
+        while designs:
+            families = designs.popleft()
+            bucket = families.popleft()
+            result.append(bucket.popleft())
+            if bucket:
+                families.append(bucket)
+            if families:
+                designs.append(families)
+    return result
+
+
 def _screening_order(ordered, policy, route_records):
     """Reorder evidence-passing groups only; retain every product/design group.
 
@@ -977,6 +1019,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         if scoring_mode != "3d" and screening_policy != SCREENING_ALLOCATION_INHERIT:
             raise ValueError("Experimental screening_allocation_policy requires3d scoring")
         summary["screening_allocation_policy"] = screening_policy
+        evidence_policy = config.get("evidence_allocation_policy", EVIDENCE_ALLOCATION_INHERIT)
+        summary["evidence_allocation_policy"] = evidence_policy
         policy = effective_policy(config)
         qualified = policy["mode"] == "qualified"
         ranking_policy = _ranking_policy(config)
@@ -1356,9 +1400,18 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             "budget_unit": "Product/design screening attempts, including preflight failures; not distinct molecules",
             "design_semantics": "All eligible route/design associations retained; each attempted design independently scored/validated; deferred unattempted associations remain unscored",
         }
+        manifest["evidence_allocation_policy"] = {
+            "name": evidence_policy,
+            "ordering": "Inherit existing allocation_policy and carried priority"
+            if evidence_policy == EVIDENCE_ALLOCATION_INHERIT
+            else "Within carried tiers, rotate designs then scaffold families; single-design tiers inherit exactly",
+            "budget_unit": "Fresh predictor calls per step, not routes or equal per-design quotas",
+            "cache_scope": "Configured evaluator cache and product-matching policy unchanged; computational-route-support-v1 uses prepared-input/predictor binding and exact-product checks per route",
+        }
         manifest["effective_workflow"] = {
             "allocation_policy": config.get("allocation_policy", "balanced"),
             "screening_allocation_policy": screening_policy,
+            "evidence_allocation_policy": evidence_policy,
             "mode": config.get("mode", "hop"),
             "core_smiles": config.get("core_smiles"),
             "preserve_design_scaffold": config.get("preserve_design_scaffold", False),
@@ -1656,7 +1709,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     )
                 ),
             )
-            for entry in ordered
+            for entry in _evidence_order(ordered, evidence_policy)
         )
         while evidence_queue:
             entry, pending_routes = evidence_queue.popleft()
