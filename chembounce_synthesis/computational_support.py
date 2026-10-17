@@ -5,6 +5,7 @@ import math
 import time
 
 from .evidence import EvidencePolicy, SynthesisEvidenceEvaluator, _json_key
+from .evidence_outcomes import prediction_outcome, route_outcome, unsupported_reason
 from .forward_support import PROFILE, PinnedReactionT5Forward, binding, strict_smiles
 
 STRICT_POLICY = {"require_forward_agreement": True}
@@ -40,14 +41,22 @@ class ComputationalRouteSupport(SynthesisEvidenceEvaluator):
 
     def _raw_prediction(self, reactants, context, deadline, *, cached_only=False):
         if self.predictor is None:
-            return {"status": "unknown", "reason": "Pinned forward model unavailable"}
+            return {
+                "status": "unknown",
+                "reason": "Pinned forward model unavailable",
+                "reason_code": "predictor_unavailable",
+            }
         if deadline is not None and time.monotonic() >= deadline:
-            return {"status": "unknown", "reason": "Forward prediction deadline exhausted"}
+            return {
+                "status": "unknown",
+                "reason": "Forward prediction deadline exhausted",
+                "reason_code": "prediction_deadline_exhausted",
+            }
         reagents = [strict_smiles(s) for s in context.get("reagents", [])]
         try:
             prepared = self.predictor.prepare(reactants, reagents)
         except (ValueError, RuntimeError) as exc:
-            return {"status": "unknown", "reason": str(exc)}
+            return {"status": "unknown", "reason": str(exc), "reason_code": "predictor_preparation_failed"}
         key = binding({"input": prepared, "predictor": self.predictor.provenance})
         if key in self.cache:
             if not cached_only:
@@ -56,19 +65,33 @@ class ComputationalRouteSupport(SynthesisEvidenceEvaluator):
         if cached_only:
             raise ValueError("Strict evidence has no actual model-call cache binding")
         if deadline is not None and time.monotonic() >= deadline:
-            return {"status": "unknown", "reason": "Forward prediction deadline exhausted"}
+            return {
+                "status": "unknown",
+                "reason": "Forward prediction deadline exhausted",
+                "reason_code": "prediction_deadline_exhausted",
+            }
         reserve = 3 * 256
-        if (
-            self.usage["predictor_calls"] >= self.limits["predictor_calls"]
-            or self.usage["input_tokens"] + prepared["input_tokens"] > self.limits["input_tokens"]
-            or self.usage["output_tokens"] + reserve > self.limits["output_tokens"]
-        ):
-            return {"status": "unknown", "reason": "Forward prediction budget exhausted"}
+        # Same checks and priority as before; the cause is now retained separately.
+        budget_cause = None
+        if self.usage["predictor_calls"] >= self.limits["predictor_calls"]:
+            budget_cause = "predictor_call_budget_exhausted"
+        elif self.usage["input_tokens"] + prepared["input_tokens"] > self.limits["input_tokens"]:
+            budget_cause = "input_token_budget_exhausted"
+        elif self.usage["output_tokens"] + reserve > self.limits["output_tokens"]:
+            budget_cause = "output_token_budget_exhausted"
+        if budget_cause is not None:
+            return {
+                "status": "unknown",
+                "reason": "Forward prediction budget exhausted",
+                "reason_code": budget_cause,
+            }
         self.usage["predictor_calls"] += 1
         self.usage["input_tokens"] += prepared["input_tokens"]
         raw = None
+        failure_code = "prediction_execution_failed"
         try:
             raw = self.predictor.predict_raw(prepared)
+            failure_code = "prediction_validation_failed"
             self.predictor.validate_raw(raw, prepared)
             tokens = raw["output_tokens"]
             if isinstance(tokens, bool) or not isinstance(tokens, int) or not 0 <= tokens <= reserve:
@@ -77,7 +100,7 @@ class ComputationalRouteSupport(SynthesisEvidenceEvaluator):
             result = {"status": "completed_call", "raw": raw}
         except (ValueError, RuntimeError, KeyError, TypeError) as exc:
             self.usage["output_tokens"] += reserve
-            result = {"status": "failed", "reason": str(exc)}
+            result = {"status": "failed", "reason": str(exc), "reason_code": failure_code}
             if raw is not None:
                 result["raw"] = copy.deepcopy(raw)
         self.cache[key] = copy.deepcopy(result)
@@ -109,6 +132,11 @@ class ComputationalRouteSupport(SynthesisEvidenceEvaluator):
                 )
                 prediction.update(
                     status=status,
+                    reason_code={
+                        "matched": "exact_full_product_match",
+                        "mismatched": "completed_top_three_nonmatch",
+                        "partially_evaluated": "incomplete_or_invalid_hypotheses",
+                    }[status],
                     matched_rank=min(matches) if matches else None,
                     matching_policy="exact",
                     predictions=predictions,
@@ -117,7 +145,7 @@ class ComputationalRouteSupport(SynthesisEvidenceEvaluator):
             if not step["strict_eligible"]:
                 rejected.append("Concrete atom/stereo audit did not establish route integrity")
             if not matches:
-                rejected.append("No completed exact full-product hypothesis in bounded top three")
+                rejected.append(unsupported_reason(prediction))
             reasons.extend(f"{step['node_id']}: {reason}" for reason in rejected)
             reports.append(
                 {
@@ -127,6 +155,7 @@ class ComputationalRouteSupport(SynthesisEvidenceEvaluator):
                     "step_binding_sha256": step["step_binding_sha256"],
                     "rule_replay": "matched",
                     "forward_prediction": prediction,
+                    "forward_outcome": prediction_outcome(prediction),
                     "context": {
                         "status": "supplied_unvalidated" if context else "incomplete",
                         "supplied": context,
@@ -150,6 +179,7 @@ class ComputationalRouteSupport(SynthesisEvidenceEvaluator):
             "route_binding_sha256": audit["route_binding_sha256"],
             "route_audit": audit,
             "steps": reports,
+            "forward_outcome": route_outcome(reports),
             "eligibility": {"passed": not reasons, "reasons": reasons},
             "policy": self.provenance["policy"],
             "predictor_provenance": self.provenance["predictor"],

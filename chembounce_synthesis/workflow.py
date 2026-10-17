@@ -47,7 +47,7 @@ from .refinement import RefinementBudget, RefinementSettings, refine_candidate
 from .route_objective import RootProductObjective, search_policy
 from .routes import SearchLimits, expand_route, resolve_proposal, verify_route
 from .synllama import SavedProposals, SynLlama
-from . import selective_scoring
+from . import selective_scoring, evidence_outcomes
 
 LOGGER = logging.getLogger(__name__)
 COLUMNS = [
@@ -2309,7 +2309,16 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     if not policy or policy["mode"] == "exploratory"
                     else "not_qualified",
                     "qualified": False,
-                    "reasons": [record.get("reason", record.get("selection_status", "not_evaluated"))],
+                    "reasons": evidence_outcomes.fallback_reasons(record),
+                    **(
+                        {
+                            "forward_outcome": evidence_outcomes.route_outcome(
+                                record["synthesis_evidence"].get("steps", [])
+                            )
+                        }
+                        if "synthesis_evidence" in record
+                        else {}
+                    ),
                     "route_id": record["route_id"],
                 }
         write_json(
@@ -2328,6 +2337,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             summary["synthesis_evidence_evaluated_routes"] = sum(
                 "synthesis_evidence" in record for record in route_records
             )
+        summary["forward_evidence_outcomes"] = evidence_outcomes.summarize(route_records)
         summary["route_rejections"] = {
             status: sum(r["selection_status"] == status for r in route_records)
             for status in sorted({r["selection_status"] for r in route_records})

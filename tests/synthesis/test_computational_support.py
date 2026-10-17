@@ -65,6 +65,8 @@ def test_real_route_audit_cache_and_fresh_final_comparison(assets, route, strict
         lambda e: e.update(route_binding_sha256="supplied-claim"),
         lambda e: e["route_audit"]["steps"][0]["reactant_slots"].reverse(),
         lambda e: e["steps"][0]["forward_prediction"].update(matched_rank=2),
+        lambda e: e["steps"][0]["forward_prediction"].update(reason_code="predictor_call_budget_exhausted"),
+        lambda e: e["forward_outcome"].update(status="unassessed"),
     ):
         forged = copy.deepcopy(first)
         mutate(forged)
@@ -90,6 +92,14 @@ def test_all_beams_retained_no_partial_disagreement_or_component_repair(
     evidence = ComputationalRouteSupport(strict_predictor).evaluate_route(route, *assets)
     prediction = evidence["steps"][0]["forward_prediction"]
     assert prediction["status"] == status
+    assert (
+        evidence["forward_outcome"]["status"]
+        == {
+            "matched": "supported",
+            "mismatched": "completed_nonmatch",
+            "partially_evaluated": "incomplete_prediction",
+        }[status]
+    )
     assert len(prediction["predictions"]) == 3
     assert evidence["eligibility"]["passed"] is (status == "matched")
     assert all("original_decoded_text" in p and "token_ids" in p for p in prediction["predictions"])
@@ -310,6 +320,19 @@ def test_multistep_requires_each_exact_intermediate_and_shared_budget(
     assert not limited["eligibility"]["passed"]
     assert limited["steps"][0]["forward_prediction"]["status"] == "matched"
     assert limited["steps"][1]["forward_prediction"]["status"] == "unknown"
+    assert limited["forward_outcome"]["status"] == "mixed"
+    assert [s["status"] for s in limited["forward_outcome"]["step_outcomes"]] == ["supported", "unassessed"]
+    assert limited["steps"][1]["forward_outcome"]["cause_code"] == "predictor_call_budget_exhausted"
+    strict_predictor.products = ["CC", "CO", "CN"]
+    negative_and_unknown = ComputationalRouteSupport(strict_predictor, max_predictor_calls=1).evaluate_route(
+        route, *assets
+    )
+    assert negative_and_unknown["forward_outcome"]["status"] == "mixed"
+    assert [s["status"] for s in negative_and_unknown["forward_outcome"]["step_outcomes"]] == [
+        "completed_nonmatch",
+        "unassessed",
+    ]
+    assert not negative_and_unknown["eligibility"]["passed"]
 
 
 def test_final_boundary_rejects_forged_report_after_scoring(
@@ -434,3 +457,95 @@ def test_bundle_allows_only_standard_download_metadata_without_loading(tmp_path,
     (tmp_path / "config.json").write_text("changed model configuration")
     with pytest.raises(ValueError, match="asset mismatch: config.json"):
         forward_support.validate_bundle(tmp_path)
+
+
+@pytest.mark.parametrize(
+    "case,code,status,outcome",
+    [
+        ("no_model", "predictor_unavailable", "unknown", "unassessed"),
+        ("deadline_before_prepare", "prediction_deadline_exhausted", "unknown", "unassessed"),
+        ("deadline_after_prepare", "prediction_deadline_exhausted", "unknown", "unassessed"),
+        ("prepare", "predictor_preparation_failed", "unknown", "execution_error"),
+        ("call_budget", "predictor_call_budget_exhausted", "unknown", "unassessed"),
+        ("input_budget", "input_token_budget_exhausted", "unknown", "unassessed"),
+        ("output_budget", "output_token_budget_exhausted", "unknown", "unassessed"),
+        ("execute", "prediction_execution_failed", "failed", "execution_error"),
+        ("validate", "prediction_validation_failed", "failed", "execution_error"),
+    ],
+)
+def test_operational_causes_do_not_become_completed_nonmatch(
+    assets, route, strict_predictor, monkeypatch, concrete_origins, case, code, status, outcome
+):
+    from types import SimpleNamespace
+    from chembounce_synthesis import computational_support as module
+
+    limits = {
+        "call_budget": {"max_predictor_calls": 0},
+        "input_budget": {"max_input_tokens": 0},
+        "output_budget": {"max_output_tokens": 767},
+    }.get(case, {})
+    evaluator = ComputationalRouteSupport(None if case == "no_model" else strict_predictor, **limits)
+    deadline = None
+    if case.startswith("deadline"):
+        ticks = iter([2.0] if case.endswith("before_prepare") else [0.0, 2.0])
+        monkeypatch.setattr(module, "time", SimpleNamespace(monotonic=lambda: next(ticks)))
+        deadline = 1.0
+    error = "controlled <forward-error> & retained"
+    if case in {"prepare", "execute", "validate"}:
+
+        def fail(*args):
+            raise RuntimeError(error)
+
+        monkeypatch.setattr(
+            strict_predictor,
+            {"prepare": "prepare", "execute": "predict_raw", "validate": "validate_raw"}[case],
+            fail,
+        )
+    result = evaluator.evaluate_route(route, *assets, deadline_monotonic=deadline)
+    prediction = result["steps"][0]["forward_prediction"]
+    assert prediction["status"] == status and prediction["reason_code"] == code
+    assert result["steps"][0]["forward_outcome"]["status"] == outcome
+    assert result["forward_outcome"]["status"] == outcome
+    assert not result["eligibility"]["passed"]
+    assert "Completed bounded top-three" not in " ".join(result["eligibility"]["reasons"])
+    assert code in result["eligibility"]["reasons"][0]
+    if case in {"prepare", "execute", "validate"}:
+        assert prediction["reason"] == error and error in result["eligibility"]["reasons"][0]
+    assert evaluator.usage["predictor_calls"] == (1 if case in {"execute", "validate"} else 0)
+    if case in {"execute", "validate"}:
+        assert evaluator.usage["output_tokens"] == 768
+        second = evaluator.evaluate_route(route, *assets)
+        assert second["steps"][0]["forward_prediction"] == prediction
+        assert evaluator.usage["predictor_calls"] == 1 and evaluator.usage["cache_hits"] == 1
+        assert ("raw" in prediction) is (case == "validate")
+
+
+def test_unsupported_workflow_preserves_cause_in_qualification_and_existing_report(
+    tmp_path, assets, proposal, strict_predictor, monkeypatch, concrete_origins
+):
+    from chembounce_synthesis import report as saved_report
+
+    configured = config(tmp_path, assets, proposal)
+    configured["synthesis_evidence"]["max_predictor_calls"] = 0
+
+    def must_not_score(*args, **kwargs):
+        raise AssertionError("Unknown support must not invoke scoring")
+
+    monkeypatch.setattr(workflow, "score_candidate", must_not_score)
+    out = tmp_path / "cause"
+    assert workflow.run(HIT, [DESIGN], configured, out) == []
+    record = json.loads((out / "routes.json").read_text())["routes"][0]
+    assert record["selection_status"] == "evidence_rejected"
+    assert record["qualification"]["qualified"] is False
+    assert record["qualification"]["reasons"] == record["reasons"]
+    assert record["qualification"]["forward_outcome"] == record["synthesis_evidence"]["forward_outcome"]
+    assert "predictor_call_budget_exhausted" in record["qualification"]["reasons"][0]
+    summary = json.loads((out / "summary.json").read_text())
+    assert summary["scored_products"] == 0 and summary["synthesis_evidence_usage"]["predictor_calls"] == 0
+    outcomes = summary["forward_evidence_outcomes"]
+    assert outcomes["route_record_outcomes"] == {"unassessed": 1}
+    assert outcomes["step_record_causes"] == {"predictor_call_budget_exhausted": 1}
+    view = saved_report.write_report(out)
+    assert view["artifact_consistency"] == "consistent_recorded_bundle"
+    text = (out / "review.html").read_text()
+    assert "predictor_call_budget_exhausted" in text and "Repeated route/step records" in text

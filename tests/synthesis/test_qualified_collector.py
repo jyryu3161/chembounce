@@ -595,3 +595,145 @@ def test_selective_false_empty_cannot_hide_qualified_routes(completed):
     completed[1]["candidates"] = []
     with pytest.raises(ValueError):
         collect(completed)
+
+
+@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v5"], indirect=True)
+@pytest.mark.parametrize("kind", ["contradictory_code", "projection", "counts"])
+def test_collector_refuses_new_forward_diagnostic_contradictions(completed, kind):
+    if kind == "counts":
+        update(completed, "summary.json", lambda v: v["forward_evidence_outcomes"].update(step_records=999))
+    else:
+
+        def mutate(document):
+            evidence = next(r["synthesis_evidence"] for r in document["routes"] if "synthesis_evidence" in r)
+            if kind == "contradictory_code":
+                evidence["steps"][0]["forward_prediction"]["reason_code"] = "predictor_call_budget_exhausted"
+                # Contradictory cause remains invalid even if copied into every diagnostic layer.
+                evidence["steps"][0]["forward_outcome"]["cause_code"] = "predictor_call_budget_exhausted"
+                evidence["forward_outcome"]["step_outcomes"][0]["cause_code"] = (
+                    "predictor_call_budget_exhausted"
+                )
+            else:
+                evidence["forward_outcome"]["status"] = "unassessed"
+
+        update(completed, "routes.json", mutate)
+    with pytest.raises(ValueError, match="forward"):
+        collect(completed)
+    assert len(completed[2].calls) == 1
+
+
+@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v5"], indirect=True)
+def test_collector_legacy_diagnostic_absence_still_requires_raw_support(completed):
+    def remove(document):
+        for record in document["routes"]:
+            evidence = record.get("synthesis_evidence", {})
+            evidence.pop("forward_outcome", None)
+            for step in evidence.get("steps", []):
+                step.pop("forward_outcome", None)
+                step["forward_prediction"].pop("reason_code", None)
+
+    update(completed, "routes.json", remove)
+    update(completed, "summary.json", lambda v: v.pop("forward_evidence_outcomes"))
+    assert len(collect(completed)) == 1
+    assert len(completed[2].calls) == 1
+
+
+@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v5"], indirect=True)
+@pytest.mark.parametrize("attack", ["step", "route", "qualification"])
+def test_empty_collector_validates_all_retained_forward_projections(empty_selective, attack):
+    """Synthetic unknown step on an unselected record; no additional predictor work."""
+    import copy
+    from chembounce_synthesis import evidence_outcomes as e
+    from chembounce_synthesis import report
+
+    def unknown(document):
+        record = document["routes"][0]
+        evidence = record["synthesis_evidence"]
+        for step in evidence["steps"]:
+            step["forward_prediction"] = {
+                "status": "unknown",
+                "reason_code": "predictor_call_budget_exhausted",
+                "reason": "Synthetic budget abstention",
+            }
+            step["forward_outcome"] = e.prediction_outcome(step["forward_prediction"])
+        evidence["forward_outcome"] = e.route_outcome(evidence["steps"])
+        record["qualification"]["forward_outcome"] = copy.deepcopy(evidence["forward_outcome"])
+
+    update(empty_selective, "routes.json", unknown)
+    records = json.loads((empty_selective[0] / "synthesis/routes.json").read_text())["routes"]
+    update(
+        empty_selective, "summary.json", lambda v: v.update(forward_evidence_outcomes=e.summarize(records))
+    )
+    update(
+        empty_selective,
+        "qualification.json",
+        lambda v: v.update(decisions=[r["qualification"] for r in records]),
+    )
+    assert collect(empty_selective) == []
+
+    def forge(document):
+        record = document["routes"][0]
+        if attack == "qualification":
+            record["qualification"]["forward_outcome"]["status"] = "supported"
+        elif attack == "step":
+            record["synthesis_evidence"]["steps"][0]["forward_outcome"]["status"] = "supported"
+        else:
+            record["synthesis_evidence"]["forward_outcome"]["status"] = "supported"
+
+    update(empty_selective, "routes.json", forge)
+    records = json.loads((empty_selective[0] / "synthesis/routes.json").read_text())["routes"]
+    # Duplicated false qualification claims cannot pass just by agreeing with each other.
+    update(
+        empty_selective,
+        "qualification.json",
+        lambda v: v.update(decisions=[r["qualification"] for r in records]),
+    )
+    with pytest.raises(ValueError, match="forward outcome"):
+        collect(empty_selective)
+    view = report.write_report(empty_selective[0] / "synthesis")
+    assert view["artifact_consistency"] == "incomplete_or_inconsistent"
+    assert any("forward outcome" in issue for issue in view["issues"])
+
+
+@pytest.mark.parametrize("completed", ["qualified-development-v1"], indirect=True)
+@pytest.mark.parametrize("empty", [False, True])
+@pytest.mark.parametrize("attack", ["qualification", "counts", "legacy_absent"])
+def test_nonselective_forward_diagnostics_cover_legacy_empty_branch(completed, empty, attack):
+    """Exercise the general collector branch with controlled saved-data changes."""
+    if empty:
+        update(completed, "results.json", lambda v: v.update(results=[]))
+        update(completed, "qualification.json", lambda v: v.update(selected_route_ids=[]))
+        completed[1]["candidates"] = []
+    if attack == "qualification":
+
+        def forge(document):
+            for record in document["routes"]:
+                record["qualification"]["forward_outcome"] = False
+
+        update(completed, "routes.json", forge)
+        records = json.loads((completed[0] / "synthesis/routes.json").read_text())["routes"]
+        update(
+            completed,
+            "qualification.json",
+            lambda v: v.update(decisions=[r["qualification"] for r in records]),
+        )
+        with pytest.raises(ValueError, match="qualification forward outcome"):
+            collect(completed)
+    elif attack == "counts":
+        update(completed, "summary.json", lambda v: v["forward_evidence_outcomes"].update(step_records=999))
+        with pytest.raises(ValueError, match="forward outcome counts"):
+            collect(completed)
+    else:
+
+        def remove(document):
+            for record in document["routes"]:
+                record["qualification"].pop("forward_outcome", None)
+                evidence = record.get("synthesis_evidence", {})
+                evidence.pop("forward_outcome", None)
+                for step in evidence.get("steps", []):
+                    step.pop("forward_outcome", None)
+                    step["forward_prediction"].pop("reason_code", None)
+
+        update(completed, "routes.json", remove)
+        update(completed, "summary.json", lambda v: v.pop("forward_evidence_outcomes", None))
+        assert len(collect(completed)) == (0 if empty else 1)

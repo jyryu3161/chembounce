@@ -1611,3 +1611,73 @@ def test_legacy_both_locations_without_hypotheses_remains_explicit(tmp_path, dat
     view = r.write_report(tmp_path)
     assert view["artifact_consistency"] == "consistent_recorded_bundle"
     assert "Forward hypothesis details not recorded" in (tmp_path / "review.html").read_text()
+
+
+def test_forward_outcomes_report_counts_and_escaped_operational_reason(tmp_path, data):
+    from chembounce_synthesis import evidence_outcomes
+
+    records = data["routes.json"]["routes"]
+    for record in records:
+        evidence = record.get("synthesis_evidence")
+        if evidence:
+            for step in evidence["steps"]:
+                prediction = step["forward_prediction"]
+                prediction["reason_code"] = "exact_full_product_match"
+                prediction["reason"] = "<controlled-script>& saved text"
+                step["forward_outcome"] = evidence_outcomes.prediction_outcome(prediction)
+            evidence["forward_outcome"] = evidence_outcomes.route_outcome(evidence["steps"])
+    data["summary.json"]["forward_evidence_outcomes"] = evidence_outcomes.summarize(records)
+    save(tmp_path, data)
+    view = r.write_report(tmp_path)
+    assert view["artifact_consistency"] == "consistent_recorded_bundle"
+    text = (tmp_path / "review.html").read_text()
+    assert "&lt;controlled-script&gt;&amp; saved text" in text
+    assert "<controlled-script>" not in text
+    assert "Repeated route/step records" in text
+
+
+@pytest.mark.parametrize("mutation", ["code", "projection", "counts"])
+def test_forward_outcome_contradictions_are_report_inconsistency(tmp_path, data, mutation):
+    from chembounce_synthesis import evidence_outcomes
+
+    records = data["routes.json"]["routes"]
+    evidence = next(record["synthesis_evidence"] for record in records if "synthesis_evidence" in record)
+    step = evidence["steps"][0]
+    if mutation == "code":
+        # Contradictory new cause cannot hide behind absent legacy projection fields.
+        step["forward_prediction"]["reason_code"] = "predictor_call_budget_exhausted"
+    elif mutation == "projection":
+        step["forward_outcome"] = evidence_outcomes.prediction_outcome(step["forward_prediction"])
+        step["forward_outcome"]["status"] = "unassessed"
+    else:
+        data["summary.json"]["forward_evidence_outcomes"] = evidence_outcomes.summarize(records)
+        data["summary.json"]["forward_evidence_outcomes"]["step_records"] += 1
+    save(tmp_path, data)
+    view = r.write_report(tmp_path)
+    assert view["artifact_consistency"] == "incomplete_or_inconsistent"
+    assert any("forward" in issue for issue in view["issues"])
+
+
+@pytest.mark.parametrize("empty", [False, True])
+@pytest.mark.parametrize("location", ["route", "decision", "both"])
+def test_qualification_forward_projection_checked_even_without_selection(tmp_path, data, empty, location):
+    from chembounce_synthesis import evidence_outcomes as e
+
+    record = next(r for r in data["routes.json"]["routes"] if "synthesis_evidence" in r)
+    decision = next(d for d in data["qualification.json"]["decisions"] if d["route_id"] == record["route_id"])
+    if empty:
+        data["results.json"]["results"] = []
+        data["qualification.json"]["selected_route_ids"] = []
+        data["summary.json"].update(
+            status="no_candidates", returned_products=0, accepted_products=0, qualified_products=0
+        )
+    value = e.route_outcome(record["synthesis_evidence"]["steps"])
+    record["qualification"]["forward_outcome"] = copy.deepcopy(value)
+    decision["forward_outcome"] = copy.deepcopy(value)
+    if location in ("route", "both"):
+        record["qualification"]["forward_outcome"]["status"] = "unassessed"
+    if location in ("decision", "both"):
+        decision["forward_outcome"]["status"] = "unassessed"
+    view = r.write_report(save(tmp_path, data))
+    assert view["artifact_consistency"] == "incomplete_or_inconsistent"
+    assert any("qualification forward outcome" in issue for issue in view["issues"])
