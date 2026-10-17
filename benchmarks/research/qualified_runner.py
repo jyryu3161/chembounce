@@ -15,7 +15,7 @@ import time
 import psutil
 
 from benchmarks.research.protocol import digest, write_json, synthesis_asset_paths
-from benchmarks.research.qualified_adapter import ARMS, read, benchmark_profile
+from benchmarks.research.qualified_adapter import ARMS, PROFILE_PROTOCOLS, read, benchmark_profile
 from benchmarks.research.qualified_analysis import canonical_sha256, analyze, validate_plan
 from benchmarks.research import qualified_collector
 from benchmarks.research.runner import bounded_method, _termination_scope, _write_checkpoint
@@ -117,7 +117,7 @@ def make_plan(protocol, protocol_sha256):
         "source_sha256": protocol["source_sha256"],
         "collector_catalog_policy": protocol.get("collector_catalog_policy"),
     }
-    if protocol.get("schema") == "qualified-benchmark-protocol-v2":
+    if protocol.get("schema") in PROFILE_PROTOCOLS:
         plan["benchmark_protocol"] = {
             key: protocol[key] for key in ("schema", "recommendation_profile", "profile_artifact_sha256")
         }
@@ -143,11 +143,11 @@ def make_plan(protocol, protocol_sha256):
 def resolve_protocol(protocol, base):
     protocol = copy.deepcopy(protocol)
     if (
-        protocol.get("schema") not in {"qualified-benchmark-protocol-v1", "qualified-benchmark-protocol-v2"}
+        protocol.get("schema") not in ("qualified-benchmark-protocol-v1", *PROFILE_PROTOCOLS)
         or protocol["budget"] != BUDGET
     ):
         raise ValueError("Unknown protocol or unfrozen stage budgets")
-    if protocol["schema"] == "qualified-benchmark-protocol-v2":
+    if protocol["schema"] in PROFILE_PROTOCOLS:
         benchmark_profile(
             {
                 key: protocol.get(key)
@@ -155,7 +155,7 @@ def resolve_protocol(protocol, base):
             }
         )
     elif "recommendation_profile" in protocol or "profile_artifact_sha256" in protocol:
-        raise ValueError("Explicit profile binding requires benchmark protocol v2")
+        raise ValueError("Explicit profile binding requires benchmark protocol v2 or v3")
     if protocol.get("collector_catalog_policy") != CATALOG_POLICY:
         raise ValueError("Protocol must explicitly freeze the shared catalog setup policy")
     source = protocol["source_sha256"]
@@ -209,7 +209,7 @@ def resolve_protocol(protocol, base):
 
         expected_profile = benchmark_profile(
             {key: protocol[key] for key in ("schema", "recommendation_profile", "profile_artifact_sha256")}
-            if protocol["schema"] == "qualified-benchmark-protocol-v2"
+            if protocol["schema"] in PROFILE_PROTOCOLS
             else None
         )
         if load_config(assets["synthesis_config"]).get("recommendation_profile") != expected_profile:

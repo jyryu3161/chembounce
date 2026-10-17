@@ -11,8 +11,7 @@ ADP = "C1=NC(=C2C(=N1)N(C=N2)[C@H]3[C@@H]([C@@H]([C@H](O3)COP(=O)(O)OP(=O)(O)O)O
 import pytest
 
 
-@pytest.fixture
-def synthetic_historical_profile_bindings(tmp_path, monkeypatch):
+def _synthetic_profile_bindings(tmp_path, monkeypatch, *, include_landmark=False):
     import copy
     import hashlib
     import json
@@ -23,7 +22,10 @@ def synthetic_historical_profile_bindings(tmp_path, monkeypatch):
     original_digests = dict(profiles.PROFILE_SHA256)
     paths, artifacts, packaged = {}, {}, {}
     with monkeypatch.context() as scoped:
-        for name in (profiles.PROFILE, profiles.SELECTIVE_PROFILE):
+        names = (profiles.PROFILE, profiles.SELECTIVE_PROFILE)
+        if include_landmark:
+            names += (profiles.LANDMARK_SELECTIVE_PROFILE,)
+        for name in names:
             raw = original_resource(name).read_bytes()
             packaged[name] = hashlib.sha256(raw).hexdigest()
             artifact = copy.deepcopy(profiles.load_profile(name))
@@ -55,3 +57,14 @@ def synthetic_historical_profile_bindings(tmp_path, monkeypatch):
     assert profiles.PROFILE_SHA256 == original_digests
     for name, digest in packaged.items():
         assert hashlib.sha256(original_resource(name).read_bytes()).hexdigest() == digest
+
+
+@pytest.fixture
+def synthetic_historical_profile_bindings(tmp_path, monkeypatch):
+    yield from _synthetic_profile_bindings(tmp_path, monkeypatch)
+
+
+@pytest.fixture
+def synthetic_benchmark_profile_bindings(tmp_path, monkeypatch):
+    """Explicit test-only v1/v2/v5 artifacts; never authenticate a packaged runtime."""
+    yield from _synthetic_profile_bindings(tmp_path, monkeypatch, include_landmark=True)

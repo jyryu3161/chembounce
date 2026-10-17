@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pytest
 
 # Test-only artifacts retain real loaders, policy checks and collector validation.
-pytestmark = pytest.mark.usefixtures("synthetic_historical_profile_bindings")
+pytestmark = pytest.mark.usefixtures("synthetic_benchmark_profile_bindings")
 
 from benchmarks.research import qualified_adapter as adapter, qualified_runner as runner
 from benchmarks.research.protocol import write_json
@@ -64,7 +64,9 @@ def config_file(tmp_path, profile="qualified-development-v1"):
     from chembounce_synthesis.profiles import profile_provenance
 
     assert profile_provenance(load_config(path))["status"] == (
-        "engineering_policy_matched" if profile.endswith("v2") else "development_protocol_matched"
+        "engineering_policy_matched"
+        if adapter.selective_benchmark_profile(profile)
+        else "development_protocol_matched"
     )
     return path
 
@@ -462,31 +464,43 @@ def test_common_cleanup_overrun_preserves_costs_and_continues_next_slot(tmp_path
     assert adapter.read(tmp_path / "run/attempt-0000/phases.json")["phases"]["common"]["allocation_exceeded"]
 
 
-def selective_binding():
-    from chembounce_synthesis.profiles import SELECTIVE_PROFILE, PROFILE_SHA256
+@pytest.fixture(params=["v2", "v3"])
+def profile_binding(request):
+    return selective_binding(request.param)
+
+
+def selective_binding(version="v2"):
+    from chembounce_synthesis.profiles import SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE, PROFILE_SHA256
+
+    name = {"v2": SELECTIVE_PROFILE, "v3": LANDMARK_SELECTIVE_PROFILE}[version]
 
     return {
-        "schema": "qualified-benchmark-protocol-v2",
-        "recommendation_profile": SELECTIVE_PROFILE,
-        "profile_artifact_sha256": PROFILE_SHA256[SELECTIVE_PROFILE],
+        "schema": "qualified-benchmark-protocol-" + version,
+        "recommendation_profile": name,
+        "profile_artifact_sha256": PROFILE_SHA256[name],
     }
 
 
-def test_selective_protocol_binding_reaches_only_common_request(tmp_path):
-    p = protocol() | selective_binding()
+def test_selective_protocol_binding_reaches_only_common_request(
+    tmp_path, profile_binding, benchmark_metadata_guard
+):
+    p = protocol() | profile_binding
     plan = runner.make_plan(p, "a" * 64)
-    assert plan["benchmark_protocol"] == selective_binding()
+    assert plan["benchmark_protocol"] == profile_binding
     assert len(plan["slot_order"]) == 10
     for phase in ("native", "common"):
         req = runner.request_for(p["methods"][0], p["queries"][0], 97, tmp_path, 360, phase, plan)
+        assert req["seed"] == 97
         assert ("benchmark_protocol" in req) == (phase == "common")
         if phase == "common":
-            assert req["benchmark_protocol"] == selective_binding()
+            assert req["benchmark_protocol"] == profile_binding
 
 
 @pytest.mark.parametrize("mutation", ["missing_name", "wrong_digest", "v1_upgrade", "wrong_profile"])
-def test_selective_protocol_rejects_missing_or_mismatched_binding(tmp_path, mutation):
-    p = protocol() | selective_binding()
+def test_selective_protocol_rejects_missing_or_mismatched_binding(
+    tmp_path, mutation, profile_binding, benchmark_metadata_guard
+):
+    p = protocol() | profile_binding
     if mutation == "missing_name":
         p.pop("recommendation_profile")
     elif mutation == "wrong_digest":
@@ -499,15 +513,15 @@ def test_selective_protocol_rejects_missing_or_mismatched_binding(tmp_path, muta
         runner.resolve_protocol(p, tmp_path)
 
 
-def test_selective_common_config_requires_exact_profile_and_preserves_anchors(tmp_path):
+def test_selective_common_config_requires_exact_profile_and_preserves_anchors(tmp_path, profile_binding):
     r = request(tmp_path)
-    r["assets"]["synthesis_config"] = str(
-        config_file(tmp_path, selective_binding()["recommendation_profile"])
-    )
+    r["assets"]["synthesis_config"] = str(config_file(tmp_path, profile_binding["recommendation_profile"]))
     with pytest.raises(ValueError, match="protocol-bound"):
         adapter.common_config(r)
-    r["benchmark_protocol"] = selective_binding()
+    r["benchmark_protocol"] = profile_binding
     cfg = adapter.common_config(r)
+    assert cfg["provider"]["seed"] == 97
+    assert cfg["conformers"]["seed"] == 42 and cfg["refinement"]["seeds"] == [42, 43, 44]
     assert cfg["minimum_scores"] == {"hit_tanimoto": 0.35, "hit_shape": 0.70, "hit_pharmacophore": 0.50}
     assert cfg["similarity_constraints"]["polar_recall"] == 0.75
     config = adapter.read(r["assets"]["synthesis_config"])
@@ -524,10 +538,12 @@ def test_selective_common_config_requires_exact_profile_and_preserves_anchors(tm
         adapter.common_config(r)
 
 
-def test_selective_runner_failure_keeps_denominator_and_fixed_budgets(tmp_path, monkeypatch):
+def test_selective_runner_failure_keeps_denominator_and_fixed_budgets(
+    tmp_path, monkeypatch, profile_binding, benchmark_metadata_guard
+):
     from benchmarks.research.qualified_analysis import analyze
 
-    p = protocol() | selective_binding()
+    p = protocol() | profile_binding
     plan = runner.make_plan(p, "a" * 64)
     calls = []
 
@@ -545,7 +561,7 @@ def test_selective_runner_failure_keeps_denominator_and_fixed_budgets(tmp_path, 
     result = runner.attempt(
         p["methods"][-1], p["queries"][0], 97, tmp_path / "failed", plan, SimpleNamespace(signal_number=None)
     )
-    assert len(calls) == 1 and calls[0]["benchmark_protocol"] == selective_binding()
+    assert len(calls) == 1 and calls[0]["benchmark_protocol"] == profile_binding
     assert calls[0]["budget"]["wall_seconds"] <= 600
     assert result["status"] == "error" and result["qualified"] == []
     report = analyze(
@@ -558,3 +574,294 @@ def test_selective_runner_failure_keeps_denominator_and_fixed_budgets(tmp_path, 
         },
     )
     assert report["planned_attempts"] == 10
+
+
+@pytest.fixture
+def benchmark_metadata_guard(monkeypatch):
+    """Native modules are imported, but these tests must perform no chemistry or inference."""
+    from rdkit import Chem
+    from rdkit.Chem import AllChem, rdShapeAlign
+    from chembounce_synthesis import conformers, selective_scoring, workflow
+    from chembounce_synthesis.catalog import Catalog
+    from chembounce_synthesis.reactions import Rules
+    from chembounce_synthesis.forward_support import PinnedReactionT5Forward
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("Metadata-only test attempted chemistry, model/catalog loading or a workflow run")
+
+    for target, names in (
+        (Chem, ("MolFromSmiles", "SDMolSupplier")),
+        (AllChem, ("EmbedMolecule", "EmbedMultipleConfs")),
+        (rdShapeAlign, ("AlignMol",)),
+        (conformers, ("ensemble", "score_candidate", "_overlay")),
+        (selective_scoring, ("ensemble", "score_candidate", "_overlay", "restore_result", "validate_result")),
+        (workflow, ("run", "score_candidate")),
+        (Catalog, ("__init__",)),
+        (Rules, ("__init__",)),
+        (PinnedReactionT5Forward, ("__init__",)),
+        (adapter, ("native_designs", "native_supply")),
+        (runner, ("bounded_method",)),
+    ):
+        for name in names:
+            monkeypatch.setattr(target, name, forbidden)
+
+
+@pytest.mark.parametrize("attack", ["hash", "name", "schema", "extra", "missing", "cross_version"])
+def test_benchmark_metadata_exact_binding(profile_binding, attack, benchmark_metadata_guard):
+    binding = dict(profile_binding)
+    assert adapter.benchmark_profile(binding) == binding["recommendation_profile"]
+    if attack == "hash":
+        binding["profile_artifact_sha256"] = "0" * 64
+    elif attack == "name":
+        binding["recommendation_profile"] = "qualified-selective-engineering-v4"
+    elif attack == "schema":
+        binding["schema"] = "qualified-benchmark-protocol-v4"
+    elif attack == "extra":
+        binding["trust_me"] = True
+    elif attack == "missing":
+        binding.pop("profile_artifact_sha256")
+    else:
+        binding["schema"] = "qualified-benchmark-protocol-" + (
+            "v3" if binding["schema"].endswith("v2") else "v2"
+        )
+    with pytest.raises(ValueError, match="binding"):
+        adapter.benchmark_profile(binding)
+
+
+def test_benchmark_metadata_default_cannot_upgrade_legacy(monkeypatch, benchmark_metadata_guard):
+    from chembounce_synthesis import profiles
+
+    monkeypatch.setattr(profiles, "DEFAULT_RECOMMENDATION_PROFILE", "future-profile")
+    assert adapter.benchmark_profile() == profiles.PROFILE
+    assert adapter.selective_benchmark_profile(profiles.PROFILE) is False
+    for name in (profiles.SELECTIVE_PROFILE, profiles.LANDMARK_SELECTIVE_PROFILE):
+        assert adapter.selective_benchmark_profile(name) is True
+    for name in (profiles.GUARDED_SELECTIVE_PROFILE, profiles.DIAGNOSTIC_SELECTIVE_PROFILE, "future-profile"):
+        with pytest.raises(ValueError, match="Unsupported"):
+            adapter.selective_benchmark_profile(name)
+    assert "benchmark_protocol" not in runner.make_plan(protocol(), "a" * 64)
+
+
+def test_benchmark_metadata_resolve_exact_config(tmp_path, profile_binding, benchmark_metadata_guard):
+    """Use tiny inert asset bytes: no catalog or model is constructed."""
+    from pathlib import Path
+
+    config = config_file(tmp_path, profile_binding["recommendation_profile"])
+    assets = {"synthesis_config": {"artifact": str(config), "sha256": runner.digest(config)}}
+    for name in ("catalog.tsv", "rules.json", "unused-model", "unused-prompt", "unused-forward"):
+        path = tmp_path / name
+        path.write_text("inert binding fixture, not a usable scientific asset\n")
+        alias = {"catalog.tsv": "catalog", "rules.json": "rules"}.get(name, name)
+        assets[alias] = {"artifact": str(path), "sha256": runner.digest(path)}
+    root = Path(runner.__file__).resolve().parents[2]
+    sources = (
+        list((root / "chembounce_synthesis").glob("*.py"))
+        + [
+            root / "benchmarks/research" / name
+            for name in (
+                "qualified_runner.py",
+                "qualified_collector.py",
+                "qualified_adapter.py",
+                "qualified_analysis.py",
+                "runner.py",
+            )
+        ]
+        + [root / "chembounce.py"]
+    )
+    p = protocol() | profile_binding
+    p["source_sha256"] = {str(path): runner.digest(path) for path in sources}
+    p["methods"] = [{"id": "synllama", "arm": "synllama", "assets": assets}]
+    resolved = runner.resolve_protocol(p, tmp_path)
+    assert resolved["methods"][0]["resolved_assets"]["synthesis_config"] == str(config)
+    assert runner.make_plan(resolved, "a" * 64)["benchmark_protocol"] == profile_binding
+    helper = str(root / "chembounce_synthesis/landmark_proposals.py")
+    expected = p["source_sha256"].pop(helper)
+    with pytest.raises(ValueError, match="required current source pins"):
+        runner.resolve_protocol(p, tmp_path)
+    p["source_sha256"][helper] = "0" * 64
+    with pytest.raises(ValueError, match="Protocol source changed"):
+        runner.resolve_protocol(p, tmp_path)
+    p["source_sha256"][helper] = expected
+    # A separately rehashed config still cannot switch the bound profile.
+    config_file(tmp_path)
+    p["methods"][0]["assets"]["synthesis_config"]["sha256"] = runner.digest(config)
+    with pytest.raises(ValueError, match="Method config profile"):
+        runner.resolve_protocol(p, tmp_path)
+
+
+@pytest.mark.parametrize("tamper", [False, True])
+def test_benchmark_metadata_runner_to_collector_binding(
+    tmp_path, monkeypatch, profile_binding, benchmark_metadata_guard, tamper
+):
+    """Real request/envelope/config path, fake execution and no scientific artifact validation."""
+    p = protocol() | profile_binding
+    config = config_file(tmp_path, profile_binding["recommendation_profile"])
+    p["methods"][0]["resolved_assets"] = {"synthesis_config": str(config)}
+    plan, requests, collected = runner.make_plan(p, "a" * 64), [], []
+
+    def bounded(method, req, out, **kwargs):
+        requests.append(req)
+        out.mkdir()
+        if tamper and "benchmark_protocol" in req:
+            req["benchmark_protocol"] = {**req["benchmark_protocol"], "profile_artifact_sha256": "0" * 64}
+        write_json(out / "request.json", req)
+        return {
+            "status": "no_candidates",
+            "response": {"candidates": []},
+            "resources": {"sampled_cpu_seconds_lower_bound": 0, "sampled_peak_rss_mb": 0},
+        }
+
+    def artifacts(directory, response, query, expected_source, **kwargs):
+        collected.append(kwargs)
+        return []
+
+    monkeypatch.setattr(runner, "bounded_method", bounded)
+    monkeypatch.setattr(runner.qualified_collector, "checked_workflow_artifacts", artifacts)
+    result = runner.attempt(
+        p["methods"][0], p["queries"][0], 97, tmp_path / "attempt", plan, SimpleNamespace(signal_number=None)
+    )
+    assert len(requests) == 2 and all(req["seed"] == 97 for req in requests)
+    assert "benchmark_protocol" not in requests[0]
+    assert plan["benchmark_protocol"] == profile_binding  # request replacement cannot alter authority
+    if tamper:
+        assert not collected and result["status"] == "error"
+        assert "frozen runner authority" in result["failures"][0]["reason"]
+    else:
+        assert result["status"] == "no_candidates" and len(collected) == 1
+        assert collected[0]["profile_name"] == profile_binding["recommendation_profile"]
+        cfg = collected[0]["expected_config"]
+        assert cfg["provider"]["seed"] == 97 and cfg["conformers"]["seed"] == 42
+        assert cfg["refinement"]["seeds"] == [42, 43, 44]
+        assert requests[1]["benchmark_protocol"] == profile_binding
+
+
+@pytest.mark.parametrize("attack", [None, "policy", "outcome", "missing_exports", "header", "nonempty_sdf"])
+def test_benchmark_metadata_selective_empty_never_uses_legacy_return(
+    tmp_path, monkeypatch, profile_binding, benchmark_metadata_guard, attack
+):
+    """Exercise real empty-artifact checks; mock only chemistry-derived similarity identity.
+
+    Full saved pose/seed/route/raw evidence tests for both versions live in
+    synthesis/test_qualified_collector.py and require scientific toy fixtures.
+    """
+    import copy
+    from chembounce_synthesis import selective_scoring, workflow
+    from chembounce_synthesis.qualification import effective_policy
+
+    collector = runner.qualified_collector
+    config = config_file(tmp_path, profile_binding["recommendation_profile"])
+    req = request(tmp_path)
+    req["assets"]["synthesis_config"] = str(config)
+    req["benchmark_protocol"] = profile_binding
+    cfg = workflow._config(adapter.common_config(req))
+    similarity = SimpleNamespace(policy={"synthetic_metadata_only": True}, sha256="a" * 64)
+    monkeypatch.setattr(selective_scoring, "configured_constraints", lambda *args: similarity)
+    monkeypatch.setattr(collector, "canonical", lambda value: value)
+    policy = effective_policy(cfg)
+    policy["similarity_constraints"] = {"policy": similarity.policy, "sha256": similarity.sha256}
+    manifest = {
+        "sources_changed_since_import": False,
+        "code_sha256": workflow._SOURCE_HASHES,
+        "hit": req["query"]["smiles"],
+        "config": cfg,
+        "recommendation_policy": copy.deepcopy(policy),
+        "recommendation_profile": policy["calibration"],
+    }
+    summary = {
+        "status": "no_candidates",
+        "returned_products": 0,
+        "accepted_products": 0,
+        "qualified_products": 0,
+        "refinement_accepted": 0,
+        "refinement_attempted": 0,
+        "route_rejections": {},
+        "refinement_budget": {"candidate_conformer_requests": 0},
+    }
+    if attack == "policy":
+        policy["unbound_extra_policy"] = True
+    if attack == "outcome":
+        summary["qualified_products"] = 1
+    out = tmp_path / "synthesis"
+    out.mkdir()
+    for name, value in {
+        "manifest.json": manifest,
+        "results.json": {"results": [], "policy": policy},
+        "qualification.json": {"policy": policy, "selected_route_ids": [], "decisions": []},
+        "routes.json": {"routes": []},
+        "refinement.json": {"candidates": []},
+        "summary.json": summary,
+    }.items():
+        write_json(out / name, value)
+    if attack != "missing_exports":
+        (out / "results.tsv").write_text(
+            "smiles\n"
+            if attack == "header"
+            else "\t".join(workflow.COLUMNS + workflow.SELECTIVE_COLUMNS) + "\n"
+        )
+        for name in ("poses_hit.sdf", "poses_design.sdf", "references_hit.sdf", "references_design.sdf"):
+            (out / name).write_text("forged\n" if attack == "nonempty_sdf" else "")
+    response = {"candidates": [], "metadata": {"files_sha256": runner.file_manifest(tmp_path)}}
+
+    def collect():
+        return collector.checked_workflow_artifacts(
+            tmp_path,
+            response,
+            req["query"],
+            workflow._SOURCE_HASHES,
+            expected_config=cfg,
+            profile_name=profile_binding["recommendation_profile"],
+        )
+
+    if attack is None:
+        assert collect() == []
+    else:
+        with pytest.raises(ValueError, match="Selective|bound exports|Empty selective"):
+            collect()
+
+
+@pytest.mark.parametrize("attack", ["enabled_proposals", "missing_helper", "changed_helper"])
+def test_benchmark_metadata_v5_rejects_unmatched_configuration(
+    tmp_path, monkeypatch, benchmark_metadata_guard, attack
+):
+    from chembounce_synthesis import profiles, landmark_proposals
+
+    req = request(tmp_path)
+    req["benchmark_protocol"] = selective_binding("v3")
+    path = config_file(tmp_path, profiles.LANDMARK_SELECTIVE_PROFILE)
+    req["assets"]["synthesis_config"] = str(path)
+    if attack == "enabled_proposals":
+        config = adapter.read(path)
+        config["similarity_constraints"] = {
+            "landmarks": [{"id": "oxygen", "family": "Acceptor", "hit_atom_ids": [2], "max_distance": 1.0}],
+            "landmark_pose_proposals": True,
+        }
+        write_json(path, config)
+        # Isolate profile rejection from optional native capability availability.
+        monkeypatch.setattr(landmark_proposals, "require_capability", lambda: None)
+    elif attack == "missing_helper":
+        from pathlib import Path
+
+        original_read = Path.read_bytes
+
+        def missing(path):
+            if path == Path(profiles.__file__).with_name("landmark_proposals.py"):
+                raise FileNotFoundError("controlled missing landmark helper source")
+            return original_read(path)
+
+        # Real numerical_runtime always reads the fixed helper list; a missing
+        # file raises instead of returning a fabricated incomplete source map.
+        monkeypatch.setattr(Path, "read_bytes", missing)
+        with pytest.raises(FileNotFoundError, match="missing landmark helper"):
+            adapter.common_config(req)
+        return
+    else:
+        original = profiles.numerical_runtime
+
+        def changed(name):
+            current = original(name)
+            current["source_sha256"][profiles.LANDMARK_FILE] = "0" * 64
+            return current
+
+        monkeypatch.setattr(profiles, "numerical_runtime", changed)
+    with pytest.raises(ValueError, match="frozen engineering profile"):
+        adapter.common_config(req)

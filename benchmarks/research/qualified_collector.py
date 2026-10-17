@@ -21,7 +21,12 @@ from types import MappingProxyType, SimpleNamespace
 from rdkit import Chem, DataStructs, rdBase
 
 from benchmarks.research.protocol import digest
-from benchmarks.research.qualified_adapter import read, common_config, benchmark_profile
+from benchmarks.research.qualified_adapter import (
+    read,
+    common_config,
+    benchmark_profile,
+    selective_benchmark_profile,
+)
 from chembounce_synthesis.common import FP, canonical, molecule
 from chembounce_synthesis.catalog import Catalog, _import_manifest_present
 from chembounce_synthesis.forward_support import (
@@ -37,7 +42,6 @@ from chembounce_synthesis.profiles import (
     FIXED_CONFORMERS,
     METRICS,
     PROFILE_SHA256,
-    SELECTIVE_PROFILE,
     load_profile,
 )
 from chembounce_synthesis.qualification import _validate_score_info
@@ -377,7 +381,7 @@ def checked_workflow_artifacts(
     ):
         raise ValueError("Response selected identities differ from final JSON")
     name = profile_name
-    selective = name == SELECTIVE_PROFILE
+    selective = selective_benchmark_profile(name)
     similarity = None
     if selective:
         from chembounce_synthesis import selective_scoring
