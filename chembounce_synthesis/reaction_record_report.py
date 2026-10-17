@@ -33,6 +33,9 @@ def _saved_queries(run_dir, route_id, contexts):
         "saved_documents",
         "Expected routes/results objects containing record lists",
     )
+    records.require(
+        isinstance(route_id, str) and route_id, "saved_route_selection", "Route ID must be a nonempty string"
+    )
     routes = [r for r in routes_doc.get("routes", []) if r.get("route_id") == route_id]
     results = [r for r in results_doc.get("results", []) if r.get("route_id") == route_id]
     records.require(
@@ -63,6 +66,12 @@ def _saved_queries(run_dir, route_id, contexts):
             "saved_graph",
             "Expected building block or reaction node",
         )
+        if "rule_id" in node:
+            records.require(
+                isinstance(node["rule_id"], str) and node["rule_id"],
+                "saved_graph",
+                "Rule IDs must be nonempty strings",
+            )
         by_id[ident] = node
     root = graph.get("root")
     records.require(

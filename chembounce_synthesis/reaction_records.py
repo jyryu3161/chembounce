@@ -65,8 +65,30 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def _json_types(value, depth=0):
+    require(depth <= MAX_DEPTH, "json_depth", "JSON nesting exceeds the supported bound")
+    kind = type(value)
+    if kind is dict:
+        require(all(type(key) is str for key in value), "json_type", "JSON object keys must be strings")
+        for child in value.values():
+            _json_types(child, depth + 1)
+    elif kind is list:
+        for child in value:
+            _json_types(child, depth + 1)
+    elif kind is float:
+        require(math.isfinite(value), "json_nonfinite", "JSON numbers must be finite")
+    else:
+        require(kind in {str, int, bool, type(None)}, "json_type", "Unsupported JSON value type")
+
+
 def encoded(value):
+    _json_types(value)
     return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+
+
+def same_json(left, right):
+    """Compare finite JSON with explicit type preservation (false, 0 and 0.0 differ)."""
+    return encoded(left) == encoded(right)
 
 
 def binding(value):
@@ -392,9 +414,27 @@ def identity(identifiers):
             require(not any(a.GetAtomicNum() == 0 for a in mol.GetAtoms()), "dummy_atoms", kind)
             potential = Chem.FindPotentialStereo(mol)
             require(not any(str(s.specified) != "Specified" for s in potential), "unspecified_stereo", kind)
+            # Maps distinguish graph atoms but are not material identity. Removing them can
+            # make a previously tagged center achiral; clean stereo only on this private copy.
+            mol = Chem.Mol(mol)
             for atom in mol.GetAtoms():
                 atom.SetAtomMapNum(0)
-            keys.append(absolute_smiles(mol, canonical=True, isomericSmiles=True))
+            Chem.AssignStereochemistry(mol, cleanIt=True, force=True)
+            require_absolute_stereo(mol)
+            require(
+                not any(str(s.specified) != "Specified" for s in Chem.FindPotentialStereo(mol)),
+                "unspecified_stereo_after_map_removal",
+                kind,
+            )
+            key = absolute_smiles(mol, canonical=True, isomericSmiles=True)
+            reparsed = parse_absolute_smiles(key)
+            _material_semantics(reparsed)
+            require(
+                key == absolute_smiles(reparsed, canonical=True, isomericSmiles=True),
+                "unstable_identity_serialization",
+                kind,
+            )
+            keys.append(key)
         except (ValueError, RuntimeError, KeyError, TypeError) as exc:
             issues.append(str(exc))
     if not keys:
@@ -706,6 +746,29 @@ def _receipt(raw, expected):
     }
 
 
+def _bundle_notice(snapshot):
+    """Attribute this snapshot's declared source, without inheriting example-specific claims."""
+    declared = {
+        "provider": snapshot["provider"],
+        "data_revision": snapshot["data_revision"],
+        "dataset": snapshot["dataset"],
+        "source_metadata": snapshot["source_metadata"],
+        "selectors": snapshot["selectors"],
+    }
+    return (
+        "Retained reaction data and snapshot metadata: declared CC-BY-SA-4.0 (LICENSE-DATA).\n"
+        "The following attribution, revisions, source locations and selection are caller-supplied "
+        "declarations, not authenticated acquisition or laboratory truth. Synthetic/adapted data "
+        "must be identified in the declared metadata. No unchanged-dataset claim is made.\n"
+        + json.dumps(declared, sort_keys=True, indent=2, allow_nan=False)
+        + "\nORD serialized schema descriptor: Apache-2.0 (LICENSE-SCHEMA), Copyright Open Reaction "
+        "Database Project Authors; pinned schema revision "
+        + SCHEMA_REVISION
+        + ". Descriptor extracted as data; downloaded Python is never executed.\n"
+        "No rights to unacquired publications or analytical attachments are asserted.\n"
+    )
+
+
 def import_snapshot(source_dir, output_dir, *, expected_snapshot_sha256=None):
     """Import explicitly selected records. Network acquisition is deliberately absent."""
     snapshot_raw = read_local(source_dir, "snapshot.json")
@@ -734,8 +797,9 @@ def import_snapshot(source_dir, output_dir, *, expected_snapshot_sha256=None):
         for index, (record, raw) in enumerate(zip(records, raws)):
             record["raw_path"] = f"record-{index}.pb"
             (temporary / record["raw_path"]).write_bytes(raw)
-        for name in ("NOTICE.txt", "LICENSE-DATA", "LICENSE-SCHEMA"):
+        for name in ("LICENSE-DATA", "LICENSE-SCHEMA"):
             shutil.copyfile(RESOURCE / name, temporary / name)
+        (temporary / "NOTICE.txt").write_text(_bundle_notice(snapshot), encoding="utf-8")
         bundle = {
             "schema": VERSION,
             "receipt": receipt,
@@ -775,6 +839,11 @@ def load_bundle(path, *, expected_snapshot_sha256=None):
     _check_snapshot(snapshot)
     receipt = _receipt(snapshot_raw, expected_snapshot_sha256)
     require(
+        read_local(path, "NOTICE.txt") == _bundle_notice(snapshot).encode("utf-8"),
+        "derived_notice_mismatch",
+        "Bundle attribution differs from declared snapshot",
+    )
+    require(
         isinstance(bundle["receipt"], dict) and bundle["receipt"].get("snapshot_sha256") == sha(snapshot_raw),
         "snapshot_binding",
         "Snapshot receipt differs from imported bundle",
@@ -794,11 +863,13 @@ def load_bundle(path, *, expected_snapshot_sha256=None):
             "raw_record_binding",
             "Retained protobuf differs from selected dataset row",
         )
-        require(saved == record, "derived_record_mismatch", "Saved fields differ from raw rederivation")
+        require(
+            same_json(saved, record), "derived_record_mismatch", "Saved fields differ from raw rederivation"
+        )
     require(
-        bundle["dataset_metadata"] == metadata
-        and bundle["limits"] == LIMITS
-        and bundle["interpretation"] == INTERPRETATION,
+        same_json(bundle["dataset_metadata"], metadata)
+        and same_json(bundle["limits"], LIMITS)
+        and same_json(bundle["interpretation"], INTERPRETATION),
         "derived_bundle_mismatch",
         "Saved metadata differs from replay",
     )
@@ -878,6 +949,7 @@ def _match(loaded, product, reactants=None, context=None):
     require(
         context is None or isinstance(context, dict), "query_context", "Context must be an object or absent"
     )
+    encoded(context)  # validate finite, typed JSON even when no source product matches
     query_inputs = None if reactants is None else [smiles_identity(s) for s in reactants]
     matches = []
     if target["key"] is not None:
@@ -909,7 +981,11 @@ def _match(loaded, product, reactants=None, context=None):
                 context_status = (
                     "not_compared"
                     if context is None
-                    else ("same_recorded_context" if context == recorded_context else "different_or_partial")
+                    else (
+                        "same_recorded_context"
+                        if same_json(context, recorded_context)
+                        else "different_or_partial"
+                    )
                 )
                 if context is None:
                     reasons.append("query_context_absent")

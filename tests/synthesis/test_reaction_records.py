@@ -146,6 +146,8 @@ def test_receipt_is_external_and_never_inherited(bundle, tmp_path):
         ),
         lambda b: b["records"][0]["derived"]["projection"]["provenance"].update(doi="invented"),
         lambda b: b["records"][0]["selector"].update(row=1),
+        lambda b: b["records"][0]["selector"].update(row=False),
+        lambda b: b["records"][0]["derived"]["projection"]["conditions"].update(reflux=0),
         lambda b: b["records"][0].update(raw_sha256="0" * 64),
         lambda b: b["records"][0]["derived"]["wire_floats"][0].update(decoded_value=123),
     ],
@@ -546,6 +548,12 @@ def test_synthetic_complete_reported_context_stays_report_only(source, tmp_path)
     assert match["claim_scope"] == "reported_reaction_with_matching_recorded_context"
     assert "not isolated material" in match["scope_limit"]
     assert "source_audited" not in json.dumps(result)
+    assert context["conditions"]["reflux"] is False
+    context["conditions"]["reflux"] = 0
+    typed = r.match_product(path, PRODUCT, reactants=REACTANTS, context=context)["result"]["matches"][0]
+    assert typed["context"] == "different_or_partial"
+    assert typed["claim_scope"] == "exact_product_recorded_precedent"
+    context["conditions"]["reflux"] = False
     context["inputs"]["Base"]["components"][0]["amount"]["moles"]["value"] = 0.2
     changed = r.match_product(path, PRODUCT, reactants=REACTANTS, context=context)["result"]["matches"][0]
     assert changed["claim_scope"] == "exact_product_recorded_precedent"
@@ -705,3 +713,80 @@ def test_legacy_leaf_absence_is_visible_but_explicit_empty_is_not_absence(bundle
     save_json(run / "routes.json", {"routes": [route]})
     with pytest.raises(r.RecordError, match="saved_blocks"):
         report.match_saved_route(bundle, run, "synthetic-test-route")
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), (1, 2), {1: "numeric-key"}])
+def test_context_requires_finite_typed_json_even_without_match(bundle, value):
+    with pytest.raises(r.RecordError, match="json_"):
+        r.match_product(bundle, "CCC", context={"invalid": value})
+
+
+def test_canonical_json_comparison_preserves_types():
+    assert not r.same_json({"a": False}, {"a": 0})
+    assert not r.same_json({"a": 0}, {"a": 0.0})
+    assert r.same_json({"a": 1, "b": [False]}, {"b": [False], "a": 1})
+
+
+def test_normalized_limits_reject_equal_numeric_coercion(bundle, tmp_path):
+    path = edit_bundle(tmp_path, bundle, lambda b: b["limits"].update(parser_cpu_seconds=25.0))
+    with pytest.raises(r.RecordError, match="derived_bundle_mismatch"):
+        r.load_bundle(path)
+
+
+@pytest.mark.parametrize(
+    "mapped,unmapped",
+    [
+        ("[CH3:1][C@H]([CH3:2])O", "CC(C)O"),
+        ("[CH3:1]/C=C(/[CH3:2])C", "CC=C(C)C"),
+        ("[CH3:1][C@H](F)O", "C[C@H](F)O"),
+        ("[13CH3:1][C@H]([CH3:2])O", "[13CH3][C@H](C)O"),
+    ],
+)
+def test_map_removal_stereo_key_is_stable_and_material_specific(mapped, unmapped):
+    key = r.smiles_identity(mapped)["key"]
+    assert key is not None
+    assert key == r.smiles_identity(unmapped)["key"]
+    assert key == r.smiles_identity(key)["key"]
+
+
+def test_raw_backed_map_removal_matches_concrete_achiral_product(source, tmp_path):
+    def mutate(message):
+        product = message.outcomes[0].products[1]
+        product.ClearField("identifiers")
+        identifier = product.identifiers.add()
+        identifier.type = (
+            identifier.DESCRIPTOR.fields_by_name["type"].enum_type.values_by_name["SMILES"].number
+        )
+        identifier.value = "[CH3:1][C@H]([CH3:2])O"
+
+    target = synthetic_source(tmp_path, source, mutate)
+    path = tmp_path / "bundle"
+    r.import_snapshot(target, path)
+    outcome = r.match_product(path, "CC(C)O")["result"]
+    assert len(outcome["matches"]) == 1
+    assert outcome["matches"][0]["product_identity"]["key"] == "CC(C)O"
+
+
+def test_bundle_notice_uses_this_declared_snapshot_not_example(source, tmp_path):
+    def metadata(snapshot):
+        snapshot["data_revision"] = "1" * 40
+        snapshot["source_metadata"] = {
+            "license": "CC-BY-SA-4.0",
+            "attribution": "SYNTHETIC TEST AUTHOR",
+            "synthetic_test_only": True,
+            "source_url": "urn:test-only:synthetic",
+        }
+
+    target = synthetic_source(tmp_path, source, lambda m: None, mutate_snapshot=metadata)
+    path = tmp_path / "bundle"
+    r.import_snapshot(target, path)
+    notice = (path / "NOTICE.txt").read_text()
+    assert "SYNTHETIC TEST AUTHOR" in notice and "1" * 40 in notice
+    assert "synthetic_test_only" in notice and "not authenticated" in notice
+    assert "Eric Isbrandt" not in notice
+    assert "704870642e5c93a141e6666436bc14a9b5f880ed" not in notice
+    assert r.SCHEMA_REVISION in notice and "Apache-2.0" in notice
+    r.load_bundle(path)
+    (path / "NOTICE.txt").write_text("forged attribution")
+    with pytest.raises(r.RecordError, match="derived_notice_mismatch"):
+        r.load_bundle(path)

@@ -77,7 +77,8 @@ For a product lookup the file contains one context object; for a saved route it
 maps reaction node IDs to context objects. `record_context(record, outcome_index)`
 returns the exact source protocol view: all reported inputs/preparations,
 amounts/order, setup, conditions, notes, workups, outcome time and analyses.
-Equality is deliberately strict; a temperature-only object is partial. Even
+Equality preserves finite JSON types: false, 0 and 0.0 differ; a temperature-only
+object is partial. Even
 matching recorded context does not establish that every relevant physical
 variable was reported. Unknown roles, quantities, identities or source context
 prevent the stronger reported-reaction label.
@@ -114,7 +115,10 @@ The bundle preserves original snapshot bytes, dataset, descriptor, each selected
 raw protobuf, derived JSON, presence metadata and wire floats. Loading rechecks
 dataset/descriptor/record hashes, coordinates, IDs and every normalized record.
 An edited identity, role, measurement or provenance projection must equal a fresh
-raw derivation or reject. Rewritten coherent source snapshots can pass internal
+raw derivation with identical JSON types or reject. Each bundle generates its
+own NOTICE from the snapshot's declared revision, source, attribution and
+synthetic/adaptation metadata; it does not inherit example-specific attribution.
+Loading also rechecks that notice. Rewritten coherent source snapshots can pass internal
 consistency but cannot acquire an externally trusted receipt automatically.
 Importer runtime metadata is explicitly historical reported metadata; new replay
 records its own executable, module paths, versions, source hashes and child
@@ -137,7 +141,9 @@ change shared process/environment limits. No downloaded Python is executed.
 
 - Compare full isomeric materials, preserving isotope, charge, disconnected
   components and repeated reactant instances. Only atom maps are cleared in
-  comparison copies. No family/scaffold/tautomer matching or fragment selection.
+  comparison copies, followed by private stereo cleanup and stable round-trip
+  validation so map-distinguished achiral centers do not retain stale tags.
+  No family/scaffold/tautomer matching or fragment selection.
 - Unspecified potential stereo, nonabsolute enhanced stereo, unsupported axial
   stereo, conflicting SMILES/MOLBLOCK/CXSMILES or unsupported identity-bearing
   identifiers (including InChI/XYZ/sequence) abstain. Names/accessions are retained
