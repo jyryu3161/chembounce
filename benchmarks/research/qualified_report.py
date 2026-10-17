@@ -162,18 +162,42 @@ def render_report(plan_bytes: bytes, collection_bytes: bytes, *, collection_sha2
     parts.extend(
         [
             "<h2>Observed attempt costs</h2><p>Known values include unsuccessful attempts. "
-            "Coverage is observed / planned attempts for each field. Unknown GPU time or memory is "
+            "Numeric field coverage is record availability, not complete resource measurement: "
+            "observed / planned attempts for each field. Unknown GPU time or memory is "
             "not zero. Time sums and memory maxima summarize only observed values; incomplete coverage "
             "does not estimate missing costs. CPU and GPU time are distinct resources. Summed attempt "
             "wall time is not campaign duration; memory maxima are not sums or a combined process peak.</p>",
             "<p>Separate administrative setup, setup allocation shares, and campaign wall-through-checkpoint "
             "are not included here: those auxiliary fields are outside this analyzer's validation. "
             "No setup shares are added to attempt costs. These tables are not total campaign resource accounting.</p>",
+            "<p><strong>Current runner reference, not an inferred policy for this snapshot:</strong> "
+            "qualified_runner records sampled child-process-tree CPU lower bounds and maximum sampled "
+            "child-tree RSS across phases, excluding parent/collector CPU and RSS from those fields. "
+            "Historical or arbitrary collections may use different scopes; consult their captured policy below. "
+            "The combined parent+child memory peak remains unknown in this view; separate maxima are never summed.</p>",
         ]
+    )
+    policy = collection.get("measurement_policy")
+    policy = policy if isinstance(policy, dict) else {}
+    policy_fields = dict.fromkeys((*analysis.COSTS, "parent_memory", *policy))
+    parts.append(
+        _table(
+            ["Field", "Captured policy (recorded provenance; not analyzer-validated)"],
+            [
+                [
+                    field,
+                    policy[field]
+                    if isinstance(policy.get(field), str) and policy[field].strip()
+                    else "unavailable (missing or non-text policy)",
+                ]
+                for field in policy_fields
+            ],
+            "Captured measurement policy; no scope is inferred for unavailable fields",
+        )
     )
     parts.append(
         _table(
-            ["Method", "Field", "Aggregation", "Known value", "Observed / planned", "Coverage"],
+            ["Method", "Field", "Aggregation", "Known value", "Observed / planned", "Numeric field coverage"],
             [
                 [
                     method,
@@ -181,7 +205,7 @@ def render_report(plan_bytes: bytes, collection_bytes: bytes, *, collection_sha2
                     data["costs"][field]["aggregation"],
                     _number(data["costs"][field]["observed_value"]),
                     f"{data['costs'][field]['observed_attempts']} / {data['planned_attempts']}",
-                    "complete" if data["costs"][field]["complete"] else "incomplete",
+                    "all slots numeric" if data["costs"][field]["complete"] else "partial or unavailable",
                 ]
                 for method, data in report["methods"].items()
                 for field in analysis.COSTS

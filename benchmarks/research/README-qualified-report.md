@@ -48,6 +48,16 @@ cost sums are neither total campaign costs nor campaign duration. Conditional
 similarity/margin summaries include all selected outputs, including duplicate
 families, and are not planned-attempt or equal-target distributions.
 
+Numeric field coverage means record availability, not complete resource
+measurement. The captured `measurement_policy` appears beside the cost table as
+escaped recorded provenance, distinct from analyzer-validated arithmetic. Missing,
+empty, or non-text policies are unavailable; no scope is inferred for them. A
+separately labeled current-runner reference explains its sampled child-process-tree
+CPU lower bounds and sampled child-tree RSS, excluding parent/collector CPU and
+RSS. That reference is not automatically applied to historical collections. The
+combined parent+child memory peak remains unknown; separate maxima are never
+summed. No sidecars or new measurements are used.
+
 Input byte digests, canonical JSON bindings, and scope are in collapsible details.
 These are collector-consistent computational outcomes, not fresh chemical
 validation, activity, successful synthesis, or experimental evidence. The view

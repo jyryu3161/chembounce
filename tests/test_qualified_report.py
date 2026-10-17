@@ -70,10 +70,10 @@ def test_partial_hierarchy_status_costs_and_overlapping_failures():
     assert ["a", "1", "1", "1", "0", "0", "0", "3", "0", "3"] in rows
     assert ["route", "3", "1"] in rows
     assert ["route", "budget", "2"] in rows
-    assert ["a", "wall_seconds", "sum", "27", "3 / 6", "incomplete"] in rows
-    assert ["a", "peak_rss_mb", "maximum", "120", "3 / 6", "incomplete"] in rows
-    assert ["a", "gpu_seconds", "sum", "unknown", "0 / 6", "incomplete"] in rows
-    assert ["a", "peak_gpu_mb", "maximum", "unknown", "0 / 6", "incomplete"] in rows
+    assert ["a", "wall_seconds", "sum", "27", "3 / 6", "partial or unavailable"] in rows
+    assert ["a", "peak_rss_mb", "maximum", "120", "3 / 6", "partial or unavailable"] in rows
+    assert ["a", "gpu_seconds", "sum", "unknown", "0 / 6", "partial or unavailable"] in rows
+    assert ["a", "peak_gpu_mb", "maximum", "unknown", "0 / 6", "partial or unavailable"] in rows
     assert ["a", "metrics", "hit_shape", "3", "0.7", "0.7", "0.7"] in rows
     assert ["b", "metrics", "hit_shape", "0", "unavailable", "unavailable", "unavailable"] in rows
     assert ["a", "A", "q2", "42", "recorded", "no_candidates", "0", "0", "0", "none recorded"] in rows
@@ -131,6 +131,57 @@ def test_escape_artifact_strings_and_no_external_assets():
     assert not any(tag in {"script", "img", "link", "iframe", "a"} for tag, _ in parsed.tags)
     assert not any("src" in attrs or "href" in attrs for _, attrs in parsed.tags)
     assert "default-src 'none'" in html
+
+
+def test_captured_policy_keeps_sampled_scope_separate_from_numeric_coverage():
+    p = plan()
+    p.update(methods=["a"], queries=p["queries"][:1], seeds=[42])
+    c = collection(p, [row(p)])
+    c["measurement_policy"] = {
+        "cpu_seconds": "sum of phase sampled process-tree CPU lower bounds; collector CPU excluded",
+        "peak_rss_mb": "maximum sampled aggregate process-tree RSS across phases; collector RSS excluded",
+        "parent_memory": "Simultaneous parent+child peak unmeasured; separate maxima are not summed.",
+    }
+    html = render(p, c)
+    rows = Tables(html).rows
+    for field, policy in c["measurement_policy"].items():
+        assert [field, policy] in rows
+    assert ["a", "cpu_seconds", "sum", "8", "1 / 1", "all slots numeric"] in rows
+    assert ["a", "peak_rss_mb", "maximum", "100", "1 / 1", "all slots numeric"] in rows
+    assert "record availability, not complete resource measurement" in html
+    assert "recorded provenance; not analyzer-validated" in html
+    assert "sampled child-process-tree CPU lower bounds" in html
+    assert "excluding parent/collector CPU and RSS" in html
+    assert "combined parent+child memory peak remains unknown" in html
+    assert html.index("Captured measurement policy") < html.index("Collector-reported attempt measurements")
+
+
+@pytest.mark.parametrize("policy", [None, {}, [], "unknown", {"cpu_seconds": None, "peak_rss_mb": 1}])
+def test_missing_or_non_text_policy_does_not_infer_scope(policy):
+    p = plan()
+    c = collection(p, [row(p)])
+    if policy is not None:
+        c["measurement_policy"] = policy
+    html = render(p, c)
+    rows = Tables(html).rows
+    for field in (*report.analysis.COSTS, "parent_memory"):
+        assert [field, "unavailable (missing or non-text policy)"] in rows
+    assert "not an inferred policy for this snapshot" in html
+    assert "no scope is inferred for unavailable fields" in html
+
+
+def test_arbitrary_policy_is_preserved_and_escaped_without_reinterpretation():
+    p = plan()
+    c = collection(p, [])
+    attack = '<img src="https://evil.invalid" onerror="alert(1)">'
+    c["measurement_policy"] = {"cpu_seconds": "legacy scope unknown", attack: attack}
+    html = render(p, c)
+    parsed = Tables(html)
+    assert ["cpu_seconds", "legacy scope unknown"] in parsed.rows
+    assert [attack, attack] in parsed.rows
+    assert attack not in html
+    assert not any(tag in {"script", "img", "iframe", "link"} for tag, _ in parsed.tags)
+    assert not any("src" in attrs or "onerror" in attrs for _, attrs in parsed.tags)
 
 
 @pytest.mark.parametrize(

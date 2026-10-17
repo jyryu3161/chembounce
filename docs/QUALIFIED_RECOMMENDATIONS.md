@@ -890,6 +890,11 @@ These distinct RSS maxima are never summed into a purported simultaneous peak;
 combined parent-plus-child peak memory remains unknown. Total campaign wall time
 through checkpoint includes setup and attempts.
 
+For offline review of a captured plan and externally pinned collection, see the
+[qualified benchmark snapshot report](../benchmarks/research/README-qualified-report.md).
+It preserves planned denominators and captured measurement scope without reading
+live campaign state or asserting operational completion.
+
 Current generation supplies at most twelve raw designs for three eligible
 inputs. CReM and Mol2Mol retain their complete fresh, in-budget raw pools (at
 most 256) and select twelve by their own count-Morgan or NLL ordering. The
