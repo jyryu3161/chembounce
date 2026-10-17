@@ -500,3 +500,10 @@ def validate_selected(info, aligned, similarity):
         raise ValueError("Proposal does not cover every mandatory landmark")
     if entry["shape"] != info["hit"]["shape"] or entry["pharmacophore"] != info["hit"]["pharmacophore"]:
         raise ValueError("Selected proposal metric association mismatch")
+    witness = info["similarity_constraints"]["witness"]
+    if (
+        type(entry["polar_recall"]) is not type(witness["polar"]["recall"])
+        or entry["polar_recall"] != witness["polar"]["recall"]
+        or entry["witness_reasons"] != witness["reasons"]
+    ):
+        raise ValueError("Selected proposal polar/reason association mismatch")

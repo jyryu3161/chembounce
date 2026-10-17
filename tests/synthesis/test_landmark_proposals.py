@@ -457,3 +457,26 @@ def test_same_bound_reaches_workflow_screening_config(fake_api):
     b = scorer.configured_constraints(resolved, FIXTURES[2]["smiles"])
     assert b.policy == bound(FIXTURES[2]).policy
     assert resolved["similarity_constraints"]["landmark_pose_proposals"] is True
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("polar_recall", 0.0),
+        ("polar_recall", None),
+        ("polar_recall", True),
+        ("witness_reasons", ["required_landmark_joint_assignment_infeasible"]),
+    ],
+)
+def test_selected_entry_joint_witness_contradiction_rejected(monkeypatch, fake_api, field, value):
+    b, _, _ = controlled_scorer(monkeypatch, fake_api)
+    info, aligned, _ = scorer.score_candidate(b.hit, b.hit, b.hit, similarity=b)
+    lp.validate_selected(info, aligned, b)
+    changed = copy.deepcopy(info)
+    origin = changed["hit"]["landmark_proposal"]
+    entry = changed["pose_selection"]["landmark_pose_proposals"]["pairs"][origin["pair_index"]]["proposals"][
+        origin["proposal_index"]
+    ]
+    entry[field] = value
+    with pytest.raises(ValueError, match="polar/reason association"):
+        lp.validate_selected(changed, aligned, b)
