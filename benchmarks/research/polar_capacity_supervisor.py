@@ -361,10 +361,23 @@ def supervise(
                         )
                         if observation["rss_bytes"] > memory_bytes:
                             reason = "memory_limit"
+                adopted_before = len(receipt["resources"]["adopted_child_usage"])
                 current_usage = reap_owned(process, records, receipt["resources"])
                 if current_usage is not None:
                     usage = current_usage
-                records = owned_snapshot(leader, known)
+                # One full ownership scan per healthy live poll is sufficient;
+                # new descendants are observed on the next poll. Reaping and
+                # every exit/error/deadline boundary still get a fresh scan.
+                now = clock()
+                if (
+                    process.returncode is not None
+                    or len(receipt["resources"]["adopted_child_usage"]) != adopted_before
+                    or reason is not None
+                    or interrupted
+                    or terminated_at is not None
+                    or now - t0 >= watchdog
+                ):
+                    records = owned_snapshot(leader, known)
                 live = {p: i for p, i in records.items() if i["state"] != "Z"}
                 # /proc scans and RSS sampling can overrun a polling interval.
                 # Never make escalation decisions with the pre-scan timestamp.
@@ -378,13 +391,15 @@ def supervise(
                     reason = "owned_descendants_after_exit"
                 if reason and terminated_at is None:
                     terminated_at = now
-                    stop(live, signal.SIGTERM)
+                    stop(owned_snapshot(leader, known), signal.SIGTERM)
+                    now = clock()
                 if terminated_at is not None and now >= min(
                     terminated_at + max(0, grace - 0.1), t0 + watchdog + max(0, grace - 0.1)
                 ):
                     if killed_at is None:
                         killed_at = now
-                        stop(live, signal.SIGKILL)
+                        stop(owned_snapshot(leader, known), signal.SIGKILL)
+                        now = clock()
                     # Bounded reaping only; uninterruptible work is unsafe, not success.
                     if now >= t0 + watchdog + grace or now - killed_at >= 0.2:
                         break
