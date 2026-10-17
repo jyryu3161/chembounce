@@ -585,11 +585,33 @@ def test_actual_supervisor_setup_delay_cannot_launch_after_allocation(tmp_path, 
     assert d.read(owner / "owner-receipt.json")["status"] == "allocation_exceeded"
 
 
-def test_actual_supervisor_inherits_absolute_watchdog_and_cleanup(tmp_path):
+def test_actual_supervisor_inherits_absolute_watchdog_and_cleanup(tmp_path, monkeypatch):
     ready = tmp_path / "ready"
     script = "import signal,time,pathlib,sys; signal.signal(signal.SIGTERM,signal.SIG_IGN); pathlib.Path(sys.argv[1]).write_text('ready'); time.sleep(10)"
-    ticks = iter([329.9, 330.0, 359.9, 359.9, 360.0, 360.0])  # loop reads before AND after /proc sampling
+    # Time advances at observable events, not with each clock read. Extra
+    # deadline rechecks must not move the fixture past the intended boundary.
+    now = [329.9]
+    signals = []
+    snapshot, signal_owned = s.owned_snapshot, s.signal_owned
     initial = True
+    real_deadline = time.monotonic() + 5
+
+    def scanned(leader, known):
+        result = snapshot(leader, known)
+        if now[0] == 329.9:
+            now[0] = 330.0  # first /proc scan crosses the absolute watchdog
+        return result
+
+    def signaled(entry, number):
+        signals.append((number, now[0]))
+        signal_owned(entry, number)  # actual pidfd signal to the owned child
+        if number == s.signal.SIGTERM:
+            now[0] = 359.9
+        elif number == s.signal.SIGKILL:
+            now[0] = 360.0
+
+    monkeypatch.setattr(s, "owned_snapshot", scanned)
+    monkeypatch.setattr(s, "signal_owned", signaled)
 
     def actual_ticks():
         nonlocal initial
@@ -600,7 +622,8 @@ def test_actual_supervisor_inherits_absolute_watchdog_and_cleanup(tmp_path):
                 time.sleep(0.01)
             assert ready.exists(), "controlled child did not initialize"
         time.sleep(0.03)  # let real TERM/KILL/reap operations progress
-        return next(ticks, 360.0)
+        assert time.monotonic() < real_deadline, "controlled watchdog did not make progress"
+        return now[0]
 
     receipt = s.supervise(
         [sys.executable, "-c", script, str(ready)],
@@ -617,6 +640,7 @@ def test_actual_supervisor_inherits_absolute_watchdog_and_cleanup(tmp_path):
     assert receipt["started_monotonic"] == 0.0
     assert receipt["cleanup"]["term_monotonic"] == 330.0
     assert receipt["cleanup"]["kill_monotonic"] == 359.9
+    assert signals == [(s.signal.SIGTERM, 330.0), (s.signal.SIGKILL, 359.9)]
     assert receipt["wall_seconds"] == 360.0
     assert receipt["cleanup"]["complete"] is True and receipt["cleanup"]["remaining"] == []
 
