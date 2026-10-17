@@ -105,6 +105,9 @@ LANDMARK_DECLARATION = {
 LANDMARK_FILE = "chembounce_synthesis/landmark_proposals.py"
 
 ENGINEERING_SCHEMA = "qualified-selective-engineering-profile-v2"
+SCREENING_ALLOCATION_INHERIT = "inherit-v1"
+HIT_SCREENING_ALLOCATION = "original-hit-tanimoto-distinct-first-v1"
+
 SELECTIVE_KERNEL_FILES = ("selective_scoring.py", "similarity_constraints.py")
 SELECTIVE_CONSTRAINTS = {
     "version": "selective-similarity-constraints-v2",
@@ -423,6 +426,12 @@ def profile_provenance(config):
         "refinement.max_total_conformers",
     }
     numerical_changes = {key: value for key, value in differences.items() if key not in resource_keys}
+    screening_policy = config.get("screening_allocation_policy", SCREENING_ALLOCATION_INHERIT)
+    if screening_policy != SCREENING_ALLOCATION_INHERIT:
+        numerical_changes["screening_allocation_policy"] = {
+            "profile": SCREENING_ALLOCATION_INHERIT,
+            "effective": screening_policy,
+        }
     if config.get("reference_sdf"):
         numerical_changes["reference_sdf"] = {"profile": None, "effective": config["reference_sdf"]}
     if config.get("pocket"):
@@ -487,6 +496,7 @@ def profile_provenance(config):
         or (diagnostics and diagnostics["enabled"] and diagnostic_mismatches)
         else ("engineering_policy_matched" if engineering else "development_protocol_matched"),
         "artifact_sha256": PROFILE_SHA256[name],
+        "screening_allocation_policy": screening_policy,
         **(
             {
                 "optional_landmark_proposals": {

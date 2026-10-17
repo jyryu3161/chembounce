@@ -34,6 +34,7 @@ from .identity import chemical_identity, classify_change, scaffold_family_key
 from . import identity as identity_module
 from .pocket import constraints_from_config, validate_pocket_config
 from .polar_capacity import PolarCapacity
+from .profiles import HIT_SCREENING_ALLOCATION, SCREENING_ALLOCATION_INHERIT
 from .protocols import apply_synthesis_protocol, protocol_provenance
 from .qualification import decide, effective_policy, validate_result
 from .reactions import Rules
@@ -183,6 +184,7 @@ def _config(config):
         "refinement",
         "carry_forward",
         "allocation_policy",
+        "screening_allocation_policy",
         "synthesis_evidence",
         "pocket",
         "recommendation",
@@ -221,6 +223,11 @@ def _config(config):
         "allocation_policy", "balanced"
     ) not in {"balanced", "encounter"}:
         raise ValueError("allocation_policy must be balanced or encounter")
+    if config.get("screening_allocation_policy", SCREENING_ALLOCATION_INHERIT) not in (
+        SCREENING_ALLOCATION_INHERIT,
+        HIT_SCREENING_ALLOCATION,
+    ):
+        raise ValueError("Unknown screening_allocation_policy")
     SearchLimits(**config.get("search", {}))
     ConformerSettings(**config.get("conformers", {}))
     RefinementSettings(**config.get("refinement", {}))
@@ -822,6 +829,35 @@ def _candidate_order(candidates, policy):
     return ordered
 
 
+def _screening_order(ordered, policy, route_records):
+    """Reorder evidence-passing groups only; retain every product/design group.
+
+    No score/pose is shared across designs. The default preserves the entire
+    existing allocation (including carried priority). The opt-in ranks globally,
+    so carried priority applies to evidence allocation, not its 3D ordering.
+    """
+    if policy == SCREENING_ALLOCATION_INHERIT:
+        return ordered, set()
+    positions = {r["route_id"]: i for i, r in enumerate(route_records)}
+    eligible = [e for e in ordered if any(r.get("eligible_for_scoring") for r in e["records"])]
+    ranked = sorted(
+        eligible,
+        key=lambda e: (
+            -e["tanimoto"]["hit_tanimoto"],
+            min(positions[r["route_id"]] for r in e["records"] if r.get("eligible_for_scoring")),
+            e["product"],
+        ),
+    )
+    first, deferred, seen = [], [], set()
+    for entry in ranked:
+        if entry["product"] in seen:
+            deferred.append(entry)
+        else:
+            first.append(entry)
+            seen.add(entry["product"])
+    return first + deferred, {(e["product"], e["design"]) for e in deferred}
+
+
 def _family_groups(rows):
     groups = {}
     for row in rows:
@@ -937,6 +973,10 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         if scoring_mode not in {"3d", "2d"}:
             raise ValueError("scoring_mode must be 3d or 2d")
         config = _resolve_paths(_config(config), Path.cwd())
+        screening_policy = config.get("screening_allocation_policy", SCREENING_ALLOCATION_INHERIT)
+        if scoring_mode != "3d" and screening_policy != SCREENING_ALLOCATION_INHERIT:
+            raise ValueError("Experimental screening_allocation_policy requires3d scoring")
+        summary["screening_allocation_policy"] = screening_policy
         policy = effective_policy(config)
         qualified = policy["mode"] == "qualified"
         ranking_policy = _ranking_policy(config)
@@ -1307,8 +1347,18 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         manifest["catalog_import"] = catalog.import_provenance if catalog is not None else None
         manifest["carry_forward"] = carry_sources
         manifest["effective_search"], manifest["effective_conformers"] = asdict(limits), asdict(settings)
+        manifest["screening_allocation_policy"] = {
+            "name": screening_policy,
+            "stage": "After unchanged independent evidence queue",
+            "ordering": "Inherit allocation_policy and carried priority"
+            if screening_policy == SCREENING_ALLOCATION_INHERIT
+            else "Global original-hit Tanimoto descending; first eligible route encounter then product tie; distinct exact products before deferred design alternatives",
+            "budget_unit": "Product/design screening attempts, including preflight failures; not distinct molecules",
+            "design_semantics": "All eligible route/design associations retained; each attempted design independently scored/validated; deferred unattempted associations remain unscored",
+        }
         manifest["effective_workflow"] = {
             "allocation_policy": config.get("allocation_policy", "balanced"),
+            "screening_allocation_policy": screening_policy,
             "mode": config.get("mode", "hop"),
             "core_smiles": config.get("core_smiles"),
             "preserve_design_scaffold": config.get("preserve_design_scaffold", False),
@@ -1650,7 +1700,19 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 )
             if pending_routes:
                 evidence_queue.append((entry, pending_routes))
-        for entry in ordered:
+        screening_order, deferred_designs = _screening_order(ordered, screening_policy, route_records)
+        eligible_entries = [e for e in ordered if any(r.get("eligible_for_scoring") for r in e["records"])]
+        screening_counts = summary["screening_allocation_counts"] = {
+            "eligible_product_design_groups": len(eligible_entries),
+            "eligible_distinct_products": len({e["product"] for e in eligible_entries}),
+            "deferred_design_groups": len(deferred_designs),
+            "screening_attempts": 0,
+            "distinct_products_attempted": 0,
+            "deferred_design_attempts": 0,
+            "scorer_invocations": 0,
+        }
+        attempted_products = set()
+        for entry in screening_order:
             product, design = entry["product"], entry["design"]
             records = [record for record in entry["records"] if record.get("eligible_for_scoring")]
             tanimoto = entry["tanimoto"]
@@ -1670,11 +1732,24 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     summary["limits_reached"].append("max_scored_products")
                 continue
             summary["scored_products"] += 1
+            screening_counts["screening_attempts"] += 1
+            attempted_products.add(product)
+            screening_counts["distinct_products_attempted"] = len(attempted_products)
+            screening_counts["deferred_design_attempts"] += int((product, design) in deferred_designs)
             summary["screening_allocation"].append(
                 {
                     "product": product,
                     "design": design,
                     "route_ids": [record["route_id"] for record in records],
+                    **(
+                        {
+                            "allocation_pass": "deferred_design"
+                            if (product, design) in deferred_designs
+                            else "distinct_product"
+                        }
+                        if screening_policy != SCREENING_ALLOCATION_INHERIT
+                        else {}
+                    ),
                 }
             )
             if scoring_mode == "3d":
@@ -1683,6 +1758,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     if similarity is not None:
                         similarity.preflight_candidate(product)
                         phase = "scoring"
+                        screening_counts["scorer_invocations"] += 1
                         result = selective_scoring.score_candidate(
                             product,
                             hit,
@@ -1704,6 +1780,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                             result, product, settings, hit=hit, design=design, similarity=similarity
                         )
                     else:
+                        screening_counts["scorer_invocations"] += 1
                         result = score_candidate(product, hit, design, settings, hit_pose, **scoring_options)
                     if qualified and similarity is None:
                         validate_result(result, product, settings, hit=hit, design=design)

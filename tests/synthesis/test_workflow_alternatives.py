@@ -36,7 +36,10 @@ def fallback_config(tmp_path, assets, proposal):
     }
 
 
-def test_failed_primary_design_cannot_erase_refinable_alternative(tmp_path, assets, proposal, monkeypatch):
+@pytest.mark.parametrize("screening_policy", ["inherit-v1", workflow.HIT_SCREENING_ALLOCATION])
+def test_failed_primary_design_cannot_erase_refinable_alternative(
+    tmp_path, assets, proposal, monkeypatch, screening_policy
+):
     original_screen, original_refine = workflow.score_candidate, workflow.refine_candidate
     seen = []
 
@@ -54,7 +57,9 @@ def test_failed_primary_design_cannot_erase_refinable_alternative(tmp_path, asse
     monkeypatch.setattr(workflow, "score_candidate", screen)
     monkeypatch.setattr(workflow, "refine_candidate", refine)
     out = tmp_path / "out"
-    rows = run(HIT, [DESIGN, OTHER], fallback_config(tmp_path, assets, proposal), out)
+    config = fallback_config(tmp_path, assets, proposal)
+    config["screening_allocation_policy"] = screening_policy
+    rows = run(HIT, [DESIGN, OTHER], config, out)
     assert seen == [DESIGN, OTHER]
     assert len(rows) == 1 and rows[0]["design"] == OTHER
     records = json.loads((out / "routes.json").read_text())["routes"]

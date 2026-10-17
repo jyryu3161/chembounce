@@ -549,6 +549,35 @@ are attempted deterministically within the same budget. Final deduplication
 selects one accepted exact state/design per chemical family; it does not erase
 alternatives before they can be tested.
 
+The optional `screening_allocation_policy` separates 3D screening order from
+`allocation_policy`. Its default, `"inherit-v1"`, preserves the existing balanced
+or encounter order and carried-route priority exactly. To try the experimental
+original-hit similarity baseline, set:
+
+```json
+{"screening_allocation_policy": "original-hit-tanimoto-distinct-first-v1"}
+```
+
+This option reorders only evidence-passing product/design groups **after** the
+unchanged independent-evidence queue. It ranks by original-hit Morgan Tanimoto,
+descending, with ties resolved by first eligible route encounter and then exact
+product. One group per distinct exact product is visited first; remaining design
+alternatives follow in the same deterministic rank order. Every eligible route
+association remains recorded. Each attempted design is scored and validated
+independently; unattempted alternatives remain unscored. Carried priority still
+applies to evidence allocation, but the experimental screening order is global.
+It does not change refinement, acceptance floors, or final route-support checks.
+
+`max_scored_products` retains its existing product/design screening-attempt unit,
+including preflight failures; it is not a distinct-molecule or equal-time quota.
+Summary counters distinguish attempts, distinct products, deferred design attempts
+and actual scorer invocations. The summary and manifest name the screening policy
+separately from `allocation_policy`. This option requires 3D scoring and is a
+material `custom_unvalidated` override for existing recommendation profiles.
+V2–V5 artifact bytes are unchanged. Greater 2D similarity can reduce scaffold
+diversity; this baseline has no default-superiority or efficacy claim. A future
+profile release and prospective end-to-end evaluation are separate work.
+
 Each refinement stage evaluates all requested seeds at one ensemble size. Every
 seed must succeed before the stage can supply a result. Candidate and reference
 ensembles are generated independently per seed; a supplied hit `reference_sdf`
