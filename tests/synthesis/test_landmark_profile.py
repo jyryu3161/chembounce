@@ -60,7 +60,23 @@ def test_packaged_v5_exact_policy_runtime_and_history():
     assert result["status"] == (
         "custom_unvalidated" if result["runtime_source_mismatches"] else "engineering_policy_matched"
     )
-    assert not result["optional_diagnostics"]["rejected_pose_diagnostics"]["source_mismatches"]
+    diagnostic = result["optional_diagnostics"]["rejected_pose_diagnostics"]
+    # Pure route-computation reuse changes workflow source without rebinding
+    # the historical optional diagnostic declaration or numerical policy.
+    key = "chembounce_synthesis/workflow.py"
+    assert diagnostic["source_mismatches"] == {
+        key: {
+            "declared": diagnostic["source_sha256"][key],
+            "current": diagnostic["current_source_sha256"][key],
+        }
+    }
+    enabled = profiles.profile_provenance(config(rejected_pose_diagnostics=True))
+    assert enabled["status"] == "custom_unvalidated"
+    assert enabled["runtime_source_mismatches"] == result["runtime_source_mismatches"]
+    assert (
+        enabled["optional_diagnostics"]["rejected_pose_diagnostics"]["source_mismatches"]
+        == diagnostic["source_mismatches"]
+    )
     assert result["optional_landmark_proposals"]["enabled"] is False
 
 

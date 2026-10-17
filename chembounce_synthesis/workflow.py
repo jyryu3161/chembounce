@@ -8,7 +8,7 @@ import logging
 import math
 import subprocess
 import time
-from collections import deque
+from collections import OrderedDict, deque
 from contextlib import ExitStack
 from dataclasses import asdict, replace
 from pathlib import Path
@@ -98,6 +98,30 @@ SELECTIVE_COLUMNS = [
 
 def scaffold(smiles, *, isomeric=True):
     return Chem.MolToSmiles(MurckoScaffold.GetScaffoldForMol(molecule(smiles)), isomericSmiles=isomeric)
+
+
+class _ProductProperties:
+    """Run-owned bounded LRU of pure descriptors for validated exact molecules.
+
+    Never cache admission decisions: constraints, deadlines, identity evidence
+    and capacity checks must still run. Copies isolate callers from cached data.
+    """
+
+    def __init__(self, calculate, maxsize):
+        positive(maxsize, "route_search_cache_size")
+        self.calculate, self.maxsize = calculate, maxsize
+        self.values = OrderedDict()
+
+    def __call__(self, mol):
+        # The caller has already validated this molecule. Isomeric SMILES keeps
+        # stereochemistry, isotopes, charge and tautomer state in separate keys.
+        key = Chem.MolToSmiles(mol, isomericSmiles=True)
+        if key not in self.values:
+            self.values[key] = copy.deepcopy(self.calculate(mol))
+            if len(self.values) > self.maxsize:
+                self.values.popitem(last=False)
+        self.values.move_to_end(key)
+        return copy.deepcopy(self.values[key])
 
 
 def check_constraints(product, hit, design, mode="hop", core_smiles=None, preserve_design_scaffold=False):
@@ -1357,6 +1381,10 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         )
         from utils import _get_molecular_prop_extd_, determ_props
 
+        product_properties = _ProductProperties(
+            _get_molecular_prop_extd_, config.get("route_search_cache_size", 4096)
+        )
+
         def check_final_product(product, design, *, retain_identity=False):
             change = (_check_constraints if retain_identity else check_constraints)(
                 product,
@@ -1373,7 +1401,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 _check_stereo(mol, ConformerSettings())
             if polar_capacity is not None:
                 polar_capacity.require(product)
-            props = _get_molecular_prop_extd_(mol)
+            props = product_properties(mol)
             accepted, reasons = determ_props(
                 props, config.get("property_thresholds", {}), w_all_failed_reason=True
             )
