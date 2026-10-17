@@ -14,6 +14,7 @@ from benchmarks.research.protocol import digest, write_json
 
 ARMS = {"full", "baseline", "crem", "mol2mol", "synllama"}
 PROFILE_PROTOCOLS = ("qualified-benchmark-protocol-v2", "qualified-benchmark-protocol-v3")
+_NATIVE_RESOURCE_OPTIONS = {"output_dir", "seed", "overall_max_n", "scaffold_db_file", "fingerprint_db_file"}
 
 
 def read(path):
@@ -26,13 +27,34 @@ def read(path):
     return json.loads(path.read_text(), parse_constant=invalid)
 
 
+def validate_v3_native_inputs(assets, options):
+    """Full v3 uses pinned DB libraries, never default discovery or replacement libraries.
+
+    Scaffold-only and enabled fingerprint-only inputs are both supported. Inline
+    fragments_DB is bound JSON but is outside this fixed-library contract.
+    """
+    if not isinstance(options, dict):
+        raise ValueError("V3 native generator_options must be an object")
+    if (_NATIVE_RESOURCE_OPTIONS | {"fragments_DB", "replace_scaffold_files"}) & options.keys():
+        raise ValueError("V3 native libraries/resources must use bound DB assets, not generator overrides")
+    use_fingerprints = options.get("use_fingerprint_db", True)
+    if type(use_fingerprints) is not bool:
+        raise ValueError("V3 native use_fingerprint_db must be boolean")
+    if not assets.get("scaffold_db") and not (use_fingerprints and assets.get("fingerprint_db")):
+        raise ValueError("V3 full generation requires a bound scaffold DB or enabled fingerprint DB")
+
+
 def native_designs(request):
+    options = copy.deepcopy(request["settings"].get("generator_options", {}))
+    binding = request.get("benchmark_protocol")
+    if binding is not None:
+        benchmark_profile(binding)
+        if binding["schema"] == "qualified-benchmark-protocol-v3":
+            validate_v3_native_inputs(request["assets"], options)
+    if _NATIVE_RESOURCE_OPTIONS & options.keys():
+        raise ValueError("Native generator resources must come from the frozen request")
     from chembounce import chembounce
 
-    options = copy.deepcopy(request["settings"].get("generator_options", {}))
-    forbidden = {"output_dir", "seed", "overall_max_n", "scaffold_db_file", "fingerprint_db_file"}
-    if forbidden & options.keys():
-        raise ValueError("Native generator resources must come from the frozen request")
     options.update(output_dir=Path(request["output_dir"]) / "designs", seed=request["seed"], overall_max_n=12)
     for asset, option in (("scaffold_db", "scaffold_db_file"), ("fingerprint_db", "fingerprint_db_file")):
         if asset in request["assets"]:
@@ -55,6 +77,15 @@ def native_supply(request, output):
     arm = request["settings"]["arm"]
     if arm == "synllama":
         return [request["query"]["smiles"]], None, {"raw_count": 1, "policy": "direct original hit"}
+    binding = request.get("benchmark_protocol")
+    v3_full = (
+        arm == "full"
+        and isinstance(binding, dict)
+        and binding.get("schema") == "qualified-benchmark-protocol-v3"
+    )
+    if v3_full:
+        benchmark_profile(binding)
+        validate_v3_native_inputs(request["assets"], request["settings"].get("generator_options", {}))
     native = Path(request["native"]["directory"])
     manifest = request["native"]["files_sha256"]
     if not manifest or any(
@@ -65,6 +96,18 @@ def native_supply(request, output):
     prior = read(native / "request.json")
     if prior["query"] != request["query"] or prior["seed"] != request["seed"]:
         raise ValueError("Native supply query/generation-seed mismatch")
+    if v3_full:
+        if (
+            prior.get("benchmark_protocol") != binding
+            or prior.get("settings", {}).get("arm") != "full"
+            or prior["settings"].get("generator_options", {})
+            != request["settings"].get("generator_options", {})
+            or any(
+                prior.get("assets", {}).get(key) != request["assets"].get(key)
+                for key in ("scaffold_db", "fingerprint_db")
+            )
+        ):
+            raise ValueError("V3 native profile/library inputs differ from the common request authority")
     response = read(native / "response.json")
     if arm == "full":
         supply = read(native / "design-pool.json")["designs"]
