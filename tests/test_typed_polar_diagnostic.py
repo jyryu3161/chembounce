@@ -391,6 +391,20 @@ def test_replay_floor_crossing_is_unknown_even_within_scalar_tolerance(monkeypat
     Below -> above differs by2e-13, within scalar tolerance but changes a hard
     decision. These deliberately controlled values are not native drift evidence.
     """
+    def denied_native_call(*args, **kwargs):
+        pytest.fail("Controlled replay boundary must not call native geometry APIs")
+
+    # Satisfy capability checks on minimum RDKit without permitting native work.
+    monkeypatch.setattr(
+        conformers,
+        "rdShapeAlign",
+        SimpleNamespace(
+            AlignMol=denied_native_call,
+            ScoreMol=denied_native_call,
+            ShapeInputOptions=denied_native_call,
+        ),
+    )
+    monkeypatch.setattr(conformers.AllChem, "EmbedMultipleConfs", denied_native_call)
     smiles = "c1ccccc1"
     angles = np.arange(6) * np.pi / 3
     points = np.column_stack((1.4 * np.cos(angles), 1.4 * np.sin(angles), np.zeros(6)))
