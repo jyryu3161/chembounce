@@ -247,10 +247,24 @@ def test_real_fake_child_completion_and_receipt_hash(tmp_path):
     assert r["resources"]["sampled_tree_peak_rss_bytes"] is not None
 
 
-def test_real_fake_timeout_ignoring_term(tmp_path):
+@pytest.mark.parametrize("delay_before_imports", [False, True])
+def test_real_fake_timeout_ignoring_term(tmp_path, monkeypatch, delay_before_imports):
+    real_popen = supervisor.subprocess.Popen
+    parent_term_handler = signal.getsignal(signal.SIGTERM)
+
+    def popen_ignoring_term(argv, **kwargs):
+        argv = list(argv)
+        if delay_before_imports:
+            # Keep the child before the fixture imports beyond the watchdog.
+            argv[-1] = "import time; time.sleep(10)\n" + argv[-1]
+        # SIG_IGN survives exec; Popen's exec handshake completes this child-only
+        # setup before the supervisor can send TERM, even during cold imports.
+        return real_popen(argv, preexec_fn=lambda: signal.signal(signal.SIGTERM, signal.SIG_IGN), **kwargs)
+
+    monkeypatch.setattr(supervisor.subprocess, "Popen", popen_ignoring_term)
     r = launch(
         tmp_path,
-        "signal.signal(signal.SIGTERM,signal.SIG_IGN)\ntime.sleep(10)",
+        "assert signal.getsignal(signal.SIGTERM) == signal.SIG_IGN\ntime.sleep(10)",
         allocation=0.05,
         watchdog=0.1,
         grace=1.0,
@@ -261,6 +275,7 @@ def test_real_fake_timeout_ignoring_term(tmp_path):
     assert r["returncode"] == -signal.SIGKILL
     assert r["resources"]["child_cpu_seconds"] is not None
     assert r["subreaper"]["after"] == r["subreaper"]["before"]
+    assert signal.getsignal(signal.SIGTERM) == parent_term_handler
     # This real scheduling smoke has a declared one-second grace. Precise
     # boundary/race behavior is covered separately with deterministic clocks.
     assert r["wall_seconds"] < 1.6

@@ -464,15 +464,22 @@ def test_common_cleanup_overrun_preserves_costs_and_continues_next_slot(tmp_path
     assert adapter.read(tmp_path / "run/attempt-0000/phases.json")["phases"]["common"]["allocation_exceeded"]
 
 
-@pytest.fixture(params=["v2", "v3"])
+@pytest.fixture(params=["v2", "v3", "v4"])
 def profile_binding(request):
     return selective_binding(request.param)
 
 
 def selective_binding(version="v2"):
-    from chembounce_synthesis.profiles import SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE, PROFILE_SHA256
+    from chembounce_synthesis.profiles import (
+        SELECTIVE_PROFILE,
+        LANDMARK_SELECTIVE_PROFILE,
+        ALLOCATION_SELECTIVE_PROFILE,
+        PROFILE_SHA256,
+    )
 
-    name = {"v2": SELECTIVE_PROFILE, "v3": LANDMARK_SELECTIVE_PROFILE}[version]
+    name = {"v2": SELECTIVE_PROFILE, "v3": LANDMARK_SELECTIVE_PROFILE, "v4": ALLOCATION_SELECTIVE_PROFILE}[
+        version
+    ]
 
     return {
         "schema": "qualified-benchmark-protocol-" + version,
@@ -491,7 +498,7 @@ def test_selective_protocol_binding_reaches_common_and_v3_full_native(
     for phase in ("native", "common"):
         req = runner.request_for(p["methods"][0], p["queries"][0], 97, tmp_path, 360, phase, plan)
         assert req["seed"] == 97
-        bound = phase == "common" or profile_binding["schema"].endswith("v3")
+        bound = phase == "common" or profile_binding["schema"] in adapter.FIXED_LIBRARY_PROTOCOLS
         assert ("benchmark_protocol" in req) == bound
         if bound:
             assert req["benchmark_protocol"] == profile_binding
@@ -618,7 +625,7 @@ def test_benchmark_metadata_exact_binding(profile_binding, attack, benchmark_met
     elif attack == "name":
         binding["recommendation_profile"] = "qualified-selective-engineering-v4"
     elif attack == "schema":
-        binding["schema"] = "qualified-benchmark-protocol-v4"
+        binding["schema"] = "qualified-benchmark-protocol-v99"
     elif attack == "extra":
         binding["trust_me"] = True
     elif attack == "missing":
@@ -637,7 +644,11 @@ def test_benchmark_metadata_default_cannot_upgrade_legacy(monkeypatch, benchmark
     monkeypatch.setattr(profiles, "DEFAULT_RECOMMENDATION_PROFILE", "future-profile")
     assert adapter.benchmark_profile() == profiles.PROFILE
     assert adapter.selective_benchmark_profile(profiles.PROFILE) is False
-    for name in (profiles.SELECTIVE_PROFILE, profiles.LANDMARK_SELECTIVE_PROFILE):
+    for name in (
+        profiles.SELECTIVE_PROFILE,
+        profiles.LANDMARK_SELECTIVE_PROFILE,
+        profiles.ALLOCATION_SELECTIVE_PROFILE,
+    ):
         assert adapter.selective_benchmark_profile(name) is True
     for name in (profiles.GUARDED_SELECTIVE_PROFILE, profiles.DIAGNOSTIC_SELECTIVE_PROFILE, "future-profile"):
         with pytest.raises(ValueError, match="Unsupported"):
@@ -732,7 +743,9 @@ def test_benchmark_metadata_runner_to_collector_binding(
         p["methods"][0], p["queries"][0], 97, tmp_path / "attempt", plan, SimpleNamespace(signal_number=None)
     )
     assert len(requests) == 2 and all(req["seed"] == 97 for req in requests)
-    assert ("benchmark_protocol" in requests[0]) == profile_binding["schema"].endswith("v3")
+    assert ("benchmark_protocol" in requests[0]) == (
+        profile_binding["schema"] in adapter.FIXED_LIBRARY_PROTOCOLS
+    )
     assert plan["benchmark_protocol"] == profile_binding  # request replacement cannot alter authority
     if tamper:
         assert not collected and result["status"] == "error"
@@ -830,15 +843,16 @@ def test_benchmark_metadata_selective_empty_never_uses_legacy_return(
             collect()
 
 
+@pytest.mark.parametrize("version", ["v3", "v4"])
 @pytest.mark.parametrize("attack", ["enabled_proposals", "missing_helper", "changed_helper"])
 def test_benchmark_metadata_v5_rejects_unmatched_configuration(
-    tmp_path, monkeypatch, benchmark_metadata_guard, attack
+    tmp_path, monkeypatch, benchmark_metadata_guard, attack, version
 ):
     from chembounce_synthesis import profiles, landmark_proposals
 
     req = request(tmp_path)
-    req["benchmark_protocol"] = selective_binding("v3")
-    path = config_file(tmp_path, profiles.LANDMARK_SELECTIVE_PROFILE)
+    req["benchmark_protocol"] = selective_binding(version)
+    path = config_file(tmp_path, req["benchmark_protocol"]["recommendation_profile"])
     req["assets"]["synthesis_config"] = str(path)
     if attack == "enabled_proposals":
         config = adapter.read(path)
@@ -874,5 +888,32 @@ def test_benchmark_metadata_v5_rejects_unmatched_configuration(
             return current
 
         monkeypatch.setattr(profiles, "numerical_runtime", changed)
+    with pytest.raises(ValueError, match="frozen engineering profile"):
+        adapter.common_config(req)
+
+
+@pytest.mark.parametrize("attack", ["screening", "evidence", "workflow_source"])
+def test_v4_common_config_rejects_material_allocation_or_source_change(
+    tmp_path, monkeypatch, benchmark_metadata_guard, attack
+):
+    from chembounce_synthesis import profiles
+
+    req = request(tmp_path)
+    req["benchmark_protocol"] = selective_binding("v4")
+    path = config_file(tmp_path, profiles.ALLOCATION_SELECTIVE_PROFILE)
+    req["assets"]["synthesis_config"] = str(path)
+    if attack == "workflow_source":
+        original = profiles.numerical_runtime
+
+        def changed(name):
+            current = original(name)
+            current["source_sha256"]["chembounce_synthesis/workflow.py"] = "0" * 64
+            return current
+
+        monkeypatch.setattr(profiles, "numerical_runtime", changed)
+    else:
+        cfg = adapter.read(path)
+        cfg[attack + "_allocation_policy"] = "inherit-v1"
+        write_json(path, cfg)
     with pytest.raises(ValueError, match="frozen engineering profile"):
         adapter.common_config(req)

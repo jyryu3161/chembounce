@@ -18,6 +18,7 @@ from benchmarks.research.protocol import digest, write_json, synthesis_asset_pat
 from benchmarks.research.qualified_adapter import (
     ARMS,
     PROFILE_PROTOCOLS,
+    FIXED_LIBRARY_PROTOCOLS,
     read,
     benchmark_profile,
     validate_v3_native_inputs,
@@ -161,10 +162,10 @@ def resolve_protocol(protocol, base):
             }
         )
     elif "recommendation_profile" in protocol or "profile_artifact_sha256" in protocol:
-        raise ValueError("Explicit profile binding requires benchmark protocol v2 or v3")
+        raise ValueError("Explicit profile binding requires benchmark protocol v2, v3 or v4")
     if protocol.get("collector_catalog_policy") != CATALOG_POLICY:
         raise ValueError("Protocol must explicitly freeze the shared catalog setup policy")
-    if protocol["schema"] == "qualified-benchmark-protocol-v3":
+    if protocol["schema"] in FIXED_LIBRARY_PROTOCOLS:
         for method in protocol["methods"]:
             if method["arm"] == "full":
                 validate_v3_native_inputs(
@@ -265,14 +266,14 @@ def request_for(method, query, seed, output, seconds, phase, plan):
     settings = copy.deepcopy(native.get("settings", method.get("settings", {})))
     if not native:
         settings["arm"] = method["arm"]
-    # Only v3 full generation gains a native binding; historical and external
+    # Only v3/v4 full generation gains a native binding; historical and external
     # native schemas remain unchanged. Common assessment rechecks this binding.
     binding = plan.get("benchmark_protocol")
     bind_native = (
         phase == "native"
         and method["arm"] == "full"
         and binding is not None
-        and binding.get("schema") == "qualified-benchmark-protocol-v3"
+        and binding.get("schema") in FIXED_LIBRARY_PROTOCOLS
     )
     return {
         "schema_version": 1,

@@ -11,7 +11,11 @@ from benchmarks.research import qualified_collector as collector
 from benchmarks.research.protocol import digest
 from chembounce_synthesis import workflow
 
-SELECTIVE_PROFILES = ("qualified-selective-engineering-v2", "qualified-selective-engineering-v5")
+SELECTIVE_PROFILES = (
+    "qualified-selective-engineering-v2",
+    "qualified-selective-engineering-v5",
+    "qualified-selective-engineering-v6",
+)
 
 HIT, DESIGN = "CC(=O)Nc1ccccc1", "CC(=O)Nc1ccncc1"
 
@@ -108,7 +112,7 @@ def completed(tmp_path, assets, route, strict_predictor, request):
 
         request["benchmark_protocol"] = {
             "schema": "qualified-benchmark-protocol-"
-            + ("v2" if profile_name == SELECTIVE_PROFILES[0] else "v3"),
+            + dict(zip(SELECTIVE_PROFILES, ("v2", "v3", "v4")))[profile_name],
             "recommendation_profile": profile_name,
             "profile_artifact_sha256": PROFILE_SHA256[profile_name],
         }

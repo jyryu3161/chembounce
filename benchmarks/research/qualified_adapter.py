@@ -13,7 +13,13 @@ import time
 from benchmarks.research.protocol import digest, write_json
 
 ARMS = {"full", "baseline", "crem", "mol2mol", "synllama"}
-PROFILE_PROTOCOLS = ("qualified-benchmark-protocol-v2", "qualified-benchmark-protocol-v3")
+PROFILE_PROTOCOLS = (
+    "qualified-benchmark-protocol-v2",
+    "qualified-benchmark-protocol-v3",
+    "qualified-benchmark-protocol-v4",
+)
+# Explicitly retained fixed-library contract; historical v2 native requests stay unchanged.
+FIXED_LIBRARY_PROTOCOLS = ("qualified-benchmark-protocol-v3", "qualified-benchmark-protocol-v4")
 _NATIVE_RESOURCE_OPTIONS = {"output_dir", "seed", "overall_max_n", "scaffold_db_file", "fingerprint_db_file"}
 
 
@@ -28,7 +34,7 @@ def read(path):
 
 
 def validate_v3_native_inputs(assets, options):
-    """Full v3 uses pinned DB libraries, never default discovery or replacement libraries.
+    """Full v3/v4 uses pinned DB libraries, never default discovery or replacement libraries.
 
     Scaffold-only and enabled fingerprint-only inputs are both supported. Inline
     fragments_DB is bound JSON but is outside this fixed-library contract.
@@ -49,7 +55,7 @@ def native_designs(request):
     binding = request.get("benchmark_protocol")
     if binding is not None:
         benchmark_profile(binding)
-        if binding["schema"] == "qualified-benchmark-protocol-v3":
+        if binding["schema"] in FIXED_LIBRARY_PROTOCOLS:
             validate_v3_native_inputs(request["assets"], options)
     if _NATIVE_RESOURCE_OPTIONS & options.keys():
         raise ValueError("Native generator resources must come from the frozen request")
@@ -78,12 +84,10 @@ def native_supply(request, output):
     if arm == "synllama":
         return [request["query"]["smiles"]], None, {"raw_count": 1, "policy": "direct original hit"}
     binding = request.get("benchmark_protocol")
-    v3_full = (
-        arm == "full"
-        and isinstance(binding, dict)
-        and binding.get("schema") == "qualified-benchmark-protocol-v3"
+    fixed_library_full = (
+        arm == "full" and isinstance(binding, dict) and binding.get("schema") in FIXED_LIBRARY_PROTOCOLS
     )
-    if v3_full:
+    if fixed_library_full:
         benchmark_profile(binding)
         validate_v3_native_inputs(request["assets"], request["settings"].get("generator_options", {}))
     native = Path(request["native"]["directory"])
@@ -96,7 +100,7 @@ def native_supply(request, output):
     prior = read(native / "request.json")
     if prior["query"] != request["query"] or prior["seed"] != request["seed"]:
         raise ValueError("Native supply query/generation-seed mismatch")
-    if v3_full:
+    if fixed_library_full:
         if (
             prior.get("benchmark_protocol") != binding
             or prior.get("settings", {}).get("arm") != "full"
@@ -194,17 +198,20 @@ def baseline_bridge(native, response, request, output):
 
 
 def benchmark_profile(binding=None):
-    """Explicit historical v2 or landmark v5 authority; never follow the default."""
+    """Explicit v2/v5/v6 artifact authority; never follow the recommendation default."""
     from chembounce_synthesis.profiles import (
         PROFILE,
         SELECTIVE_PROFILE,
         LANDMARK_SELECTIVE_PROFILE,
+        ALLOCATION_SELECTIVE_PROFILE,
         PROFILE_SHA256,
     )
 
     if binding is None:
         return PROFILE
-    for schema, name in zip(PROFILE_PROTOCOLS, (SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE)):
+    for schema, name in zip(
+        PROFILE_PROTOCOLS, (SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE, ALLOCATION_SELECTIVE_PROFILE)
+    ):
         if binding == {
             "schema": schema,
             "recommendation_profile": name,
@@ -215,12 +222,17 @@ def benchmark_profile(binding=None):
 
 
 def selective_benchmark_profile(name):
-    """Both admitted engineering profiles require the complete selective evidence path."""
-    from chembounce_synthesis.profiles import PROFILE, SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE
+    """Every admitted engineering profile requires the complete selective evidence path."""
+    from chembounce_synthesis.profiles import (
+        PROFILE,
+        SELECTIVE_PROFILE,
+        LANDMARK_SELECTIVE_PROFILE,
+        ALLOCATION_SELECTIVE_PROFILE,
+    )
 
     if name == PROFILE:
         return False
-    if name in (SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE):
+    if name in (SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE, ALLOCATION_SELECTIVE_PROFILE):
         return True
     raise ValueError("Unsupported benchmark recommendation profile")
 
