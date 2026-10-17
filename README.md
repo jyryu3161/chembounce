@@ -33,7 +33,7 @@ and configure existing local catalog/rules, proposal provider and pinned Reactio
 assets. Saved proposals must cover the supplied designs; for newly generated designs,
 configure a local SynLlama provider as explained in [setup](docs/SYNTHESIS.md#request-qualified-recommendations).
 No assets are downloaded implicitly. The shortcut selects
-`qualified-selective-engineering-v2`: final original-hit Tanimoto/shape/pharmacophore
+`qualified-selective-engineering-v3`: final original-hit Tanimoto/shape/pharmacophore
 floors **0.35/0.70/0.50**, polar recall **0.75**, changed normalized scaffold,
 complete three-seed geometry and concrete per-step computational route support.
 Supported explicit overrides survive and are labelled `custom_unvalidated`; the

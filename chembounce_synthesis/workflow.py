@@ -369,7 +369,7 @@ def preflight_recommendation(hit, config):
 
 
 def recommend(hit, designs, config, output_dir, *, deadline_monotonic=None):
-    """Request the fixed v2 conjunction; generic run remains exploratory by default.
+    """Request the fixed v3 conjunction; generic run remains exploratory by default.
 
     Explicit supported positive overrides survive and are labelled custom in
     outputs. No generation, retry, deadline extension or exploratory fallback.

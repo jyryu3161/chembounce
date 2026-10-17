@@ -341,7 +341,9 @@ def test_integrated_cli_profile_uses_refill_and_cannot_disable_synthesis(
     assert read(out / "synthesis", "results.json")["results"][0]["recommendation_profile"] == profile_name
 
 
-@pytest.mark.parametrize("profile_name", [profiles.PROFILE, profiles.SELECTIVE_PROFILE])
+@pytest.mark.parametrize(
+    "profile_name", [profiles.PROFILE, profiles.SELECTIVE_PROFILE, profiles.GUARDED_SELECTIVE_PROFILE]
+)
 def test_wheel_includes_profile_resource_without_installing(tmp_path, profile_name):
     pytest.importorskip("setuptools")
     pytest.importorskip("wheel")
@@ -400,7 +402,7 @@ def test_wheel_includes_profile_resource_without_installing(tmp_path, profile_na
     )
     assert loaded.returncode == 0 and loaded.stdout.strip() == (
         "declared_engineering_policy"
-        if profile_name == profiles.SELECTIVE_PROFILE
+        if profile_name in profiles.ENGINEERING_PROFILES
         else "reviewed_development_fit"
     ), loaded.stderr
 

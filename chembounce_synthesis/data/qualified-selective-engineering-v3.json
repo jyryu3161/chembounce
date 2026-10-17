@@ -1,0 +1,104 @@
+{
+  "engineering_spec": {
+    "conformers": {
+      "energy_window": 5.0,
+      "max_iterations": 500,
+      "num_conformers": 8,
+      "pharmacophore_sigma": 1.0,
+      "reject_unspecified_stereo": true,
+      "scoring_objective": "original-hit-v1",
+      "seed": 42,
+      "strain_penalty": 0.05
+    },
+    "evidence_profile": "computational-route-support-v1",
+    "fingerprint": {
+      "bits": 2048,
+      "chirality": true,
+      "kind": "binary_morgan",
+      "radius": 2
+    },
+    "pose_selection_policy": "joint-feasible-hit-pose-v2",
+    "ranking_policy": "original-hit-v1",
+    "refinement": {
+      "adaptive_max_conformers": null,
+      "borderline_margin": 0.0,
+      "conformer_growth_factor": 2,
+      "max_metric_range": null,
+      "max_score_range": null,
+      "max_total_conformers": 240,
+      "num_conformers": 8,
+      "ranking_statistic": "minimum",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "threshold_policy": "all_seeds",
+      "top_n": 10
+    },
+    "route_search_policy": "original-hit-v1",
+    "similarity_constraints": {
+      "landmarks": [],
+      "polar_recall": 0.75,
+      "version": "selective-similarity-constraints-v2"
+    }
+  },
+  "limitations": [
+    "Thresholds are declared engineering preferences, not fitted or calibrated similarity/activity cutoffs.",
+    "Polar feature coverage and optional user landmarks do not establish biological essentiality.",
+    "Pinned local ReactionT5 agreement and concrete route replay establish conditional computational support only, not experimental feasibility, conditions, yield or selectivity.",
+    "Fresh benchmark execution and scientific performance evaluation remain separate gates.",
+    "This engineering revision binds reviewed exact-state representation guards; source review is not calibration, biological validity, experimental synthesis, route performance or fresh evaluation certification.",
+    "Runtime source matching covers five numerical modules only; prior ingress/orchestration review is separately declared and does not certify every current pipeline file.",
+    "Historical v2 campaign and capacity observations are not v3 evaluation."
+  ],
+  "minimum_scores": {
+    "hit_pharmacophore": 0.5,
+    "hit_shape": 0.7,
+    "hit_tanimoto": 0.35
+  },
+  "name": "qualified-selective-engineering-v3",
+  "provenance": {
+    "runtime": {
+      "packages": {
+        "numpy": "1.26.4",
+        "rdkit": "2025.9.6",
+        "scipy": "1.13.1"
+      },
+      "pharmacophore_feature_definition": {
+        "path": "/data2/home/jyryu/chembounce/.venv-research/lib/python3.10/site-packages/rdkit/Data/BaseFeatures.fdef",
+        "sha256": "87ab54bd717af50a78a710d23e7737a2cafc96e5293bf6257ecdda86b6da3f65"
+      },
+      "python": "3.10.12"
+    },
+    "source_revision": {
+      "guarded_source_commit": "88c420f8bb428f658d174df1cebe12a46870550b",
+      "predecessor": {
+        "artifact_sha256": "a8b47a409a21518dd482acbefdce38774414ae0b65f28d6ea7cb52ab63e1ef52",
+        "name": "qualified-selective-engineering-v2"
+      },
+      "source_reviews": [
+        {
+          "record_label": "review-molzip-assembly-source-88c420f/report.json",
+          "record_sha256": "46346859a9d762c888156a178a439d0bfe715315877336406f9c2a8ab16d630f",
+          "role": "independent_source_review"
+        },
+        {
+          "record_label": "stage14-stereo-develop-merge-05ec327.json",
+          "record_sha256": "a16f0137ee4b75c7cf3987155356d50c4dabce5eaf8d43d883bccd69c95d01f6",
+          "role": "root_source_gate"
+        }
+      ]
+    },
+    "source_sha256": {
+      "chembounce_synthesis/common.py": "6c38eb9a2aad9ff3bf8f6ba7f6150ce07399bb98e2fc4b37345013ac6f9876b7",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+      "chembounce_synthesis/selective_scoring.py": "c6828589e73ecc02b1b2e476ae25e88bef3988ec0e1bdff6d78b77a7e0af5d2f",
+      "chembounce_synthesis/similarity_constraints.py": "0555bc9e07b79df5cca2a5cc8f8e0cfc99d3423dc8c5f896370b0db57b3dd10f"
+    }
+  },
+  "schema": "qualified-selective-engineering-profile-v2",
+  "scope": "explicit_engineering_preferences_not_fitted",
+  "status": "declared_engineering_policy"
+}

@@ -10,7 +10,32 @@ from importlib.resources import files
 from pathlib import Path
 
 PROFILE = "qualified-development-v1"
+# Historical benchmark authority: never retarget this name.
 SELECTIVE_PROFILE = "qualified-selective-engineering-v2"
+GUARDED_SELECTIVE_PROFILE = "qualified-selective-engineering-v3"
+DEFAULT_RECOMMENDATION_PROFILE = GUARDED_SELECTIVE_PROFILE
+ENGINEERING_PROFILES = (SELECTIVE_PROFILE, GUARDED_SELECTIVE_PROFILE)
+# Portable declarations bound by the packaged artifact hash. External release
+# review authenticates these prior records; loading never opens historical paths.
+GUARDED_SOURCE_REVISION = {
+    "guarded_source_commit": "88c420f8bb428f658d174df1cebe12a46870550b",
+    "predecessor": {
+        "name": SELECTIVE_PROFILE,
+        "artifact_sha256": "a8b47a409a21518dd482acbefdce38774414ae0b65f28d6ea7cb52ab63e1ef52",
+    },
+    "source_reviews": [
+        {
+            "role": "independent_source_review",
+            "record_label": "review-molzip-assembly-source-88c420f/report.json",
+            "record_sha256": "46346859a9d762c888156a178a439d0bfe715315877336406f9c2a8ab16d630f",
+        },
+        {
+            "role": "root_source_gate",
+            "record_label": "stage14-stereo-develop-merge-05ec327.json",
+            "record_sha256": "a16f0137ee4b75c7cf3987155356d50c4dabce5eaf8d43d883bccd69c95d01f6",
+        },
+    ],
+}
 ENGINEERING_SCHEMA = "qualified-selective-engineering-profile-v2"
 SELECTIVE_KERNEL_FILES = ("selective_scoring.py", "similarity_constraints.py")
 SELECTIVE_CONSTRAINTS = {
@@ -20,6 +45,7 @@ SELECTIVE_CONSTRAINTS = {
 }
 # Reviewed development release; the untouched fit candidate remains separately bound.
 PROFILE_SHA256 = {
+    GUARDED_SELECTIVE_PROFILE: "fd5fb3b65b12307ed1a9b5371e74427eb709d8cf3012bbcba5095022ddb34537",
     SELECTIVE_PROFILE: "a8b47a409a21518dd482acbefdce38774414ae0b65f28d6ea7cb52ab63e1ef52",
     PROFILE: "9d3c60a895912b28c13a29aac0a04f385ddb8a0effc9fcd81d64a50a3d48bdd2",
 }
@@ -66,13 +92,13 @@ def request_recommendations(config, cli_profile=None):
         ("configuration", config.get("recommendation_profile"), "recommendation_profile" in config),
         ("CLI", cli_profile, cli_profile is not None),
     ):
-        if present and value != SELECTIVE_PROFILE:
+        if present and value != DEFAULT_RECOMMENDATION_PROFILE:
             raise ValueError(
                 f"--recommend/recommend() conflicts with {origin} recommendation_profile={value!r}; "
-                f"requires {SELECTIVE_PROFILE}"
+                f"requires {DEFAULT_RECOMMENDATION_PROFILE}"
             )
     result = copy.deepcopy(config)
-    result["recommendation_profile"] = SELECTIVE_PROFILE
+    result["recommendation_profile"] = DEFAULT_RECOMMENDATION_PROFILE
     return result
 
 
@@ -91,8 +117,8 @@ def load_profile(name):
     if _sha(raw) != expected:
         raise ValueError("Packaged recommendation profile SHA-256 mismatch")
     artifact = json.loads(raw)
-    if name == SELECTIVE_PROFILE:
-        _validate_engineering_artifact(artifact)
+    if name in ENGINEERING_PROFILES:
+        _validate_engineering_artifact(artifact, name)
         return artifact
     minima = artifact.get("minimum_scores")
     spec = artifact.get("calibration_spec", {})
@@ -154,10 +180,10 @@ def profile_defaults(artifact):
     return defaults
 
 
-def _validate_engineering_artifact(artifact):
+def _validate_engineering_artifact(artifact, name):
     if (
         artifact.get("schema") != ENGINEERING_SCHEMA
-        or artifact.get("name") != SELECTIVE_PROFILE
+        or artifact.get("name") != name
         or artifact.get("status") != "declared_engineering_policy"
         or artifact.get("scope") != "explicit_engineering_preferences_not_fitted"
         or artifact.get("minimum_scores")
@@ -178,6 +204,13 @@ def _validate_engineering_artifact(artifact):
         != {"chembounce_synthesis/" + name for name in KERNEL_FILES + SELECTIVE_KERNEL_FILES}
     ):
         raise ValueError("Packaged engineering profile lacks its declared fixed policy/source scope")
+    if (
+        name == GUARDED_SELECTIVE_PROFILE
+        and artifact["provenance"].get("source_revision") != GUARDED_SOURCE_REVISION
+    ):
+        raise ValueError(
+            "Packaged guarded engineering profile lacks its reviewed source revision declaration"
+        )
 
 
 def apply_profile_defaults(config):
@@ -220,7 +253,9 @@ def numerical_runtime(name=None):
         },
         "source_sha256": {
             "chembounce_synthesis/" + name: _sha(files("chembounce_synthesis").joinpath(name).read_bytes())
-            for name in (KERNEL_FILES + SELECTIVE_KERNEL_FILES if name == SELECTIVE_PROFILE else KERNEL_FILES)
+            for name in (
+                KERNEL_FILES + SELECTIVE_KERNEL_FILES if name in ENGINEERING_PROFILES else KERNEL_FILES
+            )
         },
     }
 
@@ -261,7 +296,7 @@ def profile_provenance(config):
         numerical_changes["reference_sdf"] = {"profile": None, "effective": config["reference_sdf"]}
     if config.get("pocket"):
         numerical_changes["pocket"] = {"profile": None, "effective": config["pocket"]}
-    if name != SELECTIVE_PROFILE and "similarity_constraints" in config:
+    if name not in ENGINEERING_PROFILES and "similarity_constraints" in config:
         numerical_changes["similarity_constraints"] = {
             "profile": None,
             "effective": config["similarity_constraints"],
@@ -276,12 +311,12 @@ def profile_provenance(config):
     if budget is None or budget < 24:
         numerical_changes["refinement.max_total_conformers"] = {"profile": "at least 24", "effective": budget}
     # Optional declared landmarks are additional vetoes, not replacement floors.
-    if name == SELECTIVE_PROFILE:
+    if name in ENGINEERING_PROFILES:
         numerical_changes.pop("similarity_constraints.landmarks", None)
-    current = numerical_runtime(name) if name == SELECTIVE_PROFILE else numerical_runtime()
+    current = numerical_runtime(name) if name in ENGINEERING_PROFILES else numerical_runtime()
     recorded = artifact["provenance"]
     mismatches = {}
-    provenance_key = "engineering_policy" if name == SELECTIVE_PROFILE else "calibration"
+    provenance_key = "engineering_policy" if name in ENGINEERING_PROFILES else "calibration"
     for field in ("python", "packages"):
         if current[field] != recorded["runtime"][field]:
             mismatches[field] = {provenance_key: recorded["runtime"][field], "current": current[field]}
@@ -291,7 +326,7 @@ def profile_provenance(config):
     for path, digest in current["source_sha256"].items():
         if digest != recorded["source_sha256"].get(path):
             mismatches[path] = {provenance_key: recorded["source_sha256"].get(path), "current": digest}
-    engineering = name == SELECTIVE_PROFILE
+    engineering = name in ENGINEERING_PROFILES
     return {
         "name": name,
         "status": "custom_unvalidated"
@@ -351,7 +386,7 @@ def profile_label(config):
             " [evidence=" + config.get("synthesis_evidence", {}).get("profile", "legacy-conditional-v1") + "]"
         ) + selective
     provenance = profile_provenance(config)
-    if provenance["name"] == SELECTIVE_PROFILE:
+    if provenance["name"] in ENGINEERING_PROFILES:
         return (
             f" [profile={provenance['name']}; {provenance['status']}; "
             f"hit_tanimoto>={config['minimum_scores']['hit_tanimoto']}; "

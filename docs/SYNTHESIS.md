@@ -3,7 +3,7 @@
 ## Request qualified recommendations
 
 Use `--recommend` on either CLI or `from chembounce_synthesis import recommend`
-for the version-fixed `qualified-selective-engineering-v2` contract. The
+for the version-fixed `qualified-selective-engineering-v3` contract. The
 [asset template](../examples/synthesis/strict-recommendation-config.json) declares
 the same profile, so selection is idempotent. Replace its placeholder paths with
 existing local files/directories; the example is not a ready-made vendor catalog,
@@ -1162,3 +1162,46 @@ unsupported/unresolved, without inferring an axial configuration. This conservat
 rule can reject decorative or ambiguous wedges. It cannot recover stereo metadata
 already discarded by an upstream reader or an old serialized catalog, and it does
 not classify potential atropisomerism in an unannotated structure.
+
+### Engineering profile revisions and explicit migration
+
+`--recommend` and the lazy `recommend()` API now select
+`qualified-selective-engineering-v3`. V3 has exactly the v2 floors, eight-conformer
+screening, final seeds 42/43/44, budgets and joint-pose constraint policy. It binds
+the reviewed exact-state input guards to new artifact bytes; it is not a new fit
+or an empirically calibrated similarity/activity policy. Ordinary defined stereo
+and supported tetrahedral ABS remain supported; unsupported representations are
+rejected before lossy serialization (see the input-format contract above).
+
+The original `qualified-development-v1` and `qualified-selective-engineering-v2`
+artifacts and names remain available. On guarded source their historical kernel
+bindings differ, so their provenance honestly reports `custom_unvalidated`.
+Explicit historical config/profile requests are never silently migrated. Combining
+`--recommend` with an explicit historical profile in either the original config
+or CLI is an error before model/catalog work, even when the other declaration is
+v3. Without the shortcut, `--recommendation-profile qualified-selective-engineering-v2`
+continues to request v2.
+
+For a continuation, inherited v2 without the shortcut remains v2. To migrate,
+supply an explicit v3 replacement config, or use the profile-only
+`--recommendation-profile qualified-selective-engineering-v3` option without
+`--recommend`. Inherited v2 plus `--recommend` still conflicts before a v3 CLI
+override can conceal it. Prior provenance remains retained, and carried routes
+still undergo the existing fresh qualification gates; migration does not reuse
+old scores or reset budgets/deadlines.
+
+V3's `provenance.source_revision` names its preserved v2 predecessor, the reviewed
+guarded commit, and two prior engineering review records. Release review verifies
+those record bytes; the installed loader checks the portable packaged declaration
+and pinned artifact digest without opening local review files. These records do
+not certify calibration, biological activity, experimental synthesis, route yield
+or a fresh comparison. `engineering_policy_matched` compares the five recorded
+numerical modules, scientific runtime and pharmacophore feature content; it does
+not certify every current pipeline source file. Supported material overrides
+remain `custom_unvalidated`; resource limits and additional selection retain their
+separate provenance fields.
+
+Historical benchmark protocol-v2 and the saved-response development assessor stay
+v2-only. Current campaign and prior capacity outputs must not be relabelled v3.
+Any future v3 performance comparison needs an explicitly reviewed benchmark
+protocol/adapter revision; this profile release launches no evaluation.
