@@ -470,10 +470,18 @@ def worker(plan, plan_sha, phase):
     )
 
 
-def _subreaper():
+def _get_subreaper():
     libc = ctypes.CDLL(None, use_errno=True)
-    if libc.prctl(36, 1, 0, 0, 0) != 0:  # Linux PR_SET_CHILD_SUBREAPER
-        raise OSError(ctypes.get_errno(), "Cannot own/reap orphaned migration children")
+    value = ctypes.c_int()
+    if libc.prctl(37, ctypes.byref(value), 0, 0, 0) != 0:  # Linux PR_GET_CHILD_SUBREAPER
+        raise OSError(ctypes.get_errno(), "Cannot read migration subreaper state")
+    return value.value
+
+
+def _subreaper(value=1):
+    libc = ctypes.CDLL(None, use_errno=True)
+    if libc.prctl(36, value, 0, 0, 0) != 0:  # Linux PR_SET_CHILD_SUBREAPER
+        raise OSError(ctypes.get_errno(), "Cannot set migration subreaper state")
 
 
 def _group_exists(group):
@@ -562,10 +570,12 @@ def run(plan_path, plan_sha, *, started=None):
     interrupted = []
     previous = {}
     previous_affinity = None
+    previous_subreaper = None
     try:
         for signum in (signal.SIGINT, signal.SIGTERM):
             previous[signum] = signal.signal(signum, lambda sig, frame: interrupted.append(sig))
         _save(output / "owner.json", owner)
+        previous_subreaper = _get_subreaper()
         _subreaper()
         previous_affinity = os.sched_getaffinity(0)
         cpu = min(previous_affinity)
@@ -640,6 +650,22 @@ def run(plan_path, plan_sha, *, started=None):
             phases.append({"phase": "exception_cleanup", "cleanup": clean})
             if not clean["group_gone"] or not clean["direct_child_reaped"]:
                 result = "unsafe_cleanup"
+        subreaper = {"before": previous_subreaper, "after": None, "restoration": "not_acquired"}
+        try:
+            if previous_subreaper is not None:
+                if result == "unsafe_cleanup":
+                    subreaper["restoration"] = "retained_for_unsafe_cleanup"
+                else:
+                    _subreaper(previous_subreaper)
+                    subreaper["restoration"] = "restored_previous"
+                subreaper["after"] = _get_subreaper()
+                if result != "unsafe_cleanup" and subreaper["after"] != previous_subreaper:
+                    raise RuntimeError("Migration subreaper restoration did not retain previous state")
+        except (OSError, RuntimeError) as exc:
+            subreaper["restoration"] = "failed"
+            subreaper["error"] = {"error_type": type(exc).__name__, "reason": str(exc)}
+            if result == "validated":
+                result = "failed"
         if time.monotonic() >= work_deadline and result == "validated":
             result = "timeout"
         partial = {}
@@ -657,6 +683,7 @@ def run(plan_path, plan_sha, *, started=None):
             "elapsed_seconds": time.monotonic() - start,
             "elapsed_seconds_scope": "Before terminal serialization/fsync; the external watchdog covers the complete invocation",
             "received_signals": interrupted,
+            "subreaper": subreaper,
             "complete_lifecycle_requires": "pre-write terminal snapshot plus coordinator exit 0 after writing before the original work and total deadlines, plus external watchdog exit 0 within total ceiling; independent result review and adoption remain separate",
             "cost_scope": "Per-child self usage when available in phase receipts; missing counters are unavailable, not zero",
             "final_binding_status": "verified"
