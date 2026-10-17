@@ -1,0 +1,215 @@
+{
+  "engineering_spec": {
+    "conformers": {
+      "energy_window": 5.0,
+      "max_iterations": 500,
+      "num_conformers": 8,
+      "pharmacophore_sigma": 1.0,
+      "reject_unspecified_stereo": true,
+      "scoring_objective": "original-hit-v1",
+      "seed": 42,
+      "strain_penalty": 0.05
+    },
+    "evidence_profile": "computational-route-support-v1",
+    "fingerprint": {
+      "bits": 2048,
+      "chirality": true,
+      "kind": "binary_morgan",
+      "radius": 2
+    },
+    "pose_selection_policy": "joint-feasible-hit-pose-v2",
+    "ranking_policy": "original-hit-v1",
+    "refinement": {
+      "adaptive_max_conformers": null,
+      "borderline_margin": 0.0,
+      "conformer_growth_factor": 2,
+      "max_metric_range": null,
+      "max_score_range": null,
+      "max_total_conformers": 240,
+      "num_conformers": 8,
+      "ranking_statistic": "minimum",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "threshold_policy": "all_seeds",
+      "top_n": 10
+    },
+    "route_search_policy": "original-hit-v1",
+    "similarity_constraints": {
+      "landmarks": [],
+      "polar_recall": 0.75,
+      "version": "selective-similarity-constraints-v2"
+    }
+  },
+  "limitations": [
+    "Thresholds are declared engineering preferences, not fitted or calibrated similarity/activity cutoffs.",
+    "Polar feature coverage and optional user landmarks do not establish biological essentiality.",
+    "Pinned local ReactionT5 agreement and concrete route replay establish conditional computational support only, not experimental feasibility, conditions, yield or selectivity.",
+    "Fresh benchmark execution and scientific performance evaluation remain separate gates.",
+    "This engineering revision binds reviewed exact-state representation guards; source review is not calibration, biological validity, experimental synthesis, route performance or fresh evaluation certification.",
+    "V3/V4 runtime source matching covered five numerical modules; prior ingress/orchestration review is separately declared and does not certify every current pipeline file.",
+    "Historical v2 campaign and capacity observations are not v3 evaluation.",
+    "V4 preserves the exact v3 numerical specification and runtime declaration. This source revision and diagnostic software review are not recalibration, scientific evaluation or efficacy evidence.",
+    "Optional rejected-pose diagnostics default off, cannot rescue rejected candidates, and consume the existing deadline; resource-limited outcomes may differ when enabled.",
+    "Historical v1/v2/v3 observations are not v4 evaluation. Additional optional source bindings cover only the diagnostic module, scorer, refinement and workflow; external source review authenticates the full accepted implementation.",
+    "V5 preserves the v4 numerical specification; landmark pose proposals default false. Explicit true with mandatory user landmarks is a material search override and remains custom_unvalidated.",
+    "The prior source review establishes bounded implementation correctness only, not empirical calibration, default coverage improvement, biological activity or experimental synthesis feasibility. No historical campaign is v5 evaluation.",
+    "V5 source matching covers the five numerical modules plus landmark_proposals.py. Separate diagnostic bindings retain their declared scope; no claim of universal pipeline source authentication.",
+    "Enabled proposals use only existing conformers and exact same-pose evaluation, with finite mapping/proposal/call caps and one second cooperative additional work capped by the existing deadline. Native operations can overrun; deadline-limited outcomes may change.",
+    "V7 inherits v5 numerical policy, budgets, seeds, disabled optional features and inherit-v1 screening/evidence allocation behavior. It does not adopt the v6 allocation method.",
+    "V7 binds the reviewed graph traversal implementation in common.py. Prior source/parity review and one warmed sequential catalog constructor timing pair do not establish robust or end-to-end speedup, scientific yield, biological activity or experimental synthesis.",
+    "Every v1-v6 artifact and exact source-matching rule remains unchanged. Their names are never remapped to v7; historical source mismatches remain custom_unvalidated.",
+    "V7 retains the v5 optional diagnostic source declaration, including its historical workflow.py mismatch. Diagnostics default off; enabling against that mismatch remains custom_unvalidated.",
+    "The source revision declares prior implementation and measurement review records only. It does not self-certify this profile/default transition or relabel any historical or frozen campaign as v7 evaluation."
+  ],
+  "minimum_scores": {
+    "hit_pharmacophore": 0.5,
+    "hit_shape": 0.7,
+    "hit_tanimoto": 0.35
+  },
+  "name": "qualified-selective-engineering-v7",
+  "optional_diagnostics": {
+    "rejected_pose_diagnostics": {
+      "default_enabled": false,
+      "limits": {
+        "atoms": 512,
+        "capture_seconds": 1.0,
+        "record_bytes": 262144,
+        "records": 8,
+        "run_bytes": 2097152
+      },
+      "source_sha256": {
+        "chembounce_synthesis/refinement.py": "6b9bb1458dea1330e850c627eae9e274ebdb7977a7c8eecf1e4a32b43488370a",
+        "chembounce_synthesis/rejected_pose_diagnostics.py": "3ee06dd9be2db572580717619eb338f071d13958b8d023dfa2064d95f02eeef4",
+        "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+        "chembounce_synthesis/workflow.py": "f6bfa758cacf3ed87921af8d7316bfc69c3c4701af6debe61f0d770f999be511"
+      },
+      "version": "rejected-pose-diagnostic-v1"
+    }
+  },
+  "optional_landmark_proposals": {
+    "default_enabled": false,
+    "limits": {
+      "alternatives_per_call": 8,
+      "alternatives_per_pair": 2,
+      "complete_maps_per_pair": 4,
+      "cooperative_seconds_per_call": 1.0,
+      "helper_edge_visits_per_pair": 4096,
+      "mapping_edge_visits_per_pair": 128,
+      "scoremol_per_call": 16
+    },
+    "parity_tolerance": 1e-05,
+    "source_sha256": {
+      "chembounce_synthesis/landmark_proposals.py": "b61b16aba8f043904b75f95ad7a876db995dc758e363c1bae293c65218ddd037"
+    },
+    "version": "landmark-anchored-rigid-v1"
+  },
+  "provenance": {
+    "runtime": {
+      "packages": {
+        "numpy": "1.26.4",
+        "rdkit": "2025.9.6",
+        "scipy": "1.13.1"
+      },
+      "pharmacophore_feature_definition": {
+        "path": "/data2/home/jyryu/chembounce/.venv-research/lib/python3.10/site-packages/rdkit/Data/BaseFeatures.fdef",
+        "sha256": "87ab54bd717af50a78a710d23e7737a2cafc96e5293bf6257ecdda86b6da3f65"
+      },
+      "python": "3.10.12"
+    },
+    "source_revision": {
+      "inherited_landmark_revision": {
+        "inherited_diagnostic_revision": {
+          "diagnostic_source_commit": "612596ae8921e663dda5a239c662f50d782704f7",
+          "inherited_guard_revision": {
+            "guarded_source_commit": "88c420f8bb428f658d174df1cebe12a46870550b",
+            "predecessor": {
+              "artifact_sha256": "a8b47a409a21518dd482acbefdce38774414ae0b65f28d6ea7cb52ab63e1ef52",
+              "name": "qualified-selective-engineering-v2"
+            },
+            "source_reviews": [
+              {
+                "record_label": "review-molzip-assembly-source-88c420f/report.json",
+                "record_sha256": "46346859a9d762c888156a178a439d0bfe715315877336406f9c2a8ab16d630f",
+                "role": "independent_source_review"
+              },
+              {
+                "record_label": "stage14-stereo-develop-merge-05ec327.json",
+                "record_sha256": "a16f0137ee4b75c7cf3987155356d50c4dabce5eaf8d43d883bccd69c95d01f6",
+                "role": "root_source_gate"
+              }
+            ]
+          },
+          "predecessor": {
+            "artifact_sha256": "fd5fb3b65b12307ed1a9b5371e74427eb709d8cf3012bbcba5095022ddb34537",
+            "name": "qualified-selective-engineering-v3"
+          },
+          "source_reviews": [
+            {
+              "record_label": "review-rejected-pose-source-612596a-v1/report.json",
+              "record_sha256": "8f535615f9339580fb416bf4d81cbfbb4661402deb7a84bb323bdb7a67b58c92",
+              "role": "independent_source_review"
+            },
+            {
+              "record_label": "stage18-rejected-pose-root-source-gate-612596a-v1.json",
+              "record_sha256": "ec71e9c72527d12075209ca01e830140970d307e7451f1e478e007c1fdad9fbf",
+              "role": "root_source_gate"
+            }
+          ]
+        },
+        "landmark_source_commit": "427fdbd22ba40c3fde2cb4a4a43a3a7b64c85ad8",
+        "predecessor": {
+          "artifact_sha256": "437b5c11f9b5627122e2ad70ecbc2d4f9f8b2e5294c6fbe8be81058ffb8e48b5",
+          "name": "qualified-selective-engineering-v4"
+        },
+        "source_reviews": [
+          {
+            "record_label": "review-landmark-correction-427fdbd-v1/report.json",
+            "record_sha256": "f57aa678ba4fdc3977eec3a94961bbeda9d61c6b8fb3fd7959c5c4a74efa3402",
+            "role": "independent_source_review"
+          },
+          {
+            "record_label": "stage20-landmark-prototype-root-source-gate-427fdbd-v1.json",
+            "record_sha256": "9745470ecfe3e6d7a9a3ba4c7bc57de8e29f7305e9a158ded79ceb0add9b3a33",
+            "role": "root_source_gate"
+          }
+        ]
+      },
+      "predecessor": {
+        "artifact_sha256": "1273082948d008dc7dd02daf18ace1bc6aeeea78515ebf074f321a3c28a450ad",
+        "name": "qualified-selective-engineering-v5"
+      },
+      "source_reviews": [
+        {
+          "record_label": "catalog-load-optimization-20261018-independent-review-v1-VjDYcK/report.json",
+          "record_sha256": "7b0d196a85d4d286583156296e4f131495676fcddca2a453068b5ce823baafa0",
+          "role": "independent_source_review"
+        },
+        {
+          "record_label": "catalog-load-optimization-20261018-independent-review-v1-VjDYcK/full-pair-review-addendum.json",
+          "record_sha256": "ab2e21e6a4c6e2cbd35478077e217d6cc8898d78f5fcb146b39d36403c54ea55",
+          "role": "independent_measurement_review"
+        },
+        {
+          "record_label": "catalog-load-optimization-20261018-root-gate-v1.json",
+          "record_sha256": "601c5a4e9f3d15ce302ba3be11e0a426dd0a694150ab6c692fee0e30b0c154a2",
+          "role": "root_source_and_measurement_gate"
+        }
+      ],
+      "traversal_source_commit": "84efc5469fa52eb8c928b0b30d70480b038246a3"
+    },
+    "source_sha256": {
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+      "chembounce_synthesis/landmark_proposals.py": "b61b16aba8f043904b75f95ad7a876db995dc758e363c1bae293c65218ddd037",
+      "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd"
+    }
+  },
+  "schema": "qualified-selective-engineering-profile-v2",
+  "scope": "explicit_engineering_preferences_not_fitted",
+  "status": "declared_engineering_policy"
+}

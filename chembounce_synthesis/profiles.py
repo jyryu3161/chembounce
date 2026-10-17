@@ -16,15 +16,17 @@ GUARDED_SELECTIVE_PROFILE = "qualified-selective-engineering-v3"
 DIAGNOSTIC_SELECTIVE_PROFILE = "qualified-selective-engineering-v4"
 LANDMARK_SELECTIVE_PROFILE = "qualified-selective-engineering-v5"
 ALLOCATION_SELECTIVE_PROFILE = "qualified-selective-engineering-v6"
-_LANDMARK_PROFILES = (LANDMARK_SELECTIVE_PROFILE, ALLOCATION_SELECTIVE_PROFILE)
+TRAVERSAL_SELECTIVE_PROFILE = "qualified-selective-engineering-v7"
+_LANDMARK_PROFILES = (LANDMARK_SELECTIVE_PROFILE, ALLOCATION_SELECTIVE_PROFILE, TRAVERSAL_SELECTIVE_PROFILE)
 _DIAGNOSTIC_PROFILES = (DIAGNOSTIC_SELECTIVE_PROFILE, *_LANDMARK_PROFILES)
-DEFAULT_RECOMMENDATION_PROFILE = LANDMARK_SELECTIVE_PROFILE
+DEFAULT_RECOMMENDATION_PROFILE = TRAVERSAL_SELECTIVE_PROFILE
 ENGINEERING_PROFILES = (
     SELECTIVE_PROFILE,
     GUARDED_SELECTIVE_PROFILE,
     DIAGNOSTIC_SELECTIVE_PROFILE,
     LANDMARK_SELECTIVE_PROFILE,
     ALLOCATION_SELECTIVE_PROFILE,
+    TRAVERSAL_SELECTIVE_PROFILE,
 )
 # Portable declarations bound by the packaged artifact hash. External release
 # review authenticates these prior records; loading never opens historical paths.
@@ -118,6 +120,33 @@ ALLOCATION_SOURCE_REVISION = {
 }
 ALLOCATION_SOURCE_REVISION["inherited_landmark_revision"] = copy.deepcopy(LANDMARK_SOURCE_REVISION)
 
+# V5 policy with reviewed traversal source; never retarget historical profile pins.
+TRAVERSAL_SOURCE_REVISION = {
+    "traversal_source_commit": "84efc5469fa52eb8c928b0b30d70480b038246a3",
+    "predecessor": {
+        "name": LANDMARK_SELECTIVE_PROFILE,
+        "artifact_sha256": "1273082948d008dc7dd02daf18ace1bc6aeeea78515ebf074f321a3c28a450ad",
+    },
+    "inherited_landmark_revision": copy.deepcopy(LANDMARK_SOURCE_REVISION),
+    "source_reviews": [
+        {
+            "role": "independent_source_review",
+            "record_label": "catalog-load-optimization-20261018-independent-review-v1-VjDYcK/report.json",
+            "record_sha256": "7b0d196a85d4d286583156296e4f131495676fcddca2a453068b5ce823baafa0",
+        },
+        {
+            "role": "independent_measurement_review",
+            "record_label": "catalog-load-optimization-20261018-independent-review-v1-VjDYcK/full-pair-review-addendum.json",
+            "record_sha256": "ab2e21e6a4c6e2cbd35478077e217d6cc8898d78f5fcb146b39d36403c54ea55",
+        },
+        {
+            "role": "root_source_and_measurement_gate",
+            "record_label": "catalog-load-optimization-20261018-root-gate-v1.json",
+            "record_sha256": "601c5a4e9f3d15ce302ba3be11e0a426dd0a694150ab6c692fee0e30b0c154a2",
+        },
+    ],
+}
+
 # Declarative values: loading the disabled profile must not import or require ScoreMol.
 LANDMARK_DECLARATION = {
     "default_enabled": False,
@@ -153,6 +182,7 @@ SELECTIVE_CONSTRAINTS = {
 }
 # Reviewed development release; the untouched fit candidate remains separately bound.
 PROFILE_SHA256 = {
+    TRAVERSAL_SELECTIVE_PROFILE: "b5cc6c5d2e46ede87bb4b6f6333d52bd1c6432623c2d2b8c96bada39f983eb27",
     ALLOCATION_SELECTIVE_PROFILE: "c1d257b25286c14dc3f8208036018bf706d289c0a227f903727ada99fdf0c37a",
     LANDMARK_SELECTIVE_PROFILE: "1273082948d008dc7dd02daf18ace1bc6aeeea78515ebf074f321a3c28a450ad",
     DIAGNOSTIC_SELECTIVE_PROFILE: "437b5c11f9b5627122e2ad70ecbc2d4f9f8b2e5294c6fbe8be81058ffb8e48b5",
@@ -345,6 +375,7 @@ def _validate_engineering_artifact(artifact, name):
                     DIAGNOSTIC_SELECTIVE_PROFILE: DIAGNOSTIC_SOURCE_REVISION,
                     LANDMARK_SELECTIVE_PROFILE: LANDMARK_SOURCE_REVISION,
                     ALLOCATION_SELECTIVE_PROFILE: ALLOCATION_SOURCE_REVISION,
+                    TRAVERSAL_SELECTIVE_PROFILE: TRAVERSAL_SOURCE_REVISION,
                 }[name]
             )
             or set(artifact.get("optional_diagnostics", {})) != {"rejected_pose_diagnostics"}

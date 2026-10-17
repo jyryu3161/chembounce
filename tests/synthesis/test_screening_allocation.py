@@ -313,11 +313,15 @@ def test_selective_preflight_failure_counts_attempt_not_scorer_call(
     )
 
 
-def test_actual_packaged_v5_default_primary_sources_unchanged():
+def test_actual_packaged_v5_preserves_historical_source_mismatch():
     # Actual installed research runtime/profile; no synthetic source/runtime patch.
     artifact = profiles.load_profile(profiles.LANDMARK_SELECTIVE_PROFILE)
     current = profiles.numerical_runtime(profiles.LANDMARK_SELECTIVE_PROFILE)
-    assert current["source_sha256"] == artifact["provenance"]["source_sha256"]
+    assert {
+        path
+        for path, digest in current["source_sha256"].items()
+        if digest != artifact["provenance"]["source_sha256"][path]
+    } == {"chembounce_synthesis/common.py"}
     config = dict(
         profiles.profile_defaults(artifact), recommendation_profile=profiles.LANDMARK_SELECTIVE_PROFILE
     )
@@ -326,8 +330,9 @@ def test_actual_packaged_v5_default_primary_sources_unchanged():
     diagnostic = provenance["optional_diagnostics"]["rejected_pose_diagnostics"]
     assert "chembounce_synthesis/workflow.py" in diagnostic["source_mismatches"]
     assert not diagnostic["enabled"]
-    # Runtime portability can independently prevent profile matching; this test
-    # attests unchanged actual primary source bytes, not a synthetic runtime match.
+    assert provenance["status"] == "custom_unvalidated"
+    assert "chembounce_synthesis/common.py" in provenance["runtime_source_mismatches"]
+    # The historical source mismatch never conceals a material allocation override.
     assert "screening_allocation_policy" not in provenance["material_overrides"]
     config["screening_allocation_policy"] = OPTION
     assert (

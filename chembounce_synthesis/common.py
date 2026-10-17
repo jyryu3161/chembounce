@@ -31,7 +31,10 @@ def require_absolute_stereo(mol):
             or (hasattr(group, "GetBonds") and group.GetBonds())
         ):
             raise ValueError("Unsupported ABS group: only specified tetrahedral atom groups are supported")
-    for bond in mol.GetBonds():
+    # This guard never changes the graph. Indexed access avoids the Python
+    # iterator's repeated size checks while retaining bond order and all checks.
+    for index in range(mol.GetNumBonds()):
+        bond = mol.GetBondWithIdx(index)
         if str(bond.GetStereo()) in {"STEREOATROPCW", "STEREOATROPCCW"}:
             raise ValueError("Unsupported atropisomeric bond stereochemistry; no axial state is selected")
         # Older RDKit SDF readers can retain the wedge property while losing the
@@ -104,9 +107,17 @@ def absolute_smiles(mol, **kwargs):
 
 def molecule(smiles):
     mol = parse_absolute_smiles(smiles)
-    if len(Chem.GetMolFrags(mol)) != 1 or any(a.GetAtomicNum() == 0 for a in mol.GetAtoms()):
+    if len(Chem.GetMolFrags(mol)) != 1:
         raise ValueError(f"A connected molecule without dummy atoms is required: {smiles!r}")
-    for atom in mol.GetAtoms():
+    # Fetch each atom once; keep map clearing after the complete dummy check so
+    # a rejected molecule is never partially normalized.
+    atoms = []
+    for index in range(mol.GetNumAtoms()):
+        atom = mol.GetAtomWithIdx(index)
+        if atom.GetAtomicNum() == 0:
+            raise ValueError(f"A connected molecule without dummy atoms is required: {smiles!r}")
+        atoms.append(atom)
+    for atom in atoms:
         atom.SetAtomMapNum(0)
     return mol
 
