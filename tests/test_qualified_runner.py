@@ -235,16 +235,21 @@ def test_baseline_request_kind_is_native_pipeline(tmp_path):
     assert r["kind"] == "pipeline" and r["seed"] == 97
 
 
-def test_partial_cost_json_preserves_failed_attempt_and_measured_resources(tmp_path, monkeypatch):
+@pytest.mark.parametrize("artifact", ["summary", "refinement", "proposals"])
+@pytest.mark.parametrize("response", [{}, {"candidates": [], "evaluations": 2}])
+def test_partial_cost_json_preserves_failed_attempt_and_measured_resources(
+    tmp_path, monkeypatch, artifact, response
+):
     p = protocol()
     plan = runner.make_plan(p, "a" * 64)
 
     def bounded(method, req, out, **kwargs):
         (out / "synthesis").mkdir(parents=True)
-        (out / "synthesis/summary.json").write_text('{"truncated":')
+        write_json(out / "synthesis/summary.json", {"scored_products": 1})
+        (out / "synthesis" / (artifact + ".json")).write_text('{"truncated":')
         return {
             "status": "timeout",
-            "response": {},
+            "response": response,
             "resources": {"sampled_cpu_seconds_lower_bound": 7, "sampled_peak_rss_mb": 200},
         }
 
@@ -253,9 +258,9 @@ def test_partial_cost_json_preserves_failed_attempt_and_measured_resources(tmp_p
         p["methods"][0], p["queries"][0], 97, tmp_path / "attempt", plan, SimpleNamespace(signal_number=None)
     )
     assert result["status"] == "timeout" and result["costs"]["cpu_seconds"] == 7
-    assert (
-        result["costs"]["native_units"] == {} and result["failures"][-1]["stage"] == "native_cost_accounting"
-    )
+    assert result["costs"]["peak_rss_mb"] == 200
+    assert result["costs"]["native_units"] == ({"returned_evaluations": 2} if response else {})
+    assert result["failures"][-1]["stage"] == "native_cost_accounting"
     assert adapter.read(tmp_path / "attempt/collection-attempt.json") == result
 
 
