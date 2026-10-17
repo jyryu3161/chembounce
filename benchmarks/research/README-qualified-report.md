@@ -26,8 +26,12 @@ from pathlib import Path
 from benchmarks.research.qualified_report import render_report, write_report
 
 html = render_report(plan_bytes, collection_bytes, collection_sha256=trusted_digest)
-write_report(Path("plan.json"), Path("collection.json"),
-             collection_sha256=trusted_digest, output=Path("new-review.html"))
+write_report(
+    Path("plan.json"),
+    Path("collection.json"),
+    collection_sha256=trusted_digest,
+    output=Path("new-review.html"),
+)
 ```
 
 The report retains all planned denominators and shows exact hierarchical fractions
