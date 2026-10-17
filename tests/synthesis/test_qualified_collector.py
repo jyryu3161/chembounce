@@ -4,6 +4,9 @@ import json
 
 import pytest
 
+# Test-only artifacts retain real loaders, policy checks and collector validation.
+pytestmark = pytest.mark.usefixtures("synthetic_historical_profile_bindings")
+
 from benchmarks.research import qualified_collector as collector
 from benchmarks.research.protocol import digest
 from chembounce_synthesis import workflow
@@ -63,8 +66,7 @@ def completed(tmp_path, assets, route, strict_predictor, request):
     expected_status = (
         "engineering_policy_matched" if profile_name.endswith("v2") else "development_protocol_matched"
     )
-    if profile_provenance(workflow.load_config(path))["status"] != expected_status:
-        pytest.skip("Runtime does not match reviewed development calibration")
+    assert profile_provenance(workflow.load_config(path))["status"] == expected_status
     native, out = tmp_path / "native", tmp_path / "common"
     (native / "synthesis").mkdir(parents=True)
     out.mkdir()

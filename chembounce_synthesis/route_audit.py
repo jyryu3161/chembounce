@@ -12,7 +12,7 @@ import json
 from rdkit import Chem, rdBase
 from rdkit.Chem import rdChemReactions
 
-from .common import canonical, digest, molecule, positive
+from .common import absolute_smiles, canonical, digest, molecule, positive, require_absolute_stereo
 from .routes import _topology, verify_route
 
 
@@ -46,11 +46,28 @@ def stereo_state(mol):
                 "controlling_atoms": list(item.controllingAtoms),
             }
         )
+    groups = [
+        {"type": str(g.GetGroupType()), "atom_indices": [a.GetIdx() for a in g.GetAtoms()]}
+        for g in mol.GetStereoGroups()
+    ]
+    unsupported_groups = [g for g in groups if g["type"] != "STEREO_ABSOLUTE"]
+    serialization_error = None
+    try:
+        require_absolute_stereo(mol)
+    except ValueError as exc:
+        serialization_error = str(exc)
     return {
+        **(
+            {"enhanced_stereo_groups": groups, "unsupported_enhanced_stereo": unsupported_groups}
+            if groups
+            else {}
+        ),
+        **({"unsupported_serialization_stereo": serialization_error} if serialization_error else {}),
         "centers": entries,
         "unspecified": [x for x in entries if x["specified"] != "Specified"],
         "unsupported_types": [x for x in entries if x["type"] not in {"Atom_Tetrahedral", "Bond_Double"}],
-        "fully_specified": all(
+        "fully_specified": not serialization_error
+        and all(
             x["specified"] == "Specified" and x["type"] in {"Atom_Tetrahedral", "Bond_Double"}
             for x in entries
         ),
@@ -311,6 +328,7 @@ def product_stereo(product, reactants, origins):
 
 def normalize_product(product):
     """Keep concrete metadata while aligning origins to canonical product indices."""
+    require_absolute_stereo(product)
     mol = Chem.Mol(product)
     for atom in mol.GetAtoms():
         atom.SetIntProp("_audit_raw_index", atom.GetIdx())
@@ -319,7 +337,7 @@ def normalize_product(product):
     Chem.AssignStereochemistry(mol, cleanIt=True, force=True)
     mol = Chem.RemoveHs(mol)
     Chem.AssignStereochemistry(mol, cleanIt=True, force=True)
-    smiles = Chem.MolToSmiles(mol, isomericSmiles=True)
+    smiles = absolute_smiles(mol, isomericSmiles=True)
     exact = canonical(smiles)
     if smiles != exact:
         raise ValueError("Canonical product indexing changed during strict molecule normalization")

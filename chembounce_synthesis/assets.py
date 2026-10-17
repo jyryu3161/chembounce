@@ -14,7 +14,7 @@ from pathlib import Path
 
 from rdkit import Chem
 
-from .common import canonical, digest, write_json
+from .common import absolute_smiles, canonical, digest, write_json
 from .reactions import Rules
 
 
@@ -100,13 +100,27 @@ def convert_catalog(inputs, output, source, snapshot, smiles_column="smiles", id
                 if not line.strip() or line.lstrip().startswith("#"):
                     continue
                 fields = line.split(maxsplit=1)
-                entries.append((fields[0], fields[1] if len(fields) == 2 else None))
+                if len(fields) == 2 and fields[1].startswith("|"):
+                    end = fields[1].find("|", 1)
+                    if end < 0:
+                        entries.append((line.strip(), None))
+                        continue
+                    # Keep the complete annotation until the molecular-state check;
+                    # it is chemistry metadata, never a supplied identifier.
+                    suffix = fields[1][end + 1 :].strip()
+                    if "|" in suffix:
+                        # A second annotation must not hide inside the ID field.
+                        entries.append((line.strip(), None))
+                    else:
+                        entries.append((fields[0] + " " + fields[1][: end + 1], suffix or None))
+                else:
+                    entries.append((fields[0], fields[1] if len(fields) == 2 else None))
         elif path.suffix.lower() == ".sdf":
 
             def sdf_entries():
                 for mol in Chem.SDMolSupplier(str(path), removeHs=True):
                     yield (
-                        Chem.MolToSmiles(mol) if mol is not None else "",
+                        mol if mol is not None else "",
                         mol.GetProp(id_column) if mol is not None and mol.HasProp(id_column) else None,
                     )
 
@@ -120,7 +134,7 @@ def convert_catalog(inputs, output, source, snapshot, smiles_column="smiles", id
                 entries = [(r[smiles_column], r.get(id_column)) for r in reader]
         for index, (smiles, ident) in enumerate(entries):
             try:
-                smiles = canonical(smiles)
+                smiles = canonical(absolute_smiles(smiles) if isinstance(smiles, Chem.Mol) else smiles)
             except ValueError as exc:
                 failures.append(
                     {"input_index": input_index, "file": str(path), "record": index, "reason": str(exc)}

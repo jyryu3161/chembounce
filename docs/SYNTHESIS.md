@@ -1122,3 +1122,43 @@ authenticate scientific provenance. Existing metric, seed, route and count check
 run independently, even if identity metadata is malformed. Each seed still has
 its own common-pose witness; the comparison does not assert a shared pose across
 seeds.
+
+Nonabsolute enhanced stereochemistry is unsupported. OR groups describe unknown
+absolute configurations; AND groups describe mixtures. The synthesis and core
+input boundaries reject these groups (including mixed groups) before ordinary
+SMILES serialization can discard them. The program does not choose an enantiomer
+or infer experimental selectivity. Ordinary defined stereochemistry and explicit
+ABS groups retain their existing absolute-state meaning. Direct raw-molecule
+route diagnostics also report unsupported enhanced groups rather than calling
+them fully specified.
+
+Catalog conversion checks raw SDF molecules before serialization. In `.smi`,
+`.smiles` and `.txt` files a complete CXSMILES annotation belongs to the molecular
+input; an identifier may follow its closing `|`. Unsupported molecular records
+retain rejection ordinals/reasons while later valid records survive. They are
+never converted into identifiers or supplier claims. Previously serialized
+ordinary SMILES cannot reveal an enhanced group already lost upstream; this fix
+does not recover or certify old catalogs.
+
+This safety change updates profile-bound source files without changing score
+floors or packaged profile artifacts. Existing source-bound profiles therefore
+report `custom_unvalidated` with explicit source mismatches. Any later engineering
+profile rebinding requires separate review; the calibrated development profile
+has not been silently rebound.
+
+
+Exact-state text accepts ordinary SMILES or one complete `|a:...|` CX block whose
+unique atom references are retained as specified tetrahedral ABS centers. Other
+CX annotations, including coordinates/labels, axial `wU`/`wD`, extra blocks and
+trailing names are explicitly unsupported formats; they are not declarations
+that the molecule is chemically invalid. Optional identifiers in catalog SMILES
+files are parsed separately. CX annotations on reaction SMARTS are unsupported;
+ordinary stereochemical SMARTS remain available.
+
+Explicit atropisomeric bond states are also rejected before serialization.
+Older SDF readers may lose axial interpretation while retaining a bond wedge;
+wedging not accounted for by a specified tetrahedral origin is rejected as
+unsupported/unresolved, without inferring an axial configuration. This conservative
+rule can reject decorative or ambiguous wedges. It cannot recover stereo metadata
+already discarded by an upstream reader or an old serialized catalog, and it does
+not classify potential atropisomerism in an unannotated structure.

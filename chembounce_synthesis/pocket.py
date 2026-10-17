@@ -13,7 +13,7 @@ from rdkit import Chem, rdBase
 from scipy.optimize import linear_sum_assignment
 from scipy.spatial import cKDTree
 
-from .common import canonical, digest
+from .common import absolute_smiles, require_absolute_stereo, canonical, digest
 from .conformers import FEATURES
 
 PROTEIN_RESIDUES = set(
@@ -254,10 +254,12 @@ class BoundPoseConstraints:
         supplied = list(Chem.SDMolSupplier(str(source), removeHs=False))
         if len(supplied) != 1 or supplied[0] is None:
             raise ValueError("Pocket reference SDF requires exactly one valid molecule")
+        require_absolute_stereo(supplied[0])
+        require_absolute_stereo(hit_pose.mol)
         self.reference = Chem.Mol(hit_pose.mol)
         self.reference_cid = next(iter(hit_pose.relative_energies))
         original = Chem.RemoveHs(supplied[0])
-        if canonical(Chem.MolToSmiles(original)) != canonical(Chem.MolToSmiles(self.reference)):
+        if canonical(absolute_smiles(original)) != canonical(absolute_smiles(self.reference)):
             raise ValueError("Pocket reference file and scoring reference identities differ")
         if not np.allclose(
             original.GetConformer().GetPositions(),
@@ -390,7 +392,7 @@ class BoundPoseConstraints:
         if hit_pose is None or not hit_pose.bound_pose:
             raise ValueError("Pocket constraints cannot be used with a freely generated hit ensemble")
         if (
-            canonical(Chem.MolToSmiles(hit_pose.mol)) != canonical(Chem.MolToSmiles(self.reference))
+            canonical(absolute_smiles(hit_pose.mol)) != canonical(absolute_smiles(self.reference))
             or len(hit_pose.relative_energies) != 1
         ):
             raise ValueError("Pocket constraints require the same single bound-reference chemical state")

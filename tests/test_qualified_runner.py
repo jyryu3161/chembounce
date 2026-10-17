@@ -5,6 +5,9 @@ from types import SimpleNamespace
 
 import pytest
 
+# Test-only artifacts retain real loaders, policy checks and collector validation.
+pytestmark = pytest.mark.usefixtures("synthetic_historical_profile_bindings")
+
 from benchmarks.research import qualified_adapter as adapter, qualified_runner as runner
 from benchmarks.research.protocol import write_json
 
@@ -60,10 +63,9 @@ def config_file(tmp_path, profile="qualified-development-v1"):
     from chembounce_synthesis.workflow import load_config
     from chembounce_synthesis.profiles import profile_provenance
 
-    if profile_provenance(load_config(path))["status"] != (
+    assert profile_provenance(load_config(path))["status"] == (
         "engineering_policy_matched" if profile.endswith("v2") else "development_protocol_matched"
-    ):
-        pytest.skip("Runtime does not match reviewed development calibration")
+    )
     return path
 
 
