@@ -58,7 +58,12 @@ chembounce-reaction-records match ./ord-bundle ./saved-route-record-report \
   --run ./saved-run --route-id ROUTE_ID
 ```
 
-This reads only bounded `results.json` and `routes.json`. It requires exactly one
+This reads only `results.json` and `routes.json`, each at most 64 MiB (128 MiB
+raw JSON total), matching the standard report's per-document allowance. These
+are document-byte bounds, not limits on decoded Python object allocations; the
+selected graph remains limited to 256 nodes. The report records file sizes and
+these limits. Reaction-source/bundle/parser limits below remain separate.
+It requires exactly one
 selected result/route ID, equal exact final product identities, a connected
 acyclic saved graph, bound leaf identities and consistent recorded reactant slots
 at every step. Each reaction receives a separate lookup. It saves both file

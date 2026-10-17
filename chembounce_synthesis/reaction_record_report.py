@@ -13,6 +13,12 @@ import sys
 
 from . import reaction_records as records
 
+# Saved run documents can include many considered routes, not just the selected result.
+# Read exactly these two files: at most 128 MiB of raw JSON in total. This is a
+# document-byte bound, not a claim about the allocation of decoded Python objects.
+MAX_SAVED_DOCUMENT_BYTES = 64 * 1024 * 1024
+MAX_SAVED_TOTAL_BYTES = 2 * MAX_SAVED_DOCUMENT_BYTES
+
 
 def _same(left, right):
     a, b = records.smiles_identity(left), records.smiles_identity(right)
@@ -21,8 +27,13 @@ def _same(left, right):
 
 def _saved_queries(run_dir, route_id, contexts):
     """Join saved final result, graph and verification; this does not replay chemistry."""
-    raw_routes = records.read_local(run_dir, "routes.json")
-    raw_results = records.read_local(run_dir, "results.json")
+    raw_routes = records.read_local(run_dir, "routes.json", MAX_SAVED_DOCUMENT_BYTES)
+    raw_results = records.read_local(run_dir, "results.json", MAX_SAVED_DOCUMENT_BYTES)
+    records.require(
+        len(raw_routes) + len(raw_results) <= MAX_SAVED_TOTAL_BYTES,
+        "saved_document_total_bound",
+        "Saved documents exceed their total byte bound",
+    )
     routes_doc, results_doc = records.json_read(raw_routes), records.json_read(raw_results)
     records.require(
         isinstance(routes_doc, dict)
@@ -240,6 +251,12 @@ def _saved_queries(run_dir, route_id, contexts):
         "route_id": route_id,
         "root_node_id": root,
         "final_product": root_product,
+        "saved_document_limits": {
+            "per_file_bytes": MAX_SAVED_DOCUMENT_BYTES,
+            "total_bytes": MAX_SAVED_TOTAL_BYTES,
+            "meaning": "Raw JSON document bytes, not decoded Python object memory",
+        },
+        "saved_document_bytes": {"routes.json": len(raw_routes), "results.json": len(raw_results)},
         "routes_json_sha256": records.sha(raw_routes),
         "results_json_sha256": records.sha(raw_results),
         "saved_route_sha256": records.binding(saved),

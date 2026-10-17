@@ -790,3 +790,31 @@ def test_bundle_notice_uses_this_declared_snapshot_not_example(source, tmp_path)
     (path / "NOTICE.txt").write_text("forged attribution")
     with pytest.raises(r.RecordError, match="derived_notice_mismatch"):
         r.load_bundle(path)
+
+
+@pytest.mark.parametrize("filename", ["routes.json", "results.json"])
+def test_saved_documents_over_16_mib_bind_without_changing_source_caps(bundle, tmp_path, filename):
+    run = tmp_path / "run"
+    make_saved_run(run)
+    path = run / filename
+    document = json.loads(path.read_text())
+    document["synthetic_test_only_padding"] = "x" * (16 * 1024 * 1024)
+    save_json(path, document)
+    assert 16 * 1024 * 1024 < path.stat().st_size < report.MAX_SAVED_DOCUMENT_BYTES
+    outcome = report.match_saved_route(bundle, run, "synthetic-test-route")
+    assert outcome["steps"][0]["matches"][0]["product_identity"]["key"] == r.smiles_identity(PRODUCT)["key"]
+    binding = outcome["saved_run_binding"]
+    assert binding["saved_document_bytes"][filename] == path.stat().st_size
+    assert binding[filename.replace(".", "_") + "_sha256"] == r.sha(path.read_bytes())
+    assert binding["saved_document_limits"]["total_bytes"] == 128 * 1024 * 1024
+    assert r.MAX_FILE == 16 * 1024 * 1024 and r.MAX_DATASET == 2 * 1024 * 1024
+
+
+@pytest.mark.parametrize("filename", ["routes.json", "results.json"])
+def test_saved_document_over_64_mib_refuses_before_json_parse(tmp_path, filename):
+    run = tmp_path / "run"
+    make_saved_run(run)
+    with (run / filename).open("wb") as stream:
+        stream.truncate(report.MAX_SAVED_DOCUMENT_BYTES + 1)
+    with pytest.raises(r.RecordError, match="file_bound"):
+        report._saved_queries(run, "synthetic-test-route", {})
