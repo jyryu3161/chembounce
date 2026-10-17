@@ -1516,7 +1516,7 @@ def render_html(view, *, artifact_links=None):
             "Saved identity descriptor (not source authentication)",
             _fields(_mapping(_mapping(view.get("identity_descriptor")).get("record"))),
         ),
-        "<details><summary>Rendered artifact bytes and local files</summary><p>Hashes identify rendered bytes; they do not authenticate a self-consistent bundle. SDF/TSV files are linked for review, not parsed or scientifically validated by this report.</p>",
+        "<details><summary>Rendered artifact bytes and local files</summary><p>Hashes identify rendered bytes; they do not authenticate a self-consistent bundle. The file inventory identifies SDF/TSV artifacts for review; they are not parsed or scientifically validated by this report.</p>",
     ]
     for name, item in sorted(view["artifacts"].items()):
         label = f"<a href='{links[name]}'>{_escape(name)}</a>" if name in links else _escape(name)
