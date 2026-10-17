@@ -1,10 +1,13 @@
 # Catalog loading traversal candidate
 
-This candidate is **not release-ready**. It changes `common.py`, which is bound
+The isolated traversal candidate was **not release-ready**. It changes `common.py`, which is bound
 by the existing numerical profile source hashes. The packaged v1–v6 profiles,
-including default v5, correctly report `custom_unvalidated` on this source.
-Their artifacts, defaults and matching rules remain unchanged. Release requires
-independent review and a separate prospective profile compatibility decision.
+including former default v5, correctly report `custom_unvalidated` on this source.
+Their artifacts and matching rules remain unchanged. The prospective
+`qualified-selective-engineering-v7` profile and explicit default transition
+bind this implementation to v5's unchanged effective policy. That separate
+release candidate requires independent review; implementation parity alone
+does not authorize release. See the [v7 transition](SYNTHESIS.md#engineering-v7-v5-policy-with-optimized-validation).
 The frozen `e97036e` v6 campaign is unaffected.
 
 The change reduces Python dispatch during eager molecular validation. The stereo

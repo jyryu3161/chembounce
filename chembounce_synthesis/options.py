@@ -8,7 +8,7 @@ def add_expansion_options(parser):
     parser.add_argument(
         "--recommend",
         action="store_true",
-        help="Request qualified-selective-engineering-v5: original-hit Tanimoto/shape/pharmacophore floors .35/.70/.50, polar recall .75, changed scaffold and computational route support; supported explicit overrides remain custom",
+        help="Request qualified-selective-engineering-v7: original-hit Tanimoto/shape/pharmacophore floors .35/.70/.50, polar recall .75, changed scaffold and computational route support; supported explicit overrides remain custom",
     )
     parser.add_argument(
         "--forward-model-path",
@@ -23,6 +23,7 @@ def add_expansion_options(parser):
             "qualified-selective-engineering-v4",
             "qualified-selective-engineering-v5",
             "qualified-selective-engineering-v6",
+            "qualified-selective-engineering-v7",
         ),
         help="Explicit opt-in profile: permissive development fit or selective engineering constraints (not fitted); fixed three-seed scoring and computational route support, no activity guarantee",
     )

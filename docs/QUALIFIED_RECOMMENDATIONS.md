@@ -10,7 +10,7 @@ biological activity, or experimental synthesizability.
 
 Both CLIs expose `--recommend`, and the lazy public API exposes
 `recommend(hit, designs, config, output_dir, *, deadline_monotonic=None)`.
-These select `qualified-selective-engineering-v5` and preflight the request before
+These select `qualified-selective-engineering-v7` and preflight the request before
 consuming designs or generating raw candidates. Generic calls without a
 recommendation request retain exploratory defaults.
 See [entrypoint and conflict rules](SYNTHESIS.md#request-qualified-recommendations).
@@ -18,7 +18,14 @@ Supported explicit custom values remain visible, with effective score/recall flo
 and matched/custom status in the CLI summary; conflicting profile declarations
 and unsupported effective settings reject rather than being overwritten.
 Historical profile requests are not upgraded automatically: combining an explicit
-v2 profile with `--recommend` or `recommend()` rejects the conflict.
+v2, v5 or v6 profile with `--recommend` or `recommend()` rejects the conflict.
+
+V7 preserves v5's exact effective policy, budgets, seeds and `inherit-v1`
+allocation behavior, while binding the reviewed `common.py` traversal source.
+Existing v1–v6 artifacts and benchmark bindings remain unchanged and report
+their source mismatches on the new implementation. This transition does not
+adopt v6 allocation or establish improved scientific yield. See
+[v7 source compatibility](SYNTHESIS.md#engineering-v7-v5-policy-with-optimized-validation).
 
 ### Explicit v6 and current evidence
 
@@ -36,7 +43,9 @@ saved proposals must cover supplied designs, while fresh proposal generation
 requires the configured local SynLlama provider. The CLI profile option overrides
 the config's profile; API users select v6 in the config passed to
 `chembounce_synthesis.workflow.run(...)`.
-The version-fixed `--recommend`/`recommend()` shortcut remains v5.
+The version-fixed `--recommend`/`recommend()` shortcut selects v7. Explicit v6
+retains its historical source pins and reports `custom_unvalidated` on the
+optimized v7 implementation; its frozen evaluation source is unchanged.
 
 V6 changes screening and evidence allocation, retaining the original-input
 similarity floors, joint same-pose shape/pharmacophore/polar constraints,
@@ -1092,7 +1101,8 @@ empty result. Ranking applies only after these conditions pass. The immediate
 delivery order and completion checks are:
 
 1. **Keep the candidate method fixed for evaluation.** Opt-in v6 is the current
-   candidate; the recommendation default remains v5. Preserve its declared
+   candidate on its frozen source; the recommendation default is v7 with v5's
+   effective policy. Preserve the candidate's declared
    thresholds, same-pose checks, exact-product evidence, seeds and allocation
    policies. The accepted fresh integration and post hoc finite diagnostic above
    do not justify lowering the contract or further tuning to force those two

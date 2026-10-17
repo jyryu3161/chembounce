@@ -35,7 +35,7 @@ claim that the pin was checked.
 ## Request qualified recommendations
 
 Use `--recommend` on either CLI or `from chembounce_synthesis import recommend`
-for the version-fixed `qualified-selective-engineering-v5` contract. The
+for the version-fixed `qualified-selective-engineering-v7` contract. The
 [asset template](../examples/synthesis/strict-recommendation-config.json) declares
 the same profile, so selection is idempotent. Replace its placeholder paths with
 existing local files/directories; the example is not a ready-made vendor catalog,
@@ -565,7 +565,7 @@ equal runtime. The configured evaluator cache and product-matching policy are un
 within the run and checks exact-product agreement independently for every route.
 The legacy evaluator retains its existing matching and cache policies. Budgets, deadlines, unknown outcomes and final qualification
 are unchanged. The option applies to both 2D and 3D workflows and is an explicit
-`custom_unvalidated` material override for historical v1–v5 profiles. V6 explicitly
+`custom_unvalidated` material override for v1–v5 and v7 profiles. V6 explicitly
 declares this policy together with ranked screening (see below). Summary and
 manifest record it separately from screening and route allocation. It is a coverage
 baseline, not a claim of improved yield or default superiority.
@@ -594,7 +594,7 @@ including preflight failures; it is not a distinct-molecule or equal-time quota.
 Summary counters distinguish attempts, distinct products, deferred design attempts
 and actual scorer invocations. The summary and manifest name the screening policy
 separately from `allocation_policy`. This option requires 3D scoring and is a
-material `custom_unvalidated` override for historical v1–v5 profiles.
+material `custom_unvalidated` override for v1–v5 and v7 profiles.
 V2–V5 artifact bytes are unchanged. Greater 2D similarity can reduce scaffold
 diversity; this baseline has no default-superiority or efficacy claim. V6 below
 explicitly declares it together with evidence rotation; fresh-generation and
@@ -1523,7 +1523,7 @@ Nothing reconstructs diagnostics for older runs that did not retain these poses.
 ### Engineering v4 source revision (historical)
 
 The v4 release introduced `qualified-selective-engineering-v4` as its
-`--recommend`/`recommend()` default; v5 supersedes it below. It preserves the exact v3 numerical
+`--recommend`/`recommend()` default; v5 and then v7 superseded it. It preserves the exact v3 numerical
 specification, runtime declaration, floors, seeds, budgets and strict route
 support. Its new artifact binds the accepted rejected-pose diagnostic scorer
 revision and retains the prior exact-state guard provenance. Source review is
@@ -1607,8 +1607,8 @@ failed controls, biological activity, or experimental synthesis feasibility.
 
 ### Engineering v5 and optional landmark pose proposals
 
-`--recommend` and `recommend()` now request
-`qualified-selective-engineering-v5`. Its declared engineering floors remain
+V5 introduced `qualified-selective-engineering-v5` as the recommendation default;
+the current v7 transition is described below. Its declared engineering floors remain
 original-hit Tanimoto/shape/pharmacophore **0.35/0.70/0.50**, polar recall **0.75**,
 eight conformers at seed 42 and final seeds 42/43/44. Route support and all final
 qualification checks are unchanged. V5 binds the reviewed scorer and the bounded
@@ -1670,7 +1670,7 @@ campaign is relabelled as v5 evaluation.
 with `--recommendation-profile qualified-selective-engineering-v6` (alongside the
 usual synthesis configuration), or set `recommendation_profile` in that config.
 Do not combine this choice with `--recommend`: `--recommend` and `recommend()`
-continue to request default v5 and reject a conflicting explicit profile.
+request default v7 and reject a conflicting explicit profile.
 
 V6 retains the .35/.70/.50 original-hit floors, .75 polar recall, exact-product
 conditional route support, scaffold-change checks and three-seed qualification.
@@ -1697,3 +1697,32 @@ semantics are retained; enabling landmark proposals is still a material custom
 override. Any allocation change from the v6 declaration remains
 `custom_unvalidated`. Old profile artifacts and their source scopes are unchanged.
 A matching profile is not full-source or asset certification.
+
+### Engineering v7: v5 policy with optimized validation
+
+`--recommend` and `recommend()` explicitly select
+`qualified-selective-engineering-v7`. V7 preserves all v5 effective settings:
+the .35/.70/.50 original-hit floors, .75 polar recall, exact regenerated-product
+route support, normalized scaffold change, seeds, budgets, search and ranking.
+Both screening and evidence allocation retain `inherit-v1`; v6 allocation is
+not selected. Landmark proposals and rejected-pose diagnostics remain off.
+
+V7 changes the primary `common.py` source binding to the reviewed indexed graph
+traversal implementation. The remaining five primary source pins, runtime and
+optional feature declarations are inherited from v5. The retained optional
+diagnostic declaration still reports its historical `workflow.py` mismatch;
+enabling those diagnostics therefore remains `custom_unvalidated`.
+
+The v1–v6 artifact bytes, names and exact source checks are unchanged. Their
+`common.py` mismatch remains visible on this implementation. Combining an
+explicit historical profile, including v5 or v6, with either recommendation
+shortcut rejects before work starts; use an explicit profile without the
+shortcut to retain that historical request. Continuation retains its saved
+profile unless explicitly replaced. No historical benchmark protocol follows
+the new default or accepts v7 implicitly.
+
+One sequential full-catalog pair observed lower constructor CPU time with
+matching complete molecular/catalog/lineage digests and 60 sampled fingerprints.
+This is not a robust or end-to-end speedup result, a changed similarity contract,
+or evidence of improved qualified yield. See the
+[measurement and compatibility note](CATALOG_LOAD_OPTIMIZATION.md).

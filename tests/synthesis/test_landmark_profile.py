@@ -42,7 +42,6 @@ def test_packaged_v5_exact_policy_runtime_and_history():
         == old["provenance"]["source_revision"]
     )
     assert profiles.SELECTIVE_PROFILE == "qualified-selective-engineering-v2"
-    assert profiles.DEFAULT_RECOMMENDATION_PROFILE == V5
     assert not {"review", "calibration_spec", "fit_sha256"} & new.keys()
     for name, digest in HISTORICAL.items():
         assert profiles.PROFILE_SHA256[name] == digest
@@ -52,14 +51,18 @@ def test_packaged_v5_exact_policy_runtime_and_history():
         )
         assert result["status"] == "custom_unvalidated"
     observed = profiles.numerical_runtime(V5)
-    assert observed["source_sha256"] == new["provenance"]["source_sha256"]
+    assert {
+        path
+        for path, digest in observed["source_sha256"].items()
+        if digest != new["provenance"]["source_sha256"][path]
+    } == {"chembounce_synthesis/common.py"}
     assert len(observed["source_sha256"]) == 6
     result = profiles.profile_provenance(config())
     assert not result["material_overrides"]
-    assert not any(k.startswith("chembounce_synthesis/") for k in result["runtime_source_mismatches"])
-    assert result["status"] == (
-        "custom_unvalidated" if result["runtime_source_mismatches"] else "engineering_policy_matched"
-    )
+    assert {k for k in result["runtime_source_mismatches"] if k.startswith("chembounce_synthesis/")} == {
+        "chembounce_synthesis/common.py"
+    }
+    assert result["status"] == "custom_unvalidated"
     diagnostic = result["optional_diagnostics"]["rejected_pose_diagnostics"]
     # Pure route-computation reuse changes workflow source without rebinding
     # the historical optional diagnostic declaration or numerical policy.
@@ -246,8 +249,9 @@ def test_early_missing_api_and_no_landmarks(tmp_path, monkeypatch):
 
 
 @pytest.mark.parametrize("enabled", [False, True])
+@pytest.mark.parametrize("profile_name", [V5, profiles.TRAVERSAL_SELECTIVE_PROFILE])
 def test_controlled_named_workflow_all_seed_saved_report_and_continuation(
-    tmp_path, monkeypatch, assets, proposal, strict_predictor, enabled
+    tmp_path, monkeypatch, assets, proposal, strict_predictor, enabled, profile_name
 ):
     """Existing known amide; manual coords/controlled shape and forward beams.
 
@@ -302,7 +306,7 @@ def test_controlled_named_workflow_all_seed_saved_report_and_continuation(
         SimpleNamespace(ScoreMol=score, ShapeInputOptions=lambda: SimpleNamespace()),
     )
     c = config_for(tmp_path, assets, proposal)
-    c["recommendation_profile"] = V5
+    c["recommendation_profile"] = profile_name
     c["synthesis_evidence"] = {
         "predictor": {"kind": "reactiont5", "model_path": str(tmp_path / "controlled-forward")}
     }
@@ -314,7 +318,7 @@ def test_controlled_named_workflow_all_seed_saved_report_and_continuation(
     rows = workflow.run(HIT, [DESIGN], c, out)
     manifest = read(out, "manifest.json")
     provenance = manifest["recommendation_profile"]
-    assert provenance["name"] == V5
+    assert provenance["name"] == profile_name
     if enabled:
         assert provenance["status"] == "custom_unvalidated"
     # Minimum runtime has no concrete reaction-origin metadata, independently of ScoreMol.
@@ -336,13 +340,13 @@ def test_controlled_named_workflow_all_seed_saved_report_and_continuation(
     assert bool(fixed) is enabled
     view = report.build_report(out)
     assert view["artifact_consistency"] == "consistent_recorded_bundle", view["issues"]
-    assert view["policy"]["calibration"]["name"] == V5
+    assert view["policy"]["calibration"]["name"] == profile_name
     assert view["policy"]["calibration"]["status"] == provenance["status"]
     html = report.render_html(view)
-    assert V5 in html and (not enabled or "custom_unvalidated" in html)
+    assert profile_name in html and (not enabled or "custom_unvalidated" in html)
     _, designs, carried = continuation_inputs(out)
     assert (
-        carried["recommendation_profile"] == V5
+        carried["recommendation_profile"] == profile_name
         and carried["similarity_constraints"]["landmark_pose_proposals"] is enabled
     )
     before = len(calls)

@@ -72,6 +72,17 @@ class PackagedBenchmarkBindings(unittest.TestCase):
                 }
                 self.assertEqual(self.call("benchmark_profile", binding), name)
                 self.assertTrue(self.call("selective_benchmark_profile", name))
+                with self.assertRaises(ValueError):
+                    self.call(
+                        "benchmark_profile",
+                        {
+                            **binding,
+                            "recommendation_profile": self.profiles.TRAVERSAL_SELECTIVE_PROFILE,
+                            "profile_artifact_sha256": self.profiles.PROFILE_SHA256[
+                                self.profiles.TRAVERSAL_SELECTIVE_PROFILE
+                            ],
+                        },
+                    )
                 for field, value in (
                     ("schema", "qualified-benchmark-protocol-v99"),
                     ("profile_artifact_sha256", "0" * 64),
@@ -88,6 +99,7 @@ class PackagedBenchmarkBindings(unittest.TestCase):
         for name in (
             self.profiles.GUARDED_SELECTIVE_PROFILE,
             self.profiles.DIAGNOSTIC_SELECTIVE_PROFILE,
+            self.profiles.TRAVERSAL_SELECTIVE_PROFILE,
             "future-profile",
         ):
             with self.subTest(name=name), self.assertRaises(ValueError):

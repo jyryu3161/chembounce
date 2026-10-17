@@ -19,9 +19,8 @@ def effective(enabled=False):
     )
 
 
-def test_new_default_preserves_exact_numeric_and_runtime_declaration():
+def test_historical_v4_preserves_exact_numeric_and_runtime_declaration():
     old, new = (profiles.load_profile(n) for n in (profiles.GUARDED_SELECTIVE_PROFILE, V4))
-    assert profiles.DEFAULT_RECOMMENDATION_PROFILE == profiles.LANDMARK_SELECTIVE_PROFILE
     for key in ("engineering_spec", "minimum_scores", "schema", "status", "scope"):
         assert new[key] == old[key]
     assert new["provenance"]["runtime"] == old["provenance"]["runtime"]
