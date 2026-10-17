@@ -1,0 +1,452 @@
+{
+  "fixtures": [
+    {
+      "alternative_rotation": [
+        [
+          0.5,
+          0.8660254037844386,
+          0.0
+        ],
+        [
+          -0.8660254037844386,
+          0.5,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "alternative_translation": [
+        -0.2679491924311228,
+        4.464101615137754,
+        -1.0
+      ],
+      "candidate_coordinates": [
+        [
+          4.0,
+          -2.0,
+          1.0
+        ],
+        [
+          4.043782217350893,
+          -0.52416697508023,
+          1.15
+        ],
+        [
+          5.3,
+          0.2516660498395402,
+          0.85
+        ],
+        [
+          5.343782217350894,
+          1.727499074759311,
+          1.15
+        ],
+        [
+          6.6,
+          2.5033320996790804,
+          0.85
+        ],
+        [
+          6.643782217350893,
+          3.9791651245988504,
+          1.15
+        ],
+        [
+          7.9,
+          4.754998149518622,
+          1.0
+        ],
+        [
+          8.625,
+          6.0107349850060565,
+          1.0
+        ]
+      ],
+      "id": "rigid_control_8",
+      "landmarks": [],
+      "purpose": "Positive rigid copy/control and fixed-frame ScoreMol parity prerequisite.",
+      "reference_coordinates": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.3,
+          0.7,
+          0.15
+        ],
+        [
+          2.6,
+          0.0,
+          -0.15
+        ],
+        [
+          3.9000000000000004,
+          0.7,
+          0.15
+        ],
+        [
+          5.2,
+          0.0,
+          -0.15
+        ],
+        [
+          6.5,
+          0.7,
+          0.15
+        ],
+        [
+          7.800000000000001,
+          0.0,
+          0.0
+        ],
+        [
+          9.25,
+          0.0,
+          0.0
+        ]
+      ],
+      "smiles": "CCCCCCCN"
+    },
+    {
+      "alternative_rotation": [
+        [
+          0.9909038086150892,
+          0.1345720701784385,
+          0.0
+        ],
+        [
+          -0.1345720701784385,
+          0.9909038086150892,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "alternative_translation": [
+        0.520595667515451,
+        2.6645352591003757e-15,
+        0.0
+      ],
+      "candidate_coordinates": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.3,
+          0.7,
+          0.15
+        ],
+        [
+          2.6,
+          0.0,
+          -0.15
+        ],
+        [
+          3.9000000000000004,
+          0.7,
+          0.15
+        ],
+        [
+          5.2,
+          0.0,
+          -0.15
+        ],
+        [
+          6.5,
+          0.7,
+          0.15
+        ],
+        [
+          7.800000000000001,
+          0.0,
+          0.0
+        ],
+        [
+          8.65,
+          1.174734012447073,
+          0.0
+        ]
+      ],
+      "id": "bent_terminal_8_default",
+      "landmarks": [],
+      "purpose": "Manually bend the terminal C-N bond at preserved1.45Angstrom length; fixed proper rotation+translation aligns terminal N and direction toward atom0. Optional strict landmark is declared, not tuned.",
+      "reference_coordinates": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.3,
+          0.7,
+          0.15
+        ],
+        [
+          2.6,
+          0.0,
+          -0.15
+        ],
+        [
+          3.9000000000000004,
+          0.7,
+          0.15
+        ],
+        [
+          5.2,
+          0.0,
+          -0.15
+        ],
+        [
+          6.5,
+          0.7,
+          0.15
+        ],
+        [
+          7.800000000000001,
+          0.0,
+          0.0
+        ],
+        [
+          9.25,
+          0.0,
+          0.0
+        ]
+      ],
+      "smiles": "CCCCCCCN"
+    },
+    {
+      "alternative_rotation": [
+        [
+          0.9909038086150892,
+          0.1345720701784385,
+          0.0
+        ],
+        [
+          -0.1345720701784385,
+          0.9909038086150892,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "alternative_translation": [
+        0.520595667515451,
+        2.6645352591003757e-15,
+        0.0
+      ],
+      "candidate_coordinates": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.3,
+          0.7,
+          0.15
+        ],
+        [
+          2.6,
+          0.0,
+          -0.15
+        ],
+        [
+          3.9000000000000004,
+          0.7,
+          0.15
+        ],
+        [
+          5.2,
+          0.0,
+          -0.15
+        ],
+        [
+          6.5,
+          0.7,
+          0.15
+        ],
+        [
+          7.800000000000001,
+          0.0,
+          0.0
+        ],
+        [
+          8.65,
+          1.174734012447073,
+          0.0
+        ]
+      ],
+      "id": "bent_terminal_8_landmark",
+      "landmarks": [
+        {
+          "family": "Donor",
+          "hit_atom_ids": [
+            7
+          ],
+          "id": "terminal-donor",
+          "max_distance": 0.25
+        }
+      ],
+      "purpose": "Manually bend the terminal C-N bond at preserved1.45Angstrom length; fixed proper rotation+translation aligns terminal N and direction toward atom0. Optional strict landmark is declared, not tuned.",
+      "reference_coordinates": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.3,
+          0.7,
+          0.15
+        ],
+        [
+          2.6,
+          0.0,
+          -0.15
+        ],
+        [
+          3.9000000000000004,
+          0.7,
+          0.15
+        ],
+        [
+          5.2,
+          0.0,
+          -0.15
+        ],
+        [
+          6.5,
+          0.7,
+          0.15
+        ],
+        [
+          7.800000000000001,
+          0.0,
+          0.0
+        ],
+        [
+          9.25,
+          0.0,
+          0.0
+        ]
+      ],
+      "smiles": "CCCCCCCN"
+    },
+    {
+      "alternative_rotation": [
+        [
+          0.9816656653077056,
+          0.19061091667577632,
+          0.0
+        ],
+        [
+          -0.19061091667577632,
+          0.9816656653077056,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "alternative_translation": [
+        0.4870055979256307,
+        4.440892098500626e-16,
+        0.0
+      ],
+      "candidate_coordinates": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.3,
+          0.7,
+          0.15
+        ],
+        [
+          2.6,
+          0.0,
+          -0.15
+        ],
+        [
+          3.9000000000000004,
+          0.7,
+          0.15
+        ],
+        [
+          5.2,
+          0.0,
+          0.0
+        ],
+        [
+          6.050000000000001,
+          1.174734012447073,
+          0.0
+        ]
+      ],
+      "id": "bent_terminal_6_landmark",
+      "landmarks": [
+        {
+          "family": "Donor",
+          "hit_atom_ids": [
+            5
+          ],
+          "id": "terminal-donor",
+          "max_distance": 0.25
+        }
+      ],
+      "purpose": "Manually bend the terminal C-N bond at preserved1.45Angstrom length; fixed proper rotation+translation aligns terminal N and direction toward atom0. Optional strict landmark is declared, not tuned.",
+      "reference_coordinates": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.3,
+          0.7,
+          0.15
+        ],
+        [
+          2.6,
+          0.0,
+          -0.15
+        ],
+        [
+          3.9000000000000004,
+          0.7,
+          0.15
+        ],
+        [
+          5.2,
+          0.0,
+          0.0
+        ],
+        [
+          6.65,
+          0.0,
+          0.0
+        ]
+      ],
+      "smiles": "CCCCCN"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Manual unit geometry, not generated/energy-minimized conformers, route-qualified hops, empirical failures or scientific yield. Identical molecule identities deliberately isolate rigid pose proposal."
+}

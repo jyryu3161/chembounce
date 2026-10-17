@@ -1486,3 +1486,58 @@ A new local `qualified-selective-engineering-v4-lineage-v1.json` configuration
 must be separately reviewed and installed after release; the installed v3
 configuration is not modified by this source change. Generic runs remain
 exploratory unless qualified behavior is explicitly requested.
+
+### Experimental landmark-aware rigid proposals
+
+`similarity_constraints.landmark_pose_proposals: true` explicitly enables
+`landmark-anchored-rigid-v1` for **nonempty user-supplied landmarks**. Omitting the
+option or setting it to `false` retains the existing policy and alignment path;
+it does not require the fixed-pose `ScoreMol` API. Enabling it without landmarks,
+with a non-boolean value, or without that API fails during configuration preflight.
+This source candidate changes the selective kernel hashes: historical engineering
+profiles remain unchanged and are honestly `custom_unvalidated`. It is not a
+new matched profile, calibration, or default recommendation method.
+
+Only a completed baseline alignment with an infeasible mandatory-landmark
+assignment triggers proposals. The helper enumerates family-correct, one-to-one
+mandatory correspondences, then applies a proper rigid transformation to **all**
+original atoms, including isotopic hydrogen. A single anchor proposes translation
+and, when a distinct typed helper feature exists, a deterministic shortest
+rotation. Multi-anchor fits correct the determinant to prohibit reflection.
+Internal geometry, conformer IDs and stereo are preserved. Proposal
+correspondences are never presented as the final polar/landmark assignment.
+
+Fixed-pose shape/color scoring uses the same heavy-atom view as `_overlay`, with
+normalization disabled. Its baseline shape/color must agree with the actual
+original alignment within `1e-5`, otherwise the proposal path is explicitly
+unavailable. Every alternative gets the unchanged full pharmacophore overlap and
+joint polar/landmark assessment on that exact pose. Selection considers only
+feasible poses with the existing scalar, **both** relative-energy penalties and
+first-on-tie behavior; a lower-scoring feasible pose can replace a rejected
+baseline. The ordinary design diagnostic and all final-seed/route gates remain.
+
+The fixed limits are two alternatives per pair, eight per scoring call, sixteen
+`ScoreMol` calls including parity checks, 128 mandatory correspondence edge visits
+and four complete maps per pair, and 4096 helper-anchor edge visits per pair.
+Added work has a one-second **cooperative** allowance per scoring call, capped by
+the existing deadline. Native calls may return late; late proposals are discarded
+and costs/overruns retained. Search truncation is distinct from geometric
+infeasibility. No budget is transferred to conformer, generation or route search.
+Opting in consumes time and can change deadline-limited outcomes.
+
+`pose_selection.landmark_pose_proposals` records separate pair/proposal counts,
+parity, mapping truncation, transforms and timing. Each pair preserves its baseline
+result; its top-level decision describes the actually selected pose. Selected
+`hit.landmark_proposal` binds the exact baseline and transformed coordinates,
+reference pose, helper policy/source, and corresponding audit entry. Saved-seed
+validation checks this association without embedding, aligning or searching.
+Optional rejected-pose diagnostics retain the actual proposal origin when that
+pose supplies the diagnostic. The workflow manifest also includes the helper's
+source hash. Config/policy preparation and final saved-result validation are
+setup/verification costs outside the per-scoring-call proposal timer and still
+consume any enclosing workflow deadline.
+
+The motivating manual fixture demonstrated an omission only for an explicitly
+requested 0.25 Å donor landmark. Default fixtures already passed. This feature is
+not evidence of improved ordinary recommendation coverage, recovery of historical
+failed controls, biological activity, or experimental synthesis feasibility.

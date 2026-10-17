@@ -132,7 +132,29 @@ def restore_pose(saved):
 class BoundSimilarity:
     """Bind selectors and query identity before any generation or embedding."""
 
-    def __init__(self, hit, minimum_scores=None, *, polar_recall=0.75, core_smiles=None, landmarks=None):
+    def __init__(
+        self,
+        hit,
+        minimum_scores=None,
+        *,
+        polar_recall=0.75,
+        core_smiles=None,
+        landmarks=None,
+        landmark_pose_proposals=False,
+    ):
+        if type(landmark_pose_proposals) is not bool:
+            raise ValueError("landmark_pose_proposals must be true or false")
+        proposal = None
+        if landmark_pose_proposals:
+            import time
+
+            proposal_setup_started = time.monotonic()
+            if not landmarks:
+                raise ValueError("Landmark pose proposals require explicit nonempty landmarks")
+            from .landmark_proposals import declaration
+
+            proposal = declaration()
+            self.landmark_proposal_preflight_seconds = time.monotonic() - proposal_setup_started
         self.hit = canonical(hit)
         self._hit_mol = molecule(self.hit)
         self._check_state(self._hit_mol)
@@ -196,6 +218,8 @@ class BoundSimilarity:
             "max_landmarks": MAX_LANDMARKS,
             "scope": "Engineering geometric constraints; typed coverage does not identify biological essentiality",
         }
+        if proposal is not None:
+            self._policy["landmark_pose_proposals"] = proposal
         self.sha256 = binding(self._policy)
 
     @staticmethod
