@@ -1,0 +1,32 @@
+{
+  "schema": "ord-retained-snapshot-v1",
+  "provider": "open-reaction-database",
+  "data_revision": "704870642e5c93a141e6666436bc14a9b5f880ed",
+  "schema_revision": "51b3a4968835f0090268cab9c0be034b48ac62d4",
+  "dataset": {
+    "path": "sample.parquet",
+    "sha256": "786b10eb7815c92e07800b7005fbdd046f15158c834b05596c6b02d3d6d2128e",
+    "bytes": 24703,
+    "dataset_id": "ord_dataset-0316886541d9435489859c2ad7edc863",
+    "url": "https://huggingface.co/datasets/open-reaction-database/ord-data/resolve/46980f8cb68aa43ed9707edec319d4eac5a2bfed/data/03/ord_dataset-0316886541d9435489859c2ad7edc863.parquet"
+  },
+  "descriptor": {
+    "path": "reaction.descriptor.pb",
+    "sha256": "386431d9cb8ffeaabeaeea0b0ab2369221394466eeb81d2c0b374df95c37aeb9"
+  },
+  "selectors": [
+    {
+      "row_group": 0,
+      "row": 0,
+      "reaction_id": "ord-268b5629ab3849f890d911d8df2bb683"
+    }
+  ],
+  "source_metadata": {
+    "license": "CC-BY-SA-4.0",
+    "attribution": "Open Reaction Database Project Authors; record experimenter Eric Isbrandt (uOttawa), as reported by the source",
+    "source_url": "https://github.com/open-reaction-database/ord-data/blob/704870642e5c93a141e6666436bc14a9b5f880ed/data/03/ord_dataset-0316886541d9435489859c2ad7edc863.parquet",
+    "acquired_at_utc": "2026-10-17T20:59:39.626039+00:00",
+    "selection": "Metadata-selected first small-pointer dataset, source row 0; not representative; no chemistry-driven selection.",
+    "audit_record_sha256": "5bdd1c9535bca04c5b649d8350d50befb77ff11ad156a46cb543407841f325ff"
+  }
+}
