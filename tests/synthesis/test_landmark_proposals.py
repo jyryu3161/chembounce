@@ -318,7 +318,7 @@ def test_profile_artifacts_not_rebound():
     for name, digest in profiles.PROFILE_SHA256.items():
         assert hashlib.sha256(profiles._resource(name).read_bytes()).hexdigest() == digest
     config = profiles.apply_profile_defaults(
-        {"recommendation_profile": profiles.DEFAULT_RECOMMENDATION_PROFILE}
+        {"recommendation_profile": profiles.DIAGNOSTIC_SELECTIVE_PROFILE}
     )
     assert profiles.profile_provenance(config)["status"] == "custom_unvalidated"
 

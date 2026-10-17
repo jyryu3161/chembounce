@@ -14,8 +14,14 @@ PROFILE = "qualified-development-v1"
 SELECTIVE_PROFILE = "qualified-selective-engineering-v2"
 GUARDED_SELECTIVE_PROFILE = "qualified-selective-engineering-v3"
 DIAGNOSTIC_SELECTIVE_PROFILE = "qualified-selective-engineering-v4"
-DEFAULT_RECOMMENDATION_PROFILE = DIAGNOSTIC_SELECTIVE_PROFILE
-ENGINEERING_PROFILES = (SELECTIVE_PROFILE, GUARDED_SELECTIVE_PROFILE, DIAGNOSTIC_SELECTIVE_PROFILE)
+LANDMARK_SELECTIVE_PROFILE = "qualified-selective-engineering-v5"
+DEFAULT_RECOMMENDATION_PROFILE = LANDMARK_SELECTIVE_PROFILE
+ENGINEERING_PROFILES = (
+    SELECTIVE_PROFILE,
+    GUARDED_SELECTIVE_PROFILE,
+    DIAGNOSTIC_SELECTIVE_PROFILE,
+    LANDMARK_SELECTIVE_PROFILE,
+)
 # Portable declarations bound by the packaged artifact hash. External release
 # review authenticates these prior records; loading never opens historical paths.
 GUARDED_SOURCE_REVISION = {
@@ -60,6 +66,44 @@ DIAGNOSTIC_SOURCE_REVISION = {
 }
 DIAGNOSTIC_FILES = ("rejected_pose_diagnostics.py", "refinement.py", "workflow.py", "selective_scoring.py")
 
+# Portable prior-source review, not calibration or a self-referential package pin.
+LANDMARK_SOURCE_REVISION = {
+    "landmark_source_commit": "427fdbd22ba40c3fde2cb4a4a43a3a7b64c85ad8",
+    "predecessor": {
+        "name": DIAGNOSTIC_SELECTIVE_PROFILE,
+        "artifact_sha256": "437b5c11f9b5627122e2ad70ecbc2d4f9f8b2e5294c6fbe8be81058ffb8e48b5",
+    },
+    "inherited_diagnostic_revision": copy.deepcopy(DIAGNOSTIC_SOURCE_REVISION),
+    "source_reviews": [
+        {
+            "role": "independent_source_review",
+            "record_label": "review-landmark-correction-427fdbd-v1/report.json",
+            "record_sha256": "f57aa678ba4fdc3977eec3a94961bbeda9d61c6b8fb3fd7959c5c4a74efa3402",
+        },
+        {
+            "role": "root_source_gate",
+            "record_label": "stage20-landmark-prototype-root-source-gate-427fdbd-v1.json",
+            "record_sha256": "9745470ecfe3e6d7a9a3ba4c7bc57de8e29f7305e9a158ded79ceb0add9b3a33",
+        },
+    ],
+}
+# Declarative values: loading the disabled profile must not import or require ScoreMol.
+LANDMARK_DECLARATION = {
+    "default_enabled": False,
+    "version": "landmark-anchored-rigid-v1",
+    "limits": {
+        "alternatives_per_pair": 2,
+        "alternatives_per_call": 8,
+        "scoremol_per_call": 16,
+        "mapping_edge_visits_per_pair": 128,
+        "complete_maps_per_pair": 4,
+        "helper_edge_visits_per_pair": 4096,
+        "cooperative_seconds_per_call": 1.0,
+    },
+    "parity_tolerance": 1e-5,
+}
+LANDMARK_FILE = "chembounce_synthesis/landmark_proposals.py"
+
 ENGINEERING_SCHEMA = "qualified-selective-engineering-profile-v2"
 SELECTIVE_KERNEL_FILES = ("selective_scoring.py", "similarity_constraints.py")
 SELECTIVE_CONSTRAINTS = {
@@ -69,6 +113,7 @@ SELECTIVE_CONSTRAINTS = {
 }
 # Reviewed development release; the untouched fit candidate remains separately bound.
 PROFILE_SHA256 = {
+    LANDMARK_SELECTIVE_PROFILE: "1273082948d008dc7dd02daf18ace1bc6aeeea78515ebf074f321a3c28a450ad",
     DIAGNOSTIC_SELECTIVE_PROFILE: "437b5c11f9b5627122e2ad70ecbc2d4f9f8b2e5294c6fbe8be81058ffb8e48b5",
     GUARDED_SELECTIVE_PROFILE: "fd5fb3b65b12307ed1a9b5371e74427eb709d8cf3012bbcba5095022ddb34537",
     SELECTIVE_PROFILE: "a8b47a409a21518dd482acbefdce38774414ae0b65f28d6ea7cb52ab63e1ef52",
@@ -202,8 +247,10 @@ def profile_defaults(artifact):
 
     if artifact["schema"] == ENGINEERING_SCHEMA:
         defaults["similarity_constraints"] = copy.deepcopy(SELECTIVE_CONSTRAINTS)
-    if artifact.get("name") == DIAGNOSTIC_SELECTIVE_PROFILE:
+    if artifact.get("name") in (DIAGNOSTIC_SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE):
         defaults["rejected_pose_diagnostics"] = False
+    if artifact.get("name") == LANDMARK_SELECTIVE_PROFILE:
+        defaults["similarity_constraints"]["landmark_pose_proposals"] = False
     return defaults
 
 
@@ -228,7 +275,10 @@ def _validate_engineering_artifact(artifact, name):
         }
         or any(key in artifact for key in ("fit_sha256", "review", "calibration_spec"))
         or set(artifact.get("provenance", {}).get("source_sha256", {}))
-        != {"chembounce_synthesis/" + name for name in KERNEL_FILES + SELECTIVE_KERNEL_FILES}
+        != (
+            {"chembounce_synthesis/" + path for path in KERNEL_FILES + SELECTIVE_KERNEL_FILES}
+            | ({LANDMARK_FILE} if name == LANDMARK_SELECTIVE_PROFILE else set())
+        )
     ):
         raise ValueError("Packaged engineering profile lacks its declared fixed policy/source scope")
     if (
@@ -239,12 +289,15 @@ def _validate_engineering_artifact(artifact, name):
             "Packaged guarded engineering profile lacks its reviewed source revision declaration"
         )
 
-    if name == DIAGNOSTIC_SELECTIVE_PROFILE:
+    if name in (DIAGNOSTIC_SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE):
         from .rejected_pose_diagnostics import LIMITS, VERSION
 
         diagnostic = artifact.get("optional_diagnostics", {}).get("rejected_pose_diagnostics", {})
         if (
-            artifact["provenance"].get("source_revision") != DIAGNOSTIC_SOURCE_REVISION
+            artifact["provenance"].get("source_revision")
+            != (
+                LANDMARK_SOURCE_REVISION if name == LANDMARK_SELECTIVE_PROFILE else DIAGNOSTIC_SOURCE_REVISION
+            )
             or set(artifact.get("optional_diagnostics", {})) != {"rejected_pose_diagnostics"}
             or set(diagnostic) != {"default_enabled", "version", "limits", "source_sha256"}
             or diagnostic["default_enabled"] is not False
@@ -262,6 +315,27 @@ def _validate_engineering_artifact(artifact, name):
             raise ValueError(
                 "Packaged diagnostic engineering profile lacks its reviewed optional source declaration"
             )
+
+    if name == LANDMARK_SELECTIVE_PROFILE:
+        declaration = artifact.get("optional_landmark_proposals", {})
+        expected = {
+            **LANDMARK_DECLARATION,
+            "source_sha256": {LANDMARK_FILE: artifact["provenance"]["source_sha256"][LANDMARK_FILE]},
+        }
+        digest = expected["source_sha256"][LANDMARK_FILE]
+        if (
+            declaration != expected
+            or type(declaration.get("default_enabled")) is not bool
+            or any(
+                type(declaration.get("limits", {}).get(key)) is not type(value)
+                for key, value in LANDMARK_DECLARATION["limits"].items()
+            )
+            or type(declaration.get("parity_tolerance")) is not float
+            or not isinstance(digest, str)
+            or len(digest) != 64
+            or any(c not in "0123456789abcdef" for c in digest)
+        ):
+            raise ValueError("Packaged landmark engineering profile lacks its declared opt-in source policy")
 
 
 def apply_profile_defaults(config):
@@ -305,7 +379,11 @@ def numerical_runtime(name=None):
         "source_sha256": {
             "chembounce_synthesis/" + name: _sha(files("chembounce_synthesis").joinpath(name).read_bytes())
             for name in (
-                KERNEL_FILES + SELECTIVE_KERNEL_FILES if name in ENGINEERING_PROFILES else KERNEL_FILES
+                KERNEL_FILES
+                + SELECTIVE_KERNEL_FILES
+                + (("landmark_proposals.py",) if name == LANDMARK_SELECTIVE_PROFILE else ())
+                if name in ENGINEERING_PROFILES
+                else KERNEL_FILES
             )
         },
     }
@@ -382,7 +460,7 @@ def profile_provenance(config):
     engineering = name in ENGINEERING_PROFILES
     diagnostics = None
     diagnostic_mismatches = {}
-    if name == DIAGNOSTIC_SELECTIVE_PROFILE:
+    if name in (DIAGNOSTIC_SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE):
         declaration = copy.deepcopy(artifact["optional_diagnostics"]["rejected_pose_diagnostics"])
         observed = {
             "chembounce_synthesis/" + path: _sha(files("chembounce_synthesis").joinpath(path).read_bytes())
@@ -409,6 +487,17 @@ def profile_provenance(config):
         or (diagnostics and diagnostics["enabled"] and diagnostic_mismatches)
         else ("engineering_policy_matched" if engineering else "development_protocol_matched"),
         "artifact_sha256": PROFILE_SHA256[name],
+        **(
+            {
+                "optional_landmark_proposals": {
+                    **copy.deepcopy(artifact["optional_landmark_proposals"]),
+                    "enabled": config.get("similarity_constraints", {}).get("landmark_pose_proposals", False),
+                    "scope": "Explicit landmark proposals are a material search override and remain custom_unvalidated. Default false requires no ScoreMol capability. Source review is not calibration or efficacy evidence.",
+                }
+            }
+            if name == LANDMARK_SELECTIVE_PROFILE
+            else {}
+        ),
         **({"optional_diagnostics": {"rejected_pose_diagnostics": diagnostics}} if diagnostics else {}),
         **(
             {"engineering_spec": artifact["engineering_spec"], "engineering_provenance": recorded}

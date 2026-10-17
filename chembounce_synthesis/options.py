@@ -1,13 +1,14 @@
 """Lightweight CLI controls; importing these never loads the model or 3D runtime."""
 
 import copy
+from argparse import BooleanOptionalAction
 
 
 def add_expansion_options(parser):
     parser.add_argument(
         "--recommend",
         action="store_true",
-        help="Request qualified-selective-engineering-v4: original-hit Tanimoto/shape/pharmacophore floors .35/.70/.50, polar recall .75, changed scaffold and computational route support; supported explicit overrides remain custom",
+        help="Request qualified-selective-engineering-v5: original-hit Tanimoto/shape/pharmacophore floors .35/.70/.50, polar recall .75, changed scaffold and computational route support; supported explicit overrides remain custom",
     )
     parser.add_argument(
         "--forward-model-path",
@@ -20,8 +21,15 @@ def add_expansion_options(parser):
             "qualified-selective-engineering-v2",
             "qualified-selective-engineering-v3",
             "qualified-selective-engineering-v4",
+            "qualified-selective-engineering-v5",
         ),
         help="Explicit opt-in profile: permissive development fit or selective engineering constraints (not fitted); fixed three-seed scoring and computational route support, no activity guarantee",
+    )
+    parser.add_argument(
+        "--landmark-pose-proposals",
+        action=BooleanOptionalAction,
+        default=None,
+        help="Explicit bounded rigid proposals for configured mandatory landmarks; requires fixed-pose ScoreMol, changes search and remains custom_unvalidated. Defaults off; --no-landmark-pose-proposals disables a retained setting",
     )
     parser.add_argument(
         "--scoring-objective",
@@ -108,6 +116,10 @@ def apply_expansion_options(config, args):
         )
     if getattr(args, "recommendation_profile", None) is not None:
         config["recommendation_profile"] = args.recommendation_profile
+    if getattr(args, "landmark_pose_proposals", None) is not None:
+        config.setdefault("similarity_constraints", {})["landmark_pose_proposals"] = (
+            args.landmark_pose_proposals
+        )
     if getattr(args, "scoring_objective", None) is not None:
         config.setdefault("conformers", {})["scoring_objective"] = args.scoring_objective
     if getattr(args, "ranking_policy", None) is not None:

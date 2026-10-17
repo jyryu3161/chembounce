@@ -316,7 +316,7 @@ def test_integrated_runs_exact_preflight_intersection(config, no_work, tmp_path,
 
     def run(hit, designs, cfg, output):
         assert cfg == effective[0]
-        assert cfg["recommendation_profile"] == profiles.DIAGNOSTIC_SELECTIVE_PROFILE
+        assert cfg["recommendation_profile"] == profiles.DEFAULT_RECOMMENDATION_PROFILE
         assert cfg["property_thresholds"]["mw"] == [160.0, 250.0]
         assert cfg["core_smiles"] == "CC(=O)N"
         return []

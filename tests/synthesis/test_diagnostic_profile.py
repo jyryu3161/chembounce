@@ -21,7 +21,7 @@ def effective(enabled=False):
 
 def test_new_default_preserves_exact_numeric_and_runtime_declaration():
     old, new = (profiles.load_profile(n) for n in (profiles.GUARDED_SELECTIVE_PROFILE, V4))
-    assert profiles.DEFAULT_RECOMMENDATION_PROFILE == V4
+    assert profiles.DEFAULT_RECOMMENDATION_PROFILE == profiles.LANDMARK_SELECTIVE_PROFILE
     for key in ("engineering_spec", "minimum_scores", "schema", "status", "scope"):
         assert new[key] == old[key]
     assert new["provenance"]["runtime"] == old["provenance"]["runtime"]
@@ -42,12 +42,14 @@ def test_new_default_preserves_exact_numeric_and_runtime_declaration():
 def test_actual_v4_source_match_is_separate_from_runtime_and_diagnostic_cost(enabled):
     p = profiles.profile_provenance(effective(enabled))
     assert not p["material_overrides"]
-    assert not any(k.startswith("chembounce_synthesis/") for k in p["runtime_source_mismatches"])
+    assert "chembounce_synthesis/selective_scoring.py" in p["runtime_source_mismatches"]
+    assert "chembounce_synthesis/similarity_constraints.py" in p["runtime_source_mismatches"]
     assert p["status"] == (
         "custom_unvalidated" if p["runtime_source_mismatches"] else "engineering_policy_matched"
     )
     d = p["optional_diagnostics"]["rejected_pose_diagnostics"]
-    assert d["enabled"] is enabled and not d["source_mismatches"]
+    assert d["enabled"] is enabled
+    assert "chembounce_synthesis/selective_scoring.py" in d["source_mismatches"]
     assert "deadline" in d["scope"] and "summary" in d["observed_costs"]
     d["limits"].clear()
     assert profiles.profile_provenance(effective())["optional_diagnostics"]["rejected_pose_diagnostics"][
@@ -218,7 +220,8 @@ def test_v4_actual_controlled_workflow_manifest_and_continuation(
     p = manifest["recommendation_profile"]
     assert p["name"] == V4 and p["artifact_sha256"] == profiles.PROFILE_SHA256[V4]
     d = p["optional_diagnostics"]["rejected_pose_diagnostics"]
-    assert d["enabled"] is enabled and not d["source_mismatches"]
+    assert d["enabled"] is enabled
+    assert "chembounce_synthesis/selective_scoring.py" in d["source_mismatches"]
     for path, digest in d["current_source_sha256"].items():
         assert manifest["code_sha256"][path.rsplit("/", 1)[1]] == digest
     summary = read(out, "summary.json")
