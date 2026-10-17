@@ -519,6 +519,35 @@ def _seed_row(trial):
     }
 
 
+def _forward_records(prediction, product):
+    """Join recorded strict hypotheses; never decode tokens or normalize molecules."""
+    if "predictions" not in prediction:
+        return  # Legacy detail absence is displayed explicitly, not reconstructed.
+    hypotheses = _records(prediction, "predictions")
+    _require(bool(hypotheses), "Matched forward support has no recorded hypotheses")
+    ranks, matches = [], []
+    for item in hypotheses:
+        rank = item.get("rank")
+        _integer(rank, "forward hypothesis rank", 1)
+        ranks.append(rank)
+        _require(type(item.get("complete")) is bool, "Invalid forward hypothesis completion")
+        value = item.get("product")
+        _require(
+            "product" in item and (value is None or isinstance(value, str) and bool(value)),
+            "Invalid recorded forward product",
+        )
+        _require(item["complete"] or value is None, "Incomplete forward hypothesis has a product")
+        if item["complete"] and value == product:
+            matches.append(rank)
+    _require(len(set(ranks)) == len(ranks), "Duplicate forward hypothesis ranks")
+    _equal(ranks, list(range(1, len(hypotheses) + 1)), "forward hypothesis rank order")
+    _require(bool(matches), "No completed recorded hypothesis matches the exact step product")
+    _equal(prediction["matched_rank"], min(matches), "forward matched hypothesis rank")
+    raw = prediction.get("raw")
+    if isinstance(raw, dict) and "predictions" in raw:
+        _equal(_binding(raw["predictions"]), _binding(hypotheses), "raw/reported forward hypotheses")
+
+
 def _candidate(row, docs, policy):
     result = {"row": row, "issues": [], "seed_rows": [], "derived_minima": {}, "route": {}, "refinement": {}}
     try:
@@ -633,6 +662,7 @@ def _candidate(row, docs, policy):
                     type(prediction.get("matched_rank")) is int and prediction["matched_rank"] > 0,
                     "Missing matched forward rank",
                 )
+                _forward_records(prediction, step["product"])
                 _equal(
                     step["reactants"],
                     [slot["smiles"] for slot in audited["reactant_slots"]],
@@ -1130,6 +1160,10 @@ def _route_html(route):
                 ),
             ]
             prediction = _mapping(step.get("forward_prediction"))
+            if "predictions" not in prediction:
+                parts.append(
+                    "<p>Forward hypothesis details not recorded; any matched status is a saved claim only.</p>"
+                )
             parts += [
                 "<h5>Forward support (recorded)</h5>",
                 _fields(

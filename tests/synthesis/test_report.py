@@ -1431,3 +1431,129 @@ def test_unavailable_common_contract_still_checked(field, value):
     unavailable(docs)
     identity_parts(docs)[1][field] = value
     assert identity_view(docs)["issues"]
+
+
+def detailed_forward(data):
+    """Saved producer-shaped values only, without decoding or chemistry."""
+    prediction = data["routes.json"]["routes"][0]["synthesis_evidence"]["steps"][0]["forward_prediction"]
+    prediction["predictions"] = [
+        {"rank": 1, "complete": True, "product": PRODUCT},
+        {"rank": 2, "complete": True, "product": "CC"},
+        {"rank": 3, "complete": False, "product": None},
+    ]
+    prediction["raw"] = {"predictions": copy.deepcopy(prediction["predictions"])}
+    return prediction
+
+
+@pytest.mark.parametrize("case", ["normal", "invalid_alternative", "multiple_matches", "rank_two"])
+def test_saved_forward_hypothesis_positive_controls(tmp_path, data, case):
+    prediction = detailed_forward(data)
+    hypotheses = prediction["predictions"]
+    if case == "invalid_alternative":
+        hypotheses[1]["product"] = None  # complete decoding can still be an invalid molecule
+    elif case == "multiple_matches":
+        hypotheses[1]["product"] = PRODUCT
+    elif case == "rank_two":
+        hypotheses[0]["product"] = "CC"
+        hypotheses[1]["product"] = PRODUCT
+        prediction["matched_rank"] = 2
+    prediction["raw"]["predictions"] = copy.deepcopy(hypotheses)
+    save(tmp_path, data)
+    before = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+    view = r.write_report(tmp_path)
+    assert view["artifact_consistency"] == "consistent_recorded_bundle"
+    assert view["candidates"][0]["derived_minima"]["hit_shape"] == 0.72
+    assert all((tmp_path / name).read_bytes() == value for name, value in before.items())
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "wrong_product",
+        "wrong_rank",
+        "incomplete_match",
+        "no_hypotheses",
+        "null_hypotheses",
+        "duplicate_rank",
+        "bool_rank",
+        "float_rank",
+        "zero_rank",
+        "rank_order",
+        "bool_product",
+        "missing_product",
+        "empty_product",
+        "numeric_complete",
+        "missing_complete",
+        "incomplete_nonnull_alternative",
+        "raw_mismatch",
+        "not_lowest_match",
+        "bad_item",
+    ],
+)
+def test_saved_forward_contradiction_is_not_confirmed(tmp_path, data, mutation):
+    prediction = detailed_forward(data)
+    hypotheses = prediction["predictions"]
+    if mutation == "wrong_product":
+        hypotheses[0]["product"] = "CC"
+    elif mutation == "wrong_rank":
+        prediction["matched_rank"] = 2
+    elif mutation == "incomplete_match":
+        hypotheses[0].update(complete=False, product=None)
+    elif mutation == "no_hypotheses":
+        prediction["predictions"] = []
+    elif mutation == "null_hypotheses":
+        prediction["predictions"] = None
+    elif mutation == "duplicate_rank":
+        hypotheses[1]["rank"] = 1
+    elif mutation in ("bool_rank", "float_rank", "zero_rank"):
+        hypotheses[0]["rank"] = {"bool_rank": True, "float_rank": 1.0, "zero_rank": 0}[mutation]
+    elif mutation == "rank_order":
+        hypotheses.reverse()
+    elif mutation == "bool_product":
+        hypotheses[1]["product"] = True
+    elif mutation == "missing_product":
+        del hypotheses[1]["product"]
+    elif mutation == "empty_product":
+        hypotheses[1]["product"] = ""
+    elif mutation == "numeric_complete":
+        hypotheses[0]["complete"] = 1
+    elif mutation == "missing_complete":
+        del hypotheses[0]["complete"]
+    elif mutation == "incomplete_nonnull_alternative":
+        hypotheses[2]["product"] = "CC"
+    elif mutation == "raw_mismatch":
+        prediction["raw"]["predictions"][0]["product"] = "CC"
+    elif mutation == "not_lowest_match":
+        hypotheses[1]["product"] = PRODUCT
+        prediction["matched_rank"] = 2
+    elif mutation == "bad_item":
+        hypotheses[1] = "invalid"
+    if mutation != "raw_mismatch":
+        prediction["raw"]["predictions"] = copy.deepcopy(prediction["predictions"])
+    save(tmp_path, data)
+    assert r.main([str(tmp_path)]) == 3
+    html = (tmp_path / "review.html").read_text()
+    assert "Unconfirmed recorded claim" in html
+    assert "No selected candidates" not in html
+    view = r.build_report(tmp_path)
+    assert view["candidates"][0]["issues"]
+
+
+def test_legacy_forward_detail_absence_is_explicit(tmp_path, data):
+    save(tmp_path, data)
+    view = r.write_report(tmp_path)
+    assert view["artifact_consistency"] == "consistent_recorded_bundle"
+    assert (
+        "Forward hypothesis details not recorded; any matched status is a saved claim only."
+        in (tmp_path / "review.html").read_text()
+    )
+
+
+@pytest.mark.parametrize("key,value", [("rank", True), ("complete", 1)])
+def test_raw_forward_types_cannot_borrow_equal_python_values(tmp_path, data, key, value):
+    prediction = detailed_forward(data)
+    prediction["raw"]["predictions"][0][key] = value
+    save(tmp_path, data)
+    view = r.build_report(tmp_path)
+    assert view["artifact_consistency"] == "incomplete_or_inconsistent"
+    assert "raw/reported forward hypotheses" in view["candidates"][0]["issues"][0]
