@@ -595,3 +595,44 @@ def test_selective_false_empty_cannot_hide_qualified_routes(completed):
     completed[1]["candidates"] = []
     with pytest.raises(ValueError):
         collect(completed)
+
+
+@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v5"], indirect=True)
+@pytest.mark.parametrize("kind", ["contradictory_code", "projection", "counts"])
+def test_collector_refuses_new_forward_diagnostic_contradictions(completed, kind):
+    if kind == "counts":
+        update(completed, "summary.json", lambda v: v["forward_evidence_outcomes"].update(step_records=999))
+    else:
+
+        def mutate(document):
+            evidence = next(r["synthesis_evidence"] for r in document["routes"] if "synthesis_evidence" in r)
+            if kind == "contradictory_code":
+                evidence["steps"][0]["forward_prediction"]["reason_code"] = "predictor_call_budget_exhausted"
+                # Contradictory cause remains invalid even if copied into every diagnostic layer.
+                evidence["steps"][0]["forward_outcome"]["cause_code"] = "predictor_call_budget_exhausted"
+                evidence["forward_outcome"]["step_outcomes"][0]["cause_code"] = (
+                    "predictor_call_budget_exhausted"
+                )
+            else:
+                evidence["forward_outcome"]["status"] = "unassessed"
+
+        update(completed, "routes.json", mutate)
+    with pytest.raises(ValueError, match="forward"):
+        collect(completed)
+    assert len(completed[2].calls) == 1
+
+
+@pytest.mark.parametrize("completed", ["qualified-selective-engineering-v5"], indirect=True)
+def test_collector_legacy_diagnostic_absence_still_requires_raw_support(completed):
+    def remove(document):
+        for record in document["routes"]:
+            evidence = record.get("synthesis_evidence", {})
+            evidence.pop("forward_outcome", None)
+            for step in evidence.get("steps", []):
+                step.pop("forward_outcome", None)
+                step["forward_prediction"].pop("reason_code", None)
+
+    update(completed, "routes.json", remove)
+    update(completed, "summary.json", lambda v: v.pop("forward_evidence_outcomes"))
+    assert len(collect(completed)) == 1
+    assert len(completed[2].calls) == 1

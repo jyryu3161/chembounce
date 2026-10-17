@@ -18,6 +18,7 @@ import stat
 from urllib.parse import quote
 
 from . import review_display as display
+from . import evidence_outcomes
 
 JSON_FILES = (
     "manifest.json",
@@ -1014,6 +1015,11 @@ def _assemble(docs, inventory, issues):
         _equal(manifest["effective_conformers"], policy["conformers"], "manifest complete conformer settings")
         _summary_counts(summary, rows, policy)
         _require(isinstance(manifest["hit"], str) and bool(manifest["hit"]), "Original hit missing")
+        route_records = _records(docs["routes.json"], "routes")
+        for record in route_records:
+            if "synthesis_evidence" in record:
+                evidence_outcomes.validate_recorded(record["synthesis_evidence"])
+        evidence_outcomes.validate_summary(summary, route_records)
         _equal(qualification["selected_route_ids"], [r["route_id"] for r in rows], "selected route IDs")
         for key in ("route_id", "smiles"):
             identifiers = [r[key] for r in rows]
@@ -1136,6 +1142,7 @@ def _route_html(route):
                 "selection_status": route.get("selection_status"),
                 "route_binding_sha256": evidence.get("route_binding_sha256"),
                 "evidence_level": evidence.get("evidence_level", UNKNOWN),
+                "forward_outcome": evidence.get("forward_outcome", UNKNOWN),
                 "eligibility": evidence.get("eligibility", UNKNOWN),
             }
         ),
@@ -1155,6 +1162,7 @@ def _route_html(route):
                             "product",
                             "step_binding_sha256",
                             "rule_replay",
+                            "forward_outcome",
                             "atom_sources",
                             "eligibility",
                         )
@@ -1179,7 +1187,10 @@ def _route_html(route):
             parts += [
                 "<h5>Forward support (recorded)</h5>",
                 _fields(
-                    {k: prediction.get(k, UNKNOWN) for k in ("status", "matched_rank", "matching_policy")}
+                    {
+                        k: prediction.get(k, UNKNOWN)
+                        for k in ("status", "reason", "reason_code", "matched_rank", "matching_policy")
+                    }
                     | {"predictions": hypotheses}
                 ),
                 "<h5>Conditions and observations</h5>",
@@ -1501,6 +1512,7 @@ def render_html(view, *, artifact_links=None):
                     "deadline_reached",
                     "limits_reached",
                     "route_rejections",
+                    "forward_evidence_outcomes",
                 )
             }
         ),

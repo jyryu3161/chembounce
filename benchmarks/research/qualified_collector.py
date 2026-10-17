@@ -184,7 +184,10 @@ class TokenReplay(PinnedReactionT5Forward):
 
 
 def verify_route_support(record, catalog, rules, limit, decoder):
+    from chembounce_synthesis.evidence_outcomes import validate_recorded
+
     evidence = record["synthesis_evidence"]
+    validate_recorded(evidence)
     audit = audit_route(record["route"], catalog, rules, limit)
     if (
         evidence.get("profile") != PROFILE
@@ -220,6 +223,9 @@ def verify_route_support(record, catalog, rules, limit, decoder):
 
 def _selective_outcome(summary, rows, records, refinements, qualification):
     """Cross-check saved outcome/denominators, including genuine empty runs."""
+    from chembounce_synthesis.evidence_outcomes import validate_summary
+
+    validate_summary(summary, records)
     route_ids = [r["route_id"] for r in records]
     accepted = summary.get("accepted_products")
     if (

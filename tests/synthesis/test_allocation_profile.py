@@ -44,7 +44,7 @@ def test_packaged_v6_adds_only_declared_allocations_and_workflow_scope():
         path
         for path, digest in observed["source_sha256"].items()
         if digest != new["provenance"]["source_sha256"][path]
-    } == {"chembounce_synthesis/common.py"}
+    } == {"chembounce_synthesis/common.py", WORKFLOW}
     assert set(observed["source_sha256"]) == set(
         profiles.numerical_runtime(profiles.LANDMARK_SELECTIVE_PROFILE)["source_sha256"]
     ) | {WORKFLOW}
@@ -52,7 +52,7 @@ def test_packaged_v6_adds_only_declared_allocations_and_workflow_scope():
     assert hashlib.sha256(profiles._resource(V6).read_bytes()).hexdigest() == profiles.PROFILE_SHA256[V6]
     result = profiles.profile_provenance(config())
     assert not result["material_overrides"]
-    assert not result["optional_diagnostics"]["rejected_pose_diagnostics"]["source_mismatches"]
+    assert set(result["optional_diagnostics"]["rejected_pose_diagnostics"]["source_mismatches"]) == {WORKFLOW}
     assert not result["optional_landmark_proposals"]["enabled"]
     assert result["status"] == (
         "custom_unvalidated" if result["runtime_source_mismatches"] else "engineering_policy_matched"
@@ -97,7 +97,9 @@ def test_v6_primary_workflow_pin_cannot_be_hidden_by_disabled_diagnostics(matchi
 
 def test_v6_optional_diagnostics_and_landmarks_keep_their_semantics(matching_runtime):
     result = profiles.profile_provenance(config(rejected_pose_diagnostics=True))
-    assert result["status"] == "engineering_policy_matched"
+    # Mocked primary runtime does not hide the real optional-diagnostic source mismatch.
+    assert result["status"] == "custom_unvalidated"
+    assert set(result["optional_diagnostics"]["rejected_pose_diagnostics"]["source_mismatches"]) == {WORKFLOW}
     assert result["optional_diagnostics"]["rejected_pose_diagnostics"]["enabled"]
     result = profiles.profile_provenance(config(similarity_constraints={"landmark_pose_proposals": True}))
     assert result["status"] == "custom_unvalidated"

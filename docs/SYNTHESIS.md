@@ -847,6 +847,42 @@ product can still qualify; all unsuccessful or unassessed routes remain in
 `routes.json`. Exhausted budgets are unknown evidence, not negative chemistry
 labels, and cannot silently satisfy a required agreement.
 
+### Recorded forward outcomes and operational causes
+
+Strict computational support retains the existing `forward_prediction.status` and
+adds a `reason_code`, a per-step `forward_outcome`, and a route-level outcome.
+A completed bounded top-three nonmatch differs from incomplete/invalid hypotheses,
+unassessed work, and execution or validation errors. Budget causes distinguish
+predictor calls, input tokens and output tokens; deadline, unavailable predictor,
+and preparation errors retain their own codes and original error text. When
+several budgets are exhausted, the first failing check in the existing
+call/input/output order supplies the cause. No extra model work is performed.
+
+These fields describe the available computation. They do not describe physical
+synthesis success, failure or infeasibility. A route with different step outcomes
+is marked `mixed` and retains every step cause. Exact completed product support
+can still pass when other beams are incomplete; the existing strict agreement
+rule, fresh raw-evidence validation and acceptance Boolean are unchanged.
+Unsupported routes keep `selection_status: evidence_rejected` and remain
+unqualified. Their qualification reasons now preserve the original plural route
+reasons rather than collapsing to that selection status.
+
+`summary.json` includes `forward_evidence_outcomes`, displayed in the existing
+review diagnostics. Route-record and step-record totals have separate denominators;
+alternative routes repeat records, so these counts are neither unique products
+nor fresh predictor calls. Actual call/token/cache usage remains under
+`synthesis_evidence_usage`. Missing historical cause codes remain `not_recorded`;
+the reader does not infer them from prose. A legacy `mismatched` status without
+a cause code is `nonmatch_recorded`, not proof of a completed strict top-three
+evaluation. Reports and collectors reject newly
+present diagnostic fields that contradict their saved statuses or record counts,
+without treating diagnostic labels as proof of chemical support.
+
+This diagnostic correction does not change historical profile artifacts, score
+minima, budgets or ranking. Historical v6 pins the workflow source, so a changed
+current workflow is honestly reported as a source mismatch; the frozen campaign
+and its source snapshot remain unchanged.
+
 ## 3D and pharmacophore methods
 
 Scoring uses explicit input states. Family normalization is used only for
