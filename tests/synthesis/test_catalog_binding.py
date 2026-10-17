@@ -210,9 +210,13 @@ def test_route_audit_keeps_postload_tsv_freshness(tmp_path, assets, route):
     bound = Catalog(
         catalog.path, binding={"catalog_sha256": catalog.sha256, "manifest_sha256": digest(sidecar)}
     )
-    assert audit_route(route, bound, rules)["strict_eligible"]
+    # Freshness is independent of concrete atom-origin metadata support. Older
+    # RDKit correctly reports strict_eligible=False but must still reach this guard.
+    audited = audit_route(route, bound, rules)
+    assert audited["catalog_sha256"] == bound.sha256
+    assert audited["product"] == route["nodes"][-1]["product"]
     catalog.path.write_bytes(catalog.path.read_bytes() + b"\n")
-    with pytest.raises(ValueError, match="changed"):
+    with pytest.raises(ValueError, match="Authoritative catalog/rules files changed since loading"):
         audit_route(route, bound, rules)
 
 
