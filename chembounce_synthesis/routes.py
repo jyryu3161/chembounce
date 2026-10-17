@@ -497,7 +497,8 @@ def expand_route(
         [],
     )
     target = canonical(target_smiles) if target_smiles is not None else initial["product"]
-    target_fp = FP.GetFingerprint(molecule(target))
+    reuse_design_score = root_objective is not None and target == root_objective.design
+    target_fp = None if reuse_design_score else FP.GetFingerprint(molecule(target))
     frontier = [(route, [])]
     seen = {json.dumps(route, sort_keys=True)}
     product_scores = {}
@@ -572,9 +573,17 @@ def expand_route(
                     seen.add(key)
                     evidence = verify_route(rebuilt, catalog, rules, limits.reaction_product_limit)
                     product = evidence["product"]
+                    # Keep the same single objective request per generated route,
+                    # including its cache/eviction accounting. Only the duplicate
+                    # fingerprint score for an identical reference is avoided.
+                    eligibility = root_objective.assess(product) if root_objective is not None else None
                     if product not in product_scores:
-                        product_scores[product] = DataStructs.TanimotoSimilarity(
-                            target_fp, FP.GetFingerprint(molecule(product))
+                        product_scores[product] = (
+                            eligibility["design_tanimoto"]
+                            if reuse_design_score
+                            else DataStructs.TanimotoSimilarity(
+                                target_fp, FP.GetFingerprint(molecule(product))
+                            )
                         )
                     generated.append(
                         {
@@ -584,11 +593,7 @@ def expand_route(
                             "expansion_round": round_index,
                             "substitutions": history + [substitution],
                             "target_tanimoto": product_scores[product],
-                            **(
-                                {"search_eligibility": root_objective.assess(product)}
-                                if root_objective is not None
-                                else {}
-                            ),
+                            **({"search_eligibility": eligibility} if root_objective is not None else {}),
                         }
                     )
                     generated_count += 1
