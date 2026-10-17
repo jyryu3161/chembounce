@@ -50,6 +50,9 @@ mismatches. The allocation profile `qualified-selective-engineering-v6` remains
 available by explicit opt-in, while the default v7 retains v5 allocation. See
 [v6 usage and current evidence](docs/QUALIFIED_RECOMMENDATIONS.md#explicit-v6-and-current-evidence).
 
+The optional [public reaction-record reports](docs/PUBLIC_REACTION_RECORDS.md) attach
+raw-backed, exact-product ORD precedents to saved routes without changing acceptance.
+
 The optional [synthesis workflow](docs/SYNTHESIS.md) connects SynLlama proposals
 to a dated building-block catalog and an explicit reaction registry. It
 replays routes, expands compatible building blocks, reapplies scaffold/core constraints,
