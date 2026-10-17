@@ -9,12 +9,15 @@ from contextlib import contextmanager
 import copy
 import json
 import importlib.metadata
+from importlib.machinery import ModuleSpec
+import inspect
 import os
 from pathlib import Path
 import signal
 import socket
 import sys
 import time
+from types import ModuleType
 
 if __package__:
     from . import polar_capacity_development as d
@@ -457,11 +460,88 @@ def startup_monotonic():
     return before - (boot - start)
 
 
+def _torch_namespace_source(name, module, modules):
+    """Resolve known generated Torch namespaces to their loaded implementation.
+
+    Torch registers ModuleType instances whose class-level __file__ is a display
+    label, not an import path. Read dictionaries/static attributes only: probing
+    their dynamic __getattr__ may create operator/class namespaces or call C++.
+    """
+    cls = type(module)
+    kind = (cls.__module__, cls.__name__)
+    known = {
+        ("torch._ops", "_Ops"): ("torch.ops", "ops", "_ops.py"),
+        ("torch._classes", "_Classes"): ("torch.classes", "classes", "_classes.py"),
+        ("torch._ops", "_OpNamespace"): ("torch.ops", None, "torch.ops"),
+        ("torch._ops", "_HigherOrderNamespace"): ("torch.ops", "higher_order", "torch.ops"),
+        ("torch._classes", "_ClassNamespace"): ("torch.classes", None, None),
+    }
+    if kind not in known:
+        if name in {"torch.ops", "torch.classes"}:
+            raise ValueError("Unrecognized Torch namespace registration: " + name)
+        return None
+    implementation = modules.get(kind[0])
+    if not isinstance(implementation, ModuleType) or vars(implementation).get(kind[1]) is not cls:
+        raise ValueError("Torch namespace implementation differs: " + name)
+    namespace = vars(module)
+    parent_name, attribute, label = known[kind]
+    root = kind[1] in {"_Ops", "_Classes"}
+    if not root:
+        attribute = attribute or namespace.get("name")
+        if not isinstance(attribute, str) or not attribute or "." in attribute:
+            raise ValueError("Invalid Torch namespace name: " + name)
+    expected = parent_name if root else parent_name + "." + attribute
+    # Installed _ClassNamespace concatenates its __name__ without the dot.
+    declared = parent_name + attribute if kind[1] == "_ClassNamespace" else expected
+    parent = implementation if root else modules.get(parent_name)
+    if (
+        name != expected
+        or namespace.get("__name__") != declared
+        or "__file__" in namespace
+        or namespace.get("__spec__") is not None
+        or namespace.get("__loader__") is not None
+        or inspect.getattr_static(module, "__file__", None) != label
+        or not isinstance(parent, ModuleType)
+        or vars(parent).get(attribute) is not module
+    ):
+        raise ValueError("Torch namespace registration/provenance differs: " + name)
+    return implementation
+
+
 def imported_file_pins():
-    """Include observed transitive import files, beyond declared distributions."""
-    paths = set()
-    for module in list(sys.modules.values()):
-        path = getattr(module, "__file__", None)
+    """Pin observed real files and implementations of known virtual namespaces."""
+    paths, modules = set(), dict(sys.modules)
+    for name, module in modules.items():
+        if module is None:
+            continue
+        implementation = _torch_namespace_source(name, module, modules)
+        namespace = vars(implementation if implementation is not None else module)
+        path = namespace.get("__file__")
+        spec = namespace.get("__spec__")
+        if spec is not None and not isinstance(spec, ModuleSpec):
+            raise ValueError("Imported module has an unrecognized spec: " + name)
+        origin = spec.origin if spec is not None else None
+        if origin in {None, "built-in", "frozen"}:
+            origin = None
+        if spec is not None and spec.has_location and not origin:
+            raise ValueError("Imported file spec lacks an origin: " + name)
+        if implementation is not None and (
+            not path
+            or not origin
+            or namespace.get("__name__") != type(module).__module__
+            or spec.name != type(module).__module__
+            or namespace.get("__loader__") is not spec.loader
+        ):
+            raise ValueError("Torch namespace implementation lacks file provenance: " + name)
+        if path and origin and Path(path).resolve() != Path(origin).resolve():
+            raise ValueError("Imported file/spec origin differs: " + name)
+        if not path:
+            path = origin
+        if not path and implementation is None:
+            # No dynamic getattr: ordinary builtins/namespaces have no file. An
+            # unknown inherited/descriptor file claim must not silently vanish.
+            if inspect.getattr_static(module, "__file__", None) is not None:
+                raise ValueError("Unknown virtual imported file: " + name)
         if path:
             resolved = Path(path).resolve()
             if not resolved.is_file():
