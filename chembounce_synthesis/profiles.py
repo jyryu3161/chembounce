@@ -13,8 +13,9 @@ PROFILE = "qualified-development-v1"
 # Historical benchmark authority: never retarget this name.
 SELECTIVE_PROFILE = "qualified-selective-engineering-v2"
 GUARDED_SELECTIVE_PROFILE = "qualified-selective-engineering-v3"
-DEFAULT_RECOMMENDATION_PROFILE = GUARDED_SELECTIVE_PROFILE
-ENGINEERING_PROFILES = (SELECTIVE_PROFILE, GUARDED_SELECTIVE_PROFILE)
+DIAGNOSTIC_SELECTIVE_PROFILE = "qualified-selective-engineering-v4"
+DEFAULT_RECOMMENDATION_PROFILE = DIAGNOSTIC_SELECTIVE_PROFILE
+ENGINEERING_PROFILES = (SELECTIVE_PROFILE, GUARDED_SELECTIVE_PROFILE, DIAGNOSTIC_SELECTIVE_PROFILE)
 # Portable declarations bound by the packaged artifact hash. External release
 # review authenticates these prior records; loading never opens historical paths.
 GUARDED_SOURCE_REVISION = {
@@ -36,6 +37,29 @@ GUARDED_SOURCE_REVISION = {
         },
     ],
 }
+# No declaration/self hashes: the artifact registry and external review bind these.
+DIAGNOSTIC_SOURCE_REVISION = {
+    "diagnostic_source_commit": "612596ae8921e663dda5a239c662f50d782704f7",
+    "predecessor": {
+        "name": GUARDED_SELECTIVE_PROFILE,
+        "artifact_sha256": "fd5fb3b65b12307ed1a9b5371e74427eb709d8cf3012bbcba5095022ddb34537",
+    },
+    "inherited_guard_revision": copy.deepcopy(GUARDED_SOURCE_REVISION),
+    "source_reviews": [
+        {
+            "role": "independent_source_review",
+            "record_label": "review-rejected-pose-source-612596a-v1/report.json",
+            "record_sha256": "8f535615f9339580fb416bf4d81cbfbb4661402deb7a84bb323bdb7a67b58c92",
+        },
+        {
+            "role": "root_source_gate",
+            "record_label": "stage18-rejected-pose-root-source-gate-612596a-v1.json",
+            "record_sha256": "ec71e9c72527d12075209ca01e830140970d307e7451f1e478e007c1fdad9fbf",
+        },
+    ],
+}
+DIAGNOSTIC_FILES = ("rejected_pose_diagnostics.py", "refinement.py", "workflow.py", "selective_scoring.py")
+
 ENGINEERING_SCHEMA = "qualified-selective-engineering-profile-v2"
 SELECTIVE_KERNEL_FILES = ("selective_scoring.py", "similarity_constraints.py")
 SELECTIVE_CONSTRAINTS = {
@@ -45,6 +69,7 @@ SELECTIVE_CONSTRAINTS = {
 }
 # Reviewed development release; the untouched fit candidate remains separately bound.
 PROFILE_SHA256 = {
+    DIAGNOSTIC_SELECTIVE_PROFILE: "437b5c11f9b5627122e2ad70ecbc2d4f9f8b2e5294c6fbe8be81058ffb8e48b5",
     GUARDED_SELECTIVE_PROFILE: "fd5fb3b65b12307ed1a9b5371e74427eb709d8cf3012bbcba5095022ddb34537",
     SELECTIVE_PROFILE: "a8b47a409a21518dd482acbefdce38774414ae0b65f28d6ea7cb52ab63e1ef52",
     PROFILE: "9d3c60a895912b28c13a29aac0a04f385ddb8a0effc9fcd81d64a50a3d48bdd2",
@@ -177,6 +202,8 @@ def profile_defaults(artifact):
 
     if artifact["schema"] == ENGINEERING_SCHEMA:
         defaults["similarity_constraints"] = copy.deepcopy(SELECTIVE_CONSTRAINTS)
+    if artifact.get("name") == DIAGNOSTIC_SELECTIVE_PROFILE:
+        defaults["rejected_pose_diagnostics"] = False
     return defaults
 
 
@@ -211,6 +238,30 @@ def _validate_engineering_artifact(artifact, name):
         raise ValueError(
             "Packaged guarded engineering profile lacks its reviewed source revision declaration"
         )
+
+    if name == DIAGNOSTIC_SELECTIVE_PROFILE:
+        from .rejected_pose_diagnostics import LIMITS, VERSION
+
+        diagnostic = artifact.get("optional_diagnostics", {}).get("rejected_pose_diagnostics", {})
+        if (
+            artifact["provenance"].get("source_revision") != DIAGNOSTIC_SOURCE_REVISION
+            or set(artifact.get("optional_diagnostics", {})) != {"rejected_pose_diagnostics"}
+            or set(diagnostic) != {"default_enabled", "version", "limits", "source_sha256"}
+            or diagnostic["default_enabled"] is not False
+            or diagnostic["version"] != VERSION
+            or diagnostic["limits"] != LIMITS
+            or any(type(diagnostic["limits"][key]) is not type(value) for key, value in LIMITS.items())
+            or set(diagnostic["source_sha256"]) != {"chembounce_synthesis/" + n for n in DIAGNOSTIC_FILES}
+            or any(
+                not isinstance(value, str)
+                or len(value) != 64
+                or any(c not in "0123456789abcdef" for c in value)
+                for value in diagnostic["source_sha256"].values()
+            )
+        ):
+            raise ValueError(
+                "Packaged diagnostic engineering profile lacks its reviewed optional source declaration"
+            )
 
 
 def apply_profile_defaults(config):
@@ -280,6 +331,8 @@ def profile_provenance(config):
     defaults = profile_defaults(artifact)
     # Strict route support remains a mandatory additional selection constraint.
     defaults.pop("synthesis_evidence", None)
+    # Diagnostic output consumes resources but never changes the numeric specification.
+    defaults.pop("rejected_pose_diagnostics", None)
     effective = {key: config.get(key) for key in defaults}
     differences = _differences(defaults, effective)
     resource_keys = {
@@ -327,12 +380,36 @@ def profile_provenance(config):
         if digest != recorded["source_sha256"].get(path):
             mismatches[path] = {provenance_key: recorded["source_sha256"].get(path), "current": digest}
     engineering = name in ENGINEERING_PROFILES
+    diagnostics = None
+    diagnostic_mismatches = {}
+    if name == DIAGNOSTIC_SELECTIVE_PROFILE:
+        declaration = copy.deepcopy(artifact["optional_diagnostics"]["rejected_pose_diagnostics"])
+        observed = {
+            "chembounce_synthesis/" + path: _sha(files("chembounce_synthesis").joinpath(path).read_bytes())
+            for path in DIAGNOSTIC_FILES
+        }
+        diagnostic_mismatches = {
+            path: {"declared": expected, "current": observed[path]}
+            for path, expected in declaration["source_sha256"].items()
+            if observed[path] != expected
+        }
+        diagnostics = {
+            **declaration,
+            "enabled": config.get("rejected_pose_diagnostics", False),
+            "current_source_sha256": observed,
+            "source_mismatches": diagnostic_mismatches,
+            "scope": "Optional rejected-pose evidence, not selection, calibration or efficacy. Costs consume the existing deadline and can affect deadline-limited coverage; no extra allowance or identical wall-time outcome claim.",
+            "observed_costs": "Profile declaration/source hashing is setup work outside collector statistics and consumes the enclosing workflow deadline when supplied. Run summary.rejected_pose_diagnostics records collector setup/capture/publication time, skips and overruns; final summary-write completion requires its post-return observation.",
+        }
     return {
         "name": name,
         "status": "custom_unvalidated"
-        if numerical_changes or mismatches
+        if numerical_changes
+        or mismatches
+        or (diagnostics and diagnostics["enabled"] and diagnostic_mismatches)
         else ("engineering_policy_matched" if engineering else "development_protocol_matched"),
         "artifact_sha256": PROFILE_SHA256[name],
+        **({"optional_diagnostics": {"rejected_pose_diagnostics": diagnostics}} if diagnostics else {}),
         **(
             {"engineering_spec": artifact["engineering_spec"], "engineering_provenance": recorded}
             if engineering

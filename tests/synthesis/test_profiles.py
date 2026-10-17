@@ -342,7 +342,13 @@ def test_integrated_cli_profile_uses_refill_and_cannot_disable_synthesis(
 
 
 @pytest.mark.parametrize(
-    "profile_name", [profiles.PROFILE, profiles.SELECTIVE_PROFILE, profiles.GUARDED_SELECTIVE_PROFILE]
+    "profile_name",
+    [
+        profiles.PROFILE,
+        profiles.SELECTIVE_PROFILE,
+        profiles.GUARDED_SELECTIVE_PROFILE,
+        profiles.DIAGNOSTIC_SELECTIVE_PROFILE,
+    ],
 )
 def test_wheel_includes_profile_resource_without_installing(tmp_path, profile_name):
     pytest.importorskip("setuptools")
