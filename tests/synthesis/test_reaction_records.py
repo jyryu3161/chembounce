@@ -3,6 +3,7 @@
 No model, rule replay, scoring, catalog or campaign data. Mutated records below
 are test-only data and never claimed to be public experiments.
 """
+
 import json
 import os
 import shutil
@@ -52,6 +53,7 @@ def synthetic_source(tmp_path, source, mutate, *, duplicate=False, mutate_snapsh
     import pyarrow as pa
     import pyarrow.parquet as pq
     from google.protobuf import descriptor_pool, message_factory
+
     pool = descriptor_pool.DescriptorPool()
     pool.AddSerializedFile((source / "reaction.descriptor.pb").read_bytes())
     cls = message_factory.GetMessageClass(pool.FindMessageTypeByName("ord.Reaction"))
@@ -65,7 +67,9 @@ def synthetic_source(tmp_path, source, mutate, *, duplicate=False, mutate_snapsh
         rows.append(first)
     target = tmp_path / "synthetic-source"
     shutil.copytree(source, target)
-    pq.write_table(pa.Table.from_pylist(rows, schema=table.schema), target / "sample.parquet", compression="gzip")
+    pq.write_table(
+        pa.Table.from_pylist(rows, schema=table.schema), target / "sample.parquet", compression="gzip"
+    )
     snapshot = json.loads((target / "snapshot.json").read_text())
     data = (target / "sample.parquet").read_bytes()
     snapshot["dataset"].update(sha256=r.sha(data), bytes=len(data))
@@ -83,16 +87,24 @@ def test_real_import_match_render_and_wire_precision(bundle):
     rec = loaded["records"][0]
     assert rec["derived"]["reaction_id"] == ID
     assert rec["raw_sha256"] == "5bdd1c9535bca04c5b649d8350d50befb77ff11ad156a46cb543407841f325ff"
-    assert rec["derived"]["projection"]["outcomes"][0]["products"][1]["measurements"][0]["float_value"]["value"] == 163541580.0
-    assert next(x["decoded_value"] for x in rec["derived"]["wire_floats"]
-                if x["path"] == "/outcomes/0/products/1/measurements/0/float_value/value") == 163541584.0
+    assert (
+        rec["derived"]["projection"]["outcomes"][0]["products"][1]["measurements"][0]["float_value"]["value"]
+        == 163541580.0
+    )
+    assert (
+        next(
+            x["decoded_value"]
+            for x in rec["derived"]["wire_floats"]
+            if x["path"] == "/outcomes/0/products/1/measurements/0/float_value/value"
+        )
+        == 163541584.0
+    )
     products = rec["derived"]["projection"]["outcomes"][0]["products"]
     assert sum(p["measurements"][0]["float_value"]["value"] == 0 for p in products) == 4
     presence = rec["derived"]["presence"]
     assert presence["/outcomes/0/products/0/measurements/0/uses_authentic_standard"]["state"] == "present"
     assert presence["/outcomes/0/products/1/measurements/0/uses_authentic_standard"]["state"] == "absent"
-    result = r.match_product(bundle, PRODUCT, reactants=REACTANTS,
-                             context=r.record_context(rec, 0))
+    result = r.match_product(bundle, PRODUCT, reactants=REACTANTS, context=r.record_context(rec, 0))
     match = result["result"]["matches"][0]
     assert match["reactants"] == "reported_multiset_matched"
     assert match["context"] == "same_recorded_context"
@@ -111,8 +123,12 @@ def test_real_import_match_render_and_wire_precision(bundle):
 
 def test_receipt_is_external_and_never_inherited(bundle, tmp_path):
     digest = r.sha((bundle / "snapshot.json").read_bytes())
-    assert r.load_bundle(bundle, expected_snapshot_sha256=digest)["receipt"]["external_receipt_supplied_and_matched"]
-    forged = edit_bundle(tmp_path, bundle, lambda b: b["receipt"].update(external_receipt_supplied_and_matched=True))
+    assert r.load_bundle(bundle, expected_snapshot_sha256=digest)["receipt"][
+        "external_receipt_supplied_and_matched"
+    ]
+    forged = edit_bundle(
+        tmp_path, bundle, lambda b: b["receipt"].update(external_receipt_supplied_and_matched=True)
+    )
     assert not r.load_bundle(forged)["receipt"]["external_receipt_supplied_and_matched"]
     with pytest.raises(r.RecordError, match="external_receipt_mismatch"):
         r.load_bundle(bundle, expected_snapshot_sha256="0" * 64)
@@ -120,15 +136,20 @@ def test_receipt_is_external_and_never_inherited(bundle, tmp_path):
         r.load_bundle(bundle, verify_hashes=False)
 
 
-@pytest.mark.parametrize("mutation", [
-    lambda b: b["records"][0]["derived"]["products"][1]["identity"].update(key="CCC"),
-    lambda b: b["records"][0]["derived"]["inputs"][0].update(role="REACTANT"),
-    lambda b: b["records"][0]["derived"]["products"][1]["product"]["measurements"][0].update(type="YIELD"),
-    lambda b: b["records"][0]["derived"]["projection"]["provenance"].update(doi="invented"),
-    lambda b: b["records"][0]["selector"].update(row=1),
-    lambda b: b["records"][0].update(raw_sha256="0" * 64),
-    lambda b: b["records"][0]["derived"]["wire_floats"][0].update(decoded_value=123),
-])
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda b: b["records"][0]["derived"]["products"][1]["identity"].update(key="CCC"),
+        lambda b: b["records"][0]["derived"]["inputs"][0].update(role="REACTANT"),
+        lambda b: b["records"][0]["derived"]["products"][1]["product"]["measurements"][0].update(
+            type="YIELD"
+        ),
+        lambda b: b["records"][0]["derived"]["projection"]["provenance"].update(doi="invented"),
+        lambda b: b["records"][0]["selector"].update(row=1),
+        lambda b: b["records"][0].update(raw_sha256="0" * 64),
+        lambda b: b["records"][0]["derived"]["wire_floats"][0].update(decoded_value=123),
+    ],
+)
 def test_normalized_tampering_rejected(bundle, tmp_path, mutation):
     path = edit_bundle(tmp_path, bundle, mutation)
     with pytest.raises(r.RecordError, match="derived_record_mismatch"):
@@ -145,8 +166,9 @@ def test_raw_tamper(bundle, tmp_path, filename):
         r.load_bundle(target)
 
 
-@pytest.mark.parametrize("field,value", [("row", 96), ("row_group", 1), ("row", True),
-                                         ("reaction_id", "ord-" + "0" * 32)])
+@pytest.mark.parametrize(
+    "field,value", [("row", 96), ("row_group", 1), ("row", True), ("reaction_id", "ord-" + "0" * 32)]
+)
 def test_selector_tamper(source, tmp_path, field, value):
     target = tmp_path / "source"
     shutil.copytree(source, target)
@@ -170,14 +192,24 @@ def test_schema_binding_cannot_be_rewritten(source, tmp_path):
 
 
 def test_duplicate_ids_conflicting_payloads(source, tmp_path):
-    target = synthetic_source(tmp_path, source, lambda m: setattr(m.provenance, "city", "SYNTHETIC"), duplicate=True)
+    target = synthetic_source(
+        tmp_path, source, lambda m: setattr(m.provenance, "city", "SYNTHETIC"), duplicate=True
+    )
     with pytest.raises(r.RecordError, match="conflicting_record_id"):
         r.import_snapshot(target, tmp_path / "bundle")
 
 
-@pytest.mark.parametrize("left,right", [("F[C@H](Cl)Br", "F[C@@H](Cl)Br"), ("F/C=C/F", "F/C=C\\F"),
-                                        ("[13CH4]", "C"), ("[NH4+]", "N"),
-                                        ("CC.[Na+]", "CC"), ("CC.CC", "CC")])
+@pytest.mark.parametrize(
+    "left,right",
+    [
+        ("F[C@H](Cl)Br", "F[C@@H](Cl)Br"),
+        ("F/C=C/F", "F/C=C\\F"),
+        ("[13CH4]", "C"),
+        ("[NH4+]", "N"),
+        ("CC.[Na+]", "CC"),
+        ("CC.CC", "CC"),
+    ],
+)
 def test_exact_identity_negative(left, right):
     assert r.smiles_identity(left)["key"] != r.smiles_identity(right)["key"]
 
@@ -189,15 +221,21 @@ def test_unsupported_or_unspecified_identity_abstains(text):
 
 def test_conflicting_smiles_molblock_and_names_only():
     from rdkit import Chem
-    identifiers = [{"type": "SMILES", "value": "CC"},
-                   {"type": "MOLBLOCK", "value": Chem.MolToMolBlock(Chem.MolFromSmiles("CO"))}]
+
+    identifiers = [
+        {"type": "SMILES", "value": "CC"},
+        {"type": "MOLBLOCK", "value": Chem.MolToMolBlock(Chem.MolFromSmiles("CO"))},
+    ]
     assert "conflicting_structural_identifiers" in r.identity(identifiers)["reasons"]
     assert r.identity([{"type": "NAME", "value": "ethane"}])["key"] is None
     assert r.smiles_identity("[CH3:1][OH:2]")["key"] == r.smiles_identity("CO")["key"]
 
 
 def test_no_internal_standard_match_and_unknown_query(bundle):
-    assert r.match_product(bundle, "COc1cc(OC)cc(OC)c1")["result"]["status"] == "search_incomplete_no_assessable_match"
+    assert (
+        r.match_product(bundle, "COc1cc(OC)cc(OC)c1")["result"]["status"]
+        == "search_incomplete_no_assessable_match"
+    )
     assert r.match_product(bundle, "FC(Cl)Br")["result"]["status"] == "query_identity_unassessable"
     assert r.match_product(bundle, "CCC")["result"]["status"] == "search_incomplete_no_assessable_match"
 
@@ -210,14 +248,29 @@ def test_multiplicity_and_missing_context(bundle):
     context["conditions"]["temperature"]["setpoint"]["value"] = 90
     result = r.match_product(bundle, PRODUCT, reactants=REACTANTS, context=context)["result"]["matches"][0]
     assert result["context"] == "different_or_partial"
-    assert r.match_product(bundle, PRODUCT, context={})["result"]["matches"][0]["context"] == "different_or_partial"
+    assert (
+        r.match_product(bundle, PRODUCT, context={})["result"]["matches"][0]["context"]
+        == "different_or_partial"
+    )
 
 
-@pytest.mark.parametrize("mutate,code", [
-    (lambda m: setattr(m.outcomes[0].products[1].measurements[0], "analysis_key", "missing"), "unresolved_analysis_reference"),
-    (lambda m: setattr(m.outcomes[0].products[1].measurements[0].float_value, "value", -1), "measurement_value_missing_or_negative"),
-    (lambda m: setattr(m.outcomes[0].products[1].measurements[0], "type", 3), "measurement_value_type_mismatch_or_missing"),
-])
+@pytest.mark.parametrize(
+    "mutate,code",
+    [
+        (
+            lambda m: setattr(m.outcomes[0].products[1].measurements[0], "analysis_key", "missing"),
+            "unresolved_analysis_reference",
+        ),
+        (
+            lambda m: setattr(m.outcomes[0].products[1].measurements[0].float_value, "value", -1),
+            "measurement_value_missing_or_negative",
+        ),
+        (
+            lambda m: setattr(m.outcomes[0].products[1].measurements[0], "type", 3),
+            "measurement_value_type_mismatch_or_missing",
+        ),
+    ],
+)
 def test_typed_measurement_rejections_retained(source, tmp_path, mutate, code):
     target = synthetic_source(tmp_path, source, mutate)
     bundle = tmp_path / "bundle"
@@ -228,10 +281,16 @@ def test_typed_measurement_rejections_retained(source, tmp_path, mutate, code):
     assert result["matches"] == []
 
 
-@pytest.mark.parametrize("mutate,code", [
-    (lambda m: setattr(m.outcomes[0].products[1].measurements[0].float_value, "value", float("nan")), "nonfinite_record"),
-    (lambda m: setattr(m.inputs["Metal"].components[0], "reaction_role", 999), "unknown_enum"),
-])
+@pytest.mark.parametrize(
+    "mutate,code",
+    [
+        (
+            lambda m: setattr(m.outcomes[0].products[1].measurements[0].float_value, "value", float("nan")),
+            "nonfinite_record",
+        ),
+        (lambda m: setattr(m.inputs["Metal"].components[0], "reaction_role", 999), "unknown_enum"),
+    ],
+)
 def test_nonfinite_unknown_enum(source, tmp_path, mutate, code):
     target = synthetic_source(tmp_path, source, mutate)
     with pytest.raises(r.RecordError, match=code):
@@ -266,12 +325,27 @@ def test_decompressed_cap_on_small_compressed_source(source, tmp_path):
 
 def make_saved_run(path):
     path.mkdir()
-    nodes = [{"id": "a", "building_block_id": "a"}, {"id": "b", "building_block_id": "b"},
-             {"id": "final", "rule_id": "synthetic-test-only", "reactants": ["a", "b"], "product": PRODUCT}]
-    route = {"route_id": "synthetic-test-route", "route": {"root": "final", "nodes": nodes},
-             "verification": {"product": PRODUCT, "building_blocks": [{"id": "a", "smiles": REACTANTS[0]},
-                {"id": "b", "smiles": REACTANTS[1]}], "steps": [{"node_id": "final", "rule_id": "synthetic-test-only",
-                  "product": PRODUCT, "reactants": REACTANTS}]}}
+    nodes = [
+        {"id": "a", "building_block_id": "a"},
+        {"id": "b", "building_block_id": "b"},
+        {"id": "final", "rule_id": "synthetic-test-only", "reactants": ["a", "b"], "product": PRODUCT},
+    ]
+    route = {
+        "route_id": "synthetic-test-route",
+        "route": {"root": "final", "nodes": nodes},
+        "verification": {
+            "product": PRODUCT,
+            "building_blocks": [{"id": "a", "smiles": REACTANTS[0]}, {"id": "b", "smiles": REACTANTS[1]}],
+            "steps": [
+                {
+                    "node_id": "final",
+                    "rule_id": "synthetic-test-only",
+                    "product": PRODUCT,
+                    "reactants": REACTANTS,
+                }
+            ],
+        },
+    }
     save_json(path / "routes.json", {"routes": [route]})
     save_json(path / "results.json", {"results": [{"route_id": "synthetic-test-route", "smiles": PRODUCT}]})
     return route
@@ -315,12 +389,14 @@ def test_escape_captured_source_text(bundle):
 def test_cli_actual_flow(source, tmp_path):
     assert report.main(["example", str(tmp_path / "snapshot")]) == 0
     assert report.main(["import", str(tmp_path / "snapshot"), str(tmp_path / "bundle")]) == 0
-    assert report.main(["match", str(tmp_path / "bundle"), str(tmp_path / "report"), "--product", PRODUCT]) == 0
+    assert (
+        report.main(["match", str(tmp_path / "bundle"), str(tmp_path / "report"), "--product", PRODUCT]) == 0
+    )
     assert (tmp_path / "report" / "index.html").exists()
 
 
 def test_default_imports_and_capture_render_without_optional_modules(tmp_path):
-    script = '''
+    script = """
 import sys
 class Block:
     def find_spec(self, fullname, *args):
@@ -338,16 +414,28 @@ except r.RecordError as exc:
     assert exc.code == "optional_dependency_missing"
 else:
     raise AssertionError("optional dependency refusal missing")
-'''
-    result = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True,
-                            env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"))
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", script],
+        capture_output=True,
+        text=True,
+        env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"),
+    )
     assert result.returncode == 0, result.stderr
 
 
-@pytest.mark.parametrize("kind,value", [("CXSMILES", "F[C@@H](Cl)Br"),
-    ("CXSMILES", "F[C@H](Cl)Br |o1:1|"), ("INCHI", "InChI=1S/CH4/h1H4"),
-    ("INCHI_KEY", "VNWKTOKETHGBQD-UHFFFAOYSA-N"), ("XYZ", "1\nX\nC 0 0 0"),
-    ("AMINO_ACID_SEQUENCE", "G"), ("HELM", "PEPTIDE1{G}$$$$")])
+@pytest.mark.parametrize(
+    "kind,value",
+    [
+        ("CXSMILES", "F[C@@H](Cl)Br"),
+        ("CXSMILES", "F[C@H](Cl)Br |o1:1|"),
+        ("INCHI", "InChI=1S/CH4/h1H4"),
+        ("INCHI_KEY", "VNWKTOKETHGBQD-UHFFFAOYSA-N"),
+        ("XYZ", "1\nX\nC 0 0 0"),
+        ("AMINO_ACID_SEQUENCE", "G"),
+        ("HELM", "PEPTIDE1{G}$$$$"),
+    ],
+)
 def test_additional_structural_identifier_cannot_hide_conflict(kind, value):
     result = r.identity([{"type": "SMILES", "value": "F[C@H](Cl)Br"}, {"type": kind, "value": value}])
     assert result["key"] is None
@@ -359,6 +447,7 @@ def test_multiple_outcomes_and_optional_false_remain_distinct(source, tmp_path):
         added.CopyFrom(msg.outcomes[0])
         added.reaction_time.value = 24
         added.products[1].measurements[0].uses_authentic_standard = False
+
     target = synthetic_source(tmp_path, source, mutate)
     bundle = tmp_path / "bundle"
     r.import_snapshot(target, bundle)
@@ -370,7 +459,9 @@ def test_multiple_outcomes_and_optional_false_remain_distinct(source, tmp_path):
 
 
 def test_record_byte_bound(source, tmp_path):
-    target = synthetic_source(tmp_path, source, lambda m: setattr(m.provenance, "city", "X" * (r.MAX_RECORD + 1)))
+    target = synthetic_source(
+        tmp_path, source, lambda m: setattr(m.provenance, "city", "X" * (r.MAX_RECORD + 1))
+    )
     with pytest.raises(r.RecordError, match="record_bound"):
         r.import_snapshot(target, tmp_path / "bundle")
 
@@ -378,9 +469,12 @@ def test_record_byte_bound(source, tmp_path):
 def test_snapshot_row_and_selector_bounds(source, tmp_path):
     import pyarrow as pa
     import pyarrow.parquet as pq
+
     target = synthetic_source(tmp_path, source, lambda m: None)
     table = pq.read_table(target / "sample.parquet")
-    pq.write_table(pa.concat_tables([table] * (r.MAX_ROWS + 1)), target / "sample.parquet", compression="gzip")
+    pq.write_table(
+        pa.concat_tables([table] * (r.MAX_ROWS + 1)), target / "sample.parquet", compression="gzip"
+    )
     snap = json.loads((target / "snapshot.json").read_text())
     raw = (target / "sample.parquet").read_bytes()
     snap["dataset"].update(bytes=len(raw), sha256=r.sha(raw))
@@ -394,14 +488,17 @@ def test_snapshot_row_and_selector_bounds(source, tmp_path):
 
 
 def test_source_unsupported_schema_revision(source, tmp_path):
-    target = synthetic_source(tmp_path, source, lambda m: None,
-                              mutate_snapshot=lambda s: s.update(schema_revision="0" * 40))
+    target = synthetic_source(
+        tmp_path, source, lambda m: None, mutate_snapshot=lambda s: s.update(schema_revision="0" * 40)
+    )
     with pytest.raises(r.RecordError, match="unsupported_source_schema"):
         r.import_snapshot(target, tmp_path / "bundle")
 
 
 def test_rejected_record_is_not_a_no_match_claim(source, tmp_path):
-    target = synthetic_source(tmp_path, source, lambda m: setattr(m.outcomes[0].products[1].measurements[0], "type", 3))
+    target = synthetic_source(
+        tmp_path, source, lambda m: setattr(m.outcomes[0].products[1].measurements[0], "type", 3)
+    )
     r.import_snapshot(target, tmp_path / "bundle")
     result = r.match_product(tmp_path / "bundle", PRODUCT)["result"]
     assert result["status"] == "search_incomplete_no_assessable_match"
@@ -411,11 +508,19 @@ def test_rejected_record_is_not_a_no_match_claim(source, tmp_path):
 def test_multi_step_saved_binding_and_unknown_context(bundle, tmp_path):
     run = tmp_path / "run"
     route = make_saved_run(run)
-    route["route"]["nodes"].insert(2, {"id": "mid", "rule_id": "synthetic-intermediate", "reactants": ["a"],
-                                      "product": REACTANTS[0]})
+    route["route"]["nodes"].insert(
+        2, {"id": "mid", "rule_id": "synthetic-intermediate", "reactants": ["a"], "product": REACTANTS[0]}
+    )
     route["route"]["nodes"][-1]["reactants"][0] = "mid"
-    route["verification"]["steps"].insert(0, {"node_id": "mid", "rule_id": "synthetic-intermediate",
-                                             "reactants": [REACTANTS[0]], "product": REACTANTS[0]})
+    route["verification"]["steps"].insert(
+        0,
+        {
+            "node_id": "mid",
+            "rule_id": "synthetic-intermediate",
+            "reactants": [REACTANTS[0]],
+            "product": REACTANTS[0],
+        },
+    )
     save_json(run / "routes.json", {"routes": [route]})
     value = report.match_saved_route(bundle, run, "synthetic-test-route")
     assert [s["node_id"] for s in value["steps"]] == ["mid", "final"]
@@ -427,8 +532,11 @@ def test_multi_step_saved_binding_and_unknown_context(bundle, tmp_path):
 def test_synthetic_complete_reported_context_stays_report_only(source, tmp_path):
     def mutate(message):
         metal = message.inputs["Metal"].components[0]
-        metal.reaction_role = metal.DESCRIPTOR.fields_by_name["reaction_role"].enum_type.values_by_name["CATALYST"].number
+        metal.reaction_role = (
+            metal.DESCRIPTOR.fields_by_name["reaction_role"].enum_type.values_by_name["CATALYST"].number
+        )
         message.inputs["Ligand"].components[0].identifiers[0].value = "P"
+
     target = synthetic_source(tmp_path, source, mutate)
     path = tmp_path / "bundle"
     r.import_snapshot(target, path)
@@ -444,24 +552,33 @@ def test_synthetic_complete_reported_context_stays_report_only(source, tmp_path)
 
 
 def test_missing_measurement_is_not_zero(source, tmp_path):
-    target = synthetic_source(tmp_path, source,
-                              lambda m: m.outcomes[0].products[3].measurements[0].float_value.ClearField("value"))
+    target = synthetic_source(
+        tmp_path, source, lambda m: m.outcomes[0].products[3].measurements[0].float_value.ClearField("value")
+    )
     path = tmp_path / "bundle"
     r.import_snapshot(target, path)
     rec = r.load_bundle(path)["records"][0]
     measurement = rec["derived"]["projection"]["outcomes"][0]["products"][3]["measurements"][0]
     assert measurement["float_value"] == {}
-    assert rec["derived"]["presence"]["/outcomes/0/products/3/measurements/0/float_value/value"]["state"] == "absent"
+    assert (
+        rec["derived"]["presence"]["/outcomes/0/products/3/measurements/0/float_value/value"]["state"]
+        == "absent"
+    )
     assert any(e["code"] == "measurement_value_missing_or_negative" for e in rec["derived"]["rejections"])
 
 
-@pytest.mark.parametrize("measurement,reason", [
-    ({"type": "YIELD", "percentage": {"value": 101}}, "percentage_out_of_range"),
-    ({"type": "SELECTIVITY"}, "measurement_value_missing"),
-    ({"type": "AMOUNT", "amount": {"mass": {"value": 1}}}, "invalid_or_unmeasured_product_amount"),
-    ({"type": "AREA", "float_value": {"value": 1}, "retention_time": {"value": -1, "units": "SECOND"}},
-     "invalid_retention_time"),
-])
+@pytest.mark.parametrize(
+    "measurement,reason",
+    [
+        ({"type": "YIELD", "percentage": {"value": 101}}, "percentage_out_of_range"),
+        ({"type": "SELECTIVITY"}, "measurement_value_missing"),
+        ({"type": "AMOUNT", "amount": {"mass": {"value": 1}}}, "invalid_or_unmeasured_product_amount"),
+        (
+            {"type": "AREA", "float_value": {"value": 1}, "retention_time": {"value": -1, "units": "SECOND"}},
+            "invalid_retention_time",
+        ),
+    ],
+)
 def test_invalid_measurement_shapes(measurement, reason):
     assert reason in r._measurement_reasons(measurement)
 

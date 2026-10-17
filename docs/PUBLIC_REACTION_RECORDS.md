@@ -20,6 +20,17 @@ PyArrow 23.0.1, protobuf 7.34.1, RDKit 2025.09.6. This is a narrow descriptor
 parser, not installation or semantic validation of the complete ORD package.
 Default recommendation and report imports do not import these optional packages.
 
+Declared optional ranges are PyArrow `>=14.0.2,<24` and protobuf `>=6.30.0,<8`;
+they are not a claim that every combination has been tested. A dedicated CI job
+runs the focused real/synthetic extraction and CLI suite on Python 3.10 with
+PyArrow 14.0.2/protobuf 6.30.0/NumPy 1.26.4, and Python 3.12 with
+PyArrow 23.0.1/protobuf 7.34.1/NumPy 2. Both pin RDKit 2025.9.6. Dependency imports
+are checked before pytest so optional-stack import failures cannot silently skip
+coverage. The local author check above used Python 3.10, not 3.12; new CI rows
+remain pending until the branch is actually run by CI. No local shared environment
+is installed or upgraded to approximate those rows.
+
+
 An attributed, unchanged 24,703-byte adverse source fixture is packaged. These
 commands use the current environment; choose an interpreter containing the
 optional dependencies. `python -m chembounce_synthesis.reaction_record_report`

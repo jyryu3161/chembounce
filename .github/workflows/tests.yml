@@ -43,3 +43,40 @@ jobs:
       - run: python -m pip install 'torch==2.8.0' --index-url https://download.pytorch.org/whl/cpu
       - run: python -m pip install -e '.[dev,synllama]' 'transformers==${{ matrix.transformers }}'
       - run: pytest tests/synthesis/test_synllama_provider.py
+
+  reaction-records:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python: '3.10'
+            stack: declared-lower
+            pyarrow: '14.0.2'
+            protobuf: '6.30.0'
+            numpy: 'numpy==1.26.4'
+          - python: '3.12'
+            stack: current-tested-dependencies
+            pyarrow: '23.0.1'
+            protobuf: '7.34.1'
+            numpy: 'numpy>=2,<3'
+    env:
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      CUDA_VISIBLE_DEVICES: ''
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      # Lower PyArrow wheels use the NumPy 1 ABI. Pin that row explicitly;
+      # the newer dependency row also exercises NumPy 2. No model extras.
+      - run: python -m pip install -e '.[dev,reaction-records]' 'pyarrow==${{ matrix.pyarrow }}' 'protobuf==${{ matrix.protobuf }}' '${{ matrix.numpy }}' 'rdkit==2025.9.6'
+      # Do not allow importorskip to turn a broken optional stack into a pass.
+      - run: python -c 'import pyarrow, google.protobuf; print(pyarrow.__version__, google.protobuf.__version__)'
+      - run: python -m pytest tests/synthesis/test_reaction_records.py -q
+      - run: chembounce-reaction-records --help
