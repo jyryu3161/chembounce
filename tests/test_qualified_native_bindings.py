@@ -17,12 +17,21 @@ pytestmark = pytest.mark.usefixtures("synthetic_benchmark_profile_bindings", "de
 
 
 def binding(version="v3"):
-    name = {"v2": profiles.SELECTIVE_PROFILE, "v3": profiles.LANDMARK_SELECTIVE_PROFILE}[version]
+    name = {
+        "v2": profiles.SELECTIVE_PROFILE,
+        "v3": profiles.LANDMARK_SELECTIVE_PROFILE,
+        "v4": profiles.ALLOCATION_SELECTIVE_PROFILE,
+    }[version]
     return {
         "schema": "qualified-benchmark-protocol-" + version,
         "recommendation_profile": name,
         "profile_artifact_sha256": profiles.PROFILE_SHA256[name],
     }
+
+
+@pytest.fixture(params=["v3", "v4"])
+def fixed_library_version(request):
+    return request.param
 
 
 @pytest.fixture
@@ -97,11 +106,11 @@ def native_spy(monkeypatch):
     ],
 )
 def test_v3_native_library_modes_forward_only_explicit_inputs(
-    tmp_path, monkeypatch, libraries, use_fingerprints, accepted
+    tmp_path, monkeypatch, libraries, use_fingerprints, accepted, fixed_library_version
 ):
     assets = {key: str(tmp_path / key) for key in libraries}
     options = {} if use_fingerprints is None else {"use_fingerprint_db": use_fingerprints}
-    req = native_request(tmp_path, assets, options)
+    req = native_request(tmp_path, assets, options, version=fixed_library_version)
     calls = native_spy(monkeypatch)
     if not accepted:
         with pytest.raises(ValueError, match="bound scaffold DB or enabled fingerprint DB"):
@@ -132,10 +141,10 @@ def test_v3_native_library_modes_forward_only_explicit_inputs(
     ],
 )
 def test_v3_invalid_options_reject_before_generator_import_or_asset_hash(
-    tmp_path, monkeypatch, option, value
+    tmp_path, monkeypatch, option, value, fixed_library_version
 ):
     options = {option: value}
-    req = native_request(tmp_path, {"scaffold_db": "bound-scaffolds"}, options)
+    req = native_request(tmp_path, {"scaffold_db": "bound-scaffolds"}, options, version=fixed_library_version)
     original_import = builtins.__import__
 
     def guarded_import(name, *args, **kwargs):
@@ -152,7 +161,7 @@ def test_v3_invalid_options_reject_before_generator_import_or_asset_hash(
 
     monkeypatch.setattr(runner, "digest", no_hash)
     p = {
-        **binding(),
+        **binding(fixed_library_version),
         "budget": runner.BUDGET,
         "collector_catalog_policy": runner.CATALOG_POLICY,
         "source_sha256": {},
@@ -172,10 +181,12 @@ def test_v3_invalid_options_reject_before_generator_import_or_asset_hash(
 @pytest.mark.parametrize(
     "assets,options", [({}, {}), ({"fingerprint_db": "bound"}, {"use_fingerprint_db": False})]
 )
-def test_v3_missing_library_mode_rejects_before_any_hash(tmp_path, monkeypatch, assets, options):
+def test_v3_missing_library_mode_rejects_before_any_hash(
+    tmp_path, monkeypatch, assets, options, fixed_library_version
+):
     monkeypatch.setattr(runner, "digest", lambda *args: pytest.fail("Unexpected hash"))
     p = {
-        **binding(),
+        **binding(fixed_library_version),
         "budget": runner.BUDGET,
         "collector_catalog_policy": runner.CATALOG_POLICY,
         "source_sha256": {},
@@ -187,7 +198,7 @@ def test_v3_missing_library_mode_rejects_before_any_hash(tmp_path, monkeypatch, 
         runner.resolve_protocol(p, tmp_path)
 
 
-@pytest.mark.parametrize("version", [None, "v2", "v3"])
+@pytest.mark.parametrize("version", [None, "v2", "v3", "v4"])
 @pytest.mark.parametrize("arm", ["full", "baseline", "crem", "mol2mol", "synllama"])
 def test_native_binding_is_v3_full_only(tmp_path, version, arm):
     method = {"id": arm, "arm": arm, "resolved_assets": {}, "native_method": {"asset_names": {}}}
@@ -196,7 +207,7 @@ def test_native_binding_is_v3_full_only(tmp_path, version, arm):
         req = runner.request_for(
             method, {"id": "q", "target_id": "t", "smiles": "NOT_PARSED"}, 42, tmp_path, 360, phase, plan
         )
-        expected = version is not None and (phase == "common" or (version == "v3" and arm == "full"))
+        expected = version is not None and (phase == "common" or (version in ("v3", "v4") and arm == "full"))
         assert ("benchmark_protocol" in req) == expected
         if expected:
             assert req["benchmark_protocol"] == binding(version)
@@ -216,10 +227,14 @@ def test_native_binding_is_v3_full_only(tmp_path, version, arm):
         "arm",
     ],
 )
-def test_v3_native_supply_rechecks_cross_phase_authority(tmp_path, attack):
+def test_v3_native_supply_rechecks_cross_phase_authority(tmp_path, attack, fixed_library_version):
     native = tmp_path / "native"
     native.mkdir()
-    req = native_request(tmp_path, {"scaffold_db": "bound-scaffolds", "fingerprint_db": "bound-fp"})
+    req = native_request(
+        tmp_path,
+        {"scaffold_db": "bound-scaffolds", "fingerprint_db": "bound-fp"},
+        version=fixed_library_version,
+    )
     prior = copy.deepcopy(req)
     if attack == "missing_binding":
         prior.pop("benchmark_protocol")

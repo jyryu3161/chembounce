@@ -15,12 +15,16 @@ SELECTIVE_PROFILE = "qualified-selective-engineering-v2"
 GUARDED_SELECTIVE_PROFILE = "qualified-selective-engineering-v3"
 DIAGNOSTIC_SELECTIVE_PROFILE = "qualified-selective-engineering-v4"
 LANDMARK_SELECTIVE_PROFILE = "qualified-selective-engineering-v5"
+ALLOCATION_SELECTIVE_PROFILE = "qualified-selective-engineering-v6"
+_LANDMARK_PROFILES = (LANDMARK_SELECTIVE_PROFILE, ALLOCATION_SELECTIVE_PROFILE)
+_DIAGNOSTIC_PROFILES = (DIAGNOSTIC_SELECTIVE_PROFILE, *_LANDMARK_PROFILES)
 DEFAULT_RECOMMENDATION_PROFILE = LANDMARK_SELECTIVE_PROFILE
 ENGINEERING_PROFILES = (
     SELECTIVE_PROFILE,
     GUARDED_SELECTIVE_PROFILE,
     DIAGNOSTIC_SELECTIVE_PROFILE,
     LANDMARK_SELECTIVE_PROFILE,
+    ALLOCATION_SELECTIVE_PROFILE,
 )
 # Portable declarations bound by the packaged artifact hash. External release
 # review authenticates these prior records; loading never opens historical paths.
@@ -87,6 +91,33 @@ LANDMARK_SOURCE_REVISION = {
         },
     ],
 }
+# Prior implementation/result records, not self-attestation of this release or efficacy.
+ALLOCATION_SOURCE_REVISION = {
+    "allocation_source_commit": "df8f214e9cc86602f5021a05857f1ddf6f429105",
+    "predecessor": {
+        "name": "qualified-selective-engineering-v5",
+        "artifact_sha256": "1273082948d008dc7dd02daf18ace1bc6aeeea78515ebf074f321a3c28a450ad",
+    },
+    "source_reviews": [
+        {
+            "role": "independent_source_review",
+            "record_label": "review-evidence-allocation-df8f214-v1/report.json",
+            "record_sha256": "f8e7502e366c6d5cdc6e2e29b48877b980bfb69d3167fcd9d3bab7d71a37f018",
+        },
+        {
+            "role": "root_development_result_acceptance",
+            "record_label": "stage43-combined-allocation-execution-root-v1/acceptance.json",
+            "record_sha256": "6510c0b0df3b0bb3111c764f940b04267a491584c7478e17fb555c1bab24e4fc",
+        },
+        {
+            "role": "root_opt_in_method_decision",
+            "record_label": "stage43-combined-allocation-execution-root-v1/method-decision.json",
+            "record_sha256": "9c76e3c228951aa4f7eb6b642c6a3279fe2d15bbd53a6fa79353b78e12422bc5",
+        },
+    ],
+}
+ALLOCATION_SOURCE_REVISION["inherited_landmark_revision"] = copy.deepcopy(LANDMARK_SOURCE_REVISION)
+
 # Declarative values: loading the disabled profile must not import or require ScoreMol.
 LANDMARK_DECLARATION = {
     "default_enabled": False,
@@ -109,6 +140,10 @@ EVIDENCE_ALLOCATION_INHERIT = "inherit-v1"
 DESIGN_EVIDENCE_ALLOCATION = "design-scaffold-round-robin-v1"
 SCREENING_ALLOCATION_INHERIT = "inherit-v1"
 HIT_SCREENING_ALLOCATION = "original-hit-tanimoto-distinct-first-v1"
+ALLOCATION_SPEC = {
+    "screening_allocation_policy": HIT_SCREENING_ALLOCATION,
+    "evidence_allocation_policy": DESIGN_EVIDENCE_ALLOCATION,
+}
 
 SELECTIVE_KERNEL_FILES = ("selective_scoring.py", "similarity_constraints.py")
 SELECTIVE_CONSTRAINTS = {
@@ -118,6 +153,7 @@ SELECTIVE_CONSTRAINTS = {
 }
 # Reviewed development release; the untouched fit candidate remains separately bound.
 PROFILE_SHA256 = {
+    ALLOCATION_SELECTIVE_PROFILE: "c1d257b25286c14dc3f8208036018bf706d289c0a227f903727ada99fdf0c37a",
     LANDMARK_SELECTIVE_PROFILE: "1273082948d008dc7dd02daf18ace1bc6aeeea78515ebf074f321a3c28a450ad",
     DIAGNOSTIC_SELECTIVE_PROFILE: "437b5c11f9b5627122e2ad70ecbc2d4f9f8b2e5294c6fbe8be81058ffb8e48b5",
     GUARDED_SELECTIVE_PROFILE: "fd5fb3b65b12307ed1a9b5371e74427eb709d8cf3012bbcba5095022ddb34537",
@@ -252,10 +288,12 @@ def profile_defaults(artifact):
 
     if artifact["schema"] == ENGINEERING_SCHEMA:
         defaults["similarity_constraints"] = copy.deepcopy(SELECTIVE_CONSTRAINTS)
-    if artifact.get("name") in (DIAGNOSTIC_SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE):
+    if artifact.get("name") in _DIAGNOSTIC_PROFILES:
         defaults["rejected_pose_diagnostics"] = False
-    if artifact.get("name") == LANDMARK_SELECTIVE_PROFILE:
+    if artifact.get("name") in _LANDMARK_PROFILES:
         defaults["similarity_constraints"]["landmark_pose_proposals"] = False
+    if artifact.get("name") == ALLOCATION_SELECTIVE_PROFILE:
+        defaults.update(ALLOCATION_SPEC)
     return defaults
 
 
@@ -277,12 +315,14 @@ def _validate_engineering_artifact(artifact, name):
             "route_search_policy": "original-hit-v1",
             "evidence_profile": "computational-route-support-v1",
             "fingerprint": {"kind": "binary_morgan", "radius": 2, "bits": 2048, "chirality": True},
+            **(ALLOCATION_SPEC if name == ALLOCATION_SELECTIVE_PROFILE else {}),
         }
         or any(key in artifact for key in ("fit_sha256", "review", "calibration_spec"))
         or set(artifact.get("provenance", {}).get("source_sha256", {}))
         != (
             {"chembounce_synthesis/" + path for path in KERNEL_FILES + SELECTIVE_KERNEL_FILES}
-            | ({LANDMARK_FILE} if name == LANDMARK_SELECTIVE_PROFILE else set())
+            | ({LANDMARK_FILE} if name in _LANDMARK_PROFILES else set())
+            | ({"chembounce_synthesis/workflow.py"} if name == ALLOCATION_SELECTIVE_PROFILE else set())
         )
     ):
         raise ValueError("Packaged engineering profile lacks its declared fixed policy/source scope")
@@ -294,14 +334,18 @@ def _validate_engineering_artifact(artifact, name):
             "Packaged guarded engineering profile lacks its reviewed source revision declaration"
         )
 
-    if name in (DIAGNOSTIC_SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE):
+    if name in _DIAGNOSTIC_PROFILES:
         from .rejected_pose_diagnostics import LIMITS, VERSION
 
         diagnostic = artifact.get("optional_diagnostics", {}).get("rejected_pose_diagnostics", {})
         if (
             artifact["provenance"].get("source_revision")
             != (
-                LANDMARK_SOURCE_REVISION if name == LANDMARK_SELECTIVE_PROFILE else DIAGNOSTIC_SOURCE_REVISION
+                {
+                    DIAGNOSTIC_SELECTIVE_PROFILE: DIAGNOSTIC_SOURCE_REVISION,
+                    LANDMARK_SELECTIVE_PROFILE: LANDMARK_SOURCE_REVISION,
+                    ALLOCATION_SELECTIVE_PROFILE: ALLOCATION_SOURCE_REVISION,
+                }[name]
             )
             or set(artifact.get("optional_diagnostics", {})) != {"rejected_pose_diagnostics"}
             or set(diagnostic) != {"default_enabled", "version", "limits", "source_sha256"}
@@ -321,7 +365,7 @@ def _validate_engineering_artifact(artifact, name):
                 "Packaged diagnostic engineering profile lacks its reviewed optional source declaration"
             )
 
-    if name == LANDMARK_SELECTIVE_PROFILE:
+    if name in _LANDMARK_PROFILES:
         declaration = artifact.get("optional_landmark_proposals", {})
         expected = {
             **LANDMARK_DECLARATION,
@@ -386,7 +430,8 @@ def numerical_runtime(name=None):
             for name in (
                 KERNEL_FILES
                 + SELECTIVE_KERNEL_FILES
-                + (("landmark_proposals.py",) if name == LANDMARK_SELECTIVE_PROFILE else ())
+                + (("landmark_proposals.py",) if name in _LANDMARK_PROFILES else ())
+                + (("workflow.py",) if name == ALLOCATION_SELECTIVE_PROFILE else ())
                 if name in ENGINEERING_PROFILES
                 else KERNEL_FILES
             )
@@ -429,15 +474,17 @@ def profile_provenance(config):
     }
     numerical_changes = {key: value for key, value in differences.items() if key not in resource_keys}
     screening_policy = config.get("screening_allocation_policy", SCREENING_ALLOCATION_INHERIT)
-    if screening_policy != SCREENING_ALLOCATION_INHERIT:
+    expected_screening = defaults.get("screening_allocation_policy", SCREENING_ALLOCATION_INHERIT)
+    if screening_policy != expected_screening:
         numerical_changes["screening_allocation_policy"] = {
-            "profile": SCREENING_ALLOCATION_INHERIT,
+            "profile": expected_screening,
             "effective": screening_policy,
         }
     evidence_policy = config.get("evidence_allocation_policy", EVIDENCE_ALLOCATION_INHERIT)
-    if evidence_policy != EVIDENCE_ALLOCATION_INHERIT:
+    expected_evidence = defaults.get("evidence_allocation_policy", EVIDENCE_ALLOCATION_INHERIT)
+    if evidence_policy != expected_evidence:
         numerical_changes["evidence_allocation_policy"] = {
-            "profile": EVIDENCE_ALLOCATION_INHERIT,
+            "profile": expected_evidence,
             "effective": evidence_policy,
         }
     if config.get("reference_sdf"):
@@ -477,7 +524,7 @@ def profile_provenance(config):
     engineering = name in ENGINEERING_PROFILES
     diagnostics = None
     diagnostic_mismatches = {}
-    if name in (DIAGNOSTIC_SELECTIVE_PROFILE, LANDMARK_SELECTIVE_PROFILE):
+    if name in _DIAGNOSTIC_PROFILES:
         declaration = copy.deepcopy(artifact["optional_diagnostics"]["rejected_pose_diagnostics"])
         observed = {
             "chembounce_synthesis/" + path: _sha(files("chembounce_synthesis").joinpath(path).read_bytes())
@@ -514,7 +561,7 @@ def profile_provenance(config):
                     "scope": "Explicit landmark proposals are a material search override and remain custom_unvalidated. Default false requires no ScoreMol capability. Source review is not calibration or efficacy evidence.",
                 }
             }
-            if name == LANDMARK_SELECTIVE_PROFILE
+            if name in _LANDMARK_PROFILES
             else {}
         ),
         **({"optional_diagnostics": {"rejected_pose_diagnostics": diagnostics}} if diagnostics else {}),

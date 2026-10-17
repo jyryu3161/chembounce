@@ -11,7 +11,7 @@ ADP = "C1=NC(=C2C(=N1)N(C=N2)[C@H]3[C@@H]([C@@H]([C@H](O3)COP(=O)(O)OP(=O)(O)O)O
 import pytest
 
 
-def _synthetic_profile_bindings(tmp_path, monkeypatch, *, include_landmark=False):
+def _synthetic_profile_bindings(tmp_path, monkeypatch, *, include_current=False):
     import copy
     import hashlib
     import json
@@ -23,8 +23,8 @@ def _synthetic_profile_bindings(tmp_path, monkeypatch, *, include_landmark=False
     paths, artifacts, packaged = {}, {}, {}
     with monkeypatch.context() as scoped:
         names = (profiles.PROFILE, profiles.SELECTIVE_PROFILE)
-        if include_landmark:
-            names += (profiles.LANDMARK_SELECTIVE_PROFILE,)
+        if include_current:
+            names += (profiles.LANDMARK_SELECTIVE_PROFILE, profiles.ALLOCATION_SELECTIVE_PROFILE)
         for name in names:
             raw = original_resource(name).read_bytes()
             packaged[name] = hashlib.sha256(raw).hexdigest()
@@ -66,5 +66,5 @@ def synthetic_historical_profile_bindings(tmp_path, monkeypatch):
 
 @pytest.fixture
 def synthetic_benchmark_profile_bindings(tmp_path, monkeypatch):
-    """Explicit test-only v1/v2/v5 artifacts; never authenticate a packaged runtime."""
-    yield from _synthetic_profile_bindings(tmp_path, monkeypatch, include_landmark=True)
+    """Explicit test-only v1/v2/v5/v6 artifacts; never authenticate a packaged runtime."""
+    yield from _synthetic_profile_bindings(tmp_path, monkeypatch, include_current=True)

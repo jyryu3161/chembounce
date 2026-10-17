@@ -1,0 +1,208 @@
+{
+  "engineering_spec": {
+    "conformers": {
+      "energy_window": 5.0,
+      "max_iterations": 500,
+      "num_conformers": 8,
+      "pharmacophore_sigma": 1.0,
+      "reject_unspecified_stereo": true,
+      "scoring_objective": "original-hit-v1",
+      "seed": 42,
+      "strain_penalty": 0.05
+    },
+    "evidence_allocation_policy": "design-scaffold-round-robin-v1",
+    "evidence_profile": "computational-route-support-v1",
+    "fingerprint": {
+      "bits": 2048,
+      "chirality": true,
+      "kind": "binary_morgan",
+      "radius": 2
+    },
+    "pose_selection_policy": "joint-feasible-hit-pose-v2",
+    "ranking_policy": "original-hit-v1",
+    "refinement": {
+      "adaptive_max_conformers": null,
+      "borderline_margin": 0.0,
+      "conformer_growth_factor": 2,
+      "max_metric_range": null,
+      "max_score_range": null,
+      "max_total_conformers": 240,
+      "num_conformers": 8,
+      "ranking_statistic": "minimum",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "threshold_policy": "all_seeds",
+      "top_n": 10
+    },
+    "route_search_policy": "original-hit-v1",
+    "screening_allocation_policy": "original-hit-tanimoto-distinct-first-v1",
+    "similarity_constraints": {
+      "landmarks": [],
+      "polar_recall": 0.75,
+      "version": "selective-similarity-constraints-v2"
+    }
+  },
+  "limitations": [
+    "Thresholds and allocation policies are declared engineering preferences, not fitted or calibrated activity or synthesis probabilities.",
+    "V6 explicitly opts into original-hit Tanimoto distinct-product-first screening and design/scaffold evidence rotation. --recommend/recommend() still defaults to historical v5.",
+    "On two previously inspected inputs with saved generator proposals, the combination retained two qualified products on the first input and zero on the second, identical to ranked screening alone. Wider bounded evidence coverage is secondary development evidence; no improved qualified yield or general superiority was demonstrated.",
+    "Equal screening quotas and predictor call caps do not establish equal measured end-to-end computation. Distinct products are prioritized before deferred design alternatives; screen limits still count product/design attempts.",
+    "Fresh-generation integration and unseen evaluation remain separate. Prior result/source review does not certify this release, biological activity, experimental synthesis, yield or selectivity.",
+    "Exact catalog/rule replay and pinned local ReactionT5 agreement provide conditional computational route support only. Same-pose shape/pharmacophore/polar floors and all-three-seed qualification are unchanged.",
+    "V6 primary source scope adds workflow.py to the six v5 scoring/identity/landmark modules. It is not full pipeline/runtime/asset certification; qualified benchmark runs still bind their required full source and assets.",
+    "Optional rejected-pose diagnostics default off and consume the existing deadline. Landmark proposals default false; enabling them remains a material custom_unvalidated override. Existing finite proposal limits and cooperative deadline limitations are unchanged.",
+    "No claim that polar features are biologically essential, that three seeds establish convergence, or that historical pre-v6 observations are fresh v6 performance."
+  ],
+  "minimum_scores": {
+    "hit_pharmacophore": 0.5,
+    "hit_shape": 0.7,
+    "hit_tanimoto": 0.35
+  },
+  "name": "qualified-selective-engineering-v6",
+  "optional_diagnostics": {
+    "rejected_pose_diagnostics": {
+      "default_enabled": false,
+      "limits": {
+        "atoms": 512,
+        "capture_seconds": 1.0,
+        "record_bytes": 262144,
+        "records": 8,
+        "run_bytes": 2097152
+      },
+      "source_sha256": {
+        "chembounce_synthesis/refinement.py": "6b9bb1458dea1330e850c627eae9e274ebdb7977a7c8eecf1e4a32b43488370a",
+        "chembounce_synthesis/rejected_pose_diagnostics.py": "3ee06dd9be2db572580717619eb338f071d13958b8d023dfa2064d95f02eeef4",
+        "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+        "chembounce_synthesis/workflow.py": "284a5515f04e2dac3737dff4e3b4dfb7819ca5da10669fa987146fbf4fa826e0"
+      },
+      "version": "rejected-pose-diagnostic-v1"
+    }
+  },
+  "optional_landmark_proposals": {
+    "default_enabled": false,
+    "limits": {
+      "alternatives_per_call": 8,
+      "alternatives_per_pair": 2,
+      "complete_maps_per_pair": 4,
+      "cooperative_seconds_per_call": 1.0,
+      "helper_edge_visits_per_pair": 4096,
+      "mapping_edge_visits_per_pair": 128,
+      "scoremol_per_call": 16
+    },
+    "parity_tolerance": 1e-05,
+    "source_sha256": {
+      "chembounce_synthesis/landmark_proposals.py": "b61b16aba8f043904b75f95ad7a876db995dc758e363c1bae293c65218ddd037"
+    },
+    "version": "landmark-anchored-rigid-v1"
+  },
+  "provenance": {
+    "runtime": {
+      "packages": {
+        "numpy": "1.26.4",
+        "rdkit": "2025.9.6",
+        "scipy": "1.13.1"
+      },
+      "pharmacophore_feature_definition": {
+        "path": "/data2/home/jyryu/chembounce/.venv-research/lib/python3.10/site-packages/rdkit/Data/BaseFeatures.fdef",
+        "sha256": "87ab54bd717af50a78a710d23e7737a2cafc96e5293bf6257ecdda86b6da3f65"
+      },
+      "python": "3.10.12"
+    },
+    "source_revision": {
+      "allocation_source_commit": "df8f214e9cc86602f5021a05857f1ddf6f429105",
+      "inherited_landmark_revision": {
+        "inherited_diagnostic_revision": {
+          "diagnostic_source_commit": "612596ae8921e663dda5a239c662f50d782704f7",
+          "inherited_guard_revision": {
+            "guarded_source_commit": "88c420f8bb428f658d174df1cebe12a46870550b",
+            "predecessor": {
+              "artifact_sha256": "a8b47a409a21518dd482acbefdce38774414ae0b65f28d6ea7cb52ab63e1ef52",
+              "name": "qualified-selective-engineering-v2"
+            },
+            "source_reviews": [
+              {
+                "record_label": "review-molzip-assembly-source-88c420f/report.json",
+                "record_sha256": "46346859a9d762c888156a178a439d0bfe715315877336406f9c2a8ab16d630f",
+                "role": "independent_source_review"
+              },
+              {
+                "record_label": "stage14-stereo-develop-merge-05ec327.json",
+                "record_sha256": "a16f0137ee4b75c7cf3987155356d50c4dabce5eaf8d43d883bccd69c95d01f6",
+                "role": "root_source_gate"
+              }
+            ]
+          },
+          "predecessor": {
+            "artifact_sha256": "fd5fb3b65b12307ed1a9b5371e74427eb709d8cf3012bbcba5095022ddb34537",
+            "name": "qualified-selective-engineering-v3"
+          },
+          "source_reviews": [
+            {
+              "record_label": "review-rejected-pose-source-612596a-v1/report.json",
+              "record_sha256": "8f535615f9339580fb416bf4d81cbfbb4661402deb7a84bb323bdb7a67b58c92",
+              "role": "independent_source_review"
+            },
+            {
+              "record_label": "stage18-rejected-pose-root-source-gate-612596a-v1.json",
+              "record_sha256": "ec71e9c72527d12075209ca01e830140970d307e7451f1e478e007c1fdad9fbf",
+              "role": "root_source_gate"
+            }
+          ]
+        },
+        "landmark_source_commit": "427fdbd22ba40c3fde2cb4a4a43a3a7b64c85ad8",
+        "predecessor": {
+          "artifact_sha256": "437b5c11f9b5627122e2ad70ecbc2d4f9f8b2e5294c6fbe8be81058ffb8e48b5",
+          "name": "qualified-selective-engineering-v4"
+        },
+        "source_reviews": [
+          {
+            "record_label": "review-landmark-correction-427fdbd-v1/report.json",
+            "record_sha256": "f57aa678ba4fdc3977eec3a94961bbeda9d61c6b8fb3fd7959c5c4a74efa3402",
+            "role": "independent_source_review"
+          },
+          {
+            "record_label": "stage20-landmark-prototype-root-source-gate-427fdbd-v1.json",
+            "record_sha256": "9745470ecfe3e6d7a9a3ba4c7bc57de8e29f7305e9a158ded79ceb0add9b3a33",
+            "role": "root_source_gate"
+          }
+        ]
+      },
+      "predecessor": {
+        "artifact_sha256": "1273082948d008dc7dd02daf18ace1bc6aeeea78515ebf074f321a3c28a450ad",
+        "name": "qualified-selective-engineering-v5"
+      },
+      "source_reviews": [
+        {
+          "record_label": "review-evidence-allocation-df8f214-v1/report.json",
+          "record_sha256": "f8e7502e366c6d5cdc6e2e29b48877b980bfb69d3167fcd9d3bab7d71a37f018",
+          "role": "independent_source_review"
+        },
+        {
+          "record_label": "stage43-combined-allocation-execution-root-v1/acceptance.json",
+          "record_sha256": "6510c0b0df3b0bb3111c764f940b04267a491584c7478e17fb555c1bab24e4fc",
+          "role": "root_development_result_acceptance"
+        },
+        {
+          "record_label": "stage43-combined-allocation-execution-root-v1/method-decision.json",
+          "record_sha256": "9c76e3c228951aa4f7eb6b642c6a3279fe2d15bbd53a6fa79353b78e12422bc5",
+          "role": "root_opt_in_method_decision"
+        }
+      ]
+    },
+    "source_sha256": {
+      "chembounce_synthesis/common.py": "6c38eb9a2aad9ff3bf8f6ba7f6150ce07399bb98e2fc4b37345013ac6f9876b7",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/identity.py": "a07e99025182a09dbf66a9d2ac98635f8c9eba9895e127b9d25a40b2466423da",
+      "chembounce_synthesis/landmark_proposals.py": "b61b16aba8f043904b75f95ad7a876db995dc758e363c1bae293c65218ddd037",
+      "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "chembounce_synthesis/workflow.py": "284a5515f04e2dac3737dff4e3b4dfb7819ca5da10669fa987146fbf4fa826e0"
+    }
+  },
+  "schema": "qualified-selective-engineering-profile-v2",
+  "scope": "explicit_engineering_preferences_not_fitted",
+  "status": "declared_engineering_policy"
+}

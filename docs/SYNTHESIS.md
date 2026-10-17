@@ -565,7 +565,8 @@ equal runtime. The configured evaluator cache and product-matching policy are un
 within the run and checks exact-product agreement independently for every route.
 The legacy evaluator retains its existing matching and cache policies. Budgets, deadlines, unknown outcomes and final qualification
 are unchanged. The option applies to both 2D and 3D workflows and is an explicit
-`custom_unvalidated` material override for existing named profiles. Summary and
+`custom_unvalidated` material override for historical v1–v5 profiles. V6 explicitly
+declares this policy together with ranked screening (see below). Summary and
 manifest record it separately from screening and route allocation. It is a coverage
 baseline, not a claim of improved yield or default superiority.
 
@@ -593,10 +594,11 @@ including preflight failures; it is not a distinct-molecule or equal-time quota.
 Summary counters distinguish attempts, distinct products, deferred design attempts
 and actual scorer invocations. The summary and manifest name the screening policy
 separately from `allocation_policy`. This option requires 3D scoring and is a
-material `custom_unvalidated` override for existing recommendation profiles.
+material `custom_unvalidated` override for historical v1–v5 profiles.
 V2–V5 artifact bytes are unchanged. Greater 2D similarity can reduce scaffold
-diversity; this baseline has no default-superiority or efficacy claim. A future
-profile release and prospective end-to-end evaluation are separate work.
+diversity; this baseline has no default-superiority or efficacy claim. V6 below
+explicitly declares it together with evidence rotation; fresh-generation and
+unseen evaluation remain separate work.
 
 Each refinement stage evaluates all requested seeds at one ensemble size. Every
 seed must succeed before the stage can supply a result. Candidate and reference
@@ -1659,3 +1661,36 @@ the saved profile/custom status, policy and seed witnesses; it performs no new
 alignment or scientific validation. This integration's controlled fixtures are
 software plumbing tests, not recommendation-yield evidence; no historical
 campaign is relabelled as v5 evaluation.
+
+### Explicit v6 allocation method
+
+`qualified-selective-engineering-v6` is an opt-in engineering profile. It combines
+`screening_allocation_policy: original-hit-tanimoto-distinct-first-v1` with
+`evidence_allocation_policy: design-scaffold-round-robin-v1`. Select it explicitly
+with `--recommendation-profile qualified-selective-engineering-v6` (alongside the
+usual synthesis configuration), or set `recommendation_profile` in that config.
+Do not combine this choice with `--recommend`: `--recommend` and `recommend()`
+continue to request historical v5 and reject a conflicting explicit profile.
+
+V6 retains the .35/.70/.50 original-hit floors, .75 polar recall, exact-product
+conditional route support, scaffold-change checks and three-seed qualification.
+Screening prioritizes distinct exact products by original-hit Tanimoto, then
+retains deferred design alternatives without copying their scores or poses.
+Evidence rotation changes request ordering within the existing carried tiers;
+cache sharing, per-route multistep costs, unknown status and deadlines remain
+unchanged. Product/design screening attempts and predictor caps are not promises
+of equal end-to-end computation.
+
+On the two inspected development inputs with saved generator proposals, the
+combination retained two qualified products on the first input and zero on the
+second, identical to ranked screening alone. It broadened bounded evidence
+coverage but did **not** demonstrate better qualified yield. This is not a
+calibrated method, a default recommendation change, or unseen-input performance.
+Fresh-generation and broader evaluation remain separate.
+
+V6 binds `workflow.py` as primary method source in addition to the six v5
+scoring/identity/landmark modules. Its optional diagnostics and landmark proposal
+semantics are retained; enabling landmark proposals is still a material custom
+override. Any allocation change from the v6 declaration remains
+`custom_unvalidated`. Old profile artifacts and their source scopes are unchanged.
+A matching profile is not full-source or asset certification.

@@ -55,10 +55,11 @@ class PackagedBenchmarkBindings(unittest.TestCase):
         ):
             return self.namespace[name](*args)
 
-    def test_packaged_v2_and_v5_have_exact_distinct_authorities(self):
+    def test_packaged_v2_v5_v6_have_exact_distinct_authorities(self):
         for version, name in (
             ("v2", self.profiles.SELECTIVE_PROFILE),
             ("v3", self.profiles.LANDMARK_SELECTIVE_PROFILE),
+            ("v4", self.profiles.ALLOCATION_SELECTIVE_PROFILE),
         ):
             with self.subTest(version=version):
                 raw = (ROOT / "chembounce_synthesis/data" / (name + ".json")).read_bytes()
@@ -72,7 +73,7 @@ class PackagedBenchmarkBindings(unittest.TestCase):
                 self.assertEqual(self.call("benchmark_profile", binding), name)
                 self.assertTrue(self.call("selective_benchmark_profile", name))
                 for field, value in (
-                    ("schema", "qualified-benchmark-protocol-v4"),
+                    ("schema", "qualified-benchmark-protocol-v99"),
                     ("profile_artifact_sha256", "0" * 64),
                     ("recommendation_profile", self.profiles.DIAGNOSTIC_SELECTIVE_PROFILE),
                     ("extra", True),

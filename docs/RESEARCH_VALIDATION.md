@@ -757,3 +757,23 @@ A separately selected [same-assay follow-up](../benchmarks/results/assay-matched
 [SynLlama](https://pubs.acs.org/doi/10.1021/acscentsci.5c01285) and [RuSH](https://pubs.acs.org/doi/10.1021/acs.jcim.5c00029) already address synthesis-aware generation and/or combined 2D/3D scaffold hopping. A new paper needs a defensible improvement under a stated setting, supported by independent comparisons and ablations. Known active scaffold recovery remains a structural proxy; activity of a new candidate and chemical reaction yield remain unmeasured without additional evidence. Experimental collaboration can strengthen an application claim, but the computational-method evaluation should stand on its own with declared limits and reproducible artifacts.
 
 For a separate same-assay evaluation, use the [assay-matched control protocol](ASSAY_MATCHED_CONTROLS.md). It audits all retained activities before score-blind selection and preserves assay-local labels; it does not replace the frozen generation benchmark.
+
+### Opt-in allocation method binding (v6 / protocol v4)
+
+`qualified-benchmark-protocol-v4` admits only the exact packaged
+`qualified-selective-engineering-v6` artifact hash. Profile v6 combines ranked
+original-hit screening with design/scaffold evidence rotation; protocol v4 is the
+benchmark envelope version, not a numerical profile version. The artifact cites
+prior implementation review and the accepted two-input development comparison;
+those records are not self-certification of this release or evidence of general
+superiority. The combination did not increase qualified yield over ranked
+screening alone on those inputs.
+
+The adapter still requires `engineering_policy_matched`; there is no generic
+`custom_unvalidated` bypass. Protocol v4 preserves protocol v3's explicit native
+DB selection and cross-phase request binding, including rejection of unbound
+replacement libraries. The runner still pins all required source and assets and
+uses the existing fixed budgets. Selected and empty outcomes traverse the same
+selective collector validation, including all three seed witnesses and JSON,
+TSV and all four SDF exports. Legacy None/v1, protocol v2 -> profile v2 and protocol
+v3 -> profile v5 bindings remain unchanged; the recommendation default remains v5.

@@ -22,6 +22,7 @@ def add_expansion_options(parser):
             "qualified-selective-engineering-v3",
             "qualified-selective-engineering-v4",
             "qualified-selective-engineering-v5",
+            "qualified-selective-engineering-v6",
         ),
         help="Explicit opt-in profile: permissive development fit or selective engineering constraints (not fitted); fixed three-seed scoring and computational route support, no activity guarantee",
     )
