@@ -1237,10 +1237,15 @@ for review. Do not change normalization or omit rejections to force equality.
 partial output, nonzero exits, timeouts and unavailable cost counters. Records
 are written exclusively and fsynced. Missing counters are unavailable, not zero;
 child self-usage and pre-receipt coordinator elapsed time have explicit scopes.
-A successful migration needs both a `validated` terminal receipt and external
-exit 0 within the complete ceiling. A killed writer or unavailable terminal
-receipt never proves completion. Independent result review and adoption remain
-separate gates. Existing and dangling/symlink destinations are refused.
+The terminal receipt is a snapshot taken before its own serialization and fsync.
+It is never rewritten to certify the completion time of that same write. A
+successful migration requires a `validated` snapshot, coordinator exit 0 after
+the write strictly before the original work and total deadlines without an
+interruption, and external watchdog exit 0 within the complete ceiling. A late
+write can therefore leave a `validated` snapshot with a nonzero exit; the snapshot
+alone is insufficient. A killed writer or unavailable terminal receipt never
+proves completion. Independent result review and adoption remain separate gates.
+Existing and dangling/symlink destinations are refused.
 
 Processed-index lineage cannot certify original supplier-state completeness.
 The retained upstream preprocessing converts supplier molecules to ordinary

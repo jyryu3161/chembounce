@@ -676,3 +676,100 @@ def test_stereo_ingress_keeps_explicit_h_abs_and_logical_coordinates(tmp_path, s
     assert [o["record_index"] for o in manifest["record_origins"][ident]] == [0, 2]
     assert Catalog(output).get(ident).smiles == canonical(STEREO_PLAIN)
     assert source.read_bytes() == before
+
+
+@pytest.fixture
+def final_write_case(plan, monkeypatch):
+    """Real owned writes/receipts; controlled clock and no actual phase process."""
+    path, pinned = write_plan(plan)
+    output = Path(plan["output_dir"])
+    clock = types.SimpleNamespace(value=100.0)
+    original_save = migration._save
+    terminal_attempts = []
+    state = {"failure": None, "finish": 110.0}
+
+    def phase(argv, **kwargs):
+        name = argv[argv.index("--phase") + 1]
+        clock.value += 1
+        original_save(output / f"{name}.json", {"status": "complete", "plan_sha256": pinned})
+        code = 1 if state["failure"] == "phase" else 0
+        return types.SimpleNamespace(pid=999999, returncode=code, poll=lambda: code)
+
+    def save(target, value):
+        if target.name == "terminal.json":
+            terminal_attempts.append(target)
+            if state["failure"] == "collision":
+                target.write_text("existing receipt must survive")
+            if state["failure"] == "write":
+                raise OSError("synthetic terminal write failure")
+        original_save(target, value)
+        if target.name == "terminal.json":
+            clock.value = state["finish"]
+            if state["failure"] == "signal":
+                signal.getsignal(signal.SIGTERM)(signal.SIGTERM, None)
+
+    monkeypatch.setattr(migration.time, "monotonic", lambda: clock.value)
+    monkeypatch.setattr(migration, "_subreaper", lambda: None)
+    monkeypatch.setattr(migration.subprocess, "Popen", phase)
+    monkeypatch.setattr(
+        migration,
+        "cleanup",
+        lambda proc, *args: {
+            "group_gone": state["failure"] != "cleanup",
+            "direct_child_reaped": True,
+            "returncode": proc.returncode,
+        },
+    )
+    monkeypatch.setattr(migration, "_save", save)
+
+    def invoke(elapsed, failure=None):
+        state.update(finish=100.0 + elapsed, failure=failure)
+        affinity = os.sched_getaffinity(0)
+        handlers = {sig: signal.getsignal(sig) for sig in (signal.SIGTERM, signal.SIGINT)}
+        try:
+            return migration.run(path, pinned, started=100.0)
+        finally:
+            assert os.sched_getaffinity(0) == affinity
+            assert all(signal.getsignal(sig) == handler for sig, handler in handlers.items())
+            assert terminal_attempts == [output / "terminal.json"]
+
+    return invoke, output, plan
+
+
+@pytest.mark.parametrize(
+    "elapsed,expected", [(10, 0), (39.9, 0), (40, 3), (40.1, 3), (44.9, 3), (45, 3), (45.1, 3)]
+)
+def test_final_write_obeys_original_work_and_total_deadlines(final_write_case, elapsed, expected):
+    invoke, output, plan = final_write_case
+    assert plan["limits"]["work_seconds"] == 40 and plan["limits"]["total_seconds"] == 45
+    assert invoke(elapsed) == expected
+    receipt = json.loads((output / "terminal.json").read_text())
+    # Exclusive evidence is the pre-write snapshot, never rewritten to pretend
+    # a receipt can certify its own future serialization/fsync completion time.
+    assert receipt["status"] == "validated" and receipt["elapsed_seconds"] == 4
+    assert receipt["work_deadline_monotonic"] == 140
+    assert receipt["total_deadline_monotonic"] == 145
+    assert "Before terminal serialization/fsync" in receipt["elapsed_seconds_scope"]
+    assert [entry["phase"] for entry in receipt["phases"]] == [
+        "startup",
+        "converter",
+        "validator",
+        "bookkeeping",
+    ]
+
+
+@pytest.mark.parametrize("failure", ["phase", "cleanup", "signal", "collision", "write"])
+def test_final_write_cannot_override_failure_or_ownership(final_write_case, failure):
+    invoke, output, _ = final_write_case
+    if failure in {"collision", "write"}:
+        with pytest.raises(OSError):
+            invoke(10, failure)
+        if failure == "collision":
+            assert (output / "terminal.json").read_text() == "existing receipt must survive"
+        else:
+            assert not (output / "terminal.json").exists()
+    else:
+        assert invoke(10, failure) == 3
+        receipt = json.loads((output / "terminal.json").read_text())
+        expected = {"phase": "failed", "cleanup": "unsafe_cleanup", "signal": "validated"}
+        assert receipt["status"] == expected[failure]

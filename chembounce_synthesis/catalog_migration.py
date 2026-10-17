@@ -657,7 +657,7 @@ def run(plan_path, plan_sha, *, started=None):
             "elapsed_seconds": time.monotonic() - start,
             "elapsed_seconds_scope": "Before terminal serialization/fsync; the external watchdog covers the complete invocation",
             "received_signals": interrupted,
-            "complete_lifecycle_requires": "terminal receipt plus external watchdog exit 0 within total ceiling; independent result review and adoption remain separate",
+            "complete_lifecycle_requires": "pre-write terminal snapshot plus coordinator exit 0 after writing before the original work and total deadlines, plus external watchdog exit 0 within total ceiling; independent result review and adoption remain separate",
             "cost_scope": "Per-child self usage when available in phase receipts; missing counters are unavailable, not zero",
             "final_binding_status": "verified"
             if result == "validated"
@@ -673,7 +673,17 @@ def run(plan_path, plan_sha, *, started=None):
                 os.sched_setaffinity(0, previous_affinity)
             for signum, handler in previous.items():
                 signal.signal(signum, handler)
-    return 0 if result == "validated" and time.monotonic() < total_deadline else 3
+    # The exclusive receipt is a pre-write snapshot. Do not rewrite it to claim
+    # knowledge of its own future fsync; the exit decision covers that work.
+    finished = time.monotonic()
+    return (
+        0
+        if result == "validated"
+        and not interrupted
+        and finished < work_deadline
+        and finished < total_deadline
+        else 3
+    )
 
 
 def main(argv=None):
