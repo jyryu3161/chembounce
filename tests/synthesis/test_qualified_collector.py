@@ -1,6 +1,7 @@
 """Real toy chemistry and controlled raw beams; never local model/tokenizer loading."""
 
 import json
+from pathlib import Path
 
 import pytest
 
@@ -20,13 +21,11 @@ SELECTIVE_PROFILES = (
 HIT, DESIGN = "CC(=O)Nc1ccccc1", "CC(=O)Nc1ccncc1"
 
 
-@pytest.fixture(params=["qualified-development-v1", *SELECTIVE_PROFILES])
-def completed(tmp_path, assets, route, strict_predictor, request):
-    profile_name = request.param
+def toy_request(tmp_path, assets, route, profile_name):
     pytest.importorskip("rdkit.Chem.rdShapeAlign")
     from rdkit.Chem import rdChemReactions
     from rdkit import Chem
-    from benchmarks.research import qualified_adapter as adapter, qualified_runner as runner
+    from benchmarks.research import qualified_runner as runner
     from benchmarks.research.protocol import write_json
     from chembounce_synthesis.profiles import profile_provenance
     from chembounce_synthesis.routes import verify_route
@@ -116,6 +115,16 @@ def completed(tmp_path, assets, route, strict_predictor, request):
             "recommendation_profile": profile_name,
             "profile_artifact_sha256": PROFILE_SHA256[profile_name],
         }
+    return request
+
+
+@pytest.fixture(params=["qualified-development-v1", *SELECTIVE_PROFILES])
+def completed(tmp_path, assets, route, strict_predictor, request):
+    from benchmarks.research import qualified_adapter as adapter
+    from benchmarks.research.protocol import write_json
+
+    request = toy_request(tmp_path, assets, route, request.param)
+    out = Path(request["output_dir"])
     write_json(out / "request.json", request)
     response = adapter.common(request)
     if "benchmark_protocol" in request:
@@ -135,6 +144,105 @@ def collect(data, bound_catalog=None):
         bound_catalog=bound_catalog,
         benchmark_protocol=response["metadata"].get("benchmark_protocol"),
     )
+
+
+@pytest.fixture
+def v6_full_request(tmp_path, assets, route, proposal, strict_predictor, monkeypatch):
+    """Real common/collector path; controlled native supply, proposals and raw beams."""
+    from benchmarks.research import qualified_runner as runner
+    from benchmarks.research.protocol import write_json
+    from chembounce_synthesis.synllama import SavedProposals
+
+    request = toy_request(tmp_path, assets, route, "qualified-selective-engineering-v6")
+    request["settings"] = {"arm": "full"}
+    scaffold_db = tmp_path / "native-scaffolds.csv"
+    scaffold_db.write_text("SMILES\nc1ccncc1\n")
+    request["assets"]["scaffold_db"] = str(scaffold_db)
+    native = Path(request["native"]["directory"])
+    write_json(
+        native / "request.json",
+        {key: request[key] for key in ("query", "seed", "settings", "assets", "benchmark_protocol")},
+    )
+    write_json(native / "design-pool.json", {"designs": [DESIGN]})
+    request["native"]["files_sha256"] = runner.file_manifest(native)
+    proposals = tmp_path / "controlled-proposals.json"
+    write_json(proposals, {"schema_version": 1, "proposals": [{"design": DESIGN, "response": proposal}]})
+    monkeypatch.setattr(workflow, "SynLlama", lambda **kwargs: SavedProposals(proposals))
+    return request, strict_predictor
+
+
+@pytest.mark.parametrize("ablation", ["no_extra_refill_capacity", "design_only_route_search"])
+@pytest.mark.parametrize("empty", [False, True], ids=["selected", "failed-final-seed"])
+def test_v6_full_ablation_collector_roundtrip(v6_full_request, monkeypatch, ablation, empty):
+    from benchmarks.research import qualified_adapter as adapter
+    from benchmarks.research.protocol import write_json
+    from chembounce_synthesis import selective_scoring
+
+    request, predictor = v6_full_request
+    base = adapter.common_config(request)
+    request["settings"]["ablation"] = ablation
+    config = adapter.common_config(request)
+    key, value = (
+        ("max_design_attempts", 3)
+        if ablation == "no_extra_refill_capacity"
+        else ("route_search_policy", "design-v1")
+    )
+    assert config[key] == value
+    assert {k: v for k, v in config.items() if k != key} == {k: v for k, v in base.items() if k != key}
+    if empty:
+        original = selective_scoring.score_candidate
+
+        def fail_seed(smiles, hit, design, settings, **kwargs):
+            if settings.seed == 44:
+                raise ValueError("controlled ablation final-seed abstention")
+            return original(smiles, hit, design, settings, **kwargs)
+
+        monkeypatch.setattr(selective_scoring, "score_candidate", fail_seed)
+    out = Path(request["output_dir"])
+    write_json(out / "request.json", request)
+    response = adapter.common(request)
+    response["metadata"]["benchmark_protocol"] = request["benchmark_protocol"]
+    calls_before_collection = len(predictor.calls)
+    rows = collect((out, response, predictor))
+    assert calls_before_collection > 0 and len(predictor.calls) == calls_before_collection
+    results = adapter.read(out / "synthesis/results.json")
+    calibration = results["policy"]["calibration"]
+    expected_status = (
+        "custom_unvalidated" if ablation == "design_only_route_search" else "engineering_policy_matched"
+    )
+    assert calibration["status"] == expected_status
+    assert calibration["material_overrides"] == (
+        {"route_search_policy": {"profile": "original-hit-v1", "effective": "design-v1"}}
+        if ablation == "design_only_route_search"
+        else {}
+    )
+    if empty:
+        assert rows == response["candidates"] == results["results"] == []
+        assert adapter.read(out / "synthesis/summary.json")["status"] == "no_candidates"
+        refined = adapter.read(out / "synthesis/refinement.json")["candidates"]
+        assert refined and all(c["trials"][-1]["seed"] == 44 for c in refined)
+        assert all(c["trials"][-1]["status"] == "failed" for c in refined)
+    else:
+        assert rows and DESIGN in {r["smiles"] for r in rows}
+        assert all(r["calibration_status"] == expected_status for r in results["results"])
+        assert all(set(r["selective_evidence"]["seed_witness_sha256"]) == {"42", "43", "44"} for r in rows)
+
+
+@pytest.mark.parametrize("ablation", ["no_extra_refill_capacity", "design_only_route_search"])
+def test_v6_ablation_rejects_unrelated_custom_base(v6_full_request, monkeypatch, ablation):
+    from benchmarks.research import qualified_adapter as adapter
+    from benchmarks.research.protocol import write_json
+
+    request, predictor = v6_full_request
+    request["settings"]["ablation"] = ablation
+    path = Path(request["assets"]["synthesis_config"])
+    config = adapter.read(path)
+    config["ranking_policy"] = "joint-v1"
+    write_json(path, config)
+    monkeypatch.setattr(workflow, "run", lambda *a, **k: pytest.fail("custom base reached workflow"))
+    with pytest.raises(ValueError, match="must match frozen engineering profile"):
+        adapter.common(request)
+    assert predictor.calls == []
 
 
 def update(data, name, mutate):

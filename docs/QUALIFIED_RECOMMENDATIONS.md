@@ -20,6 +20,40 @@ and unsupported effective settings reject rather than being overwritten.
 Historical profile requests are not upgraded automatically: combining an explicit
 v2 profile with `--recommend` or `recommend()` rejects the conflict.
 
+### Explicit v6 and current evidence
+
+Select `qualified-selective-engineering-v6` explicitly, without `--recommend`:
+
+```bash
+chembounce -i "$HIT" -o NEW_V6_RUN --synthesis-config my-strict-assets.json \
+  --recommendation-profile qualified-selective-engineering-v6
+chembounce-synthesis --hit "$HIT" --design "$DESIGN" --config my-strict-assets.json \
+  --recommendation-profile qualified-selective-engineering-v6 --output NEW_V6_SYNTHESIS_RUN
+```
+
+Use the same [local asset setup](SYNTHESIS.md#request-qualified-recommendations);
+saved proposals must cover supplied designs, while fresh proposal generation
+requires the configured local SynLlama provider. The CLI profile option overrides
+the config's profile; API users select v6 in the config passed to
+`chembounce_synthesis.workflow.run(...)`.
+The version-fixed `--recommend`/`recommend()` shortcut remains v5.
+
+V6 changes screening and evidence allocation, retaining the original-input
+similarity floors, joint same-pose shape/pharmacophore/polar constraints,
+scaffold change, all three final seeds and exact regenerated-product route support.
+`engineering_policy_matched` identifies the declared engineering configuration,
+not fitted activity thresholds or experimental synthesis. See the
+[allocation policies and override rules](SYNTHESIS.md#explicit-v6-allocation-method).
+
+Fresh native generation, SynLlama proposals and the full common workflow completed
+on two previously seen development inputs. Independent saved-result review accepted
+two qualified products for CHEMBL203-query-1 and a completed zero-result outcome for
+CHEMBL205-query-1. This establishes bounded integration, not held-out performance or efficacy.
+A separate post hoc diagnostic of seven forward-supported but budget-unscored
+products found no qualifying pose in 21 product/seed conditions, with no errors or
+unresolved conditions. These finite negatives are not exhaustive conformational
+infeasibility; other products with unknown forward evidence remain unknown.
+
 ## Historical selective similarity v2: explicit engineering configuration
 
 The explicit opt-in preset `qualified-selective-engineering-v2` uses
@@ -321,7 +355,7 @@ immutable.
 | 3. Similarity-aware route/search | Search and route construction retain original-hit similarity while finding changed scaffolds and viable route products; compare yield and compute under fixed budgets. | Engineering gate passed at `6adc2cedd73c14cf5a0ab88fbcd61004f3267ef6`. Controlled toy diagnostics only; scientific yield/compute benchmark remains Stage 6. |
 | 4. Calibrated acceptance and hit-prioritized ranking | Calibrate thresholds using development-only controls, prioritize original-hit acceptance/ranking, and ship a usable recommendation preset and CLI default flow through this contract. Previously inspected data cannot be described as held-out evidence. Multi-seed verification and threshold provenance must support the intended profile. | Full gate passed at `f6ab40e0d1d536636015d94c75f1b815898dc907`; reviewed development artifact and both CLI/API paths verified. Explicit opt-in, permissive development thresholds—not a strong-similarity guarantee. |
 | 5. Independent synthesis evidence | Establish independent, route-specific evidence and provenance beyond catalog/rule replay; define treatment of unknowns, missing context, atom sources, model disagreement and observation quality. Never present a heuristic as a synthesis probability. | Engineering and known-fixture execution gate passed at `4d47b30c925152198d2fb8e68cdad3b502bacc7d`. Conditional computational support; no experimental or post-selection independence claim. |
-| 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Ten-attempt inspected development pilot and separate 197-pair selective scoring evaluation completed. New preset/collector source gate passed at `d9402ab`. Separate known-route actual result gate passed after a preserved finalizer failure and independently audited saved verification. Fresh 12-query panel selection and binding independently verified; the fixed 252-attempt campaign has started on immutable `d9402ab`. Complete scientific comparison remains pending; the original acquisition failure is preserved. No scientific superiority claimed. |
+| 6. Fresh fair benchmarks and ablations | Fresh artifact directories; comparable proposals, budgets, splits and resources; full input/proposal/route/scoring/seed/qualification failure denominators; fair ablations and confidence/uncertainty reporting. | Historical pilot, selective-scoring and panel records remain below. Current v6 fresh integration on two seen inputs returned two/zero qualified products and passed saved-result review. A new outcome-blind panel, comparator list and resource protocol remain to be bound; no scientific superiority is established. |
 
 Each stage requires implementation, focused validation and independent review
 before the next stage. Historical published results and source inventories are
@@ -1052,52 +1086,31 @@ route support. Any missing required evidence produces an explicit rejection or
 empty result. Ranking applies only after these conditions pass. The immediate
 delivery order and completion checks are:
 
-1. **Close the corrected software contract and integrate it.** The preset,
-   workflow and collector source gate passed at `d9402ab`. The exact reviewed
-   source is integrated into develop and its six CI jobs passed;
-   the separate actual result review also passed. Preserve the old
-   profile and its historical results. Numeric floors remain declared
-   engineering settings, and inactive assay labels must never be treated as
-   structural dissimilarity labels.
-2. **Preserve the completed new-preset route result gate.** The single CPU
-   inference, corrected saved-evidence verification and independent
-   actual-artifact audit above are complete. The original finalizer failure
-   remains unchanged. The exact regenerated product, complete forward token
-   evidence, all three final seeds and consistent JSON/TSV/SDF exports passed.
-   The small synthetic catalog establishes fixture membership only, not vendor
-   stock. This known example closes an integration check; it does not establish
-   useful yield on new inputs or difficult stereochemical/multi-step cases.
-3. **Preserve the reviewed fresh evaluation panel.** The fresh 12-query panel
-   selection and binding are independently verified. The original failed
-   acquisition remains preserved. Keep the frozen source, assets, scientific
-   selection and analysis unchanged, and retain the disclosed normalization,
-   incomplete inspection and checkpoint-training gaps.
-4. **Complete useful candidate yield and cost measurement.** The fixed
-   252-attempt campaign has started on immutable `d9402ab`; the complete
-   scientific comparison remains pending. The planned six-target, two-query,
-   three-generation-seed panel covers five methods and two ablations. Its primary
-   endpoint is at least one jointly qualified recommendation per planned
-   attempt. Report unique yield, scaffold change including generic topology,
-   separate 2D/3D/pharmacophore metrics, per-target behavior, route evidence,
-   failures and complete costs. Keep missing and failed attempts in denominators.
-   Six target clusters support descriptive uncertainty, not a strong
-   significance claim.
-5. **Improve generation from diagnosed failures.** The 32/197 development
-   acceptances and zero-active-acceptance targets show that software correctness
-   alone is insufficient. Use development-only failure attribution to separate
-   proposal supply, route construction, 3D feasibility and evidence failures.
-   Any search-budget, feature-conditioned generation, route-first proposal or
-   ranking change requires a new version and prospective comparison. Do not
-   lower the locked acceptance conditions to fill an output quota or tune on
-   the fresh test outcomes; further method development needs another held-out
-   evaluation. The current run does not justify a speed or yield advantage.
-6. **Establish the publication claim and practical synthesis evidence.** Select
-   representative successes and failures and test which components contribute
-   under declared budgets. Computational rule/model agreement does not provide
-   reaction conditions, yield, selectivity or current purchasing stock. An
-   additional independent synthesis assessment, experimental synthesis and
-   activity testing are separate extensions; collaboration remains undecided.
-   Claims about retained activity require evidence beyond structural similarity.
+1. **Keep the candidate method fixed for evaluation.** Opt-in v6 is the current
+   candidate; the recommendation default remains v5. Preserve its declared
+   thresholds, same-pose checks, exact-product evidence, seeds and allocation
+   policies. The accepted fresh integration and post hoc finite diagnostic above
+   do not justify lowering the contract or further tuning to force those two
+   development examples to succeed.
+2. **Bind a new outcome-blind panel before generating results.** Revalidate the
+   exposure-exclusion inventory using the current strict chemical identity rules,
+   retaining unresolved identities and model-training overlap gaps. Freeze the
+   target/query panel, comparator and ablation list, seeds, complete failure
+   denominators and resource plan. These evaluation choices are not yet bound;
+   historical campaigns cannot be relabelled as evaluation of current v6.
+3. **Measure useful qualified yield and full costs.** Report the fraction of
+   planned attempts producing a qualified product, exact-product/scaffold yield,
+   original-input similarity, route evidence, per-target behavior and uncertainty.
+   Account for fresh generation, setup, forward inference, screening and refinement
+   without adding nested costs twice. Keep unknown forward support, unscored
+   products, bounded failures and process errors distinct. Any subsequent method
+   change needs its own definition and evaluation partition.
+4. **Establish the computational-method claim and synthesis evidence separately.**
+   Use genuine published-method comparisons and ablations under declared budgets;
+   plain Mol2Mol sampling is not a RuSH reproduction. Rule/model agreement does
+   not provide reaction conditions, yield, selectivity, current purchasing stock
+   or retained biological activity. Independent synthesis assessment, experimental
+   synthesis and activity testing remain separate extensions.
 
 The publication claim must follow these results. If generator ablations and
 comparators do not show an advantage, report that outcome and reconsider which

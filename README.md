@@ -35,12 +35,17 @@ configure a local SynLlama provider as explained in [setup](docs/SYNTHESIS.md#re
 No assets are downloaded implicitly. The shortcut selects
 `qualified-selective-engineering-v5`: final original-hit Tanimoto/shape/pharmacophore
 floors **0.35/0.70/0.50**, polar recall **0.75**, changed normalized scaffold,
-complete three-seed geometry and concrete per-step computational route support.
+joint shape/pharmacophore/polar checks on each retained original-hit pose across
+three seeds, and computational route support for the exact regenerated product.
 Supported explicit overrides survive and are labelled `custom_unvalidated`; the
 summary prints the actual thresholds. These engineering constraints do not guarantee
 activity or experimental synthesis. An empty final result is bounded abstention,
 with no exploratory fallback. Generic calls without a recommendation request retain
 the existing exploratory behavior. See the [Python API and conflict rules](docs/SYNTHESIS.md#request-qualified-recommendations).
+
+The allocation profile `qualified-selective-engineering-v6` is available by
+explicit opt-in; `--recommend` and `recommend()` still select v5. See
+[v6 usage and current evidence](docs/QUALIFIED_RECOMMENDATIONS.md#explicit-v6-and-current-evidence).
 
 The optional [synthesis workflow](docs/SYNTHESIS.md) connects SynLlama proposals
 to a dated building-block catalog and an explicit reaction registry. It
