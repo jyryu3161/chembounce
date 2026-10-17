@@ -1205,3 +1205,98 @@ Historical benchmark protocol-v2 and the saved-response development assessor sta
 v2-only. Current campaign and prior capacity outputs must not be relabelled v3.
 Any future v3 performance comparison needs an explicitly reviewed benchmark
 protocol/adapter revision; this profile release launches no evaluation.
+
+### Bounded reconstruction-index lineage migration
+
+`chembounce_synthesis.catalog_migration` converts **one pinned processed index**
+into a new catalog and independently validates complete record lineage. It does
+not change the live catalog, switch a configuration, recover supplier IDs, or
+approve adoption. A reviewed, externally SHA256-pinned JSON plan is required;
+there is no automatic input discovery, retry or budget expansion.
+
+The plan contains `schema_version: 1`, a resolved `input` path/hash/byte count,
+`source` checkout/commit/tree and exact dependency hashes, `runtime` interpreter
+path/bytes/version plus RDKit/NumPy versions and distribution-metadata digests,
+a pinned GNU `watchdog` executable,
+a resolved `parent` path/device/inode, an absent `output_dir` directly beneath
+that parent, exact converter `labels`, a frozen legacy `baseline`, and `limits`.
+The source dependency list is `__init__.py`, `assets.py`, `catalog.py`, `common.py`,
+`reactions.py` and `catalog_migration.py`. Dirty or mismatched sources fail closed.
+The baseline includes output SHA256, unique-row count and exact rejected-record
+coordinates/reasons. It is supplied evidence, never repaired from new output.
+
+The Linux coordinator creates the output directory exclusively with mode 0700,
+then launches four sequential children: `startup`, `converter`, `validator` and
+`bookkeeping`. Every child is restricted to one allowed CPU, an empty CUDA device
+list, offline flags and one thread per numerical library, with `RLIMIT_AS` applied
+before interpreter startup. The chemistry processes release their separate memory
+graphs when they exit. The initial reviewed ceilings are:
+
+| Limit | Ceiling |
+| --- | ---: |
+| Entire external invocation | 1,800 seconds |
+| Shared normal-work deadline | 1,740 seconds |
+| Startup / converter / validator / bookkeeping phase | 120 / 600 / 900 / 120 seconds |
+| Owned TERM grace / KILL and reap / final receipt reserve | 15 / 15 / 30 seconds |
+| Per-child address space | 16 GiB |
+
+All phase deadlines are clamped to the same work deadline. Smaller fixture limits
+are permitted; larger limits are rejected. An address-space cap is not a promise
+that the full inert object graph, origin map or eager `Catalog` molecules fit.
+The exact reviewed invocation must also have an **external watchdog**, for example:
+
+```bash
+/usr/bin/timeout --signal=TERM --kill-after=60s 1740s \
+  /absolute/pinned/python -m chembounce_synthesis.catalog_migration run \
+  --plan /absolute/reviewed-plan.json --plan-sha256 REVIEWED_PLAN_SHA256
+```
+
+The exact executable/hash, environment, working directory and source/runtime pins
+must be frozen for the actual attempt. The external 1,740-second TERM and 60-second
+KILL grace cover interpreter startup and final writes, with a total 1,800-second
+ceiling. Each child additionally has an autonomous watchdog bounded by remaining
+normal work, so interruption of the coordinator does not leave an unguarded child.
+The coordinator uses Linux subreaping and cleans only its owned process groups.
+It records failure when a group remains alive or cannot be reaped; no universal
+termination guarantee is made for uninterruptible native/kernel states.
+
+The converter is invoked once, unchanged. The separate validator rejects extra
+pickle payloads or trailing bytes and replaces every pickle global with an inert
+placeholder. It independently checks each raw SMILES through the existing pinned
+canonicalization policy, regenerates its structure ID, and compares the exact
+TSV structure and all v2 manifest fields. Accepted occurrences **A** and rejected
+coordinates **R** must partition all **N** logical source positions; **U** is the
+separate unique TSV count. Duplicate accepted occurrences remain origins, not
+rejections. Unsupported pickle/molecule schema makes the source incomplete.
+Ordinary canonicalization failures retain exact coordinates and typed reasons.
+Every loaded ID's `Catalog.evidence` is checked, including source hashes and both
+SKU/stock verification flags being false, without fingerprints or similarity search.
+
+Input/source bindings are checked before and after phases. Output checksums are
+bound across conversion, validation and final bookkeeping. The whole output must
+match the frozen legacy TSV baseline; any difference remains a failed attempt
+for review. Do not change normalization or omit rejections to force equality.
+`owner.json`, phase logs/receipts, failure receipts and `terminal.json` preserve
+partial output, nonzero exits, timeouts and unavailable cost counters. Records
+are written exclusively and fsynced. Missing counters are unavailable, not zero;
+child self-usage and pre-receipt coordinator elapsed time have explicit scopes.
+The terminal receipt is a snapshot taken before its own serialization and fsync.
+It is never rewritten to certify the completion time of that same write. A
+successful migration requires a `validated` snapshot, coordinator exit 0 after
+the write strictly before the original work and total deadlines without an
+interruption, and external watchdog exit 0 within the complete ceiling. A late
+write can therefore leave a `validated` snapshot with a nonzero exit; the snapshot
+alone is insufficient. A killed writer or unavailable terminal receipt never
+proves completion. Independent result review and adoption remain separate gates.
+Existing and dangling/symlink destinations are refused.
+
+Processed-index lineage cannot certify original supplier-state completeness.
+The retained upstream preprocessing converts supplier molecules to ordinary
+SMILES before serialization and may deduplicate using nonisomeric canonical
+SMILES. Original enhanced-stereo annotations or separate supplier stereo records
+cannot be recovered or certified from that processed index. This is a source-
+processing limitation, not a finding that particular input records contain such
+states. A change to ingress/state policy requires a new source pin and baseline
+review before migration; newly rejected states must remain visible. Obtaining
+original supplier exports and authenticating SKU/current-stock claims are
+separate dependencies.
