@@ -391,6 +391,7 @@ def test_replay_floor_crossing_is_unknown_even_within_scalar_tolerance(monkeypat
     Below -> above differs by2e-13, within scalar tolerance but changes a hard
     decision. These deliberately controlled values are not native drift evidence.
     """
+
     def denied_native_call(*args, **kwargs):
         pytest.fail("Controlled replay boundary must not call native geometry APIs")
 
