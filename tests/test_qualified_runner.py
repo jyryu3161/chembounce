@@ -580,7 +580,7 @@ def test_selective_runner_failure_keeps_denominator_and_fixed_budgets(
 def benchmark_metadata_guard(monkeypatch):
     """Native modules are imported, but these tests must perform no chemistry or inference."""
     from rdkit import Chem
-    from rdkit.Chem import AllChem, rdShapeAlign
+    from rdkit.Chem import AllChem
     from chembounce_synthesis import conformers, selective_scoring, workflow
     from chembounce_synthesis.catalog import Catalog
     from chembounce_synthesis.reactions import Rules
@@ -589,10 +589,12 @@ def benchmark_metadata_guard(monkeypatch):
     def forbidden(*args, **kwargs):
         pytest.fail("Metadata-only test attempted chemistry, model/catalog loading or a workflow run")
 
+    # Supported minimum RDKit may omit alignment; metadata checks still run.
+    if conformers.rdShapeAlign is not None:
+        monkeypatch.setattr(conformers.rdShapeAlign, "AlignMol", forbidden)
     for target, names in (
         (Chem, ("MolFromSmiles", "SDMolSupplier")),
         (AllChem, ("EmbedMolecule", "EmbedMultipleConfs")),
-        (rdShapeAlign, ("AlignMol",)),
         (conformers, ("ensemble", "score_candidate", "_overlay")),
         (selective_scoring, ("ensemble", "score_candidate", "_overlay", "restore_result", "validate_result")),
         (workflow, ("run", "score_candidate")),
