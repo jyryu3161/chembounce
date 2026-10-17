@@ -549,6 +549,26 @@ are attempted deterministically within the same budget. Final deduplication
 selects one accepted exact state/design per chemical family; it does not erase
 alternatives before they can be tested.
 
+The optional `evidence_allocation_policy` controls only independent evidence
+ordering, before 3D screening. Its default, `"inherit-v1"`, preserves existing
+balanced or encounter ordering. Set `"design-scaffold-round-robin-v1"` to try
+rotation across designs, then across scaffold families within each design. Both
+levels use first encounter order from the actual admitted entries. Carried-route
+priority remains first; a priority tier containing one design keeps its exact
+inherited order. The separate screening sequence is never reordered by this option.
+
+Each product/design entry still tries one route before its alternatives, with
+shorter routes first. A multistep route can consume several fresh predictor calls;
+cache hits consume none. This policy promises neither equal calls per design nor
+equal runtime. The configured evaluator cache and product-matching policy are unchanged. Strict
+`computational-route-support-v1` shares prepared-input/predictor-bound raw predictions
+within the run and checks exact-product agreement independently for every route.
+The legacy evaluator retains its existing matching and cache policies. Budgets, deadlines, unknown outcomes and final qualification
+are unchanged. The option applies to both 2D and 3D workflows and is an explicit
+`custom_unvalidated` material override for existing named profiles. Summary and
+manifest record it separately from screening and route allocation. It is a coverage
+baseline, not a claim of improved yield or default superiority.
+
 The optional `screening_allocation_policy` separates 3D screening order from
 `allocation_policy`. Its default, `"inherit-v1"`, preserves the existing balanced
 or encounter order and carried-route priority exactly. To try the experimental
