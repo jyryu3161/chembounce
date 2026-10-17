@@ -167,9 +167,14 @@ def _config(config):
         "ranking_policy",
         "recommendation_profile",
         "similarity_constraints",
+        "rejected_pose_diagnostics",
     }
     if set(config) - permitted:
         raise ValueError(f"Unknown synthesis configuration keys: {sorted(set(config) - permitted)}")
+    if type(config.get("rejected_pose_diagnostics", False)) is not bool:
+        raise ValueError("rejected_pose_diagnostics must be true or false")
+    if config.get("rejected_pose_diagnostics") and "similarity_constraints" not in config:
+        raise ValueError("Rejected-pose diagnostics require selective similarity constraints")
     if "catalog_binding" in config:
         validate_catalog_binding(config["catalog_binding"])
     for required in ("catalog", "rules", "provider"):
@@ -895,6 +900,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
     root_objectives = {}
     polar_capacity = None
     identity_evidence = None
+    rejected_diagnostics = None
     selected = []
     projected_designs = set()
     try:
@@ -1333,6 +1339,18 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             "status": "unavailable",
             "reason": "optional_display_not_published",
         }
+        if config.get("rejected_pose_diagnostics", False):
+            diagnostic_setup_started = time.monotonic()
+            from .rejected_pose_diagnostics import RejectedPoseDiagnostics
+
+            rejected_diagnostics = RejectedPoseDiagnostics(
+                started_monotonic=diagnostic_setup_started,
+                deadline_monotonic=deadline_monotonic,
+                provenance={
+                    "workflow_code_sha256": manifest["code_sha256"],
+                    "versions": manifest["versions"],
+                },
+            )
         write_json(out / "manifest.json", manifest)
         write_json(
             out / "proposals.json", {"schema_version": 1, "provider": manifest["provider"], "proposals": []}
@@ -1644,6 +1662,14 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                             settings,
                             similarity=similarity,
                             deadline_monotonic=deadline_monotonic,
+                            **(
+                                {
+                                    "rejected_pose_diagnostics": rejected_diagnostics,
+                                    "rejected_pose_diagnostic_phase": "screening",
+                                }
+                                if rejected_diagnostics is not None
+                                else {}
+                            ),
                         )
                         phase = "validation"
                         selective_scoring.validate_result(
@@ -1836,6 +1862,11 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                             else {}
                         ),
                         **({"similarity": similarity} if similarity is not None else {}),
+                        **(
+                            {"rejected_pose_diagnostics": rejected_diagnostics}
+                            if rejected_diagnostics is not None
+                            else {}
+                        ),
                         **scoring_options,
                         **(
                             {"deadline_monotonic": deadline_monotonic}
@@ -2146,7 +2177,43 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         write_json(out / "routes.json", {"schema_version": 1, "routes": route_records})
         write_json(out / "scores.json", {"schema_version": 1, "scores": score_records})
         write_json(out / "refinement.json", {"schema_version": 1, "candidates": refinement_records})
+        if rejected_diagnostics is not None:
+            diagnostic_summary_started = time.monotonic()
+            summary["rejected_pose_diagnostics"] = rejected_diagnostics.statistics()
+            summary["rejected_pose_diagnostics"]["export"] = {
+                "status": "unavailable",
+                "reason": "optional_publication_pending",
+            }
+            rejected_diagnostics.charge_overhead(time.monotonic() - diagnostic_summary_started)
+        # Core summary must survive an interrupted optional publication.
         write_json(out / "summary.json", summary)
+        if rejected_diagnostics is not None:
+            diagnostic_publication_started = time.monotonic()
+            try:
+                import logging
+                from .rejected_pose_diagnostics import complete_summary, publish
+
+                diagnostic_export = publish(
+                    rejected_diagnostics,
+                    out,
+                    deadline_monotonic=deadline_monotonic,
+                    started_monotonic=diagnostic_publication_started,
+                )
+                diagnostic_update = complete_summary(
+                    rejected_diagnostics,
+                    out,
+                    summary,
+                    diagnostic_export,
+                    workflow_started=start,
+                    deadline_monotonic=deadline_monotonic,
+                )
+                logging.getLogger(__name__).info(
+                    "Optional rejected-pose diagnostic completion (post-return observation): %s",
+                    {"export": diagnostic_export, "summary_update": diagnostic_update},
+                )
+            except Exception:
+                # Initial core summary remains unavailable/pending. Termination propagates.
+                pass
 
         # Optional display cannot change selected results or scientific evidence.
         # Complete the core bundle first; helper uses only saved poses and 2D layout.

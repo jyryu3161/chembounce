@@ -1400,3 +1400,59 @@ restrictive content security policy; it fetches no external resources. Legacy
 reports without display evidence remain script-free. Conditions, activity,
 experimental feasibility, supplier SKU and current stock remain unverified
 unless separate evidence explicitly records them.
+
+### Optional rejected-pose diagnostics (source-review candidate)
+
+Set `"rejected_pose_diagnostics": true` in a selective synthesis configuration to
+retain a bounded diagnostic for future runs that finish with
+`no_jointly_feasible_hit_pose`. The default is `false`; the option must be a JSON
+boolean and requires `similarity_constraints`. This does not rescue or qualify a
+candidate, change a floor, or add an embedding, alignment, feature match, route
+search, or model call. Opting in adds overhead and can affect work completed under
+a fixed wall deadline.
+
+For each eligible failed scoring call, the collector chooses the highest existing
+scalar among completed rejected pairs, keeping the first pair on a tie. It saves
+that pair's exact original-hit reference coordinates and aligned candidate
+coordinates, identities, screening/refinement phase, seed/settings, both relative
+energies, scores/reasons, and the already-computed polar/landmark witness. Infeasible
+joint assignments remain infeasible or unassessed. The **global pharmacophore
+assignment is not retained**: its existing score/counts cannot identify a unique
+feature correspondence. This is one diagnostic pose, not an exhaustive
+conformational explanation or biological/synthesis evidence. Failed overlays,
+preflight failures, deadline abstentions, successful selections and later design
+failures do not acquire substitute rejected poses.
+
+One shared collector spans screening and refinement: at most one record per call,
+eight per workflow, 512 atoms in each pose, 256 KiB per record and 2 MiB for the
+**complete** `rejected_pose_diagnostics.json` including envelope/provenance. Excess
+records are skipped, never truncated into incomplete witnesses or retried. The
+one-second cumulative cooperative allowance includes import/setup handoffs,
+retention bookkeeping, failed captures, hashing, serialization and publication;
+checks are also capped by the existing workflow deadline. Already-entered native
+or filesystem operations can overrun. The artifact's final publication timing is
+explicitly unverified; the summary reports observed costs and overruns separately.
+The updated workflow elapsed time includes diagnostic sidecar publication when
+enabled; the final summary write endpoint remains explicitly unverified. A
+best-effort log records post-return publication and summary-update overhead.
+
+Existing failure audits in `routes.json`, `scores.json` and `refinement.json`
+carry only `captured_not_published` references (index and canonical record SHA),
+so repeated routes do not duplicate complete coordinates. Resolve a reference
+only against this run's successful `summary.json` diagnostic export receipt,
+matching the **whole-file SHA** and then the record SHA. An unavailable export
+leaves references unresolved, including when a stale sidecar happens to exist.
+The core summary is saved first with an unavailable/pending descriptor. One
+budgeted atomic status update may then resolve publication; if it fails or the
+allowance expires, the initial summary survives and references stay unresolved.
+Ordinary optional persistence errors preserve the original rejection and core
+outputs; interruption/termination is not swallowed. The offline recommendation
+report does not present these rejected records as selected evidence. Private
+serialized records yield defensive copies; source files/runtime labels are bound
+once per collector, without model/asset discovery or per-record package scans.
+
+This experimental source changes the hash-bound selective scorer. Historical
+engineering v2/v3 artifacts and defaults remain unchanged and must report
+`custom_unvalidated` here. It is not an updated calibrated or matched engineering
+release; a separately reviewed profile revision is required before adoption.
+Nothing reconstructs diagnostics for older runs that did not retain these poses.
