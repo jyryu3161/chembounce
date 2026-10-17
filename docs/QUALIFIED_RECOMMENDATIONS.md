@@ -6,7 +6,21 @@ preserve configured anchors, and have concrete synthetic-route evidence. A
 qualification filter alone does not establish useful yield, search quality,
 biological activity, or experimental synthesizability.
 
-## Selective similarity v2: explicit engineering configuration
+## Current recommendation entrypoints
+
+Both CLIs expose `--recommend`, and the lazy public API exposes
+`recommend(hit, designs, config, output_dir, *, deadline_monotonic=None)`.
+These select `qualified-selective-engineering-v5` and preflight the request before
+consuming designs or generating raw candidates. Generic calls without a
+recommendation request retain exploratory defaults.
+See [entrypoint and conflict rules](SYNTHESIS.md#request-qualified-recommendations).
+Supported explicit custom values remain visible, with effective score/recall floors
+and matched/custom status in the CLI summary; conflicting profile declarations
+and unsupported effective settings reject rather than being overwritten.
+Historical profile requests are not upgraded automatically: combining an explicit
+v2 profile with `--recommend` or `recommend()` rejects the conflict.
+
+## Historical selective similarity v2: explicit engineering configuration
 
 The explicit opt-in preset `qualified-selective-engineering-v2` uses
 `joint-feasible-hit-pose-v2` with Tanimoto/shape/pharmacophore floors
@@ -17,19 +31,11 @@ conformers at seed 42; final acceptance requires eight conformers at each of
 strict specified stereo and `computational-route-support-v1` remain mandatory.
 There is no adaptive embedding or threshold relaxation.
 
-Both CLIs now expose `--recommend`, and the lazy public API exposes
-`recommend(hit, designs, config, output_dir, *, deadline_monotonic=None)`.
-These explicitly select the same fixed v2 policy and preflight the request before
-consuming designs or generating raw candidates. Generic defaults remain exploratory.
-See [entrypoint and conflict rules](SYNTHESIS.md#request-qualified-recommendations).
-Supported explicit custom values remain visible, with effective score/recall floors
-and matched/custom status in the CLI summary; conflicting profile declarations
-and unsupported effective settings reject rather than being overwritten.
-
-Both CLIs also accept `--recommendation-profile qualified-selective-engineering-v2`
-and `--forward-model-path /path/to/pinned/local/ReactionT5`; API configurations
-use `"recommendation_profile": "qualified-selective-engineering-v2"` and an
-explicit local predictor path. Omitting the option retains existing defaults.
+For explicit historical v2 requests, both CLIs accept
+`--recommendation-profile qualified-selective-engineering-v2` without `--recommend`,
+and `--forward-model-path /path/to/pinned/local/ReactionT5`. Generic `run(...)` API
+configurations use `"recommendation_profile": "qualified-selective-engineering-v2"`
+and an explicit local predictor path.
 The packaged `qualified-selective-engineering-profile-v2` artifact has status
 `declared_engineering_policy`. A matching effective runtime/policy reports
 `engineering_policy_matched`; it contains no fit or calibration review claim.
