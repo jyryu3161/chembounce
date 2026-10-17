@@ -311,18 +311,21 @@ def _write_bytes(path, data, check):
     """One optional atomic publication; never start an operation after known expiry."""
     temporary = path.with_suffix(path.suffix + ".tmp")
     check()
+    created = False
     try:
         with temporary.open("xb") as stream:
+            created = True
             check()
             stream.write(data)
         check()
         temporary.replace(path)
     finally:
-        # Best-effort temporary cleanup is not evidence publication.
-        try:
-            temporary.unlink(missing_ok=True)
-        except OSError:
-            pass
+        # A collision is not ours to clean up. Preserve its existing bytes.
+        if created:
+            try:
+                temporary.unlink(missing_ok=True)
+            except OSError:
+                pass
 
 
 def publish(collector, out, *, deadline_monotonic=None, started_monotonic=None):

@@ -671,3 +671,61 @@ def test_unexpected_optional_publication_error_preserves_core(tmp_path, assets, 
     summary = json.loads((out / "summary.json").read_text())
     assert summary["status"] == "no_candidates"
     assert summary["rejected_pose_diagnostics"]["export"]["status"] == "unavailable"
+
+
+@pytest.mark.parametrize("kind", ["sidecar", "summary"])
+def test_preexisting_optional_temporary_bytes_are_not_owned(tmp_path, kind):
+    collector = diagnostics.RejectedPoseDiagnostics()
+    name = diagnostics.ARTIFACT if kind == "sidecar" else "summary.json"
+    target = tmp_path / name
+    target.write_bytes(b"existing core or diagnostic bytes")
+    temporary = target.with_suffix(target.suffix + ".tmp")
+    temporary.write_bytes(b"preexisting partial bytes; not this attempt")
+    if kind == "sidecar":
+        result = diagnostics.publish(collector, tmp_path)
+    else:
+        result = diagnostics.complete_summary(
+            collector,
+            tmp_path,
+            {"status": "no_candidates"},
+            {"status": "unavailable"},
+            workflow_started=collector.clock(),
+        )
+    assert result["status"] == "unavailable"
+    assert "FileExistsError" in result["reason"]
+    assert temporary.read_bytes() == b"preexisting partial bytes; not this attempt"
+    assert target.read_bytes() == b"existing core or diagnostic bytes"
+
+
+@pytest.mark.parametrize("exception", [OSError, KeyboardInterrupt, SystemExit])
+def test_owned_partial_write_is_cleaned_without_replacing_target(tmp_path, monkeypatch, exception):
+    target = tmp_path / "optional.json"
+    target.write_bytes(b"existing target")
+    temporary = target.with_suffix(".json.tmp")
+    original_open = Path.open
+
+    class PartialStream:
+        def __init__(self, stream):
+            self.stream = stream
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            self.stream.close()
+
+        def write(self, data):
+            self.stream.write(data[:3])
+            self.stream.flush()
+            assert temporary.read_bytes() == data[:3]
+            raise exception("controlled partial write")
+
+    def partial_open(path, mode="r", *args, **kwargs):
+        stream = original_open(path, mode, *args, **kwargs)
+        return PartialStream(stream) if path == temporary and mode == "xb" else stream
+
+    monkeypatch.setattr(Path, "open", partial_open)
+    with pytest.raises(exception):
+        diagnostics._write_bytes(target, b"new diagnostic bytes", lambda: None)
+    assert not temporary.exists()
+    assert target.read_bytes() == b"existing target"
