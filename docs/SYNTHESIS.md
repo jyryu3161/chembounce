@@ -1259,6 +1259,13 @@ normal work, so interruption of the coordinator does not leave an unguarded chil
 The coordinator uses Linux subreaping and cleans only its owned process groups.
 It records failure when a group remains alive or cannot be reaped; no universal
 termination guarantee is made for uninterruptible native/kernel states.
+After safe owned cleanup it restores the process's previous subreaper flag,
+including when a phase fails or terminal persistence later fails. Unsafe cleanup
+retains subreaper ownership; a failed restoration cannot return success. The
+terminal snapshot records the prior/observed flag and restoration status. This
+process-wide flag is not isolation from concurrent unrelated child activity;
+the real invocation runs in its own coordinator process. No foreign children are
+reaped or signaled to repair process state.
 
 The converter is invoked once, unchanged. The separate validator rejects extra
 pickle payloads or trailing bytes and replaces every pickle global with an inert

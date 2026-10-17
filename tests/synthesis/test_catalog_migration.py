@@ -1,6 +1,7 @@
 """Tiny inert inputs only: source accounting, failure preservation and ownership."""
 
 import csv
+import ctypes
 import hashlib
 import importlib.metadata
 import json
@@ -19,6 +20,27 @@ from rdkit import rdBase
 from chembounce_synthesis import catalog_migration as migration
 from chembounce_synthesis.assets import convert_catalog
 from chembounce_synthesis.common import canonical
+
+
+def observed_subreaper(value=None):
+    """Independent Linux state probe/control for explicitly scoped fixtures."""
+    libc = ctypes.CDLL(None, use_errno=True)
+    if value is None:
+        result = ctypes.c_int()
+        assert libc.prctl(37, ctypes.byref(result), 0, 0, 0) == 0
+        return result.value
+    assert libc.prctl(36, value, 0, 0, 0) == 0
+
+
+@pytest.fixture
+def scoped_test_subreaper():
+    before = observed_subreaper()
+    try:
+        yield before
+    finally:
+        # Only reset the flag deliberately changed by these tests. Never reap
+        # or signal unrelated children, and never mask a production assertion.
+        observed_subreaper(before)
 
 
 def digest(path):
@@ -381,7 +403,7 @@ def test_expired_shared_work_deadline_does_not_start_child(plan, monkeypatch):
     assert receipt["status"] == "timeout" and receipt["phases"] == []
 
 
-def test_owned_term_kill_and_reap_are_bounded():
+def test_owned_term_kill_and_reap_are_bounded(scoped_test_subreaper):
     migration._subreaper()
     proc = subprocess.Popen(
         [
@@ -477,7 +499,7 @@ def test_binding_changes_between_children_never_validate(plan, monkeypatch, defe
     assert receipt["status"] == "failed" and receipt["partial_outputs"]
 
 
-def test_orphaned_owned_child_is_reaped_without_touching_unrelated_process():
+def test_orphaned_owned_child_is_reaped_without_touching_unrelated_process(scoped_test_subreaper):
     migration._subreaper()
     unrelated = subprocess.Popen(
         [sys.executable, "-c", "import time; time.sleep(30)"], start_new_session=True
@@ -506,7 +528,7 @@ def test_orphaned_owned_child_is_reaped_without_touching_unrelated_process():
         unrelated.wait(timeout=3)
 
 
-def test_unsafe_cleanup_cannot_return_validated(plan, monkeypatch):
+def test_unsafe_cleanup_cannot_return_validated(plan, monkeypatch, scoped_test_subreaper):
     path, pinned = write_plan(plan)
     original = migration.cleanup
 
@@ -709,7 +731,7 @@ def final_write_case(plan, monkeypatch):
                 signal.getsignal(signal.SIGTERM)(signal.SIGTERM, None)
 
     monkeypatch.setattr(migration.time, "monotonic", lambda: clock.value)
-    monkeypatch.setattr(migration, "_subreaper", lambda: None)
+    monkeypatch.setattr(migration, "_subreaper", lambda value=1: None)
     monkeypatch.setattr(migration.subprocess, "Popen", phase)
     monkeypatch.setattr(
         migration,
@@ -773,3 +795,92 @@ def test_final_write_cannot_override_failure_or_ownership(final_write_case, fail
         receipt = json.loads((output / "terminal.json").read_text())
         expected = {"phase": "failed", "cleanup": "unsafe_cleanup", "signal": "validated"}
         assert receipt["status"] == expected[failure]
+
+
+@pytest.mark.parametrize("previous", [0, 1])
+@pytest.mark.parametrize(
+    "outcome",
+    ["success", "phase_failure", "unsafe_cleanup", "receipt_failure", "expired", "launch_failure", "signal"],
+)
+def test_subreaper_lifecycle_preserves_previous_state_and_unsafe_ownership(
+    plan, monkeypatch, scoped_test_subreaper, previous, outcome
+):
+    observed_subreaper(previous)
+    if outcome == "phase_failure":
+        plan["baseline"]["output_sha256"] = "0" * 64
+    elif outcome == "launch_failure":
+
+        def fail_launch(*args, **kwargs):
+            raise OSError("synthetic phase launch failure")
+
+        monkeypatch.setattr(migration.subprocess, "Popen", fail_launch)
+    elif outcome == "signal":
+        original = migration.subprocess.Popen
+
+        def interrupted_launch(*args, **kwargs):
+            proc = original(*args, **kwargs)
+            signal.getsignal(signal.SIGTERM)(signal.SIGTERM, None)
+            return proc
+
+        monkeypatch.setattr(migration.subprocess, "Popen", interrupted_launch)
+    elif outcome == "unsafe_cleanup":
+        original = migration.cleanup
+
+        def unsafe(*args):
+            clean = original(*args)
+            assert clean["group_gone"] and clean["direct_child_reaped"]
+            # Real fixture children are gone; model a retained-ownership claim.
+            return {**clean, "group_gone": False}
+
+        monkeypatch.setattr(migration, "cleanup", unsafe)
+    elif outcome == "receipt_failure":
+        original = migration._save
+
+        def fail_terminal(path, value):
+            if path.name == "terminal.json":
+                raise OSError("synthetic terminal persistence failure")
+            return original(path, value)
+
+        monkeypatch.setattr(migration, "_save", fail_terminal)
+    path, pinned = write_plan(plan)
+    started = time.monotonic() - (40 if outcome == "expired" else 0)
+    if outcome == "receipt_failure":
+        with pytest.raises(OSError, match="persistence failure"):
+            migration.run(path, pinned, started=started)
+    else:
+        assert migration.run(path, pinned, started=started) == (0 if outcome == "success" else 3)
+        receipt = json.loads((Path(plan["output_dir"]) / "terminal.json").read_text())
+        assert receipt["subreaper"] == {
+            "before": previous,
+            "after": 1 if outcome == "unsafe_cleanup" else previous,
+            "restoration": "retained_for_unsafe_cleanup"
+            if outcome == "unsafe_cleanup"
+            else "restored_previous",
+        }
+    assert observed_subreaper() == (1 if outcome == "unsafe_cleanup" else previous)
+
+
+@pytest.mark.parametrize("operation", ["read", "restore"])
+def test_subreaper_state_failure_cannot_certify_success(plan, monkeypatch, scoped_test_subreaper, operation):
+    observed_subreaper(0)
+    if operation == "read":
+
+        def denied_read():
+            raise OSError("synthetic flag read failure")
+
+        monkeypatch.setattr(migration, "_get_subreaper", denied_read)
+    else:
+        original = migration._subreaper
+
+        def denied_restore(value=1):
+            if value == 0:
+                raise OSError("synthetic flag restore failure")
+            return original(value)
+
+        monkeypatch.setattr(migration, "_subreaper", denied_restore)
+    path, pinned = write_plan(plan)
+    assert migration.run(path, pinned, started=time.monotonic()) == 3
+    receipt = json.loads((Path(plan["output_dir"]) / "terminal.json").read_text())
+    assert receipt["status"] == "failed"
+    assert receipt["subreaper"]["restoration"] == ("not_acquired" if operation == "read" else "failed")
+    assert observed_subreaper() == (0 if operation == "read" else 1)
