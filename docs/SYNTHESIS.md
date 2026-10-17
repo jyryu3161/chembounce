@@ -1670,7 +1670,7 @@ campaign is relabelled as v5 evaluation.
 with `--recommendation-profile qualified-selective-engineering-v6` (alongside the
 usual synthesis configuration), or set `recommendation_profile` in that config.
 Do not combine this choice with `--recommend`: `--recommend` and `recommend()`
-continue to request historical v5 and reject a conflicting explicit profile.
+continue to request default v5 and reject a conflicting explicit profile.
 
 V6 retains the .35/.70/.50 original-hit floors, .75 polar recall, exact-product
 conditional route support, scaffold-change checks and three-seed qualification.
@@ -1686,7 +1686,10 @@ combination retained two qualified products on the first input and zero on the
 second, identical to ranked screening alone. It broadened bounded evidence
 coverage but did **not** demonstrate better qualified yield. This is not a
 calibrated method, a default recommendation change, or unseen-input performance.
-Fresh-generation and broader evaluation remain separate.
+Subsequent fresh native/SynLlama generation and full workflow integration on the
+same two seen inputs returned two/zero qualified products and passed independent
+saved-result review. This is a separate integration result, not a new comparative
+or held-out evaluation. See [current evidence and next work](QUALIFIED_RECOMMENDATIONS.md#explicit-v6-and-current-evidence).
 
 V6 binds `workflow.py` as primary method source in addition to the six v5
 scoring/identity/landmark modules. Its optional diagnostics and landmark proposal
