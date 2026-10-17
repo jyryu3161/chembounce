@@ -21,6 +21,16 @@ synthetic diagnostics, not full-catalog speedup or interactive-latency claims.
 The initial full-catalog baseline profile was 116.93 CPU / 116.98 wall seconds;
 profiling overhead prevents comparison with those unprofiled synthetic timings.
 
+One subsequent unprofiled full-catalog pair, in sequential fresh processes on the
+same CPU, measured baseline `62e1bdf` at 94.3769 CPU / 94.4292 wall seconds and
+candidate `84efc546` at 79.3623 CPU / 79.4008 wall seconds. This single observation
+is 15.91% lower constructor CPU time; it does not establish a robust speedup.
+Peak process RSS was 3,505,388 / 3,504,748 KiB. The separate post-construction
+audits took 11.21 / 11.31 CPU seconds. All 238,542 ordered molecule keys and full
+property binaries, ordered building blocks and structure indexes, manifest
+lineage, and 60 predetermined direct fingerprint samples had identical digests.
+Every catalog fingerprint remained pending and both search caches remained empty.
+
 Parity checks compare valid and rejected inputs, exact exception types/messages,
 canonical and noncanonical serialization, complete RDKit molecule binaries with
 properties, ABS/explicit-H handling, maps, fingerprints, ordered catalog records,
@@ -31,5 +41,7 @@ writes, and rejection before later atoms or bonds are accessed.
 Local development evidence is under
 `benchmark-results/qualified-development-20261016/catalog-load-optimization-20261018-author-v1/`:
 `baseline.json`, `baseline-profile.txt`, `synthetic-comparison.json`, and
-`profile-compatibility.json`. No additional full-catalog construction has been
-performed for this candidate.
+`profile-compatibility.json`. `full-pair-v1/comparison.json` records the subsequent
+pair and hashes its helper, exact invocations, per-process outputs and reports.
+Each process independently verified clean source heads and both pinned asset
+hashes before and after its load. This was exactly one pair, with no retries.
