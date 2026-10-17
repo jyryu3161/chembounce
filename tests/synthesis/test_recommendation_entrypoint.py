@@ -110,7 +110,7 @@ def test_api_and_cli_resolve_same_config_without_consumption_mutation_or_deadlin
     path.write_text(json.dumps(config))
     loaded = workflow.load_config(path, options=Namespace(recommend=True))
     assert calls[0][2] == workflow.preflight_recommendation(HIT, loaded)
-    assert calls[0][2]["recommendation_profile"] == profiles.SELECTIVE_PROFILE
+    assert calls[0][2]["recommendation_profile"] == profiles.DEFAULT_RECOMMENDATION_PROFILE
     assert config == before
     assert profiles.request_recommendations(loaded) == loaded
 
@@ -382,6 +382,28 @@ def test_actual_api_cli_and_continuation_keep_final_three_seed_contract(
     assert [t["seed"] for t in report["trials"]] == [42, 43, 44]
     assert all(t["status"] == "success" and t["selective_pose_evidence"] for t in report["trials"])
     assert (cli_out / "poses_hit.sdf").read_text().strip()
+    from rdkit import Chem
+    import csv
+    from chembounce_synthesis.report import build_report, render_html
+
+    expected_name = profiles.DEFAULT_RECOMMENDATION_PROFILE
+    provenance = json.loads((cli_out / "manifest.json").read_text())["recommendation_profile"]
+    assert provenance["name"] == expected_name
+    assert provenance["artifact_sha256"] == profiles.PROFILE_SHA256[expected_name]
+    assert cli_rows[0]["recommendation_profile"] == rows[0]["recommendation_profile"] == expected_name
+    assert json.loads((cli_out / "summary.json").read_text())["recommendation_profile"] == {
+        key: provenance[key] for key in ("name", "status", "artifact_sha256")
+    }
+    with (cli_out / "results.tsv").open() as handle:
+        tsv = list(csv.DictReader(handle, delimiter="\t"))
+    assert tsv[0]["recommendation_profile"] == expected_name
+    for filename in ("poses_hit.sdf", "poses_design.sdf"):
+        for mol in Chem.SDMolSupplier(str(cli_out / filename), removeHs=False):
+            assert mol.GetProp("recommendation_profile") == expected_name
+            assert mol.GetProp("calibration_status") == provenance["status"]
+    view = build_report(cli_out)
+    assert view["artifact_consistency"] == "consistent_recorded_bundle", view
+    assert expected_name in render_html(view)
     continued = tmp_path / "continued"
     assert synthesis_main(["--continue-from", str(cli_out), "--recommend", "--output", str(continued)]) == 0
     assert json.loads((continued / "routes.json").read_text())["routes"][0]["carried_from"]
@@ -402,27 +424,30 @@ def test_explicit_null_profile_and_missing_provider_fields_do_not_default(config
         workflow.preflight_recommendation(HIT, config)
 
 
-def test_continuation_conflict_and_replacement_are_distinct(config, no_work, tmp_path, monkeypatch):
+@pytest.mark.parametrize("historical", [profiles.PROFILE, profiles.SELECTIVE_PROFILE])
+def test_continuation_conflict_and_replacement_are_distinct(
+    config, no_work, tmp_path, monkeypatch, historical
+):
     from chembounce_synthesis import cli
 
     inherited = copy.deepcopy(config)
-    inherited["recommendation_profile"] = profiles.PROFILE
+    inherited["recommendation_profile"] = historical
     monkeypatch.setattr(cli, "continuation_inputs", lambda directory: (HIT, [DESIGN], inherited))
     monkeypatch.setattr(cli, "run", lambda *a, **k: pytest.fail("Inherited conflicting profile ran"))
     old = tmp_path / "old"
     args = ["--continue-from", str(old), "--recommend", "--output", str(tmp_path / "new")]
-    assert synthesis_main(args + ["--recommendation-profile", profiles.SELECTIVE_PROFILE]) == 2
+    assert synthesis_main(args + ["--recommendation-profile", profiles.DEFAULT_RECOMMENDATION_PROFILE]) == 2
     path = tmp_path / "replacement.json"
     path.write_text(json.dumps(config))
 
     def replaced(hit, designs, effective, out):
-        assert effective["recommendation_profile"] == profiles.SELECTIVE_PROFILE
+        assert effective["recommendation_profile"] == profiles.DEFAULT_RECOMMENDATION_PROFILE
         assert effective["carry_forward"] == [str(old)]
         return []
 
     monkeypatch.setattr(cli, "run", replaced)
     assert synthesis_main(args + ["--config", str(path)]) == 3
-    assert inherited["recommendation_profile"] == profiles.PROFILE
+    assert inherited["recommendation_profile"] == historical
 
 
 def test_standalone_preflight_precedes_design_tsv_read(config, no_work, tmp_path, monkeypatch):
@@ -554,6 +579,34 @@ def test_packaged_asset_template_uses_same_policy_after_explicit_local_paths(con
     for key in ("catalog", "rules", "provider", "synthesis_evidence"):
         raw[key] = config[key]
     effective = workflow.preflight_recommendation(HIT, raw)
-    assert effective["recommendation_profile"] == profiles.SELECTIVE_PROFILE
+    assert effective["recommendation_profile"] == profiles.DEFAULT_RECOMMENDATION_PROFILE
     assert effective["minimum_scores"] == {"hit_tanimoto": 0.35, "hit_shape": 0.7, "hit_pharmacophore": 0.5}
     assert effective["refinement"]["seeds"] == [42, 43, 44]
+
+
+@pytest.mark.parametrize("explicit_v3", [False, True])
+def test_historical_continuation_without_shortcut_preserves_or_explicitly_migrates(
+    config, no_work, monkeypatch, tmp_path, explicit_v3
+):
+    from chembounce_synthesis import cli
+
+    inherited = workflow._config(config | {"recommendation_profile": profiles.SELECTIVE_PROFILE})
+    inherited["carry_forward"] = [str(tmp_path / "old")]
+    before = copy.deepcopy(inherited)
+    monkeypatch.setattr(cli, "continuation_inputs", lambda directory: (HIT, [DESIGN], inherited))
+    received = []
+
+    def run(hit, designs, effective, output):
+        received.append(effective)
+        return []
+
+    monkeypatch.setattr(cli, "run", run)
+    args = ["--continue-from", str(tmp_path / "old"), "--output", str(tmp_path / "new")]
+    if explicit_v3:
+        args += ["--recommendation-profile", profiles.DEFAULT_RECOMMENDATION_PROFILE]
+    assert synthesis_main(args) == 3
+    assert inherited == before
+    expected = profiles.DEFAULT_RECOMMENDATION_PROFILE if explicit_v3 else profiles.SELECTIVE_PROFILE
+    assert received[0]["recommendation_profile"] == expected
+    for key in ("carry_forward", "max_design_attempts", "max_scored_products", "refinement"):
+        assert received[0][key] == before[key]

@@ -3,7 +3,7 @@
 ## Request qualified recommendations
 
 Use `--recommend` on either CLI or `from chembounce_synthesis import recommend`
-for the version-fixed `qualified-selective-engineering-v2` contract. The
+for the version-fixed `qualified-selective-engineering-v3` contract. The
 [asset template](../examples/synthesis/strict-recommendation-config.json) declares
 the same profile, so selection is idempotent. Replace its placeholder paths with
 existing local files/directories; the example is not a ready-made vendor catalog,
@@ -1162,3 +1162,148 @@ unsupported/unresolved, without inferring an axial configuration. This conservat
 rule can reject decorative or ambiguous wedges. It cannot recover stereo metadata
 already discarded by an upstream reader or an old serialized catalog, and it does
 not classify potential atropisomerism in an unannotated structure.
+
+### Engineering profile revisions and explicit migration
+
+`--recommend` and the lazy `recommend()` API now select
+`qualified-selective-engineering-v3`. V3 has exactly the v2 floors, eight-conformer
+screening, final seeds 42/43/44, budgets and joint-pose constraint policy. It binds
+the reviewed exact-state input guards to new artifact bytes; it is not a new fit
+or an empirically calibrated similarity/activity policy. Ordinary defined stereo
+and supported tetrahedral ABS remain supported; unsupported representations are
+rejected before lossy serialization (see the input-format contract above).
+
+The original `qualified-development-v1` and `qualified-selective-engineering-v2`
+artifacts and names remain available. On guarded source their historical kernel
+bindings differ, so their provenance honestly reports `custom_unvalidated`.
+Explicit historical config/profile requests are never silently migrated. Combining
+`--recommend` with an explicit historical profile in either the original config
+or CLI is an error before model/catalog work, even when the other declaration is
+v3. Without the shortcut, `--recommendation-profile qualified-selective-engineering-v2`
+continues to request v2.
+
+For a continuation, inherited v2 without the shortcut remains v2. To migrate,
+supply an explicit v3 replacement config, or use the profile-only
+`--recommendation-profile qualified-selective-engineering-v3` option without
+`--recommend`. Inherited v2 plus `--recommend` still conflicts before a v3 CLI
+override can conceal it. Prior provenance remains retained, and carried routes
+still undergo the existing fresh qualification gates; migration does not reuse
+old scores or reset budgets/deadlines.
+
+V3's `provenance.source_revision` names its preserved v2 predecessor, the reviewed
+guarded commit, and two prior engineering review records. Release review verifies
+those record bytes; the installed loader checks the portable packaged declaration
+and pinned artifact digest without opening local review files. These records do
+not certify calibration, biological activity, experimental synthesis, route yield
+or a fresh comparison. `engineering_policy_matched` compares the five recorded
+numerical modules, scientific runtime and pharmacophore feature content; it does
+not certify every current pipeline source file. Supported material overrides
+remain `custom_unvalidated`; resource limits and additional selection retain their
+separate provenance fields.
+
+Historical benchmark protocol-v2 and the saved-response development assessor stay
+v2-only. Current campaign and prior capacity outputs must not be relabelled v3.
+Any future v3 performance comparison needs an explicitly reviewed benchmark
+protocol/adapter revision; this profile release launches no evaluation.
+
+### Bounded reconstruction-index lineage migration
+
+`chembounce_synthesis.catalog_migration` converts **one pinned processed index**
+into a new catalog and independently validates complete record lineage. It does
+not change the live catalog, switch a configuration, recover supplier IDs, or
+approve adoption. A reviewed, externally SHA256-pinned JSON plan is required;
+there is no automatic input discovery, retry or budget expansion.
+
+The plan contains `schema_version: 1`, a resolved `input` path/hash/byte count,
+`source` checkout/commit/tree and exact dependency hashes, `runtime` interpreter
+path/bytes/version plus RDKit/NumPy versions and distribution-metadata digests,
+a pinned GNU `watchdog` executable,
+a resolved `parent` path/device/inode, an absent `output_dir` directly beneath
+that parent, exact converter `labels`, a frozen legacy `baseline`, and `limits`.
+The source dependency list is `__init__.py`, `assets.py`, `catalog.py`, `common.py`,
+`reactions.py` and `catalog_migration.py`. Dirty or mismatched sources fail closed.
+The baseline includes output SHA256, unique-row count and exact rejected-record
+coordinates/reasons. It is supplied evidence, never repaired from new output.
+
+The Linux coordinator creates the output directory exclusively with mode 0700,
+then launches four sequential children: `startup`, `converter`, `validator` and
+`bookkeeping`. Every child is restricted to one allowed CPU, an empty CUDA device
+list, offline flags and one thread per numerical library, with `RLIMIT_AS` applied
+before interpreter startup. The chemistry processes release their separate memory
+graphs when they exit. The initial reviewed ceilings are:
+
+| Limit | Ceiling |
+| --- | ---: |
+| Entire external invocation | 1,800 seconds |
+| Shared normal-work deadline | 1,740 seconds |
+| Startup / converter / validator / bookkeeping phase | 120 / 600 / 900 / 120 seconds |
+| Owned TERM grace / KILL and reap / final receipt reserve | 15 / 15 / 30 seconds |
+| Per-child address space | 16 GiB |
+
+All phase deadlines are clamped to the same work deadline. Smaller fixture limits
+are permitted; larger limits are rejected. An address-space cap is not a promise
+that the full inert object graph, origin map or eager `Catalog` molecules fit.
+The exact reviewed invocation must also have an **external watchdog**, for example:
+
+```bash
+/usr/bin/timeout --signal=TERM --kill-after=60s 1740s \
+  /absolute/pinned/python -m chembounce_synthesis.catalog_migration run \
+  --plan /absolute/reviewed-plan.json --plan-sha256 REVIEWED_PLAN_SHA256
+```
+
+The exact executable/hash, environment, working directory and source/runtime pins
+must be frozen for the actual attempt. The external 1,740-second TERM and 60-second
+KILL grace cover interpreter startup and final writes, with a total 1,800-second
+ceiling. Each child additionally has an autonomous watchdog bounded by remaining
+normal work, so interruption of the coordinator does not leave an unguarded child.
+The coordinator uses Linux subreaping and cleans only its owned process groups.
+It records failure when a group remains alive or cannot be reaped; no universal
+termination guarantee is made for uninterruptible native/kernel states.
+After safe owned cleanup it restores the process's previous subreaper flag,
+including when a phase fails or terminal persistence later fails. Unsafe cleanup
+retains subreaper ownership; a failed restoration cannot return success. The
+terminal snapshot records the prior/observed flag and restoration status. This
+process-wide flag is not isolation from concurrent unrelated child activity;
+the real invocation runs in its own coordinator process. No foreign children are
+reaped or signaled to repair process state.
+
+The converter is invoked once, unchanged. The separate validator rejects extra
+pickle payloads or trailing bytes and replaces every pickle global with an inert
+placeholder. It independently checks each raw SMILES through the existing pinned
+canonicalization policy, regenerates its structure ID, and compares the exact
+TSV structure and all v2 manifest fields. Accepted occurrences **A** and rejected
+coordinates **R** must partition all **N** logical source positions; **U** is the
+separate unique TSV count. Duplicate accepted occurrences remain origins, not
+rejections. Unsupported pickle/molecule schema makes the source incomplete.
+Ordinary canonicalization failures retain exact coordinates and typed reasons.
+Every loaded ID's `Catalog.evidence` is checked, including source hashes and both
+SKU/stock verification flags being false, without fingerprints or similarity search.
+
+Input/source bindings are checked before and after phases. Output checksums are
+bound across conversion, validation and final bookkeeping. The whole output must
+match the frozen legacy TSV baseline; any difference remains a failed attempt
+for review. Do not change normalization or omit rejections to force equality.
+`owner.json`, phase logs/receipts, failure receipts and `terminal.json` preserve
+partial output, nonzero exits, timeouts and unavailable cost counters. Records
+are written exclusively and fsynced. Missing counters are unavailable, not zero;
+child self-usage and pre-receipt coordinator elapsed time have explicit scopes.
+The terminal receipt is a snapshot taken before its own serialization and fsync.
+It is never rewritten to certify the completion time of that same write. A
+successful migration requires a `validated` snapshot, coordinator exit 0 after
+the write strictly before the original work and total deadlines without an
+interruption, and external watchdog exit 0 within the complete ceiling. A late
+write can therefore leave a `validated` snapshot with a nonzero exit; the snapshot
+alone is insufficient. A killed writer or unavailable terminal receipt never
+proves completion. Independent result review and adoption remain separate gates.
+Existing and dangling/symlink destinations are refused.
+
+Processed-index lineage cannot certify original supplier-state completeness.
+The retained upstream preprocessing converts supplier molecules to ordinary
+SMILES before serialization and may deduplicate using nonisomeric canonical
+SMILES. Original enhanced-stereo annotations or separate supplier stereo records
+cannot be recovered or certified from that processed index. This is a source-
+processing limitation, not a finding that particular input records contain such
+states. A change to ingress/state policy requires a new source pin and baseline
+review before migration; newly rejected states must remain visible. Obtaining
+original supplier exports and authenticating SKU/current-stock claims are
+separate dependencies.
