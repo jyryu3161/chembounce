@@ -1,5 +1,37 @@
 # Synthesis-aware scaffold hopping
 
+## Optional catalog byte binding
+
+A configuration can pin both the catalog TSV and its import manifest:
+
+```json
+"catalog_binding": {
+  "catalog_sha256": "<64 lowercase hexadecimal characters>",
+  "manifest_sha256": "<64 lowercase hexadecimal characters>"
+}
+```
+
+When present, this object requires exactly both hashes; null, missing fields and
+unknown fields are rejected during configuration validation. The loaded catalog
+checks both pins before constructing molecules, then parses the exact captured
+TSV and manifest bytes that matched them. Missing or changed sidecars fail instead
+of falling back to legacy provenance. Existing route audits still check on-disk
+freshness. Unpinned configurations retain the existing streaming/legacy behavior.
+
+These pins establish byte identity, not supplier SKU, current stock, source
+completeness or experimental synthesis validation. An explicitly pinned legacy
+manifest still reports unknown legacy record provenance. The declaration is
+saved in `manifest.config` and inherited by continuation; changing only the
+catalog path retains the pins. Providing a separate replacement configuration is
+an explicit new configuration, which must declare its own binding when wanted.
+
+Recommendation preflight validates the declaration without reading catalog
+contents. Actual pin enforcement occurs at catalog loading before synthesis
+provider/forward-predictor work; it does not precede the integrated upstream
+design generator or a workflow's reference preparation. If all designs are
+rejected before catalog loading, the run records `assets_not_loaded` and makes no
+claim that the pin was checked.
+
 ## Request qualified recommendations
 
 Use `--recommend` on either CLI or `from chembounce_synthesis import recommend`

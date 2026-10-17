@@ -444,38 +444,85 @@ def test_mid_sequence_schema_failure_is_not_counted_as_ordinary_rejection(tmp_pa
         next(stream)
 
 
-@pytest.mark.parametrize("defect", ["nonzero", "timeout", "interrupt"])
+@pytest.mark.parametrize(
+    "defect", ["nonzero", "timeout", "interrupt", "interrupt_created_empty", "interrupt_readiness_error"]
+)
 def test_partial_tsv_survives_owned_child_failures(plan, monkeypatch, defect):
     plan["limits"]["converter_seconds"] = 1 if defect == "timeout" else 10
     path, pinned = write_plan(plan)
     original = subprocess.Popen
     output = Path(plan["output_dir"])
+    ready, created = output / "fixture.ready", output / "fixture.created"
+    observation = {"ready": False, "error": None, "created_empty": False}
+    launched = []
+    before_subreaper = observed_subreaper()
+    before_handler = signal.getsignal(signal.SIGTERM)
+
+    def wait_for(marker, process, seconds=3):
+        limit = time.monotonic() + seconds
+        while not marker.exists() and process.poll() is None and time.monotonic() < limit:
+            time.sleep(0.01)
+        return marker.exists()
 
     def launch(argv, **kwargs):
         if argv[-1] == "converter":
-            code = f"from pathlib import Path; import os,time; Path({str(output / 'catalog.tsv')!r}).write_text('partial TSV'); "
-            code += "os._exit(7)" if defect == "nonzero" else "time.sleep(60)"
+            code = f"from pathlib import Path; import os,time; target=Path({str(output / 'catalog.tsv')!r}); "
+            if defect == "interrupt_created_empty":
+                # Hold the creation/write gap open without a timing assumption.
+                code += f"target.touch(); Path({str(created)!r}).touch(); r,w=os.pipe(); os.read(r,1)"
+            else:
+                # write_text closes the payload before the separate ready marker.
+                code += f"target.write_text('partial TSV'); Path({str(ready)!r}).touch(); "
+                code += "os._exit(7)" if defect == "nonzero" else "time.sleep(60)"
             process = original([sys.executable, "-c", code], **kwargs)
-            if defect == "interrupt":
-                # The coordinator's handler is already installed; no subprocess or
-                # unrelated process group receives this fixture-only signal.
-                limit = time.monotonic() + 3
-                while not (output / "catalog.tsv").exists() and time.monotonic() < limit:
-                    time.sleep(0.01)
-                os.kill(os.getpid(), signal.SIGTERM)
+            launched.append(process)
+            if defect.startswith("interrupt"):
+                try:
+                    if defect == "interrupt_created_empty":
+                        observation["created_empty"] = (
+                            wait_for(created, process) and (output / "catalog.tsv").read_bytes() == b""
+                        )
+                    observation["ready"] = wait_for(
+                        ready, process, 0.1 if defect == "interrupt_created_empty" else 3
+                    )
+                    if defect == "interrupt_readiness_error":
+                        raise OSError("controlled fixture readiness failure")
+                except BaseException as exc:
+                    observation["error"] = str(exc)
+                finally:
+                    # Return Popen even on handshake failure: run() must acquire
+                    # ownership before any test assertion can fail. Its installed
+                    # handler records this signal, then its normal cleanup reaps.
+                    os.kill(os.getpid(), signal.SIGTERM)
             return process
         return original(argv, **kwargs)
 
     monkeypatch.setattr(subprocess, "Popen", launch)
     assert migration.run(path, pinned, started=time.monotonic()) == 3
     receipt = json.loads((output / "terminal.json").read_text())
-    assert (
-        receipt["status"] == {"nonzero": "failed", "timeout": "timeout", "interrupt": "interrupted"}[defect]
+    expected_status = (
+        "interrupted" if defect.startswith("interrupt") else ("failed" if defect == "nonzero" else "timeout")
     )
+    assert receipt["status"] == expected_status
     assert set(receipt["partial_outputs"]) == {"catalog.tsv"}
-    assert (output / "catalog.tsv").read_text() == "partial TSV"
-    assert all(p["cleanup"]["group_gone"] for p in receipt["phases"])
+    expected = b"" if defect == "interrupt_created_empty" else b"partial TSV"
+    assert (output / "catalog.tsv").read_bytes() == expected
+    assert receipt["partial_outputs"]["catalog.tsv"]["bytes"] == len(expected)
+    assert all(p["cleanup"]["group_gone"] and p["cleanup"]["direct_child_reaped"] for p in receipt["phases"])
+    assert len(launched) == 1 and launched[0].poll() is not None
+    assert observed_subreaper() == before_subreaper
+    assert signal.getsignal(signal.SIGTERM) == before_handler
     assert not (output / "validator.json").exists()
+    if defect == "interrupt_created_empty":
+        assert observation == {"ready": False, "error": None, "created_empty": True}
+    elif defect == "interrupt_readiness_error":
+        assert observation == {
+            "ready": True,
+            "error": "controlled fixture readiness failure",
+            "created_empty": False,
+        }
+    elif defect == "interrupt":
+        assert observation == {"ready": True, "error": None, "created_empty": False}
 
 
 @pytest.mark.parametrize("defect", ["input_drift", "output_drift"])

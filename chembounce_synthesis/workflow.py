@@ -17,7 +17,7 @@ import numpy as np
 from rdkit import Chem, DataStructs, rdBase
 from rdkit.Chem.Scaffolds import MurckoScaffold
 
-from .catalog import Catalog
+from .catalog import Catalog, validate_catalog_binding
 from .common import FP, canonical, digest, molecule, positive, write_json
 from .conformers import (
     ConformerSettings,
@@ -140,6 +140,7 @@ def _config(config):
         "schema_version",
         "protocol",
         "catalog",
+        "catalog_binding",
         "rules",
         "provider",
         "search",
@@ -169,6 +170,8 @@ def _config(config):
     }
     if set(config) - permitted:
         raise ValueError(f"Unknown synthesis configuration keys: {sorted(set(config) - permitted)}")
+    if "catalog_binding" in config:
+        validate_catalog_binding(config["catalog_binding"])
     for required in ("catalog", "rules", "provider"):
         if required not in config:
             raise ValueError(f"Missing synthesis configuration: {required}")
@@ -1208,7 +1211,12 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             if "pocket" in config:
                 summary["assets_not_loaded"].append("pocket")
         else:
-            catalog, rules = Catalog(config["catalog"]), Rules(config["rules"])
+            catalog = (
+                Catalog(config["catalog"], binding=config["catalog_binding"])
+                if "catalog_binding" in config
+                else Catalog(config["catalog"])
+            )
+            rules = Rules(config["rules"])
             if deadline_reached():
                 evidence_evaluator = evaluator_from_config(
                     config.get("synthesis_evidence", {}), load_predictor=False

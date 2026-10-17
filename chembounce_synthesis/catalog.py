@@ -3,6 +3,7 @@
 import csv
 import copy
 import hashlib
+import io
 import json
 import math
 from collections.abc import MutableMapping
@@ -24,6 +25,15 @@ def _import_manifest_present(path):
     if not path.is_file():
         raise ValueError("Catalog import manifest must be a regular file when present")
     return True
+
+
+def validate_catalog_binding(binding):
+    """Validate an explicit pair of byte identities, without opening assets."""
+    if not isinstance(binding, dict) or set(binding) != {"catalog_sha256", "manifest_sha256"}:
+        raise ValueError("catalog_binding requires exactly catalog_sha256 and manifest_sha256")
+    for value in binding.values():
+        if not isinstance(value, str) or len(value) != 64 or any(c not in "0123456789abcdef" for c in value):
+            raise ValueError("catalog_binding hashes must be lowercase SHA256 hex strings")
 
 
 @dataclass(frozen=True)
@@ -95,17 +105,33 @@ class Catalog:
     concrete ``dict`` identity for ``fps`` are not part of this API.
     """
 
-    def __init__(self, filename):
+    def __init__(self, filename, *, binding=None):
+        if binding is not None:
+            validate_catalog_binding(binding)
+            binding = dict(binding)
         self.path = Path(filename).resolve()
-        self.sha256 = digest(self.path)
+        # A pinned load hashes and parses one captured snapshot. Keep the legacy
+        # streaming path for callers that have not requested this guarantee.
+        catalog_bytes = self.path.read_bytes() if binding is not None else None
+        self.sha256 = (
+            hashlib.sha256(catalog_bytes).hexdigest() if catalog_bytes is not None else digest(self.path)
+        )
+        if binding is not None and self.sha256 != binding["catalog_sha256"]:
+            raise ValueError("Catalog TSV differs from catalog_binding.catalog_sha256")
         self.import_provenance = None
         self._record_origins = None
         self._manifest_sha256 = None
         self._manifest_inputs = ()
         manifest = None
         manifest_path = self._manifest_path = self.path.with_suffix(self.path.suffix + ".manifest.json")
-        if _import_manifest_present(manifest_path):
+        manifest_present = _import_manifest_present(manifest_path)
+        if binding is not None and not manifest_present:
+            raise ValueError("catalog_binding requires its pinned import manifest")
+        if manifest_present:
             manifest_bytes = manifest_path.read_bytes()
+            self._manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
+            if binding is not None and self._manifest_sha256 != binding["manifest_sha256"]:
+                raise ValueError("Catalog import manifest differs from catalog_binding.manifest_sha256")
             manifest = json.loads(manifest_bytes)
             if not isinstance(manifest, dict):
                 raise ValueError("Catalog import manifest must be an object")
@@ -118,7 +144,6 @@ class Catalog:
                 raise ValueError("Catalog checksum differs from its import manifest; regenerate the snapshot")
             if not isinstance(manifest.get("rejected_records", []), list):
                 raise ValueError("Invalid catalog import manifest rejected_records")
-            self._manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
             self.import_provenance = {
                 "path": str(manifest_path),
                 "sha256": self._manifest_sha256,
@@ -131,7 +156,12 @@ class Catalog:
         self.blocks = {}
         self.by_smiles = {}
         self.mols = {}
-        with self.path.open(newline="", encoding="utf-8-sig") as stream:
+        stream = (
+            io.StringIO(catalog_bytes.decode("utf-8-sig"), newline="")
+            if catalog_bytes is not None
+            else self.path.open(newline="", encoding="utf-8-sig")
+        )
+        with stream:
             reader = csv.DictReader(stream, delimiter="\t")
             if not {"id", "smiles", "source", "snapshot"}.issubset(reader.fieldnames or []):
                 raise ValueError("Catalog TSV requires id, smiles, source, snapshot columns")
