@@ -15,7 +15,13 @@ import time
 import psutil
 
 from benchmarks.research.protocol import digest, write_json, synthesis_asset_paths
-from benchmarks.research.qualified_adapter import ARMS, PROFILE_PROTOCOLS, read, benchmark_profile
+from benchmarks.research.qualified_adapter import (
+    ARMS,
+    PROFILE_PROTOCOLS,
+    read,
+    benchmark_profile,
+    validate_v3_native_inputs,
+)
 from benchmarks.research.qualified_analysis import canonical_sha256, analyze, validate_plan
 from benchmarks.research import qualified_collector
 from benchmarks.research.runner import bounded_method, _termination_scope, _write_checkpoint
@@ -158,6 +164,12 @@ def resolve_protocol(protocol, base):
         raise ValueError("Explicit profile binding requires benchmark protocol v2 or v3")
     if protocol.get("collector_catalog_policy") != CATALOG_POLICY:
         raise ValueError("Protocol must explicitly freeze the shared catalog setup policy")
+    if protocol["schema"] == "qualified-benchmark-protocol-v3":
+        for method in protocol["methods"]:
+            if method["arm"] == "full":
+                validate_v3_native_inputs(
+                    method.get("assets", {}), method.get("settings", {}).get("generator_options", {})
+                )
     source = protocol["source_sha256"]
     root = Path(__file__).resolve().parents[2]
     required = list((root / "chembounce_synthesis").glob("*.py")) + [
@@ -253,12 +265,20 @@ def request_for(method, query, seed, output, seconds, phase, plan):
     settings = copy.deepcopy(native.get("settings", method.get("settings", {})))
     if not native:
         settings["arm"] = method["arm"]
-    # Keep native schemas unchanged. The outer phase manifest binds the plan.
+    # Only v3 full generation gains a native binding; historical and external
+    # native schemas remain unchanged. Common assessment rechecks this binding.
+    binding = plan.get("benchmark_protocol")
+    bind_native = (
+        phase == "native"
+        and method["arm"] == "full"
+        and binding is not None
+        and binding.get("schema") == "qualified-benchmark-protocol-v3"
+    )
     return {
         "schema_version": 1,
         **(
             {"benchmark_protocol": plan["benchmark_protocol"]}
-            if phase == "common" and "benchmark_protocol" in plan
+            if (phase == "common" or bind_native) and "benchmark_protocol" in plan
             else {}
         ),
         "kind": native.get("request_kind", "external"),

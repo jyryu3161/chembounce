@@ -213,6 +213,17 @@ frozen in the common configuration. Scientific-floor or polar-recall overrides
 cannot pass the benchmark profile match. Enabling `landmark_pose_proposals`
 remains `custom_unvalidated` and is not admitted by protocol v3.
 
+Protocol v3 full generation requires a pinned scaffold library, an enabled pinned
+fingerprint database, or both. Scaffold-only mode does not discover a default
+fingerprint database. Fingerprint-only mode cannot disable fingerprints and fall
+back to an unpinned text library. Generator options cannot replace these inputs
+with DB paths, replacement files or an inline `fragments_DB` library; inline data
+would be bound by the protocol JSON but is outside this fixed-library contract.
+The v3 full native request carries the same profile binding as common assessment,
+which checks its native DB paths and generator options before consuming the pool.
+Historical v1/v2 and external native request schemas retain their previous behavior.
+Profile matching does not establish equivalence of different generator libraries.
+
 For both protocol v2 and v3, the collector checks the complete effective policy
 and numerical source provenance against the frozen configuration/source, restores every saved seed's
 pose and rechecks its joint witness and pharmacophore metric without embedding,

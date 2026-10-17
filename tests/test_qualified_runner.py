@@ -481,7 +481,7 @@ def selective_binding(version="v2"):
     }
 
 
-def test_selective_protocol_binding_reaches_only_common_request(
+def test_selective_protocol_binding_reaches_common_and_v3_full_native(
     tmp_path, profile_binding, benchmark_metadata_guard
 ):
     p = protocol() | profile_binding
@@ -491,8 +491,9 @@ def test_selective_protocol_binding_reaches_only_common_request(
     for phase in ("native", "common"):
         req = runner.request_for(p["methods"][0], p["queries"][0], 97, tmp_path, 360, phase, plan)
         assert req["seed"] == 97
-        assert ("benchmark_protocol" in req) == (phase == "common")
-        if phase == "common":
+        bound = phase == "common" or profile_binding["schema"].endswith("v3")
+        assert ("benchmark_protocol" in req) == bound
+        if bound:
             assert req["benchmark_protocol"] == profile_binding
 
 
@@ -644,7 +645,8 @@ def test_benchmark_metadata_default_cannot_upgrade_legacy(monkeypatch, benchmark
     assert "benchmark_protocol" not in runner.make_plan(protocol(), "a" * 64)
 
 
-def test_benchmark_metadata_resolve_exact_config(tmp_path, profile_binding, benchmark_metadata_guard):
+@pytest.mark.parametrize("arm", ["full", "synllama"])
+def test_benchmark_metadata_resolve_exact_config(tmp_path, profile_binding, benchmark_metadata_guard, arm):
     """Use tiny inert asset bytes: no catalog or model is constructed."""
     from pathlib import Path
 
@@ -655,6 +657,10 @@ def test_benchmark_metadata_resolve_exact_config(tmp_path, profile_binding, benc
         path.write_text("inert binding fixture, not a usable scientific asset\n")
         alias = {"catalog.tsv": "catalog", "rules.json": "rules"}.get(name, name)
         assets[alias] = {"artifact": str(path), "sha256": runner.digest(path)}
+    if arm == "full":
+        scaffold = tmp_path / "inert-scaffolds.txt"
+        scaffold.write_text("inert binding fixture; never loaded")
+        assets["scaffold_db"] = {"artifact": str(scaffold), "sha256": runner.digest(scaffold)}
     root = Path(runner.__file__).resolve().parents[2]
     sources = (
         list((root / "chembounce_synthesis").glob("*.py"))
@@ -672,7 +678,7 @@ def test_benchmark_metadata_resolve_exact_config(tmp_path, profile_binding, benc
     )
     p = protocol() | profile_binding
     p["source_sha256"] = {str(path): runner.digest(path) for path in sources}
-    p["methods"] = [{"id": "synllama", "arm": "synllama", "assets": assets}]
+    p["methods"] = [{"id": arm, "arm": arm, "assets": assets}]
     resolved = runner.resolve_protocol(p, tmp_path)
     assert resolved["methods"][0]["resolved_assets"]["synthesis_config"] == str(config)
     assert runner.make_plan(resolved, "a" * 64)["benchmark_protocol"] == profile_binding
@@ -698,13 +704,16 @@ def test_benchmark_metadata_runner_to_collector_binding(
     """Real request/envelope/config path, fake execution and no scientific artifact validation."""
     p = protocol() | profile_binding
     config = config_file(tmp_path, profile_binding["recommendation_profile"])
-    p["methods"][0]["resolved_assets"] = {"synthesis_config": str(config)}
+    p["methods"][0]["resolved_assets"] = {
+        "synthesis_config": str(config),
+        "scaffold_db": str(tmp_path / "inert-scaffolds.txt"),
+    }
     plan, requests, collected = runner.make_plan(p, "a" * 64), [], []
 
     def bounded(method, req, out, **kwargs):
         requests.append(req)
         out.mkdir()
-        if tamper and "benchmark_protocol" in req:
+        if tamper and len(requests) == 2 and "benchmark_protocol" in req:
             req["benchmark_protocol"] = {**req["benchmark_protocol"], "profile_artifact_sha256": "0" * 64}
         write_json(out / "request.json", req)
         return {
@@ -723,7 +732,7 @@ def test_benchmark_metadata_runner_to_collector_binding(
         p["methods"][0], p["queries"][0], 97, tmp_path / "attempt", plan, SimpleNamespace(signal_number=None)
     )
     assert len(requests) == 2 and all(req["seed"] == 97 for req in requests)
-    assert "benchmark_protocol" not in requests[0]
+    assert ("benchmark_protocol" in requests[0]) == profile_binding["schema"].endswith("v3")
     assert plan["benchmark_protocol"] == profile_binding  # request replacement cannot alter authority
     if tamper:
         assert not collected and result["status"] == "error"
