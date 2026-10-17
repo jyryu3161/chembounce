@@ -223,8 +223,9 @@ def verify_route_support(record, catalog, rules, limit, decoder):
 
 def _selective_outcome(summary, rows, records, refinements, qualification):
     """Cross-check saved outcome/denominators, including genuine empty runs."""
-    from chembounce_synthesis.evidence_outcomes import validate_summary
+    from chembounce_synthesis.evidence_outcomes import validate_records, validate_summary
 
+    validate_records(records, qualification["decisions"])
     validate_summary(summary, records)
     route_ids = [r["route_id"] for r in records]
     accepted = summary.get("accepted_products")
@@ -426,12 +427,17 @@ def checked_workflow_artifacts(
         if type(bound_catalog) is not BoundCatalog:
             raise ValueError("Collector requires a runner-owned bound catalog")
         bound_catalog.validate(config["catalog"], expected_source)
-    if not rows and not selective:
-        return []  # Preserve the legacy collector's empty-result behavior.
+    from chembounce_synthesis.evidence_outcomes import validate_records, validate_summary
+
     records = read(out / "routes.json")["routes"]
+    summary = read(out / "summary.json")
+    validate_records(records, qualification["decisions"])
+    validate_summary(summary, records)
+    if not rows and not selective:
+        return []  # Legacy emptiness remains valid after checking any optional diagnostic fields.
     refinements = read(out / "refinement.json")["candidates"]
     if selective:
-        _selective_outcome(read(out / "summary.json"), rows, records, refinements, qualification)
+        _selective_outcome(summary, rows, records, refinements, qualification)
     exports = {
         "results.tsv",
         "poses_hit.sdf",

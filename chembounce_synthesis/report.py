@@ -1016,9 +1016,7 @@ def _assemble(docs, inventory, issues):
         _summary_counts(summary, rows, policy)
         _require(isinstance(manifest["hit"], str) and bool(manifest["hit"]), "Original hit missing")
         route_records = _records(docs["routes.json"], "routes")
-        for record in route_records:
-            if "synthesis_evidence" in record:
-                evidence_outcomes.validate_recorded(record["synthesis_evidence"])
+        evidence_outcomes.validate_records(route_records, _records(qualification, "decisions"))
         evidence_outcomes.validate_summary(summary, route_records)
         _equal(qualification["selected_route_ids"], [r["route_id"] for r in rows], "selected route IDs")
         for key in ("route_id", "smiles"):

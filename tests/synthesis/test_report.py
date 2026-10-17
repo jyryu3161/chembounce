@@ -1656,3 +1656,28 @@ def test_forward_outcome_contradictions_are_report_inconsistency(tmp_path, data,
     view = r.write_report(tmp_path)
     assert view["artifact_consistency"] == "incomplete_or_inconsistent"
     assert any("forward" in issue for issue in view["issues"])
+
+
+@pytest.mark.parametrize("empty", [False, True])
+@pytest.mark.parametrize("location", ["route", "decision", "both"])
+def test_qualification_forward_projection_checked_even_without_selection(tmp_path, data, empty, location):
+    from chembounce_synthesis import evidence_outcomes as e
+
+    record = next(r for r in data["routes.json"]["routes"] if "synthesis_evidence" in r)
+    decision = next(d for d in data["qualification.json"]["decisions"] if d["route_id"] == record["route_id"])
+    if empty:
+        data["results.json"]["results"] = []
+        data["qualification.json"]["selected_route_ids"] = []
+        data["summary.json"].update(
+            status="no_candidates", returned_products=0, accepted_products=0, qualified_products=0
+        )
+    value = e.route_outcome(record["synthesis_evidence"]["steps"])
+    record["qualification"]["forward_outcome"] = copy.deepcopy(value)
+    decision["forward_outcome"] = copy.deepcopy(value)
+    if location in ("route", "both"):
+        record["qualification"]["forward_outcome"]["status"] = "unassessed"
+    if location in ("decision", "both"):
+        decision["forward_outcome"]["status"] = "unassessed"
+    view = r.write_report(save(tmp_path, data))
+    assert view["artifact_consistency"] == "incomplete_or_inconsistent"
+    assert any("qualification forward outcome" in issue for issue in view["issues"])

@@ -109,3 +109,29 @@ def test_legacy_nonmatch_does_not_imply_complete_strict_top_three():
     assert summary["step_record_causes"] == {"not_recorded": 1}
     prediction["reason_code"] = "completed_top_three_nonmatch"
     assert e.prediction_outcome(prediction)["status"] == "completed_nonmatch"
+
+
+@pytest.mark.parametrize("location", ["route", "decision", "both"])
+def test_qualification_projection_rederived_from_predictions(location):
+    item = step("unknown", "predictor_call_budget_exhausted")
+    record = {"route_id": "unselected", "synthesis_evidence": {"steps": [item]}, "qualification": {}}
+    decision = {"route_id": "unselected"}
+    e.validate_records([record], [decision])  # Legacy absence is valid.
+    expected = e.route_outcome([item])
+    record["qualification"]["forward_outcome"] = copy.deepcopy(expected)
+    decision["forward_outcome"] = copy.deepcopy(expected)
+    e.validate_records([record], [decision])
+    if location in ("route", "both"):
+        record["qualification"]["forward_outcome"]["status"] = "supported"
+    if location in ("decision", "both"):
+        decision["forward_outcome"]["status"] = "supported"
+    with pytest.raises(ValueError, match="qualification forward outcome"):
+        e.validate_records([record], [decision])
+
+
+@pytest.mark.parametrize("route_present", [False, True])
+def test_qualification_projection_without_source_evidence_refused(route_present):
+    record = {"route_id": "r0"}
+    decision = {"route_id": "r0", "forward_outcome": e.route_outcome([])}
+    with pytest.raises(ValueError, match="no route evidence"):
+        e.validate_records([record] if route_present else [], [decision])

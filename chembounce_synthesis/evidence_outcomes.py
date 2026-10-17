@@ -141,3 +141,24 @@ def validate_summary(summary, records):
         summary["forward_evidence_outcomes"], summarize(records)
     ):
         raise ValueError("Recorded forward outcome counts differ from route/step records")
+
+
+def validate_records(records, decisions=()):
+    """Check all retained projections, including duplicated qualification decisions."""
+    by_id = {record.get("route_id"): record for record in records}
+
+    def qualification_projection(decision, record):
+        if "forward_outcome" not in decision:
+            return
+        if record is None or "synthesis_evidence" not in record:
+            raise ValueError("Recorded qualification forward outcome has no route evidence")
+        expected = route_outcome(record["synthesis_evidence"].get("steps", []))
+        if not _same(decision["forward_outcome"], expected):
+            raise ValueError("Recorded qualification forward outcome differs from route predictions")
+
+    for record in records:
+        if "synthesis_evidence" in record:
+            validate_recorded(record["synthesis_evidence"])
+        qualification_projection(record.get("qualification", {}), record)
+    for decision in decisions:
+        qualification_projection(decision, by_id.get(decision.get("route_id")))

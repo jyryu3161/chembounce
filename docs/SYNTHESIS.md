@@ -876,7 +876,9 @@ the reader does not infer them from prose. A legacy `mismatched` status without
 a cause code is `nonmatch_recorded`, not proof of a completed strict top-three
 evaluation. Reports and collectors reject newly
 present diagnostic fields that contradict their saved statuses or record counts,
-without treating diagnostic labels as proof of chemical support.
+without treating diagnostic labels as proof of chemical support. These checks
+cover every retained route, including unselected routes and empty-result runs,
+and any optional forward outcome copied into qualification decisions.
 
 This diagnostic correction does not change historical profile artifacts, score
 minima, budgets or ranking. Historical v6 pins the workflow source, so a changed
