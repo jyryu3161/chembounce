@@ -35,7 +35,7 @@ claim that the pin was checked.
 ## Request qualified recommendations
 
 Use `--recommend` on either CLI or `from chembounce_synthesis import recommend`
-for the version-fixed `qualified-selective-engineering-v4` contract. The
+for the version-fixed `qualified-selective-engineering-v5` contract. The
 [asset template](../examples/synthesis/strict-recommendation-config.json) declares
 the same profile, so selection is idempotent. Replace its placeholder paths with
 existing local files/directories; the example is not a ready-made vendor catalog,
@@ -1459,10 +1459,10 @@ declaration and changes the default together, while preserving the old artifacts
 Nothing reconstructs diagnostics for older runs that did not retain these poses.
 
 
-### Engineering v4 source revision
+### Engineering v4 source revision (historical)
 
-The current `--recommend`/`recommend()` default is
-`qualified-selective-engineering-v4`. It preserves the exact v3 numerical
+The v4 release introduced `qualified-selective-engineering-v4` as its
+`--recommend`/`recommend()` default; v5 supersedes it below. It preserves the exact v3 numerical
 specification, runtime declaration, floors, seeds, budgets and strict route
 support. Its new artifact binds the accepted rejected-pose diagnostic scorer
 revision and retains the prior exact-state guard provenance. Source review is
@@ -1486,3 +1486,117 @@ A new local `qualified-selective-engineering-v4-lineage-v1.json` configuration
 must be separately reviewed and installed after release; the installed v3
 configuration is not modified by this source change. Generic runs remain
 exploratory unless qualified behavior is explicitly requested.
+
+### Experimental landmark-aware rigid proposals
+
+`similarity_constraints.landmark_pose_proposals: true` explicitly enables
+`landmark-anchored-rigid-v1` for **nonempty user-supplied landmarks**. Omitting the
+option or setting it to `false` retains the existing policy and alignment path;
+it does not require the fixed-pose `ScoreMol` API. Enabling it without landmarks,
+with a non-boolean value, or without that API fails during configuration preflight.
+The initial prototype changed selective kernel hashes: historical v2–v4
+profiles remain unchanged and are honestly `custom_unvalidated`. V5 below binds
+the reviewed source with this option still disabled; enabling the option is
+not a matched policy, calibration, or default recommendation method.
+
+Only a completed baseline alignment with an infeasible mandatory-landmark
+assignment triggers proposals. The helper enumerates family-correct, one-to-one
+mandatory correspondences, then applies a proper rigid transformation to **all**
+original atoms, including isotopic hydrogen. A single anchor proposes translation
+and, when a distinct typed helper feature exists, a deterministic shortest
+rotation. Multi-anchor fits correct the determinant to prohibit reflection.
+Internal geometry, conformer IDs and stereo are preserved. Proposal
+correspondences are never presented as the final polar/landmark assignment.
+
+Fixed-pose shape/color scoring uses the same heavy-atom view as `_overlay`, with
+normalization disabled. Its baseline shape/color must agree with the actual
+original alignment within `1e-5`, otherwise the proposal path is explicitly
+unavailable. Every alternative gets the unchanged full pharmacophore overlap and
+joint polar/landmark assessment on that exact pose. Selection considers only
+feasible poses with the existing scalar, **both** relative-energy penalties and
+first-on-tie behavior; a lower-scoring feasible pose can replace a rejected
+baseline. The ordinary design diagnostic and all final-seed/route gates remain.
+
+The fixed limits are two alternatives per pair, eight per scoring call, sixteen
+`ScoreMol` calls including parity checks, 128 mandatory correspondence edge visits
+and four complete maps per pair, and 4096 helper-anchor edge visits per pair.
+Added work has a one-second **cooperative** allowance per scoring call, capped by
+the existing deadline. Native calls may return late; late proposals are discarded
+and costs/overruns retained. Search truncation is distinct from geometric
+infeasibility. No budget is transferred to conformer, generation or route search.
+Opting in consumes time and can change deadline-limited outcomes.
+
+`pose_selection.landmark_pose_proposals` records separate pair/proposal counts,
+parity, mapping truncation, transforms and timing. Each pair preserves its baseline
+result; its top-level decision describes the actually selected pose. Selected
+`hit.landmark_proposal` binds the exact baseline and transformed coordinates,
+reference pose, helper policy/source, and corresponding audit entry. Saved-seed
+validation checks this association without embedding, aligning or searching.
+Optional rejected-pose diagnostics retain the actual proposal origin when that
+pose supplies the diagnostic. The workflow manifest also includes the helper's
+source hash. Config/policy preparation and final saved-result validation are
+setup/verification costs outside the per-scoring-call proposal timer and still
+consume any enclosing workflow deadline.
+
+The motivating manual fixture demonstrated an omission only for an explicitly
+requested 0.25 Å donor landmark. Default fixtures already passed. This feature is
+not evidence of improved ordinary recommendation coverage, recovery of historical
+failed controls, biological activity, or experimental synthesis feasibility.
+
+
+### Engineering v5 and optional landmark pose proposals
+
+`--recommend` and `recommend()` now request
+`qualified-selective-engineering-v5`. Its declared engineering floors remain
+original-hit Tanimoto/shape/pharmacophore **0.35/0.70/0.50**, polar recall **0.75**,
+eight conformers at seed 42 and final seeds 42/43/44. Route support and all final
+qualification checks are unchanged. V5 binds the reviewed scorer and the bounded
+landmark helper, and inherits the prior guarded-stereo and diagnostic source
+review declarations. These are portable software-review records authenticated by
+the packaged artifact and release review, not calibration, route-performance,
+activity or experimental synthesis certification. Loading does not reopen the
+historical record paths; the declarations contain no current self-hash cycle.
+
+Landmark pose proposals remain **off by default**. Explicit configuration:
+
+```json
+"similarity_constraints": {
+  "version": "selective-similarity-constraints-v2",
+  "polar_recall": 0.75,
+  "landmarks": [
+    {"id": "requested-acceptor", "family": "Acceptor", "hit_atom_ids": [2], "max_distance": 0.25}
+  ],
+  "landmark_pose_proposals": true
+}
+```
+
+Atom IDs refer to the exact canonical original hit; the example index must be
+checked against that hit. `--landmark-pose-proposals` overrides this boolean on
+either CLI, and `--no-landmark-pose-proposals` explicitly disables a carried
+setting. Enabling without nonempty landmarks or fixed-pose `ScoreMol` fails
+preflight. Disabled requests require no `ScoreMol` capability and do not import
+the helper for profile resolution. The option is a material search override:
+**enabled requests remain `custom_unvalidated`**, even with a v5 source match.
+Landmarks alone remain additional acceptance constraints. They are not evidence
+of biological essentiality.
+
+Only already generated conformers are used, with at most two rigid alternatives
+per pair, eight per scoring call, and 16 fixed-pose score calls including parity
+checks. Typed injective correspondences propose proper rotations/translations;
+the original same-pose evaluator makes the final decision. Mapping and helper
+search caps, partial returns and a one-second cooperative added-work allowance
+are recorded and capped by the existing absolute deadline. Native work can
+return late; exhausted search is truncation, not proof of geometric
+infeasibility. Each selected proposal retains its exact pose, transform and
+witness association through screening, refinement and saved-result validation.
+Proposal correspondences are distinct from final feature assignments.
+
+Historical v1–v4 artifacts and the benchmark's v2 authority remain unchanged.
+Explicit historical requests are never silently upgraded; combining one with
+`--recommend` is a conflict. Their source mismatches remain visible. Continuation
+retains its explicit profile and option unless replaced by an explicit user
+setting, and revalidates/rescores the carried routes. The offline report displays
+the saved profile/custom status, policy and seed witnesses; it performs no new
+alignment or scientific validation. This integration's controlled fixtures are
+software plumbing tests, not recommendation-yield evidence; no historical
+campaign is relabelled as v5 evaluation.

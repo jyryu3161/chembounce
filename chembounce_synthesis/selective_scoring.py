@@ -30,10 +30,19 @@ def configured_constraints(config, hit=None):
     request = config["similarity_constraints"]
     if (
         not isinstance(request, dict)
-        or set(request) - {"version", "polar_recall", "landmarks"}
+        or set(request) - {"version", "polar_recall", "landmarks", "landmark_pose_proposals"}
         or request.get("version") != CONSTRAINT_VERSION
     ):
         raise ValueError("similarity_constraints requires the selective-similarity-constraints-v2 schema")
+    enabled = request.get("landmark_pose_proposals", False)
+    if type(enabled) is not bool:
+        raise ValueError("landmark_pose_proposals must be true or false")
+    if enabled:
+        if not request.get("landmarks"):
+            raise ValueError("Landmark pose proposals require explicit nonempty landmarks")
+        from .landmark_proposals import require_capability
+
+        require_capability()
     settings = ConformerSettings(**config.get("conformers", {}))
     refinement = RefinementSettings(**config.get("refinement", {}))
     if (
@@ -66,6 +75,7 @@ def configured_constraints(config, hit=None):
             polar_recall=request.get("polar_recall", 0.75),
             core_smiles=config.get("core_smiles"),
             landmarks=request.get("landmarks", []),
+            landmark_pose_proposals=enabled,
         )
     return None
 
@@ -201,6 +211,14 @@ def score_candidate(
     # does not require the design itself to satisfy candidate core/feature gates.
     preflight_design(design)
     policy = similarity.policy
+    proposals = None
+    if "landmark_pose_proposals" in policy:
+        proposal_setup = time.monotonic()
+        from .landmark_proposals import ProposalSearch
+
+        proposals = ProposalSearch(
+            policy["landmark_pose_proposals"], deadline=deadline_monotonic, setup_started=proposal_setup
+        )
     audit = {
         "policy": VERSION,
         "constraint_policy_sha256": similarity.sha256,
@@ -217,6 +235,14 @@ def score_candidate(
         "scope": "Bounded generated ensembles; not an exhaustive conformational search. Cached ensemble requests are recorded, not asserted to be fresh embeddings.",
     }
 
+    if proposals is not None:
+        audit["landmark_pose_proposals"] = proposals.audit
+        audit["landmark_pose_proposals"]["bound_policy_preflight_seconds"] = (
+            similarity.landmark_proposal_preflight_seconds
+        )
+        audit["landmark_pose_proposals"]["bound_policy_preflight_scope"] = (
+            "Previously incurred once per bound object; reported here, not incurred again per seed"
+        )
     diagnostic_dispatch_started = time.monotonic() if rejected_pose_diagnostics is not None else None
     diagnostic_before = rejected_pose_diagnostics._elapsed if rejected_pose_diagnostics is not None else 0
     diagnostic = (
@@ -312,41 +338,83 @@ def score_candidate(
                 check_deadline()
                 continue
             audit["hit_pairs_completed"] += 1
-            reasons = list(witness["reasons"])
-            for name, field in (("hit_shape", "shape"), ("hit_pharmacophore", "pharmacophore")):
-                if hit_info[field] < policy["minimum_scores"][name]:
-                    reasons.append(name + "_below_minimum")
-            score = (
-                math.sqrt(hit_info["shape"] * hit_info["pharmacophore"])
-                * math.exp(-settings.strain_penalty * reference_energy)
-                * math.exp(-settings.strain_penalty * candidate_energy)
-            )
-            pair.update(
-                status="rejected" if reasons else "feasible",
-                reasons=reasons,
-                score=score,
-                shape=hit_info["shape"],
-                pharmacophore=hit_info["pharmacophore"],
-                polar_recall=witness["polar"]["recall"],
-            )
-            if reasons and diagnostic is not None:
-                diagnostic.consider(
-                    len(audit["pairs"]) - 1,
-                    pair,
-                    aligned,
-                    witness,
-                    hit_info,
-                    candidate_energy,
-                    reference_energy,
-                    hit_tanimoto=tanimoto,
+            proposal_work_started = time.monotonic() if proposals is not None else None
+            proposal_spent_before = proposals.spent if proposals is not None else 0
+            options = [(hit_info, aligned, witness)]
+            if (
+                proposals is not None
+                and "required_landmark_joint_assignment_infeasible" in witness["reasons"]
+            ):
+                options += proposals.propose(
+                    hit_ref.mol, aligned, rid, cid, hit_info, witness, similarity, settings
                 )
-            if not reasons:
+                check_deadline()
+            pair_best = None
+            selected_outcome = None
+            outcomes = []
+            for option_index, (option_info, option_pose, option_witness) in enumerate(options):
+                reasons = list(option_witness["reasons"])
+                for name, field in (("hit_shape", "shape"), ("hit_pharmacophore", "pharmacophore")):
+                    if option_info[field] < policy["minimum_scores"][name]:
+                        reasons.append(name + "_below_minimum")
+                score = (
+                    math.sqrt(option_info["shape"] * option_info["pharmacophore"])
+                    * math.exp(-settings.strain_penalty * reference_energy)
+                    * math.exp(-settings.strain_penalty * candidate_energy)
+                )
+                outcome = dict(
+                    status="rejected" if reasons else "feasible",
+                    reasons=reasons,
+                    score=score,
+                    shape=option_info["shape"],
+                    pharmacophore=option_info["pharmacophore"],
+                    polar_recall=option_witness["polar"]["recall"],
+                )
+                outcomes.append(outcome)
+                if reasons and diagnostic is not None:
+                    diagnostic_pair = {**pair, **outcome}
+                    if option_index:
+                        diagnostic_pair["landmark_proposal"] = option_info["landmark_proposal"]
+                    diagnostic.consider(
+                        len(audit["pairs"]) - 1,
+                        diagnostic_pair,
+                        option_pose,
+                        option_witness,
+                        option_info,
+                        candidate_energy,
+                        reference_energy,
+                        hit_tanimoto=tanimoto,
+                    )
+                if not reasons and (pair_best is None or score > pair_best[0]):
+                    pair_best = (score, cid, option_info, option_pose, option_witness)
+                    selected_outcome = outcome
+            pair.update(outcomes[0])
+            if proposals is not None:
+                pair["baseline"] = dict(outcomes[0])
+                pair["proposal_outcomes"] = outcomes[1:]
+            if proposals is not None:
+                proposals.charge(
+                    time.monotonic() - proposal_work_started - (proposals.spent - proposal_spent_before)
+                )
+                if (
+                    pair_best is not None
+                    and "landmark_proposal" in pair_best[2]
+                    and not proposals.available()
+                ):
+                    pair["proposal_selection_status"] = "discarded_after_allowance"
+                    pair_best = None
+            if pair_best is not None:
                 audit["hit_pairs_feasible"] += 1
+                if proposals is not None:
+                    pair.update(selected_outcome)
+                    pair["selected_pose_sha256"] = pair_best[4]["candidate_pose_sha256"]
+                    pair["selected_origin"] = (
+                        "landmark_proposal" if "landmark_proposal" in pair_best[2] else "baseline"
+                    )
+                if best is None or pair_best[0] > best[0]:
+                    best = pair_best
             check_deadline()
-            if reasons:
-                continue
-            if best is None or score > best[0]:
-                best = (score, cid, hit_info, aligned, witness)
+
     if best is None:
         abstain("no_jointly_feasible_hit_pose")
     score, cid, hit_info, aligned, witness = best
@@ -420,6 +488,12 @@ def validate_result(result, product, settings, *, hit, design, similarity):
             raise ValueError("Selective result policy mismatch")
         witness = info["similarity_constraints"]["witness"]
         cid, rid = info["candidate_conformer_id"], info["hit"]["reference_conformer_id"]
+        if "landmark_pose_proposals" in similarity.policy:
+            from .landmark_proposals import validate_selected
+
+            validate_selected(info, aligned, similarity)
+        elif "landmark_proposal" in info["hit"] or "landmark_pose_proposals" in info["pose_selection"]:
+            raise ValueError("Unrequested landmark proposal evidence")
         for role, pose in (("hit_candidate", aligned), ("design_candidate", result[2])):
             if binding(info["selective_pose_evidence"][role]) != binding(pose_binding(pose, cid)):
                 raise ValueError("Retained selective seed geometry does not describe the actual pose")

@@ -285,26 +285,46 @@ def file_manifest(directory):
     }
 
 
+def _unit_count(value):
+    return type(value) is int and value >= 0
+
+
+def _accounting_object(value):
+    return value if isinstance(value, dict) else {}
+
+
 def unit_counts(directory):
+    """Report observed units; omit unknown totals rather than imputing zero.
+
+    A sum requires an explicit collection and a valid count in every relevant
+    row. An empty collection records zero; it does not prove that no unrecorded
+    work occurred before interruption. Other known counters remain usable when
+    a particular count is absent or malformed. Unreadable JSON still follows
+    the attempt's accounting-error path, preserving measured resources and
+    the original attempt status. This cannot recover missing measurements.
+    """
     out = directory / "synthesis"
-    if not (out / "summary.json").is_file():
-        return {}
-    summary = read(out / "summary.json")
+    summary = _accounting_object(read(out / "summary.json")) if (out / "summary.json").is_file() else {}
     counts = {}
     for key in ("scored_products", "proposals", "verified_routes", "designs_used", "designs_supplied"):
-        if isinstance(summary.get(key), int):
+        if _unit_count(summary.get(key)):
             counts[key] = summary[key]
-    for key, value in summary.get("design_selection", {}).get("counts", {}).items():
-        if type(value) is int:
+    selection = _accounting_object(summary.get("design_selection"))
+    for key, value in _accounting_object(selection.get("counts")).items():
+        if _unit_count(value):
             counts["design_" + key] = value
-    for key, value in summary.get("synthesis_evidence_usage", {}).items():
-        if isinstance(value, int):
+    for key, value in _accounting_object(summary.get("synthesis_evidence_usage")).items():
+        if _unit_count(value):
             counts["forward_" + key] = value
-    if "search_reports" in summary:
+    search_reports = summary.get("search_reports")
+    if isinstance(search_reports, list) and all(
+        isinstance(r, dict) and r.get("stage") in ("projection", "expansion") for r in search_reports
+    ):
         for stage in ("projection", "expansion"):
-            reports = [
-                r for r in summary["search_reports"] if r.get("stage") == stage and not r.get("cached", False)
-            ]
+            reports = [r for r in search_reports if r["stage"] == stage]
+            if any(type(r.get("cached", False)) is not bool for r in reports):
+                continue
+            reports = [r for r in reports if not r.get("cached", False)]
             counts[stage + "_search_reports"] = len(reports)
             for key in (
                 "combinations",
@@ -317,23 +337,30 @@ def unit_counts(directory):
                 "combination_truncations",
                 "beam_truncations",
             ):
-                if all(type(r.get(key)) is int for r in reports):
+                if all(_unit_count(r.get(key)) for r in reports):
                     counts[stage + "_" + key] = sum(r[key] for r in reports)
-    refinement = read(out / "refinement.json") if (out / "refinement.json").is_file() else {}
-    counts["refinement_candidate_conformer_requests"] = sum(
-        r.get("candidate_conformer_requests", 0) for r in refinement.get("candidates", [])
+    refinement = (
+        _accounting_object(read(out / "refinement.json")) if (out / "refinement.json").is_file() else {}
     )
-    if "limit" in summary.get("refinement_budget", {}):
-        counts["refinement_candidate_conformer_limit"] = summary["refinement_budget"]["limit"]
+    candidates = refinement.get("candidates")
+    if isinstance(candidates, list) and all(
+        isinstance(r, dict) and _unit_count(r.get("candidate_conformer_requests")) for r in candidates
+    ):
+        counts["refinement_candidate_conformer_requests"] = sum(
+            r["candidate_conformer_requests"] for r in candidates
+        )
+    limit = _accounting_object(summary.get("refinement_budget")).get("limit")
+    if _unit_count(limit):
+        counts["refinement_candidate_conformer_limit"] = limit
     proposals = out / "proposals.json"
     if proposals.is_file():
-        data = read(proposals)
-        returned = data.get("proposals", [])
-        counts["returned_proposal_records"] = len(returned)
-        tokens = [r.get("sampling", {}).get("generated_tokens") for r in returned]
-        counts["returned_proposals_with_token_counts"] = sum(type(n) is int for n in tokens)
-        if all(type(n) is int and n >= 0 for n in tokens):
-            counts["returned_proposal_generated_tokens"] = sum(tokens)
+        returned = _accounting_object(read(proposals)).get("proposals")
+        if isinstance(returned, list) and all(isinstance(r, dict) for r in returned):
+            counts["returned_proposal_records"] = len(returned)
+            tokens = [_accounting_object(r.get("sampling")).get("generated_tokens") for r in returned]
+            counts["returned_proposals_with_token_counts"] = sum(_unit_count(n) for n in tokens)
+            if all(_unit_count(n) for n in tokens):
+                counts["returned_proposal_generated_tokens"] = sum(tokens)
     return counts
 
 
@@ -495,7 +522,8 @@ def attempt(method, query, seed, output, plan, termination, *, bound_catalog=Non
                     )
                 if phase in phases and phases[phase].get("response"):
                     response = phases[phase]["response"]
-                    result["costs"][phase + "_units"]["returned_evaluations"] = response["evaluations"]
+                    if _unit_count(response.get("evaluations")):
+                        result["costs"][phase + "_units"]["returned_evaluations"] = response["evaluations"]
         write_json(
             output / "phases.json",
             {
