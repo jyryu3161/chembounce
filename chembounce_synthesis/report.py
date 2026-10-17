@@ -521,9 +521,12 @@ def _seed_row(trial):
 
 def _forward_records(prediction, product):
     """Join recorded strict hypotheses; never decode tokens or normalize molecules."""
-    if "predictions" not in prediction:
+    raw = prediction.get("raw", {})
+    _require(isinstance(raw, dict), "Malformed raw forward evidence")
+    source = prediction if "predictions" in prediction else raw
+    if "predictions" not in source:
         return  # Legacy detail absence is displayed explicitly, not reconstructed.
-    hypotheses = _records(prediction, "predictions")
+    hypotheses = _records(source, "predictions")
     _require(bool(hypotheses), "Matched forward support has no recorded hypotheses")
     ranks, matches = [], []
     for item in hypotheses:
@@ -543,8 +546,7 @@ def _forward_records(prediction, product):
     _equal(ranks, list(range(1, len(hypotheses) + 1)), "forward hypothesis rank order")
     _require(bool(matches), "No completed recorded hypothesis matches the exact step product")
     _equal(prediction["matched_rank"], min(matches), "forward matched hypothesis rank")
-    raw = prediction.get("raw")
-    if isinstance(raw, dict) and "predictions" in raw:
+    if "predictions" in prediction and "predictions" in raw:
         _equal(_binding(raw["predictions"]), _binding(hypotheses), "raw/reported forward hypotheses")
 
 
@@ -1160,17 +1162,25 @@ def _route_html(route):
                 ),
             ]
             prediction = _mapping(step.get("forward_prediction"))
-            if "predictions" not in prediction:
+            raw = _mapping(prediction.get("raw"))
+            hypotheses = prediction.get("predictions", raw.get("predictions", UNKNOWN))
+            if "raw" in prediction and not isinstance(prediction["raw"], dict):
+                parts.append(
+                    "<p>Raw forward evidence is malformed; hypothesis detail availability is unknown.</p>"
+                )
+            elif "predictions" not in prediction and "predictions" not in raw:
                 parts.append(
                     "<p>Forward hypothesis details not recorded; any matched status is a saved claim only.</p>"
+                )
+            elif "predictions" not in prediction:
+                parts.append(
+                    "<p>Forward hypothesis details retained in raw evidence; reported list absent.</p>"
                 )
             parts += [
                 "<h5>Forward support (recorded)</h5>",
                 _fields(
-                    {
-                        k: prediction.get(k, UNKNOWN)
-                        for k in ("status", "matched_rank", "matching_policy", "predictions")
-                    }
+                    {k: prediction.get(k, UNKNOWN) for k in ("status", "matched_rank", "matching_policy")}
+                    | {"predictions": hypotheses}
                 ),
                 "<h5>Conditions and observations</h5>",
                 _fields(

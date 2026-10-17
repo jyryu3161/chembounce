@@ -1140,8 +1140,11 @@ When strict forward hypotheses are recorded, their completed exact product and
 lowest matching rank must agree with the step's saved match claim. Duplicate ranks,
 contradictory raw/reported hypothesis lists and malformed completion flags are
 diagnostic. This compares saved strings only; it does not decode tokens, normalize
-SMILES or rerun a predictor. Older records without hypothesis details explicitly
-display that the match is a saved claim only, rather than inventing missing evidence.
+SMILES or rerun a predictor. If only the raw record retains hypotheses, the report
+validates and displays that list with its source labelled. Explicit malformed raw
+records or hypothesis lists remain diagnostic. Only when neither location contains
+hypothesis details does the report display that the match is a saved claim only,
+rather than inventing missing evidence.
 
 The offline report also reads selected `hit_identity_comparison` records and the
 saved manifest `identity_comparison_policy`. It displays the producer-recorded

@@ -1557,3 +1557,57 @@ def test_raw_forward_types_cannot_borrow_equal_python_values(tmp_path, data, key
     view = r.build_report(tmp_path)
     assert view["artifact_consistency"] == "incomplete_or_inconsistent"
     assert "raw/reported forward hypotheses" in view["candidates"][0]["issues"][0]
+
+
+@pytest.mark.parametrize(
+    "case", ["valid", "wrong_product", "wrong_rank", "incomplete", "malformed", "null", "empty"]
+)
+def test_raw_only_forward_details_are_checked_and_displayed(tmp_path, data, case):
+    prediction = detailed_forward(data)
+    del prediction["predictions"]
+    hypotheses = prediction["raw"]["predictions"]
+    if case == "wrong_product":
+        hypotheses[0]["product"] = "CC"
+    elif case == "wrong_rank":
+        prediction["matched_rank"] = 2
+    elif case == "incomplete":
+        hypotheses[0].update(complete=False, product=None)
+    elif case in ("malformed", "null", "empty"):
+        prediction["raw"]["predictions"] = {"malformed": "not a list", "null": None, "empty": []}[case]
+    save(tmp_path, data)
+    before = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+    assert r.main([str(tmp_path)]) == (0 if case == "valid" else 3)
+    output = (tmp_path / "review.html").read_text()
+    assert "Forward hypothesis details retained in raw evidence" in output
+    assert "Forward hypothesis details not recorded" not in output
+    assert "predictions" in output
+    if case == "valid":
+        assert "complete" in output and PRODUCT in output
+    else:
+        assert "Unconfirmed recorded claim" in output
+    assert all((tmp_path / name).read_bytes() == value for name, value in before.items())
+
+
+@pytest.mark.parametrize("raw", [None, [], "invalid", False, 3])
+@pytest.mark.parametrize("reported", [False, True])
+def test_malformed_raw_container_is_not_missing_detail(tmp_path, data, raw, reported):
+    prediction = detailed_forward(data)
+    if not reported:
+        del prediction["predictions"]
+    prediction["raw"] = raw
+    save(tmp_path, data)
+    view = r.write_report(tmp_path)
+    assert view["artifact_consistency"] == "incomplete_or_inconsistent"
+    output = (tmp_path / "review.html").read_text()
+    assert "Raw forward evidence is malformed" in output
+    assert "Forward hypothesis details not recorded" not in output
+
+
+@pytest.mark.parametrize("raw", [{}, {"token_ids": [1, 2]}])
+def test_legacy_both_locations_without_hypotheses_remains_explicit(tmp_path, data, raw):
+    prediction = data["routes.json"]["routes"][0]["synthesis_evidence"]["steps"][0]["forward_prediction"]
+    prediction["raw"] = raw
+    save(tmp_path, data)
+    view = r.write_report(tmp_path)
+    assert view["artifact_consistency"] == "consistent_recorded_bundle"
+    assert "Forward hypothesis details not recorded" in (tmp_path / "review.html").read_text()
