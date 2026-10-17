@@ -353,6 +353,9 @@ def analyze(plan, collection):
         "attempts": [],
     }
     target_estimates, samples = {}, {}
+    # Shared draws make an exact ordered target vector sufficient within this call.
+    # At most three vectors per method; immutable samples never escape the analysis.
+    sample_cache = {}
     for method in plan["methods"]:
         method_rows = [row for row in rows if row["method_id"] == method]
         estimates = {}
@@ -360,11 +363,13 @@ def analyze(plan, collection):
             estimates[key], by_target = _aggregate(method_rows, values, key)
             if key in ENDPOINTS:
                 target_estimates[method, key] = [by_target[t] for t in targets]
-                samples[method, key] = (
-                    [_mean(by_target[targets[i]] for i in draw) for draw in draws_list]
-                    if len(targets) >= 2
-                    else []
-                )
+                if len(targets) >= 2:
+                    vector = tuple(target_estimates[method, key])
+                    if vector not in sample_cache:
+                        sample_cache[vector] = tuple(_mean(vector[i] for i in draw) for draw in draws_list)
+                    samples[method, key] = sample_cache[vector]
+                else:
+                    samples[method, key] = ()
                 estimates[key]["interval"] = _interval(samples[method, key]) if len(targets) >= 2 else None
         stages = Counter(f["stage"] for row in method_rows for f in row["failures"])
         stage_attempts = Counter(
