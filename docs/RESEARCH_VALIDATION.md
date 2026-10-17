@@ -776,4 +776,6 @@ replacement libraries. The runner still pins all required source and assets and
 uses the existing fixed budgets. Selected and empty outcomes traverse the same
 selective collector validation, including all three seed witnesses and JSON,
 TSV and all four SDF exports. Legacy None/v1, protocol v2 -> profile v2 and protocol
-v3 -> profile v5 bindings remain unchanged; the recommendation default remains v5.
+v3 -> profile v5 bindings remain unchanged. The recommendation default is v7,
+which retains v5's effective policy; these historical benchmark bindings do not
+follow the default or admit v7 implicitly.
