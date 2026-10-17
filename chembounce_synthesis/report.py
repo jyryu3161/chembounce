@@ -4,6 +4,7 @@ Consistency checks are joins and saved-value comparisons, not scientific validat
 No supplied path, SMILES or artifact text is executed or used to load external data.
 """
 
+import base64
 import argparse
 import copy
 import hashlib
@@ -15,6 +16,8 @@ from pathlib import Path
 import statistics
 import stat
 from urllib.parse import quote
+
+from . import review_display as display
 
 JSON_FILES = (
     "manifest.json",
@@ -85,7 +88,7 @@ def _read(path, root):
 def _load(root):
     docs, inventory, issues, observed = {}, {}, [], {}
     total = 0
-    for name in JSON_FILES + LINK_FILES:
+    for name in JSON_FILES + LINK_FILES + (display.ARTIFACT,):
         path = root / name
         observed[name] = None
         if not path.exists() and not path.is_symlink():
@@ -100,7 +103,7 @@ def _load(root):
             if total > MAX_TOTAL_BYTES:
                 raise ValueError("Bundle exceeds 256 MiB limit")
             inventory[name] = {"sha256": sha, "bytes": len(data)}
-            if name in JSON_FILES:
+            if name in JSON_FILES or name == display.ARTIFACT:
                 value = json.loads(data, object_pairs_hook=_object)
                 _finite_tree(value)
                 if (
@@ -937,7 +940,7 @@ def _assemble(docs, inventory, issues):
     view = {
         "schema_version": 1,
         "artifacts": inventory,
-        "issues": list(issues),
+        "issues": [i for i in issues if not i.startswith(display.ARTIFACT + ":")],
         "candidates": [],
         "manifest": docs.get("manifest.json", {}),
         "summary": docs.get("summary.json", {}),
@@ -1009,6 +1012,31 @@ def _assemble(docs, inventory, issues):
                 )
                 candidate["issues"].extend(candidate["identity_comparison"]["issues"])
                 view["candidates"].append(candidate)
+    # Optional visuals are validated independently, after all existing checks.
+    descriptor = _mapping(view["manifest"]).get("review_visuals")
+    visuals = [
+        {"status": "not_exported", "reason": "Legacy bundle: display evidence not exported"}
+        for _ in view["candidates"]
+    ]
+    view["visual_issues"] = [i for i in issues if i.startswith(display.ARTIFACT + ":")]
+    if "review_visuals" in _mapping(view["manifest"]):
+        try:
+            visuals = display.validate(
+                docs.get(display.ARTIFACT),
+                descriptor,
+                inventory.get(display.ARTIFACT),
+                [c["row"] for c in view["candidates"]],
+                docs.get("refinement.json", {}).get("candidates", []),
+                _mapping(view["manifest"]).get("hit"),
+            )
+        except (KeyError, TypeError, ValueError, AttributeError, OverflowError) as exc:
+            message = f"Saved display metadata inconsistent: {exc}"
+            view["visual_issues"].append(message)
+            visuals = [{"status": "inconsistent", "reason": message} for _ in view["candidates"]]
+    elif display.ARTIFACT in inventory:
+        view["visual_issues"].append("Unadvertised display artifact ignored")
+    for candidate, visual in zip(view["candidates"], visuals):
+        candidate["visuals"] = copy.deepcopy(visual)
     view["policy"] = _mapping(view["policy"])
     view["artifact_consistency"] = (
         "consistent_recorded_bundle"
@@ -1194,18 +1222,76 @@ def _route_html(route):
     return "".join(parts)
 
 
+def _visual_html(visual, index):
+    if visual.get("status") != "available":
+        return (
+            "<p>Structure display: "
+            + _escape(visual.get("status", "not_exported"))
+            + " — "
+            + _escape(visual.get("reason", "not recorded"))
+            + "</p>"
+        )
+    parts = ["<div class='depictions'>"]
+    for role, label in (("original_hit", "Original hit"), ("final_product", "Regenerated final product")):
+        image = visual["depictions"][role]
+        parts.append("<figure><figcaption>" + label + " — producer 2D depiction</figcaption>")
+        if image["status"] == "available":
+            parts.append(
+                "<img alt='"
+                + label
+                + " exact structure' width='480' height='320' src='data:image/png;base64,"
+                + _escape(image["png_base64"])
+                + "'>"
+            )
+        else:
+            parts.append("<p>Unavailable: " + _escape(image["reason"]) + "</p>")
+        parts.append("</figure>")
+    parts.append("</div>")
+    if visual["seeds"]:
+        payload = json.dumps(
+            {k: visual[k] for k in ("seeds", "representative_seed")}, allow_nan=False, separators=(",", ":")
+        )
+        parts.append(
+            "<section class='pose-viewer' data-payload='"
+            + html.escape(payload, quote=True)
+            + "'><h3>Saved original-hit pose overlap</h3><p>Blue: original hit; magenta: final product. One saved seed and shared camera. This view does not realign, rescore or validate stereochemistry; use the 2D depiction and exact SMILES for structure review.</p>"
+        )
+        parts.append(f"<label for='pose-seed-{index}'>Saved seed</label><select id='pose-seed-{index}'>")
+        representative = visual["representative_seed"]
+        if representative not in [s["seed"] for s in visual["seeds"]]:
+            parts.append(
+                "<option selected value='"
+                + _escape(representative)
+                + "'>Representative not retained</option>"
+            )
+        for seed in visual["seeds"]:
+            selected = " selected" if seed["seed"] == representative else ""
+            parts.append(
+                f"<option{selected} value='{_escape(seed['seed'])}'>{_escape(seed['seed'])} — {_escape(seed['pair']['status'])}</option>"
+            )
+        parts.append(
+            "</select><label><input type='checkbox' checked>Original hit</label><label><input type='checkbox' checked>Final product</label><button type='button' data-action='reset'>Reset camera</button><button type='button' data-zoom='1.2'>Zoom in</button><button type='button' data-zoom='.833333333333'>Zoom out</button><canvas tabindex='0' aria-label='Shared saved-pose viewer: arrow keys rotate, plus and minus zoom, zero resets'></canvas><p>Drag/touch to rotate; shift-drag to pan; wheel or buttons to zoom. Keyboard: arrows, +/−, 0. Bonds show connectivity, not stereochemical certification.</p><p class='pose-note' role='status'></p><noscript>Interactive camera unavailable without JavaScript. Saved seed evidence remains in the tables below.</noscript></section>"
+        )
+    else:
+        parts.append("<p>Saved 3D overlap unavailable: no retained selective pose trials.</p>")
+    return "".join(parts)
+
+
 def render_html(view, *, artifact_links=None):
     """Render a build_report view. Caller links are restricted to approved basenames."""
     links = artifact_links or {}
     for name, href in links.items():
-        _require(name in JSON_FILES + LINK_FILES and href == quote(name), "Unsafe artifact link")
+        _require(
+            name in JSON_FILES + LINK_FILES + (display.ARTIFACT,) and href == quote(name),
+            "Unsafe artifact link",
+        )
     policy = _mapping(view.get("policy"))
     profile = _mapping(policy.get("calibration"))
     bound = _mapping(_mapping(policy.get("similarity_constraints")).get("policy"))
     minimum = _mapping(policy.get("minimum_scores"))
     summary = view["summary"]
     parts = [
-        "<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width'><title>Candidate review</title><style>body{font:16px system-ui,sans-serif;max-width:1100px;margin:2rem auto;padding:0 1rem;color:#172332}table{border-collapse:collapse;width:100%;margin:1rem 0;table-layout:fixed}th,td{border:1px solid #cbd3dc;padding:.5rem;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eef2f6}article{border-top:3px solid #637a90;margin-top:2rem;padding-top:1rem}.notice{background:#fff4d6;padding:1rem}code{overflow-wrap:anywhere}details{border:1px solid #cbd3dc;padding:.7rem;margin:1rem 0}summary{cursor:pointer;font-weight:600}@media(max-width:600px){body{font-size:14px}th,td{padding:.3rem}.scroll{overflow-x:auto}.scroll table{min-width:520px}}</style></head><body><h1>Candidate review</h1>",
+        "<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width'><title>Candidate review</title><style>body{font:16px system-ui,sans-serif;max-width:1100px;margin:2rem auto;padding:0 1rem;color:#172332}table{border-collapse:collapse;width:100%;margin:1rem 0;table-layout:fixed}th,td{border:1px solid #cbd3dc;padding:.5rem;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eef2f6}article{border-top:3px solid #637a90;margin-top:2rem;padding-top:1rem}.notice{background:#fff4d6;padding:1rem}code{overflow-wrap:anywhere}.depictions{display:flex;flex-wrap:wrap;gap:1rem}.depictions figure{margin:0;flex:1;min-width:220px}.depictions img{width:100%;max-width:480px;height:auto}.pose-viewer canvas{width:100%;height:360px;touch-action:none;display:block}.pose-viewer button,.pose-viewer select{padding:.5rem;margin:.3rem}.pose-note{overflow-wrap:anywhere;font-size:.85rem}details{border:1px solid #cbd3dc;padding:.7rem;margin:1rem 0}summary{cursor:pointer;font-weight:600}@media(max-width:600px){body{font-size:14px}th,td{padding:.3rem}.scroll{overflow-x:auto}.scroll table{min-width:520px}}</style></head><body><h1>Candidate review</h1>",
         "<p class='notice'>Workflow-recorded evidence, not scientific revalidation. Computational route support does not establish experimental synthesis, activity, reaction conditions, supplier SKU or current stock.</p>",
         _table(
             [
@@ -1222,6 +1308,8 @@ def render_html(view, *, artifact_links=None):
     ]
     for issue in view["issues"]:
         parts.append(f"<p class='notice'>{_escape(issue)}</p>")
+    for issue in view.get("visual_issues", []):
+        parts.append(f"<p class='notice'>{_escape(issue)}</p>")
     for warning in _mapping(view.get("identity_descriptor")).get("warnings", []):
         parts.append(f"<p class='notice'>{_escape(warning)}</p>")
     for index, candidate in enumerate(view["candidates"], 1):
@@ -1232,6 +1320,7 @@ def render_html(view, *, artifact_links=None):
         consistent = view["artifact_consistency"] == "consistent_recorded_bundle"
         parts += [
             f"<article><h2>Candidate {index}</h2>",
+            _visual_html(candidate.get("visuals", {}), index),
             _table(
                 [
                     (
@@ -1390,8 +1479,22 @@ def render_html(view, *, artifact_links=None):
         parts.append(
             f"<p>{label} — {_escape(item['bytes'])} bytes — SHA256 <code>{item['sha256']}</code></p>"
         )
-    parts.append("</details></body></html>\n")
-    return "".join(parts)
+    parts.append("</details>")
+    if any(
+        c.get("visuals", {}).get("status") == "available" and c["visuals"].get("seeds")
+        for c in view["candidates"]
+    ):
+        script = (Path(__file__).parent / "data" / "review_viewer.js").read_text(encoding="utf-8")
+        parts.append("<script>" + script + "</script>")
+    parts.append("</body></html>\n")
+    output = "".join(parts)
+    style = output.split("<style>", 1)[1].split("</style>", 1)[0]
+    hashes = lambda text: base64.b64encode(hashlib.sha256(text.encode()).digest()).decode()
+    scripts = "'sha256-" + hashes(script) + "'" if "script" in locals() else "'none'"
+    csp = f"default-src 'none'; img-src data:; style-src 'sha256-{hashes(style)}'; script-src {scripts}; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    return output.replace(
+        "<head>", '<head><meta http-equiv="Content-Security-Policy" content="' + csp + '">', 1
+    )
 
 
 def _recall_text(value, candidate):
