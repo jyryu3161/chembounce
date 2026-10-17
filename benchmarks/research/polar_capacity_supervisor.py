@@ -5,6 +5,7 @@ The watchdog/cleanup interval never enlarges the successful work allocation.
 """
 
 import ctypes
+import errno
 import hashlib
 import json
 import os
@@ -44,8 +45,12 @@ def identity(pid):
             "session": int(fields[3]),
             "state": fields[0],
         }
-    except FileNotFoundError:
-        return None
+    except OSError as exc:
+        # procfs can report either error when a process exits during the read.
+        # Permission and unexpected I/O errors remain supervision failures.
+        if exc.errno in (errno.ENOENT, errno.ESRCH):
+            return None
+        raise
 
 
 def same(left, right):
