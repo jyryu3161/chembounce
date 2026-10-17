@@ -66,6 +66,11 @@ hashes, route/result hashes, final product and node bindings. It does not replay
 reaction rules, load a catalog or a model, generate conformers, inspect other
 campaigns, validate scores or requalify the recommendation. Unsupported/missing
 saved leaf bindings fail explicitly; no live catalog lookup fills the gap.
+All supplied verification leaf `node_id` values must agree with graph catalog
+IDs, and supplied nested audit `catalog_record.smiles` must agree with the outer
+leaf and verification identities. Older artifacts genuinely missing those
+optional fields use catalog-ID/outer-identity fallback and list each absence in
+`optional_leaf_fields_absent`; a provided contradictory or null field rejects.
 
 Physical context is absent unless supplied with `--context context.json`.
 For a product lookup the file contains one context object; for a saved route it
@@ -136,7 +141,9 @@ change shared process/environment limits. No downloaded Python is executed.
 - Unspecified potential stereo, nonabsolute enhanced stereo, unsupported axial
   stereo, conflicting SMILES/MOLBLOCK/CXSMILES or unsupported identity-bearing
   identifiers (including InChI/XYZ/sequence) abstain. Names/accessions are retained
-  as unverified descriptions and never resolved to structures.
+  as unverified descriptions and never resolved to structures. Polymer/substance
+  groups, query atoms/bonds and unspecified or unsupported bond types also abstain
+  before ordinary-SMILES serialization; a repeat unit cannot become ethane.
 - Compare explicitly reported REACTANT instances as a multiset; quantities are
   separate. Unknown roles make the complete inventory unresolved. An internal
   standard in the outcomes list is not a product. All outcomes remain separate.

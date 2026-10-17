@@ -103,11 +103,19 @@ def _saved_queries(run_dir, route_id, contexts):
         "saved_blocks",
         "Recorded leaf objects required",
     )
-    block_lookup = {}
-    for block in blocks:
+    block_lookup, explicit_nodes, optional_leaf_fields_absent = {}, set(), []
+    graph_leaves = {
+        ident: node["building_block_id"] for ident, node in by_id.items() if "building_block_id" in node
+    }
+    records.require(
+        all(isinstance(bid, str) and bid for bid in graph_leaves.values()),
+        "saved_blocks",
+        "Graph leaf catalog IDs must be nonempty strings",
+    )
+    for index, block in enumerate(blocks):
         bid, smiles = block.get("id"), block.get("smiles")
         records.require(
-            isinstance(bid, str) and isinstance(smiles, str),
+            isinstance(bid, str) and bid in graph_leaves.values() and isinstance(smiles, str),
             "saved_blocks",
             "Recorded leaf identity required",
         )
@@ -116,6 +124,19 @@ def _saved_queries(run_dir, route_id, contexts):
             "saved_blocks",
             "Conflicting saved catalog IDs",
         )
+        if "node_id" in block:
+            node_id = block["node_id"]
+            records.require(
+                isinstance(node_id, str)
+                and node_id in graph_leaves
+                and node_id not in explicit_nodes
+                and graph_leaves[node_id] == bid,
+                "saved_blocks",
+                "Verification leaf node/catalog binding differs",
+            )
+            explicit_nodes.add(node_id)
+        else:
+            optional_leaf_fields_absent.append(f"verification/building_blocks/{index}/node_id")
         block_lookup[bid] = smiles
     # Strict support also records per-node leaves; usable when legacy verification omits leaf records.
     support = saved.get("synthesis_evidence", {})
@@ -136,12 +157,20 @@ def _saved_queries(run_dir, route_id, contexts):
         records.require(
             isinstance(ident, str)
             and ident not in per_node
-            and ident in by_id
+            and ident in graph_leaves
             and isinstance(block.get("catalog_record"), dict)
             and block["catalog_record"].get("id") == by_id[ident].get("building_block_id"),
             "saved_blocks",
             "Audited leaf/node binding differs",
         )
+        if "smiles" in block["catalog_record"]:
+            records.require(
+                _same(block.get("smiles"), block["catalog_record"]["smiles"]),
+                "saved_blocks",
+                "Audited outer and nested catalog leaf identities disagree",
+            )
+        else:
+            optional_leaf_fields_absent.append(f"route_audit/building_blocks/{ident}/catalog_record/smiles")
         per_node[ident] = block.get("smiles")
     visiting, visited, products, queries = set(), set(), {}, []
 
@@ -207,6 +236,7 @@ def _saved_queries(run_dir, route_id, contexts):
         "saved_route_sha256": records.binding(saved),
         "saved_result_sha256": records.binding(result),
         "query_contexts_sha256": records.binding(contexts),
+        "optional_leaf_fields_absent": optional_leaf_fields_absent,
         "scope": "Saved-value graph/final-product consistency only; no rule replay, catalog lookup, "
         "score validation, eligibility validation or experimental authentication",
     }

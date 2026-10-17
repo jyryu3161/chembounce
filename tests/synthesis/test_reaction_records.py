@@ -590,3 +590,118 @@ def test_malformed_saved_documents_fail_explicitly(bundle, tmp_path, value):
     save_json(run / "routes.json", value)
     with pytest.raises(r.RecordError, match="saved_documents"):
         report.match_saved_route(bundle, run, "synthetic-test-route")
+
+
+def unsupported_material(kind):
+    from rdkit import Chem
+
+    if kind == "polymer":
+        mol = Chem.MolFromSmiles("CC")
+        group = Chem.CreateMolSubstanceGroup(mol, "SRU")
+        group.AddAtomWithIdx(0)
+        group.AddAtomWithIdx(1)
+        group.SetProp("LABEL", "n")
+        group.SetProp("CONNECT", "HT")
+        return "MOLBLOCK", Chem.MolToMolBlock(mol)
+    if kind == "query_atom":
+        return "MOLBLOCK", Chem.MolToMolBlock(Chem.MolFromSmarts("[#6,#7]-C"))
+    if kind == "query_bond":
+        return "MOLBLOCK", Chem.MolToMolBlock(Chem.MolFromSmarts("[#6]~[#6]"))
+    return "SMILES", "C~C"
+
+
+@pytest.mark.parametrize("kind", ["polymer", "query_atom", "query_bond", "unspecified_bond"])
+def test_unsupported_material_cannot_be_exact(kind):
+    identifier_type, value = unsupported_material(kind)
+    outcome = r.identity([{"type": identifier_type, "value": value}])
+    assert outcome["key"] is None and outcome["status"] == "unassessable"
+    assert any("unsupported_" in reason for reason in outcome["reasons"])
+
+
+@pytest.mark.parametrize("kind", ["polymer", "query_atom", "query_bond", "unspecified_bond"])
+def test_raw_backed_unsupported_material_never_matches_ethane(source, tmp_path, kind):
+    identifier_type, value = unsupported_material(kind)
+
+    def mutate(message):
+        product = message.outcomes[0].products[1]
+        product.ClearField("identifiers")
+        identifier = product.identifiers.add()
+        identifier.type = (
+            identifier.DESCRIPTOR.fields_by_name["type"].enum_type.values_by_name[identifier_type].number
+        )
+        identifier.value = value
+
+    target = synthetic_source(tmp_path, source, mutate)
+    bundle = tmp_path / "bundle"
+    r.import_snapshot(target, bundle)
+    record = r.load_bundle(bundle)["records"][0]
+    assert record["derived"]["products"][1]["identity"]["key"] is None
+    outcome = r.match_product(bundle, "CC")["result"]
+    assert not outcome["matches"]
+    assert outcome["status"] == "search_incomplete_no_assessable_match"
+    assert any(item["path"] == "/outcomes/0/products/1" for item in outcome["unassessable_products"])
+
+
+def test_concrete_explicit_hydrogens_still_round_trip():
+    from rdkit import Chem
+
+    mol = Chem.AddHs(Chem.MolFromSmiles("F[C@H](Cl)Br"))
+    identifier = {"type": "MOLBLOCK", "value": Chem.MolToMolBlock(mol)}
+    assert r.identity([identifier])["key"] == r.smiles_identity("F[C@H](Cl)Br")["key"]
+
+
+@pytest.mark.parametrize(
+    "mutation", ["swapped_node_ids", "nested_catalog_smiles", "nested_catalog_id", "duplicate_node_id"]
+)
+def test_all_provided_saved_leaf_layers_must_agree(bundle, tmp_path, mutation):
+    run = tmp_path / "run"
+    route = make_saved_run(run)
+    blocks = route["verification"]["building_blocks"]
+    blocks[0]["node_id"], blocks[1]["node_id"] = "a", "b"
+    route["synthesis_evidence"] = {
+        "route_audit": {
+            "building_blocks": [
+                {
+                    "node_id": "a",
+                    "smiles": REACTANTS[0],
+                    "catalog_record": {"id": "a", "smiles": REACTANTS[0]},
+                },
+                {
+                    "node_id": "b",
+                    "smiles": REACTANTS[1],
+                    "catalog_record": {"id": "b", "smiles": REACTANTS[1]},
+                },
+            ]
+        }
+    }
+    audit = route["synthesis_evidence"]["route_audit"]["building_blocks"]
+    if mutation == "swapped_node_ids":
+        blocks[0]["node_id"], blocks[1]["node_id"] = "b", "a"
+    elif mutation == "nested_catalog_smiles":
+        audit[0]["catalog_record"]["smiles"] = "CCC"
+    elif mutation == "nested_catalog_id":
+        audit[0]["catalog_record"]["id"] = "b"
+    else:
+        blocks[1]["node_id"] = "a"
+    save_json(run / "routes.json", {"routes": [route]})
+    with pytest.raises(r.RecordError, match="saved_blocks"):
+        report.match_saved_route(bundle, run, "synthetic-test-route")
+
+
+def test_legacy_leaf_absence_is_visible_but_explicit_empty_is_not_absence(bundle, tmp_path):
+    run = tmp_path / "run"
+    route = make_saved_run(run)
+    route["synthesis_evidence"] = {
+        "route_audit": {
+            "building_blocks": [{"node_id": "a", "smiles": REACTANTS[0], "catalog_record": {"id": "a"}}]
+        }
+    }
+    save_json(run / "routes.json", {"routes": [route]})
+    value = report.match_saved_route(bundle, run, "synthetic-test-route")
+    missing = value["saved_run_binding"]["optional_leaf_fields_absent"]
+    assert "verification/building_blocks/0/node_id" in missing
+    assert "route_audit/building_blocks/a/catalog_record/smiles" in missing
+    route["synthesis_evidence"]["route_audit"]["building_blocks"][0]["catalog_record"]["smiles"] = None
+    save_json(run / "routes.json", {"routes": [route]})
+    with pytest.raises(r.RecordError, match="saved_blocks"):
+        report.match_saved_route(bundle, run, "synthetic-test-route")

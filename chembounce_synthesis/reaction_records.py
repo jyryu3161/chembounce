@@ -308,6 +308,39 @@ def _wire_metadata(message):
     return presence, floats
 
 
+def _material_semantics(mol):
+    """Ordinary SMILES cannot certify polymer, query or unspecified-bond material states."""
+    from rdkit import Chem
+
+    require(
+        not Chem.GetMolSubstanceGroups(mol),
+        "unsupported_substance_groups",
+        "SGroup semantics cannot be flattened to an exact small-molecule identity",
+    )
+    require(
+        not any(atom.HasQuery() for atom in mol.GetAtoms()),
+        "unsupported_atom_query",
+        "Query atoms do not select a concrete material state",
+    )
+    allowed_bonds = {
+        Chem.BondType.SINGLE,
+        Chem.BondType.DOUBLE,
+        Chem.BondType.TRIPLE,
+        Chem.BondType.AROMATIC,
+        Chem.BondType.DATIVE,
+    }
+    require(
+        not any(bond.HasQuery() for bond in mol.GetBonds()),
+        "unsupported_bond_query",
+        "Query bonds do not select a concrete material state",
+    )
+    require(
+        all(bond.GetBondType() in allowed_bonds for bond in mol.GetBonds()),
+        "unsupported_bond_semantics",
+        "Unspecified or unsupported bond type",
+    )
+
+
 def identity(identifiers):
     """Exact full-material identity; missing/ambiguous stereo and conflicting IDs abstain."""
     from rdkit import Chem
@@ -337,13 +370,25 @@ def identity(identifiers):
             require(
                 isinstance(value, str) and len(value) <= MAX_RECORD, "structure_bound", "Identifier too large"
             )
+            if kind == "MOLBLOCK":
+                # Refuse SGroup-bearing files even if a permissive parser would discard a malformed group.
+                require(
+                    not re.search(r"(?m)^M\s+(?:STY\b|V30\s+BEGIN\s+SGROUP\b)", value),
+                    "unsupported_substance_groups",
+                    "MOLBLOCK declares substance groups",
+                )
             mol = (
                 parse_absolute_smiles(value)
                 if kind in {"SMILES", "CXSMILES"}
-                else Chem.MolFromMolBlock(value, sanitize=True, removeHs=True, strictParsing=True)
+                else Chem.MolFromMolBlock(value, sanitize=True, removeHs=False, strictParsing=True)
             )
             require(mol is not None and mol.GetNumAtoms() > 0, "invalid_structure", kind)
+            _material_semantics(mol)
             require_absolute_stereo(mol)
+            if kind == "MOLBLOCK":
+                mol = Chem.RemoveHs(mol)
+                _material_semantics(mol)
+                require_absolute_stereo(mol)
             require(not any(a.GetAtomicNum() == 0 for a in mol.GetAtoms()), "dummy_atoms", kind)
             potential = Chem.FindPotentialStereo(mol)
             require(not any(str(s.specified) != "Specified" for s in potential), "unspecified_stereo", kind)
