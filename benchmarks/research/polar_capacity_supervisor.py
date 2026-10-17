@@ -382,6 +382,8 @@ def supervise(
                 # /proc scans and RSS sampling can overrun a polling interval.
                 # Never make escalation decisions with the pre-scan timestamp.
                 now = clock()
+                if interrupted and reason is None:
+                    reason = "interrupted"
                 if process.returncode is not None and not records:
                     break
                 if now - t0 >= watchdog and reason is None:
@@ -438,6 +440,10 @@ def supervise(
         receipt["terminal_sha256"] = (
             hashlib.sha256((output / "terminal.json").read_bytes()).hexdigest() if durable else None
         )
+        # Account for a signal observed after the loop check, including the
+        # boundary where the original handlers are restored before cleanup.
+        if interrupted and reason is None:
+            reason = "interrupted"
         receipt.update(
             status=terminal_status(
                 reason, process.returncode if process else None, elapsed, allocation, cleaned, durable

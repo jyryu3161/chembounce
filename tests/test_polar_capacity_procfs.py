@@ -212,3 +212,82 @@ def test_boundary_after_reap_forces_fresh_scan(tmp_path, monkeypatch, boundary):
             "watchdog": "watchdog_timeout",
         }[boundary]
     )
+
+
+@pytest.mark.parametrize(
+    "boundary,resource_error",
+    [(None, False)]
+    + [(boundary, error) for boundary in ("reap", "post_reap_scan", "restore") for error in (False, True)],
+)
+def test_interrupt_at_success_boundary_is_retained(tmp_path, monkeypatch, boundary, resource_error):
+    """Actual supervise function with inert process and signal-delivery seams."""
+    from types import SimpleNamespace
+    import signal
+
+    output = tmp_path / "child"
+    leader = {"pid": 123, "start_ticks": 42, "state": "Z"}
+    original_handlers = {signal.SIGINT: object(), signal.SIGTERM: object()}
+    handlers = dict(original_handlers)
+    state = {"reaped": False, "delivered": False, "subreaper": 0}
+
+    def deliver():
+        handlers[signal.SIGINT](signal.SIGINT, None)
+        state["delivered"] = True
+
+    def install(number, handler):
+        if boundary == "restore" and handler is original_handlers[signal.SIGINT]:
+            deliver()
+        previous = handlers[number]
+        handlers[number] = handler
+        return previous
+
+    def subreaper(value=None):
+        if value is not None:
+            state["subreaper"] = value
+        return state["subreaper"]
+
+    def popen(*args, **kwargs):
+        (output / "terminal.json").write_text("{}")
+        return SimpleNamespace(pid=123, returncode=None)
+
+    def snapshot(*args):
+        if state["reaped"]:
+            if boundary == "post_reap_scan" and not state["delivered"]:
+                deliver()
+            return {}
+        return {123: leader}
+
+    def reap(process, records, resources):
+        process.returncode = 0
+        state["reaped"] = True
+        if boundary == "reap":
+            deliver()
+
+    monkeypatch.setattr(supervisor.signal, "signal", install)
+    monkeypatch.setattr(supervisor, "subreaper", subreaper)
+    monkeypatch.setattr(supervisor, "pidfd_open", lambda pid: os.open(os.devnull, os.O_RDONLY))
+    monkeypatch.setattr(supervisor, "identity", lambda pid: leader)
+    monkeypatch.setattr(supervisor, "parent_memory", lambda: {})
+    monkeypatch.setattr(supervisor.psutil, "Process", lambda: SimpleNamespace(children=lambda **kw: []))
+    monkeypatch.setattr(supervisor.subprocess, "Popen", popen)
+    monkeypatch.setattr(supervisor, "owned_snapshot", snapshot)
+    monkeypatch.setattr(supervisor, "reap_owned", reap)
+    result = supervisor.supervise(
+        ["inert"],
+        cwd=tmp_path,
+        env={},
+        output=output,
+        allocation=3,
+        watchdog=3,
+        clock=lambda: 1.0,
+        check_workload=lambda blocked: [],
+        sample=lambda records: {"rss_bytes": 0, "gaps": ["controlled"] if resource_error else []},
+    )
+    expected = (
+        "resource_verification_failed" if resource_error else "interrupted" if boundary else "completed"
+    )
+    assert result["status"] == expected
+    assert json.loads((output / "receipt.json").read_text())["status"] == expected
+    assert result["returncode"] == 0 and result["cleanup"]["complete"]
+    assert state["delivered"] == (boundary is not None)
+    assert handlers == original_handlers and state["subreaper"] == 0
