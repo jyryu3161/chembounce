@@ -1,5 +1,6 @@
 """Small real geometry and inert control tests; never the 72-condition study."""
 
+import copy
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -242,7 +243,30 @@ def test_failed_baseline_replay_and_design_overlay_scope(monkeypatch, mismatch):
         assert row["status"] == "rescued", row
         assert len(calls) == 3 and row["cost"]["design_overlays"] == 1
         assert len(row["extra_search"]["pairs"]) == 1
-        assert row["prototype"]["info"]["similarity_constraints"]["witness"]["passed"]
+        info, audit = row["prototype"]["info"], row["extra_search"]
+        assert info["similarity_constraints"]["witness"]["passed"]
+        assert d.selected_alternative(info, audit) == row["selected_alternative_index"]
+        # A different candidate/reference conformer or pose, score or decision
+        # cannot borrow the accepted alternative's provenance.
+        for path, replacement in [
+            (("selective_pose_evidence", "hit_candidate", "sha256"), "other"),
+            (("selective_pose_evidence", "hit_candidate", "conformer_id"), 9),
+            (("similarity_constraints", "witness", "reference_pose", "sha256"), "other"),
+            (("similarity_constraints", "witness", "reference_pose", "conformer_id"), 9),
+            (("similarity_constraints", "witness", "passed"), False),
+            (("hit", "reference_conformer_id"), 9),
+            (("hit", "shape"), 0.99999),
+        ]:
+            altered = copy.deepcopy(info)
+            node = altered
+            for key in path[:-1]:
+                node = node[key]
+            node[path[-1]] = replacement
+            with pytest.raises(d.DiagnosticError, match="not an accepted rigid alternative"):
+                d.selected_alternative(altered, audit)
+        empty = dict(audit, accepted_alternatives=[])
+        with pytest.raises(d.DiagnosticError, match="not an accepted rigid alternative"):
+            d.selected_alternative(info, empty)
     assert pose_binding(fixed.mol, 0) == before
     assert scoring._overlay is bad_pose and conformers._overlay is bad_pose
 
@@ -357,3 +381,77 @@ def test_baseline_provider_must_be_shared(monkeypatch):
     monkeypatch.setattr(scoring, "ensemble", lambda *a: pytest.fail("must refuse before ensemble work"))
     with pytest.raises(d.DiagnosticError, match="different ensemble provider"):
         d.paired_condition("CCO", "CCO", "CCO", 42)
+
+
+@pytest.mark.parametrize("field,floor", [("shape", 0.7), ("pharmacophore", 0.5), ("polar", 0.75)])
+@pytest.mark.parametrize("exhausted", [False, True])
+def test_replay_floor_crossing_is_unknown_even_within_scalar_tolerance(monkeypatch, field, floor, exhausted):
+    """Controlled scalar/witness drift, actual production pair loop; no native optimizer.
+
+    Below -> above differs by2e-13, within scalar tolerance but changes a hard
+    decision. These deliberately controlled values are not native drift evidence.
+    """
+    smiles = "c1ccccc1"
+    angles = np.arange(6) * np.pi / 3
+    points = np.column_stack((1.4 * np.cos(angles), 1.4 * np.sin(angles), np.zeros(6)))
+    fixed = ensemble(pose(smiles, points))
+    provider = lambda *a: fixed
+    monkeypatch.setattr(conformers, "ensemble", provider)
+    monkeypatch.setattr(scoring, "ensemble", provider)
+    calls = []
+
+    def controlled(reference, candidate, cid, settings):
+        calls.append(cid)
+        values = dict(shape=1.0, pharmacophore=1.0)
+        if field != "polar":
+            values[field] = floor + (-1e-13 if len(calls) == 1 else 1e-13)
+        joint = float(np.sqrt(values["shape"] * values["pharmacophore"]))
+        return dict(
+            **values,
+            alignment_color=1.0,
+            joint=joint,
+            reference_adjusted_joint=joint,
+            reference_conformer_id=0,
+            reference_relative_energy=0.0,
+        ), Chem.Mol(candidate.mol)
+
+    monkeypatch.setattr(conformers, "_overlay", controlled)
+    monkeypatch.setattr(scoring, "_overlay", controlled)
+    if field == "polar":
+        actual_assess = BoundSimilarity.assess
+
+        def controlled_assess(self, *args):
+            witness = actual_assess(self, *args)
+            below = len(calls) == 1
+            witness["polar"]["recall"] = floor + (-1e-13 if below else 1e-13)
+            witness["reasons"] = ["polar_reference_recall_below_minimum"] if below else []
+            witness["passed"] = not below
+            return witness
+
+        monkeypatch.setattr(BoundSimilarity, "assess", controlled_assess)
+    if exhausted:
+        monkeypatch.setattr(d.PolarSearch, "available", lambda self: False)
+    row = d.paired_condition(smiles, smiles, smiles, 42)
+    assert row["status"] == "diagnostic_error"
+    assert row["prototype"]["status"] == "unknown"
+    assert "joint/floor decisions changed" in row["prototype"]["error"]
+    assert row["extra_search"]["alternatives_attempted"] == 0
+    assert row["extra_search"]["accepted_alternatives"] == []
+    assert len(calls) == 2
+
+
+@pytest.mark.parametrize("reference_donors,truncated", [(3, True), (2, False)])
+def test_outer_subset_cap_marks_only_unexplored_maps(fake_api, reference_donors, truncated):
+    # First subset has exactly4 maps. With3 donors, two more subsets remain;
+    # with2 donors and full recall there is only one subset, fully enumerated.
+    ref = [feature("Acceptor", i) for i in range(2)] + [
+        feature("Donor", i + 2) for i in range(reference_donors)
+    ]
+    cand = [feature("Acceptor", i) for i in range(2)] + [feature("Donor", i + 2) for i in range(2)]
+    search = d.PolarSearch(polar_recall=0.75 if truncated else 1.0)
+    row = map_row()
+    maps = search._maps(ref, cand, [], row)
+    assert len(maps) == 4
+    assert row["mapping_truncated"] is truncated
+    assert search.audit["truncated"] is truncated
+    assert row["helper_edge_visits"] == 1

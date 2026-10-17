@@ -64,6 +64,7 @@ class PolarSearch(ProposalSearch):
         self.policy = {"version": VERSION, "limits": dict(LIMITS), "polar_recall": polar_recall}
         self.audit["policy"] = copy.deepcopy(self.policy)
         self.audit["rigid_pose_evidence"] = []
+        self.audit["accepted_alternatives"] = []
 
     def _maps(self, ref, cand, requests, row):
         polar = [i for i, f in enumerate(ref) if f["family"] in {"Acceptor", "Donor"}]
@@ -109,7 +110,10 @@ class PolarSearch(ProposalSearch):
         # Subsets allow a missing polar type only when the unchanged recall
         # floor permits it. No zero-weight/dummy correspondences propose poses.
         for required in itertools.combinations(polar, needed):
-            if not self.available() or len(maps) >= LIMITS["complete_maps_per_pair"]:
+            if not self.available():
+                break
+            if len(maps) >= LIMITS["complete_maps_per_pair"]:
+                row["mapping_truncated"] = self.audit["truncated"] = True
                 break
             if row["helper_edge_visits"] >= LIMITS["helper_edge_visits_per_pair"]:
                 row["helper_truncated"] = self.audit["truncated"] = True
@@ -133,6 +137,23 @@ class PolarSearch(ProposalSearch):
                 }
             )
         return output
+
+
+def selected_alternative(info, audit):
+    """A rescue must be the exact evaluated, accepted rigid alternative."""
+    for index, accepted in enumerate(audit["accepted_alternatives"]):
+        evidence = audit["rigid_pose_evidence"][accepted["rigid_evidence_index"]]
+        if (
+            info["selective_pose_evidence"]["hit_candidate"]
+            == accepted["candidate_pose"]
+            == evidence["candidate_pose"]
+            and info["hit"] == accepted["hit_info"]
+            and info["similarity_constraints"]["witness"] == accepted["witness"]
+            and evidence["rigid_transform"]["reference_pose_sha256"]
+            == accepted["witness"]["reference_pose"]["sha256"]
+        ):
+            return index
+    raise DiagnosticError("Selected feasible pose is not an accepted rigid alternative")
 
 
 def ensemble_state(ensembles):
@@ -233,6 +254,8 @@ def paired_condition(product, hit, design, seed):
             callback_start = time.monotonic()
             spent_before = search.spent
             chosen = info, aligned
+            chosen_witness = None
+            accepted = None
             try:
                 rid = info["reference_conformer_id"]
                 old = expected.get((cid, rid), {})
@@ -241,14 +264,21 @@ def paired_condition(product, hit, design, seed):
                     for k in ("shape", "pharmacophore")
                 ):
                     raise DiagnosticError("Baseline overlay replay differs from production audit")
+                witness = similarity.assess(reference.mol, aligned, rid, cid)
+                current_recall, prior_recall = witness["polar"]["recall"], old["polar_recall"]
+                if ((current_recall is None) != (prior_recall is None)) or (
+                    current_recall is not None
+                    and not math.isclose(current_recall, prior_recall, abs_tol=1e-12, rel_tol=1e-12)
+                ):
+                    raise DiagnosticError("Baseline polar witness replay mismatch")
+                # Scalar closeness cannot excuse a changed acceptance decision.
+                reasons = list(witness["reasons"])
+                for name, field in (("hit_shape", "shape"), ("hit_pharmacophore", "pharmacophore")):
+                    if info[field] < FLOORS[name]:
+                        reasons.append(name + "_below_minimum")
+                if reasons != old["reasons"] or not reasons:
+                    raise DiagnosticError("Baseline replay joint/floor decisions changed")
                 if search.available():
-                    witness = similarity.assess(reference.mol, aligned, rid, cid)
-                    current_recall, prior_recall = witness["polar"]["recall"], old["polar_recall"]
-                    if ((current_recall is None) != (prior_recall is None)) or (
-                        current_recall is not None
-                        and not math.isclose(current_recall, prior_recall, abs_tol=1e-12, rel_tol=1e-12)
-                    ):
-                        raise DiagnosticError("Baseline polar witness replay mismatch")
                     if "polar_reference_recall_below_minimum" in witness["reasons"]:
                         options = search.propose(
                             reference.mol, aligned, rid, cid, info, witness, similarity, settings
@@ -259,20 +289,47 @@ def paired_condition(product, hit, design, seed):
                         }:
                             raise DiagnosticError("Fixed-pose proposal scoring/parity unavailable")
                         feasible = [
-                            (extra, pose)
+                            (extra, pose, decision)
                             for extra, pose, decision in options
                             if decision["passed"]
                             and extra["shape"] >= FLOORS["hit_shape"]
                             and extra["pharmacophore"] >= FLOORS["hit_pharmacophore"]
                         ]
                         if feasible:
-                            chosen = max(feasible, key=lambda pair: pair[0]["reference_adjusted_joint"])
+                            extra, pose, chosen_witness = max(
+                                feasible, key=lambda pair: pair[0]["reference_adjusted_joint"]
+                            )
+                            chosen = extra, pose
+                if chosen_witness is not None:
+                    binding = pose_binding(chosen[1], cid)
+                    evidence_index = next(
+                        (
+                            i
+                            for i, evidence in enumerate(search.audit["rigid_pose_evidence"])
+                            if evidence["candidate_pose"] == binding
+                            and evidence["rigid_transform"]["reference_pose_sha256"]
+                            == chosen_witness["reference_pose"]["sha256"]
+                        ),
+                        None,
+                    )
+                    if evidence_index is None:
+                        raise DiagnosticError("Accepted alternative lacks rigid proposal evidence")
+                    accepted = {
+                        "candidate_pose": binding,
+                        "hit_info": copy.deepcopy(chosen[0]),
+                        "witness": copy.deepcopy(chosen_witness),
+                        "rigid_evidence_index": evidence_index,
+                    }
             finally:
                 elapsed = time.monotonic() - callback_start
                 calls["callback_seconds"] += elapsed
                 search.charge(max(0.0, elapsed - (search.spent - spent_before)))
             # Charge callback/witness overhead before accepting an alternative.
-            return chosen if search.available() else (info, aligned)
+            if not search.available():
+                return info, aligned
+            if accepted is not None:
+                search.audit["accepted_alternatives"].append(accepted)
+            return chosen
 
         def fixed_ensemble(smiles, requested):
             if requested != settings or smiles not in ensembles:
@@ -288,6 +345,8 @@ def paired_condition(product, hit, design, seed):
         prototype_start = time.monotonic()
         try:
             prototype, _ = invoke(experimental, product, hit, design, settings, similarity)
+            if prototype["status"] == "feasible":
+                row["selected_alternative_index"] = selected_alternative(prototype["info"], search.audit)
             row.update(
                 status="rescued" if prototype["status"] == "feasible" else "not_rescued", prototype=prototype
             )
