@@ -190,6 +190,7 @@ def refine_candidate(
     deadline_monotonic=None,
     result_validator=None,
     similarity=None,
+    rejected_pose_diagnostics=None,
 ):
     """Refine reproducibly; all exported pose components belong to one real pose.
 
@@ -290,6 +291,14 @@ def refine_candidate(
                         seeded,
                         similarity=similarity,
                         deadline_monotonic=deadline_monotonic,
+                        **(
+                            {
+                                "rejected_pose_diagnostics": rejected_pose_diagnostics,
+                                "rejected_pose_diagnostic_phase": "refinement",
+                            }
+                            if rejected_pose_diagnostics is not None
+                            else {}
+                        ),
                     )
                     phase = "validation"
                     selective_scoring.validate_result(

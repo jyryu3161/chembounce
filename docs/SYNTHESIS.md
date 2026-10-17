@@ -35,7 +35,7 @@ claim that the pin was checked.
 ## Request qualified recommendations
 
 Use `--recommend` on either CLI or `from chembounce_synthesis import recommend`
-for the version-fixed `qualified-selective-engineering-v3` contract. The
+for the version-fixed `qualified-selective-engineering-v4` contract. The
 [asset template](../examples/synthesis/strict-recommendation-config.json) declares
 the same profile, so selection is idempotent. Replace its placeholder paths with
 existing local files/directories; the example is not a ready-made vendor catalog,
@@ -1197,8 +1197,8 @@ not classify potential atropisomerism in an unannotated structure.
 
 ### Engineering profile revisions and explicit migration
 
-`--recommend` and the lazy `recommend()` API now select
-`qualified-selective-engineering-v3`. V3 has exactly the v2 floors, eight-conformer
+The v3 release introduced `qualified-selective-engineering-v3` as the then-current
+recommendation default (superseded by v4 below). V3 has exactly the v2 floors, eight-conformer
 screening, final seeds 42/43/44, budgets and joint-pose constraint policy. It binds
 the reviewed exact-state input guards to new artifact bytes; it is not a new fit
 or an empirically calibrated similarity/activity policy. Ordinary defined stereo
@@ -1211,7 +1211,7 @@ bindings differ, so their provenance honestly reports `custom_unvalidated`.
 Explicit historical config/profile requests are never silently migrated. Combining
 `--recommend` with an explicit historical profile in either the original config
 or CLI is an error before model/catalog work, even when the other declaration is
-v3. Without the shortcut, `--recommendation-profile qualified-selective-engineering-v2`
+the current default. V3 is now also historical for this conflict check. Without the shortcut, `--recommendation-profile qualified-selective-engineering-v2`
 continues to request v2.
 
 For a continuation, inherited v2 without the shortcut remains v2. To migrate,
@@ -1400,3 +1400,89 @@ restrictive content security policy; it fetches no external resources. Legacy
 reports without display evidence remain script-free. Conditions, activity,
 experimental feasibility, supplier SKU and current stock remain unverified
 unless separate evidence explicitly records them.
+
+### Optional rejected-pose diagnostics (source-review candidate)
+
+Set `"rejected_pose_diagnostics": true` in a selective synthesis configuration to
+retain a bounded diagnostic for future runs that finish with
+`no_jointly_feasible_hit_pose`. The default is `false`; the option must be a JSON
+boolean and requires `similarity_constraints`. This does not rescue or qualify a
+candidate, change a floor, or add an embedding, alignment, feature match, route
+search, or model call. Opting in adds overhead and can affect work completed under
+a fixed wall deadline.
+
+For each eligible failed scoring call, the collector chooses the highest existing
+scalar among completed rejected pairs, keeping the first pair on a tie. It saves
+that pair's exact original-hit reference coordinates and aligned candidate
+coordinates, identities, screening/refinement phase, seed/settings, both relative
+energies, scores/reasons, and the already-computed polar/landmark witness. Infeasible
+joint assignments remain infeasible or unassessed. The **global pharmacophore
+assignment is not retained**: its existing score/counts cannot identify a unique
+feature correspondence. This is one diagnostic pose, not an exhaustive
+conformational explanation or biological/synthesis evidence. Failed overlays,
+preflight failures, deadline abstentions, successful selections and later design
+failures do not acquire substitute rejected poses.
+
+One shared collector spans screening and refinement: at most one record per call,
+eight per workflow, 512 atoms in each pose, 256 KiB per record and 2 MiB for the
+**complete** `rejected_pose_diagnostics.json` including envelope/provenance. Excess
+records are skipped, never truncated into incomplete witnesses or retried. The
+one-second cumulative cooperative allowance includes import/setup handoffs,
+retention bookkeeping, failed captures, hashing, serialization and publication;
+checks are also capped by the existing workflow deadline. Already-entered native
+or filesystem operations can overrun. The artifact's final publication timing is
+explicitly unverified; the summary reports observed costs and overruns separately.
+The updated workflow elapsed time includes diagnostic sidecar publication when
+enabled; the final summary write endpoint remains explicitly unverified. A
+best-effort log records post-return publication and summary-update overhead.
+
+Existing failure audits in `routes.json`, `scores.json` and `refinement.json`
+carry only `captured_not_published` references (index and canonical record SHA),
+so repeated routes do not duplicate complete coordinates. Resolve a reference
+only against this run's successful `summary.json` diagnostic export receipt,
+matching the **whole-file SHA** and then the record SHA. An unavailable export
+leaves references unresolved, including when a stale sidecar happens to exist.
+The core summary is saved first with an unavailable/pending descriptor. One
+budgeted atomic status update may then resolve publication; if it fails or the
+allowance expires, the initial summary survives and references stay unresolved.
+Ordinary optional persistence errors preserve the original rejection and core
+outputs; interruption/termination is not swallowed. The offline recommendation
+report does not present these rejected records as selected evidence. Private
+serialized records yield defensive copies; source files/runtime labels are bound
+once per collector, without model/asset discovery or per-record package scans.
+
+The historical source-only diagnostic stages (`40324`/`612596`) changed the
+hash-bound selective scorer while retaining the then-current v3 default. At that
+stage v2/v3 correctly reported `custom_unvalidated`; it was not a deployable
+matched-profile update. The v4 integration below adds a separately reviewed
+declaration and changes the default together, while preserving the old artifacts.
+Nothing reconstructs diagnostics for older runs that did not retain these poses.
+
+
+### Engineering v4 source revision
+
+The current `--recommend`/`recommend()` default is
+`qualified-selective-engineering-v4`. It preserves the exact v3 numerical
+specification, runtime declaration, floors, seeds, budgets and strict route
+support. Its new artifact binds the accepted rejected-pose diagnostic scorer
+revision and retains the prior exact-state guard provenance. Source review is
+not calibration, efficacy, yield or a fresh scientific evaluation.
+
+`rejected_pose_diagnostics` defaults to `false`. When enabled, its separate
+profile provenance records version, declared limits and the diagnostic/scorer/
+refinement/workflow source bindings. A mismatch in those enabled bindings makes
+the profile custom. It does not change numerical floors or rescue a rejection.
+Profile-declaration/source hashing is setup work outside collector statistics;
+it consumes the enclosing workflow deadline when supplied. Collector costs, skips
+and overruns are in `summary.rejected_pose_diagnostics`;
+final write completion requires the existing post-return observation. Diagnostic
+work consumes the existing deadline and can change deadline-limited coverage.
+
+Historical v1/v2/v3 artifact bytes, names and benchmark authorities remain
+unchanged. Explicit v3 still selects v3 and honestly reports a scorer source
+mismatch on this checkout; `--recommend` conflicts with an explicit v3 rather
+than silently upgrading it. Continue old runs under their saved declaration.
+A new local `qualified-selective-engineering-v4-lineage-v1.json` configuration
+must be separately reviewed and installed after release; the installed v3
+configuration is not modified by this source change. Generic runs remain
+exploratory unless qualified behavior is explicitly requested.

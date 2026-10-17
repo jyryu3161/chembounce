@@ -69,6 +69,8 @@ def untouched_designs():
     "raw,cli",
     [
         (profiles.PROFILE, None),
+        (profiles.GUARDED_SELECTIVE_PROFILE, None),
+        (None, profiles.GUARDED_SELECTIVE_PROFILE),
         (profiles.PROFILE, profiles.SELECTIVE_PROFILE),
         (profiles.SELECTIVE_PROFILE, profiles.PROFILE),
         (None, profiles.PROFILE),
@@ -314,6 +316,7 @@ def test_integrated_runs_exact_preflight_intersection(config, no_work, tmp_path,
 
     def run(hit, designs, cfg, output):
         assert cfg == effective[0]
+        assert cfg["recommendation_profile"] == profiles.DIAGNOSTIC_SELECTIVE_PROFILE
         assert cfg["property_thresholds"]["mw"] == [160.0, 250.0]
         assert cfg["core_smiles"] == "CC(=O)N"
         return []
@@ -389,6 +392,7 @@ def test_actual_api_cli_and_continuation_keep_final_three_seed_contract(
     expected_name = profiles.DEFAULT_RECOMMENDATION_PROFILE
     provenance = json.loads((cli_out / "manifest.json").read_text())["recommendation_profile"]
     assert provenance["name"] == expected_name
+    assert provenance["optional_diagnostics"]["rejected_pose_diagnostics"]["enabled"] is False
     assert provenance["artifact_sha256"] == profiles.PROFILE_SHA256[expected_name]
     assert cli_rows[0]["recommendation_profile"] == rows[0]["recommendation_profile"] == expected_name
     assert json.loads((cli_out / "summary.json").read_text())["recommendation_profile"] == {
@@ -424,7 +428,9 @@ def test_explicit_null_profile_and_missing_provider_fields_do_not_default(config
         workflow.preflight_recommendation(HIT, config)
 
 
-@pytest.mark.parametrize("historical", [profiles.PROFILE, profiles.SELECTIVE_PROFILE])
+@pytest.mark.parametrize(
+    "historical", [profiles.PROFILE, profiles.SELECTIVE_PROFILE, profiles.GUARDED_SELECTIVE_PROFILE]
+)
 def test_continuation_conflict_and_replacement_are_distinct(
     config, no_work, tmp_path, monkeypatch, historical
 ):

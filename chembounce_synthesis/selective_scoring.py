@@ -155,6 +155,8 @@ def score_candidate(
     *,
     similarity=None,
     deadline_monotonic=None,
+    rejected_pose_diagnostics=None,
+    rejected_pose_diagnostic_phase="direct",
 ):
     """Enumerate at most 8x8 hit pairs, filter jointly, then maximize v1 scalar.
 
@@ -165,6 +167,15 @@ def score_candidate(
     Deadline checks bound further work, but cannot interrupt an individual RDKit call.
     """
     started = time.monotonic()
+    if rejected_pose_diagnostics is not None:
+        diagnostic_dispatch_started = time.monotonic()
+        from .rejected_pose_diagnostics import RejectedPoseDiagnostics
+
+        if rejected_pose_diagnostic_phase not in {"direct", "screening", "refinement"}:
+            raise ValueError("Unknown rejected-pose diagnostic phase")
+        if not isinstance(rejected_pose_diagnostics, RejectedPoseDiagnostics):
+            raise ValueError("rejected_pose_diagnostics requires a shared diagnostic collector")
+        rejected_pose_diagnostics.charge_overhead(time.monotonic() - diagnostic_dispatch_started)
     if (
         not isinstance(settings, ConformerSettings)
         or settings.num_conformers != MAX_CONFORMERS
@@ -206,10 +217,37 @@ def score_candidate(
         "scope": "Bounded generated ensembles; not an exhaustive conformational search. Cached ensemble requests are recorded, not asserted to be fresh embeddings.",
     }
 
+    diagnostic_dispatch_started = time.monotonic() if rejected_pose_diagnostics is not None else None
+    diagnostic_before = rejected_pose_diagnostics._elapsed if rejected_pose_diagnostics is not None else 0
+    diagnostic = (
+        rejected_pose_diagnostics.start_call(
+            {"product": smiles, "hit": hit, "design": design},
+            settings,
+            policy,
+            deadline_monotonic,
+            rejected_pose_diagnostic_phase,
+        )
+        if rejected_pose_diagnostics is not None
+        else None
+    )
+
+    if rejected_pose_diagnostics is not None:
+        rejected_pose_diagnostics.charge_overhead(
+            max(
+                0.0,
+                time.monotonic()
+                - diagnostic_dispatch_started
+                - (rejected_pose_diagnostics._elapsed - diagnostic_before),
+            )
+        )
+
     def finish(status, reason=None):
         audit.update(status=status, reason=reason, elapsed_seconds=time.monotonic() - started)
 
     def abstain(reason):
+        # Scientific abstention is decided before optional serialization.
+        if diagnostic is not None:
+            audit["rejected_pose_diagnostic"] = diagnostic.finish(reason)
         finish("abstained", reason)
         raise SimilarityAbstention(reason, audit)
 
@@ -291,6 +329,17 @@ def score_candidate(
                 pharmacophore=hit_info["pharmacophore"],
                 polar_recall=witness["polar"]["recall"],
             )
+            if reasons and diagnostic is not None:
+                diagnostic.consider(
+                    len(audit["pairs"]) - 1,
+                    pair,
+                    aligned,
+                    witness,
+                    hit_info,
+                    candidate_energy,
+                    reference_energy,
+                    hit_tanimoto=tanimoto,
+                )
             if not reasons:
                 audit["hit_pairs_feasible"] += 1
             check_deadline()
@@ -309,6 +358,8 @@ def score_candidate(
     except (ValueError, RuntimeError) as exc:
         abstain(f"selected_conformer_design_diagnostic_failed: {exc}")
     check_deadline()
+    if diagnostic is not None:
+        diagnostic.finish("selected")
     finish("selected")
     info = {
         "score": score,

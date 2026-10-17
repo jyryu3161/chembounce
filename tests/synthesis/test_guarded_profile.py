@@ -24,7 +24,7 @@ def test_real_packaged_identity_policy_and_historical_authorities():
         V3: "fd5fb3b65b12307ed1a9b5371e74427eb709d8cf3012bbcba5095022ddb34537",
     }
     assert profiles.SELECTIVE_PROFILE == "qualified-selective-engineering-v2"
-    assert profiles.DEFAULT_RECOMMENDATION_PROFILE == V3
+    assert profiles.GUARDED_SELECTIVE_PROFILE == V3
     for name, digest in expected.items():
         assert profiles.PROFILE_SHA256[name] == digest
         assert hashlib.sha256(profiles._resource(name).read_bytes()).hexdigest() == digest
@@ -46,7 +46,7 @@ def test_real_v3_runtime_is_honest_on_each_runtime_without_rebinding():
     assert set(provenance["source_match_scope"]) == {
         "chembounce_synthesis/" + n for n in profiles.KERNEL_FILES + profiles.SELECTIVE_KERNEL_FILES
     }
-    assert not any(k.startswith("chembounce_synthesis/") for k in provenance["runtime_source_mismatches"])
+    assert "chembounce_synthesis/selective_scoring.py" in provenance["runtime_source_mismatches"]
     assert provenance["status"] == (
         "custom_unvalidated" if provenance["runtime_source_mismatches"] else "engineering_policy_matched"
     )
@@ -98,7 +98,7 @@ def test_idempotent_copy_custom_and_resource_additional_selection():
     config = {"minimum_scores": {"hit_shape": 0.8}, "max_results": 1, "core_smiles": "CC"}
     requested = profiles.request_recommendations(config)
     assert "recommendation_profile" not in config
-    assert profiles.request_recommendations(requested, V3) == requested
+    assert profiles.request_recommendations(requested, profiles.DEFAULT_RECOMMENDATION_PROFILE) == requested
     loaded = profiles.apply_profile_defaults(requested)
     result = profiles.profile_provenance(loaded)
     assert result["status"] == "custom_unvalidated"
@@ -181,7 +181,7 @@ def test_load_has_no_historical_files_dependency_and_rejects_tampering(tmp_path,
     with pytest.raises(ValueError, match="Missing packaged"):
         profiles.load_profile(V3)
     with pytest.raises(ValueError, match="Unknown"):
-        profiles.load_profile("qualified-selective-engineering-v4")
+        profiles.load_profile("qualified-selective-engineering-unknown")
 
 
 @pytest.mark.parametrize(

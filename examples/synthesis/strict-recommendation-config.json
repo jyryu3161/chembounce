@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recommendation_profile": "qualified-selective-engineering-v3",
+  "recommendation_profile": "qualified-selective-engineering-v4",
   "catalog": "/path/to/local/catalog.tsv",
   "rules": "/path/to/local/rules.json",
   "provider": {
