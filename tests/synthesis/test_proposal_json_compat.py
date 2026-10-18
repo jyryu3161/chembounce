@@ -114,14 +114,17 @@ def test_repair_count_and_deadline_bound():
     assert decode_response(raw)["compatibility"]["status"] == "rejected"
     row = bind_row(
         _raw_invalid(),
-        {"seed": 1},
+        {"seed": 1, "sample_index": 0},
         "a" * 64,
         _provider()["response_decoder_source_sha256"],
+        design="CCO",
         deadline_monotonic=time.monotonic() - 1,
     )
     assert row["response"] == row["raw_response"]
     assert row["compatibility"]["status"] == "not_evaluated_deadline"
-    assert verify_saved_row(row, _provider()) == row
+    assert verify_saved_row(row, _provider(), design="CCO") == row
+    with pytest.raises(ValueError, match="differs from raw rederivation"):
+        verify_saved_row(row, _provider(), design="CCC")
 
 
 def test_saved_replay_rederives_raw_and_rejects_tampering(tmp_path):
@@ -130,8 +133,9 @@ def test_saved_replay_rederives_raw_and_rejects_tampering(tmp_path):
         {"seed": 1, "sample_index": 0},
         "a" * 64,
         _provider()["response_decoder_source_sha256"],
+        design="CCO",
     )
-    assert verify_saved_row(row, _provider()) == row
+    assert verify_saved_row(row, _provider(), design="CCO") == row
     archive = tmp_path / "proposals.json"
     archive.write_text(
         json.dumps({"schema_version": 1, "provider": _provider(), "proposals": [{"design": "CCO", **row}]})
@@ -167,7 +171,7 @@ def test_saved_replay_rederives_raw_and_rejects_tampering(tmp_path):
         tampered = copy.deepcopy(row)
         tampered.update(changed)
         with pytest.raises(ValueError):
-            verify_saved_row(tampered, _provider())
+            verify_saved_row(tampered, _provider(), design="CCO")
     stripped = json.loads(archive.read_text())
     del stripped["proposals"][0]["compatibility"]
     archive.write_text(json.dumps(stripped))
@@ -254,4 +258,4 @@ def test_provider_acquisition_uses_template_policy_without_model_runtime():
     assert compatible["raw_response"] == _raw_invalid()
     assert compatible["response"] == _proposal()
     assert compatible["sampling"]["sample_index"] == 0
-    assert verify_saved_row(compatible, _provider()) == compatible
+    assert verify_saved_row(compatible, _provider(), design="CCO") == compatible

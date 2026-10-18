@@ -355,8 +355,16 @@ def decode_response(raw, *, deadline_monotonic=None):
     }
 
 
-def bind_row(raw, sampling, prompt_sha256, decoder_source_sha256, *, deadline_monotonic=None):
+def bind_row(raw, sampling, prompt_sha256, decoder_source_sha256, *, design, deadline_monotonic=None):
     """Create a proposal row whose audit binds raw text, sampling and policy source."""
+    if not isinstance(design, str) or not design:
+        raise ValueError("Compatibility proposal requires a design identity")
+    if (
+        not isinstance(sampling, dict)
+        or type(sampling.get("sample_index")) is not int
+        or sampling["sample_index"] < 0
+    ):
+        raise ValueError("Compatibility proposal requires a sample index")
     row = decode_response(raw, deadline_monotonic=deadline_monotonic)
     row["sampling"] = sampling
     sampling_sha256 = _sha(_json_text(sampling))
@@ -368,12 +376,14 @@ def bind_row(raw, sampling, prompt_sha256, decoder_source_sha256, *, deadline_mo
             "prompt_sha256": prompt_sha256,
             "decoder_source_sha256": decoder_source_sha256,
             "sampling_sha256": sampling_sha256,
+            "design_smiles": design,
+            "sample_index": sampling["sample_index"],
         }
     )
     return row
 
 
-def verify_saved_row(row, provider):
+def verify_saved_row(row, provider, *, design):
     """Rederive an opt-in archive row; reject missing or detached audit fields."""
     if not isinstance(row, dict) or not all(
         key in row for key in ("response", "raw_response", "compatibility", "sampling")
@@ -381,6 +391,10 @@ def verify_saved_row(row, provider):
         raise ValueError("Saved compatibility proposal is missing raw response or audit")
     if not isinstance(row["raw_response"], str) or not isinstance(row["sampling"], dict):
         raise ValueError("Saved compatibility proposal has invalid raw or sampling type")
+    if not isinstance(design, str) or not design:
+        raise ValueError("Saved compatibility proposal requires a design identity")
+    if type(row["sampling"].get("sample_index")) is not int or row["sampling"]["sample_index"] < 0:
+        raise ValueError("Saved compatibility proposal requires a sample index")
     if (
         isinstance(row["compatibility"], dict)
         and row["compatibility"].get("status") == "not_evaluated_deadline"
@@ -392,6 +406,8 @@ def verify_saved_row(row, provider):
                 "prompt_sha256": provider["prompt_sha256"],
                 "decoder_source_sha256": provider["response_decoder_source_sha256"],
                 "sampling_sha256": _sha(_json_text(row["sampling"])),
+                "design_smiles": design,
+                "sample_index": row["sampling"].get("sample_index"),
             }
         )
     else:
@@ -400,12 +416,15 @@ def verify_saved_row(row, provider):
             row["sampling"],
             provider["prompt_sha256"],
             provider["response_decoder_source_sha256"],
+            design=design,
         )
     try:
-        if _json_text(row["response"]) != _json_text(expected["response"]) or _json_text(
-            row["compatibility"]
-        ) != _json_text(expected["compatibility"]):
-            raise ValueError("Saved compatibility proposal differs from raw rederivation")
+        actual_response = _json_text(row["response"])
+        expected_response = _json_text(expected["response"])
+        actual_audit = _json_text(row["compatibility"])
+        expected_audit = _json_text(expected["compatibility"])
     except (TypeError, ValueError, OverflowError, RecursionError) as exc:
         raise ValueError("Saved compatibility proposal has invalid JSON values") from exc
+    if actual_response != expected_response or actual_audit != expected_audit:
+        raise ValueError("Saved compatibility proposal differs from raw rederivation")
     return expected

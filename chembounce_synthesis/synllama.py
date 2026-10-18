@@ -191,6 +191,7 @@ class SynLlama:
                         sampling,
                         self.provenance["prompt_sha256"],
                         self.provenance["response_decoder_source_sha256"],
+                        design=smiles,
                         deadline_monotonic=deadline_monotonic,
                     )
                 )
@@ -226,13 +227,14 @@ class SavedProposals:
         ):
             raise ValueError("Saved compatibility decoder source does not match this runtime")
         for row in data["proposals"]:
+            design = canonical(row["design"])
             if dialect == SMILES_JSON_POLICY:
-                proposal = verify_saved_row(row, recorded_provider)
+                proposal = verify_saved_row(row, recorded_provider, design=design)
             else:
                 if any(key in row for key in ("raw_response", "compatibility")):
                     raise ValueError("Saved proposal audit requires declared compatibility policy")
                 proposal = {"response": row["response"], "sampling": row.get("sampling", {})}
-            self.proposals.setdefault(canonical(row["design"]), []).append(proposal)
+            self.proposals.setdefault(design, []).append(proposal)
         self.provenance = {
             "provider": "saved_proposals",
             "path": str(path),

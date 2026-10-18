@@ -102,7 +102,13 @@ def test_opt_in_saved_proposal_reaches_route_gate_with_raw_audit(tmp_path, asset
         "prompt_sha256": "a" * 64,
         "response_decoder_source_sha256": digest(Path(proposal_json.__file__)),
     }
-    row = bind_row(raw, {"seed": 1, "sample_index": 0}, "a" * 64, provider["response_decoder_source_sha256"])
+    row = bind_row(
+        raw,
+        {"seed": 1, "sample_index": 0},
+        "a" * 64,
+        provider["response_decoder_source_sha256"],
+        design=DESIGN,
+    )
     assert row["compatibility"]["status"] == "compatibility_decoded"
     source = tmp_path / "proposals.json"
     source.write_text(
