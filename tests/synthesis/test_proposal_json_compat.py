@@ -14,6 +14,7 @@ from chembounce_synthesis.proposal_json import (
     POLICY,
     bind_row,
     decode_response,
+    finalize_timing,
     provider_identity_sha256,
     verify_saved_row,
 )
@@ -133,8 +134,9 @@ def test_repair_count_and_deadline_bound():
         provider_identity=provider_identity_sha256(_provider()),
         deadline_monotonic=time.monotonic() - 1,
     )
-    assert row["response"] == row["raw_response"]
+    assert row["response"] is None and row["raw_response"] == _raw_invalid()
     assert row["compatibility"]["status"] == "not_evaluated_deadline"
+    finalize_timing(row, 1.0, True)
     assert verify_saved_row(row, _provider(), design="CCO") == row
     with pytest.raises(ValueError, match="differs from raw rederivation"):
         verify_saved_row(row, _provider(), design="CCC")
@@ -159,6 +161,90 @@ def test_opt_in_depth_and_length_bounds_precede_strict_json():
         decode_response(Oversized(" " * 250_001))
 
 
+def test_rejected_and_deadline_responses_cannot_enter_route_parser(tmp_path):
+    deep = '{"reactions":[],"building_blocks":[],"extra":' + "[" * 130 + "0" + "]" * 130 + "}"
+    for row in (
+        decode_response(deep),
+        decode_response('{"reactions":[],"building_blocks":[]}', deadline_monotonic=0),
+    ):
+        assert row["raw_response"]
+        assert row["response"] is None
+        with pytest.raises(ValueError):
+            parse_response(row["response"])
+    rejected = bind_row(
+        deep,
+        {"seed": 1, "sample_index": 0},
+        "a" * 64,
+        _provider()["response_decoder_source_sha256"],
+        design="CCO",
+        provider_identity=provider_identity_sha256(_provider()),
+    )
+    finalize_timing(rejected, 1.0, False)
+    archive = tmp_path / "deep-rejected.json"
+    archive.write_text(
+        json.dumps(
+            {"schema_version": 1, "provider": _provider(), "proposals": [{"design": "CCO", **rejected}]}
+        )
+    )
+    replayed = SavedProposals(archive).propose("CCO")[0]
+    assert replayed["compatibility"]["status"] == "rejected"
+    with pytest.raises(ValueError):
+        parse_response(replayed["response"])
+
+
+def test_oversized_generated_row_is_terminal_and_bounded_on_replay():
+    raw = " " * 250_001
+    row = bind_row(
+        raw,
+        {"seed": 1, "sample_index": 0},
+        "a" * 64,
+        _provider()["response_decoder_source_sha256"],
+        design="CCO",
+        provider_identity=provider_identity_sha256(_provider()),
+    )
+    finalize_timing(row, 1.0, False)
+    assert row["response"] is None
+    assert row["raw_response"] == raw
+    assert row["compatibility"]["strict_parser_outcome"] == "not_parsed_input_limit"
+    assert verify_saved_row(row, _provider(), design="CCO") == row
+    long_row = bind_row(
+        raw + "more",
+        {"seed": 1, "sample_index": 0},
+        "a" * 64,
+        _provider()["response_decoder_source_sha256"],
+        design="CCO",
+        provider_identity=provider_identity_sha256(_provider()),
+    )
+    assert len(long_row["raw_response"]) == 250_001
+    assert long_row["compatibility"]["raw_omitted_chars"] == 4
+    finalize_timing(long_row, 1.0, False)
+    assert verify_saved_row(long_row, _provider(), design="CCO") == long_row
+
+
+def test_replay_rejects_oversized_deadline_and_missing_timing_seal():
+    row = bind_row(
+        _raw_invalid(),
+        {"seed": 1, "sample_index": 0},
+        "a" * 64,
+        _provider()["response_decoder_source_sha256"],
+        design="CCO",
+        provider_identity=provider_identity_sha256(_provider()),
+        deadline_monotonic=0,
+    )
+    finalize_timing(row, 1.0, True)
+    oversized = copy.deepcopy(row)
+    oversized["raw_response"] = " " * 250_001
+    with pytest.raises(ValueError, match="oversized"):
+        verify_saved_row(oversized, _provider(), design="CCO")
+    stripped = copy.deepcopy(row)
+    for key in ("elapsed_seconds", "deadline_reached"):
+        stripped["sampling"].pop(key)
+    for key in ("sample_elapsed_seconds", "sample_deadline_reached"):
+        stripped["compatibility"].pop(key)
+    with pytest.raises(ValueError, match="timing seal"):
+        verify_saved_row(stripped, _provider(), design="CCO")
+
+
 def test_saved_replay_rederives_raw_and_rejects_tampering(tmp_path):
     row = bind_row(
         _raw_invalid(),
@@ -168,6 +254,7 @@ def test_saved_replay_rederives_raw_and_rejects_tampering(tmp_path):
         design="CCO",
         provider_identity=provider_identity_sha256(_provider()),
     )
+    finalize_timing(row, 1.0, False)
     assert verify_saved_row(row, _provider(), design="CCO") == row
     archive = tmp_path / "proposals.json"
     archive.write_text(
@@ -353,6 +440,19 @@ def test_provider_acquisition_uses_template_policy_without_model_runtime(monkeyp
     assert compatible["response"] == _proposal()
     assert compatible["sampling"]["sample_index"] == 0
     assert verify_saved_row(compatible, _provider(seed=17), design="CCO") == compatible
+
+    provider.samples = 2
+    provider.provenance["samples"] = 2
+    responses = iter((_raw_invalid(), " " * 250_001))
+    provider.tokenizer.decode = lambda *args, **kwargs: next(responses)
+    completed, oversized = provider.propose("CCO")
+    assert completed["raw_response"] == _raw_invalid()
+    assert oversized["compatibility"]["status"] == "rejected"
+    assert oversized["raw_response"] == " " * 250_001
+    assert oversized["response"] is None
+    provider.samples = 1
+    provider.provenance["samples"] = 1
+    provider.tokenizer.decode = lambda *args, **kwargs: _raw_invalid()
 
     class Clock:
         now = 0.0

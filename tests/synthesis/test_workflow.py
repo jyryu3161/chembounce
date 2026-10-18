@@ -11,7 +11,7 @@ pytest.importorskip(
 from chembounce_synthesis import proposal_json
 from chembounce_synthesis.cli import main
 from chembounce_synthesis.common import FP, canonical, digest, molecule
-from chembounce_synthesis.proposal_json import POLICY, bind_row, provider_identity_sha256
+from chembounce_synthesis.proposal_json import POLICY, bind_row, finalize_timing, provider_identity_sha256
 from chembounce_synthesis.routes import verify_route
 from chembounce_synthesis.synllama import load_prompt
 from chembounce_synthesis.workflow import check_constraints, run
@@ -114,6 +114,7 @@ def test_opt_in_saved_proposal_reaches_route_gate_with_raw_audit(tmp_path, asset
         design=DESIGN,
         provider_identity=provider_identity_sha256(provider),
     )
+    finalize_timing(row, 1.0, False)
     assert row["compatibility"]["status"] == "compatibility_decoded"
     source = tmp_path / "proposals.json"
     source.write_text(

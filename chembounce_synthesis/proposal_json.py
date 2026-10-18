@@ -160,7 +160,7 @@ def _depth_check(raw, deadline_monotonic):
 
 def _rejected_raw(raw, reason, *, outcome):
     return {
-        "response": raw,
+        "response": None,
         "raw_response": raw,
         "compatibility": {
             "policy": POLICY,
@@ -168,6 +168,23 @@ def _rejected_raw(raw, reason, *, outcome):
             "strict_parser_outcome": outcome,
             "raw_utf8_sha256": _sha(raw),
             "reason": reason,
+        },
+    }
+
+
+def _oversized_row(raw):
+    """Retain the first over-limit character without scanning or hashing the input."""
+    retained = raw[: _MAX_INPUT + 1]
+    return {
+        "response": None,
+        "raw_response": retained,
+        "compatibility": {
+            "policy": POLICY,
+            "status": "rejected",
+            "strict_parser_outcome": "not_parsed_input_limit",
+            "reason": "Invalid or oversized model response",
+            "original_length_chars": len(raw),
+            "raw_omitted_chars": len(raw) - len(retained),
         },
     }
 
@@ -399,7 +416,7 @@ class _Scanner:
 
 def _deadline_row(raw):
     return {
-        "response": raw,
+        "response": None,
         "raw_response": raw,
         "compatibility": {
             "policy": POLICY,
@@ -443,7 +460,7 @@ def decode_response(raw, *, deadline_monotonic=None):
             if str(exc) == "Proposal decode deadline reached":
                 return _deadline_row(raw)
             return {
-                "response": raw,
+                "response": None,
                 "raw_response": raw,
                 "compatibility": {
                     "policy": POLICY,
@@ -458,7 +475,7 @@ def decode_response(raw, *, deadline_monotonic=None):
         return {"response": data, "raw_response": raw, "compatibility": audit}
     except (ValueError, TypeError, RecursionError) as strict_error:
         return {
-            "response": raw,
+            "response": None,
             "raw_response": raw,
             "compatibility": {
                 "policy": POLICY,
@@ -504,10 +521,18 @@ def bind_row(
         raise ValueError("Compatibility proposal requires a sample index")
     if not isinstance(provider_identity, str) or len(provider_identity) != 64:
         raise ValueError("Compatibility proposal requires provider identity")
-    row = decode_response(raw, deadline_monotonic=deadline_monotonic)
+    row = (
+        _oversized_row(raw)
+        if isinstance(raw, str) and len(raw) > _MAX_INPUT
+        else decode_response(raw, deadline_monotonic=deadline_monotonic)
+    )
     row["sampling"] = sampling
     sampling_sha256 = _stable_sampling_sha256(sampling)
-    if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
+    if (
+        row["compatibility"]["status"] != "rejected"
+        and deadline_monotonic is not None
+        and time.monotonic() >= deadline_monotonic
+    ):
         row = _deadline_row(raw)
         row["sampling"] = sampling
     row["compatibility"].update(
@@ -553,11 +578,47 @@ def verify_saved_row(row, provider, *, design):
         raise ValueError("Saved compatibility proposal requires a design identity")
     if type(row["sampling"].get("sample_index")) is not int or row["sampling"]["sample_index"] < 0:
         raise ValueError("Saved compatibility proposal requires a sample index")
+    if not all(key in row["sampling"] for key in ("elapsed_seconds", "deadline_reached")):
+        raise ValueError("Saved compatibility proposal is missing completed timing seal")
+    if len(row["raw_response"]) > _MAX_INPUT + 1:
+        raise ValueError("Saved compatibility proposal has oversized raw response")
+    depth_reason = _depth_check(row["raw_response"], None) if len(row["raw_response"]) <= _MAX_INPUT else None
+    if depth_reason and (
+        not isinstance(row["compatibility"], dict)
+        or row["compatibility"].get("strict_parser_outcome") != "not_parsed_depth_limit"
+    ):
+        raise ValueError("Saved compatibility proposal exceeds JSON nesting limit")
     origin = compatibility_origin(provider)
     if origin is None:
         raise ValueError("Saved compatibility proposal has no declared provider policy")
     identity = provider_identity_sha256(origin)
-    if (
+    oversized = (
+        isinstance(row["compatibility"], dict)
+        and row["compatibility"].get("strict_parser_outcome") == "not_parsed_input_limit"
+    )
+    if oversized:
+        audit = row["compatibility"]
+        if (
+            len(row["raw_response"]) != _MAX_INPUT + 1
+            or type(audit.get("original_length_chars")) is not int
+            or type(audit.get("raw_omitted_chars")) is not int
+            or audit["original_length_chars"] < _MAX_INPUT + 1
+            or audit["raw_omitted_chars"] != audit["original_length_chars"] - (_MAX_INPUT + 1)
+        ):
+            raise ValueError("Saved compatibility proposal has invalid oversized raw capture")
+        expected = bind_row(
+            row["raw_response"],
+            row["sampling"],
+            provider["prompt_sha256"],
+            provider["response_decoder_source_sha256"],
+            design=design,
+            provider_identity=identity,
+        )
+        expected["compatibility"]["original_length_chars"] = audit["original_length_chars"]
+        expected["compatibility"]["raw_omitted_chars"] = audit["raw_omitted_chars"]
+    elif len(row["raw_response"]) > _MAX_INPUT:
+        raise ValueError("Saved compatibility proposal has oversized raw response")
+    elif (
         isinstance(row["compatibility"], dict)
         and row["compatibility"].get("status") == "not_evaluated_deadline"
     ):
@@ -583,18 +644,13 @@ def verify_saved_row(row, provider, *, design):
             design=design,
             provider_identity=identity,
         )
-    has_timing = "elapsed_seconds" in row["sampling"] or "deadline_reached" in row["sampling"]
-    if has_timing:
-        if "elapsed_seconds" not in row["sampling"] or "deadline_reached" not in row["sampling"]:
-            raise ValueError("Saved compatibility proposal has incomplete timing")
-        finalize_timing(
-            expected,
-            row["sampling"]["elapsed_seconds"],
-            row["sampling"]["deadline_reached"],
-        )
+    finalize_timing(
+        expected,
+        row["sampling"]["elapsed_seconds"],
+        row["sampling"]["deadline_reached"],
+    )
     if (
         expected["compatibility"]["status"] == "not_evaluated_deadline"
-        and has_timing
         and not row["sampling"]["deadline_reached"]
     ):
         raise ValueError("Saved deadline outcome disagrees with sample timing")

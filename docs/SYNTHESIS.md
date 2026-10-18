@@ -102,7 +102,13 @@ not change any chemical, route, or qualification gate.
 
 The opt-in decoder checks the 250,000-character input and 128-level nesting
 limits before strict parsing. It records a rejected raw response when nesting
-exceeds the limit; an oversized response raises an explicit provider error.
+exceeds the limit. For oversized generated text it retains at most 250,001
+characters, records the original character count and any omitted count, and
+marks the response rejected without scanning or hashing the oversized text.
+Direct decoder calls reject oversized input before traversal. Rejected and
+deadline-exceeded rows have no route-parsable `response`; their original text
+remains in `raw_response` within the capture bound. Completed opt-in rows
+require a timing seal on saved replay.
 Sampling elapsed time includes generation, decoding, and audit work through the
 final timing seal. Its audit hashes fixed sampling fields and records the final
 elapsed time and deadline flag separately, avoiding a self-referential hash.

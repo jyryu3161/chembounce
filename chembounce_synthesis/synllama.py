@@ -181,6 +181,8 @@ class SynLlama:
                     pad_token_id=self.tokenizer.pad_token_id,
                     **stopping,
                 )
+            if self.response_json_dialect != SMILES_JSON_POLICY:
+                longest_sample = max(longest_sample, time.monotonic() - sample_started)
             tokens = generated[0, inputs.input_ids.shape[1] :]
             response = self.tokenizer.decode(tokens, skip_special_tokens=True)
             sampling = {
@@ -204,7 +206,7 @@ class SynLlama:
                 if (
                     deadline_monotonic is not None
                     and time.monotonic() >= deadline_monotonic
-                    and row["compatibility"]["status"] != "not_evaluated_deadline"
+                    and row["compatibility"]["status"] in ("strict_valid", "compatibility_decoded")
                 ):
                     row = bind_row(
                         response,
@@ -222,13 +224,13 @@ class SynLlama:
                     deadline_monotonic is not None and finished >= deadline_monotonic,
                 )
                 responses.append(row)
+                longest_sample = max(longest_sample, time.monotonic() - sample_started)
             else:
                 sampling["deadline_reached"] = (
                     deadline_monotonic is not None and time.monotonic() >= deadline_monotonic
                 )
                 sampling["elapsed_seconds"] = time.monotonic() - sample_started
                 responses.append({"response": response, "sampling": sampling})
-            longest_sample = max(longest_sample, time.monotonic() - sample_started)
         return responses
 
 
