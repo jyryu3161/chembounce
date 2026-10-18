@@ -21,6 +21,7 @@ from rdkit.Chem import rdFingerprintGenerator
 import chemistry
 import cli
 import cost_estimation
+from chembounce_synthesis.phase_telemetry import phase_span, validate_telemetry
 import scaffoldgraph_fragmenter as sg
 import utils
 
@@ -329,209 +330,215 @@ def _make_diverse_hopping(
     diagnostics,
     exploration_fraction,
     search_candidate_budget,
+    *,
+    telemetry=None,
 ):
     """Allocate bounded attachment and final scoring budgets across fragments."""
     from collections import deque
     from chembounce_synthesis.exploration import select_diverse
     from chembounce_synthesis.identity import chemical_identity, classify_change, scaffold_family_key
 
-    out = Path(output_dir)
-    report = diagnostics if diagnostics is not None else {}
-    try:
-        chemical_identity(target_smiles)
-    except (ValueError, RuntimeError) as exc:
-        raise ValueError(f"Input compound identity failure: {exc}") from exc
-    query_fp = chemistry.count_fingerprint(target_mol)
-    cats = utils.cats_module.CATS2D()
-    target_cats = np.asarray(cats.getCATs2D(target_mol))
-    counters, local_counts, fragment_reports = Counter(), {}, []
-    queues, prepared, originals = deque(), {}, {}
-    for number, frag in enumerate(frags, 1):
-        original = utils.absolute_smiles(frag)
-        originals[number] = original
-        prepared[number] = chemistry.prepare_replacement(target_mol, frag)
-        replacements = _read_replacements(
-            out / f"replace_scaffold_list.fragment_{number:04d}.tsv", preserve_order=True
-        )
-        queues.append((number, frag, deque(replacements.index[:scaffold_top_n])))
-        local_counts[number] = Counter()
-        fragment_reports.append(
-            {"number": number, "smiles": original, "available_scaffolds": len(replacements)}
-        )
-    pending, decisions, assembly = [], [], []
-    seen = {target_smiles}
-    while queues and counters["candidate_requests"] < search_candidate_budget:
-        number, frag, replacements = queues.popleft()
-        if not replacements:
-            continue
-        replacement = replacements.popleft()
-        if replacements:
-            queues.append((number, frag, replacements))
-        local = local_counts[number]
-        local["scaffolds_tested"] += 1
-        requested = min(cand_max_n__rplc or 10, search_candidate_budget - counters["candidate_requests"])
-        counters["candidate_requests"] += requested
-        counters["attachment_calls"] += 1
-        replacement_mol, replacement = utils.init_mol(replacement)
-        assembly_report = {}
-        candidates = replace_molecule(
-            target_mol,
-            frag,
-            replacement_mol,
-            requested,
-            beam,
-            prepared=prepared[number],
-            search_policy="diverse",
-            exploration_fraction=exploration_fraction,
-            seed=seed,
-            diagnostics=assembly_report,
-        )
-        assembly.append(
-            {
-                "fragment": number,
-                "replacement": replacement,
-                "requested_candidates": requested,
-                "returned_candidates": len(candidates),
-                **assembly_report,
-            }
-        )
-        if not candidates:
-            local["no_valid_attachments"] += 1
-        for _, candidate in candidates:
-            local["generated"] += 1
-            decision = {"fragment": number, "replacement": replacement, "smiles": candidate}
-            decisions.append(decision)
-            if candidate in seen:
-                local["duplicate_or_input"] += 1
-                decision["status"] = "duplicate_or_input"
-                continue
-            seen.add(candidate)
-            try:
-                change = classify_change(target_smiles, candidate)
-            except (ValueError, RuntimeError) as exc:
-                local["identity_rejected"] += 1
-                decision.update(status="identity_rejected", reason=str(exc))
-                continue
-            if change != "scaffold":
-                local["not_scaffold_change"] += 1
-                decision["status"] = "not_scaffold_change"
-                continue
-            mol, candidate = utils.init_mol(candidate)
-            score = DataStructs.TanimotoSimilarity(query_fp, chemistry.count_fingerprint(mol))
-            decision["tanimoto"] = score
-            if core_mol is not None and not mol.HasSubstructMatch(core_mol, useChirality=True):
-                local["core_rejected"] += 1
-                decision["status"] = "core_rejected"
-                continue
-            props = utils._get_molecular_prop_extd_(mol)
-            passed, reasons = utils.determ_props(props, candidate_thresholds or {}, True)
-            if not passed:
-                local["property_rejected"] += 1
-                decision.update(status="property_rejected", reasons=reasons)
-                continue
-            standardized, _ = utils.get_standard_smiles(candidate)
-            distance = float(np.linalg.norm(target_cats - np.asarray(cats.getCATs2D(mol))))
-            row = [
-                number,
-                originals[number],
-                replacement,
-                candidate,
-                standardized,
-                score,
-                float("nan"),
-                distance,
-                props["qed"],
-                props["sa"],
-                props["logp"],
-                props["mw"],
-                props["n_hdonor"],
-                props["n_hacceptor"],
-            ]
-            pending.append(row)
-            decision["status"] = "eligible"
-            local["eligible"] += 1
-            if score < tanimoto_threshold:
-                local["below_2d_threshold_eligible"] += 1
-    counts, processed = Counter(), 0
-
-    def can_select(row, selected):
-        nonlocal processed
-        for selected_row in selected[processed:]:
-            counts[selected_row[0]] += 1
-        processed = len(selected)
-        return frag_max_n is None or counts[row[0]] < frag_max_n
-
-    selected, allocation = select_diverse(
-        pending,
-        overall_max_n or len(pending),
-        score=lambda row: row[5],
-        smiles=lambda row: row[3],
-        fingerprint=lambda row: chemistry.count_fingerprint(Chem.MolFromSmiles(row[3])),
-        fraction=exploration_fraction,
-        seed=seed,
-        threshold=tanimoto_threshold,
-        group=lambda row: scaffold_family_key(row[3]),
-        can_select=can_select,
-    )
-    selected_smiles = {row[3] for row in selected}
-    for decision in decisions:
-        if decision["status"] == "eligible":
-            decision["status"] = (
-                "selected"
-                if decision["smiles"] in selected_smiles
-                else "not_selected_output_budget_or_fragment_cap"
+    with phase_span(telemetry, "native.setup"):
+        out = Path(output_dir)
+        report = diagnostics if diagnostics is not None else {}
+        try:
+            chemical_identity(target_smiles)
+        except (ValueError, RuntimeError) as exc:
+            raise ValueError(f"Input compound identity failure: {exc}") from exc
+        query_fp = chemistry.count_fingerprint(target_mol)
+        cats = utils.cats_module.CATS2D()
+        target_cats = np.asarray(cats.getCATs2D(target_mol))
+        counters, local_counts, fragment_reports = Counter(), {}, []
+        queues, prepared, originals = deque(), {}, {}
+        for number, frag in enumerate(frags, 1):
+            original = utils.absolute_smiles(frag)
+            originals[number] = original
+            prepared[number] = chemistry.prepare_replacement(target_mol, frag)
+            replacements = _read_replacements(
+                out / f"replace_scaffold_list.fragment_{number:04d}.tsv", preserve_order=True
             )
-            if decision["status"] == "selected":
-                decision["lane"] = allocation["lanes"][decision["smiles"]]
-    output_path = out / "overall_result.txt"
-    for row in selected:
-        if calculate_shape:
-            try:
-                row[6] = utils.calc_electron_shape(target_smiles, row[3], seed)
-            except (ValueError, RuntimeError, ImportError) as exc:
-                local_counts[row[0]]["shape_failed"] += 1
-                report.setdefault("shape_errors", []).append({"smiles": row[3], "reason": str(exc)})
-        local_counts[row[0]]["accepted"] += 1
-    with output_path.open("w", newline="") as stream:
-        writer = csv.writer(stream, delimiter="\t")
-        writer.writerow(RESULT_FEATURES)
-        writer.writerows(selected)
-    for number in originals:
-        with (out / f"fragment_result_{number:04d}.txt").open("w", newline="") as stream:
+            queues.append((number, frag, deque(replacements.index[:scaffold_top_n])))
+            local_counts[number] = Counter()
+            fragment_reports.append(
+                {"number": number, "smiles": original, "available_scaffolds": len(replacements)}
+            )
+        pending, decisions, assembly = [], [], []
+        seen = {target_smiles}
+    with phase_span(telemetry, "native.generation"):
+        while queues and counters["candidate_requests"] < search_candidate_budget:
+            number, frag, replacements = queues.popleft()
+            if not replacements:
+                continue
+            replacement = replacements.popleft()
+            if replacements:
+                queues.append((number, frag, replacements))
+            local = local_counts[number]
+            local["scaffolds_tested"] += 1
+            requested = min(cand_max_n__rplc or 10, search_candidate_budget - counters["candidate_requests"])
+            counters["candidate_requests"] += requested
+            counters["attachment_calls"] += 1
+            replacement_mol, replacement = utils.init_mol(replacement)
+            assembly_report = {}
+            candidates = replace_molecule(
+                target_mol,
+                frag,
+                replacement_mol,
+                requested,
+                beam,
+                prepared=prepared[number],
+                search_policy="diverse",
+                exploration_fraction=exploration_fraction,
+                seed=seed,
+                diagnostics=assembly_report,
+            )
+            assembly.append(
+                {
+                    "fragment": number,
+                    "replacement": replacement,
+                    "requested_candidates": requested,
+                    "returned_candidates": len(candidates),
+                    **assembly_report,
+                }
+            )
+            if not candidates:
+                local["no_valid_attachments"] += 1
+            for _, candidate in candidates:
+                local["generated"] += 1
+                decision = {"fragment": number, "replacement": replacement, "smiles": candidate}
+                decisions.append(decision)
+                if candidate in seen:
+                    local["duplicate_or_input"] += 1
+                    decision["status"] = "duplicate_or_input"
+                    continue
+                seen.add(candidate)
+                try:
+                    change = classify_change(target_smiles, candidate)
+                except (ValueError, RuntimeError) as exc:
+                    local["identity_rejected"] += 1
+                    decision.update(status="identity_rejected", reason=str(exc))
+                    continue
+                if change != "scaffold":
+                    local["not_scaffold_change"] += 1
+                    decision["status"] = "not_scaffold_change"
+                    continue
+                mol, candidate = utils.init_mol(candidate)
+                score = DataStructs.TanimotoSimilarity(query_fp, chemistry.count_fingerprint(mol))
+                decision["tanimoto"] = score
+                if core_mol is not None and not mol.HasSubstructMatch(core_mol, useChirality=True):
+                    local["core_rejected"] += 1
+                    decision["status"] = "core_rejected"
+                    continue
+                props = utils._get_molecular_prop_extd_(mol)
+                passed, reasons = utils.determ_props(props, candidate_thresholds or {}, True)
+                if not passed:
+                    local["property_rejected"] += 1
+                    decision.update(status="property_rejected", reasons=reasons)
+                    continue
+                standardized, _ = utils.get_standard_smiles(candidate)
+                distance = float(np.linalg.norm(target_cats - np.asarray(cats.getCATs2D(mol))))
+                row = [
+                    number,
+                    originals[number],
+                    replacement,
+                    candidate,
+                    standardized,
+                    score,
+                    float("nan"),
+                    distance,
+                    props["qed"],
+                    props["sa"],
+                    props["logp"],
+                    props["mw"],
+                    props["n_hdonor"],
+                    props["n_hacceptor"],
+                ]
+                pending.append(row)
+                decision["status"] = "eligible"
+                local["eligible"] += 1
+                if score < tanimoto_threshold:
+                    local["below_2d_threshold_eligible"] += 1
+    with phase_span(telemetry, "native.allocation"):
+        counts, processed = Counter(), 0
+
+        def can_select(row, selected):
+            nonlocal processed
+            for selected_row in selected[processed:]:
+                counts[selected_row[0]] += 1
+            processed = len(selected)
+            return frag_max_n is None or counts[row[0]] < frag_max_n
+
+        selected, allocation = select_diverse(
+            pending,
+            overall_max_n or len(pending),
+            score=lambda row: row[5],
+            smiles=lambda row: row[3],
+            fingerprint=lambda row: chemistry.count_fingerprint(Chem.MolFromSmiles(row[3])),
+            fraction=exploration_fraction,
+            seed=seed,
+            threshold=tanimoto_threshold,
+            group=lambda row: scaffold_family_key(row[3]),
+            can_select=can_select,
+        )
+        selected_smiles = {row[3] for row in selected}
+        for decision in decisions:
+            if decision["status"] == "eligible":
+                decision["status"] = (
+                    "selected"
+                    if decision["smiles"] in selected_smiles
+                    else "not_selected_output_budget_or_fragment_cap"
+                )
+                if decision["status"] == "selected":
+                    decision["lane"] = allocation["lanes"][decision["smiles"]]
+    with phase_span(telemetry, "native.output"):
+        output_path = out / "overall_result.txt"
+        for row in selected:
+            if calculate_shape:
+                try:
+                    row[6] = utils.calc_electron_shape(target_smiles, row[3], seed)
+                except (ValueError, RuntimeError, ImportError) as exc:
+                    local_counts[row[0]]["shape_failed"] += 1
+                    report.setdefault("shape_errors", []).append({"smiles": row[3], "reason": str(exc)})
+            local_counts[row[0]]["accepted"] += 1
+        with output_path.open("w", newline="") as stream:
             writer = csv.writer(stream, delimiter="\t")
             writer.writerow(RESULT_FEATURES)
-            writer.writerows(row for row in selected if row[0] == number)
-    for fragment_report in fragment_reports:
-        local = local_counts[fragment_report["number"]]
-        fragment_report["counts"] = dict(local)
-        counters.update(local)
-    report.update(
-        source_files_changed_after_import=_changed_sources(),
-        fragments=fragment_reports,
-        fragment_count_total=len(frags),
-        fragment_count_screened=sum(bool(count["scaffolds_tested"]) for count in local_counts.values()),
-        global_limit_reached=overall_max_n is not None and len(selected) >= overall_max_n,
-        counts=dict(counters),
-        status="success" if selected else "no_candidates",
-        candidate_selection=allocation,
-        search_budget={
-            "candidate_request_limit": search_candidate_budget,
-            "candidate_requests": counters["candidate_requests"],
-            "attachment_calls": counters["attachment_calls"],
-            "unvisited_replacements": sum(len(replacements) for _, _, replacements in queues),
-            "budget_scope": "Requested final products per attachment call, charged even when no valid attachments result; intermediate beam separately bounded",
-        },
-    )
-    if not selected:
-        report["message"] = (
-            "No distinct scaffold-changing candidates passed constraints within the explicit search and output budgets. Inspect search_decisions.json."
+            writer.writerows(selected)
+        for number in originals:
+            with (out / f"fragment_result_{number:04d}.txt").open("w", newline="") as stream:
+                writer = csv.writer(stream, delimiter="\t")
+                writer.writerow(RESULT_FEATURES)
+                writer.writerows(row for row in selected if row[0] == number)
+        for fragment_report in fragment_reports:
+            local = local_counts[fragment_report["number"]]
+            fragment_report["counts"] = dict(local)
+            counters.update(local)
+        report.update(
+            source_files_changed_after_import=_changed_sources(),
+            fragments=fragment_reports,
+            fragment_count_total=len(frags),
+            fragment_count_screened=sum(bool(count["scaffolds_tested"]) for count in local_counts.values()),
+            global_limit_reached=overall_max_n is not None and len(selected) >= overall_max_n,
+            counts=dict(counters),
+            status="success" if selected else "no_candidates",
+            candidate_selection=allocation,
+            search_budget={
+                "candidate_request_limit": search_candidate_budget,
+                "candidate_requests": counters["candidate_requests"],
+                "attachment_calls": counters["attachment_calls"],
+                "unvisited_replacements": sum(len(replacements) for _, _, replacements in queues),
+                "budget_scope": "Requested final products per attachment call, charged even when no valid attachments result; intermediate beam separately bounded",
+            },
         )
-    _json_write(
-        out / "search_decisions.json",
-        {"schema_version": 1, "policy": "diverse", "decisions": decisions, "assembly": assembly},
-    )
-    _json_write(out / "run_summary.json", report)
-    return str(output_path)
+        if not selected:
+            report["message"] = (
+                "No distinct scaffold-changing candidates passed constraints within the explicit search and output budgets. Inspect search_decisions.json."
+            )
+        _json_write(
+            out / "search_decisions.json",
+            {"schema_version": 1, "policy": "diverse", "decisions": decisions, "assembly": assembly},
+        )
+        _json_write(out / "run_summary.json", report)
+        return str(output_path)
 
 
 def get_frags_cands(
@@ -690,7 +697,10 @@ def make_scaffold_hopping(
     search_policy="legacy",
     exploration_fraction=0.25,
     search_candidate_budget=4096,
+    *,
+    telemetry=None,
 ):
+    validate_telemetry(telemetry, "native")
     if search_policy == "diverse":
         return _make_diverse_hopping(
             target_smiles,
@@ -710,7 +720,11 @@ def make_scaffold_hopping(
             diagnostics,
             exploration_fraction,
             search_candidate_budget,
+            **({"telemetry": telemetry} if telemetry is not None else {}),
         )
+    if telemetry is not None:
+        for name in ("generation", "allocation"):
+            telemetry.unavailable(f"native.{name}", "legacy_native_path_not_instrumented")
     out = Path(output_dir)
     counters = Counter()
     report = diagnostics if diagnostics is not None else {}
@@ -887,12 +901,15 @@ def chembounce(
     exploration_fraction=None,
     search_candidate_budget=None,
     protocol="legacy",
+    *,
+    telemetry=None,
 ):
     """Return (results DataFrame, resource metrics); record provenance and diagnostics.
 
     Python API and CLI both apply Lipinski filters unless thresholds={} is supplied.
     Existing run artifacts require overwrite=True, protecting earlier results.
     """
+    validate_telemetry(telemetry, "native")
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
     if not overwrite and any(
@@ -914,110 +931,111 @@ def chembounce(
                 old.unlink()
     report = {"schema_version": 1}
     try:
-        from chembounce_synthesis.exploration import validate_policy
-        from chembounce_synthesis.protocols import core_protocol, protocol_provenance
+        with phase_span(telemetry, "native.setup"):
+            from chembounce_synthesis.exploration import validate_policy
+            from chembounce_synthesis.protocols import core_protocol, protocol_provenance
 
-        defaults = core_protocol(protocol)
-        search_policy = defaults["search_policy"] if search_policy is None else search_policy
-        exploration_fraction = (
-            defaults["exploration_fraction"] if exploration_fraction is None else exploration_fraction
-        )
-        search_candidate_budget = (
-            defaults["search_candidate_budget"]
-            if search_candidate_budget is None
-            else search_candidate_budget
-        )
-
-        validate_policy(search_policy, exploration_fraction, seed, search_candidate_budget)
-        thresholds = utils._default_thrs_() if candidate_thresholds is None else candidate_thresholds
-        _validate_parameters(tanimoto_threshold, _search_scf_thr_, seed, thresholds)
-        utils._scaffold_no_reassign_(
-            overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_
-        )
-        if not isinstance(murcko_frag_itr_rnd, int) or murcko_frag_itr_rnd < 0:
-            raise ValueError("Fragment depth must be a nonnegative integer")
-        target_mol, canonical = utils.init_mol(target_smiles)
-        if len(Chem.GetMolFrags(target_mol)) != 1:
-            raise utils.SmilesInputError(
-                target_smiles, "Multi-component input: supply one compound without counterions"
+            defaults = core_protocol(protocol)
+            search_policy = defaults["search_policy"] if search_policy is None else search_policy
+            exploration_fraction = (
+                defaults["exploration_fraction"] if exploration_fraction is None else exploration_fraction
             )
-        core_mol = utils.init_mol(core_smiles)[0] if core_smiles is not None else None
-        if core_mol is not None and not target_mol.HasSubstructMatch(core_mol, useChirality=True):
-            raise utils.SmilesInputError(core_smiles, "Core SMILES is not contained in the input")
-        report["input_smiles"] = canonical
-        report["input_properties"] = utils._get_molecular_prop_extd_(target_mol)
-        _, input_failures = utils.determ_props(report["input_properties"], thresholds, True)
-        report["input_filter_failures"] = input_failures
-        if input_failures:
-            LOGGER.warning("Input exceeds active candidate filters: %s", "; ".join(input_failures))
-        if fragments_DB is not None:
-            fragments_DB = list(fragments_DB)
-        args = dict(
-            target_smiles=canonical,
-            target_mol=target_mol,
-            fragments_DB=fragments_DB,
-            overall_max_n=overall_max_n,
-            frag_max_n=frag_max_n,
-            scaffold_top_n=scaffold_top_n,
-            cand_max_n__rplc=cand_max_n__rplc,
-            _merge_structure_top_n_=_merge_structure_top_n_,
-            murcko_frag_itr_rnd=murcko_frag_itr_rnd,
-            _search_scf_thr_=_search_scf_thr_,
-            fragments=fragments,
-            replace_scaffold_files=replace_scaffold_files,
-            output_dir=out,
-            low_mem=low_mem,
-            tqdm_quiet=tqdm_quiet,
-            use_fingerprint_db=use_fingerprint_db,
-            scaffold_db_file=scaffold_db_file,
-            fingerprint_db_file=fingerprint_db_file,
-            trust_legacy_db=trust_legacy_db,
-            diagnostics=report,
-            search_policy=search_policy,
-            exploration_fraction=exploration_fraction,
-            seed=seed,
-        )
-        frags, overall, per_frag, top_n, per_replacement, beam = get_frags_cands(**args)
-        parameters = {
-            k: v
-            for k, v in args.items()
-            if k not in ("target_mol", "fragments_DB", "diagnostics", "output_dir")
-        }
-        parameters.update(
-            input_smiles=target_smiles,
-            protocol=protocol,
-            core_smiles=core_smiles,
-            seed=seed,
-            calculate_shape=calculate_shape,
-            tanimoto_threshold=tanimoto_threshold,
-            candidate_thresholds={
-                k: [v if v is None or math.isfinite(v) else str(v) for v in bounds]
-                for k, bounds in thresholds.items()
-            },
-            search_candidate_budget=search_candidate_budget,
-            effective_limits={
-                "overall": overall,
-                "per_fragment": per_frag,
-                "scaffolds": top_n,
-                "per_replacement": per_replacement,
-                "beam": beam,
-            },
-        )
-        # Normalize paths for JSON and hash exactly the actual libraries in use.
-        parameters = json.loads(json.dumps(parameters, default=str))
-        sources = (
-            list(replace_scaffold_files or [])
-            if not isinstance(replace_scaffold_files, (str, Path))
-            else [replace_scaffold_files]
-        )
-        if report["database"]["path"]:
-            sources.append(report["database"]["path"])
-        manifest = _provenance(parameters, sources)
-        manifest["protocol"] = protocol_provenance(protocol)
-        if fragments_DB is not None:
-            values = [s if isinstance(s, str) else utils.absolute_smiles(s) for s in fragments_DB]
-            manifest["in_memory_library_sha256"] = hashlib.sha256("\n".join(values).encode()).hexdigest()
-        _json_write(out / "run_manifest.json", manifest)
+            search_candidate_budget = (
+                defaults["search_candidate_budget"]
+                if search_candidate_budget is None
+                else search_candidate_budget
+            )
+
+            validate_policy(search_policy, exploration_fraction, seed, search_candidate_budget)
+            thresholds = utils._default_thrs_() if candidate_thresholds is None else candidate_thresholds
+            _validate_parameters(tanimoto_threshold, _search_scf_thr_, seed, thresholds)
+            utils._scaffold_no_reassign_(
+                overall_max_n, frag_max_n, scaffold_top_n, cand_max_n__rplc, _merge_structure_top_n_
+            )
+            if not isinstance(murcko_frag_itr_rnd, int) or murcko_frag_itr_rnd < 0:
+                raise ValueError("Fragment depth must be a nonnegative integer")
+            target_mol, canonical = utils.init_mol(target_smiles)
+            if len(Chem.GetMolFrags(target_mol)) != 1:
+                raise utils.SmilesInputError(
+                    target_smiles, "Multi-component input: supply one compound without counterions"
+                )
+            core_mol = utils.init_mol(core_smiles)[0] if core_smiles is not None else None
+            if core_mol is not None and not target_mol.HasSubstructMatch(core_mol, useChirality=True):
+                raise utils.SmilesInputError(core_smiles, "Core SMILES is not contained in the input")
+            report["input_smiles"] = canonical
+            report["input_properties"] = utils._get_molecular_prop_extd_(target_mol)
+            _, input_failures = utils.determ_props(report["input_properties"], thresholds, True)
+            report["input_filter_failures"] = input_failures
+            if input_failures:
+                LOGGER.warning("Input exceeds active candidate filters: %s", "; ".join(input_failures))
+            if fragments_DB is not None:
+                fragments_DB = list(fragments_DB)
+            args = dict(
+                target_smiles=canonical,
+                target_mol=target_mol,
+                fragments_DB=fragments_DB,
+                overall_max_n=overall_max_n,
+                frag_max_n=frag_max_n,
+                scaffold_top_n=scaffold_top_n,
+                cand_max_n__rplc=cand_max_n__rplc,
+                _merge_structure_top_n_=_merge_structure_top_n_,
+                murcko_frag_itr_rnd=murcko_frag_itr_rnd,
+                _search_scf_thr_=_search_scf_thr_,
+                fragments=fragments,
+                replace_scaffold_files=replace_scaffold_files,
+                output_dir=out,
+                low_mem=low_mem,
+                tqdm_quiet=tqdm_quiet,
+                use_fingerprint_db=use_fingerprint_db,
+                scaffold_db_file=scaffold_db_file,
+                fingerprint_db_file=fingerprint_db_file,
+                trust_legacy_db=trust_legacy_db,
+                diagnostics=report,
+                search_policy=search_policy,
+                exploration_fraction=exploration_fraction,
+                seed=seed,
+            )
+            frags, overall, per_frag, top_n, per_replacement, beam = get_frags_cands(**args)
+            parameters = {
+                k: v
+                for k, v in args.items()
+                if k not in ("target_mol", "fragments_DB", "diagnostics", "output_dir")
+            }
+            parameters.update(
+                input_smiles=target_smiles,
+                protocol=protocol,
+                core_smiles=core_smiles,
+                seed=seed,
+                calculate_shape=calculate_shape,
+                tanimoto_threshold=tanimoto_threshold,
+                candidate_thresholds={
+                    k: [v if v is None or math.isfinite(v) else str(v) for v in bounds]
+                    for k, bounds in thresholds.items()
+                },
+                search_candidate_budget=search_candidate_budget,
+                effective_limits={
+                    "overall": overall,
+                    "per_fragment": per_frag,
+                    "scaffolds": top_n,
+                    "per_replacement": per_replacement,
+                    "beam": beam,
+                },
+            )
+            # Normalize paths for JSON and hash exactly the actual libraries in use.
+            parameters = json.loads(json.dumps(parameters, default=str))
+            sources = (
+                list(replace_scaffold_files or [])
+                if not isinstance(replace_scaffold_files, (str, Path))
+                else [replace_scaffold_files]
+            )
+            if report["database"]["path"]:
+                sources.append(report["database"]["path"])
+            manifest = _provenance(parameters, sources)
+            manifest["protocol"] = protocol_provenance(protocol)
+            if fragments_DB is not None:
+                values = [s if isinstance(s, str) else utils.absolute_smiles(s) for s in fragments_DB]
+                manifest["in_memory_library_sha256"] = hashlib.sha256("\n".join(values).encode()).hexdigest()
+            _json_write(out / "run_manifest.json", manifest)
         path = make_scaffold_hopping(
             canonical,
             target_mol,
@@ -1037,8 +1055,10 @@ def chembounce(
             search_policy=search_policy,
             exploration_fraction=exploration_fraction,
             search_candidate_budget=search_candidate_budget,
+            **({"telemetry": telemetry} if telemetry is not None else {}),
         )
-        return pd.read_csv(path, sep="\t")
+        with phase_span(telemetry, "native.output"):
+            return pd.read_csv(path, sep="\t")
     except Exception as exc:
         report.update(status="error", error_type=type(exc).__name__, message=str(exc))
         _json_write(out / "run_summary.json", report)

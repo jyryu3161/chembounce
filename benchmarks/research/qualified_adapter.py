@@ -50,8 +50,10 @@ def validate_v3_native_inputs(assets, options):
         raise ValueError("V3 full generation requires a bound scaffold DB or enabled fingerprint DB")
 
 
-def native_designs(request):
+def native_designs(request, *, telemetry=None):
     options = copy.deepcopy(request["settings"].get("generator_options", {}))
+    if "telemetry" in options:
+        raise ValueError("Telemetry is process-local, not a generator_options callback")
     binding = request.get("benchmark_protocol")
     if binding is not None:
         benchmark_profile(binding)
@@ -65,7 +67,9 @@ def native_designs(request):
     for asset, option in (("scaffold_db", "scaffold_db_file"), ("fingerprint_db", "fingerprint_db_file")):
         if asset in request["assets"]:
             options[option] = request["assets"][asset]
-    frame, cost = chembounce(request["query"]["smiles"], **options)
+    frame, cost = chembounce(
+        request["query"]["smiles"], **options, **({"telemetry": telemetry} if telemetry is not None else {})
+    )
     supply = list(frame["Final structure"])
     if len(supply) > 12:
         raise ValueError("Native generator exceeded the declared pool")
