@@ -109,6 +109,9 @@ Direct decoder calls reject oversized input before traversal. Rejected and
 deadline-exceeded rows have no route-parsable `response`; their original text
 remains in `raw_response` within the capture bound. Completed opt-in rows
 require a timing seal on saved replay.
+When a sample has already reached its deadline before decoding, replay keeps
+that bounded, unparsed text as terminal evidence without claiming a nesting
+check the live decoder never performed.
 Sampling elapsed time includes generation, decoding, and audit work through the
 final timing seal. Its audit hashes fixed sampling fields and records the final
 elapsed time and deadline flag separately, avoiding a self-referential hash.

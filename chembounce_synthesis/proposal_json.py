@@ -582,7 +582,15 @@ def verify_saved_row(row, provider, *, design):
         raise ValueError("Saved compatibility proposal is missing completed timing seal")
     if len(row["raw_response"]) > _MAX_INPUT + 1:
         raise ValueError("Saved compatibility proposal has oversized raw response")
-    depth_reason = _depth_check(row["raw_response"], None) if len(row["raw_response"]) <= _MAX_INPUT else None
+    deadline_outcome = (
+        isinstance(row["compatibility"], dict)
+        and row["compatibility"].get("status") == "not_evaluated_deadline"
+    )
+    depth_reason = (
+        _depth_check(row["raw_response"], None)
+        if len(row["raw_response"]) <= _MAX_INPUT and not deadline_outcome
+        else None
+    )
     if depth_reason and (
         not isinstance(row["compatibility"], dict)
         or row["compatibility"].get("strict_parser_outcome") != "not_parsed_depth_limit"
@@ -618,10 +626,7 @@ def verify_saved_row(row, provider, *, design):
         expected["compatibility"]["raw_omitted_chars"] = audit["raw_omitted_chars"]
     elif len(row["raw_response"]) > _MAX_INPUT:
         raise ValueError("Saved compatibility proposal has oversized raw response")
-    elif (
-        isinstance(row["compatibility"], dict)
-        and row["compatibility"].get("status") == "not_evaluated_deadline"
-    ):
+    elif deadline_outcome:
         expected = _deadline_row(row["raw_response"])
         expected["sampling"] = row["sampling"]
         expected["compatibility"].update(

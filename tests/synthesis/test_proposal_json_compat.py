@@ -383,7 +383,7 @@ def test_prompt_opt_in_requires_exact_named_policy(tmp_path):
     assert load_prompt(prompt)["response_json_dialect"] == POLICY
 
 
-def test_provider_acquisition_uses_template_policy_without_model_runtime(monkeypatch):
+def test_provider_acquisition_uses_template_policy_without_model_runtime(monkeypatch, tmp_path):
     class Batch(dict):
         def to(self, device):
             return self
@@ -487,3 +487,30 @@ def test_provider_acquisition_uses_template_policy_without_model_runtime(monkeyp
     assert late["sampling"]["elapsed_seconds"] >= clock.now
     assert late["compatibility"]["sample_elapsed_seconds"] == late["sampling"]["elapsed_seconds"]
     assert verify_saved_row(late, _provider(seed=17), design="CCO") == late
+
+    clock.now = 0
+    deep = '{"reactions":[],"building_blocks":[],"extra":' + "[" * 130 + "0" + "]" * 130 + "}"
+
+    def generation_exceeds_deadline(**kwargs):
+        clock.now += 6
+        return Generated()
+
+    provider.model.generate = generation_exceeds_deadline
+    provider.tokenizer.decode = lambda *args, **kwargs: deep
+    terminal = provider.propose("CCO", deadline_monotonic=5)[0]
+    assert terminal["compatibility"]["status"] == "not_evaluated_deadline"
+    assert terminal["response"] is None and terminal["raw_response"] == deep
+    archive = tmp_path / "late-deep.json"
+    archive.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "provider": provider.provenance,
+                "proposals": [{"design": "CCO", **terminal}],
+            }
+        )
+    )
+    replayed = SavedProposals(archive).propose("CCO")[0]
+    assert replayed == terminal
+    with pytest.raises(ValueError):
+        parse_response(replayed["response"])
