@@ -79,6 +79,48 @@ path types without constructing catalogs, models, reference ensembles or consumi
 designs. Asset contents/hashes are still validated by their authoritative loaders;
 path presence alone is not certification.
 
+The local provider parses model responses as strict JSON by default. A new run
+can explicitly opt into `smiles-bond-backslash-v1` by supplying a **JSON** prompt
+template at `prompt_path` with the same `instruction` and `input` strings as its
+chosen prompt plus this metadata key:
+
+```json
+"response_json_dialect": "smiles-bond-backslash-v1"
+```
+
+This policy interprets a literal backslash before a supported SMILES bond
+following atom only inside `reactions[*].product`,
+`reactions[*].reactants[*]`, or `building_blocks[*]` when the whole model
+response is otherwise invalid JSON. It preserves the raw response and records
+the exact character and UTF-8 byte offsets, derived JSON, hashes, and policy
+source in `proposals.json`. Ambiguous escapes, unrelated syntax errors, and
+unrecognized bond following tokens remain explicit failures. Valid JSON keeps
+its existing meaning. Saved replay rederives the interpretation and rejects a
+missing or changed audit. The prompt hash changes when this metadata is added;
+new proposal acceptance under this policy needs separate evaluation and does
+not change any chemical, route, or qualification gate.
+
+The opt-in decoder checks the 250,000-character input and 128-level nesting
+limits before strict parsing. It records a rejected raw response when nesting
+exceeds the limit. For oversized generated text it retains at most 250,001
+characters, records the original character count and any omitted count, and
+marks the response rejected without scanning or hashing the oversized text.
+Direct decoder calls reject oversized input before traversal. Rejected and
+deadline-exceeded rows have no route-parsable `response`; their original text
+remains in `raw_response` within the capture bound. Completed opt-in rows
+require a timing seal on saved replay.
+When a sample has already reached its deadline before decoding, replay keeps
+that bounded, unparsed text as terminal evidence without claiming a nesting
+check the live decoder never performed.
+Sampling elapsed time includes generation, decoding, and audit work through the
+final timing seal. Its audit hashes fixed sampling fields and records the final
+elapsed time and deadline flag separately, avoiding a self-referential hash.
+Saved replay checks those values and the original provider metadata against
+the raw response. It accepts at most 32 consistent provenance levels and
+requires unique sample indices within each design's declared sample count.
+These checks establish internal consistency, not authentication of external
+clock readings or model provenance.
+
 The default original-hit floors are Tanimoto **0.35**, shape **0.70**,
 pharmacophore **0.50** and polar reference recall **0.75**. Screening uses eight
 conformers at seed 42; final acceptance requires eight at each of 42/43/44. Final

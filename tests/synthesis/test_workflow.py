@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 from rdkit import Chem, DataStructs
@@ -7,8 +8,10 @@ pytest.importorskip(
     "rdkit.Chem.rdShapeAlign", reason="Optional synthesis alignment requires a newer RDKit wheel"
 )
 
+from chembounce_synthesis import proposal_json
 from chembounce_synthesis.cli import main
-from chembounce_synthesis.common import FP, canonical, molecule
+from chembounce_synthesis.common import FP, canonical, digest, molecule
+from chembounce_synthesis.proposal_json import POLICY, bind_row, finalize_timing, provider_identity_sha256
 from chembounce_synthesis.routes import verify_route
 from chembounce_synthesis.synllama import load_prompt
 from chembounce_synthesis.workflow import check_constraints, run
@@ -87,6 +90,45 @@ def test_invalid_model_response_is_visible(tmp_path, assets, proposal):
     assert run(HIT, [DESIGN], config, out) == []
     assert json.loads((out / "summary.json").read_text())["failures"][0]["stage"] == "proposal"
     assert (out / "proposals.json").exists()
+
+
+def test_opt_in_saved_proposal_reaches_route_gate_with_raw_audit(tmp_path, assets, proposal):
+    config = config_for(tmp_path, assets, proposal)
+    changed = json.loads(json.dumps(proposal))
+    changed["reactions"][0]["product"] = "F/C=C\\Cl"
+    raw = json.dumps(changed).replace("C\\\\Cl", "C\\Cl")
+    provider = {
+        "provider": "synllama_local",
+        "response_json_dialect": POLICY,
+        "prompt_sha256": "a" * 64,
+        "response_decoder_source_sha256": digest(Path(proposal_json.__file__)),
+        "model_files_sha256": {"fixture": "b" * 64},
+        "samples": 1,
+        "seed": 1,
+    }
+    row = bind_row(
+        raw,
+        {"seed": 1, "sample_index": 0},
+        "a" * 64,
+        provider["response_decoder_source_sha256"],
+        design=DESIGN,
+        provider_identity=provider_identity_sha256(provider),
+    )
+    finalize_timing(row, 1.0, False)
+    assert row["compatibility"]["status"] == "compatibility_decoded"
+    source = tmp_path / "proposals.json"
+    source.write_text(
+        json.dumps({"schema_version": 1, "provider": provider, "proposals": [{"design": DESIGN, **row}]})
+    )
+    out = tmp_path / "compatibility"
+    rows = run(HIT, [DESIGN], config, out)
+    assert rows
+    recorded = json.loads((out / "proposals.json").read_text())["proposals"][0]
+    assert recorded["raw_response"] == raw
+    assert recorded["compatibility"] == row["compatibility"]
+    summary = json.loads((out / "summary.json").read_text())
+    assert any(item["stage"] == "projection" for item in summary["search_reports"])
+    assert all(item["stage"] != "proposal" for item in summary["failures"])
 
 
 def test_bounded_workflow_and_cli(tmp_path, assets, proposal):
