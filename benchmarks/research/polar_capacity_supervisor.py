@@ -36,7 +36,8 @@ def write(path, value):
 
 def identity(pid):
     try:
-        fields = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()
+        with open(f"/proc/{pid}/stat") as stream:
+            fields = stream.read().rsplit(")", 1)[1].split()
         return {
             "pid": pid,
             "start_ticks": int(fields[19]),
@@ -168,6 +169,7 @@ def owned_snapshot(leader, known):
     # this supervisor while a phase is active. Session membership covers an
     # orphan before adoption; tracked identities cover setsid/reparenting.
     records = {}
+    supervisor_pid = os.getpid()
     for name in os.listdir("/proc"):
         if name.isdigit():
             item = identity(int(name))
@@ -180,7 +182,7 @@ def owned_snapshot(leader, known):
         pid: item
         for pid, item in records.items()
         if same(item, known.get(pid))
-        or item["ppid"] == os.getpid()
+        or item["ppid"] == supervisor_pid
         or (anchored_session and item["session"] == leader["pid"])
     }
     changed = True

@@ -3,7 +3,6 @@
 import errno
 import json
 import os
-from pathlib import Path
 import sys
 
 import pytest
@@ -18,7 +17,7 @@ def test_identity_disappearance_is_absent(monkeypatch, number):
     def missing(path, *args, **kwargs):
         raise error
 
-    monkeypatch.setattr(Path, "read_text", missing)
+    monkeypatch.setattr(supervisor, "open", missing, raising=False)
     assert supervisor.identity(1073741824) is None
 
 
@@ -29,7 +28,7 @@ def test_identity_other_io_errors_remain_visible(monkeypatch, number):
     def failed(path, *args, **kwargs):
         raise error
 
-    monkeypatch.setattr(Path, "read_text", failed)
+    monkeypatch.setattr(supervisor, "open", failed, raising=False)
     with pytest.raises(OSError) as caught:
         supervisor.identity(1073741824)
     assert caught.value is error
@@ -38,8 +37,8 @@ def test_identity_other_io_errors_remain_visible(monkeypatch, number):
 @pytest.mark.parametrize("number", [errno.ENOENT, errno.ESRCH, errno.EACCES, errno.EIO])
 def test_unrelated_procfs_race_during_owned_child(number, tmp_path, monkeypatch):
     missing_pid = 1073741824  # Beyond Linux's maximum PID; never an actual process.
-    target = Path(f"/proc/{missing_pid}/stat")
-    read_text, listdir = Path.read_text, os.listdir
+    target = f"/proc/{missing_pid}/stat"
+    read_text, listdir = open, os.listdir
     snapshot, signal_owned = supervisor.owned_snapshot, supervisor.signal_owned
     before = supervisor.subreaper()
     injected, scans, signals = [], [], []
@@ -69,7 +68,7 @@ def test_unrelated_procfs_race_during_owned_child(number, tmp_path, monkeypatch)
         return signal_owned(entry, signum)
 
     monkeypatch.setattr(os, "listdir", listing)
-    monkeypatch.setattr(Path, "read_text", disappearing)
+    monkeypatch.setattr(supervisor, "open", disappearing, raising=False)
     monkeypatch.setattr(supervisor, "owned_snapshot", scanned)
     monkeypatch.setattr(supervisor, "signal_owned", signaled)
     code = (
