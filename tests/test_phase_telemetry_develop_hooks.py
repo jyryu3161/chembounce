@@ -241,3 +241,176 @@ def test_public_native_propagation_and_sequential_repeated_scopes(tmp_path, monk
     assert result["native.setup"]["calls"] == (2 if policy == "diverse" else 1)
     assert result["native.generation"]["status"] == ("complete" if policy == "diverse" else "unavailable")
     assert result["native.reference_preflight"]["status"] == "not_reached"
+
+
+def _inert_screening_and_finalization(tmp_path, failure_stage, deadline_mode, enabled):
+    """Execute actual source blocks; stub all scientific work with opaque labels.
+
+    The source-shaped failure path reaches the scientific phase assignments,
+    then executes the real finalization block in a finally clause. No molecular
+    decoding, asset/model access, scoring, generation or wall-clock deadline.
+    """
+    import ast
+    from pathlib import Path
+    from types import SimpleNamespace
+
+    tree = ast.parse(Path(workflow.__file__).read_text())
+    run = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "run")
+    blocks = {
+        n.items[0].context_expr.args[1].value: n
+        for n in ast.walk(run)
+        if isinstance(n, ast.With)
+        and isinstance(n.items[0].context_expr, ast.Call)
+        and isinstance(n.items[0].context_expr.func, ast.Name)
+        and n.items[0].context_expr.func.id == "phase_span"
+    }
+    records = [
+        {
+            "route_id": f"r{i}",
+            "eligible_for_scoring": True,
+            "selection_status": "verified",
+            "qualification": {"status": "not_assessed", "route_id": f"r{i}"},
+        }
+        for i in range(2)
+    ]
+    entries = [
+        {"product": f"opaque-product-{i}", "design": "opaque-design", "records": [r], "tanimoto": {}}
+        for i, r in enumerate(records)
+    ]
+    summary = {
+        "status": "success",
+        "deadline_reached": False,
+        "scored_products": 0,
+        "limits_reached": [],
+        "screening_allocation": [],
+    }
+    deadlines, writes, tables, failures = [], {}, {}, []
+    terminal = KeyError("inert uncaught screening failure") if failure_stage == "terminal" else None
+
+    def deadline():
+        deadlines.append(True)
+        if deadline_mode == "next_candidate" and len(deadlines) > 1:
+            summary["deadline_reached"] = True
+        return summary["deadline_reached"]
+
+    def fail(*args, **kwargs):
+        if deadline_mode == "inside_failure":
+            summary["deadline_reached"] = True
+        raise terminal if terminal is not None else ValueError("inert scientific phase failure")
+
+    def failure_record(exc, **kwargs):
+        failures.append(kwargs["phase"])
+        return {"phase": kwargs["phase"], "reason": str(exc)}
+
+    selective = SimpleNamespace(
+        score_candidate=(lambda *a, **kw: object()) if failure_stage == "validation" else fail,
+        validate_result=fail,
+        failure_record=failure_record,
+    )
+    timing = pt.PhaseTelemetry("common") if enabled else None
+    ns = dict(
+        phase_span=pt.phase_span,
+        telemetry=timing,
+        _screening_order=lambda *a: (entries, set()),
+        ordered=entries,
+        screening_policy="inherit",
+        SCREENING_ALLOCATION_INHERIT="inherit",
+        route_records=records,
+        summary=summary,
+        config={},
+        deadline_reached=deadline,
+        scoring_mode="3d",
+        similarity=None
+        if failure_stage in {"ordinary", "terminal"}
+        else SimpleNamespace(preflight_candidate=fail if failure_stage == "preflight" else lambda *a: None),
+        selective_scoring=selective,
+        score_candidate=fail,
+        settings=None,
+        hit="opaque-hit",
+        hit_pose=None,
+        scoring_options={},
+        deadline_monotonic=None,
+        rejected_diagnostics=None,
+        qualified=False,
+        rows={},
+        _rank=lambda rows: rows,
+        _write_table=lambda path, rows, **kw: tables.update({path.name: list(rows)}),
+        _family_groups=lambda rows: {},
+        out=tmp_path,
+        identity_evidence=None,
+        polar_capacity=None,
+        route_policy=None,
+        root_objectives={},
+        write_json=lambda path, data: writes.update({path.name: json.loads(json.dumps(data))}),
+        policy=None,
+        selected=[],
+        time=SimpleNamespace(monotonic=lambda: 10.0),
+        start=0.0,
+        evidence_evaluator=None,
+        evidence_outcomes=workflow.evidence_outcomes,
+        score_records=[],
+        refinement_records=[],
+    )
+    unit = ast.Module(
+        body=[
+            ast.Try(
+                body=[blocks["common.screening"]],
+                handlers=[],
+                orelse=[],
+                finalbody=[blocks["common.workflow_finalization"]],
+            )
+        ],
+        type_ignores=[],
+    )
+    code = compile(ast.fix_missing_locations(unit), workflow.__file__, "exec")
+    if terminal is not None:
+        with pytest.raises(KeyError) as caught:
+            exec(code, ns)
+        assert caught.value is terminal
+    else:
+        exec(code, ns)
+    assert set(writes) == {
+        "search_objectives.json",
+        "qualification.json",
+        "results.json",
+        "routes.json",
+        "scores.json",
+        "refinement.json",
+        "summary.json",
+    }
+    assert writes["results.json"]["results"] == []
+    if enabled:
+        snapshot = timing.snapshot()
+        assert snapshot["status"] == "closed"
+        assert snapshot["buckets"]["common.workflow_finalization"]["status"] == "complete"
+        expected = "interrupted" if deadline_mode != "none" or terminal is not None else "complete"
+        assert snapshot["buckets"]["common.screening"]["status"] == expected
+    return writes, tables, failures, ns.get("phase")
+
+
+@pytest.mark.parametrize("failure_stage", ["ordinary", "preflight", "scoring", "validation"])
+@pytest.mark.parametrize("deadline_mode", ["next_candidate", "inside_failure", "none"])
+def test_screening_phase_labels_deadlines_and_finalization_match_disabled(
+    tmp_path, failure_stage, deadline_mode
+):
+    disabled = _inert_screening_and_finalization(tmp_path, failure_stage, deadline_mode, False)
+    enabled = _inert_screening_and_finalization(tmp_path, failure_stage, deadline_mode, True)
+    assert disabled == enabled
+    writes, tables, failures, phase = enabled
+    expected_phase = "preflight" if failure_stage == "ordinary" else failure_stage
+    assert phase == expected_phase
+    assert failures == (
+        [] if failure_stage == "ordinary" else [expected_phase] * (2 if deadline_mode == "none" else 1)
+    )
+    records = writes["routes.json"]["routes"]
+    assert records[0]["selection_status"] == "3d_failed"
+    assert records[1]["selection_status"] == (
+        "3d_failed" if deadline_mode == "none" else "not_scored_deadline"
+    )
+    assert set(tables) == {"screening_alternatives.tsv", "screening.tsv"}
+
+
+def test_uncaught_screening_failure_preserves_finalization_and_exception(tmp_path):
+    assert _inert_screening_and_finalization(
+        tmp_path, "terminal", "none", False
+    ) == _inert_screening_and_finalization(tmp_path, "terminal", "none", True)

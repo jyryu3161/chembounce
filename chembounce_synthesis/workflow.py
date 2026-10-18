@@ -1154,7 +1154,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 "route_support_binding": primary["synthesis_evidence"].get("route_binding_sha256", ""),
             }
 
-        with phase_span(telemetry, "common.reference_admission") as phase:
+        with phase_span(telemetry, "common.reference_admission") as telemetry_phase:
             hit_pose = None
             try:
                 if bounded_refill and deadline_reached():
@@ -1250,7 +1250,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     "policy": design_policy,
                 }
             if telemetry is not None and summary["deadline_reached"]:
-                phase.interrupt("workflow_deadline_observed")
+                telemetry_phase.interrupt("workflow_deadline_observed")
         rejected_designs = {
             check["design"]: check
             for check in design_checks
@@ -1342,7 +1342,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 )
             with phase_span(telemetry, "common.rules"):
                 rules = Rules(config["rules"])
-            with phase_span(telemetry, "common.evidence_prepare") as phase:
+            with phase_span(telemetry, "common.evidence_prepare") as telemetry_phase:
                 if deadline_reached():
                     evidence_evaluator = evaluator_from_config(
                         config.get("synthesis_evidence", {}), load_predictor=False
@@ -1351,7 +1351,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 else:
                     evidence_evaluator = _evidence_evaluator(config)
                 if telemetry is not None and summary["deadline_reached"]:
-                    phase.interrupt("workflow_deadline_observed")
+                    telemetry_phase.interrupt("workflow_deadline_observed")
         manifest = _manifest(config, hit, capped_designs)
         manifest["recommendation_policy"] = policy
         manifest["recommendation_profile"] = policy["calibration"]
@@ -1532,7 +1532,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 }
             return props
 
-        with phase_span(telemetry, "common.route_search") as phase:
+        with phase_span(telemetry, "common.route_search") as telemetry_phase:
             for design, proposals in _design_batches(
                 designs, provider, deadline_monotonic, carried_only=carried_only
             ):
@@ -1712,7 +1712,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                             entry["identity_check_conflict"] = True
                         entry["records"].append(record)
             if telemetry is not None and summary["deadline_reached"]:
-                phase.interrupt("workflow_deadline_observed")
+                telemetry_phase.interrupt("workflow_deadline_observed")
         # Collect before allocating expensive 3D work so one early design cannot
         # exhaust the global budget. Routes remain fully auditable when unscored.
         ordered = _candidate_order(
@@ -1732,7 +1732,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             )
             for entry in _evidence_order(ordered, evidence_policy)
         )
-        with phase_span(telemetry, "common.forward_evidence") as phase:
+        with phase_span(telemetry, "common.forward_evidence") as telemetry_phase:
             while evidence_queue:
                 entry, pending_routes = evidence_queue.popleft()
                 record = pending_routes.popleft()
@@ -1780,8 +1780,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 if pending_routes:
                     evidence_queue.append((entry, pending_routes))
             if telemetry is not None and summary["deadline_reached"]:
-                phase.interrupt("workflow_deadline_observed")
-        with phase_span(telemetry, "common.screening") as phase:
+                telemetry_phase.interrupt("workflow_deadline_observed")
+        with phase_span(telemetry, "common.screening") as telemetry_phase:
             screening_order, deferred_designs = _screening_order(ordered, screening_policy, route_records)
             eligible_entries = [
                 e for e in ordered if any(r.get("eligible_for_scoring") for r in e["records"])
@@ -1985,9 +1985,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             summary["screened_product_design_pairs"] = len(all_screened)
             summary["screened_scaffold_families"] = len({row["scaffold_family_smiles"] for row in ranked})
             if telemetry is not None and summary["deadline_reached"]:
-                phase.interrupt("workflow_deadline_observed")
+                telemetry_phase.interrupt("workflow_deadline_observed")
         if refinement.top_n:
-            with phase_span(telemetry, "common.refinement") as phase:
+            with phase_span(telemetry, "common.refinement") as telemetry_phase:
                 shortlist = ranked
                 if config.get("allocation_policy", "balanced") == "balanced":
                     shortlist = _balanced_order(
@@ -2175,10 +2175,10 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 summary["refinement_accepted"] = len(ranked)
                 summary["refinement_budget"] = budget.snapshot()
                 if telemetry is not None and summary["deadline_reached"]:
-                    phase.interrupt("workflow_deadline_observed")
+                    telemetry_phase.interrupt("workflow_deadline_observed")
         elif telemetry is not None:
             telemetry.skip("common.refinement")
-        with phase_span(telemetry, "common.selection") as phase:
+        with phase_span(telemetry, "common.selection") as telemetry_phase:
             if len(ranked) > config.get("max_results", 50):
                 summary["limits_reached"].append("max_results")
             selected = ranked[: config.get("max_results", 50)]
@@ -2325,7 +2325,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 returned_scaffold_families=len({row["scaffold_family_smiles"] for row in selected}),
             )
             if telemetry is not None and summary["deadline_reached"]:
-                phase.interrupt("workflow_deadline_observed")
+                telemetry_phase.interrupt("workflow_deadline_observed")
         return selected
     except Exception as exc:
         summary.update(status="error", error_type=type(exc).__name__, error=str(exc))

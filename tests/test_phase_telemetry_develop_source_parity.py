@@ -31,7 +31,7 @@ def statement(text):
 
 OBSERVATION_IFS = {
     statement(
-        'if telemetry is not None and summary["deadline_reached"]:\n    phase.interrupt("workflow_deadline_observed")'
+        'if telemetry is not None and summary["deadline_reached"]:\n    telemetry_phase.interrupt("workflow_deadline_observed")'
     ),
     statement('if telemetry is not None:\n    telemetry.skip("common.refinement")'),
     statement(
@@ -85,7 +85,7 @@ class DisabledTelemetry(ast.NodeTransformer):
                 assert dump(call.args[0]) == dump(ast.Name(id="telemetry", ctx=ast.Load()))
                 assert isinstance(call.args[1], ast.Constant) and isinstance(call.args[1].value, str)
                 assert item.optional_vars is None or dump(item.optional_vars) == dump(
-                    ast.Name(id="phase", ctx=ast.Store())
+                    ast.Name(id="telemetry_phase", ctx=ast.Store())
                 )
                 return self.generic_visit(node).body
         return self.generic_visit(node)
@@ -169,7 +169,7 @@ def test_only_known_empty_version_fields_are_ignored():
         "def f():\n    return 2",
         "def f():\n    if telemetry is not None:\n        scientific_call()\n    return 1",
         'def f():\n    validate_telemetry(telemetry, "native", extra=True)\n    return 1',
-        'def f():\n    if telemetry is not None and summary["deadline_reached"]:\n        phase.interrupt("workflow_deadline_observed")\n        scientific_call()\n    return 1',
+        'def f():\n    if telemetry is not None and summary["deadline_reached"]:\n        telemetry_phase.interrupt("workflow_deadline_observed")\n        scientific_call()\n    return 1',
     ],
 )
 def test_real_semantic_changes_are_not_normalized(changed):
