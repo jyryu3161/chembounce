@@ -79,6 +79,27 @@ path types without constructing catalogs, models, reference ensembles or consumi
 designs. Asset contents/hashes are still validated by their authoritative loaders;
 path presence alone is not certification.
 
+The local provider parses model responses as strict JSON by default. A new run
+can explicitly opt into `smiles-bond-backslash-v1` by supplying a **JSON** prompt
+template at `prompt_path` with the same `instruction` and `input` strings as its
+chosen prompt plus this metadata key:
+
+```json
+"response_json_dialect": "smiles-bond-backslash-v1"
+```
+
+This policy interprets a literal backslash before a supported SMILES bond
+following atom only inside `reactions[*].product`,
+`reactions[*].reactants[*]`, or `building_blocks[*]` when the whole model
+response is otherwise invalid JSON. It preserves the raw response and records
+the exact character and UTF-8 byte offsets, derived JSON, hashes, and policy
+source in `proposals.json`. Ambiguous escapes, unrelated syntax errors, and
+unrecognized bond following tokens remain explicit failures. Valid JSON keeps
+its existing meaning. Saved replay rederives the interpretation and rejects a
+missing or changed audit. The prompt hash changes when this metadata is added;
+new proposal acceptance under this policy needs separate evaluation and does
+not change any chemical, route, or qualification gate.
+
 The default original-hit floors are Tanimoto **0.35**, shape **0.70**,
 pharmacophore **0.50** and polar reference recall **0.75**. Screening uses eight
 conformers at seed 42; final acceptance requires eight at each of 42/43/44. Final

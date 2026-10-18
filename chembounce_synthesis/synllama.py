@@ -13,6 +13,7 @@ import time
 from pathlib import Path
 
 from .common import canonical, digest, positive
+from .proposal_json import POLICY as SMILES_JSON_POLICY, bind_row, verify_saved_row
 
 LOGGER = logging.getLogger(__name__)
 
@@ -39,6 +40,10 @@ def load_prompt(filename):
         or "SMILES_STRING" not in template["input"]
     ):
         raise ValueError("Prompt requires instruction and input containing SMILES_STRING")
+    if "response_json_dialect" in template and (
+        path.suffix != ".json" or template["response_json_dialect"] != SMILES_JSON_POLICY
+    ):
+        raise ValueError(f"JSON prompt response_json_dialect must be {SMILES_JSON_POLICY}")
     return template
 
 
@@ -51,6 +56,7 @@ class SynLlama:
         self.model_path = Path(model_path).resolve()
         self.prompt_path = Path(prompt_path).resolve()
         self.template = load_prompt(self.prompt_path)
+        self.response_json_dialect = self.template.get("response_json_dialect", "strict-json-v1")
         safe_weights = sorted(self.model_path.glob("*.safetensors"))
         weights = safe_weights or sorted(self.model_path.glob("pytorch_model*.bin"))
         if not weights or not (self.model_path / "config.json").is_file():
@@ -69,7 +75,12 @@ class SynLlama:
             "max_new_tokens": max_new_tokens,
             "seed": seed,
             "use_cache": True,
+            "response_json_dialect": self.response_json_dialect,
         }
+        if self.response_json_dialect == SMILES_JSON_POLICY:
+            self.provenance["response_decoder_source_sha256"] = digest(
+                Path(__file__).with_name("proposal_json.py")
+            )
         try:
             import torch
             from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -163,21 +174,28 @@ class SynLlama:
             longest_sample = max(longest_sample, time.monotonic() - sample_started)
             tokens = generated[0, inputs.input_ids.shape[1] :]
             response = self.tokenizer.decode(tokens, skip_special_tokens=True)
-            responses.append(
-                {
-                    "response": response,
-                    "sampling": {
-                        "temperature": temperature,
-                        "top_p": top_p,
-                        "seed": self.seed + index,
-                        "generated_tokens": len(tokens),
-                        "ended_with_eos": int(tokens[-1]) in eos if len(tokens) else False,
-                        "deadline_reached": deadline_monotonic is not None
-                        and time.monotonic() >= deadline_monotonic,
-                        "elapsed_seconds": time.monotonic() - sample_started,
-                    },
-                }
-            )
+            sampling = {
+                "temperature": temperature,
+                "top_p": top_p,
+                "seed": self.seed + index,
+                "generated_tokens": len(tokens),
+                "ended_with_eos": int(tokens[-1]) in eos if len(tokens) else False,
+                "deadline_reached": deadline_monotonic is not None and time.monotonic() >= deadline_monotonic,
+                "elapsed_seconds": time.monotonic() - sample_started,
+            }
+            if self.response_json_dialect == SMILES_JSON_POLICY:
+                sampling["sample_index"] = index
+                responses.append(
+                    bind_row(
+                        response,
+                        sampling,
+                        self.provenance["prompt_sha256"],
+                        self.provenance["response_decoder_source_sha256"],
+                        deadline_monotonic=deadline_monotonic,
+                    )
+                )
+            else:
+                responses.append({"response": response, "sampling": sampling})
         return responses
 
 
@@ -190,16 +208,44 @@ class SavedProposals:
         if data.get("schema_version") != 1 or not isinstance(data.get("proposals"), list):
             raise ValueError("Saved proposals require schema_version=1 and a proposals list")
         self.proposals = {}
+        recorded_provider = data.get("provider", {})
+        dialect = (
+            recorded_provider.get("response_json_dialect") if isinstance(recorded_provider, dict) else None
+        )
+        if dialect is not None and dialect not in ("strict-json-v1", SMILES_JSON_POLICY):
+            raise ValueError("Unknown saved proposal response_json_dialect")
+        if dialect == SMILES_JSON_POLICY and not all(
+            isinstance(recorded_provider.get(key), str)
+            and len(recorded_provider[key]) == 64
+            and all(ch in "0123456789abcdef" for ch in recorded_provider[key])
+            for key in ("prompt_sha256", "response_decoder_source_sha256")
+        ):
+            raise ValueError("Saved compatibility provider is missing policy provenance")
+        if dialect == SMILES_JSON_POLICY and recorded_provider["response_decoder_source_sha256"] != digest(
+            Path(__file__).with_name("proposal_json.py")
+        ):
+            raise ValueError("Saved compatibility decoder source does not match this runtime")
         for row in data["proposals"]:
-            self.proposals.setdefault(canonical(row["design"]), []).append(
-                {"response": row["response"], "sampling": row.get("sampling", {})}
-            )
+            if dialect == SMILES_JSON_POLICY:
+                proposal = verify_saved_row(row, recorded_provider)
+            else:
+                if any(key in row for key in ("raw_response", "compatibility")):
+                    raise ValueError("Saved proposal audit requires declared compatibility policy")
+                proposal = {"response": row["response"], "sampling": row.get("sampling", {})}
+            self.proposals.setdefault(canonical(row["design"]), []).append(proposal)
         self.provenance = {
             "provider": "saved_proposals",
             "path": str(path),
             "sha256": digest(path),
-            "recorded_provider": data.get("provider", {}),
+            "recorded_provider": recorded_provider,
         }
+        if dialect == SMILES_JSON_POLICY:
+            self.provenance.update(
+                {
+                    key: recorded_provider[key]
+                    for key in ("response_json_dialect", "prompt_sha256", "response_decoder_source_sha256")
+                }
+            )
 
     def propose(self, smiles, deadline_monotonic=None):
         if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
