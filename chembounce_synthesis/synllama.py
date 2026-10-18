@@ -13,7 +13,14 @@ import time
 from pathlib import Path
 
 from .common import canonical, digest, positive
-from .proposal_json import POLICY as SMILES_JSON_POLICY, bind_row, verify_saved_row
+from .proposal_json import (
+    POLICY as SMILES_JSON_POLICY,
+    bind_row,
+    compatibility_origin,
+    finalize_timing,
+    provider_identity_sha256,
+    verify_saved_row,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -147,12 +154,15 @@ class SynLlama:
 
             stopping["stopping_criteria"] = StoppingCriteriaList([DeadlineStop()])
         longest_sample = 0.0
+        provider_identity = None
         for index in range(self.samples):
             if deadline_monotonic is not None and deadline_monotonic - time.monotonic() <= max(
                 0.1, longest_sample * 1.2
             ):
                 break
             sample_started = time.monotonic()
+            if self.response_json_dialect == SMILES_JSON_POLICY and provider_identity is None:
+                provider_identity = provider_identity_sha256(self.provenance)
             temperature, top_p = modes[index % len(modes)]
             LOGGER.info("SynLlama sample %s/%s for %s", index + 1, self.samples, smiles)
             with self.torch.random.fork_rng(devices=devices), self.torch.inference_mode():
@@ -171,7 +181,6 @@ class SynLlama:
                     pad_token_id=self.tokenizer.pad_token_id,
                     **stopping,
                 )
-            longest_sample = max(longest_sample, time.monotonic() - sample_started)
             tokens = generated[0, inputs.input_ids.shape[1] :]
             response = self.tokenizer.decode(tokens, skip_special_tokens=True)
             sampling = {
@@ -180,23 +189,46 @@ class SynLlama:
                 "seed": self.seed + index,
                 "generated_tokens": len(tokens),
                 "ended_with_eos": int(tokens[-1]) in eos if len(tokens) else False,
-                "deadline_reached": deadline_monotonic is not None and time.monotonic() >= deadline_monotonic,
-                "elapsed_seconds": time.monotonic() - sample_started,
             }
             if self.response_json_dialect == SMILES_JSON_POLICY:
                 sampling["sample_index"] = index
-                responses.append(
-                    bind_row(
+                row = bind_row(
+                    response,
+                    sampling,
+                    self.provenance["prompt_sha256"],
+                    self.provenance["response_decoder_source_sha256"],
+                    design=smiles,
+                    provider_identity=provider_identity,
+                    deadline_monotonic=deadline_monotonic,
+                )
+                if (
+                    deadline_monotonic is not None
+                    and time.monotonic() >= deadline_monotonic
+                    and row["compatibility"]["status"] != "not_evaluated_deadline"
+                ):
+                    row = bind_row(
                         response,
                         sampling,
                         self.provenance["prompt_sha256"],
                         self.provenance["response_decoder_source_sha256"],
                         design=smiles,
-                        deadline_monotonic=deadline_monotonic,
+                        provider_identity=provider_identity,
+                        deadline_monotonic=time.monotonic(),
                     )
+                finished = time.monotonic()
+                finalize_timing(
+                    row,
+                    finished - sample_started,
+                    deadline_monotonic is not None and finished >= deadline_monotonic,
                 )
+                responses.append(row)
             else:
+                sampling["deadline_reached"] = (
+                    deadline_monotonic is not None and time.monotonic() >= deadline_monotonic
+                )
+                sampling["elapsed_seconds"] = time.monotonic() - sample_started
                 responses.append({"response": response, "sampling": sampling})
+            longest_sample = max(longest_sample, time.monotonic() - sample_started)
         return responses
 
 
@@ -210,11 +242,8 @@ class SavedProposals:
             raise ValueError("Saved proposals require schema_version=1 and a proposals list")
         self.proposals = {}
         recorded_provider = data.get("provider", {})
-        dialect = (
-            recorded_provider.get("response_json_dialect") if isinstance(recorded_provider, dict) else None
-        )
-        if dialect is not None and dialect not in ("strict-json-v1", SMILES_JSON_POLICY):
-            raise ValueError("Unknown saved proposal response_json_dialect")
+        origin = compatibility_origin(recorded_provider)
+        dialect = SMILES_JSON_POLICY if origin is not None else None
         if dialect == SMILES_JSON_POLICY and not all(
             isinstance(recorded_provider.get(key), str)
             and len(recorded_provider[key]) == 64
@@ -226,10 +255,28 @@ class SavedProposals:
             Path(__file__).with_name("proposal_json.py")
         ):
             raise ValueError("Saved compatibility decoder source does not match this runtime")
+        if dialect == SMILES_JSON_POLICY and (
+            type(origin.get("samples")) is not int
+            or origin["samples"] < 1
+            or type(origin.get("seed")) is not int
+        ):
+            raise ValueError("Saved compatibility origin is missing sample identity bounds")
+        seen_samples = {}
         for row in data["proposals"]:
             design = canonical(row["design"])
             if dialect == SMILES_JSON_POLICY:
                 proposal = verify_saved_row(row, recorded_provider, design=design)
+                index = proposal["sampling"]["sample_index"]
+                if (
+                    index >= origin["samples"]
+                    or type(proposal["sampling"].get("seed")) is not int
+                    or proposal["sampling"]["seed"] != origin["seed"] + index
+                ):
+                    raise ValueError("Saved compatibility sample identity differs from origin provider")
+                slots = seen_samples.setdefault(design, set())
+                if index in slots:
+                    raise ValueError("Duplicate saved compatibility sample index for design")
+                slots.add(index)
             else:
                 if any(key in row for key in ("raw_response", "compatibility")):
                     raise ValueError("Saved proposal audit requires declared compatibility policy")

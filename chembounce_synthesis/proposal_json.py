@@ -14,6 +14,8 @@ _SMILES_ATOM_START = frozenset("BCNOPSFIbcnops*[")
 _JSON_ESCAPES = frozenset('"\\/bfnrt')
 _MAX_REPAIRS = 256
 _MAX_OUTPUT = 500_000
+_MAX_INPUT = 250_000
+_MAX_DEPTH = 128
 
 
 def _sha(text):
@@ -23,6 +25,86 @@ def _sha(text):
 def _json_text(value):
     _require_scalars(value)
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
+
+
+def provider_identity_sha256(provider):
+    """Bind captured provider metadata; never rehash model or prompt assets."""
+    if not isinstance(provider, dict) or provider.get("provider") != "synllama_local":
+        raise ValueError("Compatibility requires original SynLlama provider provenance")
+    pending = [(provider, 0)]
+    nodes = characters = 0
+    while pending:
+        value, depth = pending.pop()
+        nodes += 1
+        if depth > _MAX_DEPTH or nodes > 10_000:
+            raise ValueError("Deeply nested or oversized provider provenance")
+        if isinstance(value, dict):
+            if len(value) > 10_000 - nodes:
+                raise ValueError("Oversized provider provenance")
+            pending.extend((item, depth + 1) for item in value.values())
+            characters += sum(len(key) for key in value if isinstance(key, str))
+        elif isinstance(value, list):
+            if len(value) > 10_000 - nodes:
+                raise ValueError("Oversized provider provenance")
+            pending.extend((item, depth + 1) for item in value)
+        elif isinstance(value, str):
+            characters += len(value)
+        if characters > 100_000:
+            raise ValueError("Oversized provider provenance")
+    try:
+        encoded = _json_text(provider)
+    except (RecursionError, OverflowError, TypeError) as exc:
+        raise ValueError("Invalid or deeply nested provider provenance") from exc
+    if len(encoded) > 100_000:
+        raise ValueError("Oversized provider provenance")
+    return _sha(encoded)
+
+
+def compatibility_origin(provider):
+    """Find a declared policy through bounded saved-provider replay wrappers."""
+    if not isinstance(provider, dict):
+        return None
+    chain = []
+    current = provider
+    for _ in range(32):
+        if not isinstance(current, dict):
+            raise ValueError("Invalid saved provider provenance chain")
+        chain.append(current)
+        if "recorded_provider" not in current:
+            break
+        current = current["recorded_provider"]
+    else:
+        raise ValueError("Saved provider provenance chain exceeds limit")
+    policies = [item.get("response_json_dialect") for item in chain]
+    if POLICY not in policies:
+        if any(policy not in (None, "strict-json-v1") for policy in policies):
+            raise ValueError("Unknown saved proposal response_json_dialect")
+        return None
+    if any(policy != POLICY for policy in policies):
+        raise ValueError("Saved compatibility policy was stripped or changed in provenance chain")
+    origin = chain[-1]
+    prompt = origin.get("prompt_sha256")
+    decoder = origin.get("response_decoder_source_sha256")
+    for item in chain:
+        if item.get("prompt_sha256") != prompt or item.get("response_decoder_source_sha256") != decoder:
+            raise ValueError("Saved compatibility provenance chain has inconsistent source bindings")
+    provider_identity_sha256(origin)
+    return origin
+
+
+def _stable_sampling_sha256(sampling):
+    if (
+        not isinstance(sampling, dict)
+        or len(sampling) > 32
+        or any(not isinstance(key, str) or isinstance(value, (dict, list)) for key, value in sampling.items())
+    ):
+        raise ValueError("Invalid or oversized compatibility sampling metadata")
+    encoded = _json_text(
+        {k: v for k, v in sampling.items() if k not in ("elapsed_seconds", "deadline_reached")}
+    )
+    if len(encoded) > 4096:
+        raise ValueError("Oversized compatibility sampling metadata")
+    return _sha(encoded)
 
 
 def _reject_constant(value):
@@ -51,6 +133,45 @@ def _unique_object(pairs):
     return result
 
 
+def _depth_check(raw, deadline_monotonic):
+    """Bound nesting before Python's JSON decoder or the compatibility parser runs."""
+    depth = 0
+    quoted = escaped = False
+    for index, char in enumerate(raw):
+        if index % 1024 == 0 and deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
+            return "Proposal decode deadline reached"
+        if quoted:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                quoted = False
+        elif char == '"':
+            quoted = True
+        elif char in "[{":
+            depth += 1
+            if depth > _MAX_DEPTH:
+                return "JSON nesting limit exceeded"
+        elif char in "]}":
+            depth -= 1
+    return None
+
+
+def _rejected_raw(raw, reason, *, outcome):
+    return {
+        "response": raw,
+        "raw_response": raw,
+        "compatibility": {
+            "policy": POLICY,
+            "status": "rejected",
+            "strict_parser_outcome": outcome,
+            "raw_utf8_sha256": _sha(raw),
+            "reason": reason,
+        },
+    }
+
+
 def _is_smiles_path(path):
     return (
         (len(path) == 3 and path[0] == "reactions" and isinstance(path[1], int) and path[2] == "product")
@@ -67,7 +188,7 @@ def _is_smiles_path(path):
 
 class _Scanner:
     def __init__(self, raw, deadline_monotonic=None):
-        if not isinstance(raw, str) or len(raw) > 250_000:
+        if not isinstance(raw, str) or len(raw) > _MAX_INPUT:
             raise ValueError("Invalid or oversized model response")
         self.raw = raw
         self.start = len(raw) - len(raw.lstrip())
@@ -162,7 +283,7 @@ class _Scanner:
 
     def _value(self, path=(), depth=0):
         self._budget()
-        if depth > 128:
+        if depth > _MAX_DEPTH:
             raise ValueError("JSON nesting limit exceeded")
         self._space()
         if self.pos >= self.end:
@@ -294,6 +415,8 @@ def decode_response(raw, *, deadline_monotonic=None):
     """Return a raw-preserving provider row for a versioned opt-in dialect."""
     if not isinstance(raw, str):
         raise ValueError("Model response must be text")
+    if len(raw) > _MAX_INPUT:
+        raise ValueError("Invalid or oversized model response")
     if any(0xD800 <= ord(ch) <= 0xDFFF for ch in raw):
         raise ValueError("Non-scalar Unicode in raw model response")
     if deadline_monotonic is not None and (
@@ -304,6 +427,11 @@ def decode_response(raw, *, deadline_monotonic=None):
         raise ValueError("Invalid proposal decode deadline")
     if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
         return _deadline_row(raw)
+    depth_reason = _depth_check(raw, deadline_monotonic)
+    if depth_reason == "Proposal decode deadline reached":
+        return _deadline_row(raw)
+    if depth_reason:
+        return _rejected_raw(raw, depth_reason, outcome="not_parsed_depth_limit")
     try:
         from .routes import parse_response
 
@@ -328,7 +456,7 @@ def decode_response(raw, *, deadline_monotonic=None):
             }
         audit["strict_error"] = str(strict_error)
         return {"response": data, "raw_response": raw, "compatibility": audit}
-    except (ValueError, TypeError) as strict_error:
+    except (ValueError, TypeError, RecursionError) as strict_error:
         return {
             "response": raw,
             "raw_response": raw,
@@ -355,7 +483,16 @@ def decode_response(raw, *, deadline_monotonic=None):
     }
 
 
-def bind_row(raw, sampling, prompt_sha256, decoder_source_sha256, *, design, deadline_monotonic=None):
+def bind_row(
+    raw,
+    sampling,
+    prompt_sha256,
+    decoder_source_sha256,
+    *,
+    design,
+    provider_identity,
+    deadline_monotonic=None,
+):
     """Create a proposal row whose audit binds raw text, sampling and policy source."""
     if not isinstance(design, str) or not design:
         raise ValueError("Compatibility proposal requires a design identity")
@@ -365,9 +502,11 @@ def bind_row(raw, sampling, prompt_sha256, decoder_source_sha256, *, design, dea
         or sampling["sample_index"] < 0
     ):
         raise ValueError("Compatibility proposal requires a sample index")
+    if not isinstance(provider_identity, str) or len(provider_identity) != 64:
+        raise ValueError("Compatibility proposal requires provider identity")
     row = decode_response(raw, deadline_monotonic=deadline_monotonic)
     row["sampling"] = sampling
-    sampling_sha256 = _sha(_json_text(sampling))
+    sampling_sha256 = _stable_sampling_sha256(sampling)
     if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
         row = _deadline_row(raw)
         row["sampling"] = sampling
@@ -376,10 +515,29 @@ def bind_row(raw, sampling, prompt_sha256, decoder_source_sha256, *, design, dea
             "prompt_sha256": prompt_sha256,
             "decoder_source_sha256": decoder_source_sha256,
             "sampling_sha256": sampling_sha256,
+            "sampling_hash_scope": "excluding_elapsed_seconds_and_deadline_reached",
+            "provider_identity_sha256": provider_identity,
             "design_smiles": design,
             "sample_index": sampling["sample_index"],
         }
     )
+    return row
+
+
+def finalize_timing(row, elapsed_seconds, deadline_reached):
+    """Seal observed post-decode timing without hashing its own measurement."""
+    if (
+        isinstance(elapsed_seconds, bool)
+        or not isinstance(elapsed_seconds, (int, float))
+        or not math.isfinite(elapsed_seconds)
+        or elapsed_seconds < 0
+        or type(deadline_reached) is not bool
+    ):
+        raise ValueError("Invalid proposal sample timing")
+    row["sampling"]["elapsed_seconds"] = elapsed_seconds
+    row["sampling"]["deadline_reached"] = deadline_reached
+    row["compatibility"]["sample_elapsed_seconds"] = elapsed_seconds
+    row["compatibility"]["sample_deadline_reached"] = deadline_reached
     return row
 
 
@@ -395,6 +553,10 @@ def verify_saved_row(row, provider, *, design):
         raise ValueError("Saved compatibility proposal requires a design identity")
     if type(row["sampling"].get("sample_index")) is not int or row["sampling"]["sample_index"] < 0:
         raise ValueError("Saved compatibility proposal requires a sample index")
+    origin = compatibility_origin(provider)
+    if origin is None:
+        raise ValueError("Saved compatibility proposal has no declared provider policy")
+    identity = provider_identity_sha256(origin)
     if (
         isinstance(row["compatibility"], dict)
         and row["compatibility"].get("status") == "not_evaluated_deadline"
@@ -405,7 +567,9 @@ def verify_saved_row(row, provider, *, design):
             {
                 "prompt_sha256": provider["prompt_sha256"],
                 "decoder_source_sha256": provider["response_decoder_source_sha256"],
-                "sampling_sha256": _sha(_json_text(row["sampling"])),
+                "sampling_sha256": _stable_sampling_sha256(row["sampling"]),
+                "sampling_hash_scope": "excluding_elapsed_seconds_and_deadline_reached",
+                "provider_identity_sha256": identity,
                 "design_smiles": design,
                 "sample_index": row["sampling"].get("sample_index"),
             }
@@ -417,7 +581,23 @@ def verify_saved_row(row, provider, *, design):
             provider["prompt_sha256"],
             provider["response_decoder_source_sha256"],
             design=design,
+            provider_identity=identity,
         )
+    has_timing = "elapsed_seconds" in row["sampling"] or "deadline_reached" in row["sampling"]
+    if has_timing:
+        if "elapsed_seconds" not in row["sampling"] or "deadline_reached" not in row["sampling"]:
+            raise ValueError("Saved compatibility proposal has incomplete timing")
+        finalize_timing(
+            expected,
+            row["sampling"]["elapsed_seconds"],
+            row["sampling"]["deadline_reached"],
+        )
+    if (
+        expected["compatibility"]["status"] == "not_evaluated_deadline"
+        and has_timing
+        and not row["sampling"]["deadline_reached"]
+    ):
+        raise ValueError("Saved deadline outcome disagrees with sample timing")
     try:
         actual_response = _json_text(row["response"])
         expected_response = _json_text(expected["response"])

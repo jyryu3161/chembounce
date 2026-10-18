@@ -100,6 +100,18 @@ missing or changed audit. The prompt hash changes when this metadata is added;
 new proposal acceptance under this policy needs separate evaluation and does
 not change any chemical, route, or qualification gate.
 
+The opt-in decoder checks the 250,000-character input and 128-level nesting
+limits before strict parsing. It records a rejected raw response when nesting
+exceeds the limit; an oversized response raises an explicit provider error.
+Sampling elapsed time includes generation, decoding, and audit work through the
+final timing seal. Its audit hashes fixed sampling fields and records the final
+elapsed time and deadline flag separately, avoiding a self-referential hash.
+Saved replay checks those values and the original provider metadata against
+the raw response. It accepts at most 32 consistent provenance levels and
+requires unique sample indices within each design's declared sample count.
+These checks establish internal consistency, not authentication of external
+clock readings or model provenance.
+
 The default original-hit floors are Tanimoto **0.35**, shape **0.70**,
 pharmacophore **0.50** and polar reference recall **0.75**. Screening uses eight
 conformers at seed 42; final acceptance requires eight at each of 42/43/44. Final

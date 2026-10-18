@@ -11,7 +11,7 @@ pytest.importorskip(
 from chembounce_synthesis import proposal_json
 from chembounce_synthesis.cli import main
 from chembounce_synthesis.common import FP, canonical, digest, molecule
-from chembounce_synthesis.proposal_json import POLICY, bind_row
+from chembounce_synthesis.proposal_json import POLICY, bind_row, provider_identity_sha256
 from chembounce_synthesis.routes import verify_route
 from chembounce_synthesis.synllama import load_prompt
 from chembounce_synthesis.workflow import check_constraints, run
@@ -98,9 +98,13 @@ def test_opt_in_saved_proposal_reaches_route_gate_with_raw_audit(tmp_path, asset
     changed["reactions"][0]["product"] = "F/C=C\\Cl"
     raw = json.dumps(changed).replace("C\\\\Cl", "C\\Cl")
     provider = {
+        "provider": "synllama_local",
         "response_json_dialect": POLICY,
         "prompt_sha256": "a" * 64,
         "response_decoder_source_sha256": digest(Path(proposal_json.__file__)),
+        "model_files_sha256": {"fixture": "b" * 64},
+        "samples": 1,
+        "seed": 1,
     }
     row = bind_row(
         raw,
@@ -108,6 +112,7 @@ def test_opt_in_saved_proposal_reaches_route_gate_with_raw_audit(tmp_path, asset
         "a" * 64,
         provider["response_decoder_source_sha256"],
         design=DESIGN,
+        provider_identity=provider_identity_sha256(provider),
     )
     assert row["compatibility"]["status"] == "compatibility_decoded"
     source = tmp_path / "proposals.json"

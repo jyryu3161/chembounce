@@ -2,15 +2,23 @@
 
 import copy
 import json
+import sys
 import time
 from contextlib import nullcontext
 from pathlib import Path
-from types import SimpleNamespace
+from types import ModuleType, SimpleNamespace
 
 import pytest
 
-from chembounce_synthesis.proposal_json import POLICY, bind_row, decode_response, verify_saved_row
+from chembounce_synthesis.proposal_json import (
+    POLICY,
+    bind_row,
+    decode_response,
+    provider_identity_sha256,
+    verify_saved_row,
+)
 from chembounce_synthesis import proposal_json
+from chembounce_synthesis import synllama
 from chembounce_synthesis.common import digest
 from chembounce_synthesis.routes import parse_response
 from chembounce_synthesis.synllama import SavedProposals, SynLlama, load_prompt
@@ -35,11 +43,15 @@ def _raw_invalid(field="product", follow="C"):
     raise AssertionError(field)
 
 
-def _provider():
+def _provider(seed=1):
     return {
+        "provider": "synllama_local",
         "response_json_dialect": POLICY,
         "prompt_sha256": "a" * 64,
         "response_decoder_source_sha256": digest(Path(proposal_json.__file__)),
+        "model_files_sha256": {"fixture": "b" * 64},
+        "samples": 1,
+        "seed": seed,
     }
 
 
@@ -118,6 +130,7 @@ def test_repair_count_and_deadline_bound():
         "a" * 64,
         _provider()["response_decoder_source_sha256"],
         design="CCO",
+        provider_identity=provider_identity_sha256(_provider()),
         deadline_monotonic=time.monotonic() - 1,
     )
     assert row["response"] == row["raw_response"]
@@ -127,6 +140,25 @@ def test_repair_count_and_deadline_bound():
         verify_saved_row(row, _provider(), design="CCC")
 
 
+def test_opt_in_depth_and_length_bounds_precede_strict_json():
+    for depth in (130, 1200):
+        raw = '{"reactions":[],"building_blocks":[],"extra":' + "[" * depth + "0" + "]" * depth + "}"
+        row = decode_response(raw)
+        assert row["raw_response"] == raw
+        assert row["compatibility"]["status"] == "rejected"
+        assert "nesting limit" in row["compatibility"]["reason"]
+
+    class Oversized(str):
+        def __iter__(self):
+            raise AssertionError("Oversized input was traversed")
+
+        def encode(self, *args, **kwargs):
+            raise AssertionError("Oversized input was hashed")
+
+    with pytest.raises(ValueError, match="oversized"):
+        decode_response(Oversized(" " * 250_001))
+
+
 def test_saved_replay_rederives_raw_and_rejects_tampering(tmp_path):
     row = bind_row(
         _raw_invalid(),
@@ -134,6 +166,7 @@ def test_saved_replay_rederives_raw_and_rejects_tampering(tmp_path):
         "a" * 64,
         _provider()["response_decoder_source_sha256"],
         design="CCO",
+        provider_identity=provider_identity_sha256(_provider()),
     )
     assert verify_saved_row(row, _provider(), design="CCO") == row
     archive = tmp_path / "proposals.json"
@@ -152,10 +185,60 @@ def test_saved_replay_rederives_raw_and_rejects_tampering(tmp_path):
         )
     )
     assert SavedProposals(archive).propose("CCO")[0] == row
+    downgraded = copy.deepcopy(saved.provenance)
+    for key in ("response_json_dialect", "prompt_sha256", "response_decoder_source_sha256"):
+        downgraded.pop(key)
+    stripped = {key: value for key, value in row.items() if key not in ("raw_response", "compatibility")}
+    archive.write_text(
+        json.dumps(
+            {"schema_version": 1, "provider": downgraded, "proposals": [{"design": "CCO", **stripped}]}
+        )
+    )
+    with pytest.raises(ValueError, match="stripped or changed"):
+        SavedProposals(archive)
+    archive.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "provider": _provider(),
+                "proposals": [{"design": "CCO", **row}, {"design": "CCO", **row}],
+            }
+        )
+    )
+    with pytest.raises(ValueError, match="Duplicate saved compatibility sample index"):
+        SavedProposals(archive)
+    changed_provider = _provider()
+    changed_provider["model_files_sha256"] = {"other": "c" * 64}
+    archive.write_text(
+        json.dumps(
+            {"schema_version": 1, "provider": changed_provider, "proposals": [{"design": "CCO", **row}]}
+        )
+    )
+    with pytest.raises(ValueError, match="raw rederivation"):
+        SavedProposals(archive)
+    deeply_wrapped = _provider()
+    for _ in range(33):
+        deeply_wrapped = {
+            "provider": "saved_proposals",
+            "response_json_dialect": POLICY,
+            "prompt_sha256": "a" * 64,
+            "response_decoder_source_sha256": _provider()["response_decoder_source_sha256"],
+            "recorded_provider": deeply_wrapped,
+        }
+    archive.write_text(
+        json.dumps({"schema_version": 1, "provider": deeply_wrapped, "proposals": [{"design": "CCO", **row}]})
+    )
+    with pytest.raises(ValueError, match="chain exceeds limit"):
+        SavedProposals(archive)
+    archive.write_text(
+        json.dumps(
+            {"schema_version": 1, "provider": saved.provenance, "proposals": [{"design": "CCO", **row}]}
+        )
+    )
     wrong_source = json.loads(archive.read_text())
     wrong_source["provider"]["response_decoder_source_sha256"] = "0" * 64
     archive.write_text(json.dumps(wrong_source))
-    with pytest.raises(ValueError, match="decoder source"):
+    with pytest.raises(ValueError, match="source"):
         SavedProposals(archive)
     archive.write_text(
         json.dumps(
@@ -184,7 +267,18 @@ def test_legacy_saved_proposals_keep_existing_dict_transport(tmp_path):
     archive.write_text(
         json.dumps({"schema_version": 1, "proposals": [{"design": "CCO", "response": _proposal()}]})
     )
-    assert SavedProposals(archive).propose("CCO")[0] == {"response": _proposal(), "sampling": {}}
+    saved = SavedProposals(archive)
+    assert saved.propose("CCO")[0] == {"response": _proposal(), "sampling": {}}
+    archive.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "provider": saved.provenance,
+                "proposals": [{"design": "CCO", **saved.propose("CCO")[0]}],
+            }
+        )
+    )
+    assert SavedProposals(archive).propose("CCO")[0] == saved.propose("CCO")[0]
 
 
 def test_prompt_opt_in_requires_exact_named_policy(tmp_path):
@@ -202,7 +296,7 @@ def test_prompt_opt_in_requires_exact_named_policy(tmp_path):
     assert load_prompt(prompt)["response_json_dialect"] == POLICY
 
 
-def test_provider_acquisition_uses_template_policy_without_model_runtime():
+def test_provider_acquisition_uses_template_policy_without_model_runtime(monkeypatch):
     class Batch(dict):
         def to(self, device):
             return self
@@ -250,7 +344,7 @@ def test_provider_acquisition_uses_template_policy_without_model_runtime():
     provider.samples = 1
     provider.seed = 17
     provider.response_json_dialect = "strict-json-v1"
-    provider.provenance = {"prompt_sha256": "a" * 64, **_provider()}
+    provider.provenance = _provider(seed=17)
     strict = provider.propose("CCO")[0]
     assert strict["response"] == _raw_invalid() and "compatibility" not in strict
     provider.response_json_dialect = POLICY
@@ -258,4 +352,38 @@ def test_provider_acquisition_uses_template_policy_without_model_runtime():
     assert compatible["raw_response"] == _raw_invalid()
     assert compatible["response"] == _proposal()
     assert compatible["sampling"]["sample_index"] == 0
-    assert verify_saved_row(compatible, _provider(), design="CCO") == compatible
+    assert verify_saved_row(compatible, _provider(seed=17), design="CCO") == compatible
+
+    class Clock:
+        now = 0.0
+
+        def monotonic(self):
+            return self.now
+
+    clock = Clock()
+    monkeypatch.setattr(synllama, "time", clock)
+    monkeypatch.setattr(proposal_json, "time", clock)
+    transforms = ModuleType("transformers")
+    transforms.StoppingCriteria = type("StoppingCriteria", (), {})
+    transforms.StoppingCriteriaList = list
+    monkeypatch.setitem(sys.modules, "transformers", transforms)
+    original_hash = proposal_json._sha
+
+    def costly_hash(value):
+        result = original_hash(value)
+        clock.now += 2
+        return result
+
+    monkeypatch.setattr(proposal_json, "_sha", costly_hash)
+
+    def generated_after_one_second(**kwargs):
+        clock.now += 1
+        return Generated()
+
+    provider.model.generate = generated_after_one_second
+    late = provider.propose("CCO", deadline_monotonic=5)[0]
+    assert late["compatibility"]["status"] == "not_evaluated_deadline"
+    assert late["sampling"]["deadline_reached"] is True
+    assert late["sampling"]["elapsed_seconds"] >= clock.now
+    assert late["compatibility"]["sample_elapsed_seconds"] == late["sampling"]["elapsed_seconds"]
+    assert verify_saved_row(late, _provider(seed=17), design="CCO") == late
