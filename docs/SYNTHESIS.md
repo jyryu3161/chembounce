@@ -275,6 +275,20 @@ without another full model comparison, and the original serial inner-rule
 preparation has been restored. The saved v15 result remains developmental
 evidence; it does not change the completed primary comparison or P1 status.
 
+A subsequent default-off search-constructor experiment traces a future
+reaction role through the exact normalized reverse guide, then prefers a
+role-matching ordinary second building block from the already visited ranked
+pool. It preserves the first block, anchor reservation and final gates;
+ambiguous or incomplete metadata retains the legacy choice. In the fixed
+12-input paired v16 probe, the off arm reproduced all 56 input/product pairs
+and 59 routes. The on arm retained every pair and route and expanded these
+sets to 58 pairs and 65 routes, including all three historically qualified
+products and graphs. No additional input acquired a candidate. Under the
+unchanged saved forward evidence, even the optimistic supported-input bound
+is only five, so the policy has not met P1 or entered the workflow configuration.
+The actual primary result remains four supported inputs. This probe made no
+forward-model or 3D calls; its gains are pre-evidence supply gains only.
+
 ## Optional catalog byte binding
 
 A configuration can pin both the catalog TSV and its import manifest:
