@@ -1,0 +1,404 @@
+{
+  "schema": "route-first-saved-route-loss-v1",
+  "status": "complete",
+  "scope": "Only saved supported baseline products passing frozen v8 pre-evidence gates; v7 artifacts and 91-rule template inspection; no catalog loading, search, generation, model or new route replay",
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "9f7d18eccc9134448ab138d29c02e38e1986daaf975eac97bd4711f640a010ed",
+    "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329"
+  },
+  "harness_sha256": "265709876a820dd153a8c952faf30789ed572e02ab8e8d1e39490b4f1d1ee970",
+  "input_sha256": {
+    "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/baseline-pre-evidence-gates-v1/result.json": "5f14ec8a86ca4a5d43845740091e54aecf875dcc3c413e583dbe156134bd9ee4",
+    "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/development-probe-v7/result.json": "db3bfdbd7a5068933cd483ac56c969f36e21c959cc4566d2e8953105150f0190",
+    "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023/route-first-config.json": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+    "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/rules.json": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39"
+  },
+  "inputs": [
+    {
+      "id": "CHEMBL4630839-query-1",
+      "baseline_passed_products": 24,
+      "baseline_supported_route_records_for_passed_products": 62,
+      "v7_eligible_products": 26,
+      "exact_product_overlap_with_v7": [],
+      "baseline_rule_sequences": [
+        {
+          "rules": [
+            "synllama-rule-045"
+          ],
+          "route_records": 6
+        },
+        {
+          "rules": [
+            "synllama-rule-077"
+          ],
+          "route_records": 56
+        }
+      ],
+      "raw_routes_sha256": "5ea1de3ab6a80b5ec24255dd61eac9fe206d497b2ed4605ffd37a8bd9cba8cbb",
+      "baseline_manifest_sha256": "83437cf55f5ebed055c6d0cf0f8ac546764bc2b73fb48d0ac02a7c610b237379",
+      "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39"
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "baseline_passed_products": 2,
+      "baseline_supported_route_records_for_passed_products": 8,
+      "v7_eligible_products": 0,
+      "exact_product_overlap_with_v7": [],
+      "baseline_rule_sequences": [
+        {
+          "rules": [
+            "synllama-rule-036",
+            "synllama-rule-042"
+          ],
+          "route_records": 8
+        }
+      ],
+      "raw_routes_sha256": "5c1557a3d97366569128c3918548872fdd4d3051bdc5a3a2f0c9baf37b5029e8",
+      "baseline_manifest_sha256": "1c3744aee6b94dd2efd080aff4a516b5958b0504a167f78daa2e85d2c2e72128",
+      "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39"
+    },
+    {
+      "id": "CHEMBL3334418-query-2",
+      "baseline_passed_products": 1,
+      "baseline_supported_route_records_for_passed_products": 2,
+      "v7_eligible_products": 2,
+      "exact_product_overlap_with_v7": [],
+      "baseline_rule_sequences": [
+        {
+          "rules": [
+            "synllama-rule-081"
+          ],
+          "route_records": 2
+        }
+      ],
+      "raw_routes_sha256": "23016afd02b65cfc2782154b6faa995d7dfea448f90f6000b8ab817643ba5536",
+      "baseline_manifest_sha256": "23402f094df798483e6fd6b772dbe11f063b9bb3874a3c49bf6f34723f26a163",
+      "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39"
+    }
+  ],
+  "focus": {
+    "id": "CHEMBL4247-query-2",
+    "supported_products": [
+      "COc1cc(CC(=O)O)ccc1Nc1ccc2ncc(-c3ccccc3N(C)C)n2n1",
+      "COc1cc(CC(=O)O)ccc1Nc1nn2c(-c3ccccc3N(C)C)cnc2cc1C"
+    ],
+    "all_supported_route_ids_by_product": {
+      "COc1cc(CC(=O)O)ccc1Nc1ccc2ncc(-c3ccccc3N(C)C)n2n1": [
+        "route_000008",
+        "route_000012",
+        "route_000028",
+        "route_000032"
+      ],
+      "COc1cc(CC(=O)O)ccc1Nc1nn2c(-c3ccccc3N(C)C)cnc2cc1C": [
+        "route_000006",
+        "route_000010",
+        "route_000026",
+        "route_000030"
+      ]
+    },
+    "representative_saved_routes": [
+      {
+        "route_id": "route_000008",
+        "product": "COc1cc(CC(=O)O)ccc1Nc1ccc2ncc(-c3ccccc3N(C)C)n2n1",
+        "rules_in_forward_order": [
+          "synllama-rule-036",
+          "synllama-rule-042"
+        ],
+        "steps": [
+          {
+            "rule_id": "synllama-rule-036",
+            "product": "CN(C)c1ccccc1-c1cnc2ccc(Cl)nn12",
+            "reactants": [
+              "CN(C)c1ccccc1Br",
+              "Clc1ccc2ncc(Br)n2n1"
+            ]
+          },
+          {
+            "rule_id": "synllama-rule-042",
+            "product": "COc1cc(CC(=O)O)ccc1Nc1ccc2ncc(-c3ccccc3N(C)C)n2n1",
+            "reactants": [
+              "CN(C)c1ccccc1-c1cnc2ccc(Cl)nn12",
+              "COc1cc(CC(=O)O)ccc1N"
+            ]
+          }
+        ],
+        "leaves": {
+          "b0": {
+            "catalog_id": "structure-sha256:54489d4bc382b9f092e2cbd64927a988e4ffd2eca9495c07fa8288224f252e94",
+            "smiles": "CN(C)c1ccccc1Br"
+          },
+          "b2": {
+            "catalog_id": "structure-sha256:9eba082d36a1edde6e2f0578a8603a93e6d0eac2df5b89c15c901a1e2d5cdfa6",
+            "smiles": "Clc1ccc2ncc(Br)n2n1"
+          },
+          "b1": {
+            "catalog_id": "structure-sha256:66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a",
+            "smiles": "COc1cc(CC(=O)O)ccc1N"
+          }
+        }
+      },
+      {
+        "route_id": "route_000006",
+        "product": "COc1cc(CC(=O)O)ccc1Nc1nn2c(-c3ccccc3N(C)C)cnc2cc1C",
+        "rules_in_forward_order": [
+          "synllama-rule-036",
+          "synllama-rule-042"
+        ],
+        "steps": [
+          {
+            "rule_id": "synllama-rule-036",
+            "product": "Cc1cc2ncc(-c3ccccc3N(C)C)n2nc1Cl",
+            "reactants": [
+              "CN(C)c1ccccc1Br",
+              "Cc1cc2ncc(I)n2nc1Cl"
+            ]
+          },
+          {
+            "rule_id": "synllama-rule-042",
+            "product": "COc1cc(CC(=O)O)ccc1Nc1nn2c(-c3ccccc3N(C)C)cnc2cc1C",
+            "reactants": [
+              "Cc1cc2ncc(-c3ccccc3N(C)C)n2nc1Cl",
+              "COc1cc(CC(=O)O)ccc1N"
+            ]
+          }
+        ],
+        "leaves": {
+          "b0": {
+            "catalog_id": "structure-sha256:54489d4bc382b9f092e2cbd64927a988e4ffd2eca9495c07fa8288224f252e94",
+            "smiles": "CN(C)c1ccccc1Br"
+          },
+          "b2": {
+            "catalog_id": "structure-sha256:de00325d7efc3cf47f15bb66432f5afe9e49043437e97b9abd14de3c7590237d",
+            "smiles": "Cc1cc2ncc(I)n2nc1Cl"
+          },
+          "b1": {
+            "catalog_id": "structure-sha256:66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a",
+            "smiles": "COc1cc(CC(=O)O)ccc1N"
+          }
+        }
+      }
+    ],
+    "required_rules": {
+      "synllama-rule-036": {
+        "smarts": "[#6;$(C=C-[#6]),$(c:c):1][Br,I].[Cl,Br,I][c:2]>>[c:2][#6:1]",
+        "roles": [
+          "[#6;$(C=C-[#6]),$(c:c):1][Br,I]",
+          "[Cl,Br,I][c:2]"
+        ],
+        "strict_template_issues": {
+          "reactant_map_collisions": [],
+          "product_map_collisions": [],
+          "unbound_product_atoms": []
+        }
+      },
+      "synllama-rule-042": {
+        "smarts": "[Cl,Br,I][c;$(c1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):1].[N;$(NC)&!$(N=*)&!$([N-])&!$(N#*)&!$([ND3])&!$([ND4])&!$(N[c,O])&!$(N[C,S]=[S,O,N]),H2&$(Nc1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):2]>>[c:1][N:2]",
+        "roles": [
+          "[Cl,Br,I][c&$(c1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):1]",
+          "[N;$(NC)&!$(N=*)&!$([N&-])&!$(N#*)&!$([N&D3])&!$([N&D4])&!$(N[c,O])&!$(N[C,S]=[S,O,N]),H2&$(Nc1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):2]"
+        ],
+        "strict_template_issues": {
+          "reactant_map_collisions": [],
+          "product_map_collisions": [],
+          "unbound_product_atoms": []
+        }
+      }
+    },
+    "v7_outer_rules_selected": [
+      {
+        "rule_id": "synllama-rule-063",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-077",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-080",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-027",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-029",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-030",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-031",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-036",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-039",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-040",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-042",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-044",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-045",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-046",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-047",
+        "fallback": false
+      },
+      {
+        "rule_id": "synllama-rule-071",
+        "fallback": false
+      }
+    ],
+    "v7_outer_plans_selected": [
+      {
+        "rule_id": "synllama-rule-077",
+        "guide": [
+          "COc1cc(C2CCN(CC=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+          "N"
+        ],
+        "hint_quality": "approximate"
+      },
+      {
+        "rule_id": "synllama-rule-080",
+        "guide": [
+          "COc1cc(C2CCN(CI)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+          "NC=O"
+        ],
+        "hint_quality": "approximate"
+      },
+      {
+        "rule_id": "synllama-rule-042",
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3)n2n1",
+          "CNS(C)(=O)=O"
+        ],
+        "hint_quality": "approximate"
+      },
+      {
+        "rule_id": "synllama-rule-045",
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3)n2n1",
+          "CNS(C)(=O)=O"
+        ],
+        "hint_quality": "approximate"
+      },
+      {
+        "rule_id": "synllama-rule-046",
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3)n2n1",
+          "CNS(C)(=O)=O"
+        ],
+        "hint_quality": "approximate"
+      },
+      {
+        "rule_id": "synllama-rule-047",
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3)n2n1",
+          "CNS(C)(=O)=O"
+        ],
+        "hint_quality": "approximate"
+      },
+      {
+        "rule_id": "synllama-rule-071",
+        "guide": [
+          "COc1cc(C2CCN(CC=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+          "N"
+        ],
+        "hint_quality": "approximate"
+      },
+      {
+        "rule_id": "synllama-rule-039",
+        "guide": [
+          "CS(=O)(=O)Cl",
+          "CNc1ccccc1-c1cc(C)c2cnc(Nc3ccc(C4CCN(CC(N)=O)CC4)cc3OC)nn12"
+        ],
+        "hint_quality": "approximate"
+      }
+    ],
+    "v7_outer_stage_rule_ids_executed": [
+      "synllama-rule-077",
+      "synllama-rule-080",
+      "synllama-rule-042",
+      "synllama-rule-045",
+      "synllama-rule-046",
+      "synllama-rule-047",
+      "synllama-rule-071",
+      "synllama-rule-039"
+    ],
+    "v7_outer_042_guide_slot_zero": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3)n2n1",
+    "v7_inner_template_priority_for_outer_042_slot_zero": [
+      "synllama-rule-063",
+      "synllama-rule-077",
+      "synllama-rule-080",
+      "synllama-rule-027",
+      "synllama-rule-029",
+      "synllama-rule-030",
+      "synllama-rule-031",
+      "synllama-rule-036",
+      "synllama-rule-040",
+      "synllama-rule-042",
+      "synllama-rule-044",
+      "synllama-rule-045",
+      "synllama-rule-046",
+      "synllama-rule-047",
+      "synllama-rule-071",
+      "synllama-rule-072",
+      "synllama-rule-073",
+      "synllama-rule-074"
+    ],
+    "v7_inner_036_rank_for_outer_042_slot_zero": 8,
+    "v7_max_inner_rules": 4,
+    "v7_limits_reached": [
+      "max_outer_guides",
+      "max_catalog_row_visits",
+      "max_rule_inspections"
+    ],
+    "v7_inner_role_checks": 104,
+    "v7_inner_role_compatible": 12,
+    "v7_route_audit_attempts": 0,
+    "supported_leaf_asset_binding": "Baseline and v7 manifests name the same catalog SHA; saved leaves exist in that snapshot, but v7 pool membership and rank are not recorded.",
+    "generic_next_change": "Within existing rule-inspection, catalog-row and four-inner-rule caps, rank eligible inner rules using bounded evidence of role-compatible catalog reactants and the outer slot's required role before reserving four slots; record per-plan inner-rule and pool-stage decisions. Do not seed from saved baseline products or relax gates.",
+    "conditional_inner_selection_barrier": "For the selected outer rule 042 guide slot zero, needed inner rule 036 is eighth among strict-template-eligible product-template matches; v7 chooses at most four inner rules. Earlier catalog-pool or budget loss cannot be excluded because per-plan inner selection and pool ranks were not saved."
+  },
+  "source_sha256_after": {
+    "chembounce_synthesis/route_first.py": "9f7d18eccc9134448ab138d29c02e38e1986daaf975eac97bd4711f640a010ed",
+    "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329"
+  },
+  "harness_sha256_after": "265709876a820dd153a8c952faf30789ed572e02ab8e8d1e39490b4f1d1ee970",
+  "interpretation": "Rank8>inner cap4 establishes a conditional rule-selection exclusion on the saved selected guide, not the earliest runtime loss or proof that promoting rule036 would recover the witness. Saved phase1 outer-stage calls do not prove which plans entered phase2; pool/rank history was not recorded. The subsequent original-hit reverse-center audit identifies an earlier outer allocation loss.",
+  "witness_use": "Saved supported routes and leaves are diagnostics only, never production seeds or input/rule/product-specific ranking exceptions.",
+  "evidence": {
+    "result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/saved-route-loss-v1/result.json",
+      "sha256": "5e42d8aad4800a3f4b529ec6526f8028fcef525cdda141da5b8acd77177d694e"
+    },
+    "script": {
+      "path": "benchmark-results/route-first-development-20261023-v2/saved-route-loss-v1/probe.py",
+      "sha256": "265709876a820dd153a8c952faf30789ed572e02ab8e8d1e39490b4f1d1ee970"
+    }
+  }
+}

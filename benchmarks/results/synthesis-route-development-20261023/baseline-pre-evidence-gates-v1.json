@@ -1,0 +1,559 @@
+{
+  "schema": "route-first-saved-baseline-pre-evidence-gates-v1",
+  "status": "complete",
+  "scope": "Saved analysis-v3 baseline exact products only; no catalog, route replay, model, generation, 3D embedding or metric redefinition",
+  "approved_analysis_sha256": "a9e2dadb69b4597c1260800e0d427d1dad4b46dd681e1b51a6b2333d980e6a0d",
+  "approved_analyzer_sha256": "2301bb1c0f90e6a0faaa0eb9ad760d47b318be67579dcb02f48a9257b4bc099f",
+  "portable_report_sha256": "783b1bca068f0abf3b63e96b0920a03605d15ee18639465bc1d7e0247d5be619",
+  "v8_gate_harness_sha256": "c67e56ef0447aed632169921323faea4579104c26dcd7650190e4543277c7acf",
+  "panel_sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "644c84568386d443538e73c5a7e9374dcbc8b7579a1d4a778938ed096cf45235",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+    "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+    "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+    "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+    "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+    "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+  },
+  "harness_sha256": "6b700dca6c31d4cba405932e6a5cdb246b9cd4e036e5a35e87637299728c346d",
+  "approved_supported_input_product_pairs": 69,
+  "pairs_passed": 27,
+  "pairs_failed": 42,
+  "pairs_missing": 0,
+  "inputs_with_saved_product_passing_pre_evidence": 3,
+  "source_sha256_after": {
+    "chembounce_synthesis/route_first.py": "644c84568386d443538e73c5a7e9374dcbc8b7579a1d4a778938ed096cf45235",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+    "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+    "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+    "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+    "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+    "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+  },
+  "harness_sha256_after": "6b700dca6c31d4cba405932e6a5cdb246b9cd4e036e5a35e87637299728c346d",
+  "rows": [
+    {
+      "id": "CHEMBL4630839-query-1",
+      "approved_metrics_status": "complete_replayed",
+      "approved_supported_pairs": 24,
+      "approved_changed_pairs": 24,
+      "status": "complete",
+      "routes_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1/runs/CHEMBL4630839-query-1/synthesis/routes.json",
+      "routes_sha256": "5ea1de3ab6a80b5ec24255dd61eac9fe206d497b2ed4605ffd37a8bd9cba8cbb",
+      "route_first_manifest_sha256": "4550b2df1b553049fb94a78835fec0544cca3980c044823ad0e9cbc51f521739",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "passed": 24,
+      "failed": 0,
+      "first_failure_counts": {},
+      "passed_product_witnesses": [
+        {
+          "product": "CN1CCN(c2cccc(C(=O)NCC3CC3)n2)CC1",
+          "hit_bit_tanimoto": 0.46153846153846156,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000025",
+            "route_000065"
+          ]
+        },
+        {
+          "product": "CN1CCN(c2cccc(C(=O)NCC3CC3)n2)CC1=O",
+          "hit_bit_tanimoto": 0.4084507042253521,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000029",
+            "route_000069"
+          ]
+        },
+        {
+          "product": "CN1CCn2nc(C(=O)NCC3CC3)cc2C1=O",
+          "hit_bit_tanimoto": 0.35714285714285715,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000039",
+            "route_000079"
+          ]
+        },
+        {
+          "product": "COC1(OC)CC(CCNC(=O)c2cccc(N3CCCC3)n2)C1",
+          "hit_bit_tanimoto": 0.36,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000043",
+            "route_000083"
+          ]
+        },
+        {
+          "product": "COC1(OC)CC(CNC(=O)c2cc(N3CCCC3)ncn2)C1",
+          "hit_bit_tanimoto": 0.4084507042253521,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 4,
+          "saved_supported_route_ids": [
+            "route_000019",
+            "route_000036",
+            "route_000059",
+            "route_000076"
+          ]
+        },
+        {
+          "product": "COC1(OC)CC(CNC(=O)c2cccc(C(=O)N3CCCC3)n2)C1",
+          "hit_bit_tanimoto": 0.35135135135135137,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000045",
+            "route_000085"
+          ]
+        },
+        {
+          "product": "COC1(OC)CC(CNC(=O)c2cccc(N3CCCC3)n2)C1",
+          "hit_bit_tanimoto": 0.42857142857142855,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 4,
+          "saved_supported_route_ids": [
+            "route_000018",
+            "route_000028",
+            "route_000058",
+            "route_000068"
+          ]
+        },
+        {
+          "product": "COC1(OC)CC(CNC(=O)c2cccc(N3CCN(C)CC3)n2)C1",
+          "hit_bit_tanimoto": 0.36,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000042",
+            "route_000082"
+          ]
+        },
+        {
+          "product": "COC1(OC)CC(CNC(=O)c2cccc(N3CCOCC3)n2)C1",
+          "hit_bit_tanimoto": 0.35526315789473684,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000044",
+            "route_000084"
+          ]
+        },
+        {
+          "product": "COC1(OC)CC2(CC(CNC(=O)c3cccc(N4CCCC4)n3)C2)C1",
+          "hit_bit_tanimoto": 0.40540540540540543,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000041",
+            "route_000081"
+          ]
+        },
+        {
+          "product": "C[C@@H]1C[C@H](CNC(=O)c2cccc(N3CCCC3)n2)CO1",
+          "hit_bit_tanimoto": 0.44285714285714284,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000040",
+            "route_000080"
+          ]
+        },
+        {
+          "product": "Cc1nc(NCC2CC2)cc(N2CCCC2)n1",
+          "hit_bit_tanimoto": 0.36923076923076925,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 4,
+          "saved_supported_route_ids": [
+            "route_000000",
+            "route_000007",
+            "route_000008",
+            "route_000015"
+          ]
+        },
+        {
+          "product": "O=C(NCC1CC1)C1CCN(c2ccccn2)CC1",
+          "hit_bit_tanimoto": 0.36764705882352944,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000037",
+            "route_000077"
+          ]
+        },
+        {
+          "product": "O=C(NCC1CC1)c1cc(N2CCCC2)ncn1",
+          "hit_bit_tanimoto": 0.5081967213114754,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 4,
+          "saved_supported_route_ids": [
+            "route_000017",
+            "route_000053",
+            "route_000057",
+            "route_000093"
+          ]
+        },
+        {
+          "product": "O=C(NCC1CC1)c1cc(N2CCCCC2)ncn1",
+          "hit_bit_tanimoto": 0.5,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000030",
+            "route_000070"
+          ]
+        },
+        {
+          "product": "O=C(NCC1CC1)c1cc(N2CCOCC2)ncn1",
+          "hit_bit_tanimoto": 0.417910447761194,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000035",
+            "route_000075"
+          ]
+        },
+        {
+          "product": "O=C(NCC1CC1)c1cccc(C(=O)N2CCCC2)n1",
+          "hit_bit_tanimoto": 0.4375,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000027",
+            "route_000067"
+          ]
+        },
+        {
+          "product": "O=C(NCC1CC1)c1cccc(N2CCCC2)n1",
+          "hit_bit_tanimoto": 0.5333333333333333,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 4,
+          "saved_supported_route_ids": [
+            "route_000016",
+            "route_000050",
+            "route_000056",
+            "route_000090"
+          ]
+        },
+        {
+          "product": "O=C(NCC1CC1)c1cccc(N2CCOCC2)n1",
+          "hit_bit_tanimoto": 0.4393939393939394,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000026",
+            "route_000066"
+          ]
+        },
+        {
+          "product": "O=C(NCC1CC1)c1cnc(N2CCCCC2)cn1",
+          "hit_bit_tanimoto": 0.4603174603174603,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000033",
+            "route_000073"
+          ]
+        },
+        {
+          "product": "O=C(NCC1CCCC1)c1cc(N2CCCC2)ncn1",
+          "hit_bit_tanimoto": 0.47619047619047616,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 4,
+          "saved_supported_route_ids": [
+            "route_000032",
+            "route_000055",
+            "route_000072",
+            "route_000095"
+          ]
+        },
+        {
+          "product": "O=C(NCC1CCCC1)c1cccc(N2CCCC2)n1",
+          "hit_bit_tanimoto": 0.5,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 4,
+          "saved_supported_route_ids": [
+            "route_000023",
+            "route_000052",
+            "route_000063",
+            "route_000092"
+          ]
+        },
+        {
+          "product": "O=C(O)c1cc(C(=O)NCC2CC2)ncn1",
+          "hit_bit_tanimoto": 0.36507936507936506,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000038",
+            "route_000078"
+          ]
+        },
+        {
+          "product": "O=C(O)c1cc(NCC2CC2)nc(N2CCCC2)c1",
+          "hit_bit_tanimoto": 0.4090909090909091,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000006",
+            "route_000014"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL4630839-query-2",
+      "approved_metrics_status": "complete_replayed",
+      "approved_supported_pairs": 24,
+      "approved_changed_pairs": 24,
+      "status": "complete",
+      "routes_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1/runs/CHEMBL4630839-query-2/synthesis/routes.json",
+      "routes_sha256": "5ac3f631530127508bebbc9fd6a31781e702e40d2665854bbae5d71ef3526dd1",
+      "route_first_manifest_sha256": "b8d631a17140f78af64e6ce4f188c5b64aa1f74d5cc6b8acaaaed07f440a10cc",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "passed": 0,
+      "failed": 24,
+      "first_failure_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 24
+      },
+      "passed_product_witnesses": []
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "approved_metrics_status": "complete_replayed",
+      "approved_supported_pairs": 18,
+      "approved_changed_pairs": 18,
+      "status": "complete",
+      "routes_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1/runs/CHEMBL4247-query-1/synthesis/routes.json",
+      "routes_sha256": "0c7e3cec256b50f72352cd1ca3c1389bb360fe3118853ef9893fabbe93b3af44",
+      "route_first_manifest_sha256": "500fda8ed7a5dbc447fe8b9aa1f6ea85c97ac8d389eebf089b919360aa6371cb",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "passed": 0,
+      "failed": 18,
+      "first_failure_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 18
+      },
+      "passed_product_witnesses": []
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "approved_metrics_status": "complete_replayed",
+      "approved_supported_pairs": 2,
+      "approved_changed_pairs": 2,
+      "status": "complete",
+      "routes_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1/runs/CHEMBL4247-query-2/synthesis/routes.json",
+      "routes_sha256": "5c1557a3d97366569128c3918548872fdd4d3051bdc5a3a2f0c9baf37b5029e8",
+      "route_first_manifest_sha256": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "passed": 2,
+      "failed": 0,
+      "first_failure_counts": {},
+      "passed_product_witnesses": [
+        {
+          "product": "COc1cc(CC(=O)O)ccc1Nc1ccc2ncc(-c3ccccc3N(C)C)n2n1",
+          "hit_bit_tanimoto": 0.36,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 4,
+          "saved_supported_route_ids": [
+            "route_000008",
+            "route_000012",
+            "route_000028",
+            "route_000032"
+          ]
+        },
+        {
+          "product": "COc1cc(CC(=O)O)ccc1Nc1nn2c(-c3ccccc3N(C)C)cnc2cc1C",
+          "hit_bit_tanimoto": 0.38,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 4,
+          "saved_supported_route_ids": [
+            "route_000006",
+            "route_000010",
+            "route_000026",
+            "route_000030"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "approved_metrics_status": "complete_replayed",
+      "approved_supported_pairs": 0,
+      "approved_changed_pairs": 0,
+      "status": "complete",
+      "routes_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1/runs/CHEMBL5163-query-1/synthesis/routes.json",
+      "routes_sha256": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "route_first_manifest_sha256": "cf83f89e9df2e11ccc259628a9f7b59aee066c2f64e4a01a2eda829922926baf",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "passed": 0,
+      "failed": 0,
+      "first_failure_counts": {},
+      "passed_product_witnesses": []
+    },
+    {
+      "id": "CHEMBL5163-query-2",
+      "approved_metrics_status": "complete_replayed",
+      "approved_supported_pairs": 0,
+      "approved_changed_pairs": 0,
+      "status": "complete",
+      "routes_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1/runs/CHEMBL5163-query-2/synthesis/routes.json",
+      "routes_sha256": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "route_first_manifest_sha256": "53066839233b041e4d65b62284a722b995a9ab08c65692cb83ae8f479f335145",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "passed": 0,
+      "failed": 0,
+      "first_failure_counts": {},
+      "passed_product_witnesses": []
+    },
+    {
+      "id": "CHEMBL3334418-query-1",
+      "approved_metrics_status": "complete_replayed",
+      "approved_supported_pairs": 0,
+      "approved_changed_pairs": 0,
+      "status": "complete",
+      "routes_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1/runs/CHEMBL3334418-query-1/synthesis/routes.json",
+      "routes_sha256": "3fc2282df5eb6efc6fb4c1ac9376f791c221b989f0544f527230f3a990e18d00",
+      "route_first_manifest_sha256": "6b12dae1b5d50308a4f785ba393de1eba27ed2756923fafa59fc20571d0fe812",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "passed": 0,
+      "failed": 0,
+      "first_failure_counts": {},
+      "passed_product_witnesses": []
+    },
+    {
+      "id": "CHEMBL3334418-query-2",
+      "approved_metrics_status": "complete_replayed",
+      "approved_supported_pairs": 1,
+      "approved_changed_pairs": 1,
+      "status": "complete",
+      "routes_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1/runs/CHEMBL3334418-query-2/synthesis/routes.json",
+      "routes_sha256": "23016afd02b65cfc2782154b6faa995d7dfea448f90f6000b8ab817643ba5536",
+      "route_first_manifest_sha256": "c8d906d4231bf602ec241be4ec7ff946b25b2cdfb133eb44f1f49eb262a5b911",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "passed": 1,
+      "failed": 0,
+      "first_failure_counts": {},
+      "passed_product_witnesses": [
+        {
+          "product": "O=S(=O)(Cc1c(F)cccc1C(F)(F)F)Nc1cc(F)cc(F)c1O",
+          "hit_bit_tanimoto": 0.35384615384615387,
+          "status": "passed",
+          "first_failure": null,
+          "saved_supported_route_count": 2,
+          "saved_supported_route_ids": [
+            "route_000018",
+            "route_000025"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "approved_metrics_status": "complete_replayed",
+      "approved_supported_pairs": 0,
+      "approved_changed_pairs": 0,
+      "status": "complete",
+      "routes_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1/runs/CHEMBL4869-query-1/synthesis/routes.json",
+      "routes_sha256": "cfa0aa3110d10bc24f077daae197385b1cf44e3c7872a7e0e851eacbba007f2a",
+      "route_first_manifest_sha256": "1669db70ff4d09c9a93d586d872d256d3482e10c6e729c7637f15a176eab262d",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "passed": 0,
+      "failed": 0,
+      "first_failure_counts": {},
+      "passed_product_witnesses": []
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "approved_metrics_status": "complete_replayed",
+      "approved_supported_pairs": 0,
+      "approved_changed_pairs": 0,
+      "status": "complete",
+      "routes_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1/runs/CHEMBL4869-query-2/synthesis/routes.json",
+      "routes_sha256": "85280db4e3817b1897ede398088d91f1d1c8ab8ab19c31639a21cd1d066d283d",
+      "route_first_manifest_sha256": "7c4ef94083ab953bb45c9651f3bb80d5d00cbff155849752ec2135655f0ede7b",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "passed": 0,
+      "failed": 0,
+      "first_failure_counts": {},
+      "passed_product_witnesses": []
+    },
+    {
+      "id": "CHEMBL3864-query-1",
+      "approved_metrics_status": "complete_replayed",
+      "approved_supported_pairs": 0,
+      "approved_changed_pairs": 0,
+      "status": "complete",
+      "routes_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1/runs/CHEMBL3864-query-1/synthesis/routes.json",
+      "routes_sha256": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "route_first_manifest_sha256": "4a968e55ab7c40947beee7db5cdcee24b35e04253feb1faf379007d12eaf525b",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "passed": 0,
+      "failed": 0,
+      "first_failure_counts": {},
+      "passed_product_witnesses": []
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "approved_metrics_status": "complete_replayed",
+      "approved_supported_pairs": 0,
+      "approved_changed_pairs": 0,
+      "status": "complete",
+      "routes_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1/runs/CHEMBL3864-query-2/synthesis/routes.json",
+      "routes_sha256": "de6fd468e35bedc8977cecfecf40a26843a8540fdf1587415352b176715e3c93",
+      "route_first_manifest_sha256": "b038c40adf103153dd78182be09cb9c2ee3258e05a5eff7dc8837ebabeb04fc0",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "passed": 0,
+      "failed": 0,
+      "first_failure_counts": {},
+      "passed_product_witnesses": []
+    }
+  ],
+  "interpretation": "Saved positive route products are diagnostic witnesses only, not generation seeds. Passing current product gates does not establish that the bounded current search can recover their routes.42 are first failures of local hit-stereo-anchor correspondence; later gates are not independently assessed for those products. No new model, route replay or3D claim.",
+  "frozen_primary_baseline_unchanged": 5,
+  "not_new_adoption_baseline": "The3 inputs here do not replace the frozen5/12 baseline for full audited all-step supported route coverage.",
+  "runtime_reversion": "Executed before revert under644c845; retained v7 runtime9f7d18e has unchanged gate semantics. Script deliberately pins the executed source and should not be rerun against different bytes without a new diagnostic version.",
+  "evidence": {
+    "result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/baseline-pre-evidence-gates-v1/result.json",
+      "sha256": "5f14ec8a86ca4a5d43845740091e54aecf875dcc3c413e583dbe156134bd9ee4"
+    },
+    "script": {
+      "path": "benchmark-results/route-first-development-20261023-v2/baseline-pre-evidence-gates-v1/probe.py",
+      "sha256": "6b700dca6c31d4cba405932e6a5cdb246b9cd4e036e5a35e87637299728c346d"
+    },
+    "review": {
+      "path": "benchmark-results/qualified-development-20261023/route-first-v2-baseline-gate-review-v1/report.json",
+      "sha256": "aad6e896f367d65edc84cc3c8a613540f3f80ecae0705d24a799c9313253a288"
+    }
+  }
+}

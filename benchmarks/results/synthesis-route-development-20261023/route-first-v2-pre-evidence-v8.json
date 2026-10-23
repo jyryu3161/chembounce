@@ -1,0 +1,500 @@
+{
+  "schema": "route-first-pre-evidence-development-diagnostic-v2",
+  "status": "complete_rejected_runtime_reverted",
+  "scope": "Development-only exact pre-evidence gates, bounded polar second-block ranking, eligible routes and nearest rejected graphs; no model, 3D, forward support or qualification",
+  "policy": "catalog-rule-route-first-v2",
+  "source_commit_matching_runtime": "6c4a5e7",
+  "revert_commit": "19110e4",
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "644c84568386d443538e73c5a7e9374dcbc8b7579a1d4a778938ed096cf45235",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff"
+  },
+  "source_sha256_after": {
+    "chembounce_synthesis/route_first.py": "644c84568386d443538e73c5a7e9374dcbc8b7579a1d4a778938ed096cf45235",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff"
+  },
+  "harness_sha256": "c67e56ef0447aed632169921323faea4579104c26dcd7650190e4543277c7acf",
+  "harness_sha256_after": "c67e56ef0447aed632169921323faea4579104c26dcd7650190e4543277c7acf",
+  "panel_sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+  "config_sha256": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+  "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+  "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+  "pre_evidence_input_coverage": 2,
+  "primary_comparison_run": false,
+  "input_count": 12,
+  "eligible_input_product_pairs": 30,
+  "eligible_route_count": 30,
+  "one_step_eligible_routes": 6,
+  "two_step_eligible_routes": 24,
+  "metric_note": "Distinct product totals are deduplicated within input, not globally. No forward-model/3D/qualified result is inferred from this pre-evidence probe.",
+  "generation_seconds_sum": 664.955,
+  "previous_generation_seconds_sum": 321.719,
+  "timing_scope": "Diagnostic generation time sums; shared one-time catalog load excluded. Observational development timings, not a randomized timing benchmark or actual all-stage wall comparison.",
+  "additional_polar_limits": {
+    "ranked_candidates_per_query": 8192,
+    "feature_perceptions_per_query": 8193,
+    "feature_perceptions_per_search": 65536,
+    "decision_samples": 32,
+    "anchor_coverage": "posting-backed known coverage only"
+  },
+  "additional_feature_perception_attempts": 152380,
+  "rows": [
+    {
+      "id": "CHEMBL4630839-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 76.82,
+      "pre_evidence_eligible_routes": 28,
+      "pre_evidence_eligible_distinct_products": 28,
+      "one_step_routes": 4,
+      "two_step_routes": 24,
+      "best_original_hit_bit_tanimoto": 0.4444444444444444,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 15,
+        "hit_tanimoto": 18,
+        "polar_reference_capacity_below_minimum": 6,
+        "property: logp.upper_maximum:5.254800000000005>5": 1,
+        "property: logp.upper_maximum:5.279400000000005>5": 1,
+        "property: logp.upper_maximum:5.299500000000005>5": 1,
+        "property: logp.upper_maximum:5.553200000000006>5": 1,
+        "property: logp.upper_maximum:5.694100000000005>5": 1,
+        "property: logp.upper_maximum:5.832100000000006>5": 1,
+        "property: logp.upper_maximum:6.474300000000006>5": 1
+      },
+      "observed_distinct_products": 74,
+      "anchor_passed_distinct_products": 74,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "polar_second_queries": 28,
+        "polar_second_candidates_considered": 28175,
+        "polar_second_feature_attempts": 15487,
+        "polar_second_feature_cache_hits": 12716,
+        "polar_second_feature_failures": 0,
+        "polar_second_selected": 28,
+        "polar_second_changed": 11,
+        "polar_second_fallbacks": {},
+        "polar_second_decisions_truncated": 0
+      },
+      "decision_samples_retained": 28,
+      "eligible_route_graphs_retained": 28
+    },
+    {
+      "id": "CHEMBL4630839-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 68.952,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 4,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 17,
+        "hit_tanimoto": 8,
+        "polar_reference_capacity_below_minimum": 6,
+        "property: mw.upper_maximum:526.5970000000002>500.0": 1,
+        "property: mw.upper_maximum:554.6070000000003>500.0": 1,
+        "property: mw.upper_maximum:571.6340000000002>500.0; logp.upper_maximum:5.137100000000004>5": 1,
+        "property: mw.upper_maximum:571.6340000000002>500.0; logp.upper_maximum:5.137100000000005>5": 1
+      },
+      "observed_distinct_products": 39,
+      "anchor_passed_distinct_products": 22,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "polar_second_queries": 24,
+        "polar_second_candidates_considered": 27592,
+        "polar_second_feature_attempts": 17765,
+        "polar_second_feature_cache_hits": 9851,
+        "polar_second_feature_failures": 0,
+        "polar_second_selected": 24,
+        "polar_second_changed": 13,
+        "polar_second_fallbacks": {},
+        "polar_second_decisions_truncated": 0
+      },
+      "decision_samples_retained": 24,
+      "eligible_route_graphs_retained": 0
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 80.927,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 34,
+        "hit_tanimoto": 4,
+        "polar_reference_capacity_below_minimum": 4
+      },
+      "observed_distinct_products": 42,
+      "anchor_passed_distinct_products": 8,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "polar_second_queries": 27,
+        "polar_second_candidates_considered": 28900,
+        "polar_second_feature_attempts": 21504,
+        "polar_second_feature_cache_hits": 7423,
+        "polar_second_feature_failures": 0,
+        "polar_second_selected": 27,
+        "polar_second_changed": 16,
+        "polar_second_fallbacks": {},
+        "polar_second_decisions_truncated": 0
+      },
+      "decision_samples_retained": 27,
+      "eligible_route_graphs_retained": 0
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 67.228,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 31,
+        "Chemical-family tautomer enumeration incomplete: MaxTransformsReached": 1,
+        "hit_tanimoto": 2,
+        "polar_reference_capacity_below_minimum": 4,
+        "property: mw.upper_maximum:512.0360000000003>500.0": 1,
+        "property: mw.upper_maximum:524.6470000000003>500.0": 1,
+        "property: mw.upper_maximum:552.7010000000002>500.0": 1,
+        "property: mw.upper_maximum:554.0290000000002>500.0": 1,
+        "property: mw.upper_maximum:559.7220000000001>500.0; n_hacceptor.upper_maximum:11>10": 1,
+        "property: mw.upper_maximum:612.7570000000004>500.0; n_hacceptor.upper_maximum:11>10": 1
+      },
+      "observed_distinct_products": 44,
+      "anchor_passed_distinct_products": 44,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "polar_second_queries": 29,
+        "polar_second_candidates_considered": 28095,
+        "polar_second_feature_attempts": 12403,
+        "polar_second_feature_cache_hits": 15721,
+        "polar_second_feature_failures": 0,
+        "polar_second_selected": 29,
+        "polar_second_changed": 23,
+        "polar_second_fallbacks": {},
+        "polar_second_decisions_truncated": 0
+      },
+      "decision_samples_retained": 29,
+      "eligible_route_graphs_retained": 0
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 32.425,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 2,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 10,
+        "hit_tanimoto": 4,
+        "polar_reference_capacity_below_minimum": 8
+      },
+      "observed_distinct_products": 24,
+      "anchor_passed_distinct_products": 14,
+      "limits_reached": [
+        "max_rule_inspections"
+      ],
+      "work": {
+        "polar_second_queries": 16,
+        "polar_second_candidates_considered": 12159,
+        "polar_second_feature_attempts": 7908,
+        "polar_second_feature_cache_hits": 4267,
+        "polar_second_feature_failures": 0,
+        "polar_second_selected": 16,
+        "polar_second_changed": 15,
+        "polar_second_fallbacks": {},
+        "polar_second_decisions_truncated": 0
+      },
+      "decision_samples_retained": 16,
+      "eligible_route_graphs_retained": 0
+    },
+    {
+      "id": "CHEMBL5163-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 25.124,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 32
+      },
+      "observed_distinct_products": 32,
+      "anchor_passed_distinct_products": 0,
+      "limits_reached": [],
+      "work": {
+        "polar_second_queries": 9,
+        "polar_second_candidates_considered": 5540,
+        "polar_second_feature_attempts": 5119,
+        "polar_second_feature_cache_hits": 430,
+        "polar_second_feature_failures": 0,
+        "polar_second_selected": 9,
+        "polar_second_changed": 5,
+        "polar_second_fallbacks": {},
+        "polar_second_decisions_truncated": 0
+      },
+      "decision_samples_retained": 9,
+      "eligible_route_graphs_retained": 0
+    },
+    {
+      "id": "CHEMBL3334418-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 45.098,
+      "pre_evidence_eligible_routes": 2,
+      "pre_evidence_eligible_distinct_products": 2,
+      "one_step_routes": 2,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": 0.37681159420289856,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 15,
+        "hit_tanimoto": 10,
+        "polar_reference_capacity_below_minimum": 14,
+        "property: logp.upper_maximum:5.121200000000004>5": 1,
+        "property: logp.upper_maximum:5.642700000000005>5": 1,
+        "property: mw.upper_maximum:574.7430000000002>500.0; logp.upper_maximum:7.149100000000007>5": 1,
+        "property: mw.upper_maximum:588.7700000000002>500.0; logp.upper_maximum:7.670600000000007>5": 1,
+        "property: mw.upper_maximum:599.5470000000001>500.0; logp.upper_maximum:6.703000000000006>5": 1,
+        "property: mw.upper_maximum:613.5739999999998>500.0; logp.upper_maximum:7.224500000000006>5": 1,
+        "property: mw.upper_maximum:613.5740000000001>500.0; logp.upper_maximum:7.093100000000007>5": 1,
+        "property: mw.upper_maximum:627.6009999999999>500.0; logp.upper_maximum:7.6146000000000065>5": 1
+      },
+      "observed_distinct_products": 49,
+      "anchor_passed_distinct_products": 49,
+      "limits_reached": [],
+      "work": {
+        "polar_second_queries": 15,
+        "polar_second_candidates_considered": 18660,
+        "polar_second_feature_attempts": 11808,
+        "polar_second_feature_cache_hits": 6867,
+        "polar_second_feature_failures": 0,
+        "polar_second_selected": 15,
+        "polar_second_changed": 8,
+        "polar_second_fallbacks": {},
+        "polar_second_decisions_truncated": 0
+      },
+      "decision_samples_retained": 15,
+      "eligible_route_graphs_retained": 2
+    },
+    {
+      "id": "CHEMBL3334418-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 40.075,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 16,
+        "hit_tanimoto": 8,
+        "polar_reference_capacity_below_minimum": 22,
+        "property: mw.upper_maximum:559.0590000000002>500.0; logp.upper_maximum:6.415400000000005>5": 1,
+        "property: mw.upper_maximum:583.8630000000002>500.0; logp.upper_maximum:5.969300000000003>5": 1,
+        "property: mw.upper_maximum:587.4460000000003>500.0": 1,
+        "property: mw.upper_maximum:597.8900000000002>500.0; logp.upper_maximum:6.359400000000004>5": 1,
+        "property: mw.upper_maximum:601.4730000000003>500.0": 1
+      },
+      "observed_distinct_products": 51,
+      "anchor_passed_distinct_products": 51,
+      "limits_reached": [],
+      "work": {
+        "polar_second_queries": 15,
+        "polar_second_candidates_considered": 15124,
+        "polar_second_feature_attempts": 10232,
+        "polar_second_feature_cache_hits": 4907,
+        "polar_second_feature_failures": 0,
+        "polar_second_selected": 15,
+        "polar_second_changed": 11,
+        "polar_second_fallbacks": {},
+        "polar_second_decisions_truncated": 0
+      },
+      "decision_samples_retained": 15,
+      "eligible_route_graphs_retained": 0
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 65.529,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 40
+      },
+      "observed_distinct_products": 40,
+      "anchor_passed_distinct_products": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "polar_second_queries": 26,
+        "polar_second_candidates_considered": 22259,
+        "polar_second_feature_attempts": 10907,
+        "polar_second_feature_cache_hits": 11378,
+        "polar_second_feature_failures": 0,
+        "polar_second_selected": 26,
+        "polar_second_changed": 15,
+        "polar_second_fallbacks": {},
+        "polar_second_decisions_truncated": 0
+      },
+      "decision_samples_retained": 26,
+      "eligible_route_graphs_retained": 0
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 66.11,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 42
+      },
+      "observed_distinct_products": 42,
+      "anchor_passed_distinct_products": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "polar_second_queries": 25,
+        "polar_second_candidates_considered": 22433,
+        "polar_second_feature_attempts": 13155,
+        "polar_second_feature_cache_hits": 9303,
+        "polar_second_feature_failures": 0,
+        "polar_second_selected": 25,
+        "polar_second_changed": 16,
+        "polar_second_fallbacks": {},
+        "polar_second_decisions_truncated": 0
+      },
+      "decision_samples_retained": 25,
+      "eligible_route_graphs_retained": 0
+    },
+    {
+      "id": "CHEMBL3864-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 46.604,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 12,
+        "hit_tanimoto": 9,
+        "polar_reference_capacity_below_minimum": 17
+      },
+      "observed_distinct_products": 38,
+      "anchor_passed_distinct_products": 38,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "polar_second_queries": 20,
+        "polar_second_candidates_considered": 26621,
+        "polar_second_feature_attempts": 13318,
+        "polar_second_feature_cache_hits": 13323,
+        "polar_second_feature_failures": 0,
+        "polar_second_selected": 20,
+        "polar_second_changed": 15,
+        "polar_second_fallbacks": {},
+        "polar_second_decisions_truncated": 0
+      },
+      "decision_samples_retained": 20,
+      "eligible_route_graphs_retained": 0
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 50.063,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is inverted": 14,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 48
+      },
+      "observed_distinct_products": 62,
+      "anchor_passed_distinct_products": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "polar_second_queries": 22,
+        "polar_second_candidates_considered": 22360,
+        "polar_second_feature_attempts": 12774,
+        "polar_second_feature_cache_hits": 9608,
+        "polar_second_feature_failures": 0,
+        "polar_second_selected": 22,
+        "polar_second_changed": 18,
+        "polar_second_fallbacks": {},
+        "polar_second_decisions_truncated": 0
+      },
+      "decision_samples_retained": 22,
+      "eligible_route_graphs_retained": 0
+    }
+  ],
+  "decision": "Reject: covered inputs fall3→2; no new covered input, existing333q2 loses both eligible products; total input/product pairs stay30. Runtime reverted to exactv7 source9f7d18e. No model comparison/develop merge; P1 remains incomplete.",
+  "interpretation": "This intervention changes second-slot selection to known-anchor priority plus polar distance, not a pure polar factor across the panel. On lost333q2 decisions, both old/new choices have zero known anchors: closer polar counts replace the shared successful brominated block and one successful amine. Counts alone do not preserve product-level similarity and constraints.",
+  "validation": {
+    "author_final_focused_passed": 49,
+    "independent_initial_focused_passed": 49,
+    "independent_final_diagnostic_controls_passed": 2,
+    "full_repository_suite_rerun": false
+  },
+  "artifact_retention": "Raw result retains complete eligible route graphs and replay/audit bindings, near rejected graphs, bounded first32 polar decisions per search and truncation counts. Full witnesses are not implied by audit binding hashes.",
+  "evidence": {
+    "result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v8/result.json",
+      "sha256": "f46629709156b95430fd271049c60a3bce2d1bc121ba7cf5970ce28a72e1d3ec"
+    },
+    "script": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v8/probe.py",
+      "sha256": "c67e56ef0447aed632169921323faea4579104c26dcd7650190e4543277c7acf"
+    },
+    "review": {
+      "path": "benchmark-results/qualified-development-20261023/route-first-v2-polar-retrieval-review-v1/report.json",
+      "sha256": "a60a9903adbdd20c74a28ddf8041d7193a3550e67b96a380bad0cbe85870c616"
+    }
+  },
+  "next_question": "Trace where routes that pass the current original-hit gates are lost: rule/plan selection, catalog pool retrieval, or top-k combination truncation. Saved baseline routes are diagnostic witnesses only, never production seeds."
+}
