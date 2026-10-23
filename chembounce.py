@@ -1212,7 +1212,7 @@ def main(argv=None):
             {
                 "schema_version": 1,
                 "input_smiles": options.input_smiles,
-                "design_supply": "route_first_catalog_rule_v1",
+                "design_supply": "route_first_catalog_rule_v2",
                 "native_hopping": "not_run",
                 "synthesis_config": synthesis_config,
             },

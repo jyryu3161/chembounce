@@ -3,11 +3,19 @@
 import copy
 import json
 import time
+from types import SimpleNamespace
 
 import pytest
 
 from chembounce_synthesis.route_audit import audit_route
-from chembounce_synthesis.route_first import check_hit_stereo_anchors, generate
+from chembounce_synthesis.common import canonical, molecule
+from chembounce_synthesis.route_first import (
+    HitStereoAnchors,
+    RouteFirstLimits,
+    RouteFirstSearch,
+    check_hit_stereo_anchors,
+    generate,
+)
 from chembounce_synthesis.routes import verify_route
 from chembounce_synthesis.workflow import check_constraints, run
 
@@ -39,7 +47,9 @@ def test_actual_one_and_two_step_routes_have_complete_forward_and_atom_stereo_re
     assert report["depth_counts"]["2"] > 0
     assert report["catalog_row_visits"] <= 200
     assert report["fingerprint_calls"] <= 200
+    assert report["total_fingerprint_calls"] <= 200
     assert report["combinations"] <= 100
+    assert report["route_audit_attempts"] <= report["limits"]["max_routes"]
     assert all(item["generation"]["reference"] == "self_product_design" for item in routes)
     for item in routes:
         verified = verify_route(item["route"], catalog, rules, 16)
@@ -96,7 +106,64 @@ def test_global_retrieval_combination_and_deadline_caps(assets):
     assert combinations["combinations"] <= 2
     _, capped = generate(TWO_STEP_HIT, catalog, rules, limits(max_routes=2))
     assert capped["routes_verified"] <= 2
+    assert capped["route_audit_attempts"] <= 2
     assert capped["depth_counts"]["2"] >= 1
+
+
+def test_feature_index_targets_guide_size_without_unbounded_per_query_scan(assets):
+    catalog, rules = assets
+    search = RouteFirstSearch(
+        HIT, catalog, rules, RouteFirstLimits(**limits(max_steps=1, max_catalog_rows_per_query=2))
+    )
+    small = search._pool("CC(=O)O")
+    large = search._pool("O=C(O)c1ccccc1")
+    assert len(small) == len(large) == 2
+    assert small != large
+    assert search.report["catalog_index_rows_scanned"] == len(catalog.mols)
+    assert search.report["catalog_bucket_rankings"] == 2 * search.report["catalog_index_buckets"]
+    assert search.report["catalog_row_visits"] <= search.limits.max_catalog_row_visits
+
+
+def test_exact_catalog_target_replaces_pool_row_within_query_cap(assets):
+    catalog, rules = assets
+    search = RouteFirstSearch(
+        HIT, catalog, rules, RouteFirstLimits(**limits(max_steps=1, max_catalog_rows_per_query=1))
+    )
+    search._pool = lambda _target: ("CC(=O)O",)
+    blocks = search._nearest("Nc1ccccc1", "[N;H1,H2]")
+    assert [block.smiles for block in blocks] == ["Nc1ccccc1"]
+    assert search.report["catalog_row_visits"] == 1
+
+
+def test_stereo_anchor_posting_is_used_only_for_matching_guide_and_role():
+    hit = canonical("C[C@H]1CCCNC1")
+    inverse = canonical("C[C@@H]1CCCNC1")
+    ordinary = canonical("N1CCCCC1")
+    values = (hit, inverse, ordinary)
+    catalog = SimpleNamespace(
+        sha256="synthetic",
+        mols={smiles: molecule(smiles) for smiles in values},
+        by_smiles={smiles: [smiles] for smiles in values},
+        blocks={smiles: SimpleNamespace(id=smiles, smiles=smiles) for smiles in values},
+    )
+    rules = SimpleNamespace(sha256="synthetic")
+    search = RouteFirstSearch(
+        hit,
+        catalog,
+        rules,
+        RouteFirstLimits(**limits(max_steps=1, max_catalog_rows_per_query=1)),
+        hit_anchors=HitStereoAnchors(hit),
+    )
+    search._index()
+    search._pool = lambda _target: (ordinary,)
+    guide = canonical("C[C@H]1CCCN(C)C1")
+    assert [block.smiles for block in search._nearest(guide, "[N;H1,H2]")] == [hit]
+    assert search.report["anchor_index_matches"] == [1]
+    assert search.report["anchor_role_compatible"] == 1
+    assert search.report["guide_anchor_checks"] == 1
+    assert [block.smiles for block in search._nearest(ordinary, "[N;H1,H2]")] == [ordinary]
+    assert search.report["anchor_role_compatible"] == 1
+    assert search.report["catalog_row_visits"] <= search.limits.max_catalog_row_visits
 
 
 def test_original_hit_stereo_anchor_preserves_local_geometry_and_rejects_inversion():
@@ -114,10 +181,15 @@ def test_original_hit_stereo_anchor_preserves_local_geometry_and_rejects_inversi
     check_hit_stereo_anchors(alkene, alkene)
     with pytest.raises(ValueError, match="inverted"):
         check_hit_stereo_anchors(alkene, "C/C=C\\c1ccccc1")
-    with pytest.raises(ValueError, match="lost defined tetrahedral"):
+    with pytest.raises(ValueError, match="inverted"):
         check_hit_stereo_anchors("N[C@H](CCCCl)CCCBr", "N[C@@H](CCCCl)CCCBr")
-    with pytest.raises(ValueError, match="lost defined double-bond"):
-        check_hit_stereo_anchors("CCC/C(CCCO)=C(/F)Cl", "CCC/C(CCCO)=C(\\F)Cl")
+    check_hit_stereo_anchors("N[C@H](CCCCl)CCCBr", "N[C@H](CCCCl)CCCBr")
+    long_alkene = "CCC/C(CCCO)=C(/F)Cl"
+    check_hit_stereo_anchors(long_alkene, long_alkene)
+    with pytest.raises(ValueError, match="inverted"):
+        check_hit_stereo_anchors(long_alkene, "CCC/C(CCCO)=C(\\F)Cl")
+    complex_hit = "O=C(O)COC[C@H]1CC[C@@H](Cn2nc(-c3ccccc3)c(-c3ccccc3)c2SCCO)CC1"
+    check_hit_stereo_anchors(complex_hit, complex_hit)
 
 
 def test_unmapped_product_atom_and_unspecified_stereo_fail_strict_route_audit(tmp_path):
@@ -205,7 +277,40 @@ def test_real_workflow_uses_generated_route_without_proposal_provider_or_native_
     assert summary["route_first_downstream"]["workflow_reverified_route_records"] > 0
     assert summary["route_first_downstream"]["qualified_products"] == 0
     routes = json.loads((output / "routes.json").read_text())["routes"]
-    assert all(record["generation"]["policy"] == "catalog-rule-route-first-v1" for record in routes)
+    assert all(record["generation"]["policy"] == "catalog-rule-route-first-v2" for record in routes)
+
+
+def test_preintake_exact_hit_similarity_gate_does_not_spend_design_or_route_slots(assets, tmp_path):
+    catalog, rules = assets
+    output = tmp_path / "high-threshold"
+    rows = run(
+        HIT,
+        (),
+        {
+            "schema_version": 1,
+            "catalog": str(catalog.path),
+            "rules": str(rules.path),
+            "route_first": limits(max_steps=1),
+            "max_designs": 3,
+            "minimum_scores": {"hit_tanimoto": 0.99},
+        },
+        output,
+    )
+    summary = json.loads((output / "summary.json").read_text())
+    generated = json.loads((output / "route_first_candidates.json").read_text())
+    assert rows == []
+    assert generated["selected_designs"] == []
+    assert summary["route_first"]["candidate_designs"] == 0
+    assert summary["route_first"]["route_audit_attempts"] == 0
+    assert summary["route_first"]["admission_fingerprint_calls"] > 0
+    assert (
+        summary["route_first"]["total_fingerprint_calls"]
+        <= summary["route_first"]["limits"]["max_fingerprint_calls"]
+    )
+    assert any(
+        "2D original-hit/design similarity" in reason
+        for reason in summary["route_first"]["product_rejections"]
+    )
 
 
 def test_two_step_product_reaches_bounded_design_intake(assets, tmp_path):
@@ -284,7 +389,7 @@ def test_public_route_first_api_and_main_cli_skip_hopping_but_retain_strict_prop
     assert calls[-1][0]["property_thresholds"]["mw"][1] == 400
     manifest = json.loads((tmp_path / "main" / "run_manifest.json").read_text())
     assert manifest["native_hopping"] == "not_run"
-    assert manifest["design_supply"] == "route_first_catalog_rule_v1"
+    assert manifest["design_supply"] == "route_first_catalog_rule_v2"
     assert (
         chembounce.main(
             [

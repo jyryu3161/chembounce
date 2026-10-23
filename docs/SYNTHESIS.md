@@ -7,7 +7,7 @@ bounded route-generation work, and checks planned before another large run.
 
 ## Experimental route-first generation (explicit opt-in)
 
-The `catalog-rule-route-first-v1` option generates concrete one- and two-step
+The `catalog-rule-route-first-v2` option generates concrete one- and two-step
 catalog/rule routes before the existing recommendation intake. It does not run
 native scaffold hopping or SynLlama proposals. Use it only with `--recommend`
 and a synthesis configuration that declares `route_first`; omit `provider` and
@@ -16,7 +16,7 @@ with local catalog, rules, and pinned forward-model assets, remove `provider`,
 and add:
 
 ```json
-"route_first": {"version": "catalog-rule-route-first-v1", "max_steps": 2}
+"route_first": {"version": "catalog-rule-route-first-v2", "max_steps": 2}
 ```
 
 ```bash
@@ -28,22 +28,29 @@ python -m chembounce_synthesis.cli --hit 'HIT_SMILES' --recommend \
 
 The Python entry point is `recommend_routes(hit, config, output_dir)` from
 `chembounce_synthesis`. The policy has explicit global caps on rule scans,
-catalog row visits/fingerprints, combinations, products, verified routes,
+catalog index rows, charged bucket/role visits and fingerprints, combinations,
+products and route-audit attempts,
 beam width, two-step depth and the inherited wall deadline. Reverse-template
 products are retrieval hints only; every retained route is forward replayed
 and audited, and its evidence and 3D gates remain separate. An exact generated
 product is its own design reference, so design-to-product similarity 1 is
 tautological; original-hit constraints remain the meaningful comparison.
 
-Specified hit tetrahedral and E/Z centers require a unique, stereo-matched
-local atom context in each generated product. The bounded comparison includes
-complete rings touching that context and may conservatively reject changed or
-ambiguous anchors, including some legitimate peripheral replacements. It does
+Specified hit tetrahedral and E/Z centers compile unique, self-matching local
+anchors from the original hit before any product is considered. The radius
+grows only within fixed atom/match bounds until source stereo is representable;
+the queries are then frozen. The comparison includes complete rings touching
+the context and may conservatively reject changed or ambiguous anchors,
+including some legitimate peripheral replacements. It does
 not infer a global hit/product atom mapping. `route_first_candidates.json`
 records reviewable generated routes and work counters; `results.json` contains
 only products that pass the existing final qualification. This material
 generation override is reported as `custom_unvalidated`; a development-panel
 comparison does not establish independent calibration or experimental synthesis.
+V1 produced no supported products on the reused 12-input development panel;
+v2 is a prospective retrieval/admission revision and has not been validated by
+that panel. The same original-hit similarity, property, polar-capacity, route,
+forward-support and 3D gates still apply.
 
 ## Optional catalog byte binding
 

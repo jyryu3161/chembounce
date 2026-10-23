@@ -1,0 +1,141 @@
+{
+  "status": "complete",
+  "scope": "One catalog scan; exact compiled hit-local topology/stereo match in individual building blocks only; absent does not rule out assembly",
+  "panel_sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+  "config_sha256": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+  "route_first_source_sha256": "ab36fa3646bb0152cec3162ebdb4185c53f42a0f76ae3377e4e89200b725523a",
+  "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+  "catalog_rows_scanned": 238542,
+  "substructure_checks": 1675799,
+  "rows": [
+    {
+      "id": "CHEMBL4630839-query-2",
+      "anchors": [
+        {
+          "query_smiles": "c1ccc([C@@H]2CCCNC2)cc1",
+          "query_atoms": 12,
+          "root_query_positions": [
+            4
+          ],
+          "radius": 1,
+          "topology_matches": 153,
+          "stereo_matches": 8,
+          "sample_block_ids": [
+            "structure-sha256:2255cdcc5633a240e0bdaf14c870f3e967c57e3bf34c2d3766a72fa5fc21545e",
+            "structure-sha256:3881364506a50d17aad3eb10432c37d4977e5990c5b335772c199de0b0065402",
+            "structure-sha256:3bf503893397e7ce7dfd5a115ff3e0889e17711b27e94af9958e737513fb1c3e"
+          ]
+        }
+      ],
+      "same_block_all_anchors": 8
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "anchors": [
+        {
+          "query_smiles": "C[C@H]1CCCNC1",
+          "query_atoms": 7,
+          "root_query_positions": [
+            1
+          ],
+          "radius": 1,
+          "topology_matches": 3858,
+          "stereo_matches": 412,
+          "sample_block_ids": [
+            "structure-sha256:0007c1857c8ea2172a905aa44b1e2cb871cf90a0857510625a4b2e2cd8dbeb19",
+            "structure-sha256:0065052d541d5fe2a422eea2549a647d87a967be8b933d6b9fa2872bf414c690",
+            "structure-sha256:010e27dcf3cc81a0962e8d7bd0d344ef33bfb75d602d3111ae26ecdc7136343e"
+          ]
+        }
+      ],
+      "same_block_all_anchors": 412
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "anchors": [
+        {
+          "query_smiles": "O[C@H]1CCNC1",
+          "query_atoms": 6,
+          "root_query_positions": [
+            1
+          ],
+          "radius": 1,
+          "topology_matches": 1254,
+          "stereo_matches": 310,
+          "sample_block_ids": [
+            "structure-sha256:004c6ea0128f65aa56fac9b03f0316d25f1d2ce7842e64cb2bdb91937cd433ee",
+            "structure-sha256:0142b03a82fa11821341c24a71104daafb527c11a179b5118d22c319feb4a1ef",
+            "structure-sha256:020eea7a0587962e818afcc4baf2607a9d567d5350c9df09256d63fd4cacf979"
+          ]
+        }
+      ],
+      "same_block_all_anchors": 310
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "anchors": [
+        {
+          "query_smiles": "C[C@H]1CC[C@@H](CO)CC1",
+          "query_atoms": 9,
+          "root_query_positions": [
+            4
+          ],
+          "radius": 2,
+          "topology_matches": 727,
+          "stereo_matches": 42,
+          "sample_block_ids": [
+            "structure-sha256:00b813e23ce892c4dff9a35f496c235f0ea1e33e074efce4dfec8f0cf856e14e",
+            "structure-sha256:0e5732275249c3b51ee53383a4d48f9c22e982d54cbb39a7afea3f2567d7a4b2",
+            "structure-sha256:0f83359c1d80d6665f5b855e863f53bea7b763fd96df9866464dba64e2d52a71"
+          ]
+        },
+        {
+          "query_smiles": "C[C@H]1CC[C@@H](Cn2cccn2)CC1",
+          "query_atoms": 13,
+          "root_query_positions": [
+            4
+          ],
+          "radius": 2,
+          "topology_matches": 0,
+          "stereo_matches": 0,
+          "sample_block_ids": []
+        }
+      ],
+      "same_block_all_anchors": 0
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "anchors": [
+        {
+          "query_smiles": "C[C@H]1CC2(CCNCC2)CO1",
+          "query_atoms": 11,
+          "root_query_positions": [
+            1
+          ],
+          "radius": 1,
+          "topology_matches": 13,
+          "stereo_matches": 0,
+          "sample_block_ids": []
+        },
+        {
+          "query_smiles": "N[C@@H]1COCC12CCNCC2",
+          "query_atoms": 11,
+          "root_query_positions": [
+            1
+          ],
+          "radius": 1,
+          "topology_matches": 0,
+          "stereo_matches": 0,
+          "sample_block_ids": []
+        }
+      ],
+      "same_block_all_anchors": 0
+    }
+  ],
+  "evidence": {
+    "result_path": "benchmark-results/route-first-development-20261023-v2/development-probe-v1/anchor-availability.json",
+    "result_sha256": "1e6a012396770a4b07c9dda7b909ce98404784a60342c424ee7b64c20da8d5e2",
+    "script_sha256": "8effdb05a1763b172daecc27d61c1746a2f494c417499077af8b8d26cc39c67a"
+  },
+  "interpretation": "Available anchor-bearing building blocks establish a retrieval opportunity, not full reaction-role compatibility, a supported route, or experimental synthesis. Missing single-block anchors do not exclude assembly."
+}

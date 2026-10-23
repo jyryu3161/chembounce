@@ -47,7 +47,12 @@ from .reactions import Rules
 from .refinement import RefinementBudget, RefinementSettings, refine_candidate
 from .route_objective import RootProductObjective, search_policy
 from .routes import SearchLimits, expand_route, resolve_proposal, verify_route
-from .route_first import RouteFirstLimits, check_hit_stereo_anchors, generate as generate_route_first
+from .route_first import (
+    VERSION as ROUTE_FIRST_VERSION,
+    HitStereoAnchors,
+    RouteFirstLimits,
+    generate as generate_route_first,
+)
 from .synllama import SavedProposals, SynLlama
 from . import selective_scoring, evidence_outcomes
 
@@ -1035,7 +1040,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
     rejected_diagnostics = None
     selected = []
     projected_designs = set()
-    route_first_catalog = route_first_rules = route_first_report = None
+    route_first_catalog = route_first_rules = route_first_report = route_first_properties = None
     route_first_items = {}
     try:
         if deadline_monotonic is not None and (
@@ -1103,8 +1108,14 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             if "route_first" in config:
                 if designs is not None and (not isinstance(designs, (tuple, list)) or len(designs)):
                     raise ValueError("route_first does not accept externally supplied designs")
+                hit_stereo_anchors = HitStereoAnchors(hit)
                 generation_settings = ConformerSettings(**config.get("conformers", {}))
                 _check_stereo(molecule(hit), generation_settings)
+                from utils import _get_molecular_prop_extd_, determ_props
+
+                route_first_properties = _ProductProperties(
+                    _get_molecular_prop_extd_, config.get("route_search_cache_size", 4096)
+                )
                 with phase_span(telemetry, "common.catalog"):
                     route_first_catalog = (
                         Catalog(config["catalog"], binding=config["catalog_binding"])
@@ -1115,7 +1126,9 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     route_first_rules = Rules(config["rules"])
 
                 def accept_generated(product):
-                    check_hit_stereo_anchors(hit, product)
+                    if deadline_reached():
+                        raise ValueError("Deadline reached before route-first product admission")
+                    hit_stereo_anchors.check(product)
                     check_constraints(
                         product,
                         hit,
@@ -1127,6 +1140,36 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     _check_stereo(molecule(product), generation_settings)
                     if similarity is not None:
                         selective_scoring.preflight_design(product)
+                    mol = molecule(product)
+                    if polar_capacity is not None:
+                        polar_capacity.require(product)
+                    accepted, reasons = determ_props(
+                        route_first_properties(mol),
+                        config.get("property_thresholds", {}),
+                        w_all_failed_reason=True,
+                    )
+                    if not accepted:
+                        raise ValueError("Product property filter: " + "; ".join(reasons))
+                    if accept_generated.fingerprint_calls >= config["route_first"].get(
+                        "max_fingerprint_calls", 65536
+                    ):
+                        raise ValueError("Route-first admission fingerprint budget exhausted")
+                    accept_generated.fingerprint_calls += 1
+                    product_fp = FP.GetFingerprint(mol)
+                    scores = {
+                        "hit_tanimoto": DataStructs.TanimotoSimilarity(hit_fp, product_fp),
+                        "design_tanimoto": 1.0,
+                    }
+                    if any(
+                        scores[key] < threshold
+                        for key, threshold in config.get("minimum_scores", {}).items()
+                        if key in scores
+                    ):
+                        raise ValueError("2D original-hit/design similarity threshold rejected")
+                    if deadline_reached():
+                        raise ValueError("Deadline reached during route-first product admission")
+
+                accept_generated.fingerprint_calls = 0
 
                 generated, route_first_report = generate_route_first(
                     hit,
@@ -1135,6 +1178,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     config["route_first"],
                     deadline_monotonic=deadline_monotonic,
                     accept=accept_generated,
+                    hit_anchors=hit_stereo_anchors,
                 )
                 for item in generated:
                     route_first_items.setdefault(item["verification"]["product"], []).append(item)
@@ -1609,7 +1653,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             )
         from utils import _get_molecular_prop_extd_, determ_props
 
-        product_properties = _ProductProperties(
+        product_properties = route_first_properties or _ProductProperties(
             _get_molecular_prop_extd_, config.get("route_search_cache_size", 4096)
         )
 
@@ -2508,9 +2552,7 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             summary["forward_evidence_outcomes"] = evidence_outcomes.summarize(route_records)
             if route_first_report is not None:
                 generated_records = [
-                    r
-                    for r in route_records
-                    if r.get("generation", {}).get("policy") == "catalog-rule-route-first-v1"
+                    r for r in route_records if r.get("generation", {}).get("policy") == ROUTE_FIRST_VERSION
                 ]
                 supported = [
                     r

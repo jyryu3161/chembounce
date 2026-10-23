@@ -14,96 +14,137 @@ from .common import FP, absolute_smiles, canonical, molecule, positive
 from .route_audit import audit_route
 from .routes import verify_route
 
-VERSION = "catalog-rule-route-first-v1"
+VERSION = "catalog-rule-route-first-v2"
 
 
-def check_hit_stereo_anchors(hit, product):
-    """Require an unambiguous, stereo-matched radius-two motif at each hit center.
+class HitStereoAnchors:
+    """Bounded local hit anchors; compile only representable, unique source mappings."""
 
-    This deliberately rejects changed/ambiguous local neighborhoods. The atom
-    correspondence comes from the rooted local substructure, not a global MCS
-    or a potentially relabelled CIP R/S string.
-    """
-    source, candidate = molecule(hit), molecule(product)
-    if source.GetNumAtoms() > 128 or candidate.GetNumAtoms() > 128:
-        raise ValueError("Hit stereo anchor molecule exceeds bounded comparison size")
-    centers = [
-        atom.GetIdx() for atom in source.GetAtoms() if atom.GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED
-    ]
-    stereo_bonds = [bond for bond in source.GetBonds() if bond.GetStereo() != Chem.BondStereo.STEREONONE]
-    if len(centers) + len(stereo_bonds) > 16:
-        raise ValueError("Too many specified hit stereo anchors")
+    def __init__(self, hit):
+        self.source = molecule(hit)
+        if self.source.GetNumAtoms() > 128:
+            raise ValueError("Hit stereo anchor molecule exceeds bounded comparison size")
+        tetra = [
+            (atom.GetIdx(),)
+            for atom in self.source.GetAtoms()
+            if atom.GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED
+        ]
+        bonds = [
+            (bond.GetBeginAtomIdx(), bond.GetEndAtomIdx())
+            for bond in self.source.GetBonds()
+            if bond.GetStereo() != Chem.BondStereo.STEREONONE
+        ]
+        if len(tetra) + len(bonds) > 16:
+            raise ValueError("Too many specified hit stereo anchors")
+        if any(
+            self.source.GetBondBetweenAtoms(*pair).GetStereo()
+            not in (Chem.BondStereo.STEREOE, Chem.BondStereo.STEREOZ)
+            for pair in bonds
+        ):
+            raise ValueError("Unsupported specified hit bond stereo")
+        self.queries = [self._compile(roots) for roots in tetra + bonds]
 
-    def verify_anchor(roots, radius):
+    def _compile(self, roots):
         included, frontier = set(roots), set(roots)
-        for _ in range(radius):
+        rings = self.source.GetRingInfo().AtomRings()
+        for radius in range(1, 9):
+            previous_included = set(included)
             frontier = {
                 neighbor.GetIdx()
                 for index in frontier
-                for neighbor in source.GetAtomWithIdx(index).GetNeighbors()
+                for neighbor in self.source.GetAtomWithIdx(index).GetNeighbors()
             } - included
             included.update(frontier)
-        rings = source.GetRingInfo().AtomRings()
-        for _ in range(len(rings) + 1):
-            previous = len(included)
-            for ring in rings:
-                if included.intersection(ring):
-                    included.update(ring)
-            if len(included) == previous:
+            for _ in range(len(rings) + 1):
+                previous = len(included)
+                for ring in rings:
+                    if included.intersection(ring):
+                        included.update(ring)
+                if len(included) == previous:
+                    break
+            frontier = included - previous_included
+            if len(included) > 64:
                 break
-        if len(included) > 64:
-            raise ValueError("Hit stereo anchor exceeds bounded local ring context")
-        marked = Chem.Mol(source)
-        for position, index in enumerate(roots):
-            marked.GetAtomWithIdx(index).SetAtomMapNum(1000000 + position)
-        fragment = Chem.MolFragmentToSmiles(
-            marked, atomsToUse=sorted(included), canonical=True, isomericSmiles=True
-        )
-        query = Chem.MolFromSmiles(fragment)
-        if query is None:
-            raise ValueError("Hit stereo anchor could not be represented")
-        positions = [
-            next((a.GetIdx() for a in query.GetAtoms() if a.GetAtomMapNum() == 1000000 + i), None)
-            for i in range(len(roots))
-        ]
-        if None in positions:
-            raise ValueError("Hit stereo anchor correspondence is ambiguous")
-        if (
-            len(roots) == 1
-            and query.GetAtomWithIdx(positions[0]).GetChiralTag() == Chem.ChiralType.CHI_UNSPECIFIED
-        ):
-            raise ValueError("Hit stereo anchor lost defined tetrahedral geometry in local context")
-        if len(roots) == 2:
-            query_bond = query.GetBondBetweenAtoms(*positions)
-            if query_bond is None or query_bond.GetStereo() not in (
-                Chem.BondStereo.STEREOE,
-                Chem.BondStereo.STEREOZ,
+            marked = Chem.Mol(self.source)
+            for position, index in enumerate(roots):
+                marked.GetAtomWithIdx(index).SetAtomMapNum(1000000 + position)
+            fragment = Chem.MolFragmentToSmiles(
+                marked, atomsToUse=sorted(included), canonical=True, isomericSmiles=True
+            )
+            query = Chem.MolFromSmiles(fragment)
+            if query is None:
+                continue
+            positions = [
+                next(
+                    (atom.GetIdx() for atom in query.GetAtoms() if atom.GetAtomMapNum() == 1000000 + i), None
+                )
+                for i in range(len(roots))
+            ]
+            if None in positions:
+                continue
+            if len(roots) == 1:
+                defined = query.GetAtomWithIdx(positions[0]).GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED
+            else:
+                bond = query.GetBondBetweenAtoms(*positions)
+                defined = bond is not None and bond.GetStereo() in (
+                    Chem.BondStereo.STEREOE,
+                    Chem.BondStereo.STEREOZ,
+                )
+            if not defined:
+                continue
+            for position in positions:
+                query.GetAtomWithIdx(position).SetAtomMapNum(0)
+            matches = self.source.GetSubstructMatches(
+                query, useChirality=False, uniquify=False, maxMatches=65
+            )
+            locations = {tuple(match[position] for position in positions) for match in matches}
+            chiral_matches = self.source.GetSubstructMatches(
+                query, useChirality=True, uniquify=False, maxMatches=65
+            )
+            chiral_locations = {tuple(match[position] for position in positions) for match in chiral_matches}
+            if (
+                len(matches) < 65
+                and len(chiral_matches) < 65
+                and locations == {tuple(roots)}
+                and chiral_locations == {tuple(roots)}
             ):
-                raise ValueError("Hit stereo anchor lost defined double-bond geometry in local context")
-        for position in positions:
-            query.GetAtomWithIdx(position).SetAtomMapNum(0)
-        achiral_matches = candidate.GetSubstructMatches(
-            query, useChirality=False, uniquify=False, maxMatches=65
-        )
-        if len(achiral_matches) >= 65:
-            raise ValueError("Hit stereo anchor match bound reached")
-        locations = {tuple(match[position] for position in positions) for match in achiral_matches}
-        if len(locations) != 1:
-            raise ValueError("Hit stereo anchor is missing or has ambiguous correspondence")
-        chiral_matches = candidate.GetSubstructMatches(
-            query, useChirality=True, uniquify=False, maxMatches=65
-        )
-        if len(chiral_matches) >= 65:
-            raise ValueError("Hit stereo anchor match bound reached")
-        if locations != {tuple(match[position] for position in positions) for match in chiral_matches}:
-            raise ValueError("Hit stereo anchor is inverted")
+                return query, tuple(positions), radius
+            if not frontier:
+                break
+        raise ValueError("Hit stereo anchor is not uniquely representable within bounded local context")
 
-    for center in centers:
-        verify_anchor((center,), 2)
-    for bond in stereo_bonds:
-        if bond.GetStereo() not in (Chem.BondStereo.STEREOE, Chem.BondStereo.STEREOZ):
-            raise ValueError("Unsupported specified hit bond stereo")
-        verify_anchor((bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()), 1)
+    def check(self, product):
+        candidate = molecule(product)
+        if candidate.GetNumAtoms() > 128:
+            raise ValueError("Hit stereo anchor molecule exceeds bounded comparison size")
+        used_tetra, used_bonds = set(), set()
+        for query, positions, _radius in self.queries:
+            achiral_matches = candidate.GetSubstructMatches(
+                query, useChirality=False, uniquify=False, maxMatches=65
+            )
+            if len(achiral_matches) >= 65:
+                raise ValueError("Hit stereo anchor match bound reached")
+            locations = {tuple(match[position] for position in positions) for match in achiral_matches}
+            if len(locations) != 1:
+                raise ValueError("Hit stereo anchor is missing or has ambiguous correspondence")
+            chiral_matches = candidate.GetSubstructMatches(
+                query, useChirality=True, uniquify=False, maxMatches=65
+            )
+            if len(chiral_matches) >= 65:
+                raise ValueError("Hit stereo anchor match bound reached")
+            if locations != {tuple(match[position] for position in positions) for match in chiral_matches}:
+                raise ValueError("Hit stereo anchor is inverted")
+            mapped = next(iter(locations))
+            used = used_tetra if len(positions) == 1 else used_bonds
+            mapped = mapped if len(positions) == 1 else tuple(sorted(mapped))
+            if mapped in used:
+                raise ValueError("Two hit stereo anchors map to one product anchor")
+            used.add(mapped)
+
+
+def check_hit_stereo_anchors(hit, product):
+    """Conservative standalone control; workflows compile anchors only once."""
+    HitStereoAnchors(hit).check(product)
 
 
 @dataclass(frozen=True)
@@ -156,7 +197,7 @@ class RouteFirstLimits:
 
 
 class RouteFirstSearch:
-    def __init__(self, hit, catalog, rules, limits, deadline_monotonic=None, accept=None):
+    def __init__(self, hit, catalog, rules, limits, deadline_monotonic=None, accept=None, hit_anchors=None):
         self.hit = canonical(hit)
         self.hit_mol = molecule(self.hit)
         self.hit_fp = FP.GetFingerprint(self.hit_mol)
@@ -174,27 +215,51 @@ class RouteFirstSearch:
             "reverse_failures": 0,
             "reverse_outcomes": 0,
             "reverse_fallbacks": 0,
+            "retrieval_guides_normalized": 0,
+            "retrieval_guides_unusable": 0,
             "catalog_index_rows_scanned": 0,
             "catalog_index_hashes": 0,
+            "anchor_index_queries": min(2, len(hit_anchors.queries)) if hit_anchors else 0,
+            "anchor_index_queries_unindexed": max(0, len(hit_anchors.queries) - 2) if hit_anchors else 0,
+            "anchor_index_match_checks": 0,
+            "anchor_index_matches": [],
+            "anchor_index_postings_retained": [],
+            "anchor_index_postings_truncated": [],
+            "anchor_index_incomplete": False,
+            "guide_anchor_checks": 0,
+            "anchor_posting_metadata_visits": 0,
+            "anchor_role_checks": 0,
+            "anchor_role_compatible": 0,
             "catalog_row_visits": 0,
+            "catalog_bucket_rankings": 0,
             "fingerprint_calls": 1,
+            "admission_fingerprint_calls": 0,
             "role_queries": 0,
             "combinations": 0,
             "products_generated": 0,
+            "route_audit_attempts": 0,
             "routes_verified": 0,
             "product_rejections": {},
             "limits_reached": [],
             "selection_policy": "Product-template hit match first; bounded reverse precursor guides; explicit hit-role fallback",
-            "retrieval_scope": "One bounded deterministic stratified hash reservoir over catalog rows, plus exact target ID lookup; role scans/fingerprint work separately charged",
+            "retrieval_scope": "One bounded catalog feature index; each guide ranks charged bucket metadata and scans at most the nearest 8192 catalog rows; exact target ID is additionally considered",
             "evidence_scope": "Reverse results only guide retrieval. Forward rule replay and later route audit/evidence are authoritative.",
         }
         self._nearest_cache = {}
+        self._rule_selection_cache = {}
         self._reverse_cache = {}
+        self._retrieval_target_cache = {}
         self._fp_cache = {self.hit: self.hit_fp}
-        self._catalog_pool = None
+        self._catalog_index = None
+        self._catalog_pools = {}
+        self._anchor_queries = tuple(item[0] for item in hit_anchors.queries[:2]) if hit_anchors else ()
+        self._anchor_postings = ()
+        self._anchor_scores = {}
+        self._guide_anchor_cache = {}
         self._phase = 1
         self.routes = []
         self._route_keys = set()
+        self._pending = []
 
     def _stop(self, name=None):
         if self.deadline is not None and time.monotonic() >= self.deadline:
@@ -220,41 +285,119 @@ class RouteFirstSearch:
             if self._phase == 1 and self.limits.max_steps == 2
             else self.limits.max_fingerprint_calls
         )
-        if self.report["fingerprint_calls"] >= phase_limit:
-            self._stop("max_fingerprint_calls")
+        if self.report["fingerprint_calls"] + getattr(self.accept, "fingerprint_calls", 0) >= phase_limit:
+            self._stop(
+                "depth_one_fingerprint_budget"
+                if self._phase == 1 and self.limits.max_steps == 2
+                else "max_fingerprint_calls"
+            )
             return None
         self.report["fingerprint_calls"] += 1
         fp = FP.GetFingerprint(molecule(smiles))
         self._fp_cache[smiles] = fp
         return fp
 
-    def _pool(self):
-        if self._catalog_pool is not None:
-            return self._catalog_pool
-        size = self.limits.max_catalog_rows_per_query
-        quota = max(1, (size + 3) // 4)
-        buckets = [[] for _ in range(4)]
+    @staticmethod
+    def _features(mol):
+        heavy = mol.GetNumHeavyAtoms()
+        hetero = sum(atom.GetAtomicNum() not in (1, 6) for atom in mol.GetAtoms())
+        aromatic = sum(atom.GetIsAromatic() for atom in mol.GetAtoms())
+        rings = mol.GetRingInfo().NumRings()
+        return (heavy // 4, hetero // 2, aromatic // 4, min(rings, 8))
+
+    def _index(self):
+        if self._catalog_index is not None:
+            return self._catalog_index
+        buckets = {}
+        reserve = min(256, max(1, self.limits.max_catalog_rows_per_query // 4))
+        postings = [[] for _ in self._anchor_queries]
+        match_totals = [0 for _ in self._anchor_queries]
         for smiles, mol in itertools.islice(self.catalog.mols.items(), self.limits.max_catalog_index_rows):
             if self._stop():
                 break
             self.report["catalog_index_rows_scanned"] += 1
             self.report["catalog_index_hashes"] += 1
-            heavy = mol.GetNumHeavyAtoms()
-            bucket = 0 if heavy <= 8 else 1 if heavy <= 16 else 2 if heavy <= 28 else 3
+            key = self._features(mol)
             score = int.from_bytes(hashlib.sha256(smiles.encode()).digest()[:8], "big")
-            heap = buckets[bucket]
-            item = (-score, smiles)
-            if len(heap) < quota:
-                heapq.heappush(heap, item)
-            elif item > heap[0]:
-                heapq.heapreplace(heap, item)
+            buckets.setdefault(key, []).append((score, smiles))
+            for anchor_index, anchor in enumerate(self._anchor_queries):
+                if self.report["anchor_index_match_checks"] >= 500000:
+                    self.report["anchor_index_incomplete"] = True
+                    break
+                self.report["anchor_index_match_checks"] += 1
+                if mol.HasSubstructMatch(anchor, useChirality=True):
+                    match_totals[anchor_index] += 1
+                    heap = postings[anchor_index]
+                    item = (-score, smiles)
+                    if len(heap) < reserve:
+                        heapq.heappush(heap, item)
+                    elif item > heap[0]:
+                        heapq.heapreplace(heap, item)
         if len(self.catalog.mols) > self.limits.max_catalog_index_rows:
             self._stop("max_catalog_index_rows")
-        self._catalog_pool = tuple(sorted(smiles for heap in buckets for _, smiles in heap)[:size])
-        self.report["catalog_index_size"] = len(self._catalog_pool)
-        return self._catalog_pool
+        for rows in buckets.values():
+            rows.sort()
+        self._anchor_postings = tuple(
+            tuple(smiles for _score, smiles in sorted(heap, reverse=True)) for heap in postings
+        )
+        self._anchor_scores = {
+            smiles: -negative_score for heap in postings for negative_score, smiles in heap
+        }
+        self.report["anchor_index_matches"] = match_totals
+        self.report["anchor_index_postings_retained"] = [len(posting) for posting in self._anchor_postings]
+        self.report["anchor_index_postings_truncated"] = [
+            total > len(posting) for total, posting in zip(match_totals, self._anchor_postings)
+        ]
+        if self.report["catalog_index_rows_scanned"] < min(
+            len(self.catalog.mols), self.limits.max_catalog_index_rows
+        ):
+            self.report["anchor_index_incomplete"] = True
+        self._catalog_index = buckets
+        self.report["catalog_index_size"] = sum(map(len, buckets.values()))
+        self.report["catalog_index_buckets"] = len(buckets)
+        return buckets
+
+    def _pool(self, target):
+        if target in self._catalog_pools:
+            return self._catalog_pools[target]
+        buckets = self._index()
+        if self._stop():
+            return ()
+        phase_limit = (
+            self.limits.max_catalog_row_visits // 2
+            if self._phase == 1 and self.limits.max_steps == 2
+            else self.limits.max_catalog_row_visits
+        )
+        if self.report["catalog_row_visits"] + len(buckets) > phase_limit:
+            self._stop("max_catalog_row_visits")
+            return ()
+        self.report["catalog_row_visits"] += len(buckets)
+        self.report["catalog_bucket_rankings"] += len(buckets)
+        features = self._features(molecule(target))
+
+        def distance(key):
+            return (
+                4 * abs(key[0] - features[0])
+                + 3 * abs(key[1] - features[1])
+                + 2 * abs(key[2] - features[2])
+                + 2 * abs(key[3] - features[3]),
+                key,
+            )
+
+        selected = []
+        for key in sorted(buckets, key=distance):
+            remaining = self.limits.max_catalog_rows_per_query - len(selected)
+            if remaining <= 0:
+                break
+            selected.extend(smiles for _, smiles in buckets[key][:remaining])
+        pool = tuple(selected)
+        self._catalog_pools[target] = pool
+        return pool
 
     def _select_rules(self, target, maximum, fallback=0):
+        key = (target, maximum, fallback)
+        if key in self._rule_selection_cache:
+            return self._rule_selection_cache[key]
         mol = molecule(target)
         primary, secondary = [], []
         for ident in sorted(self.rules.rules)[: self.limits.max_rule_scans_per_target]:
@@ -274,9 +417,12 @@ class RouteFirstSearch:
                 secondary.append(rule)
         primary.sort(key=lambda rule: (-rule.reaction.GetProducts()[0].GetNumHeavyAtoms(), rule.id))
         secondary.sort(key=lambda rule: rule.id)
-        return [(rule, False) for rule in primary[:maximum]] + [
+        selected = [(rule, False) for rule in primary[:maximum]] + [
             (rule, True) for rule in secondary[: max(0, min(fallback, maximum - len(primary)))]
         ]
+        if not self._stop() and self.report["rule_inspections"] < self.limits.max_rule_inspections:
+            self._rule_selection_cache[key] = selected
+        return selected
 
     def _reverse(self, rule, target, fallback):
         key = (rule.id, target, fallback)
@@ -330,45 +476,155 @@ class RouteFirstSearch:
         self._reverse_cache[key] = guides
         return guides
 
+    def _retrieval_target(self, target):
+        """Erase reverse-SMARTS dummy/radical artifacts for retrieval only.
+
+        The original rule, catalog block and forward replay are never changed.
+        An unconstructive guide falls back to its original literal query.
+        """
+        if target in self._retrieval_target_cache:
+            return self._retrieval_target_cache[target]
+        try:
+            source = molecule(target)
+            edited = Chem.RWMol(source)
+            changed = False
+            for atom in edited.GetAtoms():
+                if atom.GetNumRadicalElectrons():
+                    atom.SetNumRadicalElectrons(0)
+                    atom.SetNumExplicitHs(0)
+                    atom.SetNoImplicit(False)
+                    changed = True
+            for index in reversed(range(edited.GetNumAtoms())):
+                if edited.GetAtomWithIdx(index).GetAtomicNum() == 0:
+                    edited.RemoveAtom(index)
+                    changed = True
+            if edited.GetNumAtoms() == 0:
+                raise ValueError("Guide has no concrete atoms")
+            clean = edited.GetMol()
+            Chem.SanitizeMol(clean)
+            if len(Chem.GetMolFrags(clean)) != 1:
+                raise ValueError("Guide is disconnected after placeholder removal")
+            result = canonical(Chem.MolToSmiles(clean, isomericSmiles=True))
+            if changed:
+                self.report["retrieval_guides_normalized"] += 1
+        except (ValueError, RuntimeError):
+            self.report["retrieval_guides_unusable"] += 1
+            result = target
+        self._retrieval_target_cache[target] = result
+        return result
+
+    def _guide_anchors(self, target):
+        if target in self._guide_anchor_cache:
+            return self._guide_anchor_cache[target]
+        matched = []
+        if self._stop():
+            return ()
+        mol = molecule(target)
+        for index, query in enumerate(self._anchor_queries):
+            if self._stop():
+                break
+            if self.report["guide_anchor_checks"] >= 2048:
+                self._stop("guide_anchor_check_budget")
+                break
+            self.report["guide_anchor_checks"] += 1
+            if mol.HasSubstructMatch(query, useChirality=True):
+                matched.append(index)
+        result = tuple(matched)
+        self._guide_anchor_cache[target] = result
+        return result
+
     def _nearest(self, target, role):
         key = (target, role)
         if key in self._nearest_cache:
             return self._nearest_cache[key]
         self.report["role_queries"] += 1
         query = Chem.MolFromSmarts(role)
-        fp = self._fingerprint(target)
+        retrieval_target = self._retrieval_target(target)
+        # Radical hydrogens in reversed templates can retain useful local
+        # positional features in the fingerprint. Dummy atoms cannot, so only
+        # those use the normalized fingerprint; both remain retrieval hints.
+        fingerprint_target = (
+            retrieval_target
+            if any(atom.GetAtomicNum() == 0 for atom in molecule(target).GetAtoms())
+            else target
+        )
+        fp = self._fingerprint(fingerprint_target)
         if fp is None:
             return ()
         ranked = []
-        pool = self._pool()
-        exact = (target,) if target in self.catalog.mols and target not in pool else ()
+        pool = self._pool(retrieval_target)
+        active_anchors = self._guide_anchors(target)
+        anchor_strength = {}
+        for index in active_anchors:
+            for smiles in self._anchor_postings[index]:
+                anchor_strength[smiles] = anchor_strength.get(smiles, 0) + 1
         complete = True
-        for smiles in itertools.chain(exact, pool):
+        phase_limit = (
+            self.limits.max_catalog_row_visits // 2
+            if self._phase == 1 and self.limits.max_steps == 2
+            else self.limits.max_catalog_row_visits
+        )
+        if self.report["catalog_row_visits"] + len(anchor_strength) > phase_limit:
+            self._stop("max_catalog_row_visits")
+            return ()
+        self.report["catalog_row_visits"] += len(anchor_strength)
+        self.report["anchor_posting_metadata_visits"] += len(anchor_strength)
+        ordered_anchors = sorted(
+            anchor_strength,
+            key=lambda smiles: (-anchor_strength[smiles], self._anchor_scores[smiles], smiles),
+        )
+        chosen_anchors = []
+        posting_attempts = 0
+        posting_limit = min(256, self.limits.max_catalog_rows_per_query)
+        for smiles in ordered_anchors[:posting_limit]:
             if self._stop():
                 complete = False
                 break
-            phase_limit = (
-                self.limits.max_catalog_row_visits // 2
-                if self._phase == 1 and self.limits.max_steps == 2
-                else self.limits.max_catalog_row_visits
-            )
             if self.report["catalog_row_visits"] >= phase_limit:
                 self._stop("max_catalog_row_visits")
                 complete = False
                 break
             self.report["catalog_row_visits"] += 1
+            self.report["anchor_role_checks"] += 1
+            posting_attempts += 1
             mol = self.catalog.mols[smiles]
-            if not mol.HasSubstructMatch(query, useChirality=True):
-                continue
+            if mol.HasSubstructMatch(query, useChirality=True):
+                self.report["anchor_role_compatible"] += 1
+                chosen_anchors.append(smiles)
+        remaining = self.limits.max_catalog_rows_per_query - posting_attempts
+        base_pool = tuple(smiles for smiles in pool if smiles not in chosen_anchors)[:remaining]
+        if target in self.catalog.mols and target not in chosen_anchors and target not in base_pool:
+            base_pool = (target,) + base_pool[: max(0, remaining - 1)] if remaining else ()
+        for smiles in itertools.chain(chosen_anchors, base_pool):
+            if self._stop():
+                complete = False
+                break
+            if smiles not in chosen_anchors:
+                if self.report["catalog_row_visits"] >= phase_limit:
+                    self._stop("max_catalog_row_visits")
+                    complete = False
+                    break
+                self.report["catalog_row_visits"] += 1
+                mol = self.catalog.mols[smiles]
+                if not mol.HasSubstructMatch(query, useChirality=True):
+                    continue
             candidate_fp = self._fingerprint(smiles)
             if candidate_fp is None:
                 complete = False
                 break
             score = DataStructs.TanimotoSimilarity(fp, candidate_fp)
-            ranked.append((-score, smiles))
+            ranked.append((-score, -anchor_strength.get(smiles, 0), smiles))
+        anchored = sorted((row for row in ranked if row[1] < 0), key=lambda row: (row[1], row[0], row[2]))
+        ordinary = sorted((row for row in ranked if row[1] == 0), key=lambda row: (row[0], row[2]))
+        selected = []
+        if anchored:
+            selected.append(anchored.pop(0))
+        if ordinary and len(selected) < self.limits.building_block_top_k:
+            selected.append(ordinary.pop(0))
+        selected.extend((anchored + ordinary)[: self.limits.building_block_top_k - len(selected)])
         blocks = tuple(
             self.catalog.blocks[sorted(self.catalog.by_smiles[smiles])[0]]
-            for _, smiles in sorted(ranked)[: self.limits.building_block_top_k]
+            for _score, _anchors, smiles in selected
         )
         if complete:
             self._nearest_cache[key] = blocks
@@ -433,27 +689,72 @@ class RouteFirstSearch:
         return states
 
     def _retain(self, states):
+        # Keep the bounded forward outcomes until both search phases finish.
+        # Product admission and route audit then spend their budget on the
+        # closest eligible exact products, rather than the first rule's output.
         for state in states:
             if self._stop():
                 return
-            depth = sum("rule_id" in node for node in state["nodes"])
-            if len(self.routes) >= self.limits.max_routes:
-                self._stop("max_routes")
+            self._pending.append(state)
+
+    def _admit(self):
+        if self._stop():
+            return
+        unique_products = sorted({state["product"] for state in self._pending})
+        product_ranks = {product: self._rank(product) for product in unique_products}
+        if self._stop() or "max_fingerprint_calls" in self.report["limits_reached"]:
+            return
+        eligible = set()
+        for product in sorted(unique_products, key=lambda product: (product_ranks[product], product)):
+            if self._stop():
                 return
             if (
-                depth == 1
-                and self.limits.max_steps == 2
-                and sum(len(item["verification"]["steps"]) == 1 for item in self.routes)
-                >= max(1, self.limits.max_routes // 2)
+                self.report["fingerprint_calls"] + getattr(self.accept, "fingerprint_calls", 0)
+                >= self.limits.max_fingerprint_calls
             ):
-                self._stop("depth_one_route_budget")
+                self._stop("max_fingerprint_calls")
+                break
+            try:
+                self.accept(product)
+            except (ValueError, KeyError, TypeError) as exc:
+                reason = f"{type(exc).__name__}: {exc}"
+                self.report["product_rejections"][reason] = (
+                    self.report["product_rejections"].get(reason, 0) + 1
+                )
+                continue
+            finally:
+                self.report["admission_fingerprint_calls"] = getattr(self.accept, "fingerprint_calls", 0)
+            eligible.add(product)
+        if self._stop():
+            return
+        states = sorted(
+            (state for state in self._pending if state["product"] in eligible),
+            key=lambda state: (
+                product_ranks[state["product"]],
+                state["product"],
+                sum("rule_id" in node for node in state["nodes"]),
+                str(state["nodes"]),
+            ),
+        )
+        first, alternatives, seen_products = [], [], set()
+        for state in states:
+            if state["product"] in seen_products:
+                alternatives.append(state)
+            else:
+                first.append(state)
+                seen_products.add(state["product"])
+        for state in itertools.chain(first, alternatives):
+            if self._stop():
+                return
+            if self.report["route_audit_attempts"] >= self.limits.max_routes:
+                self._stop("max_routes")
                 return
             route = {"schema_version": 1, "root": state["root"], "nodes": state["nodes"]}
             key = str(route)
             if key in self._route_keys:
                 continue
+            self.report["route_audit_attempts"] += 1
             try:
-                self.accept(state["product"])
                 verification = verify_route(
                     route, self.catalog, self.rules, self.limits.reaction_product_limit
                 )
@@ -490,37 +791,61 @@ class RouteFirstSearch:
             if self.limits.max_steps == 1
             else max(1, self.limits.max_combinations // 2)
         )
-        plans = []
-        depth_one_product_budget = (
-            self.limits.max_products if self.limits.max_steps == 1 else max(1, self.limits.max_products // 2)
-        )
+        plan_candidates = []
         for rule, fallback in outer:
+            if self._stop():
+                break
             for guide in self._reverse(rule, self.hit, fallback):
                 if self._stop():
                     break
-                if len(plans) >= self.limits.max_outer_guides:
-                    self._stop("max_outer_guides")
-                    break
-                plans.append((rule, guide))
-                states = self._stage(
-                    rule,
-                    guide,
-                    "o",
-                    budget=depth_one_budget,
-                    product_budget=depth_one_product_budget,
+                normalized = tuple(self._retrieval_target(part) for part in guide)
+                artifacts = sum(a != b for a, b in zip(guide, normalized))
+                size_delta = abs(
+                    sum(molecule(part).GetNumHeavyAtoms() for part in normalized)
+                    - self.hit_mol.GetNumHeavyAtoms()
                 )
-                self._retain(states)
-                if (
-                    self.report["combinations"] >= depth_one_budget
-                    or len(plans) >= self.limits.max_outer_guides
-                ):
+                plan_candidates.append((rule, guide, fallback, artifacts, size_delta))
+        plan_candidates.sort(
+            key=lambda item: (
+                item[2],
+                -item[0].reaction.GetProducts()[0].GetNumHeavyAtoms(),
+                item[3],
+                item[4],
+                item[0].id,
+                item[1],
+            )
+        )
+        plans = []
+        seen_rules = set()
+        for only_new_rules in (True, False):
+            for rule, guide, _fallback, _artifacts, _size_delta in plan_candidates:
+                if len(plans) >= self.limits.max_outer_guides:
                     break
-            if (
-                self.report["combinations"] >= depth_one_budget
-                or len(plans) >= self.limits.max_outer_guides
-                or self._stop()
-            ):
+                if only_new_rules and rule.id in seen_rules:
+                    continue
+                if (rule, guide) in plans:
+                    continue
+                plans.append((rule, guide))
+                seen_rules.add(rule.id)
+        if len(plan_candidates) > len(plans):
+            self._stop("max_outer_guides")
+        self.report["outer_plans_selected"] = [
+            {"rule_id": rule.id, "guide": list(guide)} for rule, guide in plans
+        ]
+        depth_one_product_budget = (
+            self.limits.max_products if self.limits.max_steps == 1 else max(1, self.limits.max_products // 2)
+        )
+        for rule, guide in plans:
+            if self._stop() or self.report["combinations"] >= depth_one_budget:
                 break
+            states = self._stage(
+                rule,
+                guide,
+                "o",
+                budget=depth_one_budget,
+                product_budget=depth_one_product_budget,
+            )
+            self._retain(states)
         if self.limits.max_steps == 2 and not self._stop():
             self._phase = 2
             for outer_rule, guide in plans:
@@ -542,31 +867,10 @@ class RouteFirstSearch:
                             if self._stop() or self.report["combinations"] >= self.limits.max_combinations:
                                 break
 
-        def order(item):
-            return (
-                self._rank(item["verification"]["product"]),
-                item["verification"]["product"],
-                str(item["route"]),
-            )
-
-        by_depth = {
-            depth: sorted(
-                (item for item in self.routes if len(item["verification"]["steps"]) == depth),
-                key=order,
-            )
-            for depth in (1, 2)
-        }
-        first = []
-        seen = set()
-        for depth in (1, 2):
-            for item in by_depth[depth]:
-                product = item["verification"]["product"]
-                if product not in seen:
-                    first.append(item)
-                    seen.add(product)
-                    break
-        remainder = sorted((item for item in self.routes if item not in first), key=order)
-        self.routes = (first + remainder)[: self.limits.max_routes]
+        self._admit()
+        self.report["total_fingerprint_calls"] = (
+            self.report["fingerprint_calls"] + self.report["admission_fingerprint_calls"]
+        )
         self.report["distinct_exact_products"] = len(
             {item["verification"]["product"] for item in self.routes}
         )
@@ -577,7 +881,7 @@ class RouteFirstSearch:
         return self.routes, self.report
 
 
-def generate(hit, catalog, rules, config, *, deadline_monotonic=None, accept=None):
+def generate(hit, catalog, rules, config, *, deadline_monotonic=None, accept=None, hit_anchors=None):
     if not isinstance(config, dict):
         raise ValueError("route_first must be an object")
     if set(config) - set(RouteFirstLimits.__dataclass_fields__):
@@ -589,4 +893,4 @@ def generate(hit, catalog, rules, config, *, deadline_monotonic=None, accept=Non
         or not math.isfinite(deadline_monotonic)
     ):
         raise ValueError("Invalid route-first deadline")
-    return RouteFirstSearch(hit, catalog, rules, limits, deadline_monotonic, accept).run()
+    return RouteFirstSearch(hit, catalog, rules, limits, deadline_monotonic, accept, hit_anchors).run()
