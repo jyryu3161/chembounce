@@ -1,0 +1,635 @@
+{
+  "bindings": {
+    "actual_v2_portable": {
+      "path": "benchmarks/results/synthesis-route-development-20261023/actual-comparison-v2.json",
+      "sha256": "2cb848e63da912b11e565c588e5b396e9d025ce94a8328fd5e3d22ea7434b468"
+    },
+    "additional_work_limits": {
+      "atoms_per_part": 256,
+      "bonds_per_part": 512,
+      "fallback": "unknown metadata uses legacy size score; no new reverse/role/substructure/model calls",
+      "guide_entries_per_search": 128,
+      "source_proven_origin_structural_units_per_search": 32768
+    },
+    "base_caps": {
+      "arms": 1,
+      "building_block_top_k": 2,
+      "catalog_index_rows": 250000,
+      "catalog_loads": 1,
+      "catalog_row_visits_per_arm": 262144,
+      "combinations_per_arm": 512,
+      "fingerprint_calls_per_arm": 65536,
+      "inputs": 12,
+      "per_input_per_arm_cooperative_seconds": 960,
+      "products_per_arm": 1024,
+      "reverse_outcomes_per_call": 4,
+      "route_audits_per_arm": 64,
+      "rows_per_query": 8192,
+      "rule_inspections_per_arm": 512,
+      "stereo_atom_bond_units_per_arm": 131072,
+      "stereo_perceptions_per_arm": 2048
+    },
+    "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "config_sha256": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+    "files": {
+      "analysis-plan-draft-reviewed.json": {
+        "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v19/analysis-plan-draft-reviewed.json",
+        "sha256": "930e4b26f489d4b74cd73dc7d267f3e5d44a7fa5ce0551f4b6cf2dd79aff69f3"
+      },
+      "analysis-plan-preexecution.json": {
+        "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v19/analysis-plan-preexecution.json",
+        "sha256": "96de2809ae53471b81c0a6a84e1c449168b077b48e25a431f5986a0c302a53e9"
+      },
+      "analysis-plan.json": {
+        "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v19/analysis-plan.json",
+        "sha256": "8ca40e65dacab82ada090e1a6ec7c93bbdb7ed9cd0f9450937537c1fa079c9b8"
+      },
+      "analysis.json": {
+        "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v19/analysis.json",
+        "sha256": "6b42bcea450d4459cdf94fe04b6b4d16452dbf3474099c65feb8810958be0693"
+      },
+      "analyze.py": {
+        "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v19/analyze.py",
+        "sha256": "1c06521e1acf935daa13e18be8c8d4cb47d03cb9f81affddb794c2d4f4295ac6"
+      },
+      "plan-draft-reviewed.json": {
+        "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v19/plan-draft-reviewed.json",
+        "sha256": "a84695e0abee1c4510a20cbcecd65d89c9c692644b228e7dc1aa82bfb29f6625"
+      },
+      "plan.json": {
+        "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v19/plan.json",
+        "sha256": "d5244a8a1d0dd735bc93ef25b17daf3c8ee350da1b5e74de620f2f712b6b3ff1"
+      },
+      "probe.py": {
+        "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v19/probe.py",
+        "sha256": "cbec55b72d4142758310b6abac83554250395e9f6f195bb4fd2015f7792f9f66"
+      },
+      "result.json": {
+        "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v19/result.json",
+        "sha256": "e259b1d279f57e7fdd625b868b84e2c63de643c6e8ad4839a9925a79be313b81"
+      }
+    },
+    "manifest_sha256": {
+      "CHEMBL3334418-query-1": "6b12dae1b5d50308a4f785ba393de1eba27ed2756923fafa59fc20571d0fe812",
+      "CHEMBL3334418-query-2": "c8d906d4231bf602ec241be4ec7ff946b25b2cdfb133eb44f1f49eb262a5b911",
+      "CHEMBL3864-query-1": "4a968e55ab7c40947beee7db5cdcee24b35e04253feb1faf379007d12eaf525b",
+      "CHEMBL3864-query-2": "b038c40adf103153dd78182be09cb9c2ee3258e05a5eff7dc8837ebabeb04fc0",
+      "CHEMBL4247-query-1": "500fda8ed7a5dbc447fe8b9aa1f6ea85c97ac8d389eebf089b919360aa6371cb",
+      "CHEMBL4247-query-2": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "CHEMBL4630839-query-1": "4550b2df1b553049fb94a78835fec0544cca3980c044823ad0e9cbc51f521739",
+      "CHEMBL4630839-query-2": "b8d631a17140f78af64e6ce4f188c5b64aa1f74d5cc6b8acaaaed07f440a10cc",
+      "CHEMBL4869-query-1": "1669db70ff4d09c9a93d586d872d256d3482e10c6e729c7637f15a176eab262d",
+      "CHEMBL4869-query-2": "7c4ef94083ab953bb45c9651f3bb80d5d00cbff155849752ec2135655f0ede7b",
+      "CHEMBL5163-query-1": "cf83f89e9df2e11ccc259628a9f7b59aee066c2f64e4a01a2eda829922926baf",
+      "CHEMBL5163-query-2": "53066839233b041e4d65b62284a722b995a9ab08c65692cb83ae8f479f335145"
+    },
+    "panel_sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+    "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "runtime_commit": "4e6a56f2afd7e033c5db796d54d795182643bc04",
+    "size_plan_control_result_sha256": "5105501b3589dd1846b2c4a3189df873c2203b67f1ef688b6fd525964a3149b6",
+    "source_sha256": {
+      "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "8303df88df9755f332dce635b64fde742b04907ca0953e480075c73acadce136",
+      "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e"
+    },
+    "v17_result_sha256": "f86e0d441e8e9f9d759476febba4d6a92b8acd831a9dfda06a7df6366983f56e",
+    "v18_result_sha256": "7675112a51d049db4c1da3bb499e8073db9f881b0de78caf4e8ee551f2b3159f"
+  },
+  "cost": {
+    "continuation_preference_work_sums": {
+      "bridge_positive_work_items": 88,
+      "bridge_role_contexts": 378,
+      "bridge_snapshot_attempts": 328,
+      "bridge_structural_units": 65305,
+      "bridge_unknown_work_items": 290,
+      "outer_role_queries": 15,
+      "ranked_rows_retained": 102227,
+      "replacements": 19,
+      "role_checks": 422,
+      "role_matches": 41,
+      "samples_omitted": 0,
+      "stereo_rejections": 12,
+      "stereo_unknowns": 0
+    },
+    "generation_seconds_median_excluding_catalog_descriptive": 44.542,
+    "generation_seconds_sum_excluding_catalog_descriptive": 552.833,
+    "new_metadata_adds_cpu_work": "The per-search metadata meter is separate from unchanged catalog/FP/rule/reverse caps; elapsed times are descriptive, not a causal speed comparison.",
+    "search_work_sums": {
+      "catalog_index_rows_scanned": 2862504,
+      "catalog_row_visits": 2906505,
+      "catalog_stereo_atom_bond_charges": 18616,
+      "catalog_stereo_perceptions": 676,
+      "combinations": 1272,
+      "fallback_hit_second_tanimotos": 5321,
+      "products_generated": 1448,
+      "reaction_pool_graph_visits": 103624,
+      "reaction_pool_query_pairs": 522,
+      "reaction_pool_role_index_checks": 5725008,
+      "reaction_pool_site_match_requests": 1311,
+      "reaction_pool_window_match_requests": 522,
+      "reverse_role_work": 2147,
+      "route_audit_attempts": 64,
+      "rule_inspections": 6144,
+      "topology_match_requests": 349,
+      "topology_spec_graph_visits": 217164,
+      "total_fingerprint_calls": 482577
+    },
+    "source_proven_metadata_limit_per_search": 32768,
+    "source_proven_metadata_structural_units_all12": 110490,
+    "source_proven_metadata_structural_units_max_one_search": 16818
+  },
+  "outcome": {
+    "actual_primary_supported_coverage_unchanged": {
+      "baseline": 5,
+      "known_complete_inputs": 12,
+      "route_first": 4
+    },
+    "adoption": "rejected: pre-evidence input coverage does not increase above retained v17 and the optimistic bound does not exceed the baseline five; constructor-only flags remain opt-in/default-off.",
+    "conditional_optimistic_possible_inputs": 5,
+    "gross_change_vs_retained_v17": {
+      "affected_input": "CHEMBL3334418-query-2",
+      "products_gained": 1,
+      "products_lost": 2,
+      "route_graphs_gained": 1,
+      "route_graphs_lost": 2
+    },
+    "historical_qualified_exact_graphs_retained_not_rescored": 3,
+    "restoration_from_rejected_v18": "CHEMBL4247-query-2 retains all four v17 exact products and six v17 route graphs; this restoration is not new v17 coverage.",
+    "saved_exact_all_step_matched_inputs": 3,
+    "v17_retained": {
+      "covered_inputs": 6,
+      "input_product_pairs": 58,
+      "one_step_routes": 24,
+      "routes": 65,
+      "two_step_routes": 41
+    },
+    "v18_rejected": {
+      "covered_inputs": 5,
+      "input_product_pairs": 55,
+      "routes": 62
+    },
+    "v19": {
+      "covered_inputs": 6,
+      "input_product_pairs": 57,
+      "one_step_routes": 23,
+      "routes": 64,
+      "two_step_routes": 41
+    }
+  },
+  "per_input": [
+    {
+      "conditional_optimistic_possible_input": true,
+      "gained_products_vs_rejected_v18": [],
+      "gained_products_vs_v17": [],
+      "gained_route_graph_sha256_vs_v17": [],
+      "input_id": "CHEMBL4630839-query-1",
+      "known_saved_all_step_matched_graphs": 3,
+      "limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "lost_products_vs_rejected_v18": [],
+      "lost_products_vs_v17": [],
+      "lost_route_graph_sha256_vs_v17": [],
+      "source_proven_metadata_work": {
+        "representative_origin_checks": 34,
+        "representative_origin_guide_entries": 34,
+        "representative_origin_known_guides": 34,
+        "representative_origin_legacy_reasons": {
+          "no_raw_origin": 1,
+          "retrieval_target_changed": 10
+        },
+        "representative_origin_limits": {
+          "atoms_per_part": 256,
+          "bonds_per_part": 512,
+          "guide_entries": 128,
+          "structural_units": 32768
+        },
+        "representative_origin_score_corrections": 8,
+        "representative_origin_structural_units": 12378
+      },
+      "v17_retained_products": 34,
+      "v18_rejected_products": 34,
+      "v19_products": 34
+    },
+    {
+      "conditional_optimistic_possible_input": true,
+      "gained_products_vs_rejected_v18": [],
+      "gained_products_vs_v17": [],
+      "gained_route_graph_sha256_vs_v17": [],
+      "input_id": "CHEMBL4630839-query-2",
+      "known_saved_all_step_matched_graphs": 1,
+      "limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "lost_products_vs_rejected_v18": [],
+      "lost_products_vs_v17": [],
+      "lost_route_graph_sha256_vs_v17": [],
+      "source_proven_metadata_work": {
+        "representative_origin_checks": 23,
+        "representative_origin_guide_entries": 23,
+        "representative_origin_known_guides": 23,
+        "representative_origin_legacy_reasons": {
+          "retrieval_target_changed": 6
+        },
+        "representative_origin_limits": {
+          "atoms_per_part": 256,
+          "bonds_per_part": 512,
+          "guide_entries": 128,
+          "structural_units": 32768
+        },
+        "representative_origin_score_corrections": 6,
+        "representative_origin_structural_units": 9360
+      },
+      "v17_retained_products": 1,
+      "v18_rejected_products": 1,
+      "v19_products": 1
+    },
+    {
+      "conditional_optimistic_possible_input": true,
+      "gained_products_vs_rejected_v18": [],
+      "gained_products_vs_v17": [],
+      "gained_route_graph_sha256_vs_v17": [],
+      "input_id": "CHEMBL4247-query-1",
+      "known_saved_all_step_matched_graphs": 3,
+      "limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "generation_fingerprint_budget"
+      ],
+      "lost_products_vs_rejected_v18": [],
+      "lost_products_vs_v17": [],
+      "lost_route_graph_sha256_vs_v17": [],
+      "source_proven_metadata_work": {
+        "representative_origin_checks": 29,
+        "representative_origin_guide_entries": 28,
+        "representative_origin_known_guides": 28,
+        "representative_origin_legacy_reasons": {
+          "retrieval_target_changed": 7
+        },
+        "representative_origin_limits": {
+          "atoms_per_part": 256,
+          "bonds_per_part": 512,
+          "guide_entries": 128,
+          "structural_units": 32768
+        },
+        "representative_origin_score_corrections": 8,
+        "representative_origin_structural_units": 15168
+      },
+      "v17_retained_products": 11,
+      "v18_rejected_products": 11,
+      "v19_products": 11
+    },
+    {
+      "conditional_optimistic_possible_input": true,
+      "gained_products_vs_rejected_v18": [
+        "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+        "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1"
+      ],
+      "gained_products_vs_v17": [],
+      "gained_route_graph_sha256_vs_v17": [],
+      "input_id": "CHEMBL4247-query-2",
+      "known_saved_all_step_matched_graphs": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "lost_products_vs_rejected_v18": [
+        "COc1cc(CC(=O)O)ccc1Nc1ncc2cc(-c3ccccc3S(C)(=O)=O)cn2n1"
+      ],
+      "lost_products_vs_v17": [],
+      "lost_route_graph_sha256_vs_v17": [],
+      "source_proven_metadata_work": {
+        "representative_origin_checks": 32,
+        "representative_origin_guide_entries": 32,
+        "representative_origin_known_guides": 32,
+        "representative_origin_legacy_reasons": {
+          "retrieval_target_changed": 9
+        },
+        "representative_origin_limits": {
+          "atoms_per_part": 256,
+          "bonds_per_part": 512,
+          "guide_entries": 128,
+          "structural_units": 32768
+        },
+        "representative_origin_score_corrections": 7,
+        "representative_origin_structural_units": 16818
+      },
+      "v17_retained_products": 4,
+      "v18_rejected_products": 3,
+      "v19_products": 4
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products_vs_rejected_v18": [],
+      "gained_products_vs_v17": [],
+      "gained_route_graph_sha256_vs_v17": [],
+      "input_id": "CHEMBL5163-query-1",
+      "known_saved_all_step_matched_graphs": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "lost_products_vs_rejected_v18": [],
+      "lost_products_vs_v17": [],
+      "lost_route_graph_sha256_vs_v17": [],
+      "source_proven_metadata_work": {
+        "representative_origin_checks": 16,
+        "representative_origin_guide_entries": 15,
+        "representative_origin_known_guides": 15,
+        "representative_origin_legacy_reasons": {
+          "retrieval_target_changed": 2
+        },
+        "representative_origin_limits": {
+          "atoms_per_part": 256,
+          "bonds_per_part": 512,
+          "guide_entries": 128,
+          "structural_units": 32768
+        },
+        "representative_origin_score_corrections": 1,
+        "representative_origin_structural_units": 7158
+      },
+      "v17_retained_products": 0,
+      "v18_rejected_products": 0,
+      "v19_products": 0
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products_vs_rejected_v18": [],
+      "gained_products_vs_v17": [],
+      "gained_route_graph_sha256_vs_v17": [],
+      "input_id": "CHEMBL5163-query-2",
+      "known_saved_all_step_matched_graphs": 0,
+      "limits_reached": [
+        "max_rule_inspections"
+      ],
+      "lost_products_vs_rejected_v18": [],
+      "lost_products_vs_v17": [],
+      "lost_route_graph_sha256_vs_v17": [],
+      "source_proven_metadata_work": {
+        "representative_origin_checks": 7,
+        "representative_origin_guide_entries": 5,
+        "representative_origin_known_guides": 5,
+        "representative_origin_legacy_reasons": {
+          "no_raw_origin": 2,
+          "retrieval_target_changed": 2
+        },
+        "representative_origin_limits": {
+          "atoms_per_part": 256,
+          "bonds_per_part": 512,
+          "guide_entries": 128,
+          "structural_units": 32768
+        },
+        "representative_origin_score_corrections": 0,
+        "representative_origin_structural_units": 2028
+      },
+      "v17_retained_products": 0,
+      "v18_rejected_products": 0,
+      "v19_products": 0
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products_vs_rejected_v18": [],
+      "gained_products_vs_v17": [],
+      "gained_route_graph_sha256_vs_v17": [],
+      "input_id": "CHEMBL3334418-query-1",
+      "known_saved_all_step_matched_graphs": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "lost_products_vs_rejected_v18": [],
+      "lost_products_vs_v17": [],
+      "lost_route_graph_sha256_vs_v17": [],
+      "source_proven_metadata_work": {
+        "representative_origin_checks": 14,
+        "representative_origin_guide_entries": 13,
+        "representative_origin_known_guides": 13,
+        "representative_origin_legacy_reasons": {
+          "no_raw_origin": 2,
+          "retrieval_target_changed": 2
+        },
+        "representative_origin_limits": {
+          "atoms_per_part": 256,
+          "bonds_per_part": 512,
+          "guide_entries": 128,
+          "structural_units": 32768
+        },
+        "representative_origin_score_corrections": 3,
+        "representative_origin_structural_units": 6222
+      },
+      "v17_retained_products": 6,
+      "v18_rejected_products": 6,
+      "v19_products": 6
+    },
+    {
+      "conditional_optimistic_possible_input": true,
+      "gained_products_vs_rejected_v18": [
+        "CC(C)(Nc1cc2c(cc1N)C(=O)c1ccccc1C2=O)c1ccc(S(N)(=O)=O)cc1F"
+      ],
+      "gained_products_vs_v17": [
+        "CC(C)(Nc1cc2c(cc1N)C(=O)c1ccccc1C2=O)c1ccc(S(N)(=O)=O)cc1F"
+      ],
+      "gained_route_graph_sha256_vs_v17": [
+        "c32094c9f5f2f992071a5b337071b1317ccb0f1476d8f766fdc7385ea17c15b7"
+      ],
+      "input_id": "CHEMBL3334418-query-2",
+      "known_saved_all_step_matched_graphs": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "lost_products_vs_rejected_v18": [],
+      "lost_products_vs_v17": [
+        "CNc1ccc(NC(C)(C)c2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+        "CNc1ccc(Nc2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O"
+      ],
+      "lost_route_graph_sha256_vs_v17": [
+        "40fd767ca6348495290b3af78cdfd4d7955fdfc00499528b92ba548882d6496a",
+        "e4b9f9a9a95ef9479d397883642774a7f301539e5de3c4d42bca78a02ab1dd30"
+      ],
+      "source_proven_metadata_work": {
+        "representative_origin_checks": 14,
+        "representative_origin_guide_entries": 13,
+        "representative_origin_known_guides": 13,
+        "representative_origin_legacy_reasons": {
+          "no_raw_origin": 2,
+          "retrieval_target_changed": 2
+        },
+        "representative_origin_limits": {
+          "atoms_per_part": 256,
+          "bonds_per_part": 512,
+          "guide_entries": 128,
+          "structural_units": 32768
+        },
+        "representative_origin_score_corrections": 2,
+        "representative_origin_structural_units": 5940
+      },
+      "v17_retained_products": 2,
+      "v18_rejected_products": 0,
+      "v19_products": 1
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products_vs_rejected_v18": [],
+      "gained_products_vs_v17": [],
+      "gained_route_graph_sha256_vs_v17": [],
+      "input_id": "CHEMBL4869-query-1",
+      "known_saved_all_step_matched_graphs": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "lost_products_vs_rejected_v18": [],
+      "lost_products_vs_v17": [],
+      "lost_route_graph_sha256_vs_v17": [],
+      "source_proven_metadata_work": {
+        "representative_origin_checks": 26,
+        "representative_origin_guide_entries": 26,
+        "representative_origin_known_guides": 26,
+        "representative_origin_legacy_reasons": {
+          "no_raw_origin": 2,
+          "retrieval_target_changed": 7
+        },
+        "representative_origin_limits": {
+          "atoms_per_part": 256,
+          "bonds_per_part": 512,
+          "guide_entries": 128,
+          "structural_units": 32768
+        },
+        "representative_origin_score_corrections": 7,
+        "representative_origin_structural_units": 11424
+      },
+      "v17_retained_products": 0,
+      "v18_rejected_products": 0,
+      "v19_products": 0
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products_vs_rejected_v18": [],
+      "gained_products_vs_v17": [],
+      "gained_route_graph_sha256_vs_v17": [],
+      "input_id": "CHEMBL4869-query-2",
+      "known_saved_all_step_matched_graphs": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "lost_products_vs_rejected_v18": [],
+      "lost_products_vs_v17": [],
+      "lost_route_graph_sha256_vs_v17": [],
+      "source_proven_metadata_work": {
+        "representative_origin_checks": 29,
+        "representative_origin_guide_entries": 29,
+        "representative_origin_known_guides": 29,
+        "representative_origin_legacy_reasons": {
+          "no_raw_origin": 2,
+          "retrieval_target_changed": 5
+        },
+        "representative_origin_limits": {
+          "atoms_per_part": 256,
+          "bonds_per_part": 512,
+          "guide_entries": 128,
+          "structural_units": 32768
+        },
+        "representative_origin_score_corrections": 13,
+        "representative_origin_structural_units": 12468
+      },
+      "v17_retained_products": 0,
+      "v18_rejected_products": 0,
+      "v19_products": 0
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products_vs_rejected_v18": [],
+      "gained_products_vs_v17": [],
+      "gained_route_graph_sha256_vs_v17": [],
+      "input_id": "CHEMBL3864-query-1",
+      "known_saved_all_step_matched_graphs": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "lost_products_vs_rejected_v18": [],
+      "lost_products_vs_v17": [],
+      "lost_route_graph_sha256_vs_v17": [],
+      "source_proven_metadata_work": {
+        "representative_origin_checks": 9,
+        "representative_origin_guide_entries": 9,
+        "representative_origin_known_guides": 9,
+        "representative_origin_legacy_reasons": {
+          "no_raw_origin": 2,
+          "retrieval_target_changed": 2
+        },
+        "representative_origin_limits": {
+          "atoms_per_part": 256,
+          "bonds_per_part": 512,
+          "guide_entries": 128,
+          "structural_units": 32768
+        },
+        "representative_origin_score_corrections": 2,
+        "representative_origin_structural_units": 2124
+      },
+      "v17_retained_products": 0,
+      "v18_rejected_products": 0,
+      "v19_products": 0
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products_vs_rejected_v18": [],
+      "gained_products_vs_v17": [],
+      "gained_route_graph_sha256_vs_v17": [],
+      "input_id": "CHEMBL3864-query-2",
+      "known_saved_all_step_matched_graphs": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "lost_products_vs_rejected_v18": [],
+      "lost_products_vs_v17": [],
+      "lost_route_graph_sha256_vs_v17": [],
+      "source_proven_metadata_work": {
+        "representative_origin_checks": 23,
+        "representative_origin_guide_entries": 23,
+        "representative_origin_known_guides": 23,
+        "representative_origin_legacy_reasons": {
+          "retrieval_target_changed": 7
+        },
+        "representative_origin_limits": {
+          "atoms_per_part": 256,
+          "bonds_per_part": 512,
+          "guide_entries": 128,
+          "structural_units": 32768
+        },
+        "representative_origin_score_corrections": 5,
+        "representative_origin_structural_units": 9402
+      },
+      "v17_retained_products": 0,
+      "v18_rejected_products": 0,
+      "v19_products": 0
+    }
+  ],
+  "schema": "route-first-v2-pre-evidence-v19",
+  "scope": "One fixed 12-input model-free pre-evidence run; source-proven representative size correction active with typed-prefix and continuation preference. v17 retained policy is the primary development comparator; v18 rejected policy is secondary. No model, 3D, downstream forward re-evaluation, or primary metric revision.",
+  "status": "complete_rejected_for_adoption"
+}

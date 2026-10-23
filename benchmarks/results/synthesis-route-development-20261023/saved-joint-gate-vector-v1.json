@@ -1,0 +1,569 @@
+{
+  "bindings": {
+    "declared_bounds": {
+      "anchor_matches_per_query": 65,
+      "cooperative_wall_seconds_total": 300,
+      "hit_anchor_queries_per_input": 16,
+      "hit_fingerprint_calls_total": 3,
+      "molecule_atoms": 256,
+      "molecule_bonds": 512,
+      "polar_requests_total": 97,
+      "product_fingerprint_calls_total": 97,
+      "retries": 0,
+      "saved_graphs_per_input": 128,
+      "unique_products_total": 97
+    },
+    "files": {
+      "plan-draft-reviewed.json": {
+        "path": "benchmark-results/route-first-development-20261023-v2/saved-joint-gate-vector-v1/plan-draft-reviewed.json",
+        "sha256": "ce7c38267142f4b30cb56bf99f1a79e46d3b1254719c1a6707a0e710e589d405"
+      },
+      "plan.json": {
+        "path": "benchmark-results/route-first-development-20261023-v2/saved-joint-gate-vector-v1/plan.json",
+        "sha256": "3dcc2c305d4bd688353cae3e21c913ff29fd01df1756d54f610a6c42ee788805"
+      },
+      "probe.py": {
+        "path": "benchmark-results/route-first-development-20261023-v2/saved-joint-gate-vector-v1/probe.py",
+        "sha256": "9afb85c25339d333d9e89b6a8ce01b824caf3275495b2dbfc23c5cab62234f30"
+      },
+      "result.json": {
+        "path": "benchmark-results/route-first-development-20261023-v2/saved-joint-gate-vector-v1/result.json",
+        "sha256": "945beb95ecfd2bd24d56d90aedfbf4effdba68c1a1bbf22a80ac39f41b24b57f"
+      },
+      "run.log": {
+        "path": "benchmark-results/route-first-development-20261023-v2/saved-joint-gate-vector-v1/run.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "input_sha256": {
+      "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "v17": "f86e0d441e8e9f9d759476febba4d6a92b8acd831a9dfda06a7df6366983f56e",
+      "v19": "e259b1d279f57e7fdd625b868b84e2c63de643c6e8ad4839a9925a79be313b81"
+    },
+    "manifest_sha256": {
+      "CHEMBL3864-query-1": "4a968e55ab7c40947beee7db5cdcee24b35e04253feb1faf379007d12eaf525b",
+      "CHEMBL5163-query-1": "cf83f89e9df2e11ccc259628a9f7b59aee066c2f64e4a01a2eda829922926baf",
+      "CHEMBL5163-query-2": "53066839233b041e4d65b62284a722b995a9ab08c65692cb83ae8f479f335145"
+    },
+    "rdkit_version": "2025.09.6",
+    "reviewed_protocol_status": "frozen_preexecution",
+    "source_sha256": {
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "chembounce_synthesis/route_first.py": "8303df88df9755f332dce635b64fde742b04907ca0953e480075c73acadce136",
+      "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+      "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+    }
+  },
+  "cost": {
+    "all_unknown_component_counts": {
+      "polar_capacity": 4,
+      "typed_preflight": 4
+    },
+    "component_requests": {
+      "anchor": 97,
+      "polar_capacity": 97,
+      "properties": 97,
+      "scaffold_and_core": 97,
+      "specified_stereo": 97,
+      "typed_preflight": 97
+    },
+    "cooperative_wall_limit_seconds": 300,
+    "hit_fingerprint_attempts": 3,
+    "polar_evaluations": 97,
+    "polar_requests": 97,
+    "product_fingerprint_attempts": 97,
+    "product_parse_attempts": 97
+  },
+  "outcome": {
+    "all_assessed_gates_passed": 0,
+    "all_gate_vectors_completed": 97,
+    "distinct_products": 97,
+    "interpretation": "First-failure counts hid joint deficits. No observed polar-only near-solution is established; 5163q2 has separate anchor failures, and four 3864q1 stereo cases also have Tanimoto failure with typed/polar assessment unknown. These fixed products do not prove route impossibility or justify rank fitting. A retrieval intervention would require exact guide\u2192source leaf/role loss or an already-observed compatible alternative under unchanged caps. The actual supported primary metric remains 4/12.",
+    "polar_only_failures": 0,
+    "single_gate_failure": "All seven are hit-bit-Tanimoto failures with scores 0.172\u20130.228, well below the fixed 0.35 threshold.",
+    "single_gate_failures": 7
+  },
+  "per_input": [
+    {
+      "all_assessed_gates_passed": 0,
+      "anchor_passed": 12,
+      "assessment_unknowns": {},
+      "distinct_products": 27,
+      "gate_failures_independent": {
+        "anchor": 15,
+        "hit_bit_tanimoto": 23,
+        "polar_capacity": 20,
+        "properties": 2
+      },
+      "graph_source": "v19",
+      "hit_tanimoto": {
+        "max": 0.39473684210526316,
+        "min": 0.17204301075268819,
+        "minimum": 0.35,
+        "passed": 4
+      },
+      "input_id": "CHEMBL5163-query-1",
+      "joint_failed_and_unknown_patterns": [
+        {
+          "distinct_products": 4,
+          "failed": [
+            "anchor",
+            "hit_bit_tanimoto"
+          ],
+          "unknown": []
+        },
+        {
+          "distinct_products": 7,
+          "failed": [
+            "anchor",
+            "hit_bit_tanimoto",
+            "polar_capacity"
+          ],
+          "unknown": []
+        },
+        {
+          "distinct_products": 4,
+          "failed": [
+            "anchor",
+            "polar_capacity"
+          ],
+          "unknown": []
+        },
+        {
+          "distinct_products": 3,
+          "failed": [
+            "hit_bit_tanimoto"
+          ],
+          "unknown": []
+        },
+        {
+          "distinct_products": 7,
+          "failed": [
+            "hit_bit_tanimoto",
+            "polar_capacity"
+          ],
+          "unknown": []
+        },
+        {
+          "distinct_products": 2,
+          "failed": [
+            "hit_bit_tanimoto",
+            "polar_capacity",
+            "properties"
+          ],
+          "unknown": []
+        }
+      ],
+      "polar_capacity_passed": 7,
+      "polar_failed_missing_feature_families": {
+        "Acceptor": {
+          "affected_products": 20,
+          "deficit_units": 87
+        },
+        "Donor": {
+          "affected_products": 7,
+          "deficit_units": 7
+        }
+      },
+      "saved_product_graph_associations": 32,
+      "single_gate_failures": [
+        {
+          "gate": "hit_bit_tanimoto",
+          "hit_bit_tanimoto": 0.21782178217821782,
+          "product": "CC(C)(C)OC(=O)N1CC[C@H](Oc2cnccc2CNc2ccncn2)C1"
+        },
+        {
+          "gate": "hit_bit_tanimoto",
+          "hit_bit_tanimoto": 0.17204301075268819,
+          "product": "O=C(O)[C@H]1C[C@H](O)CN1S(=O)(=O)c1ccc(-c2ccc(F)s2)cc1"
+        },
+        {
+          "gate": "hit_bit_tanimoto",
+          "hit_bit_tanimoto": 0.1935483870967742,
+          "product": "O=C(O)[C@H]1C[C@H](O)CN1S(=O)(=O)c1ccc(-c2csc(F)c2)cc1"
+        }
+      ],
+      "v19_observed_product_set_identical": true,
+      "work": {
+        "component_requests": {
+          "anchor": 27,
+          "polar_capacity": 27,
+          "properties": 27,
+          "scaffold_and_core": 27,
+          "specified_stereo": 27,
+          "typed_preflight": 27
+        },
+        "hit_fingerprint_attempts": 1,
+        "polar": {
+          "cache_hits": 0,
+          "capacity_rejections": 20,
+          "deadline_events": 0,
+          "evaluations": 27,
+          "evictions": 0,
+          "preflight_failures": 0,
+          "requests": 27
+        },
+        "product_fingerprint_attempts": 27,
+        "product_parse_attempts": 27,
+        "product_vectors_completed": 27,
+        "setup_attempts": 1
+      }
+    },
+    {
+      "all_assessed_gates_passed": 0,
+      "anchor_passed": 0,
+      "assessment_unknowns": {},
+      "distinct_products": 36,
+      "gate_failures_independent": {
+        "anchor": 36,
+        "hit_bit_tanimoto": 36,
+        "polar_capacity": 34
+      },
+      "graph_source": "v19",
+      "hit_tanimoto": {
+        "max": 0.18292682926829268,
+        "min": 0.06172839506172839,
+        "minimum": 0.35,
+        "passed": 0
+      },
+      "input_id": "CHEMBL5163-query-2",
+      "joint_failed_and_unknown_patterns": [
+        {
+          "distinct_products": 2,
+          "failed": [
+            "anchor",
+            "hit_bit_tanimoto"
+          ],
+          "unknown": []
+        },
+        {
+          "distinct_products": 34,
+          "failed": [
+            "anchor",
+            "hit_bit_tanimoto",
+            "polar_capacity"
+          ],
+          "unknown": []
+        }
+      ],
+      "polar_capacity_passed": 2,
+      "polar_failed_missing_feature_families": {
+        "Acceptor": {
+          "affected_products": 34,
+          "deficit_units": 87
+        },
+        "Donor": {
+          "affected_products": 34,
+          "deficit_units": 200
+        },
+        "PosIonizable": {
+          "affected_products": 32,
+          "deficit_units": 32
+        }
+      },
+      "saved_product_graph_associations": 36,
+      "single_gate_failures": [],
+      "v19_observed_product_set_identical": true,
+      "work": {
+        "component_requests": {
+          "anchor": 36,
+          "polar_capacity": 36,
+          "properties": 36,
+          "scaffold_and_core": 36,
+          "specified_stereo": 36,
+          "typed_preflight": 36
+        },
+        "hit_fingerprint_attempts": 1,
+        "polar": {
+          "cache_hits": 0,
+          "capacity_rejections": 34,
+          "deadline_events": 0,
+          "evaluations": 36,
+          "evictions": 0,
+          "preflight_failures": 0,
+          "requests": 36
+        },
+        "product_fingerprint_attempts": 36,
+        "product_parse_attempts": 36,
+        "product_vectors_completed": 36,
+        "setup_attempts": 1
+      }
+    },
+    {
+      "all_assessed_gates_passed": 0,
+      "anchor_passed": 34,
+      "assessment_unknowns": {
+        "polar_capacity": 4,
+        "typed_preflight": 4
+      },
+      "distinct_products": 34,
+      "gate_failures_independent": {
+        "hit_bit_tanimoto": 34,
+        "polar_capacity": 26,
+        "specified_stereo": 4
+      },
+      "graph_source": "v17",
+      "hit_tanimoto": {
+        "max": 0.3409090909090909,
+        "min": 0.10606060606060606,
+        "minimum": 0.35,
+        "passed": 0
+      },
+      "input_id": "CHEMBL3864-query-1",
+      "joint_failed_and_unknown_patterns": [
+        {
+          "distinct_products": 4,
+          "failed": [
+            "hit_bit_tanimoto"
+          ],
+          "unknown": []
+        },
+        {
+          "distinct_products": 26,
+          "failed": [
+            "hit_bit_tanimoto",
+            "polar_capacity"
+          ],
+          "unknown": []
+        },
+        {
+          "distinct_products": 4,
+          "failed": [
+            "hit_bit_tanimoto",
+            "specified_stereo"
+          ],
+          "unknown": [
+            "polar_capacity",
+            "typed_preflight"
+          ]
+        }
+      ],
+      "polar_capacity_passed": 4,
+      "polar_failed_missing_feature_families": {
+        "Acceptor": {
+          "affected_products": 26,
+          "deficit_units": 64
+        },
+        "Donor": {
+          "affected_products": 26,
+          "deficit_units": 81
+        },
+        "NegIonizable": {
+          "affected_products": 20,
+          "deficit_units": 20
+        }
+      },
+      "saved_product_graph_associations": 38,
+      "single_gate_failures": [
+        {
+          "gate": "hit_bit_tanimoto",
+          "hit_bit_tanimoto": 0.22033898305084745,
+          "product": "O=CCCCCC(=O)Oc1c(C(=O)O)ccc2cccc(O)c12"
+        },
+        {
+          "gate": "hit_bit_tanimoto",
+          "hit_bit_tanimoto": 0.22033898305084745,
+          "product": "O=CCCCCC(=O)Oc1cccc2ccc(C(=O)O)c(O)c12"
+        },
+        {
+          "gate": "hit_bit_tanimoto",
+          "hit_bit_tanimoto": 0.22807017543859648,
+          "product": "O=CNCC(=O)Oc1c(C(=O)O)ccc2cccc(O)c12"
+        },
+        {
+          "gate": "hit_bit_tanimoto",
+          "hit_bit_tanimoto": 0.22807017543859648,
+          "product": "O=CNCC(=O)Oc1cccc2ccc(C(=O)O)c(O)c12"
+        }
+      ],
+      "v19_observed_product_set_identical": false,
+      "work": {
+        "component_requests": {
+          "anchor": 34,
+          "polar_capacity": 34,
+          "properties": 34,
+          "scaffold_and_core": 34,
+          "specified_stereo": 34,
+          "typed_preflight": 34
+        },
+        "hit_fingerprint_attempts": 1,
+        "polar": {
+          "cache_hits": 0,
+          "capacity_rejections": 26,
+          "deadline_events": 0,
+          "evaluations": 34,
+          "evictions": 0,
+          "preflight_failures": 4,
+          "requests": 34
+        },
+        "product_fingerprint_attempts": 34,
+        "product_parse_attempts": 34,
+        "product_vectors_completed": 34,
+        "setup_attempts": 1
+      }
+    }
+  ],
+  "route_family_counts": [
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 8,
+      "any_unassessed": 0,
+      "failed/hit_bit_tanimoto": 8,
+      "failed/polar_capacity": 8,
+      "input_id": "CHEMBL3864-query-1",
+      "product_graphs": 8,
+      "root_rule_id": "synllama-rule-027"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 4,
+      "any_unassessed": 2,
+      "failed/hit_bit_tanimoto": 4,
+      "failed/polar_capacity": 2,
+      "failed/specified_stereo": 2,
+      "input_id": "CHEMBL3864-query-1",
+      "product_graphs": 4,
+      "root_rule_id": "synllama-rule-036"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 22,
+      "any_unassessed": 4,
+      "failed/hit_bit_tanimoto": 22,
+      "failed/polar_capacity": 14,
+      "failed/specified_stereo": 4,
+      "input_id": "CHEMBL3864-query-1",
+      "product_graphs": 22,
+      "root_rule_id": "synllama-rule-071"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 4,
+      "any_unassessed": 0,
+      "failed/hit_bit_tanimoto": 4,
+      "failed/polar_capacity": 4,
+      "input_id": "CHEMBL3864-query-1",
+      "product_graphs": 4,
+      "root_rule_id": "synllama-rule-074"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 4,
+      "any_unassessed": 0,
+      "failed/anchor": 2,
+      "failed/hit_bit_tanimoto": 3,
+      "failed/polar_capacity": 4,
+      "input_id": "CHEMBL5163-query-1",
+      "product_graphs": 4,
+      "root_rule_id": "synllama-rule-030"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 8,
+      "any_unassessed": 0,
+      "failed/anchor": 4,
+      "failed/hit_bit_tanimoto": 8,
+      "failed/polar_capacity": 4,
+      "failed/properties": 2,
+      "input_id": "CHEMBL5163-query-1",
+      "product_graphs": 8,
+      "root_rule_id": "synllama-rule-036"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 4,
+      "any_unassessed": 0,
+      "failed/anchor": 2,
+      "failed/hit_bit_tanimoto": 4,
+      "failed/polar_capacity": 3,
+      "input_id": "CHEMBL5163-query-1",
+      "product_graphs": 4,
+      "root_rule_id": "synllama-rule-039"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 8,
+      "any_unassessed": 0,
+      "failed/anchor": 2,
+      "failed/hit_bit_tanimoto": 8,
+      "failed/polar_capacity": 4,
+      "input_id": "CHEMBL5163-query-1",
+      "product_graphs": 8,
+      "root_rule_id": "synllama-rule-042"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 4,
+      "any_unassessed": 0,
+      "failed/anchor": 2,
+      "failed/hit_bit_tanimoto": 2,
+      "failed/polar_capacity": 3,
+      "input_id": "CHEMBL5163-query-1",
+      "product_graphs": 4,
+      "root_rule_id": "synllama-rule-045"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 4,
+      "any_unassessed": 0,
+      "failed/anchor": 4,
+      "failed/hit_bit_tanimoto": 3,
+      "failed/polar_capacity": 4,
+      "input_id": "CHEMBL5163-query-1",
+      "product_graphs": 4,
+      "root_rule_id": "synllama-rule-081"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 14,
+      "any_unassessed": 0,
+      "failed/anchor": 14,
+      "failed/hit_bit_tanimoto": 14,
+      "failed/polar_capacity": 14,
+      "input_id": "CHEMBL5163-query-2",
+      "product_graphs": 14,
+      "root_rule_id": "synllama-rule-026"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 4,
+      "any_unassessed": 0,
+      "failed/anchor": 4,
+      "failed/hit_bit_tanimoto": 4,
+      "failed/polar_capacity": 4,
+      "input_id": "CHEMBL5163-query-2",
+      "product_graphs": 4,
+      "root_rule_id": "synllama-rule-027"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 14,
+      "any_unassessed": 0,
+      "failed/anchor": 14,
+      "failed/hit_bit_tanimoto": 14,
+      "failed/polar_capacity": 14,
+      "input_id": "CHEMBL5163-query-2",
+      "product_graphs": 14,
+      "root_rule_id": "synllama-rule-030"
+    },
+    {
+      "all_assessed_passed": 0,
+      "any_failed": 4,
+      "any_unassessed": 0,
+      "failed/anchor": 4,
+      "failed/hit_bit_tanimoto": 4,
+      "failed/polar_capacity": 2,
+      "input_id": "CHEMBL5163-query-2",
+      "product_graphs": 4,
+      "root_rule_id": "synllama-rule-073"
+    }
+  ],
+  "schema": "route-first-saved-joint-gate-vector-v1",
+  "scope": "Independent unchanged gate components for 97 unique fixed saved observed products of 5163q1/q2 and 3864q1. Saved v19 graph associations used only when that input has byte-identical v17 product set; 3864q1 remains v17-only. No Catalog, rules replay, generation, model, 3D, ranking, or threshold changes.",
+  "status": "complete_finite_saved_product_diagnostic"
+}
