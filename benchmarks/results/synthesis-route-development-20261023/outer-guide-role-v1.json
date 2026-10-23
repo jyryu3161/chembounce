@@ -1,0 +1,331 @@
+{
+  "status": "complete",
+  "scope": "Catalog-free reverse-hint role compatibility for fixed selected outer plans. A mismatching guide can still retrieve a compatible block; this is not a concrete-route verdict.",
+  "panel_sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+  "config_sha256": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+  "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+  "route_first_source_sha256": "a02ad56dfa7401fa991b137ef4494791b0394556dfd157390222c7d089c0894a",
+  "probe_sha256": "3e70abc1b6ee6c12612a078ccb123d33595ed653d7096108402f7484f9887c6f",
+  "selected_plans_total": 93,
+  "plans_with_any_role_mismatch_total": 92,
+  "rows": [
+    {
+      "id": "CHEMBL4630839-query-1",
+      "selected_plan_count": 8,
+      "plans_with_any_role_mismatch": 8,
+      "reverse_partition_rejections": {
+        "reused_parent_atom": 11
+      },
+      "reverse_hint_normalizations": {
+        "removed_originless_terminal_dummy": 29,
+        "reset_template_n_hydrogens": 2
+      }
+    },
+    {
+      "id": "CHEMBL4630839-query-2",
+      "selected_plan_count": 8,
+      "plans_with_any_role_mismatch": 8,
+      "reverse_partition_rejections": {
+        "reused_parent_atom": 23
+      },
+      "reverse_hint_normalizations": {
+        "removed_originless_terminal_dummy": 19,
+        "reset_template_n_hydrogens": 2
+      }
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "selected_plan_count": 8,
+      "plans_with_any_role_mismatch": 8,
+      "reverse_partition_rejections": {
+        "reused_parent_atom": 26
+      },
+      "reverse_hint_normalizations": {
+        "removed_originless_terminal_dummy": 20,
+        "reset_template_n_hydrogens": 2
+      }
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "selected_plan_count": 8,
+      "plans_with_any_role_mismatch": 8,
+      "reverse_partition_rejections": {
+        "reused_parent_atom": 22
+      },
+      "reverse_hint_normalizations": {
+        "removed_originless_terminal_dummy": 16,
+        "reset_template_n_hydrogens": 1
+      }
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "selected_plan_count": 8,
+      "plans_with_any_role_mismatch": 8,
+      "reverse_partition_rejections": {
+        "reused_parent_atom": 30
+      },
+      "reverse_hint_normalizations": {
+        "removed_originless_terminal_dummy": 4
+      }
+    },
+    {
+      "id": "CHEMBL5163-query-2",
+      "selected_plan_count": 5,
+      "plans_with_any_role_mismatch": 5,
+      "reverse_partition_rejections": {
+        "reused_parent_atom": 32
+      },
+      "reverse_hint_normalizations": {}
+    },
+    {
+      "id": "CHEMBL3334418-query-1",
+      "selected_plan_count": 8,
+      "plans_with_any_role_mismatch": 8,
+      "reverse_partition_rejections": {
+        "reused_parent_atom": 24
+      },
+      "reverse_hint_normalizations": {
+        "removed_originless_terminal_dummy": 4
+      }
+    },
+    {
+      "id": "CHEMBL3334418-query-2",
+      "selected_plan_count": 8,
+      "plans_with_any_role_mismatch": 8,
+      "reverse_partition_rejections": {
+        "reused_parent_atom": 24
+      },
+      "reverse_hint_normalizations": {
+        "removed_originless_terminal_dummy": 4
+      }
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "selected_plan_count": 8,
+      "plans_with_any_role_mismatch": 8,
+      "reverse_partition_rejections": {
+        "reused_parent_atom": 10
+      },
+      "reverse_hint_normalizations": {
+        "removed_originless_terminal_dummy": 21
+      }
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "selected_plan_count": 8,
+      "plans_with_any_role_mismatch": 8,
+      "reverse_partition_rejections": {
+        "reused_parent_atom": 23
+      },
+      "reverse_hint_normalizations": {
+        "removed_originless_terminal_dummy": 12
+      }
+    },
+    {
+      "id": "CHEMBL3864-query-1",
+      "selected_plan_count": 8,
+      "plans_with_any_role_mismatch": 7,
+      "reverse_partition_rejections": {
+        "reused_parent_atom": 13
+      },
+      "reverse_hint_normalizations": {
+        "removed_originless_terminal_dummy": 12
+      }
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "selected_plan_count": 8,
+      "plans_with_any_role_mismatch": 8,
+      "reverse_partition_rejections": {
+        "reused_parent_atom": 28
+      },
+      "reverse_hint_normalizations": {
+        "removed_originless_terminal_dummy": 14,
+        "reset_template_n_hydrogens": 1
+      }
+    }
+  ],
+  "examples": [
+    {
+      "rule_id": "synllama-rule-077",
+      "guide": [
+        "O=Cc1cc(N2CCOCC2)nc(N2CCC[C@@H](c3ccccc3)C2)n1",
+        "NCC1CC1"
+      ],
+      "all_slots_match_outer_role": false,
+      "slots": [
+        {
+          "slot": 0,
+          "guide_smiles": "O=Cc1cc(N2CCOCC2)nc(N2CCC[C@@H](c3ccccc3)C2)n1",
+          "reactant_role_smarts": "[Cl,O&H1,O&-:3][C&$(C(=O)[C&X4,c]),C&$([C&H1]=O):2]=[O:4]",
+          "guide_matches_outer_role": false
+        },
+        {
+          "slot": 1,
+          "guide_smiles": "NCC1CC1",
+          "reactant_role_smarts": "[N&$([N&H2,N&H3&+][C&X4,c]),N&$([N&H1]([C&X4,c])[C&X4,c]):6]",
+          "guide_matches_outer_role": true
+        }
+      ]
+    },
+    {
+      "rule_id": "synllama-rule-036",
+      "guide": [
+        "O=CNCC1CC1",
+        "c1ccc([C@@H]2CCCN(c3nccc(N4CCOCC4)n3)C2)cc1"
+      ],
+      "all_slots_match_outer_role": false,
+      "slots": [
+        {
+          "slot": 0,
+          "guide_smiles": "O=CNCC1CC1",
+          "reactant_role_smarts": "[#6;$(C=C-[#6]),$(c:c):1][Br,I]",
+          "guide_matches_outer_role": false
+        },
+        {
+          "slot": 1,
+          "guide_smiles": "c1ccc([C@@H]2CCCN(c3nccc(N4CCOCC4)n3)C2)cc1",
+          "reactant_role_smarts": "[Cl,Br,I][c:2]",
+          "guide_matches_outer_role": false
+        }
+      ]
+    },
+    {
+      "rule_id": "synllama-rule-042",
+      "guide": [
+        "O=C(NCC1CC1)c1cc(N2CCOCC2)ncn1",
+        "c1ccc([C@@H]2CCCNC2)cc1"
+      ],
+      "all_slots_match_outer_role": false,
+      "slots": [
+        {
+          "slot": 0,
+          "guide_smiles": "O=C(NCC1CC1)c1cc(N2CCOCC2)ncn1",
+          "reactant_role_smarts": "[Cl,Br,I][c&$(c1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):1]",
+          "guide_matches_outer_role": false
+        },
+        {
+          "slot": 1,
+          "guide_smiles": "c1ccc([C@@H]2CCCNC2)cc1",
+          "reactant_role_smarts": "[N;$(NC)&!$(N=*)&!$([N&-])&!$(N#*)&!$([N&D3])&!$([N&D4])&!$(N[c,O])&!$(N[C,S]=[S,O,N]),H2&$(Nc1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):2]",
+          "guide_matches_outer_role": true
+        }
+      ]
+    },
+    {
+      "rule_id": "synllama-rule-045",
+      "guide": [
+        "O=C(NCC1CC1)c1cc(N2CCOCC2)ncn1",
+        "c1ccc([C@@H]2CCCNC2)cc1"
+      ],
+      "all_slots_match_outer_role": false,
+      "slots": [
+        {
+          "slot": 0,
+          "guide_smiles": "O=C(NCC1CC1)c1cc(N2CCOCC2)ncn1",
+          "reactant_role_smarts": "[c&!$(c1ccccc1)&$(c1[n,c]c[n,c]c[n,c]1):1][Cl,F]",
+          "guide_matches_outer_role": false
+        },
+        {
+          "slot": 1,
+          "guide_smiles": "c1ccc([C@@H]2CCCNC2)cc1",
+          "reactant_role_smarts": "[N&$(NC)&!$(N=*)&!$([N&-])&!$(N#*)&!$([N&D3])&!$([N&D4])&!$(N[c,O])&!$(N[C,S]=[S,O,N]):2]",
+          "guide_matches_outer_role": true
+        }
+      ]
+    },
+    {
+      "rule_id": "synllama-rule-046",
+      "guide": [
+        "O=C(NCC1CC1)c1cc(N2CCOCC2)ncn1",
+        "c1ccc([C@@H]2CCCNC2)cc1"
+      ],
+      "all_slots_match_outer_role": false,
+      "slots": [
+        {
+          "slot": 0,
+          "guide_smiles": "O=C(NCC1CC1)c1cc(N2CCOCC2)ncn1",
+          "reactant_role_smarts": "[c&$(c1c(N(~O)~O)cccc1):1][Cl,F]",
+          "guide_matches_outer_role": false
+        },
+        {
+          "slot": 1,
+          "guide_smiles": "c1ccc([C@@H]2CCCNC2)cc1",
+          "reactant_role_smarts": "[N&$(NC)&!$(N=*)&!$([N&-])&!$(N#*)&!$([N&D3])&!$([N&D4])&!$(N[c,O])&!$(N[C,S]=[S,O,N]):2]",
+          "guide_matches_outer_role": true
+        }
+      ]
+    },
+    {
+      "rule_id": "synllama-rule-047",
+      "guide": [
+        "O=C(NCC1CC1)c1cc(N2CCOCC2)ncn1",
+        "c1ccc([C@@H]2CCCNC2)cc1"
+      ],
+      "all_slots_match_outer_role": false,
+      "slots": [
+        {
+          "slot": 0,
+          "guide_smiles": "O=C(NCC1CC1)c1cc(N2CCOCC2)ncn1",
+          "reactant_role_smarts": "[c&$(c1ccc(N(~O)~O)cc1):1][Cl,F]",
+          "guide_matches_outer_role": false
+        },
+        {
+          "slot": 1,
+          "guide_smiles": "c1ccc([C@@H]2CCCNC2)cc1",
+          "reactant_role_smarts": "[N&$(NC)&!$(N=*)&!$([N&-])&!$(N#*)&!$([N&D3])&!$([N&D4])&!$(N[c,O])&!$(N[C,S]=[S,O,N]):2]",
+          "guide_matches_outer_role": true
+        }
+      ]
+    },
+    {
+      "rule_id": "synllama-rule-071",
+      "guide": [
+        "O=CNCC1CC1",
+        "c1ccc([C@@H]2CCCN(c3nccc(N4CCOCC4)n3)C2)cc1"
+      ],
+      "all_slots_match_outer_role": false,
+      "slots": [
+        {
+          "slot": 0,
+          "guide_smiles": "O=CNCC1CC1",
+          "reactant_role_smarts": "[Cl,O&H1,O&-:3][C&$(C(=O)[C&X4,c]),C&$([C&H1]=O):2]=[O:4]",
+          "guide_matches_outer_role": false
+        },
+        {
+          "slot": 1,
+          "guide_smiles": "c1ccc([C@@H]2CCCN(c3nccc(N4CCOCC4)n3)C2)cc1",
+          "reactant_role_smarts": "[O&$([O&H1][C&X4,c]),O&$([O&H1]([C&X4,c])[C&X4,c]),S&$([S&H1][C&X4,c]),S&$([S&H1]([C&X4,c])[C&X4,c]):6]",
+          "guide_matches_outer_role": false
+        }
+      ]
+    },
+    {
+      "rule_id": "synllama-rule-072",
+      "guide": [
+        "O=CC1CC1",
+        "NC(=O)c1cc(N2CCOCC2)nc(N2CCC[C@@H](c3ccccc3)C2)n1"
+      ],
+      "all_slots_match_outer_role": false,
+      "slots": [
+        {
+          "slot": 0,
+          "guide_smiles": "O=CC1CC1",
+          "reactant_role_smarts": "[C&$(C(=O)([C&X4,c])[C&X4,c]),C&$([C&H1](=O)[C&X4,c]):1]=[O:2]",
+          "guide_matches_outer_role": true
+        },
+        {
+          "slot": 1,
+          "guide_smiles": "NC(=O)c1cc(N2CCOCC2)nc(N2CCC[C@@H](c3ccccc3)C2)n1",
+          "reactant_role_smarts": "[N&$([N&H2,N&H3&+][C&X4,c]),N&$([N&H1]([C&X4,c])[C&X4,c]):3]",
+          "guide_matches_outer_role": false
+        }
+      ]
+    }
+  ],
+  "interpretation": "Hints are retrieval queries, not asserted reactants. Missing handles can misdirect intermediate objectives, but do not prove compatible stock is absent. Constructing bounded role-consistent query representatives is a proposed next change, not implemented or validated here.",
+  "evidence": {
+    "result_path": "benchmark-results/route-first-development-20261023-v2/outer-guide-role-v1/result.json",
+    "result_sha256": "437bdee7cf2756c507af166981aa2f420a20c1ff4690ae2b2ced73d5083c95f2"
+  }
+}
