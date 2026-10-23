@@ -1,0 +1,838 @@
+{
+  "artifacts": {
+    "execution.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-retention-feasibility-v1/execution.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-retention-feasibility-v1/plan.json",
+      "sha256": "fd5d6f0aaaabf779bdd68ae6a3c4a7e90173467a8bf20678ed36210367bc5ce5"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-retention-feasibility-v1/probe.py",
+      "sha256": "f91d7a96cb59e405682470f8b77d8303ff3219496a177938fc327eef17631d4f"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-retention-feasibility-v1/result.json",
+      "sha256": "d668e77b1c635cad18aa4465297b382da2ac62809e57e70286d73d4887f14a86"
+    },
+    "spectator.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-retention-feasibility-v1/spectator.py",
+      "sha256": "a71e24d7788b109b67a4a64d320230502c2eb9a729176b8c6302ef462a72a7b6"
+    },
+    "test_spectator.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-retention-feasibility-v1/test_spectator.py",
+      "sha256": "11a76ea4de60e84f9b77ef8b7b642199cf6071435edd1b62980be3a3f4abc2ec"
+    }
+  },
+  "execution": {
+    "retries": 0,
+    "session_id": 36433,
+    "terminal_exit_code": 0
+  },
+  "interpretation": {
+    "claim_limits": "No Catalog load, forward product generation, whole-route audit, model inference, 3D or qualification. Reverse provenance replay2 calls is separately charged. Actual P1 primary remains4/12, current v20 saved-evidence upper bound5/12.",
+    "historical_only": "No proof that historical pools equal current v20 pools. Call19 is selected-source evidence only; context4 partial snapshot was not scanned.",
+    "inner": "Historical first-call20 pool was NOT scanned: parent-origin spectator proof returned attachment_ambiguous. No conclusion about available sources.",
+    "nonjoint_role_sites": "For absent rows, extra_competing_role_sites counts nonjoint role sites, not demonstrated competing reactions.",
+    "outer": "Historical first-call3 pool (call21 cache reuse) traversed8192 rows:0present5523absent2669unknown. No complete absence claim; no source selection change justified.",
+    "post_result_correctness_finding": "Source review and synthetic C-C example identify an over-ambiguity defect in the diagnostic helper: product-template embeddings were accumulated before filtering every mapped atom by the raw source owner. A separately reviewed inner-only correction is planned; v1 outer result remains immutable."
+  },
+  "protocol": {
+    "bound_sha256": {
+      "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "config": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9",
+      "helper": "a71e24d7788b109b67a4a64d320230502c2eb9a729176b8c6302ef462a72a7b6",
+      "historical_observation": "f21deb7dce8bdf9c0b1c21b318ad4e9084ffaf98edc8304b203439b2180936d0",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "probe": "f91d7a96cb59e405682470f8b77d8303ff3219496a177938fc327eef17631d4f",
+      "reactions_source": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "route_audit_source": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "route_first_source": "a4976fe90f3ba31dc4aea6b2081d54ab1b9b7e98083d127b47ed29164ada8177",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "synthetic_tests": "11a76ea4de60e84f9b77ef8b7b642199cf6071435edd1b62980be3a3f4abc2ec",
+      "v20_result": "b391aa4a4cad33d62e28fa40e66dd663e4847bb49d20dfd3cfa84c4af8a7e918"
+    },
+    "caps": {
+      "candidate_atoms_per_molecule": 256,
+      "candidate_bonds_per_molecule": 512,
+      "deadline_seconds": 300,
+      "matches_per_request_sentinel": 65,
+      "proof_structural_units": 131072,
+      "proof_template_match_requests": 8,
+      "raw_outcomes_per_reverse": 4,
+      "reverse_calls": 2,
+      "rows_per_context": 8192,
+      "rows_total": 16384,
+      "stereo_perceptions": 16384,
+      "structural_units": 16777216,
+      "substructure_match_requests": 32768
+    },
+    "catalog_sha256_reference": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "contexts": [
+      {
+        "context_key": "49798678ebe81ab0849e40f8fd98106d3472f0f0ab79d36098f7b38655dded9e",
+        "first_call_index": 3,
+        "kind": "outer",
+        "phase": 1,
+        "rule_id": "synllama-rule-042",
+        "source_slot": 1
+      },
+      {
+        "context_key": "d3918aa5d04c9d62ea8005a87286dee679c6eff7a57d36bf3f4477e706219af5",
+        "first_call_index": 20,
+        "kind": "inner",
+        "phase": 2,
+        "rule_id": "synllama-rule-036",
+        "source_slot": 1
+      }
+    ],
+    "cost_semantics": "Proof structural units are precharged atom+bond size units for parent and captured raw/clean alternatives, not literal Python visits. Candidate units are charged candidate atom+bond sizes before role/fragment matches. One role and one fragment substructure request plus one stereo perception are reserved for every row, including a failed parse. These caps do not establish equivalent Catalog or current v20 retrieval cost.",
+    "excluded_call19": {
+      "call_index": 19,
+      "context_key": "9e641e6a255f6c4f4122242e5d92a2a8e18aa48b58d6854d1d86ae594e4e1fb7",
+      "reason": "first-snapshot call4 is partial and has different stage guide/selected blocks; call19 per-call ranked rows unavailable",
+      "use": "selection witness only; no row scan or absence inference"
+    },
+    "input_id": "CHEMBL4247-query-2",
+    "interpretation": "A positive is only exact-subgraph/attachment presence at one distinct joint role/fragment root in one historical visited role-compatible pool. Extra role sites are recorded as competition; multiple joint roots remain unknown. A complete negative is confined to its exact historical first-snapshot context. Any raw/clean ambiguity, cap, role ambiguity, parse/stereo unknown or deadline makes absence unproved. No proof of substituent survival through forward chemistry, gate/model support, or current v20 pool identity.",
+    "paths": {
+      "common_source": "chembounce_synthesis/common.py",
+      "config": "benchmark-results/route-first-development-20261023-v2/route-first-config.json",
+      "helper": "benchmark-results/route-first-development-20261023-v2/spectator-retention-feasibility-v1/spectator.py",
+      "historical_observation": "benchmark-results/route-first-development-20261023-v2/actual-v2-retrieval-observation-v1/result.json",
+      "panel": "benchmark-results/route-first-development-20261023-v2/panel.json",
+      "reactions_source": "chembounce_synthesis/reactions.py",
+      "route_audit_source": "chembounce_synthesis/route_audit.py",
+      "route_first_source": "chembounce_synthesis/route_first.py",
+      "rules": ".chembounce-data-synthesis/rules.json",
+      "synthetic_tests": "benchmark-results/route-first-development-20261023-v2/spectator-retention-feasibility-v1/test_spectator.py",
+      "v20_result": "benchmark-results/route-first-development-20261023-v2/development-probe-v20/result.json"
+    },
+    "purpose": "Binary historical same-pool presence test for exact retained source-side parent subgraph and mapped attachment; no ranking or route claim.",
+    "rdkit_version": "2025.09.6",
+    "review": "root_and_astra_pass_before_execution",
+    "reviewed_draft_sha256": "30f8e2eeacf45ad1567d9d7bad6ef2f50abea7c77dc5248372b12734c3ee6a4d",
+    "schema": "spectator-retention-feasibility-plan-v1",
+    "scope": {
+      "call19_full_pool_available": false,
+      "current_v20_pool_parity_claim": false,
+      "historical_complete_contexts": 2,
+      "inner_call": 20,
+      "new_catalog_or_generation_or_model_calls": 0,
+      "outer_calls_deduplicated": [
+        3,
+        21
+      ],
+      "partial_first_snapshot_call4_scanned": false
+    },
+    "status": "frozen_preexecution"
+  },
+  "result": {
+    "call19_selection_witness_only": {
+      "aliased_first_snapshot_call": 4,
+      "aliased_first_snapshot_complete": false,
+      "call_index": 19,
+      "complete_reported_for_call": true,
+      "historical_ranked_rows_for_call_available": false,
+      "ranked_count_reported_for_call": 4818,
+      "role_slot": 0,
+      "rule_id": "synllama-rule-036",
+      "selected_blocks": [
+        {
+          "id": "structure-sha256:54489d4bc382b9f092e2cbd64927a988e4ffd2eca9495c07fa8288224f252e94",
+          "smiles": "CN(C)c1ccccc1Br"
+        },
+        {
+          "id": "structure-sha256:e646a475dcf77c33f2457b60197e020aa8bab7baa076a8c2d602078d9521b792",
+          "smiles": "CS(=O)(=O)c1ccccc1Br"
+        }
+      ]
+    },
+    "contexts": [
+      {
+        "absence_claim_eligible": false,
+        "all_rows_traversed": true,
+        "candidate_unknown_examples": [
+          {
+            "group": "ordinary",
+            "group_rank": 2632,
+            "row_index": 3,
+            "smiles": "NC1CCCN(Cc2ccccn2)C1=O"
+          },
+          {
+            "group": "ordinary",
+            "group_rank": 7384,
+            "row_index": 4,
+            "smiles": "CC(C)c1nnc(C2CNCCO2)o1"
+          },
+          {
+            "group": "ordinary",
+            "group_rank": 6502,
+            "row_index": 5,
+            "smiles": "O=C(O)C1CNCc2[nH]ncc21"
+          },
+          {
+            "group": "ordinary",
+            "group_rank": 4575,
+            "row_index": 6,
+            "smiles": "O=C(NCc1ccccc1)C1CSCN1"
+          },
+          {
+            "group": "ordinary",
+            "group_rank": 1955,
+            "row_index": 8,
+            "smiles": "O=C(O)c1ccc(C2CCCN2)s1"
+          },
+          {
+            "group": "ordinary",
+            "group_rank": 6369,
+            "row_index": 10,
+            "smiles": "NC1CCOc2nc(Cl)ccc21"
+          },
+          {
+            "group": "ordinary",
+            "group_rank": 6290,
+            "row_index": 18,
+            "smiles": "C1CCC(Cc2nn[nH]n2)NC1"
+          },
+          {
+            "group": "ordinary",
+            "group_rank": 3349,
+            "row_index": 24,
+            "smiles": "Nc1ccc(OC2CC(=O)N2)cc1"
+          }
+        ],
+        "context_key": "49798678ebe81ab0849e40f8fd98106d3472f0f0ab79d36098f7b38655dded9e",
+        "continuation_capture_live": {
+          "role_contexts": 0,
+          "snapshot_attempts": 3,
+          "snapshot_structural_units": 520
+        },
+        "first_call_index": 3,
+        "first_present_historical_row": null,
+        "historical_ranked_rows": 8192,
+        "kind": "outer",
+        "parent_target": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+        "presence": {
+          "absent": 5523,
+          "present": 0,
+          "unknown": 2669
+        },
+        "proof": {
+          "fragment_attachment_index": 18,
+          "fragment_smarts": "[#6]-[#8]-[#6]1:[#6]:[#6](-[#6]2-[#6]-[#6]-[#7](-[#6]-[#6](-[#7])=[#8])-[#6]-[#6]-2):[#6]:[#6]:[#6]:1-[#7]",
+          "raw_alternatives": 1,
+          "reason": null,
+          "role_attachment_index": 0,
+          "source_slot": 1,
+          "status": "proven_query"
+        },
+        "reverse_report": {
+          "reverse_attempts": 1,
+          "reverse_failures": 0,
+          "reverse_outcomes": 3,
+          "reverse_partition_checks": 3,
+          "reverse_role_trials": 12,
+          "reverse_role_work": 12
+        },
+        "rows_with_extra_competing_role_sites": 5523,
+        "rule_id": "synllama-rule-042",
+        "search_report_live": {
+          "admission_attempted_products": 0,
+          "admission_callback_unattempted_products": 0,
+          "admission_fingerprint_calls": 0,
+          "admission_fingerprint_reserve": 2048,
+          "admission_fp_unassessed_products": 0,
+          "admission_pending_unique_products": 0,
+          "admission_rank_fingerprint_calls": 0,
+          "admission_rank_selection_policy": "cached fingerprint first, then canonical SMILES; reserve one possible callback fingerprint plus zero or one new rank fingerprint per selected product",
+          "admission_ranked_products": 0,
+          "admission_reserved_cost_units": 0,
+          "anchor_index_incomplete": false,
+          "anchor_index_match_checks": 0,
+          "anchor_index_matches": [],
+          "anchor_index_postings_retained": [],
+          "anchor_index_postings_truncated": [],
+          "anchor_index_queries": 0,
+          "anchor_index_queries_unindexed": 0,
+          "anchor_posting_metadata_visits": 0,
+          "anchor_role_checks": 0,
+          "anchor_role_compatible": 0,
+          "catalog_bucket_rankings": 0,
+          "catalog_index_hashes": 0,
+          "catalog_index_rows_scanned": 0,
+          "catalog_row_visits": 0,
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "catalog_stereo_atom_bond_charges": 0,
+          "catalog_stereo_cache_hits": 0,
+          "catalog_stereo_exclusion_samples": [],
+          "catalog_stereo_exclusion_samples_truncated": 0,
+          "catalog_stereo_exclusions": 0,
+          "catalog_stereo_limits": {
+            "atom_bond_charges": 131072,
+            "cache_entries": 2048,
+            "exclusion_samples": 16,
+            "perceptions": 2048
+          },
+          "catalog_stereo_perceptions": 0,
+          "catalog_stereo_unknowns": {},
+          "combinations": 0,
+          "context_role_checks_total": 0,
+          "depth_one_fingerprint_ceiling": 32768,
+          "evidence_scope": "Reverse results only guide retrieval. Forward rule replay and later route audit/evidence are authoritative.",
+          "fallback_hit_second_legacy_reasons": {},
+          "fallback_hit_second_limit": 65536,
+          "fallback_hit_second_queries": 0,
+          "fallback_hit_second_replacements": 0,
+          "fallback_hit_second_sample_limit": 16,
+          "fallback_hit_second_samples": [],
+          "fallback_hit_second_samples_omitted": 0,
+          "fallback_hit_second_tanimotos": 0,
+          "fingerprint_calls": 1,
+          "generation_fingerprint_calls": 0,
+          "generation_fingerprint_ceiling": 63488,
+          "guide_anchor_checks": 0,
+          "hit_fingerprint_calls": 1,
+          "inner_role_checks": 0,
+          "inner_role_compatible": 0,
+          "inner_role_rejected": 0,
+          "limits": {
+            "beam_width": 12,
+            "building_block_top_k": 2,
+            "fallback_rules": 2,
+            "max_catalog_index_rows": 250000,
+            "max_catalog_row_visits": 262144,
+            "max_catalog_rows_per_query": 8192,
+            "max_combinations": 512,
+            "max_fingerprint_calls": 65536,
+            "max_inner_rules": 4,
+            "max_outer_guides": 8,
+            "max_products": 1024,
+            "max_reverse_outcomes": 4,
+            "max_routes": 64,
+            "max_rule_inspections": 512,
+            "max_rule_scans_per_target": 128,
+            "max_rules": 16,
+            "max_steps": 2,
+            "prefer_continuation_second": false,
+            "prefer_mapped_nh_second": false,
+            "reaction_product_limit": 16,
+            "version": "catalog-rule-route-first-v2"
+          },
+          "limits_reached": [],
+          "mapped_nh_preference": {
+            "enabled": false,
+            "legacy_reasons": {},
+            "proof_context_limit": 128,
+            "proof_contexts": 0,
+            "proof_match_requests": 0,
+            "proof_match_requests_limit": 512,
+            "proof_structural_units": 0,
+            "proof_structural_units_limit": 32768,
+            "ranked_rows_limit": 32768,
+            "ranked_rows_retained": 0,
+            "raw_registry_limit": 512,
+            "raw_snapshot_attempts": 0,
+            "raw_snapshot_attempts_limit": 1024,
+            "raw_snapshot_structural_units": 0,
+            "raw_snapshot_structural_units_limit": 262144,
+            "replacements": 0,
+            "role_checks": 0,
+            "role_checks_per_query_limit": 8192,
+            "role_checks_shared_search_limit": 65536,
+            "role_matches_per_request": 64,
+            "selected_contexts_limit": 128
+          },
+          "outer_center_metadata_check_limit": 32768,
+          "outer_center_metadata_checks": 261,
+          "outer_center_metadata_incomplete": 0,
+          "outer_distinct_cut_centers": 0,
+          "outer_plan_candidates": 0,
+          "phase2_plan_trace": [],
+          "phase2_plan_trace_truncated": 0,
+          "product_rejections": {},
+          "products_generated": 0,
+          "reaction_pool_caller_only_sites": 0,
+          "reaction_pool_graph_visits": 0,
+          "reaction_pool_index_applied": 0,
+          "reaction_pool_index_choices": {
+            "exact": 0,
+            "legacy": 0,
+            "same_site": 0
+          },
+          "reaction_pool_index_disabled_incomplete": 0,
+          "reaction_pool_index_only_sites": 0,
+          "reaction_pool_indexed_bucket_rankings": 0,
+          "reaction_pool_indexed_rows_selected": 0,
+          "reaction_pool_limits": {
+            "combined_graph_visits": 262144,
+            "extra_catalog_role_match_checks": 500000,
+            "matches_per_request": 64,
+            "query_atoms": 256,
+            "query_bonds": 512,
+            "query_role_pairs": 128,
+            "site_match_requests": 384,
+            "total_pool_rows": 8192,
+            "window_match_requests": 128
+          },
+          "reaction_pool_metadata_cache_hits": 0,
+          "reaction_pool_metadata_unknowns": {},
+          "reaction_pool_ordinary_bucket_rankings": 0,
+          "reaction_pool_ordinary_rows_selected": 0,
+          "reaction_pool_query_pairs": 0,
+          "reaction_pool_role_index_checks": 0,
+          "reaction_pool_role_index_complete": false,
+          "reaction_pool_role_index_failure": null,
+          "reaction_pool_role_index_sizes": [],
+          "reaction_pool_selected_roles": [],
+          "reaction_pool_site_match_requests": 0,
+          "reaction_pool_window_match_requests": 0,
+          "representative_origin_checks": 0,
+          "representative_origin_guide_entries": 0,
+          "representative_origin_known_guides": 0,
+          "representative_origin_legacy_reasons": {},
+          "representative_origin_limits": {
+            "atoms_per_part": 256,
+            "bonds_per_part": 512,
+            "guide_entries": 128,
+            "structural_units": 32768
+          },
+          "representative_origin_score_corrections": 0,
+          "representative_origin_structural_units": 0,
+          "retrieval_guides_normalized": 0,
+          "retrieval_guides_unusable": 0,
+          "retrieval_scope": "One bounded catalog feature index; each guide ranks charged bucket metadata and scans at most the nearest 8192 catalog rows; exact target ID is additionally considered",
+          "reverse_attempts": 1,
+          "reverse_failures": 0,
+          "reverse_fallbacks": 0,
+          "reverse_hint_normalizations": {
+            "removed_originless_terminal_dummy": 1,
+            "reset_template_n_hydrogens": 1,
+            "typed_originless_placeholder_instantiated": 2
+          },
+          "reverse_hint_quality_counts": {
+            "approximate": 1,
+            "explicit_fallback": 0,
+            "implicit_fallback": 0,
+            "typed": 2
+          },
+          "reverse_hint_rejections": {},
+          "reverse_local_template_compiles": 1,
+          "reverse_nonring_compile_failures": 0,
+          "reverse_nonring_empty": 0,
+          "reverse_nonring_query_calls": 1,
+          "reverse_nonring_query_compiles": 1,
+          "reverse_outcomes": 3,
+          "reverse_partition_checks": 3,
+          "reverse_partition_rejections": {},
+          "reverse_role_match_checks": 12,
+          "reverse_role_query_limits": {
+            "matches_per_query": 64,
+            "representative_order": [
+              "OH",
+              "F",
+              "Cl",
+              "Br",
+              "I",
+              "O-"
+            ],
+            "trial_and_match_work_per_search": 1024,
+            "trials_per_raw_outcome": 16
+          },
+          "reverse_role_rejections": {
+            "role_mismatch_at_mapped_positions": 7
+          },
+          "reverse_role_trials": 12,
+          "reverse_role_work": 12,
+          "role_queries": 0,
+          "route_audit_attempts": 0,
+          "routes_verified": 0,
+          "rule_inspections": 0,
+          "rule_template_checks": 0,
+          "rule_template_exclusions": [],
+          "rules_selected": [],
+          "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+          "selection_policy": "Product-template hit match first; bounded reverse precursor guides; explicit hit-role fallback",
+          "topology_assessment_cache_hits": 0,
+          "topology_limits": {
+            "match_requests_per_search": 128,
+            "matches_per_request": 64,
+            "spec_and_graph_visits_per_search": 262144
+          },
+          "topology_match_requests": 0,
+          "topology_pruned_rules": 0,
+          "topology_spec_graph_visits": 7,
+          "topology_static_cache_hits": 0,
+          "topology_static_checks": 1,
+          "topology_unknown_reasons": {},
+          "version": "catalog-rule-route-first-v2"
+        },
+        "selected_blocks": [
+          {
+            "id": "structure-sha256:67abce1083b75e3ceb756aafcbdfec8e5dbc5b87970f3f7908565c742f4dc8d5",
+            "smiles": "COc1cc(C(N)=O)ccc1N"
+          },
+          {
+            "id": "structure-sha256:66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a",
+            "smiles": "COc1cc(CC(=O)O)ccc1N"
+          }
+        ],
+        "source_slot": 1,
+        "stage_guide": [
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(Cl)ncc12",
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N"
+        ]
+      },
+      {
+        "absence_claim_eligible": false,
+        "all_rows_traversed": false,
+        "candidate_unknown_examples": [],
+        "context_key": "d3918aa5d04c9d62ea8005a87286dee679c6eff7a57d36bf3f4477e706219af5",
+        "continuation_capture_live": {
+          "role_contexts": 0,
+          "snapshot_attempts": 3,
+          "snapshot_structural_units": 302
+        },
+        "first_call_index": 20,
+        "first_present_historical_row": null,
+        "historical_ranked_rows": 8192,
+        "kind": "inner",
+        "parent_target": "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(Cl)ncc12",
+        "presence": {
+          "absent": 0,
+          "present": 0,
+          "unknown": 0
+        },
+        "proof": {
+          "fragment_attachment_index": null,
+          "fragment_smarts": null,
+          "raw_alternatives": 1,
+          "reason": "raw_alternative_incomplete:attachment_ambiguous",
+          "role_attachment_index": null,
+          "source_slot": null,
+          "status": "unknown"
+        },
+        "reverse_report": {
+          "reverse_attempts": 1,
+          "reverse_failures": 0,
+          "reverse_outcomes": 3,
+          "reverse_partition_checks": 3,
+          "reverse_role_trials": 20,
+          "reverse_role_work": 20
+        },
+        "rows_with_extra_competing_role_sites": 0,
+        "rule_id": "synllama-rule-036",
+        "search_report_live": {
+          "admission_attempted_products": 0,
+          "admission_callback_unattempted_products": 0,
+          "admission_fingerprint_calls": 0,
+          "admission_fingerprint_reserve": 2048,
+          "admission_fp_unassessed_products": 0,
+          "admission_pending_unique_products": 0,
+          "admission_rank_fingerprint_calls": 0,
+          "admission_rank_selection_policy": "cached fingerprint first, then canonical SMILES; reserve one possible callback fingerprint plus zero or one new rank fingerprint per selected product",
+          "admission_ranked_products": 0,
+          "admission_reserved_cost_units": 0,
+          "anchor_index_incomplete": false,
+          "anchor_index_match_checks": 0,
+          "anchor_index_matches": [],
+          "anchor_index_postings_retained": [],
+          "anchor_index_postings_truncated": [],
+          "anchor_index_queries": 0,
+          "anchor_index_queries_unindexed": 0,
+          "anchor_posting_metadata_visits": 0,
+          "anchor_role_checks": 0,
+          "anchor_role_compatible": 0,
+          "catalog_bucket_rankings": 0,
+          "catalog_index_hashes": 0,
+          "catalog_index_rows_scanned": 0,
+          "catalog_row_visits": 0,
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "catalog_stereo_atom_bond_charges": 0,
+          "catalog_stereo_cache_hits": 0,
+          "catalog_stereo_exclusion_samples": [],
+          "catalog_stereo_exclusion_samples_truncated": 0,
+          "catalog_stereo_exclusions": 0,
+          "catalog_stereo_limits": {
+            "atom_bond_charges": 131072,
+            "cache_entries": 2048,
+            "exclusion_samples": 16,
+            "perceptions": 2048
+          },
+          "catalog_stereo_perceptions": 0,
+          "catalog_stereo_unknowns": {},
+          "combinations": 0,
+          "context_role_checks_total": 0,
+          "depth_one_fingerprint_ceiling": 32768,
+          "evidence_scope": "Reverse results only guide retrieval. Forward rule replay and later route audit/evidence are authoritative.",
+          "fallback_hit_second_legacy_reasons": {},
+          "fallback_hit_second_limit": 65536,
+          "fallback_hit_second_queries": 0,
+          "fallback_hit_second_replacements": 0,
+          "fallback_hit_second_sample_limit": 16,
+          "fallback_hit_second_samples": [],
+          "fallback_hit_second_samples_omitted": 0,
+          "fallback_hit_second_tanimotos": 0,
+          "fingerprint_calls": 1,
+          "generation_fingerprint_calls": 0,
+          "generation_fingerprint_ceiling": 63488,
+          "guide_anchor_checks": 0,
+          "hit_fingerprint_calls": 1,
+          "inner_role_checks": 0,
+          "inner_role_compatible": 0,
+          "inner_role_rejected": 0,
+          "limits": {
+            "beam_width": 12,
+            "building_block_top_k": 2,
+            "fallback_rules": 2,
+            "max_catalog_index_rows": 250000,
+            "max_catalog_row_visits": 262144,
+            "max_catalog_rows_per_query": 8192,
+            "max_combinations": 512,
+            "max_fingerprint_calls": 65536,
+            "max_inner_rules": 4,
+            "max_outer_guides": 8,
+            "max_products": 1024,
+            "max_reverse_outcomes": 4,
+            "max_routes": 64,
+            "max_rule_inspections": 512,
+            "max_rule_scans_per_target": 128,
+            "max_rules": 16,
+            "max_steps": 2,
+            "prefer_continuation_second": false,
+            "prefer_mapped_nh_second": false,
+            "reaction_product_limit": 16,
+            "version": "catalog-rule-route-first-v2"
+          },
+          "limits_reached": [],
+          "mapped_nh_preference": {
+            "enabled": false,
+            "legacy_reasons": {},
+            "proof_context_limit": 128,
+            "proof_contexts": 0,
+            "proof_match_requests": 0,
+            "proof_match_requests_limit": 512,
+            "proof_structural_units": 0,
+            "proof_structural_units_limit": 32768,
+            "ranked_rows_limit": 32768,
+            "ranked_rows_retained": 0,
+            "raw_registry_limit": 512,
+            "raw_snapshot_attempts": 0,
+            "raw_snapshot_attempts_limit": 1024,
+            "raw_snapshot_structural_units": 0,
+            "raw_snapshot_structural_units_limit": 262144,
+            "replacements": 0,
+            "role_checks": 0,
+            "role_checks_per_query_limit": 8192,
+            "role_checks_shared_search_limit": 65536,
+            "role_matches_per_request": 64,
+            "selected_contexts_limit": 128
+          },
+          "outer_center_metadata_check_limit": 32768,
+          "outer_center_metadata_checks": 150,
+          "outer_center_metadata_incomplete": 0,
+          "outer_distinct_cut_centers": 0,
+          "outer_plan_candidates": 0,
+          "phase2_plan_trace": [],
+          "phase2_plan_trace_truncated": 0,
+          "product_rejections": {},
+          "products_generated": 0,
+          "reaction_pool_caller_only_sites": 0,
+          "reaction_pool_graph_visits": 0,
+          "reaction_pool_index_applied": 0,
+          "reaction_pool_index_choices": {
+            "exact": 0,
+            "legacy": 0,
+            "same_site": 0
+          },
+          "reaction_pool_index_disabled_incomplete": 0,
+          "reaction_pool_index_only_sites": 0,
+          "reaction_pool_indexed_bucket_rankings": 0,
+          "reaction_pool_indexed_rows_selected": 0,
+          "reaction_pool_limits": {
+            "combined_graph_visits": 262144,
+            "extra_catalog_role_match_checks": 500000,
+            "matches_per_request": 64,
+            "query_atoms": 256,
+            "query_bonds": 512,
+            "query_role_pairs": 128,
+            "site_match_requests": 384,
+            "total_pool_rows": 8192,
+            "window_match_requests": 128
+          },
+          "reaction_pool_metadata_cache_hits": 0,
+          "reaction_pool_metadata_unknowns": {},
+          "reaction_pool_ordinary_bucket_rankings": 0,
+          "reaction_pool_ordinary_rows_selected": 0,
+          "reaction_pool_query_pairs": 0,
+          "reaction_pool_role_index_checks": 0,
+          "reaction_pool_role_index_complete": false,
+          "reaction_pool_role_index_failure": null,
+          "reaction_pool_role_index_sizes": [],
+          "reaction_pool_selected_roles": [],
+          "reaction_pool_site_match_requests": 0,
+          "reaction_pool_window_match_requests": 0,
+          "representative_origin_checks": 0,
+          "representative_origin_guide_entries": 0,
+          "representative_origin_known_guides": 0,
+          "representative_origin_legacy_reasons": {},
+          "representative_origin_limits": {
+            "atoms_per_part": 256,
+            "bonds_per_part": 512,
+            "guide_entries": 128,
+            "structural_units": 32768
+          },
+          "representative_origin_score_corrections": 0,
+          "representative_origin_structural_units": 0,
+          "retrieval_guides_normalized": 0,
+          "retrieval_guides_unusable": 0,
+          "retrieval_scope": "One bounded catalog feature index; each guide ranks charged bucket metadata and scans at most the nearest 8192 catalog rows; exact target ID is additionally considered",
+          "reverse_attempts": 1,
+          "reverse_failures": 0,
+          "reverse_fallbacks": 0,
+          "reverse_hint_normalizations": {
+            "removed_originless_terminal_dummy": 2,
+            "typed_originless_placeholder_instantiated": 4
+          },
+          "reverse_hint_quality_counts": {
+            "approximate": 1,
+            "explicit_fallback": 0,
+            "implicit_fallback": 0,
+            "typed": 2
+          },
+          "reverse_hint_rejections": {},
+          "reverse_local_template_compiles": 1,
+          "reverse_nonring_compile_failures": 0,
+          "reverse_nonring_empty": 0,
+          "reverse_nonring_query_calls": 1,
+          "reverse_nonring_query_compiles": 1,
+          "reverse_outcomes": 3,
+          "reverse_partition_checks": 3,
+          "reverse_partition_rejections": {},
+          "reverse_role_match_checks": 20,
+          "reverse_role_query_limits": {
+            "matches_per_query": 64,
+            "representative_order": [
+              "OH",
+              "F",
+              "Cl",
+              "Br",
+              "I",
+              "O-"
+            ],
+            "trial_and_match_work_per_search": 1024,
+            "trials_per_raw_outcome": 16
+          },
+          "reverse_role_rejections": {
+            "role_mismatch_at_mapped_positions": 16
+          },
+          "reverse_role_trials": 20,
+          "reverse_role_work": 20,
+          "role_queries": 0,
+          "route_audit_attempts": 0,
+          "routes_verified": 0,
+          "rule_inspections": 0,
+          "rule_template_checks": 0,
+          "rule_template_exclusions": [],
+          "rules_selected": [],
+          "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+          "selection_policy": "Product-template hit match first; bounded reverse precursor guides; explicit hit-role fallback",
+          "topology_assessment_cache_hits": 0,
+          "topology_limits": {
+            "match_requests_per_search": 128,
+            "matches_per_request": 64,
+            "spec_and_graph_visits_per_search": 262144
+          },
+          "topology_match_requests": 0,
+          "topology_pruned_rules": 0,
+          "topology_spec_graph_visits": 9,
+          "topology_static_cache_hits": 0,
+          "topology_static_checks": 1,
+          "topology_unknown_reasons": {},
+          "version": "catalog-rule-route-first-v2"
+        },
+        "selected_blocks": [
+          {
+            "id": "structure-sha256:e0c31529387159df69d5a27b141922730615a70bdd0d80bbe7fe8692ad119ce8",
+            "smiles": "Cc1cc(Cl)n2ncc(C)c2n1"
+          },
+          {
+            "id": "structure-sha256:26c15eb6aa221d34abbcdda7cc3e79a995fda8cd223c59305aebf182995775f4",
+            "smiles": "Cc1cnn2c(Cl)cc(Cl)nc12"
+          }
+        ],
+        "source_slot": 1,
+        "stage_guide": [
+          "CN(c1ccccc1Br)S(C)(=O)=O",
+          "Cc1cc(Cl)n2nc(Cl)ncc12"
+        ]
+      }
+    ],
+    "entry_sha256": {
+      "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "config": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9",
+      "helper": "a71e24d7788b109b67a4a64d320230502c2eb9a729176b8c6302ef462a72a7b6",
+      "historical_observation": "f21deb7dce8bdf9c0b1c21b318ad4e9084ffaf98edc8304b203439b2180936d0",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "probe": "f91d7a96cb59e405682470f8b77d8303ff3219496a177938fc327eef17631d4f",
+      "reactions_source": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "route_audit_source": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "route_first_source": "a4976fe90f3ba31dc4aea6b2081d54ab1b9b7e98083d127b47ed29164ada8177",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "synthetic_tests": "11a76ea4de60e84f9b77ef8b7b642199cf6071435edd1b62980be3a3f4abc2ec",
+      "v20_result": "b391aa4a4cad33d62e28fa40e66dd663e4847bb49d20dfd3cfa84c4af8a7e918"
+    },
+    "error": null,
+    "exit_sha256": {
+      "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "config": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9",
+      "helper": "a71e24d7788b109b67a4a64d320230502c2eb9a729176b8c6302ef462a72a7b6",
+      "historical_observation": "f21deb7dce8bdf9c0b1c21b318ad4e9084ffaf98edc8304b203439b2180936d0",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "probe": "f91d7a96cb59e405682470f8b77d8303ff3219496a177938fc327eef17631d4f",
+      "reactions_source": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "route_audit_source": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "route_first_source": "a4976fe90f3ba31dc4aea6b2081d54ab1b9b7e98083d127b47ed29164ada8177",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "synthetic_tests": "11a76ea4de60e84f9b77ef8b7b642199cf6071435edd1b62980be3a3f4abc2ec",
+      "v20_result": "b391aa4a4cad33d62e28fa40e66dd663e4847bb49d20dfd3cfa84c4af8a7e918"
+    },
+    "plan_sha256_at_entry": "fd5d6f0aaaabf779bdd68ae6a3c4a7e90173467a8bf20678ed36210367bc5ce5",
+    "plan_sha256_at_exit": "fd5d6f0aaaabf779bdd68ae6a3c4a7e90173467a8bf20678ed36210367bc5ce5",
+    "schema": "spectator-retention-feasibility-v1",
+    "scope": {
+      "call19_full_pool_available": false,
+      "current_v20_pool_parity_claim": false,
+      "historical_complete_contexts": 2,
+      "inner_call": 20,
+      "new_catalog_or_generation_or_model_calls": 0,
+      "outer_calls_deduplicated": [
+        3,
+        21
+      ],
+      "partial_first_snapshot_call4_scanned": false
+    },
+    "status": "complete",
+    "work": {
+      "candidate_rows_attempted": 8192,
+      "proof_structural_units_reserved": 410,
+      "proof_template_match_requests_reserved": 2,
+      "raw_outcomes": 6,
+      "reverse_calls": 2,
+      "search_constructors_attempted": 2,
+      "stereo_perceptions_reserved": 8192,
+      "structural_units_reserved": 224087,
+      "substructure_match_requests_reserved": 16384
+    }
+  },
+  "review": {
+    "before_execution": "root_and_astra_pass",
+    "outcome": "astra_verified_counts_bindings_and_narrow_scope",
+    "ruff_and_compile": "passed",
+    "synthetic_tests_passed": 8
+  },
+  "schema": "spectator-retention-feasibility-portable-v1",
+  "source_commit": "83a0e5f",
+  "status": "development_diagnostic_complete_no_confirmed_alternative"
+}
