@@ -27,6 +27,39 @@ MAX_REVERSE_ROLE_TRIALS_PER_OUTCOME = 16
 MAX_REVERSE_ROLE_WORK_PER_SEARCH = 1024
 MAX_REVERSE_ROLE_MATCHES = 65
 MAX_OUTER_CENTER_METADATA_CHECKS = 32768
+MAX_TOPOLOGY_MATCH_REQUESTS = 128
+MAX_TOPOLOGY_MATCHES = 65  # 64 plus a truncation sentinel.
+MAX_TOPOLOGY_SPEC_GRAPH_VISITS = 262144
+
+
+def topology_rule_specification(reaction):
+    """Describe a supported product cut without asserting chemical feasibility."""
+    if len(reaction.GetReactants()) != 2 or len(reaction.GetProducts()) != 1:
+        return None, "not_two_reactants_one_product"
+    maps, issues = template_maps(reaction)
+    if any(issues.values()):
+        return None, "ambiguous_or_unbound_maps"
+    product = reaction.GetProducts()[0]
+    retained = {atom.GetAtomMapNum() for atom in product.GetAtoms() if atom.GetAtomMapNum()}
+    product_edges = {
+        frozenset((first, second))
+        for bond in product.GetBonds()
+        if (first := bond.GetBeginAtom().GetAtomMapNum()) and (second := bond.GetEndAtom().GetAtomMapNum())
+    }
+    for reactant in reaction.GetReactants():
+        for bond in reactant.GetBonds():
+            first, second = bond.GetBeginAtom().GetAtomMapNum(), bond.GetEndAtom().GetAtomMapNum()
+            if first in retained and second in retained and frozenset((first, second)) not in product_edges:
+                return None, "retained_reactant_edge_deleted"
+    cross = []
+    for bond in product.GetBonds():
+        first, second = bond.GetBeginAtom(), bond.GetEndAtom()
+        a, b = first.GetAtomMapNum(), second.GetAtomMapNum()
+        if a and b and maps[a][0] != maps[b][0]:
+            cross.append((first.GetIdx(), second.GetIdx()))
+    if not cross:
+        return None, "no_cross_slot_product_bond"
+    return (product, maps, tuple(cross)), None
 
 
 def reverse_partition_issue(outcome, target_atoms):
@@ -458,6 +491,22 @@ class RouteFirstSearch:
             "rule_inspections": 0,
             "rule_template_checks": 0,
             "rule_template_exclusions": [],
+            "topology_limits": {
+                "match_requests_per_search": MAX_TOPOLOGY_MATCH_REQUESTS,
+                "matches_per_request": MAX_TOPOLOGY_MATCHES - 1,
+                "spec_and_graph_visits_per_search": MAX_TOPOLOGY_SPEC_GRAPH_VISITS,
+            },
+            "topology_match_requests": 0,
+            "topology_spec_graph_visits": 0,
+            "topology_static_checks": 0,
+            "topology_static_cache_hits": 0,
+            "topology_assessment_cache_hits": 0,
+            "topology_pruned_rules": 0,
+            "topology_unknown_reasons": {},
+            "reverse_nonring_query_compiles": 0,
+            "reverse_nonring_compile_failures": 0,
+            "reverse_nonring_query_calls": 0,
+            "reverse_nonring_empty": 0,
             "rules_selected": [],
             "reverse_attempts": 0,
             "reverse_failures": 0,
@@ -526,9 +575,12 @@ class RouteFirstSearch:
         }
         self._nearest_cache = {}
         self._rule_selection_cache = {}
+        self._topology_rule_cache = {}
+        self._topology_assessment_cache = {}
         self._eligible_rules = None
         self._reverse_cache = {}
         self._tagged_reverse_cache = {}
+        self._nonring_unavailable_rules = set()
         self._guide_quality = {}
         self._guide_centers = {}
         self._active_phase2_slot = None
@@ -701,8 +753,134 @@ class RouteFirstSearch:
         self._eligible_rules = tuple(eligible)
         return self._eligible_rules
 
+    def _topology_unknown(self, reason):
+        counts = self.report["topology_unknown_reasons"]
+        counts[reason] = counts.get(reason, 0) + 1
+        return "unknown"
+
+    def _topology_visit(self, count=1):
+        if self._stop():
+            return False
+        if self.report["topology_spec_graph_visits"] + count > MAX_TOPOLOGY_SPEC_GRAPH_VISITS:
+            self._stop("max_topology_spec_graph_visits")
+            return False
+        self.report["topology_spec_graph_visits"] += count
+        return True
+
+    def _topology_spec(self, rule):
+        if rule.id in self._topology_rule_cache:
+            self.report["topology_static_cache_hits"] += 1
+            return self._topology_rule_cache[rule.id]
+        cost = sum(
+            part.GetNumAtoms() + part.GetNumBonds()
+            for part in itertools.chain(rule.reaction.GetReactants(), rule.reaction.GetProducts())
+        )
+        if not self._topology_visit(cost):
+            return None, "spec_budget_or_deadline"
+        self.report["topology_static_checks"] += 1
+        result = topology_rule_specification(rule.reaction)
+        # At most the fixed eligible rule prefix can enter this cache.
+        self._topology_rule_cache[rule.id] = result
+        return result
+
+    def _topology_assess(self, target, parent, rule):
+        key = (target, rule.id)
+        if key in self._topology_assessment_cache:
+            self.report["topology_assessment_cache_hits"] += 1
+            return self._topology_assessment_cache[key]
+        specification, reason = self._topology_spec(rule)
+        if reason:
+            status = self._topology_unknown(reason)
+        elif self.report["topology_match_requests"] >= MAX_TOPOLOGY_MATCH_REQUESTS:
+            self._stop("max_topology_match_requests")
+            status = self._topology_unknown("match_request_budget")
+        elif self._stop():
+            status = self._topology_unknown("deadline")
+        else:
+            self.report["topology_match_requests"] += 1
+            query, maps, cross = specification
+            matches = parent.GetSubstructMatches(
+                query, useChirality=True, uniquify=False, maxMatches=MAX_TOPOLOGY_MATCHES
+            )
+            if len(matches) >= MAX_TOPOLOGY_MATCHES:
+                status = self._topology_unknown("match_truncation")
+            elif not matches:
+                # The existing product match was positive. A disagreement is
+                # uncertainty, never evidence that the rule is impossible.
+                status = self._topology_unknown("no_enumerated_match")
+            else:
+                status = "impossible"
+                for match in matches:
+                    removed = {frozenset((match[a], match[b])) for a, b in cross}
+                    if not self._topology_visit(parent.GetNumAtoms()):
+                        status = self._topology_unknown("graph_budget_or_deadline")
+                        break
+                    neighbors = [[] for _ in range(parent.GetNumAtoms())]
+                    complete = True
+                    for bond in parent.GetBonds():
+                        if not self._topology_visit():
+                            complete = False
+                            break
+                        first, second = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
+                        if frozenset((first, second)) not in removed:
+                            neighbors[first].append(second)
+                            neighbors[second].append(first)
+                    if not complete:
+                        status = self._topology_unknown("graph_budget_or_deadline")
+                        break
+                    components = {}
+                    component = 0
+                    for origin in range(parent.GetNumAtoms()):
+                        if origin in components:
+                            continue
+                        stack = [origin]
+                        components[origin] = component
+                        while stack:
+                            if not self._topology_visit():
+                                complete = False
+                                break
+                            for neighbor in neighbors[stack.pop()]:
+                                if not self._topology_visit():
+                                    complete = False
+                                    break
+                                if neighbor not in components:
+                                    components[neighbor] = component
+                                    stack.append(neighbor)
+                            if not complete:
+                                break
+                        if not complete:
+                            break
+                        component += 1
+                    if not complete:
+                        status = self._topology_unknown("graph_budget_or_deadline")
+                        break
+                    slots = (set(), set())
+                    for atom in query.GetAtoms():
+                        if not self._topology_visit():
+                            complete = False
+                            break
+                        number = atom.GetAtomMapNum()
+                        if number:
+                            slots[maps[number][0]].add(components[match[atom.GetIdx()]])
+                    if not complete:
+                        status = self._topology_unknown("graph_budget_or_deadline")
+                        break
+                    if not slots[0].isdisjoint(slots[1]):
+                        continue
+                    status = "feasible"
+                    break
+        # Only bounded completed assessments are cached. A budget miss remains
+        # a legacy-eligible rule without consuming a result cache slot.
+        if (
+            self.report["topology_match_requests"] <= MAX_TOPOLOGY_MATCH_REQUESTS
+            and len(self._topology_assessment_cache) < MAX_TOPOLOGY_MATCH_REQUESTS
+            and status in ("feasible", "impossible")
+        ):
+            self._topology_assessment_cache[key] = status
+        return status
+
     def _select_rules(self, target, maximum, fallback=0):
-        key = (target, maximum, fallback)
+        key = (target, maximum, fallback, self._phase == 2)
         if key in self._rule_selection_cache:
             return self._rule_selection_cache[key]
         mol = molecule(target)
@@ -733,6 +911,13 @@ class RouteFirstSearch:
             rule = self.rules.get(ident)
             product_template = rule.reaction.GetProducts()[0]
             if mol.HasSubstructMatch(product_template, useChirality=True):
+                if (
+                    self._phase == 2
+                    and not fallback
+                    and self._topology_assess(target, mol, rule) == "impossible"
+                ):
+                    self.report["topology_pruned_rules"] += 1
+                    continue
                 primary.append(rule)
                 if not fallback and len(primary) >= maximum:
                     break
@@ -878,16 +1063,60 @@ class RouteFirstSearch:
         centers = {}
         raw_seen = False
         reverse_failed = False
+        nonring_query = False
         if not fallback and not self._stop():
             self.report["reverse_attempts"] += 1
             try:
-                if rule.id not in self._tagged_reverse_cache:
-                    self._tagged_reverse_cache[rule.id] = tagged_reverse_reaction(rule)
-                    self.report["reverse_local_template_compiles"] += 1
-                reverse, tags = self._tagged_reverse_cache[rule.id]
+                restriction = None
+                if rule.id not in self._nonring_unavailable_rules:
+                    specification, reason = self._topology_spec(rule)
+                    if reason is None and len(specification[2]) == 1:
+                        restriction = specification[2][0]
+                if self._stop():
+                    return []
+                template_key = (rule.id, restriction is not None)
+                if template_key not in self._tagged_reverse_cache:
+                    new_template = True
+                    reverse, tags = tagged_reverse_reaction(rule)
+                    if restriction is not None:
+                        try:
+                            bond = reverse.GetReactants()[0].GetBondBetweenAtoms(*restriction)
+                            if bond is None:
+                                raise ValueError("Missing local reverse cross bond")
+                            bond.ExpandQuery(Chem.BondFromSmarts("!@"), Chem.CompositeQueryType.COMPOSITE_AND)
+                            with rdBase.BlockLogs():
+                                reverse.Initialize()
+                        except (ValueError, RuntimeError, AttributeError):
+                            # Failure to build an optional local query must
+                            # not delete the original reverse search path.
+                            self.report["reverse_nonring_compile_failures"] += 1
+                            self._nonring_unavailable_rules.add(rule.id)
+                            restriction = None
+                            template_key = (rule.id, False)
+                            if template_key in self._tagged_reverse_cache:
+                                reverse, tags = self._tagged_reverse_cache[template_key]
+                                new_template = False
+                            else:
+                                reverse, tags = tagged_reverse_reaction(rule)
+                        else:
+                            self.report["reverse_nonring_query_compiles"] += 1
+                    if new_template:
+                        self._tagged_reverse_cache[template_key] = reverse, tags
+                        self.report["reverse_local_template_compiles"] += 1
+                reverse, tags = self._tagged_reverse_cache[template_key]
+                nonring_query = restriction is not None
                 parent = molecule(target)
+                if self._stop():
+                    # Static support checks, local query compilation and
+                    # parent parsing can consume the remaining deadline.
+                    # No chemistry call or fallback may start after expiry.
+                    return []
+                if nonring_query:
+                    self.report["reverse_nonring_query_calls"] += 1
                 with rdBase.BlockLogs():
                     outcomes = reverse.RunReactants((parent,), maxProducts=self.limits.max_reverse_outcomes)
+                if nonring_query and not outcomes:
+                    self.report["reverse_nonring_empty"] += 1
                 raw_seen = bool(outcomes)
                 for outcome in outcomes:
                     if self._stop():
@@ -947,6 +1176,7 @@ class RouteFirstSearch:
             and not self._stop()
             and not raw_seen
             and not reverse_failed
+            and not nonring_query
             and any(
                 molecule(target).HasSubstructMatch(q, useChirality=True) for q in rule.reaction.GetReactants()
             )

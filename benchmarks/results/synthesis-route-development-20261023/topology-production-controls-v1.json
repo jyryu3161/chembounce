@@ -1,0 +1,172 @@
+{
+  "schema": "route-first-topology-production-controls-v1",
+  "status": "local_mechanism_and_code_review_passed_panel_efficacy_pending",
+  "scope": "Catalog-free original-hit-derived inner-plan mechanism; no concrete catalog products, forward model, 3D or qualification. Frozen P1 adoption criterion unchanged.",
+  "runtime_sha256": "8c5979c0d73f0c72d28ab713f1156623232403bc442f222eb7f201c894aa5650",
+  "plan_only_control": {
+    "schema": "route-first-topology-production-plan-only-v2",
+    "status": "complete",
+    "scope": "Original-hit-derived inner target, fixed rule asset, no catalog/model/products",
+    "outer_cut_bond_center": [
+      [
+        [
+          18,
+          19
+        ]
+      ]
+    ],
+    "inner_target": "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(Cl)ncc12",
+    "inner_rule_ids": [
+      "synllama-rule-027",
+      "synllama-rule-029",
+      "synllama-rule-031",
+      "synllama-rule-036"
+    ],
+    "diagnostic_rule_id": "synllama-rule-036",
+    "reverse_guides": [
+      {
+        "guide": [
+          "C",
+          "CN(c1ccccc1-c1ccc2cnc(Cl)nn12)S(C)(=O)=O"
+        ],
+        "quality": "approximate",
+        "cut_bond_centers": [
+          [
+            [
+              0,
+              1
+            ]
+          ]
+        ]
+      },
+      {
+        "guide": [
+          "CN(c1ccccc1Br)S(C)(=O)=O",
+          "Cc1cc(Cl)n2nc(Cl)ncc12"
+        ],
+        "quality": "typed",
+        "cut_bond_centers": [
+          [
+            [
+              3,
+              4
+            ]
+          ]
+        ]
+      },
+      {
+        "guide": [
+          "Cc1cc(Br)n2nc(Cl)ncc12",
+          "CN(c1ccccc1Cl)S(C)(=O)=O"
+        ],
+        "quality": "typed",
+        "cut_bond_centers": [
+          [
+            [
+              3,
+              4
+            ]
+          ]
+        ]
+      }
+    ],
+    "limits": {
+      "match_requests_per_search": 128,
+      "matches_per_request": 64,
+      "spec_and_graph_visits_per_search": 262144
+    },
+    "work": {
+      "rule_inspections": 143,
+      "topology_match_requests": 5,
+      "topology_spec_graph_visits": 786,
+      "topology_pruned_rules": 1,
+      "topology_unknown_reasons": {},
+      "reverse_attempts": 1,
+      "reverse_partition_checks": 3,
+      "reverse_outcomes": 3,
+      "reverse_nonring_query_calls": 1,
+      "reverse_nonring_empty": 0
+    },
+    "source_sha256": "8c5979c0d73f0c72d28ab713f1156623232403bc442f222eb7f201c894aa5650",
+    "harness_sha256": "b38a69106d76023965961beb192ef6982e97749268cbd15bc4e08c5f3e121849",
+    "input_sha256": {
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/center-plan-only-v1/result.json": "359a935f8b168b873965af0bca6b30f21ae49bf714a61feb4856b6f61524d82e",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/reverse-center-audit-v1/result.json": "5b847c17a70add3ff4f0b02bbb170e282e6f9ae026ad5e95347cda679c4be614",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023/route-first-config.json": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/rules.json": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39"
+    },
+    "source_sha256_after": "8c5979c0d73f0c72d28ab713f1156623232403bc442f222eb7f201c894aa5650",
+    "harness_sha256_after": "b38a69106d76023965961beb192ef6982e97749268cbd15bc4e08c5f3e121849"
+  },
+  "review": {
+    "verdict": "pass_for_bounded_topology_implementation",
+    "independent_checks": [
+      {
+        "command": ".venv-research/bin/python -m pytest -q tests/synthesis/test_route_first.py tests/test_phase_telemetry_develop_hooks.py",
+        "result": "53 passed in 12.68s",
+        "source_sha256": "33a2f62573c4098d418c88d014eab39c0fa07ef1399f698aa5823947e14168ba",
+        "tests_sha256": "32ef0bf4e8dee5ccc2e259f57f51ef31b99e113a6ad8f50cc2098fc4976e7565"
+      },
+      {
+        "command": ".venv-research/bin/python -m pytest -q tests/synthesis/test_route_first.py -k reverse_deadline_expiry_during_static_check_or_local_compile_skips_chemistry",
+        "result": "1 passed, 29 deselected in 0.28s on final source/test hashes"
+      },
+      {
+        "command": "git diff --check",
+        "result": "passed on final delta"
+      },
+      {
+        "check": "Read-only saved result and harness delta inspection",
+        "result": "Production plan-only v1 remains bound to pre-deadline-fix source33a2; not regenerated or relabeled as current-source execution."
+      }
+    ],
+    "author_reported_checks": {
+      "route_tests": "30 passed in 11.39s on final delta",
+      "format": "Ruff check and format check228 files passed; author reported"
+    },
+    "limitations": [
+      "No actual catalog or model run; v9 unexecuted at review.",
+      "Local reachability does not establish catalog availability, complete routes, fixed-panel coverage or efficacy.",
+      "Frozen P1 adoption criterion remains greater than5/12 with all-step forward support and unchanged strict gates; goal remains active."
+    ],
+    "current_source_control_followup": {
+      "schema": "route-first-focused-review-addendum-v1",
+      "verdict": "prior_pass_unchanged",
+      "prior_receipt_sha256": "49efbb474935f3f1326d887fd4332124282eef89628d6b29cdc6b45cded17ca1",
+      "scope": "Read-only optional-exception-path assessment and current-source plan-only v2 file/hash binding; no tests, probes, catalog or model run.",
+      "optional_exception_assessment": "New GetSubstructMatches ValueError/RuntimeError could propagate, but no valid-asset failure is demonstrated. Same target/product query first passes existing uncaught HasSubstructMatch; Rules validates and initializes templates; template_maps already ran in eligibility. Narrow exception-to-unknown handling is reasonable defensive hardening, not a current freeze blocker based on a synthetic throwing parent alone. No guarantee against future RDKit failures is asserted.",
+      "saved_evidence": {
+        "script": "benchmark-results/route-first-development-20261023-v2/topology-production-plan-only-v2/probe.py",
+        "script_sha256": "b38a69106d76023965961beb192ef6982e97749268cbd15bc4e08c5f3e121849",
+        "result": "benchmark-results/route-first-development-20261023-v2/topology-production-plan-only-v2/result.json",
+        "result_sha256": "873863242adf66638b698b999562a6f8296d5027b608f376ee62428f67352312",
+        "runtime_sha256": "8c5979c0d73f0c72d28ab713f1156623232403bc442f222eb7f201c894aa5650",
+        "binding": "Actual script/runtime hashes equal embedded before/after hashes.",
+        "interpretation": "Same selected top4, three raw guides including two typed interaromatic hints, and bounded work counts as v1; catalog-free local mechanism proof only."
+      },
+      "limitations": "No efficacy/adoption claim; frozen greater-than5/12 all-step-supported criterion unchanged."
+    }
+  },
+  "artifacts": [
+    {
+      "path": "benchmark-results/route-first-development-20261023-v2/topology-production-plan-only-v2/result.json",
+      "sha256": "873863242adf66638b698b999562a6f8296d5027b608f376ee62428f67352312"
+    },
+    {
+      "path": "benchmark-results/route-first-development-20261023-v2/topology-production-plan-only-v2/probe.py",
+      "sha256": "b38a69106d76023965961beb192ef6982e97749268cbd15bc4e08c5f3e121849"
+    },
+    {
+      "path": "benchmark-results/qualified-development-20261023/route-first-v2-topology-steering-review-v1/report.json",
+      "sha256": "49efbb474935f3f1326d887fd4332124282eef89628d6b29cdc6b45cded17ca1"
+    },
+    {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v9/probe.py",
+      "sha256": "13f2cc5b9ee8cdb3e2be464933210eb52d2f75b2d166e554cf45aa712d5d3d93"
+    },
+    {
+      "path": "benchmark-results/qualified-development-20261023/route-first-v2-topology-steering-review-v1/report.revision-2.json",
+      "sha256": "ebbd98e858e773349be831d81fbefc3adefa2a8194a059ca98e181dab0b0713f"
+    }
+  ]
+}

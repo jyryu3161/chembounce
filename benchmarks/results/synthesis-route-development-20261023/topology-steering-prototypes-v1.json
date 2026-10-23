@@ -1,0 +1,395 @@
+{
+  "schema": "route-first-topology-steering-development-prototypes-v1",
+  "status": "prototype_mechanism_supported_production_validation_pending",
+  "scope": "Original-hit-derived guide and small controls only; no full catalog, generated concrete products, forward model or qualification. No saved baseline products used as generation seeds.",
+  "reference_runtime_commit": "3ba5a62",
+  "reference_runtime_sha256": "ef9f43c9d309fb05e5b527851bf23e3012ce3b67b4d4fdccbb2ccfbc9bdaab65",
+  "retained_map_and_multibond_controls": [
+    {
+      "name": "disappearing_leaving_group_feasible",
+      "observed": {
+        "status": "feasible",
+        "reason": null,
+        "matches": 1,
+        "feasible_matches": [
+          {
+            "ordinal_one_based": 1,
+            "atom_match": [
+              0,
+              1
+            ],
+            "cross_bonds": [
+              [
+                0,
+                1
+              ]
+            ]
+          }
+        ],
+        "cross_bond_count": 1
+      },
+      "single_edge_steering_allowed": true
+    },
+    {
+      "name": "retained_edge_deleted_unknown",
+      "observed": {
+        "status": "unknown",
+        "reason": "retained_mapped_reactant_edge_deleted",
+        "matches": 0,
+        "feasible_matches": []
+      },
+      "single_edge_steering_allowed": false
+    },
+    {
+      "name": "two_cross_edge_ring_formation_feasible_but_no_single_edge_restriction",
+      "observed": {
+        "status": "feasible",
+        "reason": null,
+        "matches": 2,
+        "feasible_matches": [
+          {
+            "ordinal_one_based": 1,
+            "atom_match": [
+              0,
+              1,
+              2
+            ],
+            "cross_bonds": [
+              [
+                1,
+                2
+              ],
+              [
+                0,
+                2
+              ]
+            ]
+          },
+          {
+            "ordinal_one_based": 2,
+            "atom_match": [
+              1,
+              0,
+              2
+            ],
+            "cross_bonds": [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        ],
+        "cross_bond_count": 2
+      },
+      "single_edge_steering_allowed": false
+    }
+  ],
+  "installed_rdkit_version": "2025.09.6",
+  "rdkit_source_reference": {
+    "url": "https://github.com/rdkit/rdkit/blob/master/Code/GraphMol/ChemReactions/ReactionRunner.cpp",
+    "scope": "Observed repository source on 2026-10-23 describes initial maxMatches=maxProducts SubstructMatch before _protected filtering; master branch is not claimed to equal the installed release. V1 empirical local negative control is authoritative here."
+  },
+  "compositional_control": {
+    "schema": "route-first-topology-steering-prototype-v5",
+    "status": "complete",
+    "scope": "Compositional plan-only original-hit guide; no catalog/model/concrete product or production change",
+    "limits": {
+      "rule_inspections": 512,
+      "rule_prefix_per_target": 128,
+      "topology_requests_search_proposal": 128,
+      "matches_per_request_including_sentinel": 65,
+      "spec_and_graph_visits_search_proposal": 262144,
+      "raw_reverse_outcomes": 4,
+      "reverse_calls": 1,
+      "deadline_seconds": 20
+    },
+    "work": {
+      "rule_inspections": 91,
+      "product_template_match_requests": 65,
+      "topology_requests": 5,
+      "spec_visits": 58,
+      "graph_visits": 5000,
+      "raw_reverse_outcomes": 3,
+      "reverse_calls": 1
+    },
+    "outer_cut_center": [
+      [
+        [
+          18,
+          19
+        ]
+      ]
+    ],
+    "inner_target": "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(Cl)ncc12",
+    "selected_inner_rule_ids": [
+      "synllama-rule-027",
+      "synllama-rule-029",
+      "synllama-rule-031",
+      "synllama-rule-036"
+    ],
+    "selected_rule_assessments": {
+      "synllama-rule-027": {
+        "status": "feasible",
+        "reason": null,
+        "matches": 24,
+        "feasible_matches": [
+          {
+            "ordinal_one_based": 1,
+            "atom_match": [
+              0,
+              1
+            ],
+            "cross_bonds": [
+              [
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "ordinal_one_based": 2,
+            "atom_match": [
+              1,
+              0
+            ],
+            "cross_bonds": [
+              [
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "ordinal_one_based": 8,
+            "atom_match": [
+              3,
+              4
+            ],
+            "cross_bonds": [
+              [
+                3,
+                4
+              ]
+            ]
+          },
+          {
+            "ordinal_one_based": 9,
+            "atom_match": [
+              4,
+              3
+            ],
+            "cross_bonds": [
+              [
+                3,
+                4
+              ]
+            ]
+          }
+        ],
+        "cross_bond_count": 1
+      },
+      "synllama-rule-029": {
+        "status": "feasible",
+        "reason": null,
+        "matches": 1,
+        "feasible_matches": [
+          {
+            "ordinal_one_based": 1,
+            "atom_match": [
+              11,
+              10
+            ],
+            "cross_bonds": [
+              [
+                10,
+                11
+              ]
+            ]
+          }
+        ],
+        "cross_bond_count": 1
+      },
+      "synllama-rule-031": {
+        "status": "feasible",
+        "reason": null,
+        "matches": 1,
+        "feasible_matches": [
+          {
+            "ordinal_one_based": 1,
+            "atom_match": [
+              11,
+              10
+            ],
+            "cross_bonds": [
+              [
+                10,
+                11
+              ]
+            ]
+          }
+        ],
+        "cross_bond_count": 1
+      },
+      "synllama-rule-036": {
+        "status": "feasible",
+        "reason": null,
+        "matches": 23,
+        "feasible_matches": [
+          {
+            "ordinal_one_based": 1,
+            "atom_match": [
+              1,
+              0
+            ],
+            "cross_bonds": [
+              [
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "ordinal_one_based": 7,
+            "atom_match": [
+              3,
+              4
+            ],
+            "cross_bonds": [
+              [
+                3,
+                4
+              ]
+            ]
+          },
+          {
+            "ordinal_one_based": 8,
+            "atom_match": [
+              4,
+              3
+            ],
+            "cross_bonds": [
+              [
+                3,
+                4
+              ]
+            ]
+          }
+        ],
+        "cross_bond_count": 1
+      }
+    },
+    "local_copied_query_smarts": "[c:2]!@[#6:1]",
+    "raw_reverse": [
+      {
+        "raw_ordinal": 0,
+        "partition_issue": null,
+        "cut_bonds": [
+          [
+            0,
+            1
+          ]
+        ],
+        "hint_quality": null,
+        "guide": null
+      },
+      {
+        "raw_ordinal": 1,
+        "partition_issue": null,
+        "cut_bonds": [
+          [
+            3,
+            4
+          ]
+        ],
+        "hint_quality": "typed",
+        "guide": [
+          "CN(c1ccccc1Br)S(C)(=O)=O",
+          "Cc1cc(Cl)n2nc(Cl)ncc12"
+        ]
+      },
+      {
+        "raw_ordinal": 2,
+        "partition_issue": null,
+        "cut_bonds": [
+          [
+            3,
+            4
+          ]
+        ],
+        "hint_quality": "typed",
+        "guide": [
+          "Cc1cc(Br)n2nc(Cl)ncc12",
+          "CN(c1ccccc1Cl)S(C)(=O)=O"
+        ]
+      }
+    ],
+    "source_sha256": "ef9f43c9d309fb05e5b527851bf23e3012ce3b67b4d4fdccbb2ccfbc9bdaab65",
+    "harness_sha256": "dc43216a24defd58c6a3f7b0b13de906b3748bfc05a1f89f793a7bfe44711b4f",
+    "input_sha256": {
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/center-plan-only-v1/result.json": "359a935f8b168b873965af0bca6b30f21ae49bf714a61feb4856b6f61524d82e",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/reverse-center-audit-v1/result.json": "5b847c17a70add3ff4f0b02bbb170e282e6f9ae026ad5e95347cda679c4be614",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023/route-first-config.json": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/rules.json": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/topology-steering-prototype-v1/probe.py": "94a47d3e9d18ec18f9978531125c7bb899259bacf3b9f80e6c6a056445f92f09",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/topology-steering-prototype-v1/result.json": "37bbc9befc5ff4bac7f2d13c6e2fc34a50f268541d37c46810d637793fdafb09",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/topology-steering-prototype-v2/probe.py": "88deb99901587bbedb29a57797c6148c203170acf2af43782266cc7f411b957e",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/topology-steering-prototype-v2/result.json": "f6ddba657071b4cd31513a20a5577a22d596b46f0d792ce38a173bee1b675a1e"
+    },
+    "source_sha256_after": "ef9f43c9d309fb05e5b527851bf23e3012ce3b67b4d4fdccbb2ccfbc9bdaab65",
+    "harness_sha256_after": "dc43216a24defd58c6a3f7b0b13de906b3748bfc05a1f89f793a7bfe44711b4f"
+  },
+  "production_requirements": {
+    "existing_rule_inspections": 512,
+    "existing_inner_rules": 4,
+    "existing_raw_outcomes_per_rule_target": 4,
+    "additional_topology_enumeration_requests": 128,
+    "matches_per_enumeration_including_truncation_sentinel": 65,
+    "combined_static_specification_and_target_graph_visits": 262144,
+    "classification_cache_entries": 128,
+    "rule_pruning": "Inner selection only; complete nonempty enumeration with every match provably impossible. Unsupported/truncated/budget/deadline assessments retain legacy rule eligibility.",
+    "reverse_query": "Only independently proven single-cross-reactant-edge subset receives local copied-query nonring conjunction. One existing reverse call; no protected-mask retry, renumbering, extra raw outcomes, or original-rule/catalog mutation.",
+    "fallback": "No implicit whole-hit/C resurrection after topology-restricted reverse returns zero. Explicitly selected fallback remains separate.",
+    "cost_note": "V5 separate specification/graph counters are prototype observations; production must enforce their sum with one shared meter."
+  },
+  "interpretation": "Generic inner eligibility includes036 without ID promotion; selected036 local reverse yields3raw outcomes including2typed interaromatic hints. Selected027 also enumerates that cut in v2 but only approximate hints. These are local selector/enumerator controls, not evidence that catalog leaves or full paths can be recovered inside the complete shared search budget.",
+  "failed_harness_attempts": {
+    "v3": "Reaction.ToSmarts API mistake; no completed control result.",
+    "v4": "Tuple/list assertion mismatch; no completed control result.",
+    "scope": "Harness failures, not chemical failures or zero candidate observations; original failed scripts and failure records retained."
+  },
+  "evidence": {
+    "v1_negative_mask_and_initial_controls": {
+      "path": "benchmark-results/route-first-development-20261023-v2/topology-steering-prototype-v1/result.json",
+      "sha256": "37bbc9befc5ff4bac7f2d13c6e2fc34a50f268541d37c46810d637793fdafb09"
+    },
+    "v2_result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/topology-steering-prototype-v2/result.json",
+      "sha256": "f6ddba657071b4cd31513a20a5577a22d596b46f0d792ce38a173bee1b675a1e"
+    },
+    "v2_script": {
+      "path": "benchmark-results/route-first-development-20261023-v2/topology-steering-prototype-v2/probe.py",
+      "sha256": "88deb99901587bbedb29a57797c6148c203170acf2af43782266cc7f411b957e"
+    },
+    "v3_failure": {
+      "path": "benchmark-results/route-first-development-20261023-v2/topology-steering-prototype-v3/failed.json",
+      "sha256": "9d824727e438a6408bf1c8a8f0b0ad31fd356ef7f56d8102db2bb623feaa79de"
+    },
+    "v4_failure": {
+      "path": "benchmark-results/route-first-development-20261023-v2/topology-steering-prototype-v4/failed.json",
+      "sha256": "04b1fa084d384ed2ea95f04439b0cba09d6834d073df30c1e316c1df090ec27a"
+    },
+    "v5_result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/topology-steering-prototype-v5/result.json",
+      "sha256": "ae19fce012b0ef7686a37547630d00884ca6f26d48f13b9b1ff6ba56e520a496"
+    },
+    "v5_script": {
+      "path": "benchmark-results/route-first-development-20261023-v2/topology-steering-prototype-v5/probe.py",
+      "sha256": "dc43216a24defd58c6a3f7b0b13de906b3748bfc05a1f89f793a7bfe44711b4f"
+    }
+  }
+}

@@ -19,6 +19,7 @@ from chembounce_synthesis.route_first import (
     normalize_reverse_hint,
     reverse_partition_issue,
     reverse_role_issue,
+    topology_rule_specification,
     typed_reverse_hint,
 )
 from chembounce_synthesis.routes import verify_route
@@ -155,6 +156,9 @@ def test_reverse_guides_require_disjoint_complete_parent_atom_partition(tmp_path
     catalog = SimpleNamespace(sha256="test")
     settings = RouteFirstLimits(**limits(max_steps=1, max_reverse_outcomes=1))
     overlap = RouteFirstSearch("C1CCOCC1", catalog, rules, settings)
+    # Exercise the legacy raw partition guard when the optional local query
+    # construction is unavailable; the default nonring query filters this cut.
+    overlap._nonring_unavailable_rules.add("ether")
     assert overlap._reverse(rules.get("ether"), "C1CCOCC1", False) == []
     assert overlap.report["reverse_partition_checks"] == 1
     assert overlap.report["reverse_partition_rejections"] == {"reused_parent_atom": 1}
@@ -173,6 +177,199 @@ def test_reverse_guides_require_disjoint_complete_parent_atom_partition(tmp_path
     assert unary._reverse(rules.get("unary"), "CCO", False)
     assert unary.report["reverse_partition_checks"] == 1
     assert unary.report["reverse_partition_rejections"] == {}
+
+
+def test_topology_support_is_conservative_about_lost_atoms_and_multi_bond_cuts():
+    from rdkit.Chem import rdChemReactions
+
+    cases = (
+        ("[C:1][O:2].[N:3]>>[C:1][N:3]", 1, None),
+        ("[C:1][O:2].[N:3]>>[C:1][N:3][O:2]", None, "retained_reactant_edge_deleted"),
+        ("[C:1][C:2].[N:3]>>[C:1]1[C:2][N:3]1", 2, None),
+        ("[C:1]>>[C:1]", None, "not_two_reactants_one_product"),
+        ("[C:1].[N:1]>>[C:1]", None, "ambiguous_or_unbound_maps"),
+    )
+    for smarts, expected_cross, expected_reason in cases:
+        specification, reason = topology_rule_specification(rdChemReactions.ReactionFromSmarts(smarts))
+        assert reason == expected_reason
+        assert (len(specification[2]) if specification else None) == expected_cross
+
+
+def test_inner_topology_prunes_only_complete_impossibility_and_retains_unknowns(tmp_path, monkeypatch):
+    from chembounce_synthesis import route_first
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "topology_rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {"id": "split", "smarts": "[C:1].[C:2]>>[C:1][C:2]", "source": "test"},
+                    {"id": "unary", "smarts": "[C:1]>>[C:1]", "source": "test"},
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    catalog = SimpleNamespace(sha256="test")
+    settings = RouteFirstLimits(**limits(max_steps=1))
+    ring = RouteFirstSearch("C1CC1", catalog, rules, settings)
+    ring._phase = 2
+    assert [rule.id for rule, _ in ring._select_rules("C1CC1", 2)] == ["unary"]
+    assert ring.report["topology_pruned_rules"] == 1
+    assert ring.report["topology_match_requests"] == 1
+    assert ring.report["rule_inspections"] <= settings.max_rule_inspections
+    charged = ring.report["topology_spec_graph_visits"]
+    assert charged <= route_first.MAX_TOPOLOGY_SPEC_GRAPH_VISITS
+    assert ring._topology_assess("C1CC1", molecule("C1CC1"), rules.get("split")) == "impossible"
+    assert ring.report["topology_match_requests"] == 1
+    assert ring.report["topology_spec_graph_visits"] == charged
+    assert ring.report["topology_assessment_cache_hits"] == 1
+    assert len(ring._topology_assessment_cache) <= route_first.MAX_TOPOLOGY_MATCH_REQUESTS
+
+    # The 65th match is a sentinel; a truncated enumeration cannot prove all
+    # cuts impossible even when early ring matches are impossible.
+    long_chain = "C" * 70
+    truncated = RouteFirstSearch(long_chain, catalog, rules, settings)
+    assert truncated._topology_assess(long_chain, molecule(long_chain), rules.get("split")) == "unknown"
+    assert truncated.report["topology_unknown_reasons"] == {"match_truncation": 1}
+    assert truncated.report["topology_match_requests"] == 1
+
+    monkeypatch.setattr(route_first, "MAX_TOPOLOGY_MATCH_REQUESTS", 0)
+    capped = RouteFirstSearch("C1CC1", catalog, rules, settings)
+    capped._phase = 2
+    assert [rule.id for rule, _ in capped._select_rules("C1CC1", 2)] == ["split", "unary"]
+    assert capped.report["topology_unknown_reasons"]["match_request_budget"] == 1
+    assert capped.report["topology_match_requests"] == 0
+    assert len(capped._topology_assessment_cache) == 0
+    monkeypatch.setattr(route_first, "MAX_TOPOLOGY_MATCH_REQUESTS", 128)
+    monkeypatch.setattr(route_first, "MAX_TOPOLOGY_SPEC_GRAPH_VISITS", 0)
+    graph_capped = RouteFirstSearch("C1CC1", catalog, rules, settings)
+    graph_capped._phase = 2
+    assert [rule.id for rule, _ in graph_capped._select_rules("C1CC1", 2)] == ["split", "unary"]
+    assert graph_capped.report["topology_unknown_reasons"]["spec_budget_or_deadline"] == 2
+    assert graph_capped.report["topology_spec_graph_visits"] == 0
+    expired = RouteFirstSearch("C1CC1", catalog, rules, settings, deadline_monotonic=time.monotonic() - 1)
+    assert expired._topology_assess("C1CC1", molecule("C1CC1"), rules.get("split")) == "unknown"
+    assert expired.report["topology_match_requests"] == 0
+
+
+def test_single_cross_edge_local_reverse_suppresses_implicit_resurrection(tmp_path):
+    from rdkit.Chem import rdChemReactions
+
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "split.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [{"id": "split", "smarts": "[C:1].[C:2]>>[C:1][C:2]", "source": "test"}],
+            }
+        )
+    )
+    rules = Rules(path)
+    rule = rules.get("split")
+    original = rdChemReactions.ReactionToSmarts(rule.reaction)
+    settings = RouteFirstLimits(**limits(max_steps=2))
+    ring = RouteFirstSearch("C1CC1", SimpleNamespace(sha256="test"), rules, settings)
+    ring._phase = 2
+    assert ring._reverse(rule, "C1CC1", False) == []
+    assert ring.report["reverse_attempts"] == ring.report["reverse_nonring_query_calls"] == 1
+    assert ring.report["reverse_nonring_empty"] == 1
+    assert ring.report["reverse_fallbacks"] == 0
+    assert ring._reverse(rule, "C1CC1", True)
+    assert ring.report["reverse_hint_quality_counts"]["explicit_fallback"] == 1
+    assert rdChemReactions.ReactionToSmarts(rule.reaction) == original
+
+    multi_path = tmp_path / "multi.json"
+    multi_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "multi",
+                        "smarts": "[C:1][C:2].[N:3]>>[C:1]1[C:2][N:3]1",
+                        "source": "test",
+                    }
+                ],
+            }
+        )
+    )
+    multi_rules = Rules(multi_path)
+    multi = RouteFirstSearch("C1CN1", SimpleNamespace(sha256="test"), multi_rules, settings)
+    multi._phase = 2
+    multi._reverse(multi_rules.get("multi"), "C1CN1", False)
+    assert multi.report["reverse_nonring_query_calls"] == 0
+
+    linear = RouteFirstSearch("CC", SimpleNamespace(sha256="test"), rules, settings)
+    linear._phase = 2
+    guides = linear._reverse(rule, "CC", False)
+    assert guides and 1 <= linear.report["reverse_partition_checks"] <= settings.max_reverse_outcomes
+    before = linear.report["reverse_attempts"]
+    linear._phase = 1
+    assert linear._reverse(rule, "CC", False) == guides
+    assert linear.report["reverse_attempts"] == before
+    assert linear.report["reverse_nonring_query_compiles"] == 1
+    assert linear.report["reverse_nonring_query_calls"] == 1
+    assert linear.report["reverse_outcomes"] <= settings.max_reverse_outcomes
+    assert rdChemReactions.ReactionToSmarts(rule.reaction) == original
+
+    outer_first = RouteFirstSearch("CC", SimpleNamespace(sha256="test"), rules, settings)
+    first_guides = outer_first._reverse(rule, "CC", False, record_centers=True)
+    assert first_guides == guides
+    assert outer_first.report["reverse_nonring_query_calls"] == 1
+    outer_first._phase = 2
+    assert outer_first._reverse(rule, "CC", False) == first_guides
+    assert outer_first.report["reverse_attempts"] == 1
+    assert outer_first.report["reverse_nonring_query_calls"] == 1
+
+
+def test_reverse_deadline_expiry_during_static_check_or_local_compile_skips_chemistry(tmp_path, monkeypatch):
+    from chembounce_synthesis import route_first
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [{"id": "split", "smarts": "[C:1].[C:2]>>[C:1][C:2]", "source": "test"}],
+            }
+        )
+    )
+    rules = Rules(path)
+    rule = rules.get("split")
+    settings = RouteFirstLimits(**limits(max_steps=2))
+    static = RouteFirstSearch("CC", SimpleNamespace(sha256="test"), rules, settings, time.monotonic() + 30)
+
+    def expire_static(_rule):
+        static.deadline = time.monotonic() - 1
+        return None, "spec_budget_or_deadline"
+
+    monkeypatch.setattr(static, "_topology_spec", expire_static)
+    assert static._reverse(rule, "CC", False) == []
+    assert static.report["reverse_attempts"] == 1
+    assert static.report["reverse_partition_checks"] == 0
+    assert static.report["reverse_fallbacks"] == 0
+    assert static.report["reverse_local_template_compiles"] == 0
+
+    compiled = RouteFirstSearch("CC", SimpleNamespace(sha256="test"), rules, settings, time.monotonic() + 30)
+    original_compile = route_first.tagged_reverse_reaction
+
+    def expire_compile(rule):
+        result = original_compile(rule)
+        compiled.deadline = time.monotonic() - 1
+        return result
+
+    monkeypatch.setattr(route_first, "tagged_reverse_reaction", expire_compile)
+    assert compiled._reverse(rule, "CC", False) == []
+    assert compiled.report["reverse_attempts"] == 1
+    assert compiled.report["reverse_nonring_query_calls"] == 0
+    assert compiled.report["reverse_partition_checks"] == 0
+    assert compiled.report["reverse_fallbacks"] == 0
 
 
 def test_optional_outer_center_metadata_never_repeats_cached_reverse_work(tmp_path):

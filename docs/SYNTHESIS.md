@@ -77,7 +77,7 @@ caps.
 
 An eighth v2 development probe that changed the second catalog-block choice
 reached only two of 12 inputs before model and 3D checks, so that change was
-reverted. The current pending revision instead allocates the existing eight
+reverted. The retained revision instead allocates the existing eight
 outer search plans across distinct original-hit cut bonds recovered from the
 same capped reverse outcomes. It prefers complete role-conforming hints while
 retaining approximate, unary and explicit fallback plans. Each original-parent
@@ -88,13 +88,37 @@ retains both central typed aryl–amine disconnections that the prior plan order
 omitted on one development input. That control is a plan-selection result, not
 evidence that the catalog search or final gates produce a route. The revision
 has not yet been run on the fixed development panel.
-On those two retained guides, a separate catalog-free check found that the
-needed inner coupling rule remains outside the current four-rule selection.
-Under a hypothetical call to that rule with the unchanged four-outcome reverse
-cap, one guide yields no partition-valid outcome and the other yields only a
-peripheral methyl-bond cut. The inter-aromatic cut appears later in bounded
-product-template matches. The current center change therefore addresses one
-outer-plan loss without demonstrating recovery of the saved two-step route.
+
+The next bounded revision screens inner rule matches by an explicit graph
+condition. For a supported two-reactant template, it removes all mapped
+cross-reactant product bonds from each matched target graph and rejects the
+rule only when every completely enumerated match still connects mapped atoms
+from different reactant slots. Unclear maps, retained-atom bond deletions,
+truncated matches, unsupported reactions and exhausted work budgets keep the
+existing rule eligibility. Disappearing leaving-group atoms do not count as
+retained bond deletions. At most 128 extra match enumerations per search use
+64 matches plus one truncation sentinel each, with 262,144 shared rule-template
+and target-graph visits. The existing 512 rule inspections and four inner
+rules remain capped as before.
+
+For a statically supported template with exactly one such cross-reactant bond,
+one local reverse-query copy can require that bond to be nonring. This removes
+ring cuts that cannot partition the original target while keeping the same
+single reverse call and four raw outcomes. A zero-output restricted call cannot
+create an implicit whole-hit fallback; explicitly selected fallback rules
+remain available. Original rules, catalog molecules, forward replay and audit
+are untouched. Catalog-free original-hit controls found an already selected
+coupling rule with interaromatic raw cuts and a fourth-ranked coupling rule
+with typed interaromatic hints after this screen. They establish search-center
+reachability under the local bounds, not catalog availability or a complete
+supported route. The new policy has not yet been run on the fixed panel.
+Before the topology screen, a separate catalog-free check found that the
+needed inner coupling rule was outside the four-rule selection on those two
+guides. With the original reverse query and unchanged four-outcome cap, one
+guide yielded no partition-valid outcome and the other only a peripheral
+methyl-bond cut. The revised local nonring query changes that bounded center
+enumeration, as shown above, without demonstrating recovery of the saved
+two-step route.
 
 ## Optional catalog byte binding
 
