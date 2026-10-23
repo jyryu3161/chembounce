@@ -1,0 +1,411 @@
+{
+  "schema": "route-first-pre-evidence-portable-v14",
+  "status": "complete_model_free_not_adopted",
+  "source_commit": "d3dcadb3a4bde5bcf79f7c18e03e84e799d97e9a",
+  "scope": "Fixed 12-input development panel, unchanged original-hit pre-gates and full route audit; only explicit missing-role fallback ordinary second selection changed. No forward-model or 3D evaluation.",
+  "artifacts": {
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v14/plan.json": "cc433d285496f363d91666f43654b6693a8874c840fe4aaf02edcef4102aa73a",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v14/probe.py": "b975a922b185f83720d0019d2463f7c406773c8bc564b032b0eec8b36e1914fb",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v14/result.json": "4100f420a4d536ff2a4fff66f0ad01061257a16d941c98446e8fbb3437807c63",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v14/analyze.py": "5a7cac6cc85170e33d0593c68c014e97339a71287ec0515f863caf3dec18a8e6",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v14/analysis.json": "b2e6fa35618c7d296a0e65c8d8429a59a640eea27a9ac76ed766894b8e11415f",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v14/run.log": "44d307372f88672140649d932f2f3cff82b210fcf2ad2b4ae8a00e99b219a275"
+  },
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "b6f5e70ea69ce342b143b79805c1761100cf3e9c49f9831679ff48e309be3363",
+    "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff"
+  },
+  "shared_catalog_rules_config_panel_sha256": {
+    "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "config_sha256": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+    "panel_sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5"
+  },
+  "summary": {
+    "v13": {
+      "covered_inputs": 6,
+      "unique_input_product_pairs": 52,
+      "routes": 55,
+      "one_step_routes": 20,
+      "two_step_routes": 35,
+      "generation_seconds_sum_excluding_catalog": 547.029,
+      "generation_seconds_median_excluding_catalog": 43.442
+    },
+    "v14": {
+      "covered_inputs": 6,
+      "unique_input_product_pairs": 56,
+      "routes": 59,
+      "one_step_routes": 24,
+      "two_step_routes": 35,
+      "generation_seconds_sum_excluding_catalog": 549.498,
+      "generation_seconds_median_excluding_catalog": 44.207,
+      "fallback_hit_second_numeric_totals": {
+        "fallback_hit_second_queries": 9,
+        "fallback_hit_second_replacements": 5,
+        "fallback_hit_second_tanimotos": 5321,
+        "fallback_hit_second_samples_omitted": 0
+      },
+      "fallback_hit_second_legacy_reason_totals": {
+        "no_ordinary_second": 4
+      }
+    }
+  },
+  "per_input": [
+    {
+      "id": "CHEMBL4630839-query-1",
+      "v13_products": 32,
+      "v14_products": 32,
+      "v13_routes": 32,
+      "v14_routes": 32,
+      "gained_products": [],
+      "lost_products": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "new_second_choice_work": {
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_tanimotos": 0,
+        "fallback_hit_second_queries": 0,
+        "fallback_hit_second_replacements": 0,
+        "fallback_hit_second_legacy_reasons": {},
+        "fallback_hit_second_samples": [],
+        "fallback_hit_second_samples_omitted": 0
+      }
+    },
+    {
+      "id": "CHEMBL4630839-query-2",
+      "v13_products": 1,
+      "v14_products": 1,
+      "v13_routes": 1,
+      "v14_routes": 1,
+      "gained_products": [],
+      "lost_products": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "new_second_choice_work": {
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_tanimotos": 0,
+        "fallback_hit_second_queries": 0,
+        "fallback_hit_second_replacements": 0,
+        "fallback_hit_second_legacy_reasons": {},
+        "fallback_hit_second_samples": [],
+        "fallback_hit_second_samples_omitted": 0
+      }
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "v13_products": 11,
+      "v14_products": 11,
+      "v13_routes": 14,
+      "v14_routes": 14,
+      "gained_products": [],
+      "lost_products": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "new_second_choice_work": {
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_tanimotos": 0,
+        "fallback_hit_second_queries": 0,
+        "fallback_hit_second_replacements": 0,
+        "fallback_hit_second_legacy_reasons": {},
+        "fallback_hit_second_samples": [],
+        "fallback_hit_second_samples_omitted": 0
+      }
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "v13_products": 4,
+      "v14_products": 4,
+      "v13_routes": 4,
+      "v14_routes": 4,
+      "gained_products": [],
+      "lost_products": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "new_second_choice_work": {
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_tanimotos": 0,
+        "fallback_hit_second_queries": 0,
+        "fallback_hit_second_replacements": 0,
+        "fallback_hit_second_legacy_reasons": {},
+        "fallback_hit_second_samples": [],
+        "fallback_hit_second_samples_omitted": 0
+      }
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "v13_products": 0,
+      "v14_products": 0,
+      "v13_routes": 0,
+      "v14_routes": 0,
+      "gained_products": [],
+      "lost_products": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "new_second_choice_work": {
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_tanimotos": 0,
+        "fallback_hit_second_queries": 0,
+        "fallback_hit_second_replacements": 0,
+        "fallback_hit_second_legacy_reasons": {},
+        "fallback_hit_second_samples": [],
+        "fallback_hit_second_samples_omitted": 0
+      }
+    },
+    {
+      "id": "CHEMBL5163-query-2",
+      "v13_products": 0,
+      "v14_products": 0,
+      "v13_routes": 0,
+      "v14_routes": 0,
+      "gained_products": [],
+      "lost_products": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "new_second_choice_work": {
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_tanimotos": 911,
+        "fallback_hit_second_queries": 3,
+        "fallback_hit_second_replacements": 1,
+        "fallback_hit_second_legacy_reasons": {
+          "no_ordinary_second": 2
+        },
+        "fallback_hit_second_samples": [
+          {
+            "rule_id": "synllama-rule-026",
+            "role_slot": 1,
+            "placeholder_target": "C",
+            "first": "Br/C=C/CBr",
+            "old_second": "Br/C=C/CCBr",
+            "new_second": "CC1(CI)COC1",
+            "old_second_hit_tanimoto": 0.038461538461538464,
+            "new_second_hit_tanimoto": 0.11764705882352941,
+            "comparison_count": 911
+          }
+        ],
+        "fallback_hit_second_samples_omitted": 0
+      }
+    },
+    {
+      "id": "CHEMBL3334418-query-1",
+      "v13_products": 2,
+      "v14_products": 6,
+      "v13_routes": 2,
+      "v14_routes": 6,
+      "gained_products": [
+        "C[C@H](CC1CCCCC1)Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+        "C[C@H](CC1CCCCC1)Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O",
+        "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(O)c2OCC1CCCCC1",
+        "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(OCC1CCCCC1)c2O"
+      ],
+      "lost_products": [],
+      "gained_route_graph_sha256": [
+        "55603a0e2332970e0095bcc7b6098647bf18b59cb08747ddd7013dece621deb3",
+        "5cb18ca6397b10d76fa581d52ad18fb955850ff5d5e29a5f6324ebf26431fd68",
+        "c8d8e070990d966a7d739bd04940156723d248696f9daebddb0038203da6882f",
+        "dd662255a3d132ac485cb1899feccfaa114eb9344e91910daaa34f08a861fc9a"
+      ],
+      "lost_route_graph_sha256": [],
+      "new_second_choice_work": {
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_tanimotos": 2205,
+        "fallback_hit_second_queries": 2,
+        "fallback_hit_second_replacements": 2,
+        "fallback_hit_second_legacy_reasons": {},
+        "fallback_hit_second_samples": [
+          {
+            "rule_id": "synllama-rule-026",
+            "role_slot": 1,
+            "placeholder_target": "C",
+            "first": "Br/C=C/CBr",
+            "old_second": "Br/C=C/CCBr",
+            "new_second": "BrCC1CCCCC1",
+            "old_second_hit_tanimoto": 0.0,
+            "new_second_hit_tanimoto": 0.1111111111111111,
+            "comparison_count": 911
+          },
+          {
+            "rule_id": "synllama-rule-030",
+            "role_slot": 0,
+            "placeholder_target": "C",
+            "first": "C=C[C@@H]1CCC[C@H]1O",
+            "old_second": "C#CC(C)(C)CO",
+            "new_second": "C[C@@H](O)CC1CCCCC1",
+            "old_second_hit_tanimoto": 0.03389830508474576,
+            "new_second_hit_tanimoto": 0.14285714285714285,
+            "comparison_count": 1294
+          }
+        ],
+        "fallback_hit_second_samples_omitted": 0
+      }
+    },
+    {
+      "id": "CHEMBL3334418-query-2",
+      "v13_products": 2,
+      "v14_products": 2,
+      "v13_routes": 2,
+      "v14_routes": 2,
+      "gained_products": [],
+      "lost_products": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "new_second_choice_work": {
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_tanimotos": 2205,
+        "fallback_hit_second_queries": 2,
+        "fallback_hit_second_replacements": 2,
+        "fallback_hit_second_legacy_reasons": {},
+        "fallback_hit_second_samples": [
+          {
+            "rule_id": "synllama-rule-026",
+            "role_slot": 1,
+            "placeholder_target": "C",
+            "first": "Br/C=C/CBr",
+            "old_second": "Br/C=C/CCBr",
+            "new_second": "CC(C)N(C)C(=O)CCl",
+            "old_second_hit_tanimoto": 0.0,
+            "new_second_hit_tanimoto": 0.08333333333333333,
+            "comparison_count": 911
+          },
+          {
+            "rule_id": "synllama-rule-030",
+            "role_slot": 0,
+            "placeholder_target": "C",
+            "first": "C=C[C@@H]1CCC[C@H]1O",
+            "old_second": "C#CC(C)(C)CO",
+            "new_second": "O=c1cc1CCO",
+            "old_second_hit_tanimoto": 0.03389830508474576,
+            "new_second_hit_tanimoto": 0.10714285714285714,
+            "comparison_count": 1294
+          }
+        ],
+        "fallback_hit_second_samples_omitted": 0
+      }
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "v13_products": 0,
+      "v14_products": 0,
+      "v13_routes": 0,
+      "v14_routes": 0,
+      "gained_products": [],
+      "lost_products": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "new_second_choice_work": {
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_tanimotos": 0,
+        "fallback_hit_second_queries": 0,
+        "fallback_hit_second_replacements": 0,
+        "fallback_hit_second_legacy_reasons": {},
+        "fallback_hit_second_samples": [],
+        "fallback_hit_second_samples_omitted": 0
+      }
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "v13_products": 0,
+      "v14_products": 0,
+      "v13_routes": 0,
+      "v14_routes": 0,
+      "gained_products": [],
+      "lost_products": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "new_second_choice_work": {
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_tanimotos": 0,
+        "fallback_hit_second_queries": 0,
+        "fallback_hit_second_replacements": 0,
+        "fallback_hit_second_legacy_reasons": {},
+        "fallback_hit_second_samples": [],
+        "fallback_hit_second_samples_omitted": 0
+      }
+    },
+    {
+      "id": "CHEMBL3864-query-1",
+      "v13_products": 0,
+      "v14_products": 0,
+      "v13_routes": 0,
+      "v14_routes": 0,
+      "gained_products": [],
+      "lost_products": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "new_second_choice_work": {
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_tanimotos": 0,
+        "fallback_hit_second_queries": 2,
+        "fallback_hit_second_replacements": 0,
+        "fallback_hit_second_legacy_reasons": {
+          "no_ordinary_second": 2
+        },
+        "fallback_hit_second_samples": [],
+        "fallback_hit_second_samples_omitted": 0
+      }
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "v13_products": 0,
+      "v14_products": 0,
+      "v13_routes": 0,
+      "v14_routes": 0,
+      "gained_products": [],
+      "lost_products": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "new_second_choice_work": {
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_tanimotos": 0,
+        "fallback_hit_second_queries": 0,
+        "fallback_hit_second_replacements": 0,
+        "fallback_hit_second_legacy_reasons": {},
+        "fallback_hit_second_samples": [],
+        "fallback_hit_second_samples_omitted": 0
+      }
+    }
+  ],
+  "checks": {
+    "terminal_exit_code": 0,
+    "all_12_inputs_complete": true,
+    "source_harness_plan_pre_post_hashes_match": true,
+    "frozen_analyzer_hash_matches": true,
+    "panel_configs_assets_and_base_caps_equal_v13": true,
+    "all_checked_work_counters_within_frozen_caps": true,
+    "all_v13_product_sets_retained": true,
+    "all_v13_exact_route_graphs_retained": true,
+    "implementation_focused_tests_passed": 69,
+    "full_repository_suite_on_this_runtime": "not_run; previous 3603-pass receipt belongs to runtime 935ff0f"
+  },
+  "decision": {
+    "pre_evidence_coverage": 6,
+    "model_comparison_entry_necessary_condition_met": true,
+    "latest_actual_all_step_forward_support_inputs": 4,
+    "historical_baseline_all_step_forward_support_inputs": 5,
+    "latest_actual_qualified_products": 3,
+    "new_forward_support": "not_evaluated",
+    "new_3d_qualification": "not_evaluated",
+    "p1_complete": false,
+    "merge_as_p1_success": false,
+    "observation": "Four additional exact products and four one-step audited graphs on CHEMBL3334418-query-1; all other eligible product and graph sets unchanged. CHEMBL4247-query-2 remains unchanged; its previously unassessed route remains unknown.",
+    "next": "Resolve exact step-support bottlenecks with fixed small controls, including a separately predeclared typed-guide second-choice diagnostic. Do not repeat a full model comparison solely because pre-evidence coverage remains six.",
+    "limitations": [
+      "Development panel reused; no held-out generalization claim.",
+      "Model-free route audit does not establish synthesis feasibility, reaction conditions, yield, selectivity or current stock.",
+      "Generation timing excludes shared catalog load; no controlled speedup claim."
+    ]
+  }
+}
