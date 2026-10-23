@@ -1,0 +1,516 @@
+{
+  "schema": "typed-guide-hit-context-secondary-control-portable-v1",
+  "status": "complete_local_one_new_audited_route_not_adopted",
+  "runtime_commit": "d3dcadb3a4bde5bcf79f7c18e03e84e799d97e9a",
+  "scope": "Fixed offline ranking of three saved typed-guide contexts followed by one old/new two-workitem connected-route control. No production policy extension, forward model, 3D or full-panel rerun.",
+  "artifacts": {
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-hit-context-prototype-v1/policy.json": "ead7f6f56f46010418f59b1a348643811f9891c000b787ec94fc43bc6a45836e",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-hit-context-prototype-v1/probe.py": "f3f9dbb36dc546db58cc0eedf4899519a1bb98cac2e58d0222782a6ca6be5352",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-hit-context-prototype-v1/result.json": "8f014f8070a8128e450cb5787611df471dba88ccee4f94c1bf546b278a146846",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-hit-context-prototype-v1/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-second-joint-control-v1/plan.json": "855018affb4f7d49a3a8710e72b244f326c64274347b8bedaeaa17ddaa488e6c",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-second-joint-control-v1/probe.py": "5d45b6afad72e0f37a990d62277ac61f2a07b8df8e1a55f4a006e7fa38a87233",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-second-joint-control-v1/result.json": "33d2c89c34b043119719255885b17194e67982fbca26b525a264d93c6c557e3c",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-second-joint-control-v1/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "b6f5e70ea69ce342b143b79805c1761100cf3e9c49f9831679ff48e309be3363",
+    "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff"
+  },
+  "offline_ranking": {
+    "work": {
+      "hit_molecule_parses": 1,
+      "hit_fingerprint_calls": 1,
+      "candidate_molecule_parses": 24573,
+      "candidate_fingerprint_calls": 24573,
+      "hit_candidate_tanimoto_calls": 24573,
+      "source_stereo_perceptions": 3,
+      "source_stereo_atom_bond_charges": 81,
+      "source_stereo_cache_hits": 0,
+      "catalog_scans": 0,
+      "forward_calls": 0,
+      "model_calls": 0
+    },
+    "ranked_rows_read": 24576,
+    "contexts": [
+      {
+        "context_key": "305957a6d32ca096daa7ac18211f110bf00748327e288b85bf5d25b086e533f8",
+        "input_id": "CHEMBL4247-query-2",
+        "phase": 2,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 1,
+        "inner_hint_quality": "typed",
+        "outer_plan_indices": [],
+        "original_target": "CN(c1ccccc1Cl)S(C)(=O)=O",
+        "original_role_smarts": "[Cl,Br,I][c:2]",
+        "ranked_rows": 8192,
+        "anchored_rows": 0,
+        "ordinary_rows": 8192,
+        "original_first": {
+          "canonical_smiles": "CN(N=O)c1ccccc1Cl",
+          "saved_catalog_block_id": "structure-sha256:1c809c82be6627b0ce284a2d5920a03213384d72a0fd6cac9f8611696bc86b60",
+          "catalog_id_status": "saved_selected_block",
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "source_smiles_sha256": "1c809c82be6627b0ce284a2d5920a03213384d72a0fd6cac9f8611696bc86b60",
+          "guide_bit_tanimoto": 0.5161290322580645,
+          "known_anchor_count": 0,
+          "rank_class": "ordinary",
+          "class_rank": 1
+        },
+        "old_second": {
+          "canonical_smiles": "CS(=O)(=O)c1ccccc1Cl",
+          "saved_catalog_block_id": "structure-sha256:e27f3dd1ad7b0f8b038cd547937293eda206710bfb4cf179453f4ea05245ac93",
+          "catalog_id_status": "saved_selected_block",
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "source_smiles_sha256": "e27f3dd1ad7b0f8b038cd547937293eda206710bfb4cf179453f4ea05245ac93",
+          "guide_bit_tanimoto": 0.4666666666666667,
+          "known_anchor_count": 0,
+          "rank_class": "ordinary",
+          "class_rank": 2,
+          "original_hit_bit_tanimoto": 0.11494252873563218
+        },
+        "new_second": {
+          "canonical_smiles": "COc1cc(Br)ccc1NN",
+          "saved_catalog_block_id": null,
+          "catalog_id_status": "not_present_in_saved_rank_rows",
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "source_smiles_sha256": "46b7e68d57c59e6c853a3794659f70742c56ac0b09dac2c5e53354c4cad8073b",
+          "guide_bit_tanimoto": 0.08888888888888889,
+          "known_anchor_count": 0,
+          "rank_class": "ordinary",
+          "class_rank": 6258,
+          "original_hit_bit_tanimoto": 0.1724137931034483
+        },
+        "decision": "different_second",
+        "stereo_budget_reason": null,
+        "same_second": false,
+        "hit_candidate_comparisons": 8191
+      },
+      {
+        "context_key": "d3918aa5d04c9d62ea8005a87286dee679c6eff7a57d36bf3f4477e706219af5",
+        "input_id": "CHEMBL4247-query-2",
+        "phase": 2,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 1,
+        "inner_hint_quality": "typed",
+        "outer_plan_indices": [],
+        "original_target": "Cc1cc(Cl)n2nc(Cl)ncc12",
+        "original_role_smarts": "[Cl,Br,I][c:2]",
+        "ranked_rows": 8192,
+        "anchored_rows": 0,
+        "ordinary_rows": 8192,
+        "original_first": {
+          "canonical_smiles": "Cc1cc(Cl)n2ncc(C)c2n1",
+          "saved_catalog_block_id": "structure-sha256:e0c31529387159df69d5a27b141922730615a70bdd0d80bbe7fe8692ad119ce8",
+          "catalog_id_status": "saved_selected_block",
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "source_smiles_sha256": "e0c31529387159df69d5a27b141922730615a70bdd0d80bbe7fe8692ad119ce8",
+          "guide_bit_tanimoto": 0.3684210526315789,
+          "known_anchor_count": 0,
+          "rank_class": "ordinary",
+          "class_rank": 1
+        },
+        "old_second": {
+          "canonical_smiles": "Cc1cnn2c(Cl)cc(Cl)nc12",
+          "saved_catalog_block_id": "structure-sha256:26c15eb6aa221d34abbcdda7cc3e79a995fda8cd223c59305aebf182995775f4",
+          "catalog_id_status": "saved_selected_block",
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "source_smiles_sha256": "26c15eb6aa221d34abbcdda7cc3e79a995fda8cd223c59305aebf182995775f4",
+          "guide_bit_tanimoto": 0.3684210526315789,
+          "known_anchor_count": 0,
+          "rank_class": "ordinary",
+          "class_rank": 2,
+          "original_hit_bit_tanimoto": 0.10752688172043011
+        },
+        "new_second": {
+          "canonical_smiles": "COC(=O)Cn1ccc2ncc(Br)cc21",
+          "saved_catalog_block_id": null,
+          "catalog_id_status": "not_present_in_saved_rank_rows",
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "source_smiles_sha256": "378e1c17baef7d43d2ac252084d1802ecbea9b7ffce491b7f8f2b4a654ca90c9",
+          "guide_bit_tanimoto": 0.16666666666666666,
+          "known_anchor_count": 0,
+          "rank_class": "ordinary",
+          "class_rank": 1274,
+          "original_hit_bit_tanimoto": 0.2
+        },
+        "decision": "different_second",
+        "stereo_budget_reason": null,
+        "same_second": false,
+        "hit_candidate_comparisons": 8191
+      },
+      {
+        "context_key": "49798678ebe81ab0849e40f8fd98106d3472f0f0ab79d36098f7b38655dded9e",
+        "input_id": "CHEMBL4247-query-2",
+        "phase": 1,
+        "rule_id": "synllama-rule-042",
+        "role_slot": 1,
+        "inner_hint_quality": null,
+        "outer_plan_indices": [
+          1
+        ],
+        "original_target": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N",
+        "original_role_smarts": "[N;$(NC)&!$(N=*)&!$([N&-])&!$(N#*)&!$([N&D3])&!$([N&D4])&!$(N[c,O])&!$(N[C,S]=[S,O,N]),H2&$(Nc1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):2]",
+        "ranked_rows": 8192,
+        "anchored_rows": 0,
+        "ordinary_rows": 8192,
+        "original_first": {
+          "canonical_smiles": "COc1cc(C(N)=O)ccc1N",
+          "saved_catalog_block_id": "structure-sha256:67abce1083b75e3ceb756aafcbdfec8e5dbc5b87970f3f7908565c742f4dc8d5",
+          "catalog_id_status": "saved_selected_block",
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "source_smiles_sha256": "67abce1083b75e3ceb756aafcbdfec8e5dbc5b87970f3f7908565c742f4dc8d5",
+          "guide_bit_tanimoto": 0.43478260869565216,
+          "known_anchor_count": 0,
+          "rank_class": "ordinary",
+          "class_rank": 1
+        },
+        "old_second": {
+          "canonical_smiles": "COc1cc(CC(=O)O)ccc1N",
+          "saved_catalog_block_id": "structure-sha256:66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a",
+          "catalog_id_status": "saved_selected_block",
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "source_smiles_sha256": "66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a",
+          "guide_bit_tanimoto": 0.40816326530612246,
+          "known_anchor_count": 0,
+          "rank_class": "ordinary",
+          "class_rank": 2,
+          "original_hit_bit_tanimoto": 0.16483516483516483
+        },
+        "new_second": {
+          "canonical_smiles": "CN(c1ccccc1CN)S(C)(=O)=O",
+          "saved_catalog_block_id": null,
+          "catalog_id_status": "not_present_in_saved_rank_rows",
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "source_smiles_sha256": "9f0c0c67b8ec9369f2077dec0880cc7159a93f4cbd28191a54d53785674abe28",
+          "guide_bit_tanimoto": 0.11666666666666667,
+          "known_anchor_count": 0,
+          "rank_class": "ordinary",
+          "class_rank": 6040,
+          "original_hit_bit_tanimoto": 0.23809523809523808
+        },
+        "decision": "different_second",
+        "stereo_budget_reason": null,
+        "same_second": false,
+        "hit_candidate_comparisons": 8191
+      }
+    ],
+    "budget_scope": "Three from-zero shared stereo checks; existing production cache/remaining comparison budget reachability is not established."
+  },
+  "paired_route_control": {
+    "old_positive_graphs_reproduced": true,
+    "source_and_bound_inputs_unchanged": true,
+    "work": {
+      "generation_inner_apply_calls": 16,
+      "generation_outer_apply_calls": 16,
+      "generation_apply_cache_misses": 27,
+      "verification_apply_calls": 6,
+      "verification_apply_cache_misses": 0,
+      "audit_apply_calls": 6,
+      "audit_apply_cache_misses": 0,
+      "audit_route_calls": 3,
+      "gate_product_instances": 16,
+      "gate_fingerprint_calls": 8,
+      "hit_fingerprint_calls": 1,
+      "search_hit_fingerprint_calls": 2,
+      "generation_inner_apply_cache_misses": 12,
+      "generation_outer_apply_cache_misses": 15,
+      "all_arms_actual_fingerprint_calls": 21
+    },
+    "arms": {
+      "old": {
+        "work": {
+          "inner_generation_calls": 8,
+          "outer_generation_calls": 12,
+          "retained_generation_product_instances": 22,
+          "gate_product_instances": 12,
+          "gate_fingerprint_calls": 6,
+          "gate_deadline_unassessed": 0,
+          "direct_verify_calls": 2,
+          "audit_route_calls": 2,
+          "generation_truncated_calls": 0
+        },
+        "workitems": [
+          {
+            "name": "workitem_0",
+            "role_compatible_intermediates": 4,
+            "beam_selected_intermediates": 4
+          },
+          {
+            "name": "workitem_1",
+            "role_compatible_intermediates": 2,
+            "beam_selected_intermediates": 2
+          }
+        ],
+        "audited_products": [
+          {
+            "product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+            "hit_bit_tanimoto": 0.35294117647058826,
+            "route": {
+              "schema_version": 1,
+              "root": "or",
+              "nodes": [
+                {
+                  "id": "ib0",
+                  "building_block_id": "structure-sha256:e646a475dcf77c33f2457b60197e020aa8bab7baa076a8c2d602078d9521b792"
+                },
+                {
+                  "id": "ib1",
+                  "building_block_id": "structure-sha256:26c15eb6aa221d34abbcdda7cc3e79a995fda8cd223c59305aebf182995775f4"
+                },
+                {
+                  "id": "ir",
+                  "rule_id": "synllama-rule-036",
+                  "reactants": [
+                    "ib0",
+                    "ib1"
+                  ],
+                  "product": "Cc1cnn2c(-c3ccccc3S(C)(=O)=O)cc(Cl)nc12"
+                },
+                {
+                  "id": "ob1",
+                  "building_block_id": "structure-sha256:67abce1083b75e3ceb756aafcbdfec8e5dbc5b87970f3f7908565c742f4dc8d5"
+                },
+                {
+                  "id": "or",
+                  "rule_id": "synllama-rule-042",
+                  "reactants": [
+                    "ir",
+                    "ob1"
+                  ],
+                  "product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1"
+                }
+              ]
+            },
+            "audit": {
+              "strict_eligible": true,
+              "atom_origin_status": "complete",
+              "stereo_status": "specified_correspondence",
+              "route_binding_sha256": "69358463ec85b72dd1262f21baa64b646cfef30f4a3b9fbe7a4c74961eccb3bd",
+              "step_enumerations": [
+                {
+                  "requested_product_limit": 16,
+                  "raw_entries_observed": 2,
+                  "examined_entries": 2,
+                  "truncated": false,
+                  "exact_matching_witnesses": 1,
+                  "invalid_entries": []
+                },
+                {
+                  "requested_product_limit": 16,
+                  "raw_entries_observed": 1,
+                  "examined_entries": 1,
+                  "truncated": false,
+                  "exact_matching_witnesses": 1,
+                  "invalid_entries": []
+                }
+              ],
+              "step_strict_eligible": [
+                true,
+                true
+              ]
+            }
+          },
+          {
+            "product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+            "hit_bit_tanimoto": 0.36,
+            "route": {
+              "schema_version": 1,
+              "root": "or",
+              "nodes": [
+                {
+                  "id": "ib0",
+                  "building_block_id": "structure-sha256:30001f48a17b8fad69872511ffa73e953020d092f3056e028e2a1101a00ee29d"
+                },
+                {
+                  "id": "ib1",
+                  "building_block_id": "structure-sha256:e27f3dd1ad7b0f8b038cd547937293eda206710bfb4cf179453f4ea05245ac93"
+                },
+                {
+                  "id": "ir",
+                  "rule_id": "synllama-rule-036",
+                  "reactants": [
+                    "ib0",
+                    "ib1"
+                  ],
+                  "product": "Cc1ccc(-c2ccccc2S(C)(=O)=O)c2nc(Cl)ncc12"
+                },
+                {
+                  "id": "ob1",
+                  "building_block_id": "structure-sha256:67abce1083b75e3ceb756aafcbdfec8e5dbc5b87970f3f7908565c742f4dc8d5"
+                },
+                {
+                  "id": "or",
+                  "rule_id": "synllama-rule-042",
+                  "reactants": [
+                    "ir",
+                    "ob1"
+                  ],
+                  "product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1"
+                }
+              ]
+            },
+            "audit": {
+              "strict_eligible": true,
+              "atom_origin_status": "complete",
+              "stereo_status": "specified_correspondence",
+              "route_binding_sha256": "8d691aebe327c5059675f1be997c7d6e93f377cd9a68c706863aa0355512df3f",
+              "step_enumerations": [
+                {
+                  "requested_product_limit": 16,
+                  "raw_entries_observed": 1,
+                  "examined_entries": 1,
+                  "truncated": false,
+                  "exact_matching_witnesses": 1,
+                  "invalid_entries": []
+                },
+                {
+                  "requested_product_limit": 16,
+                  "raw_entries_observed": 1,
+                  "examined_entries": 1,
+                  "truncated": false,
+                  "exact_matching_witnesses": 1,
+                  "invalid_entries": []
+                }
+              ],
+              "step_strict_eligible": [
+                true,
+                true
+              ]
+            }
+          }
+        ],
+        "first_gate_rejections": {
+          "polar_reference_capacity_below_minimum": 6,
+          "hit_tanimoto": 4
+        },
+        "unassessed_reasons": {}
+      },
+      "new": {
+        "work": {
+          "inner_generation_calls": 8,
+          "outer_generation_calls": 4,
+          "retained_generation_product_instances": 12,
+          "gate_product_instances": 4,
+          "gate_fingerprint_calls": 2,
+          "gate_deadline_unassessed": 0,
+          "direct_verify_calls": 1,
+          "audit_route_calls": 1,
+          "generation_truncated_calls": 0
+        },
+        "workitems": [
+          {
+            "name": "workitem_0",
+            "role_compatible_intermediates": 0,
+            "beam_selected_intermediates": 0
+          },
+          {
+            "name": "workitem_1",
+            "role_compatible_intermediates": 2,
+            "beam_selected_intermediates": 2
+          }
+        ],
+        "audited_products": [
+          {
+            "product": "COc1cc(-c2ccc(C)c3cnc(NCc4ccccc4N(C)S(C)(=O)=O)nc23)ccc1NN",
+            "hit_bit_tanimoto": 0.36893203883495146,
+            "route": {
+              "schema_version": 1,
+              "root": "or",
+              "nodes": [
+                {
+                  "id": "ib0",
+                  "building_block_id": "structure-sha256:30001f48a17b8fad69872511ffa73e953020d092f3056e028e2a1101a00ee29d"
+                },
+                {
+                  "id": "ib1",
+                  "building_block_id": "structure-sha256:46b7e68d57c59e6c853a3794659f70742c56ac0b09dac2c5e53354c4cad8073b"
+                },
+                {
+                  "id": "ir",
+                  "rule_id": "synllama-rule-036",
+                  "reactants": [
+                    "ib0",
+                    "ib1"
+                  ],
+                  "product": "COc1cc(-c2ccc(C)c3cnc(Cl)nc23)ccc1NN"
+                },
+                {
+                  "id": "ob1",
+                  "building_block_id": "structure-sha256:9f0c0c67b8ec9369f2077dec0880cc7159a93f4cbd28191a54d53785674abe28"
+                },
+                {
+                  "id": "or",
+                  "rule_id": "synllama-rule-042",
+                  "reactants": [
+                    "ir",
+                    "ob1"
+                  ],
+                  "product": "COc1cc(-c2ccc(C)c3cnc(NCc4ccccc4N(C)S(C)(=O)=O)nc23)ccc1NN"
+                }
+              ]
+            },
+            "audit": {
+              "strict_eligible": true,
+              "atom_origin_status": "complete",
+              "stereo_status": "specified_correspondence",
+              "route_binding_sha256": "776826277549906a73ffb11619b74d39fa19ddd6400b89b350d346473b92c895",
+              "step_enumerations": [
+                {
+                  "requested_product_limit": 16,
+                  "raw_entries_observed": 1,
+                  "examined_entries": 1,
+                  "truncated": false,
+                  "exact_matching_witnesses": 1,
+                  "invalid_entries": []
+                },
+                {
+                  "requested_product_limit": 16,
+                  "raw_entries_observed": 1,
+                  "examined_entries": 1,
+                  "truncated": false,
+                  "exact_matching_witnesses": 1,
+                  "invalid_entries": []
+                }
+              ],
+              "step_strict_eligible": [
+                true,
+                true
+              ]
+            }
+          }
+        ],
+        "first_gate_rejections": {
+          "polar_reference_capacity_below_minimum": 2,
+          "hit_tanimoto": 1
+        },
+        "unassessed_reasons": {}
+      }
+    },
+    "new_products": [
+      "COc1cc(-c2ccc(C)c3cnc(NCc4ccccc4N(C)S(C)(=O)=O)nc23)ccc1NN"
+    ],
+    "lost_products": [
+      "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+      "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1"
+    ],
+    "generation_seconds_excluding_catalog": 2.291
+  },
+  "review_correction_before_execution": "Call19 exact selected IDs/order replaced the deduplicated context summary, whose different partner list would have invalidated the workitem contrast. No erroneous control was executed.",
+  "decision": {
+    "p1_complete": false,
+    "production_extension_adopted": false,
+    "new_forward_model_support": "not_evaluated",
+    "latest_actual_primary_inputs": 4,
+    "baseline_primary_inputs": 5,
+    "required_primary_inputs": "greater_than_5_of_12",
+    "next": "Check stepwise model support under a separately frozen small diagnostic before considering broader typed-guide implementation. Preserve both lost old routes and the failed intermediate connection; no outcome-based rank walking.",
+    "limits": [
+      "The new route is audited computationally, not experimentally validated.",
+      "One local new route does not establish panel improvement or production-budget reachability.",
+      "The previously unselected old route remains historically unassessed; no primary result is revised."
+    ]
+  }
+}
