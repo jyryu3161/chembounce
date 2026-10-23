@@ -1,0 +1,393 @@
+{
+  "adoption_assessment": "route_coverage_not_increased",
+  "artifact_bindings": {
+    "final_validation_sha256": "aed70919be5ddd8916a4010cc4f05170db6c6d8cf4d9d5229443eb5c261b4fc2",
+    "historical_baseline_binding_sha256": "1648860adf3e5d58690d2d46b2cb4cfeda5b4546edc5e8d6ae33c8172798f0a5",
+    "v13_analysis_sha256": "85ae1f56f099f1b6e1beb4935fe1ad5160d21781f7fb5ee3297c031ae5143955",
+    "v13_result_sha256": "4a30109bead11a94abd2a687bdd2070e9816c7758f7a5d4841d65e3ab1bef40d"
+  },
+  "completed_analysis_sha256": "3f563b42a4d6c536ff129eb9b917016cec413176807bd7a290a4474db2538303",
+  "cost": {
+    "historical_baseline_elapsed_seconds_median": 330.601,
+    "historical_baseline_elapsed_seconds_sum": 3333.941,
+    "interpretation": "Descriptive only: baseline was historical, not concurrently randomized; model/catalog loading included in child wall time; offline preparation/analysis excluded by frozen protocol.",
+    "route_first_elapsed_seconds_median": 204.236,
+    "route_first_elapsed_seconds_sum_including_child_loading": 2545.268,
+    "route_first_predictor_calls_sum": 24
+  },
+  "coverage": {
+    "baseline": {
+      "covered": 5,
+      "known_complete": 12,
+      "known_supported_input_product_pairs_sum": 69,
+      "unknown": 0
+    },
+    "route_first": {
+      "covered": 4,
+      "known_complete": 12,
+      "known_supported_input_product_pairs_sum": 8,
+      "unknown": 0
+    }
+  },
+  "execution_status_sha256": "4ea9db99ac7a400030842ca5279af0487afebab9283c98f2f28e8d3e46eb88ce",
+  "failure_summary": {
+    "all_input_failure_accounting": "Per-input selection_statuses, forward_step_causes, unselected_designs and pre-evidence/product counts are retained in per_input. Zero generated candidates on six inputs and no exact all-step support on two other pre-evidence-positive inputs account for eight uncovered inputs; no absence-of-chemistry claim.",
+    "confirmed_boundary": "All v13 products/graphs reproduced; selected routes at these two inputs fail exact all-step top-three forward support.",
+    "limitations": [
+      "Unselected routes have no model evidence; their forward support is unknown.",
+      "Top-three nonmatch does not establish chemical impossibility or physical failure.",
+      "Three qualified results are downstream computational qualifications on one input and do not meet primary adoption rule."
+    ],
+    "pre_evidence_to_actual_primary_loss_inputs": [
+      "CHEMBL4247-query-2",
+      "CHEMBL3334418-query-1"
+    ],
+    "unassessed_due_to_max_designs": 38
+  },
+  "frozen_protocol_sha256": "bb46cc8fdb399b92a8efc7956e6dfaa7eddc23ef643428a5d416ffe4056fce9e",
+  "full_validation": {
+    "passed": 3603,
+    "scope": "Local research environment only; optional skipped categories not validated.",
+    "skip_reasons": {
+      "Minimum-runtime capability assertion": 1,
+      "Optional locally installed Playwright": 1,
+      "Set CHEMBOUNCE_CREM_SOURCE to the exact b84003c official checkout in a dedicated CPU venv": 10,
+      "could not import 'oddt': No module named 'oddt'": 1,
+      "could not import 'pyarrow': No module named 'pyarrow'": 63
+    },
+    "skipped": 76
+  },
+  "historical_baseline_totals": {
+    "inputs": 12,
+    "primary_covered_inputs": 5,
+    "qualified_products": 0,
+    "reuse": "Historical baseline reused; no rerun.",
+    "supported_exact_changed_input_product_pairs": 69,
+    "supported_route_records": 304
+  },
+  "outcome_review": {
+    "path": "benchmark-results/qualified-development-20261023/route-first-actual-v2-outcome-review-v1/report.json",
+    "sha256": "9f54bb45e65726b107599edc532e9e9f8e2bd8fb0831023233a5a28f134cd8dc",
+    "verdict": "primary_failed_do_not_adopt_or_merge_as_P1_success"
+  },
+  "per_input": [
+    {
+      "actual_candidate_graphs": 32,
+      "actual_candidate_products": 32,
+      "actual_primary_covered": true,
+      "baseline_primary_covered": true,
+      "candidate_graph_multisets_equal": true,
+      "candidate_product_sets_equal": true,
+      "downstream_route_records": 3,
+      "elapsed_seconds_including_loading": 269.21459291595966,
+      "execution_status": "qualified_nonempty",
+      "forward_step_causes": {
+        "exact_full_product_match": 6
+      },
+      "input_id": "CHEMBL4630839-query-1",
+      "pre_evidence_graphs": 32,
+      "pre_evidence_products": 32,
+      "predictor_calls": 6,
+      "qualified_results": 3,
+      "selected_designs": 3,
+      "selection_statuses": {
+        "qualified": 3
+      },
+      "supported_exact_products": 3,
+      "supported_route_records": 3,
+      "unselected_designs": 29
+    },
+    {
+      "actual_candidate_graphs": 1,
+      "actual_candidate_products": 1,
+      "actual_primary_covered": true,
+      "baseline_primary_covered": true,
+      "candidate_graph_multisets_equal": true,
+      "candidate_product_sets_equal": true,
+      "downstream_route_records": 1,
+      "elapsed_seconds_including_loading": 220.69415478873998,
+      "execution_status": "completed_zero_qualified",
+      "forward_step_causes": {
+        "exact_full_product_match": 1
+      },
+      "input_id": "CHEMBL4630839-query-2",
+      "pre_evidence_graphs": 1,
+      "pre_evidence_products": 1,
+      "predictor_calls": 1,
+      "qualified_results": 0,
+      "selected_designs": 1,
+      "selection_statuses": {
+        "3d_failed": 1
+      },
+      "supported_exact_products": 1,
+      "supported_route_records": 1,
+      "unselected_designs": 0
+    },
+    {
+      "actual_candidate_graphs": 14,
+      "actual_candidate_products": 11,
+      "actual_primary_covered": true,
+      "baseline_primary_covered": true,
+      "candidate_graph_multisets_equal": true,
+      "candidate_product_sets_equal": true,
+      "downstream_route_records": 5,
+      "elapsed_seconds_including_loading": 258.23263926710933,
+      "execution_status": "completed_zero_qualified",
+      "forward_step_causes": {
+        "completed_top_three_nonmatch": 1,
+        "exact_full_product_match": 8,
+        "incomplete_or_invalid_hypotheses": 1
+      },
+      "input_id": "CHEMBL4247-query-1",
+      "pre_evidence_graphs": 14,
+      "pre_evidence_products": 11,
+      "predictor_calls": 9,
+      "qualified_results": 0,
+      "selected_designs": 3,
+      "selection_statuses": {
+        "3d_failed": 3,
+        "evidence_rejected": 2
+      },
+      "supported_exact_products": 2,
+      "supported_route_records": 3,
+      "unselected_designs": 8
+    },
+    {
+      "actual_candidate_graphs": 4,
+      "actual_candidate_products": 4,
+      "actual_primary_covered": false,
+      "baseline_primary_covered": true,
+      "candidate_graph_multisets_equal": true,
+      "candidate_product_sets_equal": true,
+      "downstream_route_records": 3,
+      "elapsed_seconds_including_loading": 233.46669993456453,
+      "execution_status": "completed_zero_qualified",
+      "forward_step_causes": {
+        "completed_top_three_nonmatch": 3,
+        "exact_full_product_match": 3
+      },
+      "input_id": "CHEMBL4247-query-2",
+      "pre_evidence_graphs": 4,
+      "pre_evidence_products": 4,
+      "predictor_calls": 5,
+      "qualified_results": 0,
+      "selected_designs": 3,
+      "selection_statuses": {
+        "evidence_rejected": 3
+      },
+      "supported_exact_products": 0,
+      "supported_route_records": 0,
+      "unselected_designs": 1
+    },
+    {
+      "actual_candidate_graphs": 0,
+      "actual_candidate_products": 0,
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "candidate_graph_multisets_equal": true,
+      "candidate_product_sets_equal": true,
+      "downstream_route_records": 0,
+      "elapsed_seconds_including_loading": 187.78754989616573,
+      "execution_status": "completed_zero_qualified",
+      "forward_step_causes": {},
+      "input_id": "CHEMBL5163-query-1",
+      "pre_evidence_graphs": 0,
+      "pre_evidence_products": 0,
+      "predictor_calls": null,
+      "qualified_results": 0,
+      "selected_designs": 0,
+      "selection_statuses": {},
+      "supported_exact_products": 0,
+      "supported_route_records": 0,
+      "unselected_designs": 0
+    },
+    {
+      "actual_candidate_graphs": 0,
+      "actual_candidate_products": 0,
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "candidate_graph_multisets_equal": true,
+      "candidate_product_sets_equal": true,
+      "downstream_route_records": 0,
+      "elapsed_seconds_including_loading": 187.14983551111072,
+      "execution_status": "completed_zero_qualified",
+      "forward_step_causes": {},
+      "input_id": "CHEMBL5163-query-2",
+      "pre_evidence_graphs": 0,
+      "pre_evidence_products": 0,
+      "predictor_calls": null,
+      "qualified_results": 0,
+      "selected_designs": 0,
+      "selection_statuses": {},
+      "supported_exact_products": 0,
+      "supported_route_records": 0,
+      "unselected_designs": 0
+    },
+    {
+      "actual_candidate_graphs": 2,
+      "actual_candidate_products": 2,
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "candidate_graph_multisets_equal": true,
+      "candidate_product_sets_equal": true,
+      "downstream_route_records": 2,
+      "elapsed_seconds_including_loading": 207.23855817504227,
+      "execution_status": "completed_zero_qualified",
+      "forward_step_causes": {
+        "completed_top_three_nonmatch": 2
+      },
+      "input_id": "CHEMBL3334418-query-1",
+      "pre_evidence_graphs": 2,
+      "pre_evidence_products": 2,
+      "predictor_calls": 1,
+      "qualified_results": 0,
+      "selected_designs": 2,
+      "selection_statuses": {
+        "evidence_rejected": 2
+      },
+      "supported_exact_products": 0,
+      "supported_route_records": 0,
+      "unselected_designs": 0
+    },
+    {
+      "actual_candidate_graphs": 2,
+      "actual_candidate_products": 2,
+      "actual_primary_covered": true,
+      "baseline_primary_covered": true,
+      "candidate_graph_multisets_equal": true,
+      "candidate_product_sets_equal": true,
+      "downstream_route_records": 2,
+      "elapsed_seconds_including_loading": 208.93914330936968,
+      "execution_status": "completed_zero_qualified",
+      "forward_step_causes": {
+        "exact_full_product_match": 2
+      },
+      "input_id": "CHEMBL3334418-query-2",
+      "pre_evidence_graphs": 2,
+      "pre_evidence_products": 2,
+      "predictor_calls": 2,
+      "qualified_results": 0,
+      "selected_designs": 2,
+      "selection_statuses": {
+        "3d_failed": 2
+      },
+      "supported_exact_products": 2,
+      "supported_route_records": 2,
+      "unselected_designs": 0
+    },
+    {
+      "actual_candidate_graphs": 0,
+      "actual_candidate_products": 0,
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "candidate_graph_multisets_equal": true,
+      "candidate_product_sets_equal": true,
+      "downstream_route_records": 0,
+      "elapsed_seconds_including_loading": 190.47471203748137,
+      "execution_status": "completed_zero_qualified",
+      "forward_step_causes": {},
+      "input_id": "CHEMBL4869-query-1",
+      "pre_evidence_graphs": 0,
+      "pre_evidence_products": 0,
+      "predictor_calls": null,
+      "qualified_results": 0,
+      "selected_designs": 0,
+      "selection_statuses": {},
+      "supported_exact_products": 0,
+      "supported_route_records": 0,
+      "unselected_designs": 0
+    },
+    {
+      "actual_candidate_graphs": 0,
+      "actual_candidate_products": 0,
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "candidate_graph_multisets_equal": true,
+      "candidate_product_sets_equal": true,
+      "downstream_route_records": 0,
+      "elapsed_seconds_including_loading": 201.23307990655303,
+      "execution_status": "completed_zero_qualified",
+      "forward_step_causes": {},
+      "input_id": "CHEMBL4869-query-2",
+      "pre_evidence_graphs": 0,
+      "pre_evidence_products": 0,
+      "predictor_calls": null,
+      "qualified_results": 0,
+      "selected_designs": 0,
+      "selection_statuses": {},
+      "supported_exact_products": 0,
+      "supported_route_records": 0,
+      "unselected_designs": 0
+    },
+    {
+      "actual_candidate_graphs": 0,
+      "actual_candidate_products": 0,
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "candidate_graph_multisets_equal": true,
+      "candidate_product_sets_equal": true,
+      "downstream_route_records": 0,
+      "elapsed_seconds_including_loading": 188.47327048704028,
+      "execution_status": "completed_zero_qualified",
+      "forward_step_causes": {},
+      "input_id": "CHEMBL3864-query-1",
+      "pre_evidence_graphs": 0,
+      "pre_evidence_products": 0,
+      "predictor_calls": null,
+      "qualified_results": 0,
+      "selected_designs": 0,
+      "selection_statuses": {},
+      "supported_exact_products": 0,
+      "supported_route_records": 0,
+      "unselected_designs": 0
+    },
+    {
+      "actual_candidate_graphs": 0,
+      "actual_candidate_products": 0,
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "candidate_graph_multisets_equal": true,
+      "candidate_product_sets_equal": true,
+      "downstream_route_records": 0,
+      "elapsed_seconds_including_loading": 192.36369543056935,
+      "execution_status": "completed_zero_qualified",
+      "forward_step_causes": {},
+      "input_id": "CHEMBL3864-query-2",
+      "pre_evidence_graphs": 0,
+      "pre_evidence_products": 0,
+      "predictor_calls": null,
+      "qualified_results": 0,
+      "selected_designs": 0,
+      "selection_statuses": {},
+      "supported_exact_products": 0,
+      "supported_route_records": 0,
+      "unselected_designs": 0
+    }
+  ],
+  "pinned_analyzer_sha256": "2301bb1c0f90e6a0faaa0eb9ad760d47b318be67579dcb02f48a9257b4bc099f",
+  "primary_metric": "Number of completed inputs with at least one exact changed-scaffold product whose complete concrete route passes atom/stereo audit and per-step forward support; unique input/product pairs and route counts are secondary.",
+  "qualified_structural_interpretation": "The three qualified products preserve the central pyrimidine and much of the framework: pyrrolidinyl is replaced by methoxy or methylthio; the third also changes the amide-side cyclopropylmethyl to cyclobutylmethyl. The frozen changed-scaffold criterion is met through peripheral ring changes; no central-core replacement is claimed.",
+  "route_first_totals": {
+    "actual_candidate_products": 52,
+    "actual_candidate_routes": 55,
+    "downstream_route_records": 16,
+    "primary_covered_inputs": 4,
+    "qualified_input_ids": [
+      "CHEMBL4630839-query-1"
+    ],
+    "qualified_products": 3,
+    "selected_designs": 14,
+    "supported_exact_changed_input_product_pairs": 8,
+    "supported_route_records": 9,
+    "v13_pre_evidence_inputs": 6,
+    "v13_pre_evidence_products": 52,
+    "v13_pre_evidence_routes": 55
+  },
+  "saved_loss_diagnosis": {
+    "path": "benchmark-results/qualified-development-20261023/route-first-actual-v2-loss-diagnosis-v1/report.json",
+    "sha256": "7db9717debe606c0e4b2381e48ac3e448d5d2b2293d4532b447af21b0f1b6c04"
+  },
+  "schema": "route-first-actual-comparison-v2-portable-v1",
+  "scope": "Fixed 12-input reused development panel; historical baseline reused, route-first executed once with fixed limits. Exact forward support and qualified outputs are computational evidence only, not physical synthesis or activity validation.",
+  "status": "complete_primary_not_increased"
+}
