@@ -1,0 +1,89 @@
+{
+  "schema": "actual-v2-explicit-fallback-retrieval-control-v1",
+  "status": "saved_observation_and_bounded_forward_control_complete",
+  "scope": "One original input/context, model-free read-only retrieval observation then paired forward/pregate/strict-audit control under frozen rule/catalog/config. This does not revise the 12-input comparison or adoption gate.",
+  "source_commit": "935ff0f",
+  "retrieval_observation": {
+    "raw_result_sha256": "f21deb7dce8bdf9c0b1c21b318ad4e9084ffaf98edc8304b203439b2180936d0",
+    "analysis_sha256": "f96d53e0eed2dee142590303ffe6800e31f178eeb5e44a81540402215257f27d",
+    "input_parity": {
+      "CHEMBL4247-query-2": {
+        "products": 4,
+        "routes": 4,
+        "scientific_row_identical_except_elapsed": true,
+        "nearest_calls": 122,
+        "unique_contexts": 76,
+        "contexts_omitted": 0,
+        "captured_ranked_rows_cumulative": 85614,
+        "ranked_contexts_omitted": 0
+      },
+      "CHEMBL3334418-query-1": {
+        "products": 2,
+        "routes": 2,
+        "scientific_row_identical_except_elapsed": true,
+        "nearest_calls": 46,
+        "unique_contexts": 36,
+        "contexts_omitted": 0,
+        "captured_ranked_rows_cumulative": 159939,
+        "ranked_contexts_omitted": 0
+      }
+    },
+    "rule030_context": {
+      "pool_count": 8192,
+      "ranked_count": 1295,
+      "selected_blocks": [
+        {
+          "id": "structure-sha256:aa268b16b0243ee4de835c59ee8717d9dffae40a441abc29ee23f5e0423ffebf",
+          "smiles": "C=C[C@@H]1CCC[C@H]1O"
+        },
+        {
+          "id": "structure-sha256:b55d3519b732a7201af61993998270ea88a435d88d152b3a16e952dcb03c2981",
+          "smiles": "C#CC(C)(C)CO"
+        }
+      ],
+      "minimum_heavy_same_pool_alternative": {
+        "smiles": "C#CCO",
+        "heavy_atoms": 4,
+        "original_ordinary_rank": 44,
+        "original_bit_tanimoto": 0.0,
+        "source_stereo_fully_specified": true
+      }
+    },
+    "unfolded_fingerprint_control_sha256": "9b6731dbbcf40b266c809e9ebb07b47a1d0cd225c2648efa73026e83bcfea71e"
+  },
+  "paired_forward_control": {
+    "raw_result_sha256": "08bee540af74de17946720f0fb9057d1ca516d76c93aadec33d7a7ae2b0d2518",
+    "analysis_sha256": "01abfdf8bab8fd27f7707cc9c3c101f2b6fbba96a13ae5ad5f9afd88034ad0db",
+    "old_first_positive_product_parity": true,
+    "work": {
+      "generation_apply_calls": 8,
+      "verification_apply_calls": 4,
+      "audit_apply_calls": 4,
+      "generation_apply_cache_misses": 6,
+      "verification_apply_cache_misses": 0,
+      "audit_apply_cache_misses": 0,
+      "audit_route_calls": 4,
+      "gate_products_tested": 12,
+      "gate_fingerprint_calls": 8,
+      "hit_fingerprint_calls": 1
+    },
+    "retained_product_instances": 12,
+    "old_eligible_product_count": 2,
+    "new_eligible_product_count": 2,
+    "new_products_vs_old": [],
+    "gate_or_audit_counts": {
+      "old": {
+        "strict_eligible": 2,
+        "polar_reference_capacity_below_minimum": 2,
+        "hit_tanimoto": 2
+      },
+      "new": {
+        "strict_eligible": 2,
+        "polar_reference_capacity_below_minimum": 2,
+        "hit_tanimoto": 2
+      }
+    },
+    "decision": "Reject prespecified minimum-heavy second-slot intervention for this context: C#CCO yields no new gate-pass, strict audited product with unchanged partners."
+  },
+  "interpretation": "The minimum-heavy replacement existed in the original ranked role-compatible pool but added no gate-passing product with the two fixed partners; no source, model, or route-first policy change followed."
+}
