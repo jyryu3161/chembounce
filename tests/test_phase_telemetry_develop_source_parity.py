@@ -3,8 +3,9 @@
 Canonical AST retains every semantic field. Only empty type_params on the three
 Python3.12 declaration nodes are omitted, matching their absence on3.10/3.11.
 Nonempty type parameters and unknown fields remain compared. Historical94b
-digests below are retained as attribution; current P1 digests bind the reviewed
-route-first feature source. No new scientific call is normalized away.
+digests below are retained as attribution; the reviewed P1 v1 digest is kept
+as history, while current P1 v2 digests bind the new retrieval source. No new
+scientific call is normalized away.
 """
 
 import ast
@@ -145,7 +146,7 @@ BASELINES = {
 # Approved feature source is a new semantic baseline for the two changed files.
 # The qualified adapter retains its exact94b disabled-telemetry AST pin; its
 # instrumented source bytes have always differed from that pre-telemetry pin.
-CURRENT_REVIEWED = {
+ROUTE_FIRST_V1_REVIEWED = {
     "commit": "0454d8643bc03b061565439a4ad77649c114114d",
     "scope": "Reviewed opt-in P1 route-first generation; not exact94b semantic parity",
     "files": {
@@ -156,6 +157,21 @@ CURRENT_REVIEWED = {
         "chembounce_synthesis/workflow.py": {
             "source_sha256": "0e8082aacede68db0898456d677065c0c05a40f64eaba933a37d040b44f41b2c",
             "ast_sha256": "ce54ab6f45ac9f63923397112387e96f7de65308796093fff1ec511dcbe88da6",
+        },
+    },
+}
+
+CURRENT_REVIEWED = {
+    "commit": "826b2af90d75f5243851395250fe53e96224f356",
+    "scope": "Reviewed opt-in P1 v2 catalog retrieval and bounded stereo-anchor postings; not exact94b parity",
+    "files": {
+        "chembounce.py": {
+            "source_sha256": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+            "ast_sha256": "f1d90fc41f97e3b565442a4c210deda3e77c918ed6c25d89803778b522f71159",
+        },
+        "chembounce_synthesis/workflow.py": {
+            "source_sha256": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+            "ast_sha256": "1cd153a3e57c579160a025633a417cae78006e0423a2d2346a27594c606de30e",
         },
     },
 }

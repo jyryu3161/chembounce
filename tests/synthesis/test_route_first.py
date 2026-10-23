@@ -313,6 +313,36 @@ def test_preintake_exact_hit_similarity_gate_does_not_spend_design_or_route_slot
     )
 
 
+def test_workflow_passes_compiled_chiral_hit_anchors_to_generator(assets, monkeypatch, tmp_path):
+    from chembounce_synthesis import workflow
+
+    catalog, rules = assets
+    original = workflow.generate_route_first
+    seen = []
+
+    def wrapped(*args, **kwargs):
+        anchors = kwargs["hit_anchors"]
+        assert isinstance(anchors, HitStereoAnchors)
+        assert len(anchors.queries) == 1
+        seen.append(anchors)
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(workflow, "generate_route_first", wrapped)
+    run(
+        "N[C@@H](C)C(=O)Nc1ccccc1",
+        (),
+        {
+            "schema_version": 1,
+            "catalog": str(catalog.path),
+            "rules": str(rules.path),
+            "route_first": limits(max_steps=1),
+        },
+        tmp_path / "chiral-seam",
+        scoring_mode="2d",
+    )
+    assert len(seen) == 1
+
+
 def test_two_step_product_reaches_bounded_design_intake(assets, tmp_path):
     catalog, rules = assets
     config = {
