@@ -48,9 +48,12 @@ only products that pass the existing final qualification. This material
 generation override is reported as `custom_unvalidated`; a development-panel
 comparison does not establish independent calibration or experimental synthesis.
 V1 produced no supported products on the reused 12-input development panel.
-The sixth v2 development probe reached three inputs before model and 3D checks;
-the typed/approximate hybrid described here has not yet been probed on that
-panel. More than five pre-evidence inputs is required before a model run.
+The seventh v2 development probe retained coverage at three of 12 inputs before
+model and 3D checks. Distinct input/product pairs rose from 10 to 30, including
+22 eligible two-step routes, all on one input. Full eligible route graphs and
+near rejections are retained in the diagnostic record. More than five
+pre-evidence inputs is required before a model run, so no forward/3D comparison
+was performed for this revision.
 Adoption requires more than five of the 12 inputs to have complete, audited
 changed-scaffold routes with all-step forward support. The same
 original-hit similarity, property, polar-capacity, route, forward-support and

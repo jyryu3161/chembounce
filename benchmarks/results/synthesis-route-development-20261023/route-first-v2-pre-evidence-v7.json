@@ -1,0 +1,815 @@
+{
+  "schema": "route-first-pre-evidence-development-diagnostic-v2",
+  "status": "complete",
+  "scope": "Development-only exact pre-evidence gates, bounded typed/approximate reverse hints, eligible routes and nearest rejected graphs; no model, 3D, forward support or qualification",
+  "policy": "catalog-rule-route-first-v2",
+  "source_commit_matching_runtime": "93f8ac8",
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "9f7d18eccc9134448ab138d29c02e38e1986daaf975eac97bd4711f640a010ed",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff"
+  },
+  "source_sha256_after": {
+    "chembounce_synthesis/route_first.py": "9f7d18eccc9134448ab138d29c02e38e1986daaf975eac97bd4711f640a010ed",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff"
+  },
+  "harness_sha256": "5910a72182e4ae6dcf52f3a570cca632609734fd643cda0995bc1dbc115081d3",
+  "harness_sha256_after": "5910a72182e4ae6dcf52f3a570cca632609734fd643cda0995bc1dbc115081d3",
+  "panel_sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+  "config_sha256": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+  "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+  "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+  "pre_evidence_input_coverage": 3,
+  "primary_comparison_run": false,
+  "input_count": 12,
+  "eligible_input_product_pairs": 30,
+  "eligible_route_count": 30,
+  "one_step_eligible_routes": 8,
+  "two_step_eligible_routes": 22,
+  "metric_note": "Product totals sum distinct exact products within each input, not globally unique structures. These pre-evidence counts are not forward-supported or qualified results.",
+  "additional_query_limits": {
+    "trials_per_raw_outcome": 16,
+    "trial_and_match_work_per_search": 1024,
+    "matches_per_query": 64,
+    "representative_order": [
+      "OH",
+      "F",
+      "Cl",
+      "Br",
+      "I",
+      "O-"
+    ]
+  },
+  "role_match_truncation_sentinel": 65,
+  "rule_template_exclusions_reference": "route-template-eligibility-v1.json",
+  "rows": [
+    {
+      "id": "CHEMBL4630839-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 37.342,
+      "pre_evidence_eligible_routes": 26,
+      "pre_evidence_eligible_distinct_products": 26,
+      "one_step_routes": 4,
+      "two_step_routes": 22,
+      "best_original_hit_bit_tanimoto": 0.4444444444444444,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 11,
+        "hit_tanimoto": 20,
+        "polar_reference_capacity_below_minimum": 8,
+        "property: logp.upper_maximum:5.235800000000006>5": 1,
+        "property: logp.upper_maximum:5.254800000000005>5": 1,
+        "property: logp.upper_maximum:5.2756200000000035>5": 2,
+        "property: logp.upper_maximum:5.2943200000000035>5": 1,
+        "property: logp.upper_maximum:5.294320000000004>5": 1,
+        "property: logp.upper_maximum:5.299500000000005>5": 1,
+        "property: logp.upper_maximum:5.665720000000004>5": 2,
+        "property: logp.upper_maximum:5.684420000000004>5": 1,
+        "property: logp.upper_maximum:5.684420000000005>5": 1,
+        "property: logp.upper_maximum:5.832100000000006>5": 1,
+        "property: logp.upper_maximum:6.016000000000007>5": 1
+      },
+      "observed_distinct_products": 78,
+      "anchor_passed_distinct_products": 78,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "total_fingerprint_calls": 15678,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "combinations": 122,
+        "products_generated": 124,
+        "route_audit_attempts": 26,
+        "inner_role_checks": 36,
+        "inner_role_compatible": 28,
+        "inner_role_rejected": 8,
+        "reverse_role_work": 176,
+        "reverse_role_trials": 176,
+        "reverse_role_match_checks": 168,
+        "reverse_role_rejections": {
+          "role_mismatch_at_mapped_positions": 140,
+          "hint_sanitization_failed": 8
+        },
+        "reverse_hint_quality_counts": {
+          "typed": 10,
+          "approximate": 57,
+          "explicit_fallback": 1,
+          "implicit_fallback": 0
+        }
+      },
+      "eligible_route_graphs_retained": 26,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "Cc1cc(C(=O)NCC2CC2)nn1-c1c(Cl)cc(-c2ccccc2)cc1Cl",
+          "hit_bit_tanimoto": 0.3783783783783784,
+          "gate": "property: logp.upper_maximum:5.2943200000000035>5",
+          "rule_ids": [
+            "synllama-rule-027",
+            "synllama-rule-077"
+          ]
+        },
+        {
+          "product": "Cc1cc(C(=O)NCC2CCC2)nn1-c1c(Cl)cc(-c2ccccc2)cc1Cl",
+          "hit_bit_tanimoto": 0.3684210526315789,
+          "gate": "property: logp.upper_maximum:5.684420000000004>5",
+          "rule_ids": [
+            "synllama-rule-027",
+            "synllama-rule-077"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL4630839-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 31.627,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 4,
+        "Hit stereo anchor is inverted": 4,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 22,
+        "hit_tanimoto": 5,
+        "polar_reference_capacity_below_minimum": 2,
+        "property: mw.upper_maximum:526.5970000000002>500.0": 1,
+        "property: mw.upper_maximum:540.6240000000003>500.0": 1,
+        "property: mw.upper_maximum:544.5870000000002>500.0": 1,
+        "property: mw.upper_maximum:554.6070000000003>500.0": 1
+      },
+      "observed_distinct_products": 41,
+      "anchor_passed_distinct_products": 15,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "total_fingerprint_calls": 18534,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "combinations": 82,
+        "products_generated": 86,
+        "route_audit_attempts": 0,
+        "inner_role_checks": 36,
+        "inner_role_compatible": 7,
+        "inner_role_rejected": 29,
+        "reverse_role_work": 115,
+        "reverse_role_trials": 115,
+        "reverse_role_match_checks": 110,
+        "reverse_role_rejections": {
+          "role_mismatch_at_mapped_positions": 89,
+          "hint_sanitization_failed": 5
+        },
+        "reverse_hint_quality_counts": {
+          "typed": 7,
+          "approximate": 33,
+          "explicit_fallback": 0,
+          "implicit_fallback": 0
+        }
+      },
+      "eligible_route_graphs_retained": 0,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc([N+](=O)[O-])cc5N5CCOCC5)C4)cc3)nc12",
+          "hit_bit_tanimoto": 0.35106382978723405,
+          "gate": "property: mw.upper_maximum:526.5970000000002>500.0",
+          "rule_ids": [
+            "synllama-rule-047"
+          ]
+        },
+        {
+          "product": "CC(C)(C)OC(=O)N1C[C@@H](C(=O)NCC2CC2)C[C@@H](c2ccccc2)C1",
+          "hit_bit_tanimoto": 0.34615384615384615,
+          "gate": "hit_tanimoto",
+          "rule_ids": [
+            "synllama-rule-077"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 31.154,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is inverted": 2,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 30,
+        "hit_tanimoto": 2,
+        "polar_reference_capacity_below_minimum": 6
+      },
+      "observed_distinct_products": 40,
+      "anchor_passed_distinct_products": 8,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "total_fingerprint_calls": 21715,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "combinations": 102,
+        "products_generated": 104,
+        "route_audit_attempts": 0,
+        "inner_role_checks": 60,
+        "inner_role_compatible": 6,
+        "inner_role_rejected": 54,
+        "reverse_role_work": 147,
+        "reverse_role_trials": 147,
+        "reverse_role_match_checks": 145,
+        "reverse_role_rejections": {
+          "role_mismatch_at_mapped_positions": 120,
+          "hint_sanitization_failed": 2
+        },
+        "reverse_hint_quality_counts": {
+          "typed": 9,
+          "approximate": 28,
+          "explicit_fallback": 0,
+          "implicit_fallback": 0
+        }
+      },
+      "eligible_route_graphs_retained": 0,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "Cc1ccccc1C(=O)N1CCC[C@H](C(=O)NCc2cccc(N3CCOCC3)c2)C1",
+          "hit_bit_tanimoto": 0.5057471264367817,
+          "gate": "polar_reference_capacity_below_minimum",
+          "rule_ids": [
+            "synllama-rule-077"
+          ]
+        },
+        {
+          "product": "Cc1ccccc1C(=O)N1CCC[C@H](C(=O)NCc2ccc(N3CCOCC3)cc2)C1",
+          "hit_bit_tanimoto": 0.4111111111111111,
+          "gate": "polar_reference_capacity_below_minimum",
+          "rule_ids": [
+            "synllama-rule-077"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 26.783,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 33,
+        "hit_tanimoto": 1,
+        "polar_reference_capacity_below_minimum": 8,
+        "property: mw.upper_maximum:524.6470000000003>500.0": 1,
+        "property: mw.upper_maximum:552.7010000000002>500.0": 1,
+        "property: mw.upper_maximum:554.0290000000002>500.0": 1,
+        "property: mw.upper_maximum:568.0560000000003>500.0": 1,
+        "property: mw.upper_maximum:612.7570000000004>500.0; n_hacceptor.upper_maximum:11>10": 1,
+        "property: mw.upper_maximum:626.7840000000003>500.0; n_hacceptor.upper_maximum:11>10": 1,
+        "property: mw.upper_maximum:650.2669999999998>500.0; logp.upper_maximum:6.424020000000006>5": 1,
+        "property: mw.upper_maximum:678.321>500.0; logp.upper_maximum:7.202620000000008>5": 1,
+        "property: mw.upper_maximum:699.863>500.0; n_hacceptor.upper_maximum:12>10": 1,
+        "property: mw.upper_maximum:713.8900000000001>500.0; n_hacceptor.upper_maximum:12>10": 1
+      },
+      "observed_distinct_products": 52,
+      "anchor_passed_distinct_products": 52,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "total_fingerprint_calls": 12493,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "combinations": 160,
+        "products_generated": 160,
+        "route_audit_attempts": 0,
+        "inner_role_checks": 104,
+        "inner_role_compatible": 12,
+        "inner_role_rejected": 92,
+        "reverse_role_work": 107,
+        "reverse_role_trials": 107,
+        "reverse_role_match_checks": 105,
+        "reverse_role_rejections": {
+          "role_mismatch_at_mapped_positions": 88,
+          "hint_sanitization_failed": 2
+        },
+        "reverse_hint_quality_counts": {
+          "typed": 4,
+          "approximate": 32,
+          "explicit_fallback": 0,
+          "implicit_fallback": 0
+        }
+      },
+      "eligible_route_graphs_retained": 0,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "CCC(=O)Nc1cccc(Oc2nc(Nc3ccc(N4CCN(C)CC4)cc3OC)ncc2N(C)CCNS(C)(=O)=O)c1",
+          "hit_bit_tanimoto": 0.29508196721311475,
+          "gate": "property: mw.upper_maximum:612.7570000000004>500.0; n_hacceptor.upper_maximum:11>10",
+          "rule_ids": [
+            "synllama-rule-042"
+          ]
+        },
+        {
+          "product": "COc1cc(N2CCC(N3CCN(C)CC3)CC2)ccc1Nc1ncc(N(C)CCNS(C)(=O)=O)c(Nc2ccccc2P(C)(C)=O)n1",
+          "hit_bit_tanimoto": 0.29508196721311475,
+          "gate": "property: mw.upper_maximum:699.863>500.0; n_hacceptor.upper_maximum:12>10",
+          "rule_ids": [
+            "synllama-rule-042"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 22.43,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 1,
+        "Hit stereo anchor is inverted": 4,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 11,
+        "hit_tanimoto": 1,
+        "polar_reference_capacity_below_minimum": 6
+      },
+      "observed_distinct_products": 23,
+      "anchor_passed_distinct_products": 8,
+      "limits_reached": [
+        "max_rule_inspections"
+      ],
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 159880,
+        "total_fingerprint_calls": 7939,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "combinations": 64,
+        "products_generated": 64,
+        "route_audit_attempts": 0,
+        "inner_role_checks": 36,
+        "inner_role_compatible": 2,
+        "inner_role_rejected": 34,
+        "reverse_role_work": 42,
+        "reverse_role_trials": 42,
+        "reverse_role_match_checks": 42,
+        "reverse_role_rejections": {
+          "role_mismatch_at_mapped_positions": 39
+        },
+        "reverse_hint_quality_counts": {
+          "typed": 0,
+          "approximate": 12,
+          "explicit_fallback": 0,
+          "implicit_fallback": 0
+        }
+      },
+      "eligible_route_graphs_retained": 0,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "O=S(=O)(N=S(=O)(c1ccc(F)cc1)C(F)(F)F)N1CC[C@H](Oc2ccccn2)C1",
+          "hit_bit_tanimoto": 0.38823529411764707,
+          "gate": "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly",
+          "rule_ids": [
+            "synllama-rule-039"
+          ]
+        },
+        {
+          "product": "O=S(=O)(Cc1cc(-c2ccc(F)cc2)no1)N1CC[C@H](Oc2ccccn2)C1",
+          "hit_bit_tanimoto": 0.3118279569892473,
+          "gate": "polar_reference_capacity_below_minimum",
+          "rule_ids": [
+            "synllama-rule-039"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL5163-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 19.981,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 28
+      },
+      "observed_distinct_products": 28,
+      "anchor_passed_distinct_products": 0,
+      "limits_reached": [],
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 88360,
+        "total_fingerprint_calls": 5155,
+        "rule_inspections": 444,
+        "rule_template_checks": 91,
+        "combinations": 48,
+        "products_generated": 60,
+        "route_audit_attempts": 0,
+        "inner_role_checks": 32,
+        "inner_role_compatible": 0,
+        "inner_role_rejected": 32,
+        "reverse_role_work": 11,
+        "reverse_role_trials": 11,
+        "reverse_role_match_checks": 5,
+        "reverse_role_rejections": {
+          "hint_sanitization_failed": 6,
+          "role_mismatch_at_mapped_positions": 5
+        },
+        "reverse_hint_quality_counts": {
+          "typed": 0,
+          "approximate": 4,
+          "explicit_fallback": 2,
+          "implicit_fallback": 0
+        }
+      },
+      "eligible_route_graphs_retained": 0,
+      "nearest_anchor_passed_rejections": []
+    },
+    {
+      "id": "CHEMBL3334418-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 24.854,
+      "pre_evidence_eligible_routes": 2,
+      "pre_evidence_eligible_distinct_products": 2,
+      "one_step_routes": 2,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": 0.37681159420289856,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 3,
+        "hit_tanimoto": 7,
+        "polar_reference_capacity_below_minimum": 22
+      },
+      "observed_distinct_products": 34,
+      "anchor_passed_distinct_products": 34,
+      "limits_reached": [],
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 137512,
+        "total_fingerprint_calls": 11862,
+        "rule_inspections": 510,
+        "rule_template_checks": 91,
+        "combinations": 70,
+        "products_generated": 74,
+        "route_audit_attempts": 2,
+        "inner_role_checks": 40,
+        "inner_role_compatible": 0,
+        "inner_role_rejected": 40,
+        "reverse_role_work": 30,
+        "reverse_role_trials": 30,
+        "reverse_role_match_checks": 30,
+        "reverse_role_rejections": {
+          "role_mismatch_at_mapped_positions": 28
+        },
+        "reverse_hint_quality_counts": {
+          "typed": 0,
+          "approximate": 8,
+          "explicit_fallback": 2,
+          "implicit_fallback": 0
+        }
+      },
+      "eligible_route_graphs_retained": 2,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "O=C1c2ccccc2C(=O)c2c(NS(=O)(=O)Cc3ccc(C4CCCCC4)cc3)cccc21",
+          "hit_bit_tanimoto": 0.5,
+          "gate": "polar_reference_capacity_below_minimum",
+          "rule_ids": [
+            "synllama-rule-081"
+          ]
+        },
+        {
+          "product": "Nc1ccc(NS(=O)(=O)Cc2ccc(C3CCCCC3)cc2)c2c1C(=O)c1ccccc1C2=O",
+          "hit_bit_tanimoto": 0.47619047619047616,
+          "gate": "polar_reference_capacity_below_minimum",
+          "rule_ids": [
+            "synllama-rule-081"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL3334418-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 24.128,
+      "pre_evidence_eligible_routes": 2,
+      "pre_evidence_eligible_distinct_products": 2,
+      "one_step_routes": 2,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": 0.3939393939393939,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 8,
+        "hit_tanimoto": 4,
+        "polar_reference_capacity_below_minimum": 20
+      },
+      "observed_distinct_products": 34,
+      "anchor_passed_distinct_products": 34,
+      "limits_reached": [],
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 137512,
+        "total_fingerprint_calls": 10283,
+        "rule_inspections": 510,
+        "rule_template_checks": 91,
+        "combinations": 70,
+        "products_generated": 74,
+        "route_audit_attempts": 2,
+        "inner_role_checks": 40,
+        "inner_role_compatible": 0,
+        "inner_role_rejected": 40,
+        "reverse_role_work": 30,
+        "reverse_role_trials": 30,
+        "reverse_role_match_checks": 30,
+        "reverse_role_rejections": {
+          "role_mismatch_at_mapped_positions": 28
+        },
+        "reverse_hint_quality_counts": {
+          "typed": 0,
+          "approximate": 8,
+          "explicit_fallback": 2,
+          "implicit_fallback": 0
+        }
+      },
+      "eligible_route_graphs_retained": 2,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "O=C1c2ccccc2C(=O)c2c(NS(=O)(=O)Cc3ccccc3C(F)(F)F)cccc21",
+          "hit_bit_tanimoto": 0.3870967741935484,
+          "gate": "polar_reference_capacity_below_minimum",
+          "rule_ids": [
+            "synllama-rule-081"
+          ]
+        },
+        {
+          "product": "Nc1ccc(NS(=O)(=O)Cc2ccccc2C(F)(F)F)c2c1C(=O)c1ccccc1C2=O",
+          "hit_bit_tanimoto": 0.36923076923076925,
+          "gate": "polar_reference_capacity_below_minimum",
+          "rule_ids": [
+            "synllama-rule-081"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 26.379,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 36
+      },
+      "observed_distinct_products": 36,
+      "anchor_passed_distinct_products": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "total_fingerprint_calls": 10974,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "combinations": 86,
+        "products_generated": 86,
+        "route_audit_attempts": 0,
+        "inner_role_checks": 42,
+        "inner_role_compatible": 11,
+        "inner_role_rejected": 31,
+        "reverse_role_work": 121,
+        "reverse_role_trials": 121,
+        "reverse_role_match_checks": 105,
+        "reverse_role_rejections": {
+          "hint_sanitization_failed": 10,
+          "role_mismatch_at_mapped_positions": 88,
+          "unsupported_placeholder_stereo": 6
+        },
+        "reverse_hint_quality_counts": {
+          "typed": 6,
+          "approximate": 32,
+          "explicit_fallback": 2,
+          "implicit_fallback": 0
+        }
+      },
+      "eligible_route_graphs_retained": 0,
+      "nearest_anchor_passed_rejections": []
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 26.631,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 44
+      },
+      "observed_distinct_products": 44,
+      "anchor_passed_distinct_products": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "total_fingerprint_calls": 13226,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "combinations": 88,
+        "products_generated": 88,
+        "route_audit_attempts": 0,
+        "inner_role_checks": 40,
+        "inner_role_compatible": 12,
+        "inner_role_rejected": 28,
+        "reverse_role_work": 96,
+        "reverse_role_trials": 96,
+        "reverse_role_match_checks": 86,
+        "reverse_role_rejections": {
+          "hint_sanitization_failed": 10,
+          "role_mismatch_at_mapped_positions": 63
+        },
+        "reverse_hint_quality_counts": {
+          "typed": 9,
+          "approximate": 18,
+          "explicit_fallback": 2,
+          "implicit_fallback": 0
+        }
+      },
+      "eligible_route_graphs_retained": 0,
+      "nearest_anchor_passed_rejections": []
+    },
+    {
+      "id": "CHEMBL3864-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 23.761,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 9,
+        "hit_tanimoto": 4,
+        "polar_reference_capacity_below_minimum": 14
+      },
+      "observed_distinct_products": 27,
+      "anchor_passed_distinct_products": 27,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 201208,
+        "total_fingerprint_calls": 13360,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "combinations": 66,
+        "products_generated": 68,
+        "route_audit_attempts": 0,
+        "inner_role_checks": 40,
+        "inner_role_compatible": 2,
+        "inner_role_rejected": 38,
+        "reverse_role_work": 76,
+        "reverse_role_trials": 76,
+        "reverse_role_match_checks": 73,
+        "reverse_role_rejections": {
+          "role_mismatch_at_mapped_positions": 68,
+          "hint_sanitization_failed": 3
+        },
+        "reverse_hint_quality_counts": {
+          "typed": 0,
+          "approximate": 15,
+          "explicit_fallback": 2,
+          "implicit_fallback": 0
+        }
+      },
+      "eligible_route_graphs_retained": 0,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "O=CNCC(=O)Oc1c(C(=O)O)ccc2cccc(O)c12",
+          "hit_bit_tanimoto": 0.22807017543859648,
+          "gate": "hit_tanimoto",
+          "rule_ids": [
+            "synllama-rule-071"
+          ]
+        },
+        {
+          "product": "O=CNCC(=O)Oc1cccc2ccc(C(=O)O)c(O)c12",
+          "hit_bit_tanimoto": 0.22807017543859648,
+          "gate": "hit_tanimoto",
+          "rule_ids": [
+            "synllama-rule-071"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 26.649,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is inverted": 14,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 48
+      },
+      "observed_distinct_products": 62,
+      "anchor_passed_distinct_products": 0,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections"
+      ],
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 204056,
+        "total_fingerprint_calls": 12856,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "combinations": 110,
+        "products_generated": 116,
+        "route_audit_attempts": 0,
+        "inner_role_checks": 54,
+        "inner_role_compatible": 12,
+        "inner_role_rejected": 42,
+        "reverse_role_work": 83,
+        "reverse_role_trials": 83,
+        "reverse_role_match_checks": 74,
+        "reverse_role_rejections": {
+          "hint_sanitization_failed": 9,
+          "role_mismatch_at_mapped_positions": 64
+        },
+        "reverse_hint_quality_counts": {
+          "typed": 2,
+          "approximate": 21,
+          "explicit_fallback": 0,
+          "implicit_fallback": 0
+        }
+      },
+      "eligible_route_graphs_retained": 0,
+      "nearest_anchor_passed_rejections": []
+    }
+  ],
+  "validation": {
+    "focused_tests_passed": 47,
+    "independent_review": "pass",
+    "ruff_check": "pass",
+    "ruff_format_check": "pass",
+    "full_repository_suite_rerun": false
+  },
+  "decision": "Coverage remains 3/12 although eligible input/product pairs increase from10 to30 and22 eligible two-step routes now exist. No forward/model/3D comparison because coverage cannot exceed frozen supported-input baseline5/12. P1 remains incomplete; no develop merge.",
+  "artifact_retention": "Raw result retains complete bounded eligible route graphs/products, verification/generation records and nearest rejected graphs. This portable summary omits full graphs and repeated template exclusions; exact raw bytes are pinned below.",
+  "evidence": {
+    "result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v7/result.json",
+      "sha256": "db3bfdbd7a5068933cd483ac56c969f36e21c959cc4566d2e8953105150f0190"
+    },
+    "script": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v7/probe.py",
+      "sha256": "5910a72182e4ae6dcf52f3a570cca632609734fd643cda0995bc1dbc115081d3"
+    },
+    "review": {
+      "path": "benchmark-results/qualified-development-20261023/route-first-v2-hybrid-query-review-v1/report.json",
+      "sha256": "80d7c091ed973e63957c48ae5ed562dd471f093b3405daf27531c86bc3d05abd"
+    }
+  }
+}
