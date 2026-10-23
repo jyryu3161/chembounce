@@ -13,6 +13,7 @@ from rdkit.Chem import rdChemReactions
 
 from .common import FP, absolute_smiles, canonical, molecule, positive
 from .route_audit import audit_route, stereo_state, template_maps
+from .route_first_nh import candidate_role_n_site, prove_parent_n, prove_raw_n, same_n_origin_and_bonds
 from .routes import verify_route
 
 VERSION = "catalog-rule-route-first-v2"
@@ -63,6 +64,11 @@ MAX_CONTINUATION_ROLE_CHECKS_PER_QUERY = 8192
 MAX_CONTINUATION_ROLE_CHECKS_PER_SEARCH = 65536
 MAX_CONTINUATION_OUTER_ROLE_QUERIES = 16
 MAX_CONTINUATION_SELECTED_CONTEXTS = 128
+MAX_MAPPED_NH_PROOF_CONTEXTS = 128
+MAX_MAPPED_NH_PROOF_UNITS = 32768
+MAX_MAPPED_NH_PROOF_MATCH_REQUESTS = 512
+MAX_MAPPED_NH_RANKED_ROWS = 32768
+MAX_MAPPED_NH_SELECTED_CONTEXTS = 128
 
 
 def _pool_raw_counts(mol, atoms=None):
@@ -904,12 +910,17 @@ class RouteFirstLimits:
     max_inner_rules: int = 4
     fallback_rules: int = 2
     reaction_product_limit: int = 16
+    prefer_continuation_second: bool = False
+    prefer_mapped_nh_second: bool = False
 
     def __post_init__(self):
         if self.version != VERSION:
             raise ValueError(f"route_first.version must be {VERSION}")
+        for name in ("prefer_continuation_second", "prefer_mapped_nh_second"):
+            if type(getattr(self, name)) is not bool:
+                raise ValueError(f"route_first.{name} must be a boolean")
         for key, value in asdict(self).items():
-            if key != "version":
+            if key not in ("version", "prefer_continuation_second", "prefer_mapped_nh_second"):
                 positive(value, f"route_first.{key}")
         if self.max_steps not in (1, 2):
             raise ValueError("route_first.max_steps must be 1 or 2")
@@ -944,14 +955,23 @@ class RouteFirstSearch:
         hit_anchors=None,
         *,
         diagnose_continuation=False,
-        prefer_continuation_second=False,
+        prefer_continuation_second=None,
         preserve_typed_prefix=False,
         correct_typed_prefix_size=False,
+        prefer_mapped_nh_second=None,
     ):
         self.hit = canonical(hit)
         self.hit_mol = molecule(self.hit)
         self.hit_fp = FP.GetFingerprint(self.hit_mol)
         self.catalog, self.rules, self.limits = catalog, rules, limits
+        if prefer_continuation_second is None:
+            prefer_continuation_second = limits.prefer_continuation_second
+        if type(prefer_continuation_second) is not bool:
+            raise ValueError("prefer_continuation_second must be a boolean")
+        if prefer_mapped_nh_second is None:
+            prefer_mapped_nh_second = limits.prefer_mapped_nh_second
+        if type(prefer_mapped_nh_second) is not bool:
+            raise ValueError("prefer_mapped_nh_second must be a boolean")
         self.deadline = deadline_monotonic
         self.accept = accept or (lambda product: None)
         self._admission_fp_reserve = min(2 * limits.max_products, limits.max_fingerprint_calls // 2)
@@ -1063,6 +1083,30 @@ class RouteFirstSearch:
             "fallback_hit_second_legacy_reasons": {},
             "fallback_hit_second_samples": [],
             "fallback_hit_second_samples_omitted": 0,
+            "mapped_nh_preference": {
+                "enabled": prefer_mapped_nh_second,
+                "proof_context_limit": MAX_MAPPED_NH_PROOF_CONTEXTS,
+                "proof_structural_units_limit": MAX_MAPPED_NH_PROOF_UNITS,
+                "proof_match_requests_limit": MAX_MAPPED_NH_PROOF_MATCH_REQUESTS,
+                "raw_registry_limit": MAX_CONTINUATION_REGISTRIES,
+                "raw_snapshot_attempts_limit": MAX_CONTINUATION_RAW_SNAPSHOTS,
+                "raw_snapshot_structural_units_limit": MAX_CONTINUATION_SNAPSHOT_UNITS,
+                "ranked_rows_limit": MAX_MAPPED_NH_RANKED_ROWS,
+                "selected_contexts_limit": MAX_MAPPED_NH_SELECTED_CONTEXTS,
+                "role_checks_per_query_limit": MAX_CONTINUATION_ROLE_CHECKS_PER_QUERY,
+                "role_checks_shared_search_limit": MAX_CONTINUATION_ROLE_CHECKS_PER_SEARCH,
+                "role_matches_per_request": MAX_CONTINUATION_ROLE_MATCHES - 1,
+                "proof_contexts": 0,
+                "proof_structural_units": 0,
+                "proof_match_requests": 0,
+                "raw_snapshot_attempts": 0,
+                "raw_snapshot_structural_units": 0,
+                "ranked_rows_retained": 0,
+                "role_checks": 0,
+                "replacements": 0,
+                "legacy_reasons": {},
+            },
+            "context_role_checks_total": 0,
             "catalog_bucket_rankings": 0,
             "reaction_pool_limits": {
                 "query_role_pairs": MAX_POOL_QUERY_ROLE_PAIRS,
@@ -1133,6 +1177,7 @@ class RouteFirstSearch:
         self._diagnose_continuation = diagnose_continuation or prefer_continuation_second
         self._continuation_capture_all_phases = diagnose_continuation
         self._prefer_continuation_second = prefer_continuation_second
+        self._prefer_mapped_nh_second = prefer_mapped_nh_second
         self._preserve_typed_prefix = preserve_typed_prefix
         self._correct_typed_prefix_size = correct_typed_prefix_size
         self._guide_representative_heavy = {} if correct_typed_prefix_size else None
@@ -1146,6 +1191,13 @@ class RouteFirstSearch:
         self._continuation_role_contexts = 0
         self._continuation_ranked = {} if prefer_continuation_second else None
         self._continuation_selected = {} if prefer_continuation_second else None
+        self._mapped_nh_ranked = {} if prefer_mapped_nh_second else None
+        self._mapped_nh_selected = {} if prefer_mapped_nh_second else None
+        self._context_role_checks = 0
+        self._mapped_nh_proofs = {}
+        self._mapped_nh_raw = {} if prefer_mapped_nh_second else None
+        self._mapped_nh_snapshots = 0
+        self._mapped_nh_snapshot_units = 0
         self._continuation_outer_roles = {} if prefer_continuation_second else None
         if prefer_continuation_second:
             self.report["continuation_preference"] = {
@@ -2045,9 +2097,9 @@ class RouteFirstSearch:
             "typed_reset_product_aromatic_query_flags": aromatic_resets,
         }
 
-    def _capture_continuation_raw(self, registry, guide, outcome, clean_parts):
+    def _capture_continuation_raw(self, registry, guide, outcome, clean_parts, *, mapped_nh=False):
         """Attach one emitted guide to its exact raw alternative; never affect it."""
-        if not self._diagnose_continuation:
+        if not (self._diagnose_continuation or mapped_nh):
             return
         if len(clean_parts) != len(outcome) or any(part is None for part in clean_parts):
             registry["incomplete"] = "normalized_molecule_unavailable"
@@ -2064,15 +2116,21 @@ class RouteFirstSearch:
             registry["incomplete"] = "snapshot_part_size_limit"
             return
         units = sum(part.GetNumAtoms() + part.GetNumBonds() for part in parts)
-        if self._continuation_snapshots >= MAX_CONTINUATION_RAW_SNAPSHOTS or (
-            self._continuation_snapshot_units + units > MAX_CONTINUATION_SNAPSHOT_UNITS
-        ):
+        snapshots = self._mapped_nh_snapshots if mapped_nh else self._continuation_snapshots
+        charged = self._mapped_nh_snapshot_units if mapped_nh else self._continuation_snapshot_units
+        if snapshots >= MAX_CONTINUATION_RAW_SNAPSHOTS or charged + units > MAX_CONTINUATION_SNAPSHOT_UNITS:
             registry["incomplete"] = "snapshot_budget"
             return
         # Reserve attempted copy work before any allocation. Failed partial
         # copies still consume the diagnostic budget and cannot be retried free.
-        self._continuation_snapshots += 1
-        self._continuation_snapshot_units += units
+        if mapped_nh:
+            self._mapped_nh_snapshots += 1
+            self._mapped_nh_snapshot_units += units
+            self.report["mapped_nh_preference"]["raw_snapshot_attempts"] += 1
+            self.report["mapped_nh_preference"]["raw_snapshot_structural_units"] += units
+        else:
+            self._continuation_snapshots += 1
+            self._continuation_snapshot_units += units
         try:
             captured = (
                 tuple(Chem.Mol(part) for part in outcome),
@@ -2196,6 +2254,71 @@ class RouteFirstSearch:
         except (ValueError, RuntimeError, AttributeError, IndexError, KeyError):
             return unknown("role_or_origin_check_failed")
 
+    def _mapped_nh_proof(self, rule, guide, fallback):
+        """Bind an outer guide to one mapped N site in its existing raw outcomes."""
+        key = (rule.id, self.hit, fallback, guide)
+        if key in self._mapped_nh_proofs:
+            return self._mapped_nh_proofs[key]
+        report = self.report["mapped_nh_preference"]
+
+        def unknown(reason):
+            reasons = report["legacy_reasons"]
+            reasons[reason] = reasons.get(reason, 0) + 1
+            return None
+
+        if self.deadline is not None and time.monotonic() >= self.deadline:
+            return unknown("deadline")
+        if report["proof_contexts"] >= MAX_MAPPED_NH_PROOF_CONTEXTS:
+            return unknown("proof_context_budget")
+        registry = self._mapped_nh_raw.get((rule.id, self.hit, fallback))
+        if registry is None or registry["incomplete"] is not None or registry["raw_cap_saturated"]:
+            return unknown("raw_provenance_incomplete")
+        alternatives = registry["by_guide"].get(guide, ())
+        if not alternatives or len(alternatives) >= self.limits.max_reverse_outcomes:
+            return unknown("raw_alternatives_missing_or_truncated")
+        parent = self.hit_mol
+        templates = tuple(rule.reaction.GetReactants()) + tuple(rule.reaction.GetProducts())
+        parts = tuple(part for pair in alternatives for side in pair for part in side)
+        if any(
+            part.GetNumAtoms() > MAX_CONTINUATION_ROLE_ATOMS
+            or part.GetNumBonds() > MAX_CONTINUATION_ROLE_BONDS
+            for part in (parent, *templates, *parts)
+        ):
+            return unknown("proof_molecule_size")
+        units = sum(part.GetNumAtoms() + part.GetNumBonds() for part in (parent, *templates, *parts))
+        if report["proof_structural_units"] + units > MAX_MAPPED_NH_PROOF_UNITS:
+            return unknown("proof_structural_budget")
+        report["proof_contexts"] += 1
+        report["proof_structural_units"] += units
+        try:
+            if report["proof_match_requests"] >= MAX_MAPPED_NH_PROOF_MATCH_REQUESTS:
+                return unknown("proof_match_request_budget")
+            report["proof_match_requests"] += 1
+            site, reason = prove_parent_n(rule.reaction, parent)
+            if site is None:
+                return unknown(reason)
+            source_slot = site["source_slot"]
+            proven, reason = prove_raw_n(
+                tuple(raw for raw, _clean in alternatives),
+                parent,
+                site,
+                self.limits.max_reverse_outcomes,
+            )
+            if not proven:
+                return unknown(reason)
+            for raw, clean in alternatives:
+                if source_slot >= len(clean) or source_slot >= len(raw):
+                    return unknown("normalized_source_slot_missing")
+                if not same_n_origin_and_bonds(raw[source_slot], clean[source_slot], site["parent_n"]):
+                    return unknown("normalized_source_n_origin_or_bonds_changed")
+            if self.deadline is not None and time.monotonic() >= self.deadline:
+                return unknown("deadline")
+            proof = (rule.id, guide, source_slot, site["map_number"], site["parent_n"])
+            self._mapped_nh_proofs[key] = proof
+            return proof
+        except (ValueError, RuntimeError, AttributeError, IndexError, KeyError):
+            return unknown("proof_error")
+
     def _reverse(self, rule, target, fallback, *, record_centers=False):
         key = (rule.id, target, fallback)
         if key in self._reverse_cache:
@@ -2214,11 +2337,14 @@ class RouteFirstSearch:
         raw_seen = False
         reverse_failed = False
         nonring_query = False
+        mapped_nh_capture = self._prefer_mapped_nh_second and self._phase == 1 and target == self.hit
+        registry_store = self._mapped_nh_raw if mapped_nh_capture else self._continuation_raw
+        capture_enabled = mapped_nh_capture or (
+            self._diagnose_continuation and (self._phase == 2 or self._continuation_capture_all_phases)
+        )
         registry = (
             {"by_guide": {}, "incomplete": None, "raw_cap_saturated": False}
-            if self._diagnose_continuation
-            and (self._phase == 2 or self._continuation_capture_all_phases)
-            and len(self._continuation_raw) < MAX_CONTINUATION_REGISTRIES
+            if capture_enabled and len(registry_store) < MAX_CONTINUATION_REGISTRIES
             else None
         )
         if not fallback and not self._stop():
@@ -2387,7 +2513,9 @@ class RouteFirstSearch:
                             )
                     if registry is not None:
                         try:
-                            self._capture_continuation_raw(registry, guide, outcome, clean_parts)
+                            self._capture_continuation_raw(
+                                registry, guide, outcome, clean_parts, mapped_nh=mapped_nh_capture
+                            )
                         except Exception:
                             registry["incomplete"] = "snapshot_unexpected_error"
                     if record_centers:
@@ -2457,7 +2585,7 @@ class RouteFirstSearch:
                     reasons[reason] = reasons.get(reason, 0) + 1
         self._reverse_cache[key] = guides
         if registry is not None:
-            self._continuation_raw[key] = registry
+            registry_store[key] = registry
         return guides
 
     def _retrieval_target(self, target):
@@ -2619,9 +2747,11 @@ class RouteFirstSearch:
                 return old("deadline")
             if checked >= MAX_CONTINUATION_ROLE_CHECKS_PER_QUERY:
                 return old("role_check_query_budget")
-            if report["role_checks"] >= MAX_CONTINUATION_ROLE_CHECKS_PER_SEARCH:
+            if self._context_role_checks >= MAX_CONTINUATION_ROLE_CHECKS_PER_SEARCH:
                 return old("role_check_search_budget")
             checked += 1
+            self._context_role_checks += 1
+            self.report["context_role_checks_total"] += 1
             report["role_checks"] += 1
             try:
                 if not self.catalog.mols[smiles].HasSubstructMatch(query, useChirality=True):
@@ -2675,6 +2805,85 @@ class RouteFirstSearch:
         self._continuation_selected[key] = legacy
         return old("no_role_and_stereo_eligible_ordinary")
 
+    def _mapped_nh_second(self, base_key, legacy, context):
+        """Prefer an already visited ordinary source retaining a proven mapped N-H."""
+        if not self._prefer_mapped_nh_second or context is None:
+            return legacy
+        rule, proof = context
+        report = self.report["mapped_nh_preference"]
+
+        def old(reason):
+            counts = report["legacy_reasons"]
+            counts[reason] = counts.get(reason, 0) + 1
+            return legacy
+
+        if self.deadline is not None and time.monotonic() >= self.deadline:
+            return old("deadline")
+        key = ("mapped_nh", base_key, proof)
+        if key in self._mapped_nh_selected:
+            return self._mapped_nh_selected[key]
+        if len(self._mapped_nh_selected) >= MAX_MAPPED_NH_SELECTED_CONTEXTS:
+            return old("selected_context_budget")
+        stored = self._mapped_nh_ranked.get(base_key)
+        if stored is None:
+            return old("complete_ranked_pool_unavailable")
+        ordinary, ordinary_second = stored
+        if self.limits.building_block_top_k != 2 or len(legacy) != 2 or not ordinary_second:
+            return old("no_ordinary_second")
+        if proof[0] != rule.id or base_key[1] != rule.roles[proof[2]]:
+            return old("proof_context_mismatch")
+        role = rule.reaction.GetReactants()[proof[2]]
+        checked = 0
+        for row in ordinary:
+            smiles = row[2]
+            if smiles == legacy[0].smiles:
+                continue
+            if self.deadline is not None and time.monotonic() >= self.deadline:
+                return old("deadline")
+            if checked >= MAX_CONTINUATION_ROLE_CHECKS_PER_QUERY:
+                return old("role_check_query_budget")
+            if self._context_role_checks >= MAX_CONTINUATION_ROLE_CHECKS_PER_SEARCH:
+                return old("role_check_search_budget")
+            checked += 1
+            self._context_role_checks += 1
+            self.report["context_role_checks_total"] += 1
+            report["role_checks"] += 1
+            try:
+                eligible, reason, _index = candidate_role_n_site(self.catalog.mols[smiles], role, proof[3], 2)
+            except (ValueError, RuntimeError, AttributeError, KeyError):
+                return old("role_check_error")
+            if eligible is None:
+                return old(reason or "role_check_unknown")
+            if not eligible:
+                continue
+            if smiles not in self._catalog_stereo_cache:
+                mol = self.catalog.mols[smiles]
+                cost = mol.GetNumAtoms() + mol.GetNumBonds()
+                if (
+                    self.report["catalog_stereo_perceptions"] >= MAX_CATALOG_STEREO_PERCEPTIONS
+                    or len(self._catalog_stereo_cache) >= MAX_CATALOG_STEREO_CACHE_ENTRIES
+                    or self.report["catalog_stereo_atom_bond_charges"] + cost
+                    > MAX_CATALOG_STEREO_ATOM_BOND_CHARGES
+                ):
+                    return old("stereo_budget")
+            stereo = self._catalog_block_stereo_eligible(smiles)
+            if stereo is None:
+                return old("stereo_unknown")
+            if not stereo:
+                continue
+            if self.deadline is not None and time.monotonic() >= self.deadline:
+                return old("deadline")
+            replacement = self.catalog.blocks[sorted(self.catalog.by_smiles[smiles])[0]]
+            selected = (legacy[0], replacement)
+            if selected != legacy:
+                report["replacements"] += 1
+            self._mapped_nh_selected[key] = selected
+            return selected
+        if self.deadline is not None and time.monotonic() >= self.deadline:
+            return old("deadline")
+        self._mapped_nh_selected[key] = legacy
+        return old("no_proven_ordinary_source")
+
     def _nearest(
         self,
         target,
@@ -2684,6 +2893,7 @@ class RouteFirstSearch:
         role_slot=None,
         fallback_missing_role=False,
         continuation_context=None,
+        mapped_nh_context=None,
     ):
         # This context changes only the second block. Keep its completed
         # selection separate from the ordinary nearest result for this query.
@@ -2695,7 +2905,8 @@ class RouteFirstSearch:
             if trace is not None:
                 trace["pool_cache_hits"] += 1
                 trace["pool_selected_blocks"] += len(self._nearest_cache[key])
-            return self._continuation_second(key, self._nearest_cache[key], continuation_context)
+            base = self._continuation_second(key, self._nearest_cache[key], continuation_context)
+            return self._mapped_nh_second(key, base, mapped_nh_context)
         self.report["role_queries"] += 1
         query = Chem.MolFromSmarts(role)
         retrieval_target = self._retrieval_target(target)
@@ -2934,7 +3145,19 @@ class RouteFirstSearch:
                         len(selected) >= 2 and selected[1][1] == 0,
                     )
                     report["ranked_rows_retained"] += len(ordinary)
-        return self._continuation_second(key, blocks, continuation_context)
+            if mapped_nh_context is not None and self._prefer_mapped_nh_second:
+                report = self.report["mapped_nh_preference"]
+                if (
+                    len(ordinary) <= self.limits.max_catalog_rows_per_query
+                    and report["ranked_rows_retained"] + len(ordinary) <= MAX_MAPPED_NH_RANKED_ROWS
+                ):
+                    self._mapped_nh_ranked[key] = (
+                        tuple(ordinary),
+                        len(selected) >= 2 and selected[1][1] == 0,
+                    )
+                    report["ranked_rows_retained"] += len(ordinary)
+        base = self._continuation_second(key, blocks, continuation_context)
+        return self._mapped_nh_second(key, base, mapped_nh_context)
 
     def _stage(
         self,
@@ -2946,6 +3169,7 @@ class RouteFirstSearch:
         product_budget=None,
         fallback_missing_slots=(),
         continuation_context=None,
+        mapped_nh_context=None,
     ):
         options = []
         for slot, (target, role) in enumerate(zip(guide, rule.roles)):
@@ -2974,6 +3198,9 @@ class RouteFirstSearch:
                                 continuation_context if continuation_context[2] == slot else None
                             )
                             if continuation_context is not None
+                            else None,
+                            mapped_nh_context=(mapped_nh_context if mapped_nh_context[1][2] == slot else None)
+                            if mapped_nh_context is not None
                             else None,
                         )
                     )
@@ -3239,11 +3466,15 @@ class RouteFirstSearch:
             }
             for rule, guide, fallback, keys, kind, quality in plans
         ]
+        mapped_nh_contexts = []
+        for rule, guide, fallback, _keys, _kind, _quality in plans:
+            proof = self._mapped_nh_proof(rule, guide, fallback) if self._prefer_mapped_nh_second else None
+            mapped_nh_contexts.append((rule, proof) if proof is not None else None)
         self._select_role_indexes(plans)
         depth_one_product_budget = (
             self.limits.max_products if self.limits.max_steps == 1 else max(1, self.limits.max_products // 2)
         )
-        for rule, guide, fallback, _keys, _kind, quality in plans:
+        for plan_index, (rule, guide, fallback, _keys, _kind, quality) in enumerate(plans):
             if self._stop() or self.report["combinations"] >= depth_one_budget:
                 break
             states = self._stage(
@@ -3257,6 +3488,7 @@ class RouteFirstSearch:
                     if fallback and quality == "explicit_fallback"
                     else ()
                 ),
+                mapped_nh_context=mapped_nh_contexts[plan_index],
             )
             self._retain(states)
         if self.limits.max_steps == 2 and not self._stop():
@@ -3452,6 +3684,7 @@ class RouteFirstSearch:
                                 if _fallback and _quality == "explicit_fallback"
                                 else ()
                             ),
+                            mapped_nh_context=mapped_nh_contexts[plan_index],
                         )
                         if slot_trace is not None:
                             slot_trace["outer_stage_calls"] += 1

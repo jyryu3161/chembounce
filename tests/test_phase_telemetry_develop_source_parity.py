@@ -176,12 +176,56 @@ CURRENT_REVIEWED = {
     },
 }
 
+MAPPED_NH_REVIEWED = {
+    "base_commit": "c558d70b29729072d1fed3f1614a5e52fd53d5af",
+    "scope": "One reviewed workflow manifest source-provenance tuple addition for route_first_nh.py; preceding P1 v2 source pin remains historical",
+    "workflow_source_sha256": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9",
+    "workflow_ast_sha256": "78df6c387a5be9f9ef732e9118248adc7a492bb939ee170180352ea9a6573a98",
+}
+
+
+def structural_digest_without_mapped_nh_manifest_source(source):
+    """Remove only the reviewed helper name from one exact manifest tuple."""
+    new = expression(
+        "{name: _SOURCE_HASHES[name] for name in ("
+        '"route_first.py", "route_first_nh.py", "routes.py", "reactions.py", '
+        '"catalog.py", "workflow.py")}'
+    )
+
+    class RemoveReviewedManifestName(ast.NodeTransformer):
+        count = 0
+
+        def visit_DictComp(self, node):
+            if dump(node) == new:
+                self.count += 1
+                return ast.parse(
+                    "{name: _SOURCE_HASHES[name] for name in ("
+                    '"route_first.py", "routes.py", "reactions.py", "catalog.py", "workflow.py")}',
+                    mode="eval",
+                ).body
+            return self.generic_visit(node)
+
+    transformer = RemoveReviewedManifestName()
+    tree = transformer.visit(ast.parse(source))
+    assert transformer.count == 1
+    tree = DisabledTelemetry().visit(tree)
+    return hashlib.sha256(
+        json.dumps(canonical(tree), separators=(",", ":"), ensure_ascii=True).encode()
+    ).hexdigest()
+
 
 @pytest.mark.parametrize("path,expected", BASELINES.items())
 def test_disabled_current_reviewed_source_structure_preserved(path, expected):
     source = (ROOT / path).read_bytes()
     if path in CURRENT_REVIEWED["files"]:
         expected = CURRENT_REVIEWED["files"][path]
+        if path == "chembounce_synthesis/workflow.py":
+            assert hashlib.sha256(source).hexdigest() == MAPPED_NH_REVIEWED["workflow_source_sha256"]
+            assert structural_digest(source.decode()) == MAPPED_NH_REVIEWED["workflow_ast_sha256"]
+            assert (
+                structural_digest_without_mapped_nh_manifest_source(source.decode()) == expected["ast_sha256"]
+            )
+            return
         assert hashlib.sha256(source).hexdigest() == expected["source_sha256"]
     assert structural_digest(source.decode()) == expected["ast_sha256"]
 

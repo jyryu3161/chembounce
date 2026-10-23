@@ -1534,7 +1534,14 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 **route_first_report,
                 "source_sha256": {
                     name: _SOURCE_HASHES[name]
-                    for name in ("route_first.py", "routes.py", "reactions.py", "catalog.py", "workflow.py")
+                    for name in (
+                        "route_first.py",
+                        "route_first_nh.py",
+                        "routes.py",
+                        "reactions.py",
+                        "catalog.py",
+                        "workflow.py",
+                    )
                 },
                 "source_binding_scope": "Observed implementation and concrete asset hashes; opt-in custom development policy, not historical v7 generation provenance",
                 "selected_design_cap": config.get("max_designs", 20),

@@ -26,11 +26,279 @@ from chembounce_synthesis.route_first import (
     topology_rule_specification,
     typed_reverse_hint,
 )
+from chembounce_synthesis.route_first_nh import candidate_role_n, prove_parent_n, prove_raw_n
 from chembounce_synthesis.routes import verify_route
 from chembounce_synthesis.workflow import check_constraints, run
 
 HIT = "CC(=O)Nc1ccccc1"
 TWO_STEP_HIT = "CC(=O)NCC(=O)Nc1ccccc1"
+
+
+def test_mapped_nh_proof_and_second_source_use_existing_ranked_pool(tmp_path, monkeypatch):
+    from chembounce_synthesis.catalog import BuildingBlock
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "couple",
+                        "smarts": "[Cl:3][c:1].[N:2]>>[c:1][N:2]",
+                        "source": "test",
+                    }
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    rule = rules.get("couple")
+    names = ("CNC", "CN", "N", "Clc1ccccc1", "unknown")
+    blocks = {name: BuildingBlock(name, name, "test", "2026") for name in names}
+    catalog = SimpleNamespace(
+        sha256="test",
+        mols={name: molecule("[2H]NC" if name == "unknown" else name) for name in names},
+        blocks=blocks,
+        by_smiles={name: {name} for name in names},
+    )
+    settings = RouteFirstLimits(**limits())
+    off = RouteFirstSearch("CNc1ccccc1", catalog, rules, settings)
+    on = RouteFirstSearch("CNc1ccccc1", catalog, rules, settings, prefer_mapped_nh_second=True)
+    guide = off._reverse(rule, off.hit, False, record_centers=True)[0]
+    assert on._reverse(rule, on.hit, False, record_centers=True) == [guide]
+    assert off.report["reverse_attempts"] == on.report["reverse_attempts"] == 1
+    assert off.report["fingerprint_calls"] == on.report["fingerprint_calls"] == 1
+    assert off.report["mapped_nh_preference"]["proof_contexts"] == 0
+    proof = on._mapped_nh_proof(rule, guide, False)
+    assert proof is not None and proof[2] == 1
+    assert on._mapped_nh_proof(rule, guide, False) == proof
+    assert on.report["mapped_nh_preference"]["proof_contexts"] == 1
+
+    key = (guide[1], rule.roles[1], False)
+    legacy = (blocks["CNC"], blocks["N"])
+    on._nearest_cache[key] = legacy
+    on._mapped_nh_ranked[key] = (
+        ((-1.0, 0, "CNC"), (-0.9, 0, "CN"), (-0.8, 0, "N")),
+        True,
+    )
+    selected = on._nearest(guide[1], rule.roles[1], mapped_nh_context=(rule, proof))
+    assert selected == (blocks["CNC"], blocks["CN"])
+    assert on._nearest_cache[key] == legacy
+    assert on.report["catalog_row_visits"] == 0
+    assert on.report["fingerprint_calls"] == 1
+    assert on.report["mapped_nh_preference"]["replacements"] == 1
+    assert on._nearest(guide[1], rule.roles[1]) == legacy
+
+    on.deadline = time.monotonic() - 1
+    assert on._nearest(guide[1], rule.roles[1], mapped_nh_context=(rule, proof)) == legacy
+    on.deadline = None
+    on._mapped_nh_selected.clear()
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_ROLE_CHECKS_PER_QUERY", 0)
+    assert on._nearest(guide[1], rule.roles[1], mapped_nh_context=(rule, proof)) == legacy
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_ROLE_CHECKS_PER_QUERY", 8192)
+    on._mapped_nh_ranked[key] = (((-1.0, 0, "CNC"), (-0.9, 0, "unknown"), (-0.8, 0, "CN")), True)
+    assert on._nearest(guide[1], rule.roles[1], mapped_nh_context=(rule, proof)) == legacy
+    on._mapped_nh_ranked[key] = (((-1.0, 0, "CNC"), (-0.8, 0, "CN")), False)
+    assert on._nearest(guide[1], rule.roles[1], mapped_nh_context=(rule, proof)) == legacy
+    on._mapped_nh_ranked.clear()
+    assert on._nearest(guide[1], rule.roles[1], mapped_nh_context=(rule, proof)) == legacy
+
+
+def test_mapped_nh_unknown_proof_and_strict_role_checks_fail_closed(tmp_path, monkeypatch):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [{"id": "couple", "smarts": "[Cl:3][c:1].[N:2]>>[c:1][N:2]", "source": "test"}],
+            }
+        )
+    )
+    rules = Rules(path)
+    rule = rules.get("couple")
+    search = RouteFirstSearch(
+        "CNc1ccccc1",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        prefer_mapped_nh_second=True,
+    )
+    guide = search._reverse(rule, search.hit, False)[0]
+    registry = search._mapped_nh_raw[(rule.id, search.hit, False)]
+    registry["raw_cap_saturated"] = True
+    assert search._mapped_nh_proof(rule, guide, False) is None
+    registry["raw_cap_saturated"] = False
+    registry["incomplete"] = "snapshot_budget"
+    assert search._mapped_nh_proof(rule, guide, False) is None
+    registry["incomplete"] = None
+    monkeypatch.setattr(route_first_module, "MAX_MAPPED_NH_PROOF_UNITS", 0)
+    assert search._mapped_nh_proof(rule, guide, False) is None
+    monkeypatch.setattr(route_first_module, "MAX_MAPPED_NH_PROOF_UNITS", 32768)
+    monkeypatch.setattr(route_first_module, "MAX_MAPPED_NH_PROOF_MATCH_REQUESTS", 0)
+    assert search._mapped_nh_proof(rule, guide, False) is None
+    monkeypatch.setattr(route_first_module, "MAX_MAPPED_NH_PROOF_MATCH_REQUESTS", 512)
+    assert search._mapped_nh_proof(rule, guide, False) is not None
+
+    conflicting = RouteFirstSearch(
+        "CNc1ccccc1",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        prefer_mapped_nh_second=True,
+    )
+    assert conflicting._reverse(rule, conflicting.hit, False) == [guide]
+    alternative = conflicting._mapped_nh_raw[(rule.id, conflicting.hit, False)]["by_guide"][guide][0]
+    raw_parts, clean_parts = alternative
+    modified = tuple(Chem.Mol(part) for part in clean_parts)
+    site_atom = next(atom for atom in modified[1].GetAtoms() if atom.GetAtomicNum() == 7)
+    site_atom.SetIntProp("react_atom_idx", 999)
+    conflicting._mapped_nh_raw[(rule.id, conflicting.hit, False)]["by_guide"][guide].append(
+        (raw_parts, modified)
+    )
+    assert conflicting._mapped_nh_proof(rule, guide, False) is None
+
+    parent = molecule("CNc1ccccc1")
+    site, reason = prove_parent_n(rule.reaction, parent)
+    assert reason is None
+    raw = registry["by_guide"][guide][0][0]
+    assert prove_raw_n((raw,), parent, site) == (True, None)
+    assert candidate_role_n(molecule("CN"), rule.reaction.GetReactants()[1], 2) == (True, None)
+    assert candidate_role_n(molecule("CNC"), rule.reaction.GetReactants()[1], 2) == (False, None)
+    assert candidate_role_n(molecule("[2H]NC"), rule.reaction.GetReactants()[1], 2)[0] is None
+    assert prove_parent_n(rule.reaction, molecule("CN(C)c1ccccc1"))[0] is None
+    assert prove_parent_n(rule.reaction, molecule("CNc1ccc(NC)cc1"))[0] is None
+    assert RouteFirstLimits(**limits(prefer_mapped_nh_second=True)).prefer_mapped_nh_second
+    assert RouteFirstLimits(**limits(prefer_continuation_second=True)).prefer_continuation_second
+    with pytest.raises(ValueError, match="must be a boolean"):
+        RouteFirstLimits(**limits(prefer_mapped_nh_second=1))
+    with pytest.raises(ValueError, match="must be a boolean"):
+        RouteFirstLimits(**limits(prefer_continuation_second="yes"))
+
+
+def test_mapped_nh_approximate_guide_can_prove_raw_n_without_role_promotion(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "couple",
+                        "smarts": "[Cl:3][c:1].[N;!$(NS(=O)=O):2]>>[c:1][N:2]",
+                        "source": "test",
+                    }
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    rule = rules.get("couple")
+    search = RouteFirstSearch(
+        "CS(=O)(=O)Nc1ccccc1",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        prefer_mapped_nh_second=True,
+        prefer_continuation_second=True,
+    )
+    guide = search._reverse(rule, search.hit, False, record_centers=True)[0]
+    assert search._guide_quality[(rule.id, search.hit, guide)] == "approximate"
+    assert not molecule(guide[1]).HasSubstructMatch(rule.reaction.GetReactants()[1])
+    proof = search._mapped_nh_proof(rule, guide, False)
+    assert proof is not None and proof[2] == 1
+    assert search.report["reverse_attempts"] == 1
+    assert search.report["mapped_nh_preference"]["raw_snapshot_attempts"] == 1
+    assert search._continuation_snapshots == 0
+    search._phase = 2
+    assert search._reverse(rule, "CNc1ccccc1", False)
+    assert search._continuation_snapshots == 1
+    assert search._mapped_nh_snapshots == 1
+
+
+def test_public_route_first_mapped_nh_opt_in_changes_only_second_source(tmp_path):
+    from chembounce_synthesis.catalog import Catalog
+    from chembounce_synthesis.reactions import Rules
+
+    catalog_path = tmp_path / "catalog.tsv"
+    names = (
+        "Clc1ccccc1",
+        "CNC1CCCCC1",
+        "CCNC1CCCCC1",
+        "NC1CCCCC1",
+        "CN",
+        "CCN",
+        "CNC",
+        "CC(C)N",
+    )
+    catalog_path.write_text(
+        "id\tsmiles\tsource\tsnapshot\n"
+        + "".join(f"{index}\t{name}\ttest\t2026\n" for index, name in enumerate(names))
+    )
+    rules_path = tmp_path / "rules.json"
+    rules_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "couple",
+                        "smarts": "[Cl:3][c:1].[N;!$(NS(=O)=O):2]>>[c:1][N:2]",
+                        "source": "test",
+                    }
+                ],
+            }
+        )
+    )
+    catalog, rules = Catalog(catalog_path), Rules(rules_path)
+    hit = "O=S(=O)(C1CCCCC1)Nc1ccccc1"
+    settings = limits(max_steps=1, max_outer_guides=1)
+    default, default_report = generate(hit, catalog, rules, settings)
+    explicit_off, off_report = generate(hit, catalog, rules, {**settings, "prefer_mapped_nh_second": False})
+    on, on_report = generate(hit, catalog, rules, {**settings, "prefer_mapped_nh_second": True})
+
+    def signature(rows):
+        return [
+            (
+                item["verification"]["product"],
+                tuple(node.get("building_block_id") for node in item["route"]["nodes"]),
+            )
+            for item in rows
+        ]
+
+    assert signature(default) == signature(explicit_off)
+    assert default_report["mapped_nh_preference"]["proof_contexts"] == 0
+    assert off_report["mapped_nh_preference"]["proof_contexts"] == 0
+    assert on_report["mapped_nh_preference"]["replacements"] == 1
+    assert on_report["reverse_attempts"] == default_report["reverse_attempts"]
+    assert on_report["fingerprint_calls"] == default_report["fingerprint_calls"]
+    assert signature(default)[0] == signature(on)[0]
+    assert signature(on)[1][0] == "CNc1ccccc1"
+    assert signature(on)[1][1][:2] == ("0", "4")
+    assert on_report["routes_verified"] == 2
+
+    both = RouteFirstSearch(
+        hit,
+        catalog,
+        rules,
+        RouteFirstLimits(**settings),
+        prefer_continuation_second=True,
+        prefer_mapped_nh_second=True,
+    )
+    both.run()
+    assert both.report["mapped_nh_preference"]["ranked_rows_retained"] > 0
+    assert both._continuation_ranked == {}
+    assert both._continuation_selected == {}
+
+    reversed_rule = rdChemReactions.ReactionFromSmarts("[N:2].[Cl:3][c:1]>>[c:1][N:2]")
+    reversed_rule.Initialize()
+    reversed_site, reason = prove_parent_n(reversed_rule, molecule("CNc1ccccc1"))
+    assert reason is None and reversed_site["source_slot"] == 0
 
 
 def test_continuation_origin_distinguishes_intact_split_and_edited_raw_sites():
@@ -2781,6 +3049,7 @@ def test_real_workflow_uses_generated_route_without_proposal_provider_or_native_
     manifest = json.loads((output / "manifest.json").read_text())
     assert manifest["provider"] is None
     assert manifest["route_first"]["source_sha256"]["route_first.py"]
+    assert manifest["route_first"]["source_sha256"]["route_first_nh.py"]
     generated = json.loads((output / "route_first_candidates.json").read_text())
     assert generated["candidates"] and len(generated["selected_designs"]) <= 3
     summary = json.loads((output / "summary.json").read_text())
