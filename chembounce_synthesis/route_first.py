@@ -355,6 +355,9 @@ class RouteFirstSearch:
             "role_queries": 0,
             "combinations": 0,
             "products_generated": 0,
+            "inner_role_checks": 0,
+            "inner_role_compatible": 0,
+            "inner_role_rejected": 0,
             "route_audit_attempts": 0,
             "routes_verified": 0,
             "product_rejections": {},
@@ -867,6 +870,20 @@ class RouteFirstSearch:
                 break
         return states
 
+    def _compatible_inner(self, states, outer_rule, slot):
+        role = outer_rule.reaction.GetReactants()[slot]
+        compatible = []
+        for state in states:
+            if self._stop():
+                break
+            self.report["inner_role_checks"] += 1
+            if molecule(state["product"]).HasSubstructMatch(role, useChirality=True):
+                self.report["inner_role_compatible"] += 1
+                compatible.append(state)
+            else:
+                self.report["inner_role_rejected"] += 1
+        return compatible
+
     def _retain(self, states):
         # Keep the bounded forward outcomes until both search phases finish.
         # Product admission and route audit then spend their budget on the
@@ -1035,6 +1052,9 @@ class RouteFirstSearch:
                     for inner_rule, _ in inner_rules:
                         for inner_guide in self._reverse(inner_rule, target, False):
                             inner = self._stage(inner_rule, inner_guide, "i")
+                            inner = self._compatible_inner(inner, outer_rule, slot)
+                            if self._stop():
+                                break
                             inner = sorted(
                                 inner,
                                 key=lambda state: (self._rank(state["product"], target), state["product"]),

@@ -1,0 +1,2615 @@
+{
+  "status": "complete",
+  "scope": "Development-only exact pre-evidence gates and nearest rejections; no model, 3D, forward support or qualification",
+  "policy": "catalog-rule-route-first-v2",
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "9f70f13794bb0142a98f7dbe354bf0f3850a26805a64ddd09c139d184504db16",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff"
+  },
+  "harness_sha256": "29c8f1c0c9cbd1a8bed734d2117754b00b2aa9831c8cf86dd41c4e88f513cad9",
+  "panel_sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+  "config_sha256": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+  "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+  "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+  "rows": [
+    {
+      "id": "CHEMBL4630839-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 28.833,
+      "pre_evidence_eligible_routes": 8,
+      "pre_evidence_eligible_distinct_products": 6,
+      "one_step_routes": 8,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": 0.4696969696969697,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 5,
+        "hit_tanimoto": 12,
+        "polar_reference_capacity_below_minimum": 8,
+        "property: logp.upper_maximum:5.294600000000005>5": 1,
+        "property: logp.upper_maximum:5.299500000000005>5": 1,
+        "property: logp.upper_maximum:5.832100000000006>5": 1
+      },
+      "observed_distinct_products": 34,
+      "anchor_passed_distinct_products": 34,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "CN(Cc1ccccc1)C(=O)c1cc(N2CCCCCCCC2)ccn1",
+          "hit_bit_tanimoto": 0.3472222222222222,
+          "anchor_passed": true,
+          "gate": "hit_tanimoto",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:9e43e1024f52a91b6bbd0dbc3a34a16c582f54ca469e6d19a81f91ff438d2fd2"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:e33390325e20014e179319a236a592105d2ac7b958af871b9610618065096a21"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-042",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "CN(Cc1ccccc1)C(=O)c1cc(N2CCCCCCCC2)ccn1"
+            }
+          ]
+        },
+        {
+          "product": "CN(Cc1ccccc1)C(=O)c1cc(N2CCCCCCCCCC2)ccn1",
+          "hit_bit_tanimoto": 0.3472222222222222,
+          "anchor_passed": true,
+          "gate": "property: logp.upper_maximum:5.294600000000005>5",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:9e43e1024f52a91b6bbd0dbc3a34a16c582f54ca469e6d19a81f91ff438d2fd2"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:a52784a7d738b6485c1570818c78467092ff937f7a13ab2d51acfcb0384a7c8a"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-042",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "CN(Cc1ccccc1)C(=O)c1cc(N2CCCCCCCCCC2)ccn1"
+            }
+          ]
+        },
+        {
+          "product": "O=C(OCC1CC1)c1cc2ccccc2nc1N1CCCC1",
+          "hit_bit_tanimoto": 0.3472222222222222,
+          "anchor_passed": true,
+          "gate": "hit_tanimoto",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:e239632f7db46a02ba6244a882d8cf674f27190262485b0491a71f919d1eca91"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:c4635fb923e34d50704e03615613f66a34c02548901d1f7bc7d29335a5337d38"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-071",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=C(OCC1CC1)c1cc2ccccc2nc1N1CCCC1"
+            }
+          ]
+        },
+        {
+          "product": "C#CC(C)N(Cc1ccccc1)S(=O)(=O)c1ccc(O)c(C(=O)NCC2CC2)c1",
+          "hit_bit_tanimoto": 0.3253012048192771,
+          "anchor_passed": true,
+          "gate": "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly",
+          "nodes": [
+            {
+              "id": "ib0",
+              "building_block_id": "structure-sha256:7c202d9e586dafe3d794020f2391a9322f59803be08f600c10cf9f7fbfe5f6b3"
+            },
+            {
+              "id": "ib1",
+              "building_block_id": "structure-sha256:6b22de51c792100154041f306b8b8ef044f03ce02a179bf64315fc09f7427bde"
+            },
+            {
+              "id": "ir",
+              "rule_id": "synllama-rule-031",
+              "reactants": [
+                "ib0",
+                "ib1"
+              ],
+              "product": "C#CC(C)N(Cc1ccccc1)S(=O)(=O)c1ccc(O)c(C(=O)O)c1"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:55a6b33f04bc8b19d9841dc13d057db7ff5abb19ff535987856c5637f5874e6c"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-077",
+              "reactants": [
+                "ir",
+                "ob1"
+              ],
+              "product": "C#CC(C)N(Cc1ccccc1)S(=O)(=O)c1ccc(O)c(C(=O)NCC2CC2)c1"
+            }
+          ]
+        },
+        {
+          "product": "C#CCN(Cc1ccccc1)S(=O)(=O)c1ccc(O)c(C(=O)NCC2CC2)c1",
+          "hit_bit_tanimoto": 0.325,
+          "anchor_passed": true,
+          "gate": "hit_tanimoto",
+          "nodes": [
+            {
+              "id": "ib0",
+              "building_block_id": "structure-sha256:ad92837b8413d7fffe9a9fb9944c7da92c93a5cb277f2f8868507d10fcc0f5da"
+            },
+            {
+              "id": "ib1",
+              "building_block_id": "structure-sha256:6b22de51c792100154041f306b8b8ef044f03ce02a179bf64315fc09f7427bde"
+            },
+            {
+              "id": "ir",
+              "rule_id": "synllama-rule-031",
+              "reactants": [
+                "ib0",
+                "ib1"
+              ],
+              "product": "C#CCN(Cc1ccccc1)S(=O)(=O)c1ccc(O)c(C(=O)O)c1"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:55a6b33f04bc8b19d9841dc13d057db7ff5abb19ff535987856c5637f5874e6c"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-077",
+              "reactants": [
+                "ir",
+                "ob1"
+              ],
+              "product": "C#CCN(Cc1ccccc1)S(=O)(=O)c1ccc(O)c(C(=O)NCC2CC2)c1"
+            }
+          ]
+        }
+      ],
+      "outer_rules_selected": [
+        {
+          "rule_id": "synllama-rule-077",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-027",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-029",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-031",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-036",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-040",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-042",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-044",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-045",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-046",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-047",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-071",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-072",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-073",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-074",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-008",
+          "fallback": true
+        }
+      ],
+      "outer_stage_rule_ids_executed": [
+        "synllama-rule-077",
+        "synllama-rule-036",
+        "synllama-rule-042",
+        "synllama-rule-045",
+        "synllama-rule-046",
+        "synllama-rule-047",
+        "synllama-rule-071",
+        "synllama-rule-072"
+      ],
+      "outer_stage_calls": 8,
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 262144,
+        "catalog_bucket_rankings": 19320,
+        "total_fingerprint_calls": 13658,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "reverse_attempts": 39,
+        "reverse_failures": 7,
+        "reverse_outcomes": 69,
+        "reverse_fallbacks": 0,
+        "reverse_partition_checks": 122,
+        "reverse_partition_rejections": {
+          "reused_parent_atom": 47
+        },
+        "reverse_hint_normalizations": {
+          "removed_originless_terminal_dummy": 46,
+          "reset_template_n_hydrogens": 2
+        },
+        "reverse_hint_rejections": {
+          "hint_sanitization_failed": 7
+        },
+        "combinations": 254,
+        "products_generated": 114,
+        "route_audit_attempts": 8,
+        "anchor_index_queries": 0,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 0,
+        "anchor_index_matches": [],
+        "anchor_index_postings_retained": [],
+        "anchor_index_postings_truncated": [],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 0,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0,
+        "rule_template_exclusions_count": 26
+      },
+      "rule_target_match_inspections": 421,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL4630839-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 28.569,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 5,
+        "Hit stereo anchor is inverted": 6,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 18,
+        "hit_tanimoto": 5,
+        "polar_reference_capacity_below_minimum": 2,
+        "property: mw.upper_maximum:526.5970000000002>500.0": 2,
+        "property: mw.upper_maximum:540.6240000000003>500.0": 1,
+        "property: mw.upper_maximum:544.5870000000002>500.0": 1,
+        "property: mw.upper_maximum:554.6070000000003>500.0": 1
+      },
+      "observed_distinct_products": 41,
+      "anchor_passed_distinct_products": 17,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5cc(C(=O)O)cc(N6CCOCC6)n5)C4)cc3)nc12",
+          "hit_bit_tanimoto": 0.4186046511627907,
+          "anchor_passed": true,
+          "gate": "property: mw.upper_maximum:526.5970000000002>500.0",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:bf065aa48e4aa81f6f39bf4f04a5d0e21281ce49b60a1e993ec6b04e7c14de9e"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:77fc88605aa7087b27d50597a1137f4239df6b1ea6f13dad8ae2bd17d09bba30"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-042",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5cc(C(=O)O)cc(N6CCOCC6)n5)C4)cc3)nc12"
+            }
+          ]
+        },
+        {
+          "product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc([N+](=O)[O-])cc5N5CCOCC5)C4)cc3)nc12",
+          "hit_bit_tanimoto": 0.35106382978723405,
+          "anchor_passed": true,
+          "gate": "property: mw.upper_maximum:526.5970000000002>500.0",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:da20503d29e7a78c4ce1ffaac44bcdcefcedebf66ce81d69d5c0771f47744186"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:77fc88605aa7087b27d50597a1137f4239df6b1ea6f13dad8ae2bd17d09bba30"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-047",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc([N+](=O)[O-])cc5N5CCOCC5)C4)cc3)nc12"
+            }
+          ]
+        },
+        {
+          "product": "CC(C)(C)OC(=O)N1C[C@@H](C(=O)NCC2CC2)C[C@@H](c2ccccc2)C1",
+          "hit_bit_tanimoto": 0.34615384615384615,
+          "anchor_passed": true,
+          "gate": "hit_tanimoto",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:dc440d6aac33d45ca5592b43b35e73d0cf0bdbf9caba7a7f8517567b1b8cb35a"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:55a6b33f04bc8b19d9841dc13d057db7ff5abb19ff535987856c5637f5874e6c"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-077",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "CC(C)(C)OC(=O)N1C[C@@H](C(=O)NCC2CC2)C[C@@H](c2ccccc2)C1"
+            }
+          ]
+        },
+        {
+          "product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc([N+](=O)[O-])c(N6CCOCC6)c5F)C4)cc3)nc12",
+          "hit_bit_tanimoto": 0.32653061224489793,
+          "anchor_passed": true,
+          "gate": "property: mw.upper_maximum:544.5870000000002>500.0",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:3834a6ab3d7396f6306ab60032d8075481b343e4627832e4ecfc24b0b86c39df"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:77fc88605aa7087b27d50597a1137f4239df6b1ea6f13dad8ae2bd17d09bba30"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-047",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc([N+](=O)[O-])c(N6CCOCC6)c5F)C4)cc3)nc12"
+            }
+          ]
+        },
+        {
+          "product": "CC(C)(C)OC(=O)N1C[C@@H](C(=O)NCC2CCC2)C[C@@H](c2ccccc2)C1",
+          "hit_bit_tanimoto": 0.325,
+          "anchor_passed": true,
+          "gate": "hit_tanimoto",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:dc440d6aac33d45ca5592b43b35e73d0cf0bdbf9caba7a7f8517567b1b8cb35a"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:2a4ae62aea2698f494de24d48699914c493a3bded3dbabc025269dc85b611215"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-077",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "CC(C)(C)OC(=O)N1C[C@@H](C(=O)NCC2CCC2)C[C@@H](c2ccccc2)C1"
+            }
+          ]
+        }
+      ],
+      "outer_rules_selected": [
+        {
+          "rule_id": "synllama-rule-026",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-077",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-027",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-029",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-030",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-031",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-036",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-040",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-042",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-044",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-045",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-046",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-047",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-071",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-072",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-073",
+          "fallback": false
+        }
+      ],
+      "outer_stage_rule_ids_executed": [
+        "synllama-rule-077",
+        "synllama-rule-036",
+        "synllama-rule-042",
+        "synllama-rule-045",
+        "synllama-rule-046",
+        "synllama-rule-047",
+        "synllama-rule-071",
+        "synllama-rule-072"
+      ],
+      "outer_stage_calls": 8,
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 262144,
+        "catalog_bucket_rankings": 18400,
+        "total_fingerprint_calls": 18113,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "reverse_attempts": 40,
+        "reverse_failures": 4,
+        "reverse_outcomes": 40,
+        "reverse_fallbacks": 0,
+        "reverse_partition_checks": 110,
+        "reverse_partition_rejections": {
+          "reused_parent_atom": 66
+        },
+        "reverse_hint_normalizations": {
+          "removed_originless_terminal_dummy": 30,
+          "reset_template_n_hydrogens": 2
+        },
+        "reverse_hint_rejections": {
+          "hint_sanitization_failed": 4
+        },
+        "combinations": 146,
+        "products_generated": 88,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 1,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 238542,
+        "anchor_index_matches": [
+          8
+        ],
+        "anchor_index_postings_retained": [
+          8
+        ],
+        "anchor_index_postings_truncated": [
+          false
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 31,
+        "anchor_posting_metadata_visits": 64,
+        "anchor_role_checks": 64,
+        "anchor_role_compatible": 17,
+        "rule_template_exclusions_count": 26
+      },
+      "rule_target_match_inspections": 421,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 28.862,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 42
+      },
+      "observed_distinct_products": 42,
+      "anchor_passed_distinct_products": 0,
+      "nearest_anchor_passed_rejections": [],
+      "outer_rules_selected": [
+        {
+          "rule_id": "synllama-rule-069",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-026",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-077",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-080",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-027",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-029",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-030",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-031",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-036",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-040",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-042",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-044",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-045",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-046",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-047",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-071",
+          "fallback": false
+        }
+      ],
+      "outer_stage_rule_ids_executed": [
+        "synllama-rule-077",
+        "synllama-rule-080",
+        "synllama-rule-042",
+        "synllama-rule-045",
+        "synllama-rule-046",
+        "synllama-rule-047",
+        "synllama-rule-071",
+        "synllama-rule-030"
+      ],
+      "outer_stage_calls": 8,
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 262144,
+        "catalog_bucket_rankings": 21160,
+        "total_fingerprint_calls": 20060,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "reverse_attempts": 41,
+        "reverse_failures": 2,
+        "reverse_outcomes": 37,
+        "reverse_fallbacks": 0,
+        "reverse_partition_checks": 113,
+        "reverse_partition_rejections": {
+          "reused_parent_atom": 72
+        },
+        "reverse_hint_normalizations": {
+          "removed_originless_terminal_dummy": 28,
+          "reset_template_n_hydrogens": 2
+        },
+        "reverse_hint_rejections": {
+          "hint_sanitization_failed": 2
+        },
+        "combinations": 258,
+        "products_generated": 124,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 1,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 238542,
+        "anchor_index_matches": [
+          412
+        ],
+        "anchor_index_postings_retained": [
+          256
+        ],
+        "anchor_index_postings_truncated": [
+          true
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 25,
+        "anchor_posting_metadata_visits": 1536,
+        "anchor_role_checks": 1536,
+        "anchor_role_compatible": 87,
+        "rule_template_exclusions_count": 26
+      },
+      "rule_target_match_inspections": 421,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 26.524,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 33,
+        "hit_tanimoto": 1,
+        "polar_reference_capacity_below_minimum": 8,
+        "property: mw.upper_maximum:524.6470000000003>500.0": 1,
+        "property: mw.upper_maximum:552.7010000000002>500.0": 1,
+        "property: mw.upper_maximum:554.0290000000002>500.0": 1,
+        "property: mw.upper_maximum:568.0560000000003>500.0": 1,
+        "property: mw.upper_maximum:612.7570000000004>500.0; n_hacceptor.upper_maximum:11>10": 1,
+        "property: mw.upper_maximum:626.7840000000003>500.0; n_hacceptor.upper_maximum:11>10": 1,
+        "property: mw.upper_maximum:650.2669999999998>500.0; logp.upper_maximum:6.424020000000006>5": 1,
+        "property: mw.upper_maximum:678.321>500.0; logp.upper_maximum:7.202620000000008>5": 1,
+        "property: mw.upper_maximum:699.863>500.0; n_hacceptor.upper_maximum:12>10": 1,
+        "property: mw.upper_maximum:713.8900000000001>500.0; n_hacceptor.upper_maximum:12>10": 1
+      },
+      "observed_distinct_products": 52,
+      "anchor_passed_distinct_products": 52,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "CCC(=O)Nc1cccc(Oc2nc(Nc3ccc(N4CCN(C)CC4)cc3OC)ncc2N(C)CCNS(C)(=O)=O)c1",
+          "hit_bit_tanimoto": 0.29508196721311475,
+          "anchor_passed": true,
+          "gate": "property: mw.upper_maximum:612.7570000000004>500.0; n_hacceptor.upper_maximum:11>10",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:d546c83834800a2fa52c86402850650745681813d42a38fecb89e6428daa7fc5"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:ff03c0199e94bd50b23547f84472d02d6be26a280431fed8a345b434d0761662"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-042",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "CCC(=O)Nc1cccc(Oc2nc(Nc3ccc(N4CCN(C)CC4)cc3OC)ncc2N(C)CCNS(C)(=O)=O)c1"
+            }
+          ]
+        },
+        {
+          "product": "COc1cc(N2CCC(N3CCN(C)CC3)CC2)ccc1Nc1ncc(N(C)CCNS(C)(=O)=O)c(Nc2ccccc2P(C)(C)=O)n1",
+          "hit_bit_tanimoto": 0.29508196721311475,
+          "anchor_passed": true,
+          "gate": "property: mw.upper_maximum:699.863>500.0; n_hacceptor.upper_maximum:12>10",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:d43197e16ba6e2b66adde26775600b1666d0360177583cd01fc6dfe08f725a18"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:ff03c0199e94bd50b23547f84472d02d6be26a280431fed8a345b434d0761662"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-042",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "COc1cc(N2CCC(N3CCN(C)CC3)CC2)ccc1Nc1ncc(N(C)CCNS(C)(=O)=O)c(Nc2ccccc2P(C)(C)=O)n1"
+            }
+          ]
+        },
+        {
+          "product": "CCC(=O)Nc1cccc(Oc2nc(Nc3ccc(N4CCN(C)CC4)cc3OC)ncc2N(C)CCCNS(C)(=O)=O)c1",
+          "hit_bit_tanimoto": 0.2903225806451613,
+          "anchor_passed": true,
+          "gate": "property: mw.upper_maximum:626.7840000000003>500.0; n_hacceptor.upper_maximum:11>10",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:d546c83834800a2fa52c86402850650745681813d42a38fecb89e6428daa7fc5"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:829ed348722e371a8a02cf4919deff4f1c9a3a6ccaa0631e8e3d423a62136791"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-042",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "CCC(=O)Nc1cccc(Oc2nc(Nc3ccc(N4CCN(C)CC4)cc3OC)ncc2N(C)CCCNS(C)(=O)=O)c1"
+            }
+          ]
+        },
+        {
+          "product": "COc1cc(N2CCC(N3CCN(C)CC3)CC2)ccc1Nc1ncc(N(C)CCCNS(C)(=O)=O)c(Nc2ccccc2P(C)(C)=O)n1",
+          "hit_bit_tanimoto": 0.2903225806451613,
+          "anchor_passed": true,
+          "gate": "property: mw.upper_maximum:713.8900000000001>500.0; n_hacceptor.upper_maximum:12>10",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:d43197e16ba6e2b66adde26775600b1666d0360177583cd01fc6dfe08f725a18"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:829ed348722e371a8a02cf4919deff4f1c9a3a6ccaa0631e8e3d423a62136791"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-042",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "COc1cc(N2CCC(N3CCN(C)CC3)CC2)ccc1Nc1ncc(N(C)CCCNS(C)(=O)=O)c(Nc2ccccc2P(C)(C)=O)n1"
+            }
+          ]
+        },
+        {
+          "product": "CCS(=O)(=O)N1CCC(c2cc(OC(C)C)c(Nc3ncc(Cl)c(Nc4ccccc4S(=O)(=O)C(C)C)n3)cc2C)CC1",
+          "hit_bit_tanimoto": 0.2672413793103448,
+          "anchor_passed": true,
+          "gate": "property: mw.upper_maximum:650.2669999999998>500.0; logp.upper_maximum:6.424020000000006>5",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:989e56d073c7ab33c10c90cc9d9f4eb498fa4c6a1c5367a170a9171a25392abb"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:8a2a136ddeee92af7e225e9d74b11ff590f4fcb3c7c493abcac418f173925810"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-039",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "CCS(=O)(=O)N1CCC(c2cc(OC(C)C)c(Nc3ncc(Cl)c(Nc4ccccc4S(=O)(=O)C(C)C)n3)cc2C)CC1"
+            }
+          ]
+        }
+      ],
+      "outer_rules_selected": [
+        {
+          "rule_id": "synllama-rule-063",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-077",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-080",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-027",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-029",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-030",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-031",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-036",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-039",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-040",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-042",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-044",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-045",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-046",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-047",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-071",
+          "fallback": false
+        }
+      ],
+      "outer_stage_rule_ids_executed": [
+        "synllama-rule-077",
+        "synllama-rule-080",
+        "synllama-rule-042",
+        "synllama-rule-045",
+        "synllama-rule-046",
+        "synllama-rule-047",
+        "synllama-rule-071",
+        "synllama-rule-039"
+      ],
+      "outer_stage_calls": 8,
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 262144,
+        "catalog_bucket_rankings": 19320,
+        "total_fingerprint_calls": 12539,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "reverse_attempts": 36,
+        "reverse_failures": 2,
+        "reverse_outcomes": 36,
+        "reverse_fallbacks": 0,
+        "reverse_partition_checks": 83,
+        "reverse_partition_rejections": {
+          "reused_parent_atom": 44
+        },
+        "reverse_hint_normalizations": {
+          "removed_originless_terminal_dummy": 21,
+          "reset_template_n_hydrogens": 1
+        },
+        "reverse_hint_rejections": {
+          "hint_sanitization_failed": 2
+        },
+        "combinations": 344,
+        "products_generated": 160,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 0,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 0,
+        "anchor_index_matches": [],
+        "anchor_index_postings_retained": [],
+        "anchor_index_postings_truncated": [],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 0,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0,
+        "rule_template_exclusions_count": 26
+      },
+      "rule_target_match_inspections": 421,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 21.776,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 1,
+        "Hit stereo anchor is inverted": 4,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 11,
+        "hit_tanimoto": 1,
+        "polar_reference_capacity_below_minimum": 6
+      },
+      "observed_distinct_products": 23,
+      "anchor_passed_distinct_products": 8,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "O=S(=O)(N=S(=O)(c1ccc(F)cc1)C(F)(F)F)N1CC[C@H](Oc2ccccn2)C1",
+          "hit_bit_tanimoto": 0.38823529411764707,
+          "anchor_passed": true,
+          "gate": "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:1d19a83bc8ca3f4f7fd6498ad77e15b5e007244b4d662a7d745ec8f24a59b0e8"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:8f64f9c4bca889f6aaadd3fe91fdacea7be8431816b8ea29505934afe5cb96d3"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-039",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=S(=O)(N=S(=O)(c1ccc(F)cc1)C(F)(F)F)N1CC[C@H](Oc2ccccn2)C1"
+            }
+          ]
+        },
+        {
+          "product": "O=S(=O)(Cc1cc(-c2ccc(F)cc2)no1)N1CC[C@H](Oc2ccccn2)C1",
+          "hit_bit_tanimoto": 0.3118279569892473,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:53d0135ed5b572fdb14c61c6363b7131d70d54593dcd9daaf4c7d9e3b1b9e60d"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:8f64f9c4bca889f6aaadd3fe91fdacea7be8431816b8ea29505934afe5cb96d3"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-039",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=S(=O)(Cc1cc(-c2ccc(F)cc2)no1)N1CC[C@H](Oc2ccccn2)C1"
+            }
+          ]
+        },
+        {
+          "product": "FC(F)(F)c1ccc(O[C@H]2CCN(c3ccc(Nc4ccncn4)cc3)C2)cc1",
+          "hit_bit_tanimoto": 0.2717391304347826,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:f1448f11c5009fab987539a6eda53f2fe33ab19a3734e364a438e352e9477834"
+            },
+            {
+              "id": "ib0",
+              "building_block_id": "structure-sha256:5daffdbe138bb08cd31e7ad73fda2701d41c28dd3a5b606859886db2a90d6f45"
+            },
+            {
+              "id": "ib1",
+              "building_block_id": "structure-sha256:76a5d1efadb10a3e97c557332f384a208e69de84bf8f7aa73a2f790846be5dec"
+            },
+            {
+              "id": "ir",
+              "rule_id": "synllama-rule-030",
+              "reactants": [
+                "ib0",
+                "ib1"
+              ],
+              "product": "Nc1ccc(N2CC[C@H](Oc3ccc(C(F)(F)F)cc3)C2)cc1"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-042",
+              "reactants": [
+                "ob0",
+                "ir"
+              ],
+              "product": "FC(F)(F)c1ccc(O[C@H]2CCN(c3ccc(Nc4ccncn4)cc3)C2)cc1"
+            }
+          ]
+        },
+        {
+          "product": "O=[N+]([O-])c1cccc(CN2CC[C@H](Oc3ccc(C(F)(F)F)cc3)C2)c1",
+          "hit_bit_tanimoto": 0.2608695652173913,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:4a3b852ca4369b2f69438af1966855f80d5ec474fbe32b969d33e999e00f72f8"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:76a5d1efadb10a3e97c557332f384a208e69de84bf8f7aa73a2f790846be5dec"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-030",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=[N+]([O-])c1cccc(CN2CC[C@H](Oc3ccc(C(F)(F)F)cc3)C2)c1"
+            }
+          ]
+        },
+        {
+          "product": "FC(F)(F)c1cccc(O[C@H]2CCN(c3ccc(Nc4ccncn4)cc3)C2)c1",
+          "hit_bit_tanimoto": 0.2604166666666667,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:f1448f11c5009fab987539a6eda53f2fe33ab19a3734e364a438e352e9477834"
+            },
+            {
+              "id": "ib0",
+              "building_block_id": "structure-sha256:5daffdbe138bb08cd31e7ad73fda2701d41c28dd3a5b606859886db2a90d6f45"
+            },
+            {
+              "id": "ib1",
+              "building_block_id": "structure-sha256:013fce2f4f1286a5e28ae2d4fdc52702ada08538b42cdcd1b36ce7580c255643"
+            },
+            {
+              "id": "ir",
+              "rule_id": "synllama-rule-030",
+              "reactants": [
+                "ib0",
+                "ib1"
+              ],
+              "product": "Nc1ccc(N2CC[C@H](Oc3cccc(C(F)(F)F)c3)C2)cc1"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-042",
+              "reactants": [
+                "ob0",
+                "ir"
+              ],
+              "product": "FC(F)(F)c1cccc(O[C@H]2CCN(c3ccc(Nc4ccncn4)cc3)C2)c1"
+            }
+          ]
+        }
+      ],
+      "outer_rules_selected": [
+        {
+          "rule_id": "synllama-rule-081",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-027",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-029",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-030",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-031",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-036",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-039",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-040",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-042",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-044",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-045",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-046",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-047",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-072",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-073",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-074",
+          "fallback": false
+        }
+      ],
+      "outer_stage_rule_ids_executed": [
+        "synllama-rule-081",
+        "synllama-rule-042",
+        "synllama-rule-045",
+        "synllama-rule-046",
+        "synllama-rule-047",
+        "synllama-rule-030",
+        "synllama-rule-039"
+      ],
+      "outer_stage_calls": 8,
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 159880,
+        "catalog_bucket_rankings": 10120,
+        "total_fingerprint_calls": 7949,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "reverse_attempts": 40,
+        "reverse_failures": 0,
+        "reverse_outcomes": 12,
+        "reverse_fallbacks": 0,
+        "reverse_partition_checks": 96,
+        "reverse_partition_rejections": {
+          "reused_parent_atom": 82
+        },
+        "reverse_hint_normalizations": {
+          "removed_originless_terminal_dummy": 5
+        },
+        "reverse_hint_rejections": {},
+        "combinations": 116,
+        "products_generated": 64,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 1,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 238542,
+        "anchor_index_matches": [
+          310
+        ],
+        "anchor_index_postings_retained": [
+          256
+        ],
+        "anchor_index_postings_truncated": [
+          true
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 11,
+        "anchor_posting_metadata_visits": 2304,
+        "anchor_role_checks": 2304,
+        "anchor_role_compatible": 848,
+        "rule_template_exclusions_count": 26
+      },
+      "rule_target_match_inspections": 421,
+      "limits_reached": [
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL5163-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 19.357,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 28
+      },
+      "observed_distinct_products": 28,
+      "anchor_passed_distinct_products": 0,
+      "nearest_anchor_passed_rejections": [],
+      "outer_rules_selected": [
+        {
+          "rule_id": "synllama-rule-069",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-038",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-048",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-049",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-027",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-029",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-030",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-031",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-072",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-073",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-074",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-026",
+          "fallback": true
+        },
+        {
+          "rule_id": "synllama-rule-032",
+          "fallback": true
+        }
+      ],
+      "outer_stage_rule_ids_executed": [
+        "synllama-rule-048",
+        "synllama-rule-049",
+        "synllama-rule-030",
+        "synllama-rule-032",
+        "synllama-rule-026"
+      ],
+      "outer_stage_calls": 5,
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 88360,
+        "catalog_bucket_rankings": 6440,
+        "total_fingerprint_calls": 5159,
+        "rule_inspections": 444,
+        "rule_template_checks": 91,
+        "reverse_attempts": 15,
+        "reverse_failures": 7,
+        "reverse_outcomes": 6,
+        "reverse_fallbacks": 0,
+        "reverse_partition_checks": 54,
+        "reverse_partition_rejections": {
+          "reused_parent_atom": 43
+        },
+        "reverse_hint_normalizations": {
+          "removed_originless_terminal_dummy": 1
+        },
+        "reverse_hint_rejections": {
+          "hint_sanitization_failed": 6,
+          "unsafe_dummy_stereo": 1
+        },
+        "combinations": 96,
+        "products_generated": 60,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 2,
+        "anchor_index_queries_unindexed": 7,
+        "anchor_index_match_checks": 477084,
+        "anchor_index_matches": [
+          0,
+          0
+        ],
+        "anchor_index_postings_retained": [
+          0,
+          0
+        ],
+        "anchor_index_postings_truncated": [
+          false,
+          false
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 14,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0,
+        "rule_template_exclusions_count": 26
+      },
+      "rule_target_match_inspections": 353,
+      "limits_reached": []
+    },
+    {
+      "id": "CHEMBL3334418-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 24.594,
+      "pre_evidence_eligible_routes": 2,
+      "pre_evidence_eligible_distinct_products": 2,
+      "one_step_routes": 2,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": 0.37681159420289856,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 3,
+        "hit_tanimoto": 7,
+        "polar_reference_capacity_below_minimum": 22
+      },
+      "observed_distinct_products": 34,
+      "anchor_passed_distinct_products": 34,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "O=C1c2ccccc2C(=O)c2c(NS(=O)(=O)Cc3ccc(C4CCCCC4)cc3)cccc21",
+          "hit_bit_tanimoto": 0.5,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:98244281d689d20d61741da6e78111733e1f0f3bdb43a807934c4309caa4194b"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:77c3cbc44399e0b6725797eb3586b76e5451a0cae5daa317137510150830e647"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-081",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=C1c2ccccc2C(=O)c2c(NS(=O)(=O)Cc3ccc(C4CCCCC4)cc3)cccc21"
+            }
+          ]
+        },
+        {
+          "product": "Nc1ccc(NS(=O)(=O)Cc2ccc(C3CCCCC3)cc2)c2c1C(=O)c1ccccc1C2=O",
+          "hit_bit_tanimoto": 0.47619047619047616,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:98244281d689d20d61741da6e78111733e1f0f3bdb43a807934c4309caa4194b"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:9199455b2f5d05dc061e66b82357efb4e2f7822d0e43d3bafaae7e7e68a31286"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-081",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "Nc1ccc(NS(=O)(=O)Cc2ccc(C3CCCCC3)cc2)c2c1C(=O)c1ccccc1C2=O"
+            }
+          ]
+        },
+        {
+          "product": "O=C1c2ccccc2C(=O)c2c(NS(=O)(=O)[C@H]3CC[C@@H](c4ccccc4)CC3)cccc21",
+          "hit_bit_tanimoto": 0.4166666666666667,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:26f9ca81fecf3351ffe7305eec54ca4341924a681ea1bfa6c2e538aa2bafd9a9"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:77c3cbc44399e0b6725797eb3586b76e5451a0cae5daa317137510150830e647"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-081",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=C1c2ccccc2C(=O)c2c(NS(=O)(=O)[C@H]3CC[C@@H](c4ccccc4)CC3)cccc21"
+            }
+          ]
+        },
+        {
+          "product": "CNc1ccc(N2CCC(c3ccc(S(=O)(=O)F)cc3)CC2)c2c1C(=O)c1ccccc1C2=O",
+          "hit_bit_tanimoto": 0.40298507462686567,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:7757302e0a10bd09a1682c384684a54e4db5821c72b83536e868b1bcaa76ae29"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:deab9a239e141b32a47fb1e9da875f3b54d327945266b742b7217607822503a1"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-042",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "CNc1ccc(N2CCC(c3ccc(S(=O)(=O)F)cc3)CC2)c2c1C(=O)c1ccccc1C2=O"
+            }
+          ]
+        },
+        {
+          "product": "CNc1ccc(N2CCC(c3ccc(S(N)(=O)=O)cc3)CC2)c2c1C(=O)c1ccccc1C2=O",
+          "hit_bit_tanimoto": 0.40298507462686567,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:7757302e0a10bd09a1682c384684a54e4db5821c72b83536e868b1bcaa76ae29"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:4cc0162540d34e41a3fd5cb6cbd97d17dd93004e86da9e9aed3746df1858594f"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-042",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "CNc1ccc(N2CCC(c3ccc(S(N)(=O)=O)cc3)CC2)c2c1C(=O)c1ccccc1C2=O"
+            }
+          ]
+        }
+      ],
+      "outer_rules_selected": [
+        {
+          "rule_id": "synllama-rule-081",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-027",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-036",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-039",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-042",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-044",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-045",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-046",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-047",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-071",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-073",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-074",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-026",
+          "fallback": true
+        },
+        {
+          "rule_id": "synllama-rule-030",
+          "fallback": true
+        }
+      ],
+      "outer_stage_rule_ids_executed": [
+        "synllama-rule-081",
+        "synllama-rule-042",
+        "synllama-rule-045",
+        "synllama-rule-046",
+        "synllama-rule-047",
+        "synllama-rule-039",
+        "synllama-rule-026",
+        "synllama-rule-030"
+      ],
+      "outer_stage_calls": 8,
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 137512,
+        "catalog_bucket_rankings": 6440,
+        "total_fingerprint_calls": 11870,
+        "rule_inspections": 510,
+        "rule_template_checks": 91,
+        "reverse_attempts": 28,
+        "reverse_failures": 0,
+        "reverse_outcomes": 10,
+        "reverse_fallbacks": 0,
+        "reverse_partition_checks": 89,
+        "reverse_partition_rejections": {
+          "reused_parent_atom": 80
+        },
+        "reverse_hint_normalizations": {
+          "removed_originless_terminal_dummy": 5
+        },
+        "reverse_hint_rejections": {},
+        "combinations": 146,
+        "products_generated": 74,
+        "route_audit_attempts": 2,
+        "anchor_index_queries": 0,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 0,
+        "anchor_index_matches": [],
+        "anchor_index_postings_retained": [],
+        "anchor_index_postings_truncated": [],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 0,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0,
+        "rule_template_exclusions_count": 26
+      },
+      "rule_target_match_inspections": 419,
+      "limits_reached": []
+    },
+    {
+      "id": "CHEMBL3334418-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 23.771,
+      "pre_evidence_eligible_routes": 2,
+      "pre_evidence_eligible_distinct_products": 2,
+      "one_step_routes": 2,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": 0.3939393939393939,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 8,
+        "hit_tanimoto": 4,
+        "polar_reference_capacity_below_minimum": 20
+      },
+      "observed_distinct_products": 34,
+      "anchor_passed_distinct_products": 34,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "O=C1c2ccccc2C(=O)c2c(NS(=O)(=O)Cc3ccccc3C(F)(F)F)cccc21",
+          "hit_bit_tanimoto": 0.3870967741935484,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:69f6b903cc226cb53a66e19c696ee7387163c28a307a0bf31b2ed784e25eeb6d"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:77c3cbc44399e0b6725797eb3586b76e5451a0cae5daa317137510150830e647"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-081",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=C1c2ccccc2C(=O)c2c(NS(=O)(=O)Cc3ccccc3C(F)(F)F)cccc21"
+            }
+          ]
+        },
+        {
+          "product": "Nc1ccc(NS(=O)(=O)Cc2ccccc2C(F)(F)F)c2c1C(=O)c1ccccc1C2=O",
+          "hit_bit_tanimoto": 0.36923076923076925,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:69f6b903cc226cb53a66e19c696ee7387163c28a307a0bf31b2ed784e25eeb6d"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:9199455b2f5d05dc061e66b82357efb4e2f7822d0e43d3bafaae7e7e68a31286"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-081",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "Nc1ccc(NS(=O)(=O)Cc2ccccc2C(F)(F)F)c2c1C(=O)c1ccccc1C2=O"
+            }
+          ]
+        },
+        {
+          "product": "O=C1c2ccccc2C(=O)c2c(NS(=O)(=O)Cc3ccc(F)c(F)c3)cccc21",
+          "hit_bit_tanimoto": 0.36507936507936506,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:937175c8ce6c9f663bc992e13143311cd72a260258a8829eb474a931f8528ad3"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:77c3cbc44399e0b6725797eb3586b76e5451a0cae5daa317137510150830e647"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-081",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=C1c2ccccc2C(=O)c2c(NS(=O)(=O)Cc3ccc(F)c(F)c3)cccc21"
+            }
+          ]
+        },
+        {
+          "product": "O=C1c2ccccc2-c2cnc(NC(CO)c3ccc(F)c(C(F)(F)F)c3)nc21",
+          "hit_bit_tanimoto": 0.352112676056338,
+          "anchor_passed": true,
+          "gate": "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:237a9f6b7833e880c12db33a2f777606eae67eb22c89bea0ca80a43fce9198d0"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:ab9ce44bb86524e509ea6b9e6ca0e860873eeb073ed5c3d926b2b77e307cb71e"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-045",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=C1c2ccccc2-c2cnc(NC(CO)c3ccc(F)c(C(F)(F)F)c3)nc21"
+            }
+          ]
+        },
+        {
+          "product": "Nc1ccc(NS(=O)(=O)Cc2ccc(F)c(F)c2)c2c1C(=O)c1ccccc1C2=O",
+          "hit_bit_tanimoto": 0.3484848484848485,
+          "anchor_passed": true,
+          "gate": "hit_tanimoto",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:937175c8ce6c9f663bc992e13143311cd72a260258a8829eb474a931f8528ad3"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:9199455b2f5d05dc061e66b82357efb4e2f7822d0e43d3bafaae7e7e68a31286"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-081",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "Nc1ccc(NS(=O)(=O)Cc2ccc(F)c(F)c2)c2c1C(=O)c1ccccc1C2=O"
+            }
+          ]
+        }
+      ],
+      "outer_rules_selected": [
+        {
+          "rule_id": "synllama-rule-081",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-027",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-036",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-039",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-042",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-044",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-045",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-046",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-047",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-071",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-073",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-074",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-026",
+          "fallback": true
+        },
+        {
+          "rule_id": "synllama-rule-030",
+          "fallback": true
+        }
+      ],
+      "outer_stage_rule_ids_executed": [
+        "synllama-rule-081",
+        "synllama-rule-042",
+        "synllama-rule-045",
+        "synllama-rule-046",
+        "synllama-rule-047",
+        "synllama-rule-039",
+        "synllama-rule-026",
+        "synllama-rule-030"
+      ],
+      "outer_stage_calls": 8,
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 137512,
+        "catalog_bucket_rankings": 6440,
+        "total_fingerprint_calls": 10291,
+        "rule_inspections": 510,
+        "rule_template_checks": 91,
+        "reverse_attempts": 28,
+        "reverse_failures": 0,
+        "reverse_outcomes": 10,
+        "reverse_fallbacks": 0,
+        "reverse_partition_checks": 89,
+        "reverse_partition_rejections": {
+          "reused_parent_atom": 80
+        },
+        "reverse_hint_normalizations": {
+          "removed_originless_terminal_dummy": 5
+        },
+        "reverse_hint_rejections": {},
+        "combinations": 146,
+        "products_generated": 74,
+        "route_audit_attempts": 2,
+        "anchor_index_queries": 0,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 0,
+        "anchor_index_matches": [],
+        "anchor_index_postings_retained": [],
+        "anchor_index_postings_truncated": [],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 0,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0,
+        "rule_template_exclusions_count": 26
+      },
+      "rule_target_match_inspections": 419,
+      "limits_reached": []
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 25.571,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 32
+      },
+      "observed_distinct_products": 32,
+      "anchor_passed_distinct_products": 0,
+      "nearest_anchor_passed_rejections": [],
+      "outer_rules_selected": [
+        {
+          "rule_id": "synllama-rule-069",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-062",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-026",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-080",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-027",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-030",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-036",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-040",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-044",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-071",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-073",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-074",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-002",
+          "fallback": true
+        },
+        {
+          "rule_id": "synllama-rule-006",
+          "fallback": true
+        }
+      ],
+      "outer_stage_rule_ids_executed": [
+        "synllama-rule-080",
+        "synllama-rule-026",
+        "synllama-rule-036",
+        "synllama-rule-071",
+        "synllama-rule-044",
+        "synllama-rule-030",
+        "synllama-rule-027",
+        "synllama-rule-074"
+      ],
+      "outer_stage_calls": 8,
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 262144,
+        "catalog_bucket_rankings": 18400,
+        "total_fingerprint_calls": 10516,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "reverse_attempts": 34,
+        "reverse_failures": 15,
+        "reverse_outcomes": 39,
+        "reverse_fallbacks": 0,
+        "reverse_partition_checks": 94,
+        "reverse_partition_rejections": {
+          "reused_parent_atom": 42
+        },
+        "reverse_hint_normalizations": {
+          "removed_originless_terminal_dummy": 35
+        },
+        "reverse_hint_rejections": {
+          "hint_sanitization_failed": 10,
+          "unsafe_dummy_stereo": 5
+        },
+        "combinations": 168,
+        "products_generated": 96,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 2,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 477084,
+        "anchor_index_matches": [
+          42,
+          0
+        ],
+        "anchor_index_postings_retained": [
+          42,
+          0
+        ],
+        "anchor_index_postings_truncated": [
+          false,
+          false
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 64,
+        "anchor_posting_metadata_visits": 420,
+        "anchor_role_checks": 420,
+        "anchor_role_compatible": 37,
+        "rule_template_exclusions_count": 26
+      },
+      "rule_target_match_inspections": 421,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 26.223,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 28
+      },
+      "observed_distinct_products": 28,
+      "anchor_passed_distinct_products": 0,
+      "nearest_anchor_passed_rejections": [],
+      "outer_rules_selected": [
+        {
+          "rule_id": "synllama-rule-069",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-062",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-026",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-080",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-027",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-030",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-036",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-040",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-044",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-071",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-073",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-074",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-002",
+          "fallback": true
+        },
+        {
+          "rule_id": "synllama-rule-006",
+          "fallback": true
+        }
+      ],
+      "outer_stage_rule_ids_executed": [
+        "synllama-rule-080",
+        "synllama-rule-026",
+        "synllama-rule-036",
+        "synllama-rule-071",
+        "synllama-rule-044",
+        "synllama-rule-030",
+        "synllama-rule-027",
+        "synllama-rule-074"
+      ],
+      "outer_stage_calls": 8,
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 262144,
+        "catalog_bucket_rankings": 18400,
+        "total_fingerprint_calls": 12445,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "reverse_attempts": 35,
+        "reverse_failures": 10,
+        "reverse_outcomes": 29,
+        "reverse_fallbacks": 0,
+        "reverse_partition_checks": 96,
+        "reverse_partition_rejections": {
+          "reused_parent_atom": 59
+        },
+        "reverse_hint_normalizations": {
+          "removed_originless_terminal_dummy": 25
+        },
+        "reverse_hint_rejections": {
+          "hint_sanitization_failed": 10
+        },
+        "combinations": 144,
+        "products_generated": 72,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 2,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 477084,
+        "anchor_index_matches": [
+          0,
+          42
+        ],
+        "anchor_index_postings_retained": [
+          0,
+          42
+        ],
+        "anchor_index_postings_truncated": [
+          false,
+          false
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 58,
+        "anchor_posting_metadata_visits": 420,
+        "anchor_role_checks": 420,
+        "anchor_role_compatible": 52,
+        "rule_template_exclusions_count": 26
+      },
+      "rule_target_match_inspections": 421,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL3864-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 22.833,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 12,
+        "hit_tanimoto": 4,
+        "polar_reference_capacity_below_minimum": 13
+      },
+      "observed_distinct_products": 29,
+      "anchor_passed_distinct_products": 29,
+      "nearest_anchor_passed_rejections": [
+        {
+          "product": "O=CNCC(=O)Oc1c(C(=O)O)ccc2cccc(O)c12",
+          "hit_bit_tanimoto": 0.22807017543859648,
+          "anchor_passed": true,
+          "gate": "hit_tanimoto",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:4a31c473e6b80166ca40624b862d0526231c6085f188a2883190bdf3841dc0eb"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:1b40f5c7daa3928a862c95eaac045294b0f52a94909b42f6a2442c686aa1cacf"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-071",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=CNCC(=O)Oc1c(C(=O)O)ccc2cccc(O)c12"
+            }
+          ]
+        },
+        {
+          "product": "O=CNCC(=O)Oc1cccc2ccc(C(=O)O)c(O)c12",
+          "hit_bit_tanimoto": 0.22807017543859648,
+          "anchor_passed": true,
+          "gate": "hit_tanimoto",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:4a31c473e6b80166ca40624b862d0526231c6085f188a2883190bdf3841dc0eb"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:1b40f5c7daa3928a862c95eaac045294b0f52a94909b42f6a2442c686aa1cacf"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-071",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=CNCC(=O)Oc1cccc2ccc(C(=O)O)c(O)c12"
+            }
+          ]
+        },
+        {
+          "product": "O=CCCCCC(=O)Oc1c(C(=O)O)ccc2cccc(O)c12",
+          "hit_bit_tanimoto": 0.22033898305084745,
+          "anchor_passed": true,
+          "gate": "hit_tanimoto",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:2ef2d6e89a6848e2c45d101fab22ecfc422d6d86ab63cc6b3ad992004033e1a4"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:1b40f5c7daa3928a862c95eaac045294b0f52a94909b42f6a2442c686aa1cacf"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-071",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=CCCCCC(=O)Oc1c(C(=O)O)ccc2cccc(O)c12"
+            }
+          ]
+        },
+        {
+          "product": "O=CCCCCC(=O)Oc1cccc2ccc(C(=O)O)c(O)c12",
+          "hit_bit_tanimoto": 0.22033898305084745,
+          "anchor_passed": true,
+          "gate": "hit_tanimoto",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:2ef2d6e89a6848e2c45d101fab22ecfc422d6d86ab63cc6b3ad992004033e1a4"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:1b40f5c7daa3928a862c95eaac045294b0f52a94909b42f6a2442c686aa1cacf"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-071",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "O=CCCCCC(=O)Oc1cccc2ccc(C(=O)O)c(O)c12"
+            }
+          ]
+        },
+        {
+          "product": "C=C(C)c1ccc2nc(O)cc(=O)n2c1",
+          "hit_bit_tanimoto": 0.21568627450980393,
+          "anchor_passed": true,
+          "gate": "polar_reference_capacity_below_minimum",
+          "nodes": [
+            {
+              "id": "ob0",
+              "building_block_id": "structure-sha256:93328fd63051e2ddfe43ae7a67881a1e1af5c2966e17435dc855489083e932f8"
+            },
+            {
+              "id": "ob1",
+              "building_block_id": "structure-sha256:19234a8ee2bcb8207e47feedcc309090b50b435aa8c2f66e0a907a5db46fec61"
+            },
+            {
+              "id": "or",
+              "rule_id": "synllama-rule-027",
+              "reactants": [
+                "ob0",
+                "ob1"
+              ],
+              "product": "C=C(C)c1ccc2nc(O)cc(=O)n2c1"
+            }
+          ]
+        }
+      ],
+      "outer_rules_selected": [
+        {
+          "rule_id": "synllama-rule-027",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-030",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-036",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-044",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-071",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-073",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-074",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-002",
+          "fallback": true
+        },
+        {
+          "rule_id": "synllama-rule-006",
+          "fallback": true
+        }
+      ],
+      "outer_stage_rule_ids_executed": [
+        "synllama-rule-036",
+        "synllama-rule-071",
+        "synllama-rule-030",
+        "synllama-rule-027",
+        "synllama-rule-074",
+        "synllama-rule-073",
+        "synllama-rule-002",
+        "synllama-rule-006"
+      ],
+      "outer_stage_calls": 8,
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 201208,
+        "catalog_bucket_rankings": 10120,
+        "total_fingerprint_calls": 12210,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "reverse_attempts": 15,
+        "reverse_failures": 2,
+        "reverse_outcomes": 16,
+        "reverse_fallbacks": 1,
+        "reverse_partition_checks": 44,
+        "reverse_partition_rejections": {
+          "reused_parent_atom": 29
+        },
+        "reverse_hint_normalizations": {
+          "removed_originless_terminal_dummy": 15
+        },
+        "reverse_hint_rejections": {
+          "hint_sanitization_failed": 2
+        },
+        "combinations": 188,
+        "products_generated": 104,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 0,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 0,
+        "anchor_index_matches": [],
+        "anchor_index_postings_retained": [],
+        "anchor_index_postings_truncated": [],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 0,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0,
+        "rule_template_exclusions_count": 26
+      },
+      "rule_target_match_inspections": 421,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 24.548,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is inverted": 14,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 44
+      },
+      "observed_distinct_products": 58,
+      "anchor_passed_distinct_products": 0,
+      "nearest_anchor_passed_rejections": [],
+      "outer_rules_selected": [
+        {
+          "rule_id": "synllama-rule-069",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-062",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-026",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-027",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-029",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-030",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-031",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-036",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-040",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-042",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-044",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-045",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-046",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-047",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-072",
+          "fallback": false
+        },
+        {
+          "rule_id": "synllama-rule-073",
+          "fallback": false
+        }
+      ],
+      "outer_stage_rule_ids_executed": [
+        "synllama-rule-036",
+        "synllama-rule-042",
+        "synllama-rule-045",
+        "synllama-rule-046",
+        "synllama-rule-047",
+        "synllama-rule-029",
+        "synllama-rule-031",
+        "synllama-rule-027"
+      ],
+      "outer_stage_calls": 8,
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 175800,
+        "catalog_bucket_rankings": 11960,
+        "total_fingerprint_calls": 9693,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "reverse_attempts": 34,
+        "reverse_failures": 13,
+        "reverse_outcomes": 21,
+        "reverse_fallbacks": 0,
+        "reverse_partition_checks": 98,
+        "reverse_partition_rejections": {
+          "reused_parent_atom": 64
+        },
+        "reverse_hint_normalizations": {
+          "removed_originless_terminal_dummy": 20,
+          "reset_template_n_hydrogens": 1
+        },
+        "reverse_hint_rejections": {
+          "hint_sanitization_failed": 11,
+          "unsafe_dummy_stereo": 2
+        },
+        "combinations": 260,
+        "products_generated": 140,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 2,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 477084,
+        "anchor_index_matches": [
+          0,
+          0
+        ],
+        "anchor_index_postings_retained": [
+          0,
+          0
+        ],
+        "anchor_index_postings_truncated": [
+          false,
+          false
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 30,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0,
+        "rule_template_exclusions_count": 26
+      },
+      "rule_target_match_inspections": 421,
+      "limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections"
+      ]
+    }
+  ],
+  "pre_evidence_input_coverage": 3,
+  "source_sha256_after": {
+    "chembounce_synthesis/route_first.py": "9f70f13794bb0142a98f7dbe354bf0f3850a26805a64ddd09c139d184504db16",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff"
+  },
+  "harness_sha256_after": "29c8f1c0c9cbd1a8bed734d2117754b00b2aa9831c8cf86dd41c4e88f513cad9",
+  "rule_template_exclusions_reference": "route-template-eligibility-v1.json",
+  "schema": "route-first-pre-evidence-development-diagnostic-v1",
+  "source_commit": "10545c423fdfb892105c11931e299fa74c0cd38d",
+  "primary_comparison_run": false,
+  "decision": "Pre-evidence eligible inputs increased2/12 to3/12, products8to10, routes12, allone-step. Primary>5/12 still impossible from this supply; no forward/model/3D run. Test usable intermediate filtering before the bounded beam next.",
+  "evidence": {
+    "result_path": "benchmark-results/route-first-development-20261023-v2/development-probe-v5/result.json",
+    "result_sha256": "76102a240f128576e1636c7f4bfff1d5e21754108f35793b0670a385a87afc4b",
+    "script_sha256": "29c8f1c0c9cbd1a8bed734d2117754b00b2aa9831c8cf86dd41c4e88f513cad9",
+    "failed_launch_record_sha256": "13c2ba1b9000a4bcc790cb8f13483254ff6bfd64b92bb7b5bb2806df33321559"
+  },
+  "failed_launch_scope": "One harness failure aftercatalogload butbeforefirstquery, fixedandrecordedseparately. Notachemicalfailureormodelrun."
+}

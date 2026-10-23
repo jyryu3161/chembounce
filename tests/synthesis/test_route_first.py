@@ -52,6 +52,7 @@ def test_actual_one_and_two_step_routes_have_complete_forward_and_atom_stereo_re
     assert report["fingerprint_calls"] <= 200
     assert report["total_fingerprint_calls"] <= 200
     assert report["combinations"] <= 100
+    assert 0 < report["inner_role_compatible"] <= report["inner_role_checks"] <= report["products_generated"] <= 200
     assert report["route_audit_attempts"] <= report["limits"]["max_routes"]
     assert all(item["generation"]["reference"] == "self_product_design" for item in routes)
     for item in routes:
@@ -259,6 +260,60 @@ def test_reverse_aryl_amine_hints_reach_retrieval_with_chiral_anchor(tmp_path):
     assert search.report["reverse_hint_rejections"] == {}
     assert search.report["reverse_hint_normalizations"]["removed_originless_terminal_dummy"] == 2
     assert search.report["reverse_hint_normalizations"]["reset_template_n_hydrogens"] == 1
+
+
+def test_inner_beam_uses_only_intermediates_matching_outer_reactant_role(tmp_path):
+    from chembounce_synthesis.catalog import Catalog
+    from chembounce_synthesis.reactions import Rules
+
+    catalog_path = tmp_path / "catalog.tsv"
+    catalog_path.write_text(
+        "id\tsmiles\tsource\tsnapshot\n"
+        "amide\tCC(=O)N\ttest\ttest\n"
+        "acid\tCC(=O)O\ttest\ttest\n"
+        "aniline\tNc1ccccc1\ttest\ttest\n"
+    )
+    rules_path = tmp_path / "rules.json"
+    rules_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {"id": "inner", "smarts": "[C:1]>>[C:1]", "source": "test"},
+                    {
+                        "id": "outer",
+                        "smarts": "[C:1](=[O:2])[O;H1:3].[N;H1,H2:4]>>[C:1](=[O:2])[N:4]",
+                        "source": "test",
+                    },
+                ],
+            }
+        )
+    )
+    catalog, rules = Catalog(catalog_path), Rules(rules_path)
+    search = RouteFirstSearch(
+        HIT,
+        catalog,
+        rules,
+        RouteFirstLimits(**limits(beam_width=1, building_block_top_k=2)),
+    )
+    search._phase = 2
+    target, outer_guide = "CC(=O)N", ("CC(=O)N", "Nc1ccccc1")
+    inner = search._stage(rules.get("inner"), (target,), "i")
+    ranked = sorted(inner, key=lambda state: (search._rank(state["product"], target), state["product"]))
+    assert len(ranked) == 2
+    assert ranked[0]["product"] == canonical(target)
+    assert search._stage(rules.get("outer"), outer_guide, "o", replace=(0, ranked[:1])) == []
+
+    compatible = search._compatible_inner(inner, rules.get("outer"), 0)
+    selected = sorted(
+        compatible, key=lambda state: (search._rank(state["product"], target), state["product"])
+    )[: search.limits.beam_width]
+    assert [state["product"] for state in selected] == [canonical("CC(=O)O")]
+    products = search._stage(rules.get("outer"), outer_guide, "o", replace=(0, selected))
+    assert canonical(HIT) in {state["product"] for state in products}
+    assert search.report["inner_role_checks"] == 2
+    assert search.report["inner_role_compatible"] == 1
+    assert search.report["inner_role_rejected"] == 1
 
 
 def test_feature_index_targets_guide_size_without_unbounded_per_query_scan(assets):
