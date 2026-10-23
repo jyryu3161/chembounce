@@ -1955,6 +1955,170 @@ def test_typed_reverse_attempt_caps_share_all_precursor_parts_and_preserve_appro
     assert expired.report["reverse_role_work"] == 0
 
 
+def test_optional_typed_prefix_keeps_only_validated_acid_or_halide_hint(tmp_path):
+    from rdkit import Chem
+
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "amide",
+                        "smarts": (
+                            "[Cl,OH,O-:3][C$(C(=O)([CX4,c])),C$([CH](=O)):2]=[O:4]."
+                            "[N$([NH2,NH3+1]([CX4,c])),N$([NH]([CX4,c])([CX4,c])):6]"
+                            ">>[N+0:6]-[C:2]=[O:4]"
+                        ),
+                        "source": "test",
+                    },
+                    {
+                        "id": "aryl",
+                        "smarts": "[Cl,Br,I][c:1].[N;H2;$(NC):2]>>[c:1][N:2]",
+                        "source": "test",
+                    },
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    for ident, hit, old, mixed in (
+        ("amide", "CC(N)=O", ("CC=O", "N"), ("CC(=O)O", "N")),
+        ("aryl", "Nc1ccccc1", ("c1ccccc1", "[NH2]"), ("Clc1ccccc1", "[NH2]")),
+    ):
+        searches = [
+            RouteFirstSearch(
+                hit,
+                SimpleNamespace(sha256="test"),
+                rules,
+                RouteFirstLimits(**limits()),
+                diagnose_continuation=True,
+                preserve_typed_prefix=enabled,
+            )
+            for enabled in (False, True)
+        ]
+        assert searches[0]._reverse(rules.get(ident), hit, False) == [old]
+        assert searches[1]._reverse(rules.get(ident), hit, False) == [mixed]
+        for field in (
+            "reverse_attempts",
+            "reverse_role_trials",
+            "reverse_role_work",
+            "reverse_role_match_checks",
+        ):
+            assert searches[0].report[field] == searches[1].report[field]
+        assert searches[1].report["mixed_typed_prefix_hints"] == 1
+        assert searches[1].report["mixed_typed_prefix_parts"] == 1
+        assert searches[1].report["reverse_hint_quality_counts"]["approximate"] == 1
+        assert searches[1].report["reverse_hint_quality_counts"]["typed"] == 0
+        assert searches[0].report["reverse_hint_normalizations"] == {"removed_originless_terminal_dummy": 1}
+        assert searches[1].report["reverse_hint_normalizations"] == {
+            "typed_originless_placeholder_instantiated": 1
+        }
+        registry = searches[1]._continuation_raw[(ident, hit, False)]
+        assert tuple(registry["by_guide"]) == (mixed,)
+        raw, clean = registry["by_guide"][mixed][0]
+        assert len(raw) == len(clean) == 2
+        assert tuple(Chem.MolToSmiles(part, isomericSmiles=True) for part in clean) == mixed
+        assert searches[1]._reverse(rules.get(ident), hit, False) == [mixed]
+        assert searches[1].report["reverse_attempts"] == 1
+
+    fully_typed = RouteFirstSearch(
+        "CC(=O)NC",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        preserve_typed_prefix=True,
+    )
+    assert fully_typed._reverse(rules.get("amide"), "CC(=O)NC", False) == [("CC(=O)O", "CN")]
+    assert fully_typed.report["reverse_hint_quality_counts"]["typed"] == 1
+    assert fully_typed.report["mixed_typed_prefix_hints"] == 0
+
+
+def test_optional_typed_prefix_preserves_failure_and_budget_fallbacks(tmp_path, monkeypatch):
+    import chembounce_synthesis.route_first as route_first
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "amide",
+                        "smarts": (
+                            "[Cl,OH,O-:3][C$(C(=O)([CX4,c])),C$([CH](=O)):2]=[O:4]."
+                            "[N$([NH2,NH3+1]([CX4,c])),N$([NH]([CX4,c])([CX4,c])):6]"
+                            ">>[N+0:6]-[C:2]=[O:4]"
+                        ),
+                        "source": "test",
+                    },
+                    {
+                        "id": "reversed-amide",
+                        "smarts": (
+                            "[N$([NH2,NH3+1]([CX4,c])),N$([NH]([CX4,c])([CX4,c])):6]."
+                            "[Cl,OH,O-:3][C$(C(=O)([CX4,c])),C$([CH](=O)):2]=[O:4]"
+                            ">>[N+0:6]-[C:2]=[O:4]"
+                        ),
+                        "source": "test",
+                    },
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    rule = rules.get("amide")
+    first_failed = RouteFirstSearch(
+        "CC(N)=O",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        preserve_typed_prefix=True,
+    )
+    assert first_failed._reverse(rules.get("reversed-amide"), "CC(N)=O", False) == [("N", "CC=O")]
+    assert first_failed.report["reverse_role_trials"] == 1
+    assert first_failed.report["mixed_typed_prefix_hints"] == 0
+    capped = RouteFirstSearch(
+        "CC(N)=O",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        preserve_typed_prefix=True,
+    )
+    capped.report["reverse_role_work"] = route_first.MAX_REVERSE_ROLE_WORK_PER_SEARCH
+    assert capped._reverse(rule, "CC(N)=O", False) == [("CC=O", "N")]
+    assert capped.report["mixed_typed_prefix_hints"] == 0
+    assert capped.report["reverse_role_trials"] == 0
+    expired = RouteFirstSearch(
+        "CC(N)=O",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        deadline_monotonic=time.monotonic() - 1,
+        preserve_typed_prefix=True,
+    )
+    assert expired._reverse(rule, "CC(N)=O", False) == []
+    assert expired.report["reverse_attempts"] == 0
+    broken = RouteFirstSearch(
+        "CC(N)=O",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        preserve_typed_prefix=True,
+    )
+
+    def invalid_approx(*args, **kwargs):
+        raise route_first.ReverseHintError("invalid_remaining_precursor")
+
+    monkeypatch.setattr(route_first, "normalize_reverse_hint", invalid_approx)
+    assert broken._reverse(rule, "CC(N)=O", False) == []
+    assert broken.report["mixed_typed_prefix_hints"] == 0
+    assert broken.report["reverse_hint_rejections"]["invalid_remaining_precursor"] == 1
+
+
 def test_inner_beam_uses_only_intermediates_matching_outer_reactant_role(tmp_path):
     from chembounce_synthesis.catalog import Catalog
     from chembounce_synthesis.reactions import Rules

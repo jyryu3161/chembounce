@@ -941,6 +941,7 @@ class RouteFirstSearch:
         *,
         diagnose_continuation=False,
         prefer_continuation_second=False,
+        preserve_typed_prefix=False,
     ):
         self.hit = canonical(hit)
         self.hit_mol = molecule(self.hit)
@@ -1115,6 +1116,10 @@ class RouteFirstSearch:
         self._diagnose_continuation = diagnose_continuation or prefer_continuation_second
         self._continuation_capture_all_phases = diagnose_continuation
         self._prefer_continuation_second = prefer_continuation_second
+        self._preserve_typed_prefix = preserve_typed_prefix
+        if preserve_typed_prefix:
+            self.report["mixed_typed_prefix_hints"] = 0
+            self.report["mixed_typed_prefix_parts"] = 0
         self._continuation_raw = {} if self._diagnose_continuation else None
         self._continuation_context_cache = {} if self._diagnose_continuation else None
         self._continuation_snapshots = 0
@@ -1787,7 +1792,9 @@ class RouteFirstSearch:
                 cuts.append((min(first, second), max(first, second)))
         return tuple(sorted(cuts))
 
-    def _typed_reverse_outcome(self, outcome, parent, rule, tags, *, capture_parts=None):
+    def _typed_reverse_outcome(
+        self, outcome, parent, rule, tags, *, capture_parts=None, capture_partial=None
+    ):
         parts, resets, aromatic_resets, instantiated, trials = [], 0, 0, 0, 0
         for slot, raw in enumerate(outcome):
             if self._stop():
@@ -1870,6 +1877,19 @@ class RouteFirstSearch:
                 )
             resets += reset_count
             aromatic_resets += aromatic_changes.get("reset_product_aromatic_query_flags", 0)
+            if capture_partial is not None:
+                capture_partial.append(
+                    (
+                        part,
+                        {
+                            "typed_originless_placeholder_instantiated": int(bool(dummies)),
+                            "typed_reset_template_n_hydrogens": reset_count,
+                            "typed_reset_product_aromatic_query_flags": aromatic_changes.get(
+                                "reset_product_aromatic_query_flags", 0
+                            ),
+                        },
+                    )
+                )
         return tuple(parts), {
             "typed_originless_placeholder_instantiated": instantiated,
             "typed_reset_template_n_hydrogens": resets,
@@ -2121,9 +2141,15 @@ class RouteFirstSearch:
                         counts[issue] = counts.get(issue, 0) + 1
                         continue
                     cut_bonds = self._reverse_cut_bonds(outcome, parent) if record_centers else None
-                    clean_parts = [] if registry is not None else None
+                    clean_parts = [] if registry is not None or self._preserve_typed_prefix else None
+                    partial_typed = [] if self._preserve_typed_prefix else None
                     typed = self._typed_reverse_outcome(
-                        outcome, parent, rule, tags, capture_parts=clean_parts
+                        outcome,
+                        parent,
+                        rule,
+                        tags,
+                        capture_parts=clean_parts,
+                        capture_partial=partial_typed,
                     )
                     if self._stop():
                         if registry is not None:
@@ -2133,14 +2159,25 @@ class RouteFirstSearch:
                         guide, changes = typed
                         quality = "typed"
                     else:
-                        if clean_parts is not None:
+                        use_prefix = (
+                            bool(partial_typed)
+                            and clean_parts is not None
+                            and len(clean_parts) == len(partial_typed)
+                            and all(part is not None for part in clean_parts)
+                        )
+                        if clean_parts is not None and not use_prefix:
                             clean_parts.clear()
                         # A reverse guide is a search hint. Keep the old safe
                         # approximation when exact role reconstruction fails.
                         # This never bypasses the parent-origin partition check.
                         try:
                             parts, changes = [], {}
-                            for mol in outcome:
+                            if use_prefix:
+                                for part, edits in partial_typed:
+                                    parts.append(part)
+                                    for label, count in edits.items():
+                                        changes[label] = changes.get(label, 0) + count
+                            for mol in outcome[len(parts) :]:
                                 captured = []
                                 part, edits = normalize_reverse_hint(
                                     mol,
@@ -2161,6 +2198,9 @@ class RouteFirstSearch:
                                     changes[label] = changes.get(label, 0) + count
                             guide = tuple(parts)
                             quality = "approximate"
+                            if use_prefix:
+                                self.report["mixed_typed_prefix_hints"] += 1
+                                self.report["mixed_typed_prefix_parts"] += len(partial_typed)
                         except ReverseHintError as exc:
                             counts = self.report["reverse_hint_rejections"]
                             counts[exc.reason] = counts.get(exc.reason, 0) + 1

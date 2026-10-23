@@ -1,0 +1,668 @@
+{
+  "all_changed_raw_variants": [
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL4630839-query-1",
+      "legacy": [
+        "CN(CCc1ccccc1)c1nc(C=O)cc(N2CCCC2)n1",
+        "NCC1CC1"
+      ],
+      "mixed": [
+        "CN(CCc1ccccc1)c1nc(C(=O)O)cc(N2CCCC2)n1",
+        "NCC1CC1"
+      ],
+      "rule_id": "synllama-rule-071",
+      "saved_selected_plan_indices": [],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL4630839-query-2",
+      "legacy": [
+        "O=Cc1cc(N2CCOCC2)nc(N2CCC[C@@H](c3ccccc3)C2)n1",
+        "NCC1CC1"
+      ],
+      "mixed": [
+        "O=C(O)c1cc(N2CCOCC2)nc(N2CCC[C@@H](c3ccccc3)C2)n1",
+        "NCC1CC1"
+      ],
+      "rule_id": "synllama-rule-071",
+      "saved_selected_plan_indices": [],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL4247-query-1",
+      "legacy": [
+        "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCN(c2ccncn2)C1",
+        "COc1cc(N)cc(OC)c1OC"
+      ],
+      "mixed": [
+        "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCN(c2ccnc(F)n2)C1",
+        "COc1cc(N)cc(OC)c1OC"
+      ],
+      "rule_id": "synllama-rule-045",
+      "saved_selected_plan_indices": [],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL4247-query-1",
+      "legacy": [
+        "COc1cc(Nc2nccc(N3CCC[C@H](C=O)C3)n2)cc(OC)c1OC",
+        "NCc1cccc(N2CCOCC2)c1"
+      ],
+      "mixed": [
+        "COc1cc(Nc2nccc(N3CCC[C@H](C(=O)O)C3)n2)cc(OC)c1OC",
+        "NCc1cccc(N2CCOCC2)c1"
+      ],
+      "rule_id": "synllama-rule-071",
+      "saved_selected_plan_indices": [],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL4247-query-2",
+      "legacy": [
+        "COc1cc(C2CCN(CC=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+        "N"
+      ],
+      "mixed": [
+        "COc1cc(C2CCN(CC(=O)O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+        "N"
+      ],
+      "rule_id": "synllama-rule-077",
+      "saved_selected_plan_indices": [
+        4
+      ],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL4247-query-2",
+      "legacy": [
+        "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3)n2n1",
+        "CNS(C)(=O)=O"
+      ],
+      "mixed": [
+        "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3Cl)n2n1",
+        "CNS(C)(=O)=O"
+      ],
+      "rule_id": "synllama-rule-042",
+      "saved_selected_plan_indices": [
+        7
+      ],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL4247-query-2",
+      "legacy": [
+        "COc1cc(C2CCN(CC=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+        "N"
+      ],
+      "mixed": [
+        "COc1cc(C2CCN(CC(=O)O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+        "N"
+      ],
+      "rule_id": "synllama-rule-071",
+      "saved_selected_plan_indices": [],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL5163-query-1",
+      "legacy": [
+        "O=S(=O)(Nc1nccs1)c1ccc(S(=O)(=O)N2CC[C@H](Oc3ccccn3)C2)cc1F",
+        "FC(F)F"
+      ],
+      "mixed": [
+        "O=S(=O)(Nc1nccs1)c1ccc(S(=O)(=O)N2CC[C@H](Oc3ccc(Br)cn3)C2)cc1F",
+        "FC(F)F"
+      ],
+      "rule_id": "synllama-rule-074",
+      "saved_selected_plan_indices": [],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL3334418-query-1",
+      "legacy": [
+        "O=C1c2ccccc2C(=O)c2c1ccc(O)c2O",
+        "NS(=O)(=O)c1ccc(C2CCCCC2)cc1"
+      ],
+      "mixed": [
+        "O=C1c2ccccc2C(=O)c2c1cc(Cl)c(O)c2O",
+        "NS(=O)(=O)c1ccc(C2CCCCC2)cc1"
+      ],
+      "rule_id": "synllama-rule-042",
+      "saved_selected_plan_indices": [
+        2
+      ],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL3334418-query-2",
+      "legacy": [
+        "O=C1c2ccccc2C(=O)c2c1ccc(O)c2O",
+        "NS(=O)(=O)c1ccc(F)c(C(F)(F)F)c1"
+      ],
+      "mixed": [
+        "O=C1c2ccccc2C(=O)c2c1cc(Cl)c(O)c2O",
+        "NS(=O)(=O)c1ccc(F)c(C(F)(F)F)c1"
+      ],
+      "rule_id": "synllama-rule-042",
+      "saved_selected_plan_indices": [
+        2
+      ],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL3334418-query-2",
+      "legacy": [
+        "O=C1c2ccccc2C(=O)c2c1cc(NS(=O)(=O)c1ccc(F)cc1)c(O)c2O",
+        "FC(F)F"
+      ],
+      "mixed": [
+        "O=C1c2ccccc2C(=O)c2c1cc(NS(=O)(=O)c1ccc(F)c(Br)c1)c(O)c2O",
+        "FC(F)F"
+      ],
+      "rule_id": "synllama-rule-074",
+      "saved_selected_plan_indices": [],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL4869-query-1",
+      "legacy": [
+        "O=CCOC[C@H]1CC[C@@H](Cn2nc(-c3ccccc3)c(-c3ccccc3)c2SCCO)CC1",
+        "O"
+      ],
+      "mixed": [
+        "O=C(O)COC[C@H]1CC[C@@H](Cn2nc(-c3ccccc3)c(-c3ccccc3)c2SCCO)CC1",
+        "O"
+      ],
+      "rule_id": "synllama-rule-071",
+      "saved_selected_plan_indices": [
+        6
+      ],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL4869-query-2",
+      "legacy": [
+        "CSc1c(-c2cncc(F)c2)c(-c2ccccc2)nn1C[C@H]1CC[C@@H](COCC=O)CC1",
+        "O"
+      ],
+      "mixed": [
+        "CSc1c(-c2cncc(F)c2)c(-c2ccccc2)nn1C[C@H]1CC[C@@H](COCC(=O)O)CC1",
+        "O"
+      ],
+      "rule_id": "synllama-rule-071",
+      "saved_selected_plan_indices": [
+        6
+      ],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL3864-query-1",
+      "legacy": [
+        "O=Cc1cc(O)c(=O)c2c(O)c(O)ccc2c1",
+        "O"
+      ],
+      "mixed": [
+        "O=C(O)c1cc(O)c(=O)c2c(O)c(O)ccc2c1",
+        "O"
+      ],
+      "rule_id": "synllama-rule-071",
+      "saved_selected_plan_indices": [
+        1
+      ],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL3864-query-1",
+      "legacy": [
+        "O=c1c(O)cccc2ccc(O)c(O)c12",
+        "O=CO"
+      ],
+      "mixed": [
+        "O=c1c(O)cc(Br)cc2ccc(O)c(O)c12",
+        "O=CO"
+      ],
+      "rule_id": "synllama-rule-074",
+      "saved_selected_plan_indices": [],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL3864-query-2",
+      "legacy": [
+        "Cc1ncccc1-c1n[nH]c2nc(N3CCC4(CC3)CO[C@@H](C)[C@H]4N)n(C)c(=O)c12",
+        "[NH2]"
+      ],
+      "mixed": [
+        "Cc1nc(Cl)ccc1-c1n[nH]c2nc(N3CCC4(CC3)CO[C@@H](C)[C@H]4N)n(C)c(=O)c12",
+        "[NH2]"
+      ],
+      "rule_id": "synllama-rule-042",
+      "saved_selected_plan_indices": [],
+      "successful_prefix_slots": [
+        0
+      ]
+    },
+    {
+      "changed_slots": [
+        0
+      ],
+      "input_id": "CHEMBL3864-query-2",
+      "legacy": [
+        "Cc1ncccc1-c1n[nH]c2nc(N3CCC4(CC3)CO[C@@H](C)[C@H]4N)n(C)c(=O)c12",
+        "N"
+      ],
+      "mixed": [
+        "Cc1nc(F)ccc1-c1n[nH]c2nc(N3CCC4(CC3)CO[C@@H](C)[C@H]4N)n(C)c(=O)c12",
+        "N"
+      ],
+      "rule_id": "synllama-rule-045",
+      "saved_selected_plan_indices": [
+        3
+      ],
+      "successful_prefix_slots": [
+        0
+      ]
+    }
+  ],
+  "bindings": {
+    "frozen_plan": {
+      "path": "benchmark-results/route-first-development-20261023-v2/outer-typed-prefix-control-v1/plan.json",
+      "sha256": "7f270b85c20cf3b38ee2690de94a8f137bd91fc50ae072295ebda12eaf95c75e"
+    },
+    "observer_control": {
+      "path": "benchmark-results/route-first-development-20261023-v2/outer-typed-prefix-control-v1/test_probe.py",
+      "sha256": "2ae923373e7578db2261068fac08640ecd2b2a35f8fb9fa118d5c8f0f2d387d5"
+    },
+    "probe": {
+      "path": "benchmark-results/route-first-development-20261023-v2/outer-typed-prefix-control-v1/probe.py",
+      "sha256": "c41b51f0fe3b4f3599dbd9030ed5f6a746614f2ef70c0f30f305add3e0f5b106"
+    },
+    "result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/outer-typed-prefix-control-v1/result.json",
+      "sha256": "c2514d9c23ee0284767ddebe978c918103a691102ffbf12a7afeebb5930bbbd3"
+    },
+    "reviewed_draft": {
+      "path": "benchmark-results/route-first-development-20261023-v2/outer-typed-prefix-control-v1/plan-draft-reviewed.json",
+      "sha256": "00c1d72d484f02c613b55f3394e3385e23d753609b4a65bbfe2d342883e338df"
+    }
+  },
+  "interpretation": [
+    "Eight selected-plan changes across seven inputs retain already successful typed slot 0: four acid functions and four aryl halogen handles. This proves changed future retrieval targets, not improved pathway coverage.",
+    "All seventeen changed raw variants are included, including nine outside saved selected plans. A production change can alter plan selection and must be evaluated on the complete fixed panel.",
+    "Mixed tuples remain approximate; there is no proof that every precursor role is reconstructed. Final route, atom/stereo, similarity, polar and 3D gates remain necessary.",
+    "The archived rule062 typed prefix equals its approximate counterpart; this policy does not itself resolve the previously observed rule062 stock/continuation bottleneck.",
+    "Implementation is justified as a generic opt-in hypothesis. P1 remains incomplete at the last actual result of four supported inputs out of twelve."
+  ],
+  "limits": {
+    "outer_rule_calls_total": 174,
+    "raw_partition_valid_outcome_records_total": 696,
+    "raw_reverse_outcomes_per_call": 4,
+    "reverse_role_work_per_input": 1024,
+    "rule_inspections_per_input": 512,
+    "typed_trials_per_raw_outcome": 16
+  },
+  "rows": [
+    {
+      "approximate_raw_variants": 26,
+      "changed_raw_variants": 1,
+      "changed_selected_plan_associations": 0,
+      "id": "CHEMBL4630839-query-1",
+      "outer_rules_observed": 16,
+      "saved_selected_plans_recovered": 8,
+      "work": {
+        "limits_reached": [],
+        "reverse_attempts": 15,
+        "reverse_failures": 3,
+        "reverse_outcomes": 35,
+        "reverse_partition_checks": 37,
+        "reverse_role_match_checks": 119,
+        "reverse_role_trials": 122,
+        "reverse_role_work": 122,
+        "rule_inspections": 156,
+        "rule_template_checks": 91
+      }
+    },
+    {
+      "approximate_raw_variants": 18,
+      "changed_raw_variants": 1,
+      "changed_selected_plan_associations": 0,
+      "id": "CHEMBL4630839-query-2",
+      "outer_rules_observed": 16,
+      "saved_selected_plans_recovered": 8,
+      "work": {
+        "limits_reached": [],
+        "reverse_attempts": 16,
+        "reverse_failures": 4,
+        "reverse_outcomes": 23,
+        "reverse_partition_checks": 27,
+        "reverse_role_match_checks": 78,
+        "reverse_role_trials": 87,
+        "reverse_role_work": 87,
+        "rule_inspections": 156,
+        "rule_template_checks": 91
+      }
+    },
+    {
+      "approximate_raw_variants": 23,
+      "changed_raw_variants": 2,
+      "changed_selected_plan_associations": 0,
+      "id": "CHEMBL4247-query-1",
+      "outer_rules_observed": 16,
+      "saved_selected_plans_recovered": 8,
+      "work": {
+        "limits_reached": [],
+        "reverse_attempts": 16,
+        "reverse_failures": 3,
+        "reverse_outcomes": 28,
+        "reverse_partition_checks": 32,
+        "reverse_role_match_checks": 126,
+        "reverse_role_trials": 128,
+        "reverse_role_work": 128,
+        "rule_inspections": 156,
+        "rule_template_checks": 91
+      }
+    },
+    {
+      "approximate_raw_variants": 26,
+      "changed_raw_variants": 3,
+      "changed_selected_plan_associations": 2,
+      "id": "CHEMBL4247-query-2",
+      "outer_rules_observed": 16,
+      "saved_selected_plans_recovered": 8,
+      "work": {
+        "limits_reached": [],
+        "reverse_attempts": 16,
+        "reverse_failures": 2,
+        "reverse_outcomes": 32,
+        "reverse_partition_checks": 36,
+        "reverse_role_match_checks": 122,
+        "reverse_role_trials": 124,
+        "reverse_role_work": 124,
+        "rule_inspections": 156,
+        "rule_template_checks": 91
+      }
+    },
+    {
+      "approximate_raw_variants": 16,
+      "changed_raw_variants": 1,
+      "changed_selected_plan_associations": 0,
+      "id": "CHEMBL5163-query-1",
+      "outer_rules_observed": 16,
+      "saved_selected_plans_recovered": 8,
+      "work": {
+        "limits_reached": [],
+        "reverse_attempts": 16,
+        "reverse_failures": 0,
+        "reverse_outcomes": 15,
+        "reverse_partition_checks": 16,
+        "reverse_role_match_checks": 68,
+        "reverse_role_trials": 68,
+        "reverse_role_work": 68,
+        "rule_inspections": 156,
+        "rule_template_checks": 91
+      }
+    },
+    {
+      "approximate_raw_variants": 7,
+      "changed_raw_variants": 0,
+      "changed_selected_plan_associations": 0,
+      "id": "CHEMBL5163-query-2",
+      "outer_rules_observed": 13,
+      "saved_selected_plans_recovered": 7,
+      "work": {
+        "limits_reached": [],
+        "reverse_attempts": 11,
+        "reverse_failures": 10,
+        "reverse_outcomes": 7,
+        "reverse_partition_checks": 17,
+        "reverse_role_match_checks": 17,
+        "reverse_role_trials": 29,
+        "reverse_role_work": 29,
+        "rule_inspections": 156,
+        "rule_template_checks": 91
+      }
+    },
+    {
+      "approximate_raw_variants": 10,
+      "changed_raw_variants": 1,
+      "changed_selected_plan_associations": 1,
+      "id": "CHEMBL3334418-query-1",
+      "outer_rules_observed": 14,
+      "saved_selected_plans_recovered": 8,
+      "work": {
+        "limits_reached": [],
+        "reverse_attempts": 12,
+        "reverse_failures": 0,
+        "reverse_outcomes": 15,
+        "reverse_partition_checks": 14,
+        "reverse_role_match_checks": 63,
+        "reverse_role_trials": 63,
+        "reverse_role_work": 63,
+        "rule_inspections": 156,
+        "rule_template_checks": 91
+      }
+    },
+    {
+      "approximate_raw_variants": 14,
+      "changed_raw_variants": 2,
+      "changed_selected_plan_associations": 1,
+      "id": "CHEMBL3334418-query-2",
+      "outer_rules_observed": 14,
+      "saved_selected_plans_recovered": 8,
+      "work": {
+        "limits_reached": [],
+        "reverse_attempts": 12,
+        "reverse_failures": 0,
+        "reverse_outcomes": 15,
+        "reverse_partition_checks": 14,
+        "reverse_role_match_checks": 63,
+        "reverse_role_trials": 63,
+        "reverse_role_work": 63,
+        "rule_inspections": 156,
+        "rule_template_checks": 91
+      }
+    },
+    {
+      "approximate_raw_variants": 20,
+      "changed_raw_variants": 1,
+      "changed_selected_plan_associations": 1,
+      "id": "CHEMBL4869-query-1",
+      "outer_rules_observed": 14,
+      "saved_selected_plans_recovered": 8,
+      "work": {
+        "limits_reached": [],
+        "reverse_attempts": 12,
+        "reverse_failures": 5,
+        "reverse_outcomes": 28,
+        "reverse_partition_checks": 31,
+        "reverse_role_match_checks": 87,
+        "reverse_role_trials": 94,
+        "reverse_role_work": 94,
+        "rule_inspections": 156,
+        "rule_template_checks": 91
+      }
+    },
+    {
+      "approximate_raw_variants": 17,
+      "changed_raw_variants": 1,
+      "changed_selected_plan_associations": 1,
+      "id": "CHEMBL4869-query-2",
+      "outer_rules_observed": 14,
+      "saved_selected_plans_recovered": 8,
+      "work": {
+        "limits_reached": [],
+        "reverse_attempts": 12,
+        "reverse_failures": 1,
+        "reverse_outcomes": 31,
+        "reverse_partition_checks": 30,
+        "reverse_role_match_checks": 130,
+        "reverse_role_trials": 131,
+        "reverse_role_work": 131,
+        "rule_inspections": 156,
+        "rule_template_checks": 91
+      }
+    },
+    {
+      "approximate_raw_variants": 9,
+      "changed_raw_variants": 2,
+      "changed_selected_plan_associations": 1,
+      "id": "CHEMBL3864-query-1",
+      "outer_rules_observed": 9,
+      "saved_selected_plans_recovered": 8,
+      "work": {
+        "limits_reached": [],
+        "reverse_attempts": 7,
+        "reverse_failures": 1,
+        "reverse_outcomes": 11,
+        "reverse_partition_checks": 10,
+        "reverse_role_match_checks": 46,
+        "reverse_role_trials": 47,
+        "reverse_role_work": 47,
+        "rule_inspections": 156,
+        "rule_template_checks": 91
+      }
+    },
+    {
+      "approximate_raw_variants": 19,
+      "changed_raw_variants": 2,
+      "changed_selected_plan_associations": 1,
+      "id": "CHEMBL3864-query-2",
+      "outer_rules_observed": 16,
+      "saved_selected_plans_recovered": 8,
+      "work": {
+        "limits_reached": [],
+        "reverse_attempts": 16,
+        "reverse_failures": 3,
+        "reverse_outcomes": 23,
+        "reverse_partition_checks": 26,
+        "reverse_role_match_checks": 98,
+        "reverse_role_trials": 99,
+        "reverse_role_work": 99,
+        "rule_inspections": 156,
+        "rule_template_checks": 91
+      }
+    }
+  ],
+  "runtime_and_input_sha256": {
+    "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+    "config": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9",
+    "observer_test": "2ae923373e7578db2261068fac08640ecd2b2a35f8fb9fa118d5c8f0f2d387d5",
+    "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+    "plan": "7f270b85c20cf3b38ee2690de94a8f137bd91fc50ae072295ebda12eaf95c75e",
+    "probe": "c41b51f0fe3b4f3599dbd9030ed5f6a746614f2ef70c0f30f305add3e0f5b106",
+    "reactions_source": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+    "route_first_source": "70e3863a6fc80b582d6f21f3a895e8b3ca7cd34a8fa5af91fdbaa63660482791",
+    "rule062_entrypoint_control": "31dc45e711c0d81cf3dd84369aa26e88480d0401da830776e990047b4d758056",
+    "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "v17_result": "f86e0d441e8e9f9d759476febba4d6a92b8acd831a9dfda06a7df6366983f56e"
+  },
+  "runtime_commit": "9dc379c",
+  "schema": "outer-typed-prefix-control-v1-portable",
+  "scope": "All 12 v17 inputs, 174 selected outer-rule calls in original order and 95 saved selected-plan associations. Existing successful typed precursor prefixes replace their approximate counterparts only in a counterfactual tuple. No extra typed attempts or reverse outcomes. This is not a full search or route-supply experiment.",
+  "status": "complete_fixed_context_control",
+  "summary": {
+    "approximate_raw_variants": 205,
+    "changed_raw_variants": 17,
+    "changed_selected_plan_associations": 8,
+    "inputs": 12,
+    "inputs_with_changed_selected_plans": 7,
+    "outer_rule_calls": 174,
+    "saved_selected_plans_recovered": 95
+  },
+  "validation": {
+    "astra": "Scoped control reviewed before execution; root verified final receipt reset. Saved selected tuple changes independently reviewed.",
+    "entry_exit_bindings_equal": true,
+    "observer_control": "1 passed",
+    "ruff": "PASS"
+  },
+  "work": {
+    "catalog_loads": 0,
+    "forward_model_calls": 0,
+    "reverse_attempts": 161,
+    "reverse_failures": 32,
+    "reverse_outcomes": 263,
+    "reverse_partition_checks": 290,
+    "reverse_role_match_checks": 1017,
+    "reverse_role_trials": 1055,
+    "reverse_role_work": 1055,
+    "rule_inspections": 1872,
+    "rule_template_checks": 1092,
+    "three_dimensional_calls": 0
+  }
+}
