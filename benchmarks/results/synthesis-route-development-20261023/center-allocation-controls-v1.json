@@ -1,0 +1,411 @@
+{
+  "schema": "route-first-center-allocation-development-controls-v1",
+  "status": "code_review_passed_catalog_comparison_not_run",
+  "source_commit_matching_runtime": "3ba5a62",
+  "source_sha256": "ef9f43c9d309fb05e5b527851bf23e3012ce3b67b4d4fdccbb2ccfbc9bdaab65",
+  "focused_tests_passed": 50,
+  "scope": "Catalog-free plan-only and bounded reverse controls; no actual catalog candidate supply, model, route support or3D efficacy.",
+  "plan_only_control": {
+    "schema": "route-first-center-plan-only-v1",
+    "status": "complete",
+    "scope": "Original hit and actual rule asset; max_steps=1 only to skip stage two, with _stage stubbed; no catalog loading, product generation or model",
+    "query_id": "CHEMBL4247-query-2",
+    "expected_typed_centers_from_bounded_reverse_audit": [
+      [
+        17,
+        18
+      ],
+      [
+        18,
+        19
+      ]
+    ],
+    "selected_typed_centers": [
+      [
+        17,
+        18
+      ],
+      [
+        18,
+        19
+      ]
+    ],
+    "outer_plans_selected": [
+      {
+        "rule_id": "synllama-rule-042",
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+        ],
+        "fallback": false,
+        "hint_quality": "typed",
+        "center_kind": "cut",
+        "cut_bond_centers": [
+          [
+            [
+              17,
+              18
+            ]
+          ]
+        ]
+      },
+      {
+        "rule_id": "synllama-rule-042",
+        "guide": [
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(Cl)ncc12",
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N"
+        ],
+        "fallback": false,
+        "hint_quality": "typed",
+        "center_kind": "cut",
+        "cut_bond_centers": [
+          [
+            [
+              18,
+              19
+            ]
+          ]
+        ]
+      },
+      {
+        "rule_id": "synllama-rule-077",
+        "guide": [
+          "COc1cc(C2CCN(CC=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+          "N"
+        ],
+        "fallback": false,
+        "hint_quality": "approximate",
+        "center_kind": "cut",
+        "cut_bond_centers": [
+          [
+            [
+              10,
+              11
+            ]
+          ]
+        ]
+      },
+      {
+        "rule_id": "synllama-rule-080",
+        "guide": [
+          "COc1cc(C2CCN(CI)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+          "NC=O"
+        ],
+        "fallback": false,
+        "hint_quality": "approximate",
+        "center_kind": "cut",
+        "cut_bond_centers": [
+          [
+            [
+              9,
+              10
+            ]
+          ]
+        ]
+      },
+      {
+        "rule_id": "synllama-rule-042",
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3)n2n1",
+          "CNS(C)(=O)=O"
+        ],
+        "fallback": false,
+        "hint_quality": "approximate",
+        "center_kind": "cut",
+        "cut_bond_centers": [
+          [
+            [
+              32,
+              33
+            ]
+          ]
+        ]
+      },
+      {
+        "rule_id": "synllama-rule-039",
+        "guide": [
+          "CS(=O)(=O)Cl",
+          "CNc1ccccc1-c1cc(C)c2cnc(Nc3ccc(C4CCN(CC(N)=O)CC4)cc3OC)nn12"
+        ],
+        "fallback": false,
+        "hint_quality": "approximate",
+        "center_kind": "cut",
+        "cut_bond_centers": [
+          [
+            [
+              33,
+              35
+            ]
+          ]
+        ]
+      },
+      {
+        "rule_id": "synllama-rule-029",
+        "guide": [
+          "NC(=O)[CH]O",
+          "COc1cc(C2CCNCC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1"
+        ],
+        "fallback": false,
+        "hint_quality": "approximate",
+        "center_kind": "cut",
+        "cut_bond_centers": [
+          [
+            [
+              8,
+              9
+            ]
+          ]
+        ]
+      },
+      {
+        "rule_id": "synllama-rule-030",
+        "guide": [
+          "[CH]O",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(Nc3ccc(C4CCN(CC(N)=O)CC4)cc3O)ncc12"
+        ],
+        "fallback": false,
+        "hint_quality": "approximate",
+        "center_kind": "cut",
+        "cut_bond_centers": [
+          [
+            [
+              0,
+              1
+            ]
+          ]
+        ]
+      }
+    ],
+    "outer_center_metadata_checks": 1915,
+    "outer_center_metadata_incomplete": 0,
+    "outer_center_metadata_check_limit": 32768,
+    "rule_inspections": 156,
+    "max_outer_guides": 8,
+    "sha256": {
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/reverse-center-audit-v1/result.json": "5b847c17a70add3ff4f0b02bbb170e282e6f9ae026ad5e95347cda679c4be614",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023/route-first-config.json": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/rules.json": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "/data2/home/jyryu/chembounce/chembounce_synthesis/route_first.py": "ef9f43c9d309fb05e5b527851bf23e3012ce3b67b4d4fdccbb2ccfbc9bdaab65",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/center-plan-only-v1/probe.py": "2f80543337746ba3fa1bb244090e309b96161086c82a76f53d8385d142c4c6e2"
+    },
+    "source_sha256_after": "ef9f43c9d309fb05e5b527851bf23e3012ce3b67b4d4fdccbb2ccfbc9bdaab65",
+    "harness_sha256_after": "2f80543337746ba3fa1bb244090e309b96161086c82a76f53d8385d142c4c6e2"
+  },
+  "inner_followthrough_control": {
+    "schema": "route-first-center-inner-followthrough-v1",
+    "status": "complete",
+    "scope": "Original-hit-derived outer guides only; fresh bounded inner rule template selection and at most four raw reverse outcomes for one actual rule, even when not selected; no catalog, product stage, model or baseline-product seed",
+    "query_id": "CHEMBL4247-query-2",
+    "hypothetical_inner_rule": "synllama-rule-036",
+    "rows": [
+      {
+        "outer_cut_bond_centers": [
+          [
+            [
+              17,
+              18
+            ]
+          ]
+        ],
+        "outer_typed_guide_slot_zero": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+        "parent_atom_count": 19,
+        "inner_top_rule_ids_with_fresh_budget": [
+          "synllama-rule-077",
+          "synllama-rule-080",
+          "synllama-rule-027",
+          "synllama-rule-029"
+        ],
+        "inner_rule_036_rank_among_eligible_matches": 7,
+        "inner_rule_036_product_template_match_count_bounded": 13,
+        "inner_rule_036_product_template_match_count_truncated": false,
+        "interaromatic_nonring_bonds": [],
+        "inner_036_raw_outcome_cap": 4,
+        "inner_036_raw_outcome_count": 4,
+        "inner_036_raw_outcomes": [
+          {
+            "raw_index": 0,
+            "partition_issue": "reused_parent_atom",
+            "mapped_product_center_parent_atom_ids": {
+              "1": 3,
+              "2": 2
+            },
+            "parent_cut_bonds": null,
+            "guide": null,
+            "hint_quality": null
+          },
+          {
+            "raw_index": 1,
+            "partition_issue": "reused_parent_atom",
+            "mapped_product_center_parent_atom_ids": {
+              "1": 17,
+              "2": 2
+            },
+            "parent_cut_bonds": null,
+            "guide": null,
+            "hint_quality": null
+          },
+          {
+            "raw_index": 2,
+            "partition_issue": "reused_parent_atom",
+            "mapped_product_center_parent_atom_ids": {
+              "1": 2,
+              "2": 3
+            },
+            "parent_cut_bonds": null,
+            "guide": null,
+            "hint_quality": null
+          },
+          {
+            "raw_index": 3,
+            "partition_issue": "reused_parent_atom",
+            "mapped_product_center_parent_atom_ids": {
+              "1": 4,
+              "2": 3
+            },
+            "parent_cut_bonds": null,
+            "guide": null,
+            "hint_quality": null
+          }
+        ],
+        "inner_selector_rule_inspections_fresh": 140
+      },
+      {
+        "outer_cut_bond_centers": [
+          [
+            [
+              18,
+              19
+            ]
+          ]
+        ],
+        "outer_typed_guide_slot_zero": "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(Cl)ncc12",
+        "parent_atom_count": 23,
+        "inner_top_rule_ids_with_fresh_budget": [
+          "synllama-rule-063",
+          "synllama-rule-027",
+          "synllama-rule-029",
+          "synllama-rule-031"
+        ],
+        "inner_rule_036_rank_among_eligible_matches": 5,
+        "inner_rule_036_product_template_match_count_bounded": 23,
+        "inner_rule_036_product_template_match_count_truncated": false,
+        "interaromatic_nonring_bonds": [
+          {
+            "parent_bond": [
+              3,
+              4
+            ],
+            "bounded_product_template_match_ordinals_one_based": [
+              7,
+              8
+            ]
+          }
+        ],
+        "inner_036_raw_outcome_cap": 4,
+        "inner_036_raw_outcome_count": 4,
+        "inner_036_raw_outcomes": [
+          {
+            "raw_index": 0,
+            "partition_issue": null,
+            "mapped_product_center_parent_atom_ids": {
+              "1": 0,
+              "2": 1
+            },
+            "parent_cut_bonds": [
+              [
+                0,
+                1
+              ]
+            ],
+            "guide": [
+              "C",
+              "CN(c1ccccc1-c1ccc2cnc(Cl)nn12)S(C)(=O)=O"
+            ],
+            "hint_quality": "approximate"
+          },
+          {
+            "raw_index": 1,
+            "partition_issue": "reused_parent_atom",
+            "mapped_product_center_parent_atom_ids": {
+              "1": 2,
+              "2": 1
+            },
+            "parent_cut_bonds": null,
+            "guide": null,
+            "hint_quality": null
+          },
+          {
+            "raw_index": 2,
+            "partition_issue": "reused_parent_atom",
+            "mapped_product_center_parent_atom_ids": {
+              "1": 22,
+              "2": 1
+            },
+            "parent_cut_bonds": null,
+            "guide": null,
+            "hint_quality": null
+          },
+          {
+            "raw_index": 3,
+            "partition_issue": "reused_parent_atom",
+            "mapped_product_center_parent_atom_ids": {
+              "1": 1,
+              "2": 2
+            },
+            "parent_cut_bonds": null,
+            "guide": null,
+            "hint_quality": null
+          }
+        ],
+        "inner_selector_rule_inspections_fresh": 142
+      }
+    ],
+    "interpretation": "Neither guide selects inner rule 036 within the current top four. Promotion alone is insufficient under the current raw cap: the first guide's four outcomes all fail parent partition, and the second guide's only valid outcome cuts a methyl bond; none of its four outcomes cuts the interaromatic bond. That bond appears at bounded product-template match positions seven/eight, but template-match order does not establish reverse-outcome order. These observations do not establish catalog pool reachability or chemical impossibility.",
+    "sha256": {
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/center-plan-only-v1/result.json": "359a935f8b168b873965af0bca6b30f21ae49bf714a61feb4856b6f61524d82e",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/reverse-center-audit-v1/result.json": "5b847c17a70add3ff4f0b02bbb170e282e6f9ae026ad5e95347cda679c4be614",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023/route-first-config.json": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/rules.json": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "/data2/home/jyryu/chembounce/chembounce_synthesis/route_first.py": "ef9f43c9d309fb05e5b527851bf23e3012ce3b67b4d4fdccbb2ccfbc9bdaab65",
+      "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/center-inner-followthrough-v1/probe.py": "67d91e907731d4e1dc0d352fb7e71b344f623d5cf1191188cc115393285e1ff8"
+    },
+    "source_sha256_after": "ef9f43c9d309fb05e5b527851bf23e3012ce3b67b4d4fdccbb2ccfbc9bdaab65",
+    "harness_sha256_after": "67d91e907731d4e1dc0d352fb7e71b344f623d5cf1191188cc115393285e1ff8"
+  },
+  "decision": "Outer allocation now retains both typed central cut sites within8plans, fixing the demonstrated prior omission. Known two-step witness recovery remains unproven: inner rule is outside current top4, and observed raw4omit required cut. Hold v9 catalog execution while resolving bounded inner-rule/center scheduling. Frozen primary >5/12 fully supported inputs unchanged.",
+  "evidence": {
+    "plan_only_result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/center-plan-only-v1/result.json",
+      "sha256": "359a935f8b168b873965af0bca6b30f21ae49bf714a61feb4856b6f61524d82e"
+    },
+    "plan_only_script": {
+      "path": "benchmark-results/route-first-development-20261023-v2/center-plan-only-v1/probe.py",
+      "sha256": "2f80543337746ba3fa1bb244090e309b96161086c82a76f53d8385d142c4c6e2"
+    },
+    "followthrough_corrected_result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/center-inner-followthrough-v1/result.json",
+      "sha256": "02aecc7cd31337e581343f60b3ba39784d11984794585d1ac86f07aa0a8f8208"
+    },
+    "followthrough_corrected_script": {
+      "path": "benchmark-results/route-first-development-20261023-v2/center-inner-followthrough-v1/probe.py",
+      "sha256": "67d91e907731d4e1dc0d352fb7e71b344f623d5cf1191188cc115393285e1ff8"
+    },
+    "followthrough_provenance_amendment": {
+      "path": "benchmark-results/route-first-development-20261023-v2/center-inner-followthrough-provenance-v1/amendment.json",
+      "sha256": "bc3a8abab2500d0188204f8bc4108d5ffb188346b6b504c44b8a68fcde1ba9cd"
+    },
+    "code_review_initial": {
+      "path": "benchmark-results/qualified-development-20261023/route-first-v2-center-allocation-review-v1/report.json",
+      "sha256": "46dbfb68b2b0b1b0a84427dd56daddd1d5e72c528d252bd6fa37277f09d89eb9"
+    },
+    "code_review_revision2": {
+      "path": "benchmark-results/qualified-development-20261023/route-first-v2-center-allocation-review-v1/report.revision-2.json",
+      "sha256": "dcaa5b014c8371280231a10900dbcd6aaa828761596970f6083b4ca82d7c7ff8"
+    },
+    "unexecuted_v9_harness": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v9/probe.py",
+      "sha256": "6db8bee3dc3f0240a14ad0db61eebf28187c7b9cb83954940fbb15412026fd4f"
+    }
+  },
+  "artifact_note": "Followthrough causal wording was corrected and re-executed in place. The amendment retains current executed bytes and reconstructed originals verified exactly against historical hashes, explicitly labelled as reconstructed. Scientific rows and runtime identity are unchanged; initial receipt is retained and revision2 binds the correction."
+}
