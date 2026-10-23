@@ -1,0 +1,550 @@
+{
+  "status": "complete",
+  "scope": "Fixed first 250000 eligible unique catalog molecules; exact compiled hit-local stereo anchor; ring-N environment and matching reactant roles only. Presence/absence does not establish reaction feasibility or stock.",
+  "source_sha256": {
+    "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+    "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+    "catalog": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "route_first.py": "3e0cc84e20a85ad6b3869f8ab983f58eb4d07c1bb4501d958e57920898d5c5f2",
+    "probe.py": "6ef45301ee9c2f7a474e78c5f5f6fbd944f57b879135e3de3bc6126ed0493dad"
+  },
+  "catalog_rows": 238542,
+  "eligible_unique": 238542,
+  "parsed_within_index_limit": 238542,
+  "rows": [
+    {
+      "id": "CHEMBL4630839-query-2",
+      "anchor_query_smiles": "c1ccc([C@@H]2CCCNC2)cc1",
+      "anchor_radius": 1,
+      "matched_unique_blocks": 8,
+      "matched_ring_n_sites": 8,
+      "ring_n_site_classes": {
+        "Boc_like_carbamate": 3,
+        "free_ring_NH": 4,
+        "ring_amide_NH": 1
+      },
+      "unique_blocks_by_ring_n_class": {
+        "Boc_like_carbamate": 3,
+        "free_ring_NH": 4,
+        "ring_amide_NH": 1
+      },
+      "sample_limit": null,
+      "ring_n_role_counts": [
+        {
+          "matched_ring_n_sites": 1,
+          "matched_unique_blocks": 1,
+          "rule_id": "synllama-rule-029",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 4,
+          "matched_unique_blocks": 4,
+          "rule_id": "synllama-rule-039",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 4,
+          "matched_unique_blocks": 4,
+          "rule_id": "synllama-rule-042",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 4,
+          "matched_unique_blocks": 4,
+          "rule_id": "synllama-rule-045",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 4,
+          "matched_unique_blocks": 4,
+          "rule_id": "synllama-rule-046",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 4,
+          "matched_unique_blocks": 4,
+          "rule_id": "synllama-rule-047",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 4,
+          "matched_unique_blocks": 4,
+          "rule_id": "synllama-rule-048",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 4,
+          "matched_unique_blocks": 4,
+          "rule_id": "synllama-rule-049",
+          "matched_slot": 1
+        }
+      ],
+      "blocks": [
+        {
+          "catalog_ids": [
+            "structure-sha256:2255cdcc5633a240e0bdaf14c870f3e967c57e3bf34c2d3766a72fa5fc21545e"
+          ],
+          "smiles": "CC(C)(C)OC(=O)N1CC[C@@H](C(=O)O)[C@@H](c2ccccc2)C1",
+          "ring_n_class": "Boc_like_carbamate",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:3881364506a50d17aad3eb10432c37d4977e5990c5b335772c199de0b0065402"
+          ],
+          "smiles": "C[C@]1(O)CCNC[C@]1(O)c1ccccc1",
+          "ring_n_class": "free_ring_NH",
+          "matching_roles": [
+            {
+              "rule_id": "synllama-rule-039",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-042",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-045",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-046",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-047",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-048",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-049",
+              "matched_slot": 1
+            }
+          ]
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:3bf503893397e7ce7dfd5a115ff3e0889e17711b27e94af9958e737513fb1c3e"
+          ],
+          "smiles": "O=C1NC(=O)[C@]2(c3ccccc3)C[C@H]12",
+          "ring_n_class": "ring_amide_NH",
+          "matching_roles": [
+            {
+              "rule_id": "synllama-rule-029",
+              "matched_slot": 1
+            }
+          ]
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:77fc88605aa7087b27d50597a1137f4239df6b1ea6f13dad8ae2bd17d09bba30"
+          ],
+          "smiles": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCNC4)cc3)nc12",
+          "ring_n_class": "free_ring_NH",
+          "matching_roles": [
+            {
+              "rule_id": "synllama-rule-039",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-042",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-045",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-046",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-047",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-048",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-049",
+              "matched_slot": 1
+            }
+          ]
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:af20afa13c40b67c4c363fbba5bd5735d22af63120f5bf9161233ef3ef6b0964"
+          ],
+          "smiles": "c1ccc2c(c1)[C@@H]1CC[C@H]2NC1",
+          "ring_n_class": "free_ring_NH",
+          "matching_roles": [
+            {
+              "rule_id": "synllama-rule-039",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-042",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-045",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-046",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-047",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-048",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-049",
+              "matched_slot": 1
+            }
+          ]
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:dc440d6aac33d45ca5592b43b35e73d0cf0bdbf9caba7a7f8517567b1b8cb35a"
+          ],
+          "smiles": "CC(C)(C)OC(=O)N1C[C@@H](C(=O)O)C[C@@H](c2ccccc2)C1",
+          "ring_n_class": "Boc_like_carbamate",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:ef6a6a36b90aec7ef7c4f7568b28a1ad727be1127669b483da1573743643deab"
+          ],
+          "smiles": "CC(C)(C)OC(=O)N1C[C@H]2C[C@@]2(c2ccc(N)cc2)C1",
+          "ring_n_class": "Boc_like_carbamate",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:f2df0801f38ad301de10f2177ce4afdfb9caab385351809eb912f648e6c5346d"
+          ],
+          "smiles": "c1cnc2cc3c(cc2n1)[C@@H]1CNC[C@H]3C1",
+          "ring_n_class": "free_ring_NH",
+          "matching_roles": [
+            {
+              "rule_id": "synllama-rule-039",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-042",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-045",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-046",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-047",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-048",
+              "matched_slot": 1
+            },
+            {
+              "rule_id": "synllama-rule-049",
+              "matched_slot": 1
+            }
+          ]
+        }
+      ],
+      "portable_sample_count": 8
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "anchor_query_smiles": "C[C@H]1CCCNC1",
+      "anchor_radius": 1,
+      "matched_unique_blocks": 412,
+      "matched_ring_n_sites": 416,
+      "ring_n_site_classes": {
+        "Boc_like_carbamate": 98,
+        "alkyl_carbon": 38,
+        "aryl_carbon": 2,
+        "carbamate_carbonyl": 25,
+        "carbonyl_carbon": 9,
+        "free_ring_NH": 213,
+        "other": 2,
+        "other_ring_N": 10,
+        "ring_amide_NH": 17,
+        "sulfonyl_sulfur": 2
+      },
+      "unique_blocks_by_ring_n_class": {
+        "Boc_like_carbamate": 98,
+        "alkyl_carbon": 38,
+        "aryl_carbon": 2,
+        "carbamate_carbonyl": 25,
+        "carbonyl_carbon": 9,
+        "free_ring_NH": 213,
+        "other": 2,
+        "other_ring_N": 9,
+        "ring_amide_NH": 17,
+        "sulfonyl_sulfur": 2
+      },
+      "sample_limit": 30,
+      "ring_n_role_counts": [
+        {
+          "matched_ring_n_sites": 14,
+          "matched_unique_blocks": 14,
+          "rule_id": "synllama-rule-008",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 3,
+          "matched_unique_blocks": 3,
+          "rule_id": "synllama-rule-029",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 213,
+          "matched_unique_blocks": 213,
+          "rule_id": "synllama-rule-039",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 213,
+          "matched_unique_blocks": 213,
+          "rule_id": "synllama-rule-042",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 213,
+          "matched_unique_blocks": 213,
+          "rule_id": "synllama-rule-045",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 213,
+          "matched_unique_blocks": 213,
+          "rule_id": "synllama-rule-046",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 213,
+          "matched_unique_blocks": 213,
+          "rule_id": "synllama-rule-047",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 213,
+          "matched_unique_blocks": 213,
+          "rule_id": "synllama-rule-048",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 213,
+          "matched_unique_blocks": 213,
+          "rule_id": "synllama-rule-049",
+          "matched_slot": 1
+        }
+      ],
+      "blocks": [
+        {
+          "catalog_ids": [
+            "structure-sha256:3ec2eb931dd98bdae5c3359e7619298f3ab559389b13dd20a02d276a9b6b3431"
+          ],
+          "smiles": "C#C[C@H]1C[C@H]2C[C@@H]1CN(C(=O)OC(C)(C)C)C2",
+          "ring_n_class": "Boc_like_carbamate",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:4db6ffe4c7b319abc3e0117eaec18aa0df31a5722628afb605110c1ea6cf8186"
+          ],
+          "smiles": "C#C[C@H]1C[C@H]2C[C@@H]1CN2C(=O)OC(C)(C)C",
+          "ring_n_class": "Boc_like_carbamate",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:3a8525df5dcd86698566268a6d23d043b85d9330b34bf279c103566e17c6741a"
+          ],
+          "smiles": "CC(=O)[C@]12C[C@H]1CN(C(=O)OC(C)(C)C)C2",
+          "ring_n_class": "Boc_like_carbamate",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:679649355554027bad76704853be77ada5ec16bd7d3938e6152579d1afd8b2cb"
+          ],
+          "smiles": "CC(C)(C)OC(=O)N[C@@H]1CCN(Cc2ccccc2)C[C@H]1CN",
+          "ring_n_class": "alkyl_carbon",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:e93f10c3f881dc1a7b1d43ce56d77fd081263b68787ebf15670dd12795ef7aaa"
+          ],
+          "smiles": "CCCCN1C(=O)CC[C@H](C(=O)O)[C@H]1c1ccccc1OC",
+          "ring_n_class": "alkyl_carbon",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:6e594f495c85f4a000be9a4a497ba67cfe6e63a97233bc64566587bf1da09753"
+          ],
+          "smiles": "CCCN1C(=O)CC[C@H](C(=O)O)[C@H]1c1cncn1C",
+          "ring_n_class": "alkyl_carbon",
+          "matching_roles": []
+        }
+      ],
+      "portable_sample_count": 6
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "anchor_query_smiles": "O[C@H]1CCNC1",
+      "anchor_radius": 1,
+      "matched_unique_blocks": 310,
+      "matched_ring_n_sites": 310,
+      "ring_n_site_classes": {
+        "Boc_like_carbamate": 72,
+        "Cbz_like_carbamate": 2,
+        "alkyl_carbon": 31,
+        "aryl_carbon": 6,
+        "carbamate_carbonyl": 16,
+        "carbonyl_carbon": 8,
+        "free_ring_NH": 163,
+        "other_ring_N": 3,
+        "ring_amide_NH": 4,
+        "sulfonyl_sulfur": 5
+      },
+      "unique_blocks_by_ring_n_class": {
+        "Boc_like_carbamate": 72,
+        "Cbz_like_carbamate": 2,
+        "alkyl_carbon": 31,
+        "aryl_carbon": 6,
+        "carbamate_carbonyl": 16,
+        "carbonyl_carbon": 8,
+        "free_ring_NH": 163,
+        "other_ring_N": 3,
+        "ring_amide_NH": 4,
+        "sulfonyl_sulfur": 5
+      },
+      "sample_limit": 30,
+      "ring_n_role_counts": [
+        {
+          "matched_ring_n_sites": 4,
+          "matched_unique_blocks": 4,
+          "rule_id": "synllama-rule-008",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 163,
+          "matched_unique_blocks": 163,
+          "rule_id": "synllama-rule-039",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 163,
+          "matched_unique_blocks": 163,
+          "rule_id": "synllama-rule-042",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 163,
+          "matched_unique_blocks": 163,
+          "rule_id": "synllama-rule-045",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 163,
+          "matched_unique_blocks": 163,
+          "rule_id": "synllama-rule-046",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 163,
+          "matched_unique_blocks": 163,
+          "rule_id": "synllama-rule-047",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 163,
+          "matched_unique_blocks": 163,
+          "rule_id": "synllama-rule-048",
+          "matched_slot": 1
+        },
+        {
+          "matched_ring_n_sites": 163,
+          "matched_unique_blocks": 163,
+          "rule_id": "synllama-rule-049",
+          "matched_slot": 1
+        }
+      ],
+      "blocks": [
+        {
+          "catalog_ids": [
+            "structure-sha256:3cad177ba90b1e14bb2e1c6bdc46bc4ecc9c51fa3248a490aac9495b355c2994"
+          ],
+          "smiles": "C#C[C@@H]1CN(C(=O)OC(C)(C)C)C[C@H]1O",
+          "ring_n_class": "Boc_like_carbamate",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:7f7e329d40e7c98796e5ce4ce151bf8a97ad506e91cef44ff7873054755dc90e"
+          ],
+          "smiles": "C#C[C@@H]1CN(C(=O)OC(C)(C)C)C[C@H]1OC",
+          "ring_n_class": "Boc_like_carbamate",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:a425d75d1118b944fbdf976f2df02f394b6bfedc787fd78b3b7e14e558fb4a6a"
+          ],
+          "smiles": "C#C[C@@]12C[C@@H](CO1)N(C(=O)OC(C)(C)C)C2",
+          "ring_n_class": "Boc_like_carbamate",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:9fda81322d031351e50f59e957dbe0268ce056edf6a25a873f1812c69e87cfbe"
+          ],
+          "smiles": "CN[C@@H]1CN(C(=O)OCc2ccccc2)C[C@H]1O",
+          "ring_n_class": "Cbz_like_carbamate",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:6b3aebf79a0db93d9cdb41a83fad69dc363c474ec1aeb16b21be9c95b3b7ac08"
+          ],
+          "smiles": "O=C(OCc1ccccc1)N1C[C@@H]2O[C@@H]2C1",
+          "ring_n_class": "Cbz_like_carbamate",
+          "matching_roles": []
+        },
+        {
+          "catalog_ids": [
+            "structure-sha256:26428614d3b939584093eee4281cf93c7a51adfb01cf1e3454be70aae786f874"
+          ],
+          "smiles": "C#CCCN1CC[C@H](O)C1",
+          "ring_n_class": "alkyl_carbon",
+          "matching_roles": []
+        }
+      ],
+      "portable_sample_count": 6
+    }
+  ],
+  "interpretation": "Free ring NH building blocks with retained hit anchors are present and match existing reaction roles. This rules out simple absence but proves neither partner availability nor a full supported route.",
+  "evidence": {
+    "result_path": "benchmark-results/route-first-development-20261023-v2/anchor-ring-nitrogen-v1/result.json",
+    "result_sha256": "821a5827c166cda0d64da8e8f85f7737e6daf2470c1494fe4220c8d577a0f6de"
+  }
+}
