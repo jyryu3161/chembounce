@@ -1,0 +1,557 @@
+{
+  "schema": "reverse-hint-aromatic-query-repair-v1-portable",
+  "status": "implemented_focused_verification_complete",
+  "baseline_runtime_commit": "179561e",
+  "scope": "Generic copy-only reverse retrieval-hint sanitation repair. No original forward rule, catalog entry, final stereo/similarity/route gate or search cap changed. No new full-panel or forward-model result is claimed here.",
+  "problem": "After reverse ring cleavage, mapped atoms can retain product aromatic flags while the original reactant query explicitly requires an aliphatic atom. All24 archived affected precursors failed SANITIZE_KEKULIZE with a non-ring aromatic atom before the repair.",
+  "fixed_diagnostic_scope": {
+    "input_ids": [
+      "CHEMBL4869-query-1",
+      "CHEMBL4869-query-2"
+    ],
+    "selected_contexts": 6,
+    "unique_raw_outcomes": 12,
+    "archived_raw_precursors": 24,
+    "raw_outcome_cap_per_reverse_call": 4,
+    "all_parent_origin_partitions_passed": true,
+    "raw_cap_reached_contexts": 0
+  },
+  "diagnostic_work": {
+    "failure_location_v1": {
+      "reverse_calls": 6,
+      "raw_outcomes": 12,
+      "partition_checks": 12,
+      "typed_trials": 12,
+      "approximate_parts": 12,
+      "role_control_checks": 4
+    },
+    "raw_archive_v2": {
+      "reverse_calls": 6,
+      "raw_outcomes": 12,
+      "precursors_inspected": 24
+    },
+    "archive_only_helper_analysis": {
+      "precursors": 24,
+      "copied_atom_flags_corrected": 48,
+      "sanitize_none": 24,
+      "new_reverse_calls": 0
+    },
+    "actual_entrypoint_archive_integration": {
+      "precursors": 24,
+      "typed_calls": 24,
+      "approximate_normalizer_calls": 24,
+      "new_reverse_calls": 0
+    },
+    "catalog_loads": 0,
+    "forward_model_calls": 0,
+    "three_dimensional_calls": 0
+  },
+  "implementation": {
+    "predicate": "Unique original reactant/product map, Boolean query-tree proof of the same aliphatic element, aromatic product and matching parent origin, non-ring copied atom with no aromatic or stereo incident bond.",
+    "boolean_proof": "AtomAnd needs a proving conjunct; AtomOr requires every branch to prove aliphatic AtomType. Generic atomic-number, unknown, recursive-only or negated clauses do not independently prove it.",
+    "mutation": "Only the eligible copied atom aromatic flag changes; original raw binaries and forward rules stay untouched. Existing narrowly guarded N-H repair remains separately guarded.",
+    "postconditions": "Atom identity/isotope/formal charge/chiral/aromatic state/explicit-H/NoImplicit and full bond/stereo state are checked across sanitation after permitted edits. Typed hints retain exact original-role checks at mapped sites.",
+    "telemetry": "Approximate and typed accepted normalization occurrences report corrected flags; failed typed trials are not promoted or counted as accepted typed outcomes."
+  },
+  "actual_entrypoint_results": {
+    "approximate_parts_accepted": 24,
+    "approximate_pairs_accepted": 12,
+    "typed_role0_parts_accepted": 6,
+    "typed_role1_parts_accepted": 0,
+    "typed_pairs_accepted": 0,
+    "records": [
+      {
+        "input_id": "CHEMBL4869-query-1",
+        "plan_index": 0,
+        "raw_index": 0,
+        "parts": [
+          {
+            "slot": 0,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "N[NH2+]C[C@H]1CC[C@@H](CCl)CC1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 1
+              }
+            }
+          },
+          {
+            "slot": 1,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 3
+              }
+            }
+          }
+        ],
+        "typed_pair": false,
+        "approximate_pair": true
+      },
+      {
+        "input_id": "CHEMBL4869-query-1",
+        "plan_index": 0,
+        "raw_index": 1,
+        "parts": [
+          {
+            "slot": 0,
+            "typed": {
+              "smiles": "[NH2+]NC[C@H]1CC[C@@H](CCl)CC1",
+              "n_h_resets": 0
+            },
+            "approximate": {
+              "smiles": "[NH2+]NC[C@H]1CC[C@@H](CCl)CC1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 1
+              }
+            }
+          },
+          {
+            "slot": 1,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 3
+              }
+            }
+          }
+        ],
+        "typed_pair": false,
+        "approximate_pair": true
+      },
+      {
+        "input_id": "CHEMBL4869-query-1",
+        "plan_index": 1,
+        "raw_index": 0,
+        "parts": [
+          {
+            "slot": 0,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "N[NH2+]C[C@H]1CC[C@@H](CO)CC1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 1
+              }
+            }
+          },
+          {
+            "slot": 1,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 3
+              }
+            }
+          }
+        ],
+        "typed_pair": false,
+        "approximate_pair": true
+      },
+      {
+        "input_id": "CHEMBL4869-query-1",
+        "plan_index": 1,
+        "raw_index": 1,
+        "parts": [
+          {
+            "slot": 0,
+            "typed": {
+              "smiles": "[NH2+]NC[C@H]1CC[C@@H](CO)CC1",
+              "n_h_resets": 0
+            },
+            "approximate": {
+              "smiles": "[NH2+]NC[C@H]1CC[C@@H](CO)CC1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 1
+              }
+            }
+          },
+          {
+            "slot": 1,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 3
+              }
+            }
+          }
+        ],
+        "typed_pair": false,
+        "approximate_pair": true
+      },
+      {
+        "input_id": "CHEMBL4869-query-1",
+        "plan_index": 2,
+        "raw_index": 0,
+        "parts": [
+          {
+            "slot": 0,
+            "typed": {
+              "smiles": "[NH2+]NC[C@H]1CC[C@@H](COCC(=O)O)CC1",
+              "n_h_resets": 0
+            },
+            "approximate": {
+              "smiles": "[NH2+]NC[C@H]1CC[C@@H](COCC(=O)O)CC1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 1
+              }
+            }
+          },
+          {
+            "slot": 1,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "O=C(SCCO)C(Cl)C(=O)c1ccccc1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 3
+              }
+            }
+          }
+        ],
+        "typed_pair": false,
+        "approximate_pair": true
+      },
+      {
+        "input_id": "CHEMBL4869-query-1",
+        "plan_index": 2,
+        "raw_index": 1,
+        "parts": [
+          {
+            "slot": 0,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "N[NH2+]C[C@H]1CC[C@@H](COCC(=O)O)CC1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 1
+              }
+            }
+          },
+          {
+            "slot": 1,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "O=C(SCCO)C(Cl)C(=O)c1ccccc1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 3
+              }
+            }
+          }
+        ],
+        "typed_pair": false,
+        "approximate_pair": true
+      },
+      {
+        "input_id": "CHEMBL4869-query-2",
+        "plan_index": 0,
+        "raw_index": 0,
+        "parts": [
+          {
+            "slot": 0,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "N[NH2+]C[C@H]1CC[C@@H](CO)CC1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 1
+              }
+            }
+          },
+          {
+            "slot": 1,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 3
+              }
+            }
+          }
+        ],
+        "typed_pair": false,
+        "approximate_pair": true
+      },
+      {
+        "input_id": "CHEMBL4869-query-2",
+        "plan_index": 0,
+        "raw_index": 1,
+        "parts": [
+          {
+            "slot": 0,
+            "typed": {
+              "smiles": "[NH2+]NC[C@H]1CC[C@@H](CO)CC1",
+              "n_h_resets": 0
+            },
+            "approximate": {
+              "smiles": "[NH2+]NC[C@H]1CC[C@@H](CO)CC1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 1
+              }
+            }
+          },
+          {
+            "slot": 1,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 3
+              }
+            }
+          }
+        ],
+        "typed_pair": false,
+        "approximate_pair": true
+      },
+      {
+        "input_id": "CHEMBL4869-query-2",
+        "plan_index": 1,
+        "raw_index": 0,
+        "parts": [
+          {
+            "slot": 0,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "N[NH2+]C[C@H]1CC[C@@H](CCl)CC1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 1
+              }
+            }
+          },
+          {
+            "slot": 1,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 3
+              }
+            }
+          }
+        ],
+        "typed_pair": false,
+        "approximate_pair": true
+      },
+      {
+        "input_id": "CHEMBL4869-query-2",
+        "plan_index": 1,
+        "raw_index": 1,
+        "parts": [
+          {
+            "slot": 0,
+            "typed": {
+              "smiles": "[NH2+]NC[C@H]1CC[C@@H](CCl)CC1",
+              "n_h_resets": 0
+            },
+            "approximate": {
+              "smiles": "[NH2+]NC[C@H]1CC[C@@H](CCl)CC1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 1
+              }
+            }
+          },
+          {
+            "slot": 1,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 3
+              }
+            }
+          }
+        ],
+        "typed_pair": false,
+        "approximate_pair": true
+      },
+      {
+        "input_id": "CHEMBL4869-query-2",
+        "plan_index": 2,
+        "raw_index": 0,
+        "parts": [
+          {
+            "slot": 0,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "N[NH2+]C[C@H]1CC[C@@H](COCC(=O)O)CC1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 1
+              }
+            }
+          },
+          {
+            "slot": 1,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "CSC(=O)C(C(=O)Cl)c1cncc(F)c1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 3
+              }
+            }
+          }
+        ],
+        "typed_pair": false,
+        "approximate_pair": true
+      },
+      {
+        "input_id": "CHEMBL4869-query-2",
+        "plan_index": 2,
+        "raw_index": 1,
+        "parts": [
+          {
+            "slot": 0,
+            "typed": {
+              "smiles": "[NH2+]NC[C@H]1CC[C@@H](COCC(=O)O)CC1",
+              "n_h_resets": 0
+            },
+            "approximate": {
+              "smiles": "[NH2+]NC[C@H]1CC[C@@H](COCC(=O)O)CC1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 1
+              }
+            }
+          },
+          {
+            "slot": 1,
+            "typed": {
+              "reason": "role_mismatch_at_mapped_positions"
+            },
+            "approximate": {
+              "smiles": "CSC(=O)C(C(=O)Cl)c1cncc(F)c1",
+              "edits": {
+                "removed_originless_terminal_dummy": 0,
+                "reset_template_n_hydrogens": 0,
+                "reset_product_aromatic_query_flags": 3
+              }
+            }
+          }
+        ],
+        "typed_pair": false,
+        "approximate_pair": true
+      }
+    ]
+  },
+  "validation": {
+    "focused_test_command": ".venv-research/bin/python -m pytest -q tests/synthesis/test_route_first.py tests/test_phase_telemetry.py",
+    "focused_tests_passed": 77,
+    "focused_elapsed_seconds": 13.14,
+    "ruff_check": "PASS",
+    "ruff_format_check": "PASS",
+    "astra_final_code_review": "PASS",
+    "baseline_control_and_archive_hashes_unchanged": true,
+    "regression_scope": [
+      "Real simple pyrazole forward/reverse role recovery and accepted typed telemetry",
+      "Copy-only flag cleanup and intact aromatic-ring preservation",
+      "Missing source metadata, remaining aromatic bonds and source/map mismatch rejection",
+      "Generic atomic-number and mixed/negated query rejection",
+      "Existing route-first and phase telemetry regressions"
+    ],
+    "full_repository_tests": "Not rerun yet; required before an adoption/model comparison if the supply entry criterion passes."
+  },
+  "runtime_and_test_sha256": {
+    "chembounce_synthesis/route_first.py": "70e3863a6fc80b582d6f21f3a895e8b3ca7cd34a8fa5af91fdbaa63660482791",
+    "tests/synthesis/test_route_first.py": "22f4fe9c43c55244d5606e8f997fbe1c65493f681614b75a889515d6fc23c10c"
+  },
+  "baseline_source_sha256": "ac1b0da44c0aaee4a85f96a5e3a7ab9dd0d189c5bce25d2e979ea75c6b5fbccc",
+  "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+  "artifacts_sha256": {
+    "benchmark-results/route-first-development-20261023-v2/rule062-reverse-hint-cause-v1/probe.py": "8338b09c22e1679e0609c529bd35b727e4d8d990b2fad654517e3dfe7f659e71",
+    "benchmark-results/route-first-development-20261023-v2/rule062-reverse-hint-cause-v1/plan.json": "1c13a33251501949d3f792146be0e21e7337aa4352ce9f37037610416e5463dd",
+    "benchmark-results/route-first-development-20261023-v2/rule062-reverse-hint-cause-v1/result.json": "bec72a2eff85e025691073ad054775a9e53d890fceede4283a979023735ee19b",
+    "benchmark-results/route-first-development-20261023-v2/rule062-reverse-hint-cause-v1/route_first_before.py": "ac1b0da44c0aaee4a85f96a5e3a7ab9dd0d189c5bce25d2e979ea75c6b5fbccc",
+    "benchmark-results/route-first-development-20261023-v2/rule062-reverse-hint-cause-v2/probe.py": "a6152d1b719f271301591c65c45b76f505789bc7e2e012284a962e8990833653",
+    "benchmark-results/route-first-development-20261023-v2/rule062-reverse-hint-cause-v2/plan.json": "b0959cf0e9abaf4f661cbbab981dc162f814847b0bfc52fdf490b8fbffb39e9f",
+    "benchmark-results/route-first-development-20261023-v2/rule062-reverse-hint-cause-v2/result.json": "9eebd90ea5145ffe3dce4459a9bf5247a116d9dfcb2e2ede58db8d4a5eb9d871",
+    "benchmark-results/route-first-development-20261023-v2/rule062-reverse-hint-cause-v2/analyze_archive.py": "dfc1dd6a3881d283f1ecb8a52d2ec5473bfec484e9b06dc94a87beee17f3303a",
+    "benchmark-results/route-first-development-20261023-v2/rule062-reverse-hint-cause-v2/archive-analysis-v1.json": "df59f89a38e4071fcba2992122fc666bafddc94d63e659a8563cedad410f6ddf",
+    "benchmark-results/route-first-development-20261023-v2/rule062-reverse-hint-cause-v2/check_entrypoints.py": "899ff220ccba5f821ed5b2f5570aef29fbd7b7b63a7e7ae0ebfcdc4f5be8d326",
+    "benchmark-results/route-first-development-20261023-v2/rule062-reverse-hint-cause-v2/entrypoints-v1.json": "31dc45e711c0d81cf3dd84369aa26e88480d0401da830776e990047b4d758056"
+  },
+  "decision": {
+    "p1_complete": false,
+    "actual_supported_inputs": 4,
+    "denominator": 12,
+    "next": "Single fixed12-input new-runtime ON pre-evidence run against immutable v16 ON, retaining continuation preference, gates, assets and caps. Only if conditional possible support exceeds5 inputs proceed toward real adoption validation."
+  }
+}

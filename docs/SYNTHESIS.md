@@ -303,8 +303,26 @@ spiro projections equaled the full queries and provide no independent evidence.
 The diagnostic passed nine fixture controls and exact pass/fail parity against
 the original anchor check for all 218 roots. It made no generation, model or
 3D calls and did not change production selection or the four-input primary
-result. The next priority is joint stereo-core, attachment and downstream-role
-selection; original final gates remain unchanged.
+result. A [joint ring-class follow-up](../benchmarks/results/synthesis-route-development-20261023/stereo-anchor-joint-ring-v1.json)
+retained all specified ring centers and their first neighbors, comparing
+unordered center sets while preserving genuine chiral matching. It observed
+the ring class in six and two final structures from the cyclohexane inputs,
+while their required full attachment contexts still failed. This does not map
+individual original attachments or replace the final anchor gate.
+
+A [reverse-hint correction](../benchmarks/results/synthesis-route-development-20261023/reverse-hint-aromatic-query-repair-v1.json)
+addresses a subsequent observed barrier: mapped non-ring atoms retained product
+aromatic flags after reverse ring cleavage. The correction operates on copied
+retrieval hints only, requiring an explicitly aliphatic reactant query, matching
+product/parent provenance and no incident aromatic or stereo bond. Charge,
+stereo and bond identity checks and original-role validation remain in force.
+Generic atomic-number queries or unproven OR branches cannot justify cleanup.
+On 24 archived problematic precursors, the actual normalizer recovered all
+12 approximate guide pairs. No complete typed pair passed the original roles;
+the patch does not override those mismatches or change the fixed forward rules.
+Focused route/telemetry tests passed (77), with independent code review. These
+are retrieval-hint results; the next step is the fixed 12-input supply comparison,
+before claiming additional supported routes or qualification.
 
 ## Optional catalog byte binding
 

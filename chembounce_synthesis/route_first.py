@@ -4,6 +4,7 @@ import hashlib
 import heapq
 import itertools
 import math
+import re
 import time
 from dataclasses import asdict, dataclass
 
@@ -380,18 +381,152 @@ class ReverseHintError(ValueError):
         super().__init__(reason)
 
 
-def _sanitize_reverse_hint(clean, parent, rule):
+def _role_forces_aliphatic_element(atom, atomic_number):
+    """Prove the positive aliphatic atom type through RDKit's Boolean query tree."""
+    if not atom.HasQuery():
+        return atom.GetAtomicNum() == atomic_number and not atom.GetIsAromatic()
+    roots, stack = [], []
+    for line in atom.DescribeQuery().splitlines():
+        match = re.fullmatch(r"( *)(.+)", line)
+        if match is None or len(match[1]) % 2:
+            return False
+        depth = len(match[1]) // 2
+        if depth > len(stack):
+            return False
+        node = [match[2], []]
+        stack = stack[:depth]
+        if stack:
+            stack[-1][1].append(node)
+        else:
+            roots.append(node)
+        stack.append(node)
+    if len(roots) != 1:
+        return False
+
+    def proves(node):
+        label, children = node
+        if label == f"AtomType {atomic_number} = val" and not children:
+            return True
+        if label == "AtomAnd" and children:
+            return any(proves(child) for child in children)
+        if label == "AtomOr" and children:
+            return all(proves(child) for child in children)
+        return False
+
+    return proves(roots[0])
+
+
+def _restore_reactant_aromatic_query_flags(clean, parent, rule):
+    """Drop stale product aromatic atom flags only where a mapped role proves them stale."""
+    if not any(atom.GetIsAromatic() for atom in clean.GetAtoms()):
+        return 0
+    _, issues = template_maps(rule.reaction)
+    if any(issues.values()):
+        return 0
+    reactant_atoms, product_atoms = {}, {}
+    for template in rule.reaction.GetReactants():
+        for atom in template.GetAtoms():
+            if atom.GetAtomMapNum():
+                reactant_atoms.setdefault(atom.GetAtomMapNum(), []).append(atom)
+    for template in rule.reaction.GetProducts():
+        for atom in template.GetAtoms():
+            if atom.GetAtomMapNum():
+                product_atoms.setdefault(atom.GetAtomMapNum(), []).append(atom)
+    # Ring perception is read from this private copy, before sanitization can
+    # mutate aromatic flags or bond types.
+    Chem.GetSymmSSSR(clean)
+    changes = 0
+    for atom in clean.GetAtoms():
+        if (
+            not atom.GetIsAromatic()
+            or atom.IsInRing()
+            or atom.GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED
+            or not atom.HasProp("old_mapno")
+            or not atom.HasProp("react_idx")
+            or not atom.HasProp("react_atom_idx")
+            or atom.GetIntProp("react_idx") != 0
+        ):
+            continue
+        number = atom.GetIntProp("old_mapno")
+        source_index = atom.GetIntProp("react_atom_idx")
+        role_atoms = reactant_atoms.get(number, ())
+        product = product_atoms.get(number, ())
+        if (
+            len(role_atoms) != 1
+            or len(product) != 1
+            or source_index < 0
+            or source_index >= parent.GetNumAtoms()
+            or not _role_forces_aliphatic_element(role_atoms[0], atom.GetAtomicNum())
+            or not product[0].GetIsAromatic()
+            or product[0].GetAtomicNum() != atom.GetAtomicNum()
+            or any(
+                bond.GetIsAromatic()
+                or bond.GetBondType() == Chem.BondType.AROMATIC
+                or bond.GetStereo() != Chem.BondStereo.STEREONONE
+                or bond.GetBondDir() != Chem.BondDir.NONE
+                for bond in atom.GetBonds()
+            )
+        ):
+            continue
+        source = parent.GetAtomWithIdx(source_index)
+        if (
+            not source.GetIsAromatic()
+            or source.GetAtomicNum() != atom.GetAtomicNum()
+            or source.GetIsotope() != atom.GetIsotope()
+            or source.GetChiralTag() != atom.GetChiralTag()
+        ):
+            continue
+        atom.SetIsAromatic(False)
+        changes += 1
+    return changes
+
+
+def _reverse_hint_invariants(clean):
+    atoms = tuple(
+        (
+            atom.GetAtomicNum(),
+            atom.GetIsotope(),
+            atom.GetFormalCharge(),
+            atom.GetChiralTag(),
+            atom.GetIsAromatic(),
+            atom.GetNumExplicitHs(),
+            atom.GetNoImplicit(),
+        )
+        for atom in clean.GetAtoms()
+    )
+    bonds = tuple(
+        (
+            bond.GetBeginAtomIdx(),
+            bond.GetEndAtomIdx(),
+            bond.GetBondType(),
+            bond.GetIsAromatic(),
+            bond.GetStereo(),
+            bond.GetBondDir(),
+            tuple(bond.GetStereoAtoms()),
+        )
+        for bond in clean.GetBonds()
+    )
+    return atoms, bonds
+
+
+def _sanitize_reverse_hint(clean, parent, rule, *, aromatic_changes=None):
     """Sanitize one copied query without changing its target-derived atom identity."""
     if clean.GetNumAtoms() == 0 or any(atom.GetAtomicNum() == 0 for atom in clean.GetAtoms()):
         raise ReverseHintError("remaining_dummy")
     if len(Chem.GetMolFrags(clean)) != 1:
         raise ReverseHintError("disconnected_hint")
+    changes = _restore_reactant_aromatic_query_flags(clean, parent, rule)
+    if aromatic_changes is not None:
+        aromatic_changes["reset_product_aromatic_query_flags"] = changes
+    preserved = _reverse_hint_invariants(clean) if changes else None
     with rdBase.BlockLogs():
         issue = Chem.SanitizeMol(clean, catchErrors=True)
     resets = 0
     if issue != Chem.SanitizeFlags.SANITIZE_NONE:
         if issue != Chem.SanitizeFlags.SANITIZE_PROPERTIES:
             raise ReverseHintError("hint_sanitization_failed")
+        if preserved is not None and _reverse_hint_invariants(clean) != preserved:
+            raise ReverseHintError("aromatic_query_cleanup_changed_identity_or_bonds")
         role_atoms = {
             atom.GetAtomMapNum(): atom
             for role in rule.reaction.GetReactants()
@@ -427,17 +562,27 @@ def _sanitize_reverse_hint(clean, parent, rule):
             atom.SetNumExplicitHs(0)
             atom.SetNoImplicit(False)
             resets += 1
+        if preserved is not None and resets:
+            # The existing N-H repair is separately guarded by parent and
+            # reactant-template provenance above. Everything else remains fixed.
+            preserved = _reverse_hint_invariants(clean)
         with rdBase.BlockLogs():
             retry_issue = Chem.SanitizeMol(clean, catchErrors=True)
         if not resets or retry_issue != Chem.SanitizeFlags.SANITIZE_NONE:
             raise ReverseHintError("hint_sanitization_failed")
+    if preserved is not None and _reverse_hint_invariants(clean) != preserved:
+        raise ReverseHintError("aromatic_query_cleanup_changed_identity_or_bonds")
     return resets
 
 
 def normalize_reverse_hint(raw, parent, rule, *, capture_clean=None):
     """Make a copied reverse outcome usable for retrieval, never route evidence."""
     editable = Chem.RWMol(Chem.Mol(raw))
-    edits = {"removed_originless_terminal_dummy": 0, "reset_template_n_hydrogens": 0}
+    edits = {
+        "removed_originless_terminal_dummy": 0,
+        "reset_template_n_hydrogens": 0,
+        "reset_product_aromatic_query_flags": 0,
+    }
     for index in reversed(range(editable.GetNumAtoms())):
         atom = editable.GetAtomWithIdx(index)
         if atom.GetAtomicNum() != 0:
@@ -460,7 +605,7 @@ def normalize_reverse_hint(raw, parent, rule, *, capture_clean=None):
         editable.RemoveAtom(index)
         edits["removed_originless_terminal_dummy"] += 1
     clean = editable.GetMol()
-    edits["reset_template_n_hydrogens"] = _sanitize_reverse_hint(clean, parent, rule)
+    edits["reset_template_n_hydrogens"] = _sanitize_reverse_hint(clean, parent, rule, aromatic_changes=edits)
     try:
         smiles = canonical(absolute_smiles(clean, isomericSmiles=True))
     except (ValueError, RuntimeError) as exc:
@@ -521,7 +666,15 @@ def reverse_role_issue(clean, role, tags, slot):
 
 
 def typed_reverse_hint(
-    raw, parent, rule, tags, slot, representative=None, count_match=None, capture_clean=None
+    raw,
+    parent,
+    rule,
+    tags,
+    slot,
+    representative=None,
+    count_match=None,
+    capture_clean=None,
+    aromatic_changes=None,
 ):
     """One role-conforming retrieval query from a raw copied precursor."""
     editable = Chem.RWMol(Chem.Mol(raw))
@@ -558,7 +711,7 @@ def typed_reverse_hint(
         atom.SetNumExplicitHs(hydrogens)
         atom.SetNoImplicit(True)
     clean = editable.GetMol()
-    resets = _sanitize_reverse_hint(clean, parent, rule)
+    resets = _sanitize_reverse_hint(clean, parent, rule, aromatic_changes=aromatic_changes)
     for atom in raw.GetAtoms():
         if atom.HasProp("react_atom_idx"):
             same = clean.GetAtomWithIdx(atom.GetIdx())
@@ -1635,7 +1788,7 @@ class RouteFirstSearch:
         return tuple(sorted(cuts))
 
     def _typed_reverse_outcome(self, outcome, parent, rule, tags, *, capture_parts=None):
-        parts, resets, instantiated, trials = [], 0, 0, 0
+        parts, resets, aromatic_resets, instantiated, trials = [], 0, 0, 0, 0
         for slot, raw in enumerate(outcome):
             if self._stop():
                 return None
@@ -1644,6 +1797,7 @@ class RouteFirstSearch:
                 selected = None
                 for representative in REVERSE_ROLE_REPRESENTATIVES:
                     captured = []
+                    aromatic_changes = {}
                     if trials >= MAX_REVERSE_ROLE_TRIALS_PER_OUTCOME:
                         self._role_rejection("outcome_trial_budget")
                         break
@@ -1660,6 +1814,7 @@ class RouteFirstSearch:
                             slot,
                             representative,
                             count_match=self._count_role_match,
+                            aromatic_changes=aromatic_changes,
                             **(
                                 {"capture_clean": lambda mol, smiles: captured.append((mol, smiles))}
                                 if capture_parts is not None
@@ -1679,6 +1834,7 @@ class RouteFirstSearch:
                 instantiated += 1
             else:
                 captured = []
+                aromatic_changes = {}
                 if trials >= MAX_REVERSE_ROLE_TRIALS_PER_OUTCOME:
                     self._role_rejection("outcome_trial_budget")
                     return None
@@ -1694,6 +1850,7 @@ class RouteFirstSearch:
                         tags,
                         slot,
                         count_match=self._count_role_match,
+                        aromatic_changes=aromatic_changes,
                         **(
                             {"capture_clean": lambda mol, smiles: captured.append((mol, smiles))}
                             if capture_parts is not None
@@ -1712,9 +1869,11 @@ class RouteFirstSearch:
                     captured[0][0] if len(captured) == 1 and captured[0][1] == part else None
                 )
             resets += reset_count
+            aromatic_resets += aromatic_changes.get("reset_product_aromatic_query_flags", 0)
         return tuple(parts), {
             "typed_originless_placeholder_instantiated": instantiated,
             "typed_reset_template_n_hydrogens": resets,
+            "typed_reset_product_aromatic_query_flags": aromatic_resets,
         }
 
     def _capture_continuation_raw(self, registry, guide, outcome, clean_parts):

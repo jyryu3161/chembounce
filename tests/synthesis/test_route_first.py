@@ -1672,6 +1672,171 @@ def test_reverse_hint_normalization_is_copy_only_and_bounded(tmp_path):
         typed_reverse_hint(stereo_reference_dummy, parent, rule, {(0, 0): 3}, 0, (9, 0, 0, "F"))
 
 
+def test_reverse_hint_restores_only_proven_cleaved_ring_query_flags(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+    from chembounce_synthesis.route_first import tagged_reverse_reaction
+
+    path = tmp_path / "ring-rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "close-ring",
+                        "smarts": "[C:1][C:2][C:3][C:4][C:5][C:6]>>[c:1]1[c:2][c:3][c:4][c:5][c:6]1",
+                        "source": "test",
+                    }
+                ],
+            }
+        )
+    )
+    rule = Rules(path).get("close-ring")
+    parent = molecule("c1ccccc1")
+    raw = molecule("CCCCCC")
+    for index, atom in enumerate(raw.GetAtoms()):
+        atom.SetIsAromatic(True)  # RDKit reverse-query metadata after opening the ring.
+        atom.SetIntProp("old_mapno", index + 1)
+        atom.SetIntProp("react_idx", 0)
+        atom.SetIntProp("react_atom_idx", index)
+    original = Chem.Mol(raw).ToBinary(Chem.PropertyPickleOptions.AllProps)
+    normalized, edits = normalize_reverse_hint(raw, parent, rule)
+    assert normalized == "CCCCCC"
+    assert edits["reset_product_aromatic_query_flags"] == 6
+    _, tags = tagged_reverse_reaction(rule)
+    assert typed_reverse_hint(raw, parent, rule, tags, 0)[0] == normalized
+    assert raw.ToBinary(Chem.PropertyPickleOptions.AllProps) == original
+
+    # An intact aromatic ring keeps its original flags and bonds.
+    closed = molecule("c1ccccc1")
+    closed.GetAtomWithIdx(0).SetIntProp("old_mapno", 1)
+    closed.GetAtomWithIdx(0).SetIntProp("react_idx", 0)
+    closed.GetAtomWithIdx(0).SetIntProp("react_atom_idx", 0)
+    kept, edits = normalize_reverse_hint(closed, parent, rule)
+    assert kept == canonical("c1ccccc1")
+    assert edits["reset_product_aromatic_query_flags"] == 0
+
+    # Missing origin metadata and a surviving aromatic bond are not repairs.
+    ambiguous = Chem.Mol(raw)
+    ambiguous.GetAtomWithIdx(0).ClearProp("react_atom_idx")
+    with pytest.raises(ReverseHintError, match="hint_sanitization_failed"):
+        normalize_reverse_hint(ambiguous, parent, rule)
+    aromatic_bond = Chem.Mol(raw)
+    bond = aromatic_bond.GetBondBetweenAtoms(0, 1)
+    bond.SetBondType(Chem.BondType.AROMATIC)
+    bond.SetIsAromatic(False)
+    with pytest.raises(ReverseHintError, match="hint_sanitization_failed"):
+        normalize_reverse_hint(aromatic_bond, parent, rule)
+
+
+def test_reverse_hint_query_proof_rejects_generic_and_mixed_atomic_numbers():
+    from chembounce_synthesis.route_first import _role_forces_aliphatic_element
+
+    def proves(smarts):
+        return _role_forces_aliphatic_element(Chem.MolFromSmarts(smarts).GetAtomWithIdx(0), 6)
+
+    assert proves("[C]")
+    assert proves("[C;!N]")
+    assert not proves("[#6]")  # Atomic number also admits aromatic carbon.
+    assert not proves("[#6,C]")
+    assert not proves("[!C]")
+    assert not proves("[c]")
+
+
+def test_reverse_hint_cleaved_pyrazole_has_typed_roles_only_when_both_match(tmp_path):
+    from rdkit import rdBase
+
+    from chembounce_synthesis.reactions import Rules
+    from chembounce_synthesis.route_first import tagged_reverse_reaction
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "pyrazole",
+                        "smarts": (
+                            "[NH2,NH3+:3]-[N$([NH](N)([CX4])):2]."
+                            "[C$([CH](C)(C)([CX4])),C$([CH2](C)(C)):6]"
+                            "(-[C$(C(=O)(C)([CX4])),C$([CH](=O)(C)):5]=[O:9])"
+                            "-[C$(C(=O)(C)([CX4])),C$([CH](=O)(C)):7]=[O:10]"
+                            ">>[c:7]1[n:3][n:2][c:5][c:6]1"
+                        ),
+                        "source": "test",
+                    }
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    rule = rules.get("pyrazole")
+    with rdBase.BlockLogs():
+        products, truncated = rules.apply("pyrazole", ("CNN", "CC(=O)CC(C)=O"), product_limit=4)
+    assert products and not truncated
+    parent = molecule(products[0])
+    reverse, tags = tagged_reverse_reaction(rule)
+    with rdBase.BlockLogs():
+        outcomes = reverse.RunReactants((parent,), maxProducts=4)
+    assert outcomes and len(outcomes) <= 4
+    typed_pairs = []
+    for outcome in outcomes:
+        if reverse_partition_issue(outcome, parent.GetNumAtoms()) is not None:
+            continue
+        try:
+            typed_pairs.append(
+                tuple(
+                    typed_reverse_hint(part, parent, rule, tags, slot)[0] for slot, part in enumerate(outcome)
+                )
+            )
+        except ReverseHintError:
+            continue
+    assert ("CN[NH2+]", "CC(=O)CC(C)=O") in typed_pairs
+    search = RouteFirstSearch(
+        products[0], SimpleNamespace(sha256="test"), rules, RouteFirstLimits(**limits())
+    )
+    counted = [search._typed_reverse_outcome(outcome, parent, rule, tags) for outcome in outcomes]
+    assert any(
+        item is not None and item[1]["typed_reset_product_aromatic_query_flags"] == 4 for item in counted
+    )
+
+
+def test_reverse_hint_actual_role_still_rejects_wrong_mapped_site(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+    from chembounce_synthesis.route_first import tagged_reverse_reaction
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "mapped-ring",
+                        "smarts": "[N:1][C:2][C:3][C:4][C:5][C:6]>>[n:1]1[c:2][c:3][c:4][c:5][c:6]1",
+                        "source": "test",
+                    }
+                ],
+            }
+        )
+    )
+    rule = Rules(path).get("mapped-ring")
+    parent = molecule("c1ccncc1")
+    raw = molecule("CCCCCN")
+    for index, atom in enumerate(raw.GetAtoms()):
+        atom.SetIsAromatic(True)
+        atom.SetIntProp("old_mapno", index + 1)
+        atom.SetIntProp("react_idx", 0)
+        atom.SetIntProp("react_atom_idx", index)
+    # Source/map element mismatch cannot be cleared into a false typed role.
+    with pytest.raises(ReverseHintError, match="hint_sanitization_failed"):
+        normalize_reverse_hint(raw, parent, rule)
+    _, tags = tagged_reverse_reaction(rule)
+    with pytest.raises(ReverseHintError, match="hint_sanitization_failed"):
+        typed_reverse_hint(raw, parent, rule, tags, 0)
+
+
 def test_reverse_aryl_amine_hints_reach_retrieval_with_chiral_anchor(tmp_path):
     from chembounce_synthesis.reactions import Rules
 
@@ -1755,7 +1920,9 @@ def test_typed_reverse_attempt_caps_share_all_precursor_parts_and_preserve_appro
     hit = "c1ccc(N2CCCCC2)cc1"
     search = RouteFirstSearch(hit, SimpleNamespace(sha256="test"), rules, RouteFirstLimits(**limits()))
 
-    def late_choice(_raw, _parent, _rule, _tags, slot, representative=None, count_match=None):
+    def late_choice(
+        _raw, _parent, _rule, _tags, slot, representative=None, count_match=None, aromatic_changes=None
+    ):
         if slot < 2 and representative[3] == "O-":
             return "IC", 0
         raise ReverseHintError("role_mismatch_at_mapped_positions")
