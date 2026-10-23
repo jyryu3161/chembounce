@@ -1,0 +1,430 @@
+{
+  "schema": "typed-guide-forward-control-portable-v2",
+  "status": "complete_new_route_inconclusive_not_adopted",
+  "scope": "One corrected fixed four-route/seven-step diagnostic, not a full-panel comparison. Actual downstream route-audit limit64; same pinned forward model, exact matching and original fixed cases.",
+  "artifacts": {
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-forward-support-control-v1/plan.json": "e9ec17ddbbb1983439308f96682781877a0de8c2dc0a8cdc3efdd576a463a829",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-forward-support-control-v1/probe.py": "6bf9d38a31720a7c7b38990931c73a9b00e71c296e765d16c64bf7d4f805885a",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-forward-support-control-v1/result.json": "94e92198fa5f6ac0d8957dd1258d5eb5c5bc5385d5fd82a3bfb96b2bc29df6ce",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-forward-support-control-v1/run.log": "d4ae8a9400506a6660b5df7afc118584227edc2b34fb01d8c65f8fa66220541a",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-forward-support-control-v2/plan.json": "3e27f8f7a0b4c7e6bf743482b72c862e77d7b98c95d54b9564400b515c52d654",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-forward-support-control-v2/probe.py": "70cd57571d56f6978d3e02e13aab844c72d09fa52dac7be89e28be0214ba2621",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-forward-support-control-v2/result.json": "de6159f249e9d75f309d317f3d35e0815557532eeefaf011b2c2b309638807db",
+    "benchmark-results/route-first-development-20261023-v2/typed-guide-forward-support-control-v2/run.log": "89bd1af051406ac873f6175448590d9ebfa5dba2164ae0994de2368844c4bd51"
+  },
+  "previous_inconclusive_attempt": {
+    "status": "inconclusive_runtime_or_replay_error",
+    "error": {
+      "case": "actual_v2_supported_one_step_positive_control",
+      "type": "RuntimeError",
+      "message": "Fresh strict route audit binding differs"
+    },
+    "usage": {
+      "predictor_calls": 1,
+      "input_tokens": 61,
+      "output_tokens": 177,
+      "cache_hits": 0
+    },
+    "limitation": "Positive raw output was not retained before the incorrect limit16-versus64 binding assertion. New and old joint cases were not evaluated."
+  },
+  "corrected_validation": {
+    "positive_control_exact_and_raw_reproduced": true,
+    "source_asset_saved_evidence_plan_probe_pre_post_bindings_match": true,
+    "known_old_step_statuses_and_raw_reproduced": true,
+    "preflight_source_audits": "positive64 and joint3 at16 compared to archived bindings before model load",
+    "preflight_downstream_audits": "joint3 additionally audited at64; all four evaluator calls used64 and matched pre-model64 bindings",
+    "work": {
+      "explicit_verify_route_calls_started": 4,
+      "explicit_verify_route_calls_completed": 4,
+      "preflight_source_audit_calls_started": 4,
+      "preflight_source_audit_calls_completed": 4,
+      "preflight_joint_downstream64_audit_calls_started": 3,
+      "preflight_joint_downstream64_audit_calls_completed": 3,
+      "evaluator_audit_route_calls_started": 4,
+      "evaluator_audit_route_calls_completed": 4,
+      "rule_apply_by_phase": {
+        "explicit_verify64": {
+          "calls": 7,
+          "cache_misses": 7
+        },
+        "preflight_source_audit": {
+          "calls": 7,
+          "cache_misses": 6
+        },
+        "preflight_joint_downstream64_audit": {
+          "calls": 6,
+          "cache_misses": 0
+        },
+        "evaluator_audit64": {
+          "calls": 7,
+          "cache_misses": 0
+        }
+      },
+      "direct_replay_by_phase": {
+        "preflight_source_audit": {
+          "completed_step_enumerations": 7,
+          "raw_entries_observed": 8,
+          "examined_entries": 8,
+          "truncated_step_enumerations": 0
+        },
+        "preflight_joint_downstream64_audit": {
+          "completed_step_enumerations": 6,
+          "raw_entries_observed": 7,
+          "examined_entries": 7,
+          "truncated_step_enumerations": 0
+        },
+        "evaluator_audit64": {
+          "completed_step_enumerations": 7,
+          "raw_entries_observed": 8,
+          "examined_entries": 8,
+          "truncated_step_enumerations": 0
+        }
+      },
+      "model_predictor_calls": 7,
+      "model_cache_hits": 0,
+      "total_direct_replay_step_enumerations": 20,
+      "total_rule_apply_calls": 27,
+      "total_rule_apply_cache_misses": 13
+    },
+    "usage": {
+      "predictor_calls": 7,
+      "input_tokens": 339,
+      "output_tokens": 973,
+      "cache_hits": 0
+    }
+  },
+  "aggregate_both_attempts_usage": {
+    "predictor_calls": 8,
+    "input_tokens": 400,
+    "output_tokens": 1150,
+    "cache_hits": 0
+  },
+  "cases": [
+    {
+      "name": "actual_v2_supported_one_step_positive_control",
+      "route_graph_sha256": "c538f9275c07126ee68bfcac61f77db6342697746cfa62468fb13df1b4334670",
+      "historical_evidence_status": "matched",
+      "historical_step_status_parity": null,
+      "historical_raw_parity_by_step": null,
+      "strict_audit_eligible": true,
+      "actual_audit_product_limit": 64,
+      "all_step_support": true,
+      "steps": [
+        {
+          "node_id": "or",
+          "reactants": [
+            "O=C(NCC1CC1)c1ccc(Cl)nn1",
+            "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCNC4)cc3)nc12"
+          ],
+          "expected_product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6CC6)nn5)C4)cc3)nc12",
+          "status": "matched",
+          "reason_code": "exact_full_product_match",
+          "matched_rank": 1,
+          "predictions": [
+            {
+              "rank": 1,
+              "raw_product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6 CC6 )nn5)C4)cc3)nc12",
+              "complete": true,
+              "product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6CC6)nn5)C4)cc3)nc12",
+              "generated_length": 58
+            },
+            {
+              "rank": 2,
+              "raw_product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6 CC6 )nn5)C5)C4)cc3)nc12",
+              "complete": true,
+              "product": null,
+              "invalid_reason": "Invalid or unsupported molecular SMILES",
+              "generated_length": 61
+            },
+            {
+              "rank": 3,
+              "raw_product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6 CC6 )nn5)C4)cc3)nc21",
+              "complete": true,
+              "product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6CC6)nn5)C4)cc3)nc12",
+              "generated_length": 58
+            }
+          ]
+        }
+      ],
+      "usage_delta": {
+        "predictor_calls": 1,
+        "input_tokens": 61,
+        "output_tokens": 177,
+        "cache_hits": 0
+      }
+    },
+    {
+      "name": "old_workitem_0",
+      "route_graph_sha256": "9883b82f2c704b8ddb3966b89e1d53c202eed3177667bd0ee56f35cfeeb63dee",
+      "historical_evidence_status": "unassessed",
+      "historical_step_status_parity": null,
+      "historical_raw_parity_by_step": null,
+      "strict_audit_eligible": true,
+      "actual_audit_product_limit": 64,
+      "all_step_support": false,
+      "steps": [
+        {
+          "node_id": "ir",
+          "reactants": [
+            "CS(=O)(=O)c1ccccc1Br",
+            "Cc1cnn2c(Cl)cc(Cl)nc12"
+          ],
+          "expected_product": "Cc1cnn2c(-c3ccccc3S(C)(=O)=O)cc(Cl)nc12",
+          "status": "mismatched",
+          "reason_code": "completed_top_three_nonmatch",
+          "matched_rank": null,
+          "predictions": [
+            {
+              "rank": 1,
+              "raw_product": "Cc1cnn2c(Cl )cc(Cl )nc12",
+              "complete": true,
+              "product": "Cc1cnn2c(Cl)cc(Cl)nc12",
+              "generated_length": 21
+            },
+            {
+              "rank": 2,
+              "raw_product": "Cc1cnn2c(Cl )cc(-c3ccccc3S(C)(=O)=O)nc12",
+              "complete": true,
+              "product": "Cc1cnn2c(Cl)cc(-c3ccccc3S(C)(=O)=O)nc12",
+              "generated_length": 35
+            },
+            {
+              "rank": 3,
+              "raw_product": "Cc1cnn2c(Cl )cc(Br)nc12",
+              "complete": true,
+              "product": "Cc1cnn2c(Cl)cc(Br)nc12",
+              "generated_length": 20
+            }
+          ]
+        },
+        {
+          "node_id": "or",
+          "reactants": [
+            "Cc1cnn2c(-c3ccccc3S(C)(=O)=O)cc(Cl)nc12",
+            "COc1cc(C(N)=O)ccc1N"
+          ],
+          "expected_product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+          "status": "matched",
+          "reason_code": "exact_full_product_match",
+          "matched_rank": 1,
+          "predictions": [
+            {
+              "rank": 1,
+              "raw_product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+              "complete": true,
+              "product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+              "generated_length": 51
+            },
+            {
+              "rank": 2,
+              "raw_product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2nccc(C)c2n1",
+              "complete": true,
+              "product": null,
+              "invalid_reason": "Invalid or unsupported molecular SMILES",
+              "generated_length": 50
+            },
+            {
+              "rank": 3,
+              "raw_product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2nccc2n1",
+              "complete": true,
+              "product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2nccc2n1",
+              "generated_length": 46
+            }
+          ]
+        }
+      ],
+      "usage_delta": {
+        "predictor_calls": 2,
+        "input_tokens": 93,
+        "output_tokens": 223,
+        "cache_hits": 0
+      }
+    },
+    {
+      "name": "old_workitem_1",
+      "route_graph_sha256": "a0e584eba8504779abfa2c34df1d4ed2f4f9180236103284c1125679c9022519",
+      "historical_evidence_status": "mixed",
+      "historical_step_status_parity": true,
+      "historical_raw_parity_by_step": {
+        "ir": true,
+        "or": true
+      },
+      "strict_audit_eligible": true,
+      "actual_audit_product_limit": 64,
+      "all_step_support": false,
+      "steps": [
+        {
+          "node_id": "ir",
+          "reactants": [
+            "Cc1ccc(Br)c2nc(Cl)ncc12",
+            "CS(=O)(=O)c1ccccc1Cl"
+          ],
+          "expected_product": "Cc1ccc(-c2ccccc2S(C)(=O)=O)c2nc(Cl)ncc12",
+          "status": "mismatched",
+          "reason_code": "completed_top_three_nonmatch",
+          "matched_rank": null,
+          "predictions": [
+            {
+              "rank": 1,
+              "raw_product": "Cc1ccc(S(C)(=O)=O)c2nc(Cl )ncc12",
+              "complete": true,
+              "product": "Cc1ccc(S(C)(=O)=O)c2nc(Cl)ncc12",
+              "generated_length": 30
+            },
+            {
+              "rank": 2,
+              "raw_product": "Cc1ccc(S(C)(=O)=O)cc1-c1ncc2c(C)ccc(Br)c2n1",
+              "complete": true,
+              "product": "Cc1ccc(S(C)(=O)=O)cc1-c1ncc2c(C)ccc(Br)c2n1",
+              "generated_length": 39
+            },
+            {
+              "rank": 3,
+              "raw_product": "Cc1ccc(C#N)c2nc(Cl )ncc12",
+              "complete": true,
+              "product": "Cc1ccc(C#N)c2nc(Cl)ncc12",
+              "generated_length": 23
+            }
+          ]
+        },
+        {
+          "node_id": "or",
+          "reactants": [
+            "Cc1ccc(-c2ccccc2S(C)(=O)=O)c2nc(Cl)ncc12",
+            "COc1cc(C(N)=O)ccc1N"
+          ],
+          "expected_product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+          "status": "matched",
+          "reason_code": "exact_full_product_match",
+          "matched_rank": 1,
+          "predictions": [
+            {
+              "rank": 1,
+              "raw_product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+              "complete": true,
+              "product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+              "generated_length": 50
+            },
+            {
+              "rank": 2,
+              "raw_product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(N)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+              "complete": true,
+              "product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(N)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+              "generated_length": 50
+            },
+            {
+              "rank": 3,
+              "raw_product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(-c3ccccc3S(C)(=O)=O)ccc(C)c2n1",
+              "complete": true,
+              "product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(-c3ccccc3S(C)(=O)=O)ccc(C)c2n1",
+              "generated_length": 50
+            }
+          ]
+        }
+      ],
+      "usage_delta": {
+        "predictor_calls": 2,
+        "input_tokens": 94,
+        "output_tokens": 242,
+        "cache_hits": 0
+      }
+    },
+    {
+      "name": "new_workitem_1",
+      "route_graph_sha256": "469525fb5100332569c6d183c5a7e04a57b3ea42a7999a295e7ee2b08c543c92",
+      "historical_evidence_status": "new_unassessed",
+      "historical_step_status_parity": null,
+      "historical_raw_parity_by_step": null,
+      "strict_audit_eligible": true,
+      "actual_audit_product_limit": 64,
+      "all_step_support": false,
+      "steps": [
+        {
+          "node_id": "ir",
+          "reactants": [
+            "Cc1ccc(Br)c2nc(Cl)ncc12",
+            "COc1cc(Br)ccc1NN"
+          ],
+          "expected_product": "COc1cc(-c2ccc(C)c3cnc(Cl)nc23)ccc1NN",
+          "status": "partially_evaluated",
+          "reason_code": "incomplete_or_invalid_hypotheses",
+          "matched_rank": null,
+          "predictions": [
+            {
+              "rank": 1,
+              "raw_product": "COc1cc(Br)ccc1NNc1ncc2c(C)ccc(Br)c2n1",
+              "complete": true,
+              "product": "COc1cc(Br)ccc1NNc1ncc2c(C)ccc(Br)c2n1",
+              "generated_length": 31
+            },
+            {
+              "rank": 2,
+              "raw_product": "COc1cc(Br)cc2c(C)[nH]c3nc(Cl )ncc3c12",
+              "complete": true,
+              "product": null,
+              "invalid_reason": "Invalid or unsupported molecular SMILES",
+              "generated_length": 35
+            },
+            {
+              "rank": 3,
+              "raw_product": "COc1cc(Br)cc2c(Cl )nc(Cl )nc12",
+              "complete": true,
+              "product": "COc1cc(Br)cc2c(Cl)nc(Cl)nc12",
+              "generated_length": 27
+            }
+          ]
+        },
+        {
+          "node_id": "or",
+          "reactants": [
+            "COc1cc(-c2ccc(C)c3cnc(Cl)nc23)ccc1NN",
+            "CN(c1ccccc1CN)S(C)(=O)=O"
+          ],
+          "expected_product": "COc1cc(-c2ccc(C)c3cnc(NCc4ccccc4N(C)S(C)(=O)=O)nc23)ccc1NN",
+          "status": "matched",
+          "reason_code": "exact_full_product_match",
+          "matched_rank": 1,
+          "predictions": [
+            {
+              "rank": 1,
+              "raw_product": "COc1cc(-c2ccc(C)c3cnc(NCc4ccccc4N(C)S(C)(=O)=O)nc23)ccc1NN",
+              "complete": true,
+              "product": "COc1cc(-c2ccc(C)c3cnc(NCc4ccccc4N(C)S(C)(=O)=O)nc23)ccc1NN",
+              "generated_length": 51
+            },
+            {
+              "rank": 2,
+              "raw_product": "COc1cc(-c2ccc(C)c3cnc(NCc4ccccc4N(C)S(C)(=O)=O)nc23)ccc1NNc1ncc2c(C)ccc(-c3ccc(NS(C)(=O)=O)c(OC)c3)c2n1",
+              "complete": true,
+              "product": "COc1cc(-c2ccc(C)c3cnc(NCc4ccccc4N(C)S(C)(=O)=O)nc23)ccc1NNc1ncc2c(C)ccc(-c3ccc(NS(C)(=O)=O)c(OC)c3)c2n1",
+              "generated_length": 92
+            },
+            {
+              "rank": 3,
+              "raw_product": "COc1cc(-c2ccc(C)c3cnc(NCc4ccccc4N(C)S(C)(=O)=O)nc23)ccc1NNc1ncc2c(C)ccc(-c3ccc(NC)c(N(C)S(C)(=O)=O)c3)c2n1",
+              "complete": true,
+              "product": "CNc1ccc(-c2ccc(C)c3cnc(NNc4ccc(-c5ccc(C)c6cnc(NCc7ccccc7N(C)S(C)(=O)=O)nc56)cc4OC)nc23)cc1N(C)S(C)(=O)=O",
+              "generated_length": 95
+            }
+          ]
+        }
+      ],
+      "usage_delta": {
+        "predictor_calls": 2,
+        "input_tokens": 91,
+        "output_tokens": 331,
+        "cache_hits": 0
+      }
+    }
+  ],
+  "decision": {
+    "new_route": "inconclusive_new_route_forward_unknown_or_incomplete",
+    "production_typed_extension_adopted": false,
+    "p1_complete": false,
+    "latest_actual_primary_inputs": 4,
+    "historical_baseline_primary_inputs": 5,
+    "interpretation": "New outer step matches rank1; inner has no exact match and one invalid decoded hypothesis, hence partially_evaluated rather than complete nonmatch. All-step computational support is unproven. This is not a physical synthesis failure.",
+    "historical_unassessed_route": "Remains unassessed in original actual-v2 artifact; this separate diagnostic found inner nonmatch and outer match. No retrospective primary change.",
+    "next": "Do not retry this fixed candidate or walk ranks. Prepare a separately frozen model-output-blind competing-rule generation control using all16 historical selected routes and existing per-input outer-rule order, within bounded costs. Preserve original gates and actual evidence audit64."
+  }
+}
