@@ -413,9 +413,7 @@ class RouteFirstSearch:
             rule = self.rules.get(ident)
             _, issues = template_maps(rule.reaction)
             if any(issues.values()):
-                self.report["rule_template_exclusions"].append(
-                    {"rule_id": ident, "template_audit": issues}
-                )
+                self.report["rule_template_exclusions"].append({"rule_id": ident, "template_audit": issues})
             else:
                 eligible.append(ident)
         # A partial precheck is usable, but never admits uninspected rules.
@@ -432,12 +430,15 @@ class RouteFirstSearch:
         # For inner searches, this is the same ordering used by the original
         # full scan's primary sort, so the first maximum matches are final.
         if not fallback:
-            eligible_ids = tuple(sorted(
-                eligible_ids,
-                key=lambda ident: (
-                    -self.rules.get(ident).reaction.GetProducts()[0].GetNumHeavyAtoms(), ident
-                ),
-            ))
+            eligible_ids = tuple(
+                sorted(
+                    eligible_ids,
+                    key=lambda ident: (
+                        -self.rules.get(ident).reaction.GetProducts()[0].GetNumHeavyAtoms(),
+                        ident,
+                    ),
+                )
+            )
         complete = True
         for ident in eligible_ids:
             if self._stop():

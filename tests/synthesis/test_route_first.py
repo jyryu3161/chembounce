@@ -137,21 +137,31 @@ def test_template_filter_and_inner_early_stop_preserve_full_scan_priority(tmp_pa
         ("z-outside", "[C:1][C:2][C:3][C:4]>>[C:1][C:2][C:3][C:4]"),
     ]
     path = tmp_path / "rules.json"
-    path.write_text(json.dumps({
-        "schema_version": 1,
-        "rules": [
-            {"id": ident, "smarts": smarts, "source": "test"}
-            for ident, smarts in specifications
-        ],
-    }))
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {"id": ident, "smarts": smarts, "source": "test"} for ident, smarts in specifications
+                ],
+            }
+        )
+    )
     rules = Rules(path)
     catalog = SimpleNamespace(sha256="test")
     search = RouteFirstSearch(
-        "CCCC", catalog, rules,
-        RouteFirstLimits(**limits(
-            max_steps=1, max_rule_inspections=12, max_rule_scans_per_target=6,
-            max_inner_rules=2, max_rules=3,
-        )),
+        "CCCC",
+        catalog,
+        rules,
+        RouteFirstLimits(
+            **limits(
+                max_steps=1,
+                max_rule_inspections=12,
+                max_rule_scans_per_target=6,
+                max_inner_rules=2,
+                max_rules=3,
+            )
+        ),
     )
     inner = search._select_rules("CCCC", 2)
     assert [rule.id for rule, _ in inner] == ["d-large", "e-tie"]
@@ -165,19 +175,27 @@ def test_template_filter_and_inner_early_stop_preserve_full_scan_priority(tmp_pa
     # The outer selection still scans the bounded ID prefix, then applies its
     # original product-first and reactant-role fallback policy.
     outer_search = RouteFirstSearch(
-        "CCCC", catalog, rules,
-        RouteFirstLimits(**limits(
-            max_steps=1, max_rule_inspections=12, max_rule_scans_per_target=6,
-            max_rules=5, fallback_rules=1,
-        )),
+        "CCCC",
+        catalog,
+        rules,
+        RouteFirstLimits(
+            **limits(
+                max_steps=1,
+                max_rule_inspections=12,
+                max_rule_scans_per_target=6,
+                max_rules=5,
+                fallback_rules=1,
+            )
+        ),
     )
     outer = outer_search._select_rules("CCCC", 5, fallback=1)
     assert [rule.id for rule, fallback in outer if not fallback] == [
-        "d-large", "e-tie", "b-medium", "a-small"
+        "d-large",
+        "e-tie",
+        "b-medium",
+        "a-small",
     ]
-    assert [(rule.id, fallback) for rule, fallback in outer if fallback] == [
-        ("f-fallback", True)
-    ]
+    assert [(rule.id, fallback) for rule, fallback in outer if fallback] == [("f-fallback", True)]
     assert outer_search.report["rule_inspections"] == 11
     assert outer_search.report["rule_inspections"] <= outer_search.limits.max_rule_inspections
 
@@ -186,16 +204,21 @@ def test_template_checks_share_global_rule_budget(tmp_path):
     from chembounce_synthesis.reactions import Rules
 
     path = tmp_path / "rules.json"
-    path.write_text(json.dumps({
-        "schema_version": 1,
-        "rules": [
-            {"id": f"r{i}", "smarts": f"[C:{i + 1}]>>[C:{i + 1}]", "source": "test"}
-            for i in range(5)
-        ],
-    }))
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {"id": f"r{i}", "smarts": f"[C:{i + 1}]>>[C:{i + 1}]", "source": "test"} for i in range(5)
+                ],
+            }
+        )
+    )
     rules = Rules(path)
     search = RouteFirstSearch(
-        "C", SimpleNamespace(sha256="test"), rules,
+        "C",
+        SimpleNamespace(sha256="test"),
+        rules,
         RouteFirstLimits(**limits(max_steps=1, max_rule_inspections=5, max_rule_scans_per_target=5)),
     )
     assert search._select_rules("C", 1) == []
