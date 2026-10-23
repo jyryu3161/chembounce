@@ -1,0 +1,111 @@
+{
+  "schema": "reaction-role-pool-prototype-portable-v2",
+  "status": "complete_not_adopted",
+  "scope": "Metadata-only four-way legacy/local-window-v2 by complete exact normalized-role index; no generator, fingerprint, forward chemistry or model",
+  "artifacts": {
+    "benchmark-results/route-first-development-20261023-v2/reaction-role-pool-prototype-v2/probe.py": "d215432456aea2227af0e271f51630a6d30c954b89750002d3e69cd1d14b9975",
+    "benchmark-results/route-first-development-20261023-v2/reaction-role-pool-prototype-v2/result.json": "14fff66c47e357e063df1dbdfa78ca77b0148f2b42a4688c4259c10a68366ec6",
+    "benchmark-results/route-first-development-20261023-v2/reaction-role-pool-prototype-v2/analysis.json": "2bd0b069f6a835e71e8f7825f7e7211ea39ca25ff4d04b912394ad2f3dce4832"
+  },
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "bc5cc5ef47aba1bede5ec188667a006381d18554a4c0ef1d4145946296d02c2b",
+    "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b"
+  },
+  "source_unchanged": true,
+  "bounds": {
+    "unique_query_role_pairs": 128,
+    "match_sentinel": 65,
+    "max_query_atoms": 256,
+    "max_query_bonds": 512,
+    "graph_visits": 262144,
+    "extra_catalog_role_match_checks": 500000,
+    "selected_role_indexes": 2,
+    "pool_rows": 8192
+  },
+  "role_index_policy": "For a query with one of two selected exact map-stripped roles: order the complete role-matching catalog subset by existing bucket-distance, bucket-key and SHA hash first, then fill from the ordinary catalog subset without duplicates up to total 8192. Other roles and incomplete index use legacy pool. This is a metadata calculation only; no generator query is altered.",
+  "analysis": {
+    "schema": "reaction-role-pool-prototype-v2-analysis",
+    "executed_result_sha256": "14fff66c47e357e063df1dbdfa78ca77b0148f2b42a4688c4259c10a68366ec6",
+    "status": "complete",
+    "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "catalog_unique_eligible_smiles": 238542,
+    "catalog_buckets": 920,
+    "v1_rank_checks": 304,
+    "v1_rank_mismatches": 0,
+    "legacy_pool_membership_checks": 160,
+    "legacy_pool_membership_mismatches": 0,
+    "query_role_pairs": 76,
+    "query_metadata_meter": {
+      "match_requests": 76,
+      "graph_visits": 4362
+    },
+    "local_v2_fallback_counts": {
+      "None": 33,
+      "no_role_match": 43
+    },
+    "selected_roles": [
+      {
+        "normalized_smarts": "[Cl,Br,I][c&$(c1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1)]",
+        "occurrences": 3,
+        "matching_catalog_structures": 44191,
+        "needed_leaf_matches": {
+          "CN(C)c1ccccc1Br": true,
+          "COc1cc(CC(=O)O)ccc1N": false,
+          "Clc1ccc2ncc(Br)n2n1": true,
+          "Cc1cc2ncc(I)n2nc1Cl": true
+        }
+      },
+      {
+        "normalized_smarts": "[N;$(NC)&!$(N=*)&!$([N&-])&!$(N#*)&!$([N&D3])&!$([N&D4])&!$(N[c,O])&!$(N[C,S]=[S,O,N]),H2&$(Nc1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1)]",
+        "occurrences": 3,
+        "matching_catalog_structures": 68643,
+        "needed_leaf_matches": {
+          "CN(C)c1ccccc1Br": false,
+          "COc1cc(CC(=O)O)ccc1N": true,
+          "Clc1ccc2ncc(Br)n2n1": false,
+          "Cc1cc2ncc(I)n2nc1Cl": false
+        }
+      }
+    ],
+    "role_index_complete": true,
+    "role_index_checks": 477084,
+    "catalog_stream_elapsed_seconds": 104.689,
+    "inner_036_nearest_calls": 17,
+    "inner_036_unique_query_roles": 11,
+    "inner_036_queries_eligible_for_exact_selected_role_index": 0,
+    "policy_reached_counts_in_relevant_records": {
+      "legacy": 0,
+      "local_v2": 2,
+      "legacy_role_index": 0,
+      "local_v2_role_index": 2
+    },
+    "interpretation": "Only the shared aryl-bromide leaf reaches the hypothetical capped pool, under local-window-v2 with or without role index. Neither saved heteroaryl leaf nor the aniline reaches the pool for its needed rule/slot. The two exact selected normalized-role indexes do not apply to any inner rule-036 query, even where a leaf itself matches a selected aryl-halide pattern. This metadata reachability is not generation or route recovery evidence."
+  },
+  "decision": {
+    "production_applied": false,
+    "complete_known_leaf_sets_recovered": 0,
+    "distinct_relevant_known_leaves_reached": {
+      "legacy": 0,
+      "local_v2": 1,
+      "legacy_role_index": 0,
+      "local_v2_role_index": 1
+    },
+    "reason": "Exact role indexing plus local retrieval features did not recover either complete known three-leaf set. Catalog role matches are still broad, and the fixed top-two outer role indexes do not apply to inner-036 caller roles.",
+    "role_description_correction": "The selected N SMARTS includes aliphatic amines as well as aromatic NH2 alternatives. It is not an aniline-only index.",
+    "next_scope": "Redesign within-role capped pool composition and query scale using saved bucket metadata first. Require a fixed generic policy, existing retrieval controls, actual candidate selection and full-route tests before production adoption.",
+    "claims_excluded": [
+      "production performance improvement",
+      "complete route recovery",
+      "forward-model support",
+      "equal CPU work",
+      "experimental synthesis feasibility"
+    ],
+    "same_site_only_followup": {
+      "status": "not_run_analytically_insufficient",
+      "premise": "The missing aniline leaf uses the exact selected N role already and remains outside every relevant tested pool. Exact-first related-role reuse cannot change those queries.",
+      "conclusion": "Related-role reuse alone cannot recover a complete known leaf set; it does not justify another catalog scan or production change.",
+      "limitation": "This conclusion concerns the two saved known witness sets and the specified exact-first reuse policy, not all possible routes."
+    }
+  }
+}
