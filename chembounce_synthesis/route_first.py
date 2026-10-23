@@ -15,6 +15,17 @@ from .route_audit import audit_route, template_maps
 from .routes import verify_route
 
 VERSION = "catalog-rule-route-first-v2"
+REVERSE_ROLE_REPRESENTATIVES = (
+    (8, 0, 1, "OH"),
+    (9, 0, 0, "F"),
+    (17, 0, 0, "Cl"),
+    (35, 0, 0, "Br"),
+    (53, 0, 0, "I"),
+    (8, -1, 0, "O-"),
+)
+MAX_REVERSE_ROLE_TRIALS_PER_OUTCOME = 16
+MAX_REVERSE_ROLE_WORK_PER_SEARCH = 1024
+MAX_REVERSE_ROLE_MATCHES = 65
 
 
 def reverse_partition_issue(outcome, target_atoms):
@@ -48,38 +59,15 @@ class ReverseHintError(ValueError):
         super().__init__(reason)
 
 
-def normalize_reverse_hint(raw, parent, rule):
-    """Make a copied reverse outcome usable for retrieval, never route evidence."""
-    editable = Chem.RWMol(Chem.Mol(raw))
-    edits = {"removed_originless_terminal_dummy": 0, "reset_template_n_hydrogens": 0}
-    for index in reversed(range(editable.GetNumAtoms())):
-        atom = editable.GetAtomWithIdx(index)
-        if atom.GetAtomicNum() != 0:
-            continue
-        if atom.HasProp("react_atom_idx") or atom.HasProp("react_idx") or atom.GetDegree() != 1:
-            raise ReverseHintError("unsafe_dummy")
-        bond = atom.GetBonds()[0]
-        neighbor = bond.GetOtherAtom(atom)
-        if (
-            neighbor.GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED
-            or bond.GetStereo() != Chem.BondStereo.STEREONONE
-            or any(
-                adjacent.GetStereo() != Chem.BondStereo.STEREONONE
-                or adjacent.GetBondDir() != Chem.BondDir.NONE
-                or index in adjacent.GetStereoAtoms()
-                for adjacent in neighbor.GetBonds()
-            )
-        ):
-            raise ReverseHintError("unsafe_dummy_stereo")
-        editable.RemoveAtom(index)
-        edits["removed_originless_terminal_dummy"] += 1
-    clean = editable.GetMol()
+def _sanitize_reverse_hint(clean, parent, rule):
+    """Sanitize one copied query without changing its target-derived atom identity."""
     if clean.GetNumAtoms() == 0 or any(atom.GetAtomicNum() == 0 for atom in clean.GetAtoms()):
         raise ReverseHintError("remaining_dummy")
     if len(Chem.GetMolFrags(clean)) != 1:
         raise ReverseHintError("disconnected_hint")
     with rdBase.BlockLogs():
         issue = Chem.SanitizeMol(clean, catchErrors=True)
+    resets = 0
     if issue != Chem.SanitizeFlags.SANITIZE_NONE:
         if issue != Chem.SanitizeFlags.SANITIZE_PROPERTIES:
             raise ReverseHintError("hint_sanitization_failed")
@@ -117,16 +105,161 @@ def normalize_reverse_hint(raw, parent, rule):
                 continue
             atom.SetNumExplicitHs(0)
             atom.SetNoImplicit(False)
-            edits["reset_template_n_hydrogens"] += 1
+            resets += 1
         with rdBase.BlockLogs():
             retry_issue = Chem.SanitizeMol(clean, catchErrors=True)
-        if not edits["reset_template_n_hydrogens"] or retry_issue != Chem.SanitizeFlags.SANITIZE_NONE:
+        if not resets or retry_issue != Chem.SanitizeFlags.SANITIZE_NONE:
             raise ReverseHintError("hint_sanitization_failed")
+    return resets
+
+
+def normalize_reverse_hint(raw, parent, rule):
+    """Make a copied reverse outcome usable for retrieval, never route evidence."""
+    editable = Chem.RWMol(Chem.Mol(raw))
+    edits = {"removed_originless_terminal_dummy": 0, "reset_template_n_hydrogens": 0}
+    for index in reversed(range(editable.GetNumAtoms())):
+        atom = editable.GetAtomWithIdx(index)
+        if atom.GetAtomicNum() != 0:
+            continue
+        if atom.HasProp("react_atom_idx") or atom.HasProp("react_idx") or atom.GetDegree() != 1:
+            raise ReverseHintError("unsafe_dummy")
+        bond = atom.GetBonds()[0]
+        neighbor = bond.GetOtherAtom(atom)
+        if (
+            neighbor.GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED
+            or bond.GetStereo() != Chem.BondStereo.STEREONONE
+            or any(
+                adjacent.GetStereo() != Chem.BondStereo.STEREONONE
+                or adjacent.GetBondDir() != Chem.BondDir.NONE
+                or index in adjacent.GetStereoAtoms()
+                for adjacent in neighbor.GetBonds()
+            )
+        ):
+            raise ReverseHintError("unsafe_dummy_stereo")
+        editable.RemoveAtom(index)
+        edits["removed_originless_terminal_dummy"] += 1
+    clean = editable.GetMol()
+    edits["reset_template_n_hydrogens"] = _sanitize_reverse_hint(clean, parent, rule)
     try:
         smiles = canonical(absolute_smiles(clean, isomericSmiles=True))
     except (ValueError, RuntimeError) as exc:
         raise ReverseHintError("hint_serialization_failed") from exc
     return smiles, edits
+
+
+def tagged_reverse_reaction(rule):
+    """Tag only a local reverse reaction; the allowlisted rule stays untouched."""
+    lhs, rhs = rule.smarts.split(">>")
+    reverse = rdChemReactions.ReactionFromSmarts(rhs + ">>" + lhs)
+    next_map = max(
+        (
+            atom.GetAtomMapNum()
+            for template in itertools.chain(rule.reaction.GetReactants(), rule.reaction.GetProducts())
+            for atom in template.GetAtoms()
+        ),
+        default=0,
+    )
+    tags = {}
+    for slot, template in enumerate(reverse.GetProducts()):
+        for atom in template.GetAtoms():
+            if atom.GetAtomMapNum() == 0:
+                next_map += 1
+                atom.SetAtomMapNum(next_map)
+                tags[(slot, atom.GetIdx())] = next_map
+    with rdBase.BlockLogs():
+        reverse.Initialize()
+    return reverse, tags
+
+
+def reverse_role_issue(clean, role, tags, slot):
+    """Check the original role at every locally tagged or mapped atom position."""
+    positions_by_map = {}
+    for atom in clean.GetAtoms():
+        if atom.HasProp("old_mapno"):
+            positions_by_map.setdefault(atom.GetIntProp("old_mapno"), []).append(atom.GetIdx())
+    expected = {}
+    for atom in role.GetAtoms():
+        number = atom.GetAtomMapNum() or tags.get((slot, atom.GetIdx()))
+        if number is None or len(positions_by_map.get(number, ())) != 1:
+            return "missing_or_ambiguous_role_origin"
+        expected[atom.GetIdx()] = positions_by_map[number][0]
+    matches = clean.GetSubstructMatches(
+        role, useChirality=True, uniquify=False, maxMatches=MAX_REVERSE_ROLE_MATCHES
+    )
+    if len(matches) >= MAX_REVERSE_ROLE_MATCHES:
+        return "role_match_cap"
+    if not any(all(match[index] == position for index, position in expected.items()) for match in matches):
+        return "role_mismatch_at_mapped_positions"
+    return None
+
+
+def typed_reverse_hint(raw, parent, rule, tags, slot, representative=None, count_match=None):
+    """One role-conforming retrieval query from a raw copied precursor."""
+    editable = Chem.RWMol(Chem.Mol(raw))
+    dummies = [atom for atom in editable.GetAtoms() if atom.GetAtomicNum() == 0]
+    if representative is None:
+        if dummies:
+            raise ReverseHintError("unsupported_placeholders")
+    else:
+        if (
+            len(dummies) != 1
+            or dummies[0].GetDegree() != 1
+            or dummies[0].HasProp("react_atom_idx")
+            or dummies[0].HasProp("react_idx")
+            or not dummies[0].HasProp("old_mapno")
+        ):
+            raise ReverseHintError("unsupported_placeholders")
+        atom = dummies[0]
+        bond = atom.GetBonds()[0]
+        neighbor = bond.GetOtherAtom(atom)
+        if (
+            neighbor.GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED
+            or bond.GetStereo() != Chem.BondStereo.STEREONONE
+            or any(
+                adjacent.GetStereo() != Chem.BondStereo.STEREONONE
+                or adjacent.GetBondDir() != Chem.BondDir.NONE
+                or atom.GetIdx() in adjacent.GetStereoAtoms()
+                for adjacent in neighbor.GetBonds()
+            )
+        ):
+            raise ReverseHintError("unsupported_placeholder_stereo")
+        atomic_number, charge, hydrogens, _label = representative
+        atom.SetAtomicNum(atomic_number)
+        atom.SetFormalCharge(charge)
+        atom.SetNumExplicitHs(hydrogens)
+        atom.SetNoImplicit(True)
+    clean = editable.GetMol()
+    resets = _sanitize_reverse_hint(clean, parent, rule)
+    for atom in raw.GetAtoms():
+        if atom.HasProp("react_atom_idx"):
+            same = clean.GetAtomWithIdx(atom.GetIdx())
+            if (atom.GetAtomicNum(), atom.GetIsotope(), atom.GetFormalCharge(), atom.GetChiralTag()) != (
+                same.GetAtomicNum(),
+                same.GetIsotope(),
+                same.GetFormalCharge(),
+                same.GetChiralTag(),
+            ):
+                raise ReverseHintError("target_atom_changed")
+    for bond in raw.GetBonds():
+        same = clean.GetBondBetweenAtoms(bond.GetBeginAtomIdx(), bond.GetEndAtomIdx())
+        if (
+            same is None
+            or bond.GetBondType() != same.GetBondType()
+            or bond.GetStereo() != same.GetStereo()
+            or bond.GetBondDir() != same.GetBondDir()
+            or tuple(bond.GetStereoAtoms()) != tuple(same.GetStereoAtoms())
+        ):
+            raise ReverseHintError("bond_or_stereo_changed")
+    if count_match is not None:
+        count_match()
+    issue = reverse_role_issue(clean, rule.reaction.GetReactants()[slot], tags, slot)
+    if issue is not None:
+        raise ReverseHintError(issue)
+    try:
+        smiles = canonical(absolute_smiles(clean, isomericSmiles=True))
+    except (ValueError, RuntimeError) as exc:
+        raise ReverseHintError("hint_serialization_failed") from exc
+    return smiles, resets
 
 
 class HitStereoAnchors:
@@ -331,6 +464,23 @@ class RouteFirstSearch:
             "reverse_partition_rejections": {},
             "reverse_hint_normalizations": {},
             "reverse_hint_rejections": {},
+            "reverse_role_query_limits": {
+                "trials_per_raw_outcome": MAX_REVERSE_ROLE_TRIALS_PER_OUTCOME,
+                "trial_and_match_work_per_search": MAX_REVERSE_ROLE_WORK_PER_SEARCH,
+                "matches_per_query": MAX_REVERSE_ROLE_MATCHES - 1,
+                "representative_order": [row[3] for row in REVERSE_ROLE_REPRESENTATIVES],
+            },
+            "reverse_role_work": 0,
+            "reverse_role_trials": 0,
+            "reverse_role_match_checks": 0,
+            "reverse_role_rejections": {},
+            "reverse_hint_quality_counts": {
+                "typed": 0,
+                "approximate": 0,
+                "explicit_fallback": 0,
+                "implicit_fallback": 0,
+            },
+            "reverse_local_template_compiles": 0,
             "reverse_outcomes": 0,
             "reverse_fallbacks": 0,
             "retrieval_guides_normalized": 0,
@@ -370,6 +520,8 @@ class RouteFirstSearch:
         self._rule_selection_cache = {}
         self._eligible_rules = None
         self._reverse_cache = {}
+        self._tagged_reverse_cache = {}
+        self._guide_quality = {}
         self._retrieval_target_cache = {}
         self._fp_cache = {self.hit: self.hit_fp}
         self._catalog_index = None
@@ -587,62 +739,174 @@ class RouteFirstSearch:
             self._rule_selection_cache[key] = selected
         return selected
 
+    def _role_work(self, *, trial=False):
+        if self._stop():
+            return False
+        if self.report["reverse_role_work"] >= MAX_REVERSE_ROLE_WORK_PER_SEARCH:
+            self._stop("reverse_role_work_budget")
+            return False
+        self.report["reverse_role_work"] += 1
+        if trial:
+            self.report["reverse_role_trials"] += 1
+        return True
+
+    def _role_rejection(self, reason):
+        counts = self.report["reverse_role_rejections"]
+        counts[reason] = counts.get(reason, 0) + 1
+
+    def _count_role_match(self):
+        self.report["reverse_role_match_checks"] += 1
+
+    def _typed_reverse_outcome(self, outcome, parent, rule, tags):
+        parts, resets, instantiated, trials = [], 0, 0, 0
+        for slot, raw in enumerate(outcome):
+            if self._stop():
+                return None
+            dummies = [atom for atom in raw.GetAtoms() if atom.GetAtomicNum() == 0]
+            if dummies:
+                selected = None
+                for representative in REVERSE_ROLE_REPRESENTATIVES:
+                    if trials >= MAX_REVERSE_ROLE_TRIALS_PER_OUTCOME:
+                        self._role_rejection("outcome_trial_budget")
+                        break
+                    if not self._role_work(trial=True):
+                        self._role_rejection("search_trial_and_match_budget")
+                        break
+                    trials += 1
+                    try:
+                        selected = typed_reverse_hint(
+                            raw,
+                            parent,
+                            rule,
+                            tags,
+                            slot,
+                            representative,
+                            count_match=self._count_role_match,
+                        )
+                    except ReverseHintError as exc:
+                        self._role_rejection(exc.reason)
+                        continue
+                    except (ValueError, RuntimeError):
+                        self._role_rejection("typed_query_failed")
+                        continue
+                    break
+                if selected is None:
+                    return None
+                part, reset_count = selected
+                instantiated += 1
+            else:
+                if trials >= MAX_REVERSE_ROLE_TRIALS_PER_OUTCOME:
+                    self._role_rejection("outcome_trial_budget")
+                    return None
+                if not self._role_work(trial=True):
+                    self._role_rejection("search_trial_and_match_budget")
+                    return None
+                trials += 1
+                try:
+                    part, reset_count = typed_reverse_hint(
+                        raw,
+                        parent,
+                        rule,
+                        tags,
+                        slot,
+                        count_match=self._count_role_match,
+                    )
+                except ReverseHintError as exc:
+                    self._role_rejection(exc.reason)
+                    return None
+                except (ValueError, RuntimeError):
+                    self._role_rejection("typed_query_failed")
+                    return None
+            parts.append(part)
+            resets += reset_count
+        return tuple(parts), {
+            "typed_originless_placeholder_instantiated": instantiated,
+            "typed_reset_template_n_hydrogens": resets,
+        }
+
     def _reverse(self, rule, target, fallback):
         key = (rule.id, target, fallback)
         if key in self._reverse_cache:
             return self._reverse_cache[key]
         guides = []
-        partition_rejected = False
+        qualities = {}
+        raw_seen = False
+        reverse_failed = False
         if not fallback and not self._stop():
             self.report["reverse_attempts"] += 1
             try:
-                lhs, rhs = rule.smarts.split(">>")
-                reverse = rdChemReactions.ReactionFromSmarts(rhs + ">>" + lhs)
+                if rule.id not in self._tagged_reverse_cache:
+                    self._tagged_reverse_cache[rule.id] = tagged_reverse_reaction(rule)
+                    self.report["reverse_local_template_compiles"] += 1
+                reverse, tags = self._tagged_reverse_cache[rule.id]
                 parent = molecule(target)
                 with rdBase.BlockLogs():
-                    reverse.Initialize()
                     outcomes = reverse.RunReactants((parent,), maxProducts=self.limits.max_reverse_outcomes)
+                raw_seen = bool(outcomes)
                 for outcome in outcomes:
+                    if self._stop():
+                        break
                     if len(outcome) != len(rule.roles):
+                        self._role_rejection("wrong_precursor_count")
                         continue
                     self.report["reverse_partition_checks"] += 1
                     issue = reverse_partition_issue(outcome, parent.GetNumAtoms())
                     if issue is not None:
-                        partition_rejected = True
                         counts = self.report["reverse_partition_rejections"]
                         counts[issue] = counts.get(issue, 0) + 1
                         continue
-                    try:
-                        parts = []
-                        outcome_edits = {}
-                        for mol in outcome:
-                            part, changes = normalize_reverse_hint(mol, parent, rule)
-                            parts.append(part)
-                            for label, count in changes.items():
-                                if count:
-                                    outcome_edits[label] = outcome_edits.get(label, 0) + count
-                        guides.append(tuple(parts))
-                        for label, count in outcome_edits.items():
+                    typed = self._typed_reverse_outcome(outcome, parent, rule, tags)
+                    if self._stop():
+                        break
+                    if typed is not None:
+                        guide, changes = typed
+                        quality = "typed"
+                    else:
+                        # A reverse guide is a search hint. Keep the old safe
+                        # approximation when exact role reconstruction fails.
+                        # This never bypasses the parent-origin partition check.
+                        try:
+                            parts, changes = [], {}
+                            for mol in outcome:
+                                part, edits = normalize_reverse_hint(mol, parent, rule)
+                                parts.append(part)
+                                for label, count in edits.items():
+                                    changes[label] = changes.get(label, 0) + count
+                            guide = tuple(parts)
+                            quality = "approximate"
+                        except ReverseHintError as exc:
+                            counts = self.report["reverse_hint_rejections"]
+                            counts[exc.reason] = counts.get(exc.reason, 0) + 1
+                            self.report["reverse_failures"] += 1
+                            continue
+                        except (ValueError, RuntimeError):
+                            self.report["reverse_failures"] += 1
+                            continue
+                    guides.append(guide)
+                    if quality == "typed" or guide not in qualities:
+                        qualities[guide] = quality
+                    for label, count in changes.items():
+                        if count:
                             edits = self.report["reverse_hint_normalizations"]
                             edits[label] = edits.get(label, 0) + count
-                    except ReverseHintError as exc:
-                        counts = self.report["reverse_hint_rejections"]
-                        counts[exc.reason] = counts.get(exc.reason, 0) + 1
-                        self.report["reverse_failures"] += 1
-                    except (ValueError, RuntimeError):
-                        self.report["reverse_failures"] += 1
             except (ValueError, RuntimeError, AttributeError):
+                reverse_failed = True
                 self.report["reverse_failures"] += 1
         if (
             not guides
             and not fallback
-            and not partition_rejected
+            and not self._stop()
+            and not raw_seen
+            and not reverse_failed
             and any(
                 molecule(target).HasSubstructMatch(q, useChirality=True) for q in rule.reaction.GetReactants()
             )
         ):
             fallback = True
             self.report["reverse_fallbacks"] += 1
+            implicit = True
+        else:
+            implicit = False
         if fallback:
             # Coarse, explicitly capped fallback. Unmatched roles use a small
             # retrieval query so a pair of nearly whole-hit blocks is not forced.
@@ -653,8 +917,13 @@ class RouteFirstSearch:
                     for q in rule.reaction.GetReactants()
                 )
             ]
+            qualities = {guides[0]: "implicit_fallback" if implicit else "explicit_fallback"}
         guides = sorted(set(guides))[: self.limits.max_reverse_outcomes]
         self.report["reverse_outcomes"] += len(guides)
+        for guide in guides:
+            quality = qualities[guide]
+            self._guide_quality[(rule.id, target, guide)] = quality
+            self.report["reverse_hint_quality_counts"][quality] += 1
         self._reverse_cache[key] = guides
         return guides
 
@@ -1026,7 +1295,12 @@ class RouteFirstSearch:
         if len(plan_candidates) > len(plans):
             self._stop("max_outer_guides")
         self.report["outer_plans_selected"] = [
-            {"rule_id": rule.id, "guide": list(guide)} for rule, guide in plans
+            {
+                "rule_id": rule.id,
+                "guide": list(guide),
+                "hint_quality": self._guide_quality[(rule.id, self.hit, guide)],
+            }
+            for rule, guide in plans
         ]
         depth_one_product_budget = (
             self.limits.max_products if self.limits.max_steps == 1 else max(1, self.limits.max_products // 2)

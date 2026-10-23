@@ -47,10 +47,30 @@ records reviewable generated routes and work counters; `results.json` contains
 only products that pass the existing final qualification. This material
 generation override is reported as `custom_unvalidated`; a development-panel
 comparison does not establish independent calibration or experimental synthesis.
-V1 produced no supported products on the reused 12-input development panel;
-v2 is a prospective retrieval/admission revision and has not been validated by
-that panel. The same original-hit similarity, property, polar-capacity, route,
-forward-support and 3D gates still apply.
+V1 produced no supported products on the reused 12-input development panel.
+The sixth v2 development probe reached three inputs before model and 3D checks;
+the typed/approximate hybrid described here has not yet been probed on that
+panel. More than five pre-evidence inputs is required before a model run.
+Adoption requires more than five of the 12 inputs to have complete, audited
+changed-scaffold routes with all-step forward support. The same
+original-hit similarity, property, polar-capacity, route, forward-support and
+3D gates still apply. Reverse outcomes are checked for a complete, disjoint
+partition of the target atoms. A local copy of each reverse template can make
+one role-conforming retrieval hint by replacing an originless terminal query
+placeholder with a simple allowed atom. When that bounded construction fails,
+the previous safely normalized approximate hint remains available. Typed and
+approximate hints are both search guidance; neither establishes a reactant or
+a viable reaction. Explicit fallback hints are reported separately.
+
+Typed hint construction tries neutral OH, F, Cl, Br, I, then O− in that fixed
+order. Each precursor-part attempt is either one representative construction
+or one check for a part without a placeholder. At most 16 attempts are charged
+across all parts of a raw reverse outcome and 1,024 across one search,
+including rejected attempts.
+Each role check enumerates at most 65 matches; reaching match 65 means the
+enumeration may be truncated and rejects typed construction. These bounds do
+not raise the existing reverse-outcome, catalog, product, fingerprint or route
+caps.
 
 ## Optional catalog byte binding
 

@@ -18,6 +18,8 @@ from chembounce_synthesis.route_first import (
     generate,
     normalize_reverse_hint,
     reverse_partition_issue,
+    reverse_role_issue,
+    typed_reverse_hint,
 )
 from chembounce_synthesis.routes import verify_route
 from chembounce_synthesis.workflow import check_constraints, run
@@ -52,7 +54,13 @@ def test_actual_one_and_two_step_routes_have_complete_forward_and_atom_stereo_re
     assert report["fingerprint_calls"] <= 200
     assert report["total_fingerprint_calls"] <= 200
     assert report["combinations"] <= 100
-    assert 0 < report["inner_role_compatible"] <= report["inner_role_checks"] <= report["products_generated"] <= 200
+    assert (
+        0
+        < report["inner_role_compatible"]
+        <= report["inner_role_checks"]
+        <= report["products_generated"]
+        <= 200
+    )
     assert report["route_audit_attempts"] <= report["limits"]["max_routes"]
     assert all(item["generation"]["reference"] == "self_product_design" for item in routes)
     for item in routes:
@@ -224,6 +232,9 @@ def test_reverse_hint_normalization_is_copy_only_and_bounded(tmp_path):
     stereo_reference_dummy = Chem.MolFromSmiles("*/C=C/F")
     with pytest.raises(ReverseHintError, match="unsafe_dummy_stereo"):
         normalize_reverse_hint(stereo_reference_dummy, parent, rule)
+    stereo_reference_dummy.GetAtomWithIdx(0).SetIntProp("old_mapno", 3)
+    with pytest.raises(ReverseHintError, match="unsupported_placeholder_stereo"):
+        typed_reverse_hint(stereo_reference_dummy, parent, rule, {(0, 0): 3}, 0, (9, 0, 0, "F"))
 
 
 def test_reverse_aryl_amine_hints_reach_retrieval_with_chiral_anchor(tmp_path):
@@ -258,8 +269,88 @@ def test_reverse_aryl_amine_hints_reach_retrieval_with_chiral_anchor(tmp_path):
         assert "NH2" not in guides[0][1]
     assert search.report["reverse_partition_rejections"] == {}
     assert search.report["reverse_hint_rejections"] == {}
-    assert search.report["reverse_hint_normalizations"]["removed_originless_terminal_dummy"] == 2
+    assert search.report["reverse_hint_normalizations"]["removed_originless_terminal_dummy"] == 1
     assert search.report["reverse_hint_normalizations"]["reset_template_n_hydrogens"] == 1
+    assert search.report["reverse_hint_normalizations"]["typed_originless_placeholder_instantiated"] == 1
+    assert search.report["reverse_hint_quality_counts"]["typed"] == 1
+    assert search.report["reverse_hint_quality_counts"]["approximate"] == 1
+    assert (
+        search._guide_quality[("aryl-h2", hit, search._reverse(rules.get("aryl-h2"), hit, False)[0])]
+        == "approximate"
+    )
+    assert (
+        search._guide_quality[("aryl-n", hit, search._reverse(rules.get("aryl-n"), hit, False)[0])] == "typed"
+    )
+    assert search.report["reverse_role_trials"] <= 16 * 2
+    assert search.report["reverse_role_work"] <= 1024
+
+
+def test_typed_reverse_role_correspondence_rejects_unrelated_site_and_truncation():
+    from rdkit import Chem
+
+    role = Chem.MolFromSmarts("[N:1]")
+    unrelated = Chem.MolFromSmiles("NCCN")
+    unrelated.GetAtomWithIdx(1).SetIntProp("old_mapno", 1)
+    assert reverse_role_issue(unrelated, role, {}, 0) == "role_mismatch_at_mapped_positions"
+    assert reverse_role_issue(Chem.MolFromSmiles("NCCN"), role, {}, 0) == "missing_or_ambiguous_role_origin"
+
+    many = Chem.MolFromSmiles("C" * 70)
+    many.GetAtomWithIdx(0).SetIntProp("old_mapno", 1)
+    assert reverse_role_issue(many, Chem.MolFromSmarts("[C:1]"), {}, 0) == "role_match_cap"
+
+
+def test_typed_reverse_attempt_caps_share_all_precursor_parts_and_preserve_approximate_hint(
+    tmp_path, monkeypatch
+):
+    from rdkit import Chem
+
+    import chembounce_synthesis.route_first as route_first
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [{"id": "aryl", "smarts": "[Cl,F][c:1].[N:2]>>[c:1][N:2]", "source": "test"}],
+            }
+        )
+    )
+    rules = Rules(path)
+    hit = "c1ccc(N2CCCCC2)cc1"
+    search = RouteFirstSearch(hit, SimpleNamespace(sha256="test"), rules, RouteFirstLimits(**limits()))
+
+    def late_choice(_raw, _parent, _rule, _tags, slot, representative=None, count_match=None):
+        if slot < 2 and representative[3] == "O-":
+            return "IC", 0
+        raise ReverseHintError("role_mismatch_at_mapped_positions")
+
+    monkeypatch.setattr(route_first, "typed_reverse_hint", late_choice)
+    raw = Chem.MolFromSmiles("*C")
+    assert search._typed_reverse_outcome((raw, raw, raw), molecule(hit), rules.get("aryl"), {}) is None
+    assert search.report["reverse_role_trials"] == search.report["reverse_role_work"] == 16
+    assert search.report["reverse_role_rejections"]["outcome_trial_budget"] == 1
+
+    # Saturation rejects typed construction, then retains a partition-valid
+    # approximation from the real reverse result without adding outcomes.
+    fresh = RouteFirstSearch(hit, SimpleNamespace(sha256="test"), rules, RouteFirstLimits(**limits()))
+    fresh.report["reverse_role_work"] = route_first.MAX_REVERSE_ROLE_WORK_PER_SEARCH
+    guides = fresh._reverse(rules.get("aryl"), hit, False)
+    assert len(guides) == 1
+    assert fresh.report["reverse_role_trials"] == 0
+    assert fresh.report["reverse_hint_quality_counts"]["approximate"] == 1
+    assert fresh.report["reverse_hint_quality_counts"]["implicit_fallback"] == 0
+    assert fresh.report["reverse_role_work"] == route_first.MAX_REVERSE_ROLE_WORK_PER_SEARCH
+
+    expired = RouteFirstSearch(
+        hit,
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        deadline_monotonic=time.monotonic() - 1,
+    )
+    assert expired._reverse(rules.get("aryl"), hit, False) == []
+    assert expired.report["reverse_role_work"] == 0
 
 
 def test_inner_beam_uses_only_intermediates_matching_outer_reactant_role(tmp_path):
