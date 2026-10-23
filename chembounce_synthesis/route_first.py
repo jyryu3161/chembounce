@@ -5,6 +5,7 @@ import heapq
 import itertools
 import math
 import time
+from collections import Counter
 from dataclasses import asdict, dataclass
 
 from rdkit import Chem, DataStructs, rdBase
@@ -13,6 +14,7 @@ from rdkit.Chem import rdChemReactions
 from .common import FP, absolute_smiles, canonical, molecule, positive
 from .route_audit import audit_route, template_maps
 from .routes import verify_route
+from .similarity_constraints import POLAR, feature_records
 
 VERSION = "catalog-rule-route-first-v2"
 REVERSE_ROLE_REPRESENTATIVES = (
@@ -26,6 +28,11 @@ REVERSE_ROLE_REPRESENTATIVES = (
 MAX_REVERSE_ROLE_TRIALS_PER_OUTCOME = 16
 MAX_REVERSE_ROLE_WORK_PER_SEARCH = 1024
 MAX_REVERSE_ROLE_MATCHES = 65
+MAX_POLAR_SECOND_CANDIDATES_PER_QUERY = 8192
+MAX_POLAR_SECOND_FEATURES_PER_QUERY = 8193
+MAX_POLAR_SECOND_FEATURES_PER_SEARCH = 65536
+MAX_POLAR_SECOND_DECISION_SAMPLES = 32
+POLAR_FAMILIES = tuple(sorted(POLAR))
 
 
 def reverse_partition_issue(outcome, target_atoms):
@@ -498,6 +505,23 @@ class RouteFirstSearch:
             "anchor_posting_metadata_visits": 0,
             "anchor_role_checks": 0,
             "anchor_role_compatible": 0,
+            "polar_second_limits": {
+                "ranked_candidates_per_query": MAX_POLAR_SECOND_CANDIDATES_PER_QUERY,
+                "feature_perceptions_per_query": MAX_POLAR_SECOND_FEATURES_PER_QUERY,
+                "feature_perceptions_per_search": MAX_POLAR_SECOND_FEATURES_PER_SEARCH,
+                "decision_samples": MAX_POLAR_SECOND_DECISION_SAMPLES,
+                "anchor_coverage": "posting-backed known coverage only",
+            },
+            "polar_second_queries": 0,
+            "polar_second_candidates_considered": 0,
+            "polar_second_feature_attempts": 0,
+            "polar_second_feature_cache_hits": 0,
+            "polar_second_feature_failures": 0,
+            "polar_second_selected": 0,
+            "polar_second_changed": 0,
+            "polar_second_fallbacks": {},
+            "polar_second_decisions": [],
+            "polar_second_decisions_truncated": 0,
             "catalog_row_visits": 0,
             "catalog_bucket_rankings": 0,
             "fingerprint_calls": 1,
@@ -530,6 +554,7 @@ class RouteFirstSearch:
         self._anchor_postings = ()
         self._anchor_scores = {}
         self._guide_anchor_cache = {}
+        self._polar_feature_cache = {}
         self._phase = 1
         self.routes = []
         self._route_keys = set()
@@ -984,6 +1009,131 @@ class RouteFirstSearch:
         self._guide_anchor_cache[target] = result
         return result
 
+    def _polar_second_fallback(self, reason):
+        counts = self.report["polar_second_fallbacks"]
+        counts[reason] = counts.get(reason, 0) + 1
+
+    def _polar_signature(self, smiles, mol, query_attempts):
+        if self._stop():
+            return None, "deadline_monotonic"
+        if smiles in self._polar_feature_cache:
+            self.report["polar_second_feature_cache_hits"] += 1
+            signature = self._polar_feature_cache[smiles]
+            return (signature, None) if signature is not None else (None, "cached_feature_failure")
+        if query_attempts[0] >= MAX_POLAR_SECOND_FEATURES_PER_QUERY:
+            self._stop("polar_second_query_feature_budget")
+            return None, "query_feature_budget"
+        if self.report["polar_second_feature_attempts"] >= MAX_POLAR_SECOND_FEATURES_PER_SEARCH:
+            self._stop("polar_second_search_feature_budget")
+            return None, "search_feature_budget"
+        query_attempts[0] += 1
+        self.report["polar_second_feature_attempts"] += 1
+        try:
+            records = feature_records(mol)
+            counts = Counter(record["family"] for record in records if record["family"] in POLAR)
+            signature = tuple(counts[family] for family in POLAR_FAMILIES)
+        except (ValueError, RuntimeError, TypeError, AttributeError):
+            self.report["polar_second_feature_failures"] += 1
+            self._polar_feature_cache[smiles] = None
+            return None, "feature_failure"
+        self._polar_feature_cache[smiles] = signature
+        return signature, None
+
+    def _polar_second(self, legacy_order, ranked, retrieval_target, anchor_strength, active_anchors):
+        """Replace only slot two, after scoring the entire already visited pool."""
+        if len(legacy_order) < 2 or self.limits.building_block_top_k < 2:
+            return legacy_order
+        self.report["polar_second_queries"] += 1
+
+        def finish(order, reason, guide_counts=None, chosen_counts=None, distance=None, compared=0):
+            previous, chosen = legacy_order[1][2], order[1][2]
+            previous_counts = self._polar_feature_cache.get(previous)
+            previous_distance = (
+                sum(abs(reference - value) for reference, value in zip(guide_counts, previous_counts))
+                if guide_counts is not None and previous_counts is not None
+                else None
+            )
+            sample = {
+                "normalized_guide": retrieval_target,
+                "previous_second": previous,
+                "selected_second": chosen,
+                "previous_known_anchors": anchor_strength.get(previous, 0) if active_anchors else 0,
+                "selected_known_anchors": anchor_strength.get(chosen, 0) if active_anchors else 0,
+                "polar_families": POLAR_FAMILIES,
+                "guide_feature_counts": guide_counts,
+                "previous_feature_counts": previous_counts,
+                "previous_distance": previous_distance,
+                "selected_feature_counts": chosen_counts,
+                "selected_distance": distance,
+                "ranked_pool_count": len(ranked),
+                "compared_pool_count": compared,
+                "complete": reason is None,
+                "fallback_reason": reason,
+            }
+            records = self.report["polar_second_decisions"]
+            if len(records) < MAX_POLAR_SECOND_DECISION_SAMPLES:
+                records.append(sample)
+            else:
+                self.report["polar_second_decisions_truncated"] += 1
+            return order
+
+        if self._stop():
+            self._polar_second_fallback("deadline_monotonic")
+            return finish(legacy_order, "deadline_monotonic")
+        if len(ranked) > MAX_POLAR_SECOND_CANDIDATES_PER_QUERY:
+            self._stop("polar_second_candidate_budget")
+            self._polar_second_fallback("candidate_budget")
+            return finish(legacy_order, "candidate_budget")
+        attempts = [0]
+        guide_mol = self.catalog.mols.get(retrieval_target)
+        if guide_mol is None:
+            try:
+                guide_mol = molecule(retrieval_target)
+            except (ValueError, RuntimeError):
+                self._polar_second_fallback("guide_parse_failure")
+                return finish(legacy_order, "guide_parse_failure")
+        guide, reason = self._polar_signature(retrieval_target, guide_mol, attempts)
+        if reason is not None:
+            self._polar_second_fallback(reason)
+            return finish(legacy_order, reason)
+        first_smiles = legacy_order[0][2]
+        scored = []
+        seen = {first_smiles}
+        for negative_similarity, _negative_anchors, smiles in ranked:
+            if self._stop():
+                self._polar_second_fallback("deadline_monotonic")
+                return finish(legacy_order, "deadline_monotonic", guide, compared=len(scored))
+            if smiles in seen:
+                continue
+            seen.add(smiles)
+            self.report["polar_second_candidates_considered"] += 1
+            candidate, reason = self._polar_signature(smiles, self.catalog.mols[smiles], attempts)
+            if reason is not None:
+                self._polar_second_fallback(reason)
+                return finish(legacy_order, reason, guide, compared=len(scored))
+            distance = sum(abs(reference - value) for reference, value in zip(guide, candidate))
+            coverage = anchor_strength.get(smiles, 0) if active_anchors else 0
+            scored.append(((-coverage, distance, negative_similarity, smiles), smiles, candidate, distance))
+        if self._stop():
+            self._polar_second_fallback("deadline_monotonic")
+            return finish(legacy_order, "deadline_monotonic", guide, compared=len(scored))
+        if not scored:
+            self._polar_second_fallback("no_distinct_candidate")
+            return finish(legacy_order, "no_distinct_candidate", guide)
+        _key, second_smiles, second_counts, second_distance = min(scored)
+        by_smiles = {row[2]: row for row in ranked}
+        second = by_smiles[second_smiles]
+        self.report["polar_second_selected"] += 1
+        if second_smiles != legacy_order[1][2]:
+            self.report["polar_second_changed"] += 1
+        result = [legacy_order[0], second]
+        included = {first_smiles, second_smiles}
+        for row in legacy_order[1:]:
+            if row[2] not in included:
+                result.append(row)
+                included.add(row[2])
+        return finish(result, None, guide, second_counts, second_distance, len(scored))
+
     def _nearest(self, target, role):
         key = (target, role)
         if key in self._nearest_cache:
@@ -1072,7 +1222,10 @@ class RouteFirstSearch:
             selected.append(anchored.pop(0))
         if ordinary and len(selected) < self.limits.building_block_top_k:
             selected.append(ordinary.pop(0))
-        selected.extend((anchored + ordinary)[: self.limits.building_block_top_k - len(selected)])
+        selected.extend(anchored + ordinary)
+        if complete and self.limits.building_block_top_k > 1 and len(selected) > 1:
+            selected = self._polar_second(selected, ranked, retrieval_target, anchor_strength, active_anchors)
+        selected = selected[: self.limits.building_block_top_k]
         blocks = tuple(
             self.catalog.blocks[sorted(self.catalog.by_smiles[smiles])[0]]
             for _score, _anchors, smiles in selected

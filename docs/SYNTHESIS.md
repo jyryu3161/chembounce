@@ -75,6 +75,20 @@ enumeration may be truncated and rejects typed construction. These bounds do
 not raise the existing reverse-outcome, catalog, product, fingerprint or route
 caps.
 
+For the next development revision, catalog block retrieval keeps its current
+first choice. When at least two blocks are requested, the second choice is
+ranked within the same already visited, role-compatible pool by posting-backed
+known hit-anchor coverage, then by the sum of deficits and excesses in the
+existing `POLAR` feature-family counts relative to the normalized precursor
+guide, then by fingerprint similarity. Posting coverage is incomplete when an
+anchor posting was truncated; absence from a posting does not prove absence of
+an anchor. Later choices retain the previous order without duplicates. This
+ranking is retrieval guidance and does not apply a whole-product polar gate to
+blocks. Feature perception has explicit ceilings of 8,193 uncached attempts
+per query and 65,536 per search, with failed attempts charged and cache hits
+reported. If the complete pool cannot be scored, the previous choice order is
+used. The revision has not yet been tested on the fixed development panel.
+
 ## Optional catalog byte binding
 
 A configuration can pin both the catalog TSV and its import manifest:

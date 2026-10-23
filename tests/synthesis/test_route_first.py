@@ -534,6 +534,125 @@ def test_exact_catalog_target_replaces_pool_row_within_query_cap(assets):
     assert search.report["catalog_row_visits"] == 1
 
 
+def test_second_block_uses_bounded_polar_distance_after_unchanged_first(monkeypatch):
+    import chembounce_synthesis.route_first as route_first
+
+    guide = canonical("NCCO")
+    mismatched = canonical("NCCN")
+    matched = canonical("NC(C)CO")
+    extra = canonical("NCCC")
+    values = (guide, mismatched, matched, extra)
+    catalog = SimpleNamespace(
+        sha256="synthetic",
+        mols={smiles: molecule(smiles) for smiles in values},
+        by_smiles={smiles: [smiles] for smiles in values},
+        blocks={smiles: SimpleNamespace(id=smiles, smiles=smiles) for smiles in values},
+    )
+    rules = SimpleNamespace(sha256="synthetic")
+
+    def search(top_k):
+        item = RouteFirstSearch(
+            guide,
+            catalog,
+            rules,
+            RouteFirstLimits(**limits(max_steps=1, building_block_top_k=top_k)),
+        )
+        item._pool = lambda _target: values
+        return item
+
+    first_only = search(1)
+    assert [block.smiles for block in first_only._nearest(guide, "[N;H1,H2]")] == [guide]
+    assert first_only.report["polar_second_feature_attempts"] == 0
+
+    selected = search(3)
+    assert [block.smiles for block in selected._nearest(guide, "[N;H1,H2]")] == [
+        guide,
+        matched,
+        mismatched,
+    ]
+    assert selected.report["polar_second_changed"] == 1
+    assert selected.report["polar_second_feature_attempts"] <= len(values)
+    assert len(selected._polar_feature_cache) <= route_first.MAX_POLAR_SECOND_FEATURES_PER_SEARCH
+    sample = selected.report["polar_second_decisions"][0]
+    assert sample["normalized_guide"] == guide
+    assert (sample["previous_second"], sample["selected_second"]) == (mismatched, matched)
+    assert sample["selected_distance"] == 0
+    assert sample["previous_feature_counts"] is not None
+    assert sample["previous_distance"] > sample["selected_distance"]
+    assert sample["complete"] and sample["compared_pool_count"] == len(values) - 1
+
+    # Bounded decision telemetry reuses cached signatures and never grows
+    # with the number of retrieval calls.
+    attempts = selected.report["polar_second_feature_attempts"]
+    old_order = [(-1.0, 0, guide), (-0.4, 0, mismatched), (-0.2, 0, matched)]
+    for _ in range(33):
+        selected._polar_second(old_order, old_order, guide, {}, ())
+    assert len(selected.report["polar_second_decisions"]) == 32
+    assert selected.report["polar_second_decisions_truncated"] == 2
+    assert selected.report["polar_second_feature_attempts"] == attempts
+
+    anchored = search(2)
+    anchored._guide_anchors = lambda _target: (0,)
+    anchored._anchor_postings = ((guide, mismatched),)
+    anchored._anchor_scores = {guide: 0, mismatched: 1}
+    assert [block.smiles for block in anchored._nearest(guide, "[N;H1,H2]")] == [guide, mismatched]
+
+    capped = search(3)
+    monkeypatch.setattr(route_first, "MAX_POLAR_SECOND_FEATURES_PER_SEARCH", 0)
+    assert [block.smiles for block in capped._nearest(guide, "[N;H1,H2]")] == [
+        guide,
+        mismatched,
+        extra,
+    ]
+    assert capped.report["polar_second_fallbacks"] == {"search_feature_budget": 1}
+    assert capped.report["polar_second_feature_attempts"] == 0
+    assert capped.report["polar_second_decisions"][0]["complete"] is False
+    assert capped.report["polar_second_decisions"][0]["compared_pool_count"] == 0
+
+
+def test_second_block_feature_failure_and_deadline_restore_original_order(monkeypatch):
+    import chembounce_synthesis.route_first as route_first
+
+    guide, wrong, matching = map(canonical, ("NCCO", "NCCN", "NC(C)CO"))
+    values = (guide, wrong, matching)
+    catalog = SimpleNamespace(
+        sha256="synthetic",
+        mols={smiles: molecule(smiles) for smiles in values},
+        by_smiles={smiles: [smiles] for smiles in values},
+        blocks={smiles: SimpleNamespace(id=smiles, smiles=smiles) for smiles in values},
+    )
+    rules = SimpleNamespace(sha256="synthetic")
+    search = RouteFirstSearch(
+        guide, catalog, rules, RouteFirstLimits(**limits(max_steps=1, building_block_top_k=2))
+    )
+    search._pool = lambda _target: values
+    original_features = route_first.feature_records
+
+    def failing_features(mol):
+        if canonical(Chem.MolToSmiles(mol, isomericSmiles=True)) == matching:
+            raise ValueError("feature perception failed")
+        return original_features(mol)
+
+    from rdkit import Chem
+
+    monkeypatch.setattr(route_first, "feature_records", failing_features)
+    assert [block.smiles for block in search._nearest(guide, "[N;H1,H2]")] == [guide, wrong]
+    assert search.report["polar_second_feature_failures"] == 1
+    assert search.report["polar_second_fallbacks"] == {"feature_failure": 1}
+    assert search.report["polar_second_feature_attempts"] == 3
+
+    search._nearest_cache.clear()
+    assert [block.smiles for block in search._nearest(guide, "[N;H1,H2]")] == [guide, wrong]
+    assert search.report["polar_second_feature_failures"] == 1
+    assert search.report["polar_second_feature_cache_hits"] >= 3
+
+    search._nearest_cache.clear()
+    search.deadline = time.monotonic() - 1
+    old = [(0.0, 0, guide), (-0.5, 0, wrong), (-0.25, 0, matching)]
+    assert search._polar_second(old, old, guide, {}, ()) == old
+    assert search.report["polar_second_fallbacks"]["deadline_monotonic"] == 1
+
+
 def test_stereo_anchor_posting_is_used_only_for_matching_guide_and_role():
     hit = canonical("C[C@H]1CCCNC1")
     inverse = canonical("C[C@@H]1CCCNC1")
