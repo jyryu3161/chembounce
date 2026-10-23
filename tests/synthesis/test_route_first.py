@@ -11,10 +11,13 @@ from chembounce_synthesis.route_audit import audit_route
 from chembounce_synthesis.common import canonical, molecule
 from chembounce_synthesis.route_first import (
     HitStereoAnchors,
+    ReverseHintError,
     RouteFirstLimits,
     RouteFirstSearch,
     check_hit_stereo_anchors,
     generate,
+    normalize_reverse_hint,
+    reverse_partition_issue,
 )
 from chembounce_synthesis.routes import verify_route
 from chembounce_synthesis.workflow import check_constraints, run
@@ -108,6 +111,154 @@ def test_global_retrieval_combination_and_deadline_caps(assets):
     assert capped["routes_verified"] <= 2
     assert capped["route_audit_attempts"] <= 2
     assert capped["depth_counts"]["2"] >= 1
+
+
+def test_reverse_guides_require_disjoint_complete_parent_atom_partition(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "ether",
+                        "smarts": "[#6;$([#6]~[#6]);!$([#6]=O):2][#8;H1:3]."
+                        "[Cl,Br,I][#6;H2;$([#6]~[#6]):4]>>[CH2:4][O:3][#6:2]",
+                        "source": "test",
+                    },
+                    {"id": "split", "smarts": "[C:1].[C:2]>>[C:1][C:2]", "source": "test"},
+                    {"id": "unary", "smarts": "[C:1][O:2]>>[C:1][O:2]", "source": "test"},
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    catalog = SimpleNamespace(sha256="test")
+    settings = RouteFirstLimits(**limits(max_steps=1, max_reverse_outcomes=1))
+    overlap = RouteFirstSearch("C1CCOCC1", catalog, rules, settings)
+    assert overlap._reverse(rules.get("ether"), "C1CCOCC1", False) == []
+    assert overlap.report["reverse_partition_checks"] == 1
+    assert overlap.report["reverse_partition_rejections"] == {"reused_parent_atom": 1}
+    assert overlap.report["reverse_fallbacks"] == 0
+    assert overlap._reverse(rules.get("ether"), "C1CCOCC1", True)
+    assert overlap.report["reverse_partition_checks"] == 1  # explicit fallback skips reverse
+
+    linear = RouteFirstSearch("CC", catalog, rules, settings)
+    guides = linear._reverse(rules.get("split"), "CC", False)
+    assert guides and len(guides[0]) == 2
+    assert linear.report["reverse_partition_checks"] == 1
+    assert linear.report["reverse_partition_rejections"] == {}
+    assert linear.report["reverse_fallbacks"] == 0
+
+    unary = RouteFirstSearch("CCO", catalog, rules, settings)
+    assert unary._reverse(rules.get("unary"), "CCO", False)
+    assert unary.report["reverse_partition_checks"] == 1
+    assert unary.report["reverse_partition_rejections"] == {}
+
+
+def test_reverse_partition_metadata_rejects_missing_reused_and_invalid_origins():
+    from rdkit import Chem
+
+    def outcome(records):
+        mol = Chem.MolFromSmiles("C" * len(records))
+        for atom, record in zip(mol.GetAtoms(), records):
+            for key, value in record.items():
+                atom.SetIntProp(key, value)
+        return (mol,)
+
+    def origin(index):
+        return {"react_idx": 0, "react_atom_idx": index}
+
+    assert reverse_partition_issue(outcome([origin(0), {}]), 1) is None
+    assert reverse_partition_issue(outcome([origin(0), origin(0)]), 2) == "reused_parent_atom"
+    assert reverse_partition_issue(outcome([origin(0), {}]), 2) == "missing_parent_atoms"
+    assert reverse_partition_issue(outcome([{"react_idx": 0}]), 1) == "incomplete_origin_metadata"
+    assert reverse_partition_issue(outcome([{"react_atom_idx": 0}]), 1) == "incomplete_origin_metadata"
+    assert reverse_partition_issue(outcome([{"react_idx": 1, "react_atom_idx": 0}]), 1) == "wrong_parent_slot"
+    assert reverse_partition_issue(outcome([origin(1)]), 1) == "origin_out_of_range"
+
+
+def test_reverse_hint_normalization_is_copy_only_and_bounded(tmp_path):
+    from rdkit import Chem
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [{"id": "join", "smarts": "[C:1].[N:2]>>[C:1][N:2]", "source": "test"}],
+            }
+        )
+    )
+    rule = Rules(path).get("join")
+    parent = molecule("CN1CCCCC1")
+    raw = molecule("N1CCCCC1")
+    nitrogen = raw.GetAtomWithIdx(0)
+    nitrogen.SetIntProp("react_idx", 0)
+    nitrogen.SetIntProp("react_atom_idx", 1)
+    nitrogen.SetIntProp("old_mapno", 2)
+    nitrogen.SetNumExplicitHs(2)
+    nitrogen.SetNoImplicit(True)
+    hint, edits = normalize_reverse_hint(raw, parent, rule)
+    assert hint == canonical("N1CCCCC1")
+    assert edits["reset_template_n_hydrogens"] == 1
+    assert raw.GetAtomWithIdx(0).GetNumExplicitHs() == 2  # raw reverse witness untouched
+
+    raw_aromatic = Chem.MolFromSmiles("*c1ccc([C@H](F)Cl)cc1")
+    normalized, edits = normalize_reverse_hint(raw_aromatic, parent, rule)
+    assert "@" in normalized and "*" not in normalized
+    assert edits["removed_originless_terminal_dummy"] == 1
+    assert raw_aromatic.GetAtomWithIdx(0).GetAtomicNum() == 0
+
+    bridge = Chem.MolFromSmiles("C*C")
+    with pytest.raises(ReverseHintError, match="unsafe_dummy"):
+        normalize_reverse_hint(bridge, parent, rule)
+    origin_dummy = Chem.MolFromSmiles("*C")
+    origin_dummy.GetAtomWithIdx(0).SetIntProp("react_atom_idx", 0)
+    with pytest.raises(ReverseHintError, match="unsafe_dummy"):
+        normalize_reverse_hint(origin_dummy, parent, rule)
+    stereo_reference_dummy = Chem.MolFromSmiles("*/C=C/F")
+    with pytest.raises(ReverseHintError, match="unsafe_dummy_stereo"):
+        normalize_reverse_hint(stereo_reference_dummy, parent, rule)
+
+
+def test_reverse_aryl_amine_hints_reach_retrieval_with_chiral_anchor(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {"id": "aryl-h2", "smarts": "[Cl,Br,I][c:1].[N;H2:2]>>[c:1][N:2]", "source": "test"},
+                    {"id": "aryl-n", "smarts": "[Cl,F][c:1].[N:2]>>[c:1][N:2]", "source": "test"},
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    hit = "c1ccc(N2CCC[C@H](C)C2)cc1"
+    search = RouteFirstSearch(
+        hit,
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits(max_steps=1)),
+    )
+    for ident in ("aryl-h2", "aryl-n"):
+        guides = search._reverse(rules.get(ident), hit, False)
+        assert len(guides) == 1
+        assert len(guides[0]) == 2
+        assert all("*" not in part for part in guides[0])
+        assert "@" in guides[0][1]
+        assert "NH2" not in guides[0][1]
+    assert search.report["reverse_partition_rejections"] == {}
+    assert search.report["reverse_hint_rejections"] == {}
+    assert search.report["reverse_hint_normalizations"]["removed_originless_terminal_dummy"] == 2
+    assert search.report["reverse_hint_normalizations"]["reset_template_n_hydrogens"] == 1
 
 
 def test_feature_index_targets_guide_size_without_unbounded_per_query_scan(assets):

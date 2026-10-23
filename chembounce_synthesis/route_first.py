@@ -17,6 +17,118 @@ from .routes import verify_route
 VERSION = "catalog-rule-route-first-v2"
 
 
+def reverse_partition_issue(outcome, target_atoms):
+    """Require each target atom to belong to exactly one reverse precursor."""
+    origins = set()
+    for precursor in outcome:
+        for atom in precursor.GetAtoms():
+            has_index = atom.HasProp("react_atom_idx")
+            has_slot = atom.HasProp("react_idx")
+            if not has_index and not has_slot:
+                # A reverse template may introduce a leaving group as a hint.
+                continue
+            if not has_index or not has_slot:
+                return "incomplete_origin_metadata"
+            if atom.GetIntProp("react_idx") != 0:
+                return "wrong_parent_slot"
+            index = atom.GetIntProp("react_atom_idx")
+            if not 0 <= index < target_atoms:
+                return "origin_out_of_range"
+            if index in origins:
+                return "reused_parent_atom"
+            origins.add(index)
+    if len(origins) != target_atoms:
+        return "missing_parent_atoms"
+    return None
+
+
+class ReverseHintError(ValueError):
+    def __init__(self, reason):
+        self.reason = reason
+        super().__init__(reason)
+
+
+def normalize_reverse_hint(raw, parent, rule):
+    """Make a copied reverse outcome usable for retrieval, never route evidence."""
+    editable = Chem.RWMol(Chem.Mol(raw))
+    edits = {"removed_originless_terminal_dummy": 0, "reset_template_n_hydrogens": 0}
+    for index in reversed(range(editable.GetNumAtoms())):
+        atom = editable.GetAtomWithIdx(index)
+        if atom.GetAtomicNum() != 0:
+            continue
+        if atom.HasProp("react_atom_idx") or atom.HasProp("react_idx") or atom.GetDegree() != 1:
+            raise ReverseHintError("unsafe_dummy")
+        bond = atom.GetBonds()[0]
+        neighbor = bond.GetOtherAtom(atom)
+        if (
+            neighbor.GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED
+            or bond.GetStereo() != Chem.BondStereo.STEREONONE
+            or any(
+                adjacent.GetStereo() != Chem.BondStereo.STEREONONE
+                or adjacent.GetBondDir() != Chem.BondDir.NONE
+                or index in adjacent.GetStereoAtoms()
+                for adjacent in neighbor.GetBonds()
+            )
+        ):
+            raise ReverseHintError("unsafe_dummy_stereo")
+        editable.RemoveAtom(index)
+        edits["removed_originless_terminal_dummy"] += 1
+    clean = editable.GetMol()
+    if clean.GetNumAtoms() == 0 or any(atom.GetAtomicNum() == 0 for atom in clean.GetAtoms()):
+        raise ReverseHintError("remaining_dummy")
+    if len(Chem.GetMolFrags(clean)) != 1:
+        raise ReverseHintError("disconnected_hint")
+    with rdBase.BlockLogs():
+        issue = Chem.SanitizeMol(clean, catchErrors=True)
+    if issue != Chem.SanitizeFlags.SANITIZE_NONE:
+        if issue != Chem.SanitizeFlags.SANITIZE_PROPERTIES:
+            raise ReverseHintError("hint_sanitization_failed")
+        role_atoms = {
+            atom.GetAtomMapNum(): atom
+            for role in rule.reaction.GetReactants()
+            for atom in role.GetAtoms()
+            if atom.GetAtomMapNum()
+        }
+        for atom in clean.GetAtoms():
+            if (
+                atom.GetAtomicNum() != 7
+                or atom.GetIsAromatic()
+                or atom.GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED
+                or atom.GetFormalCharge() != 0
+                or atom.GetNumExplicitHs() == 0
+                or atom.GetDegree() + atom.GetNumExplicitHs() <= 3
+                or not atom.HasProp("react_atom_idx")
+                or not atom.HasProp("old_mapno")
+            ):
+                continue
+            source = parent.GetAtomWithIdx(atom.GetIntProp("react_atom_idx"))
+            role_atom = role_atoms.get(atom.GetIntProp("old_mapno"))
+            if (
+                role_atom is None
+                or role_atom.GetAtomicNum() != 7
+                or role_atom.GetNumExplicitHs() != 0
+                or source.GetAtomicNum() != 7
+                or source.GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED
+                or source.GetIsotope() != atom.GetIsotope()
+                or source.GetFormalCharge() != atom.GetFormalCharge()
+                or source.GetNumExplicitHs() != 0
+                or source.GetDegree() <= atom.GetDegree()
+            ):
+                continue
+            atom.SetNumExplicitHs(0)
+            atom.SetNoImplicit(False)
+            edits["reset_template_n_hydrogens"] += 1
+        with rdBase.BlockLogs():
+            retry_issue = Chem.SanitizeMol(clean, catchErrors=True)
+        if not edits["reset_template_n_hydrogens"] or retry_issue != Chem.SanitizeFlags.SANITIZE_NONE:
+            raise ReverseHintError("hint_sanitization_failed")
+    try:
+        smiles = canonical(absolute_smiles(clean, isomericSmiles=True))
+    except (ValueError, RuntimeError) as exc:
+        raise ReverseHintError("hint_serialization_failed") from exc
+    return smiles, edits
+
+
 class HitStereoAnchors:
     """Bounded local hit anchors; compile only representable, unique source mappings."""
 
@@ -215,6 +327,10 @@ class RouteFirstSearch:
             "rules_selected": [],
             "reverse_attempts": 0,
             "reverse_failures": 0,
+            "reverse_partition_checks": 0,
+            "reverse_partition_rejections": {},
+            "reverse_hint_normalizations": {},
+            "reverse_hint_rejections": {},
             "reverse_outcomes": 0,
             "reverse_fallbacks": 0,
             "retrieval_guides_normalized": 0,
@@ -473,25 +589,43 @@ class RouteFirstSearch:
         if key in self._reverse_cache:
             return self._reverse_cache[key]
         guides = []
+        partition_rejected = False
         if not fallback and not self._stop():
             self.report["reverse_attempts"] += 1
             try:
                 lhs, rhs = rule.smarts.split(">>")
                 reverse = rdChemReactions.ReactionFromSmarts(rhs + ">>" + lhs)
+                parent = molecule(target)
                 with rdBase.BlockLogs():
                     reverse.Initialize()
-                    outcomes = reverse.RunReactants(
-                        (molecule(target),), maxProducts=self.limits.max_reverse_outcomes
-                    )
+                    outcomes = reverse.RunReactants((parent,), maxProducts=self.limits.max_reverse_outcomes)
                 for outcome in outcomes:
                     if len(outcome) != len(rule.roles):
                         continue
+                    self.report["reverse_partition_checks"] += 1
+                    issue = reverse_partition_issue(outcome, parent.GetNumAtoms())
+                    if issue is not None:
+                        partition_rejected = True
+                        counts = self.report["reverse_partition_rejections"]
+                        counts[issue] = counts.get(issue, 0) + 1
+                        continue
                     try:
                         parts = []
+                        outcome_edits = {}
                         for mol in outcome:
-                            Chem.SanitizeMol(mol)
-                            parts.append(canonical(absolute_smiles(mol, isomericSmiles=True)))
+                            part, changes = normalize_reverse_hint(mol, parent, rule)
+                            parts.append(part)
+                            for label, count in changes.items():
+                                if count:
+                                    outcome_edits[label] = outcome_edits.get(label, 0) + count
                         guides.append(tuple(parts))
+                        for label, count in outcome_edits.items():
+                            edits = self.report["reverse_hint_normalizations"]
+                            edits[label] = edits.get(label, 0) + count
+                    except ReverseHintError as exc:
+                        counts = self.report["reverse_hint_rejections"]
+                        counts[exc.reason] = counts.get(exc.reason, 0) + 1
+                        self.report["reverse_failures"] += 1
                     except (ValueError, RuntimeError):
                         self.report["reverse_failures"] += 1
             except (ValueError, RuntimeError, AttributeError):
@@ -499,6 +633,7 @@ class RouteFirstSearch:
         if (
             not guides
             and not fallback
+            and not partition_rejected
             and any(
                 molecule(target).HasSubstructMatch(q, useChirality=True) for q in rule.reaction.GetReactants()
             )
