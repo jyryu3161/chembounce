@@ -2119,6 +2119,178 @@ def test_optional_typed_prefix_preserves_failure_and_budget_fallbacks(tmp_path, 
     assert broken.report["reverse_hint_rejections"]["invalid_remaining_precursor"] == 1
 
 
+def test_typed_representative_size_proof_for_mixed_and_full_guides(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "amide",
+                        "smarts": (
+                            "[Cl,OH,O-:3][C$(C(=O)([CX4,c])),C$([CH](=O)):2]=[O:4]."
+                            "[N$([NH2,NH3+1]([CX4,c])),N$([NH]([CX4,c])([CX4,c])):6]"
+                            ">>[N+0:6]-[C:2]=[O:4]"
+                        ),
+                        "source": "test",
+                    }
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    for hit, expected, quality in (
+        ("CC(N)=O", ("CC(=O)O", "N"), "approximate"),
+        ("CC(=O)NC", ("CC(=O)O", "CN"), "typed"),
+    ):
+        search = RouteFirstSearch(
+            hit,
+            SimpleNamespace(sha256="test"),
+            rules,
+            RouteFirstLimits(**limits()),
+            preserve_typed_prefix=True,
+            correct_typed_prefix_size=True,
+        )
+        assert search._reverse(rules.get("amide"), hit, False, record_centers=True) == [expected]
+        assert search._guide_quality[("amide", hit, expected)] == quality
+        assert search._guide_representative_heavy[("amide", hit, expected)] == 1
+        assert search.report["representative_origin_known_guides"] == 1
+        assert search.report["representative_origin_structural_units"] > 0
+        assert search._reverse(rules.get("amide"), hit, False, record_centers=True) == [expected]
+        assert search.report["reverse_attempts"] == 1
+        assert search.report["representative_origin_checks"] == 1
+
+
+def test_representative_size_proof_fails_closed_and_uses_inside_absolute_value(tmp_path):
+    from rdkit import Chem
+
+    import chembounce_synthesis.route_first as route_first
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "amide",
+                        "smarts": (
+                            "[Cl,OH,O-:3][C$(C(=O)([CX4,c])),C$([CH](=O)):2]=[O:4]."
+                            "[N$([NH2,NH3+1]([CX4,c])),N$([NH]([CX4,c])([CX4,c])):6]"
+                            ">>[N+0:6]-[C:2]=[O:4]"
+                        ),
+                        "source": "test",
+                    }
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    rule = rules.get("amide")
+    search = RouteFirstSearch(
+        "CC(N)=O",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        preserve_typed_prefix=True,
+        correct_typed_prefix_size=True,
+        diagnose_continuation=True,
+    )
+    guide = search._reverse(rule, search.hit, False, record_centers=True)[0]
+    raw, clean = search._continuation_raw[(rule.id, search.hit, False)]["by_guide"][guide][0]
+    assert search._representative_origin_count(raw, clean, 1, search.hit_mol.GetNumAtoms()) == (
+        1,
+        None,
+    )
+    assert search._outer_size_delta(rule, guide, guide, 0) == 0
+    search._guide_representative_heavy.clear()
+    assert search._outer_size_delta(rule, guide, guide, 0) == 1
+    search._guide_representative_heavy[(rule.id, search.hit, guide)] = 1
+    assert search._outer_size_delta(rule, guide, guide, 1) == 1
+    assert search.report["representative_origin_legacy_reasons"]["retrieval_target_changed"] == 1
+    modified = tuple(Chem.Mol(part) for part in raw)
+    parent = next(atom for atom in modified[0].GetAtoms() if atom.HasProp("react_atom_idx"))
+    parent.SetAtomicNum(7)
+    assert (
+        search._representative_origin_count(modified, clean, 1, search.hit_mol.GetNumAtoms())[1]
+        == "parent_atom_changed"
+    )
+    marked = tuple(Chem.Mol(part) for part in raw)
+    dummy = next(atom for atom in marked[0].GetAtoms() if atom.GetAtomicNum() == 0)
+    dummy.SetIntProp("react_atom_idx", 0)
+    dummy.SetIntProp("react_idx", 0)
+    assert search._representative_origin_count(marked, clean, 1, search.hit_mol.GetNumAtoms())[1] is not None
+
+    counts, unknown = {}, {}
+    search._merge_representative_origin(counts, unknown, guide, 1, None)
+    search._merge_representative_origin(counts, unknown, guide, 0, None)
+    assert guide not in counts
+    assert unknown[guide] == "raw_alternatives_disagree"
+    search._merge_representative_origin(counts, unknown, guide, 1, None)
+    assert guide not in counts
+    # Subtract inside abs: an already undersized normalized guide becomes
+    # farther from the hit when its proven representative is discounted.
+    assert search._outer_size_delta(rule, guide, ("C", "N"), 0) == 3
+
+    capped = RouteFirstSearch(
+        "CC(N)=O",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        preserve_typed_prefix=True,
+        correct_typed_prefix_size=True,
+    )
+    capped.report["representative_origin_structural_units"] = route_first.MAX_REPRESENTATIVE_ORIGIN_VISITS
+    assert capped._reverse(rule, capped.hit, False, record_centers=True) == [guide]
+    assert capped._guide_representative_heavy == {}
+    assert capped.report["representative_origin_legacy_reasons"]["structural_unit_limit"] == 1
+    assert (
+        capped.report["representative_origin_structural_units"]
+        == route_first.MAX_REPRESENTATIVE_ORIGIN_VISITS
+    )
+    entry_capped = RouteFirstSearch(
+        "CC(N)=O",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        preserve_typed_prefix=True,
+        correct_typed_prefix_size=True,
+    )
+    entry_capped.report["representative_origin_guide_entries"] = route_first.MAX_REPRESENTATIVE_ORIGIN_GUIDES
+    assert entry_capped._reverse(rule, entry_capped.hit, False, record_centers=True) == [guide]
+    assert entry_capped._guide_representative_heavy == {}
+    assert entry_capped.report["representative_origin_checks"] == 0
+    assert entry_capped.report["representative_origin_legacy_reasons"]["guide_entry_limit"] == 1
+    legacy = RouteFirstSearch(
+        "CC(N)=O",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        preserve_typed_prefix=True,
+    )
+    assert legacy._reverse(rule, legacy.hit, False, record_centers=True) == [guide]
+    assert legacy._outer_size_delta(rule, guide, guide, 0) == 1
+    assert legacy.report["representative_origin_checks"] == 0
+    expired = RouteFirstSearch(
+        "CC(N)=O",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits()),
+        deadline_monotonic=time.monotonic() - 1,
+        preserve_typed_prefix=True,
+        correct_typed_prefix_size=True,
+    )
+    assert expired._representative_origin_count(raw, clean, 1, search.hit_mol.GetNumAtoms()) == (
+        None,
+        "deadline",
+    )
+    assert expired.report["representative_origin_structural_units"] == 0
+
+
 def test_inner_beam_uses_only_intermediates_matching_outer_reactant_role(tmp_path):
     from chembounce_synthesis.catalog import Catalog
     from chembounce_synthesis.reactions import Rules

@@ -28,6 +28,10 @@ MAX_REVERSE_ROLE_TRIALS_PER_OUTCOME = 16
 MAX_REVERSE_ROLE_WORK_PER_SEARCH = 1024
 MAX_REVERSE_ROLE_MATCHES = 65
 MAX_OUTER_CENTER_METADATA_CHECKS = 32768
+MAX_REPRESENTATIVE_ORIGIN_VISITS = 32768
+MAX_REPRESENTATIVE_ORIGIN_GUIDES = 128
+MAX_REPRESENTATIVE_ORIGIN_ATOMS = 256
+MAX_REPRESENTATIVE_ORIGIN_BONDS = 512
 MAX_TOPOLOGY_MATCH_REQUESTS = 128
 MAX_TOPOLOGY_MATCHES = 65  # 64 plus a truncation sentinel.
 MAX_TOPOLOGY_SPEC_GRAPH_VISITS = 262144
@@ -942,6 +946,7 @@ class RouteFirstSearch:
         diagnose_continuation=False,
         prefer_continuation_second=False,
         preserve_typed_prefix=False,
+        correct_typed_prefix_size=False,
     ):
         self.hit = canonical(hit)
         self.hit_mol = molecule(self.hit)
@@ -1003,6 +1008,18 @@ class RouteFirstSearch:
             "outer_center_metadata_check_limit": MAX_OUTER_CENTER_METADATA_CHECKS,
             "outer_center_metadata_checks": 0,
             "outer_center_metadata_incomplete": 0,
+            "representative_origin_limits": {
+                "structural_units": MAX_REPRESENTATIVE_ORIGIN_VISITS,
+                "guide_entries": MAX_REPRESENTATIVE_ORIGIN_GUIDES,
+                "atoms_per_part": MAX_REPRESENTATIVE_ORIGIN_ATOMS,
+                "bonds_per_part": MAX_REPRESENTATIVE_ORIGIN_BONDS,
+            },
+            "representative_origin_structural_units": 0,
+            "representative_origin_checks": 0,
+            "representative_origin_guide_entries": 0,
+            "representative_origin_known_guides": 0,
+            "representative_origin_legacy_reasons": {},
+            "representative_origin_score_corrections": 0,
             "outer_plan_candidates": 0,
             "outer_distinct_cut_centers": 0,
             "phase2_plan_trace": [],
@@ -1117,6 +1134,8 @@ class RouteFirstSearch:
         self._continuation_capture_all_phases = diagnose_continuation
         self._prefer_continuation_second = prefer_continuation_second
         self._preserve_typed_prefix = preserve_typed_prefix
+        self._correct_typed_prefix_size = correct_typed_prefix_size
+        self._guide_representative_heavy = {} if correct_typed_prefix_size else None
         if preserve_typed_prefix:
             self.report["mixed_typed_prefix_hints"] = 0
             self.report["mixed_typed_prefix_parts"] = 0
@@ -1792,6 +1811,136 @@ class RouteFirstSearch:
                 cuts.append((min(first, second), max(first, second)))
         return tuple(sorted(cuts))
 
+    def _representative_origin_count(self, outcome, clean_parts, typed_prefix_count, parent_atom_count):
+        """Count only surviving typed representatives in the emitted guide.
+
+        Parent-derived atoms and bonds must still be identifiable in every
+        accepted clean part.  This metadata never changes guide acceptance.
+        """
+        if self._stop():
+            return None, "deadline"
+        if (
+            clean_parts is None
+            or len(clean_parts) != len(outcome)
+            or any(part is None for part in clean_parts)
+        ):
+            return None, "clean_part_unavailable"
+        if typed_prefix_count > len(outcome):
+            return None, "typed_slot_mismatch"
+        parts = tuple(outcome) + tuple(clean_parts)
+        if any(
+            part.GetNumAtoms() > MAX_REPRESENTATIVE_ORIGIN_ATOMS
+            or part.GetNumBonds() > MAX_REPRESENTATIVE_ORIGIN_BONDS
+            for part in parts
+        ):
+            return None, "part_size_limit"
+        # Precharge three structural passes, including failed proofs.  These
+        # are bounded work units rather than literal Python loop iterations.
+        units = 3 * sum(part.GetNumAtoms() + part.GetNumBonds() for part in parts)
+        if self.report["representative_origin_structural_units"] + units > MAX_REPRESENTATIVE_ORIGIN_VISITS:
+            return None, "structural_unit_limit"
+        # Precharge even a failed proof.  This meter is separate from reverse,
+        # role, catalog and fingerprint budgets.
+        self.report["representative_origin_structural_units"] += units
+        self.report["representative_origin_checks"] += 1
+
+        def parent_atoms(part):
+            result = {}
+            for atom in part.GetAtoms():
+                has_index = atom.HasProp("react_atom_idx")
+                has_slot = atom.HasProp("react_idx")
+                if has_index != has_slot:
+                    raise ValueError("partial_parent_origin")
+                if not has_index:
+                    continue
+                if atom.GetIntProp("react_idx") != 0:
+                    raise ValueError("wrong_parent_slot")
+                index = atom.GetIntProp("react_atom_idx")
+                if index in result:
+                    raise ValueError("duplicate_parent_origin")
+                result[index] = (
+                    atom.GetAtomicNum(),
+                    atom.GetIsotope(),
+                    atom.GetFormalCharge(),
+                    int(atom.GetChiralTag()),
+                )
+            return result
+
+        try:
+            count = 0
+            covered_parent_atoms = set()
+            for slot, (raw, clean) in enumerate(zip(outcome, clean_parts)):
+                raw_parent_atoms = parent_atoms(raw)
+                if raw_parent_atoms != parent_atoms(clean):
+                    return None, "parent_atom_changed"
+                if covered_parent_atoms.intersection(raw_parent_atoms):
+                    return None, "duplicate_parent_origin"
+                covered_parent_atoms.update(raw_parent_atoms)
+
+                def parent_bonds(part):
+                    result = []
+                    for bond in part.GetBonds():
+                        first, second = bond.GetBeginAtom(), bond.GetEndAtom()
+                        if not (
+                            first.HasProp("react_idx")
+                            and first.HasProp("react_atom_idx")
+                            and second.HasProp("react_idx")
+                            and second.HasProp("react_atom_idx")
+                        ):
+                            continue
+                        endpoints = sorted(
+                            (first.GetIntProp("react_atom_idx"), second.GetIntProp("react_atom_idx"))
+                        )
+                        result.append((tuple(endpoints), str(bond.GetBondType()), int(bond.GetStereo())))
+                    return sorted(result)
+
+                if parent_bonds(raw) != parent_bonds(clean):
+                    return None, "parent_bond_changed"
+                if slot >= typed_prefix_count:
+                    continue
+                if clean.GetNumAtoms() != raw.GetNumAtoms() or clean.GetNumBonds() != raw.GetNumBonds():
+                    return None, "typed_graph_changed"
+                for atom in raw.GetAtoms():
+                    if atom.GetAtomicNum() != 0:
+                        continue
+                    if (
+                        atom.HasProp("react_atom_idx")
+                        or atom.HasProp("react_idx")
+                        or not atom.HasProp("old_mapno")
+                    ):
+                        return None, "dummy_origin_unclear"
+                    replacement = clean.GetAtomWithIdx(atom.GetIdx())
+                    if replacement.GetAtomicNum() <= 1 or replacement.HasProp("react_atom_idx"):
+                        return None, "representative_not_retained"
+                    count += 1
+                for bond in raw.GetBonds():
+                    same = clean.GetBondBetweenAtoms(bond.GetBeginAtomIdx(), bond.GetEndAtomIdx())
+                    if (
+                        same is None
+                        or bond.GetBondType() != same.GetBondType()
+                        or bond.GetIsAromatic() != same.GetIsAromatic()
+                        or bond.GetStereo() != same.GetStereo()
+                    ):
+                        return None, "typed_bond_changed"
+            if covered_parent_atoms != set(range(parent_atom_count)):
+                return None, "parent_coverage_incomplete"
+            if self._stop():
+                return None, "deadline"
+            return count, None
+        except (ValueError, RuntimeError, KeyError, AttributeError):
+            return None, "origin_proof_error"
+
+    @staticmethod
+    def _merge_representative_origin(counts, unknown, guide, count, reason):
+        if reason is not None:
+            unknown[guide] = reason
+            counts.pop(guide, None)
+        elif guide not in unknown:
+            previous = counts.setdefault(guide, count)
+            if previous != count:
+                counts.pop(guide, None)
+                unknown[guide] = "raw_alternatives_disagree"
+
     def _typed_reverse_outcome(
         self, outcome, parent, rule, tags, *, capture_parts=None, capture_partial=None
     ):
@@ -2060,6 +2209,8 @@ class RouteFirstSearch:
         guides = []
         qualities = {}
         centers = {}
+        representative_counts = {}
+        representative_unknown = {}
         raw_seen = False
         reverse_failed = False
         nonring_query = False
@@ -2141,7 +2292,13 @@ class RouteFirstSearch:
                         counts[issue] = counts.get(issue, 0) + 1
                         continue
                     cut_bonds = self._reverse_cut_bonds(outcome, parent) if record_centers else None
-                    clean_parts = [] if registry is not None or self._preserve_typed_prefix else None
+                    clean_parts = (
+                        []
+                        if registry is not None
+                        or self._preserve_typed_prefix
+                        or self._correct_typed_prefix_size
+                        else None
+                    )
                     partial_typed = [] if self._preserve_typed_prefix else None
                     typed = self._typed_reverse_outcome(
                         outcome,
@@ -2158,6 +2315,7 @@ class RouteFirstSearch:
                     if typed is not None:
                         guide, changes = typed
                         quality = "typed"
+                        typed_slots = len(guide)
                     else:
                         use_prefix = (
                             bool(partial_typed)
@@ -2167,6 +2325,7 @@ class RouteFirstSearch:
                         )
                         if clean_parts is not None and not use_prefix:
                             clean_parts.clear()
+                        typed_slots = len(partial_typed) if use_prefix else 0
                         # A reverse guide is a search hint. Keep the old safe
                         # approximation when exact role reconstruction fails.
                         # This never bypasses the parent-origin partition check.
@@ -2210,6 +2369,22 @@ class RouteFirstSearch:
                             self.report["reverse_failures"] += 1
                             continue
                     guides.append(guide)
+                    if self._correct_typed_prefix_size and record_centers:
+                        if guide not in representative_counts and guide not in representative_unknown:
+                            if (
+                                self.report["representative_origin_guide_entries"]
+                                >= MAX_REPRESENTATIVE_ORIGIN_GUIDES
+                            ):
+                                representative_unknown[guide] = "guide_entry_limit"
+                            else:
+                                self.report["representative_origin_guide_entries"] += 1
+                        if guide not in representative_unknown:
+                            count, reason = self._representative_origin_count(
+                                outcome, clean_parts, typed_slots, parent.GetNumAtoms()
+                            )
+                            self._merge_representative_origin(
+                                representative_counts, representative_unknown, guide, count, reason
+                            )
                     if registry is not None:
                         try:
                             self._capture_continuation_raw(registry, guide, outcome, clean_parts)
@@ -2271,6 +2446,15 @@ class RouteFirstSearch:
                     sorted(centers[guide], key=lambda value: (value is None, value or ()))
                 )
             self.report["reverse_hint_quality_counts"][quality] += 1
+            if self._correct_typed_prefix_size and record_centers:
+                guide_key = (rule.id, target, guide)
+                if guide in representative_counts and guide not in representative_unknown:
+                    self._guide_representative_heavy[guide_key] = representative_counts[guide]
+                    self.report["representative_origin_known_guides"] += 1
+                else:
+                    reason = representative_unknown.get(guide, "no_raw_origin")
+                    reasons = self.report["representative_origin_legacy_reasons"]
+                    reasons[reason] = reasons.get(reason, 0) + 1
         self._reverse_cache[key] = guides
         if registry is not None:
             self._continuation_raw[key] = registry
@@ -2312,6 +2496,20 @@ class RouteFirstSearch:
             result = target
         self._retrieval_target_cache[target] = result
         return result
+
+    def _outer_size_delta(self, rule, guide, normalized, artifacts):
+        normalized_heavy = sum(molecule(part).GetNumHeavyAtoms() for part in normalized)
+        representative_count = (
+            self._guide_representative_heavy.get((rule.id, self.hit, guide))
+            if self._correct_typed_prefix_size and not artifacts
+            else None
+        )
+        if representative_count:
+            self.report["representative_origin_score_corrections"] += 1
+        elif self._correct_typed_prefix_size and artifacts:
+            reasons = self.report["representative_origin_legacy_reasons"]
+            reasons["retrieval_target_changed"] = reasons.get("retrieval_target_changed", 0) + 1
+        return abs(normalized_heavy - (representative_count or 0) - self.hit_mol.GetNumHeavyAtoms())
 
     def _guide_anchors(self, target):
         if target in self._guide_anchor_cache:
@@ -2973,10 +3171,7 @@ class RouteFirstSearch:
                     break
                 normalized = tuple(self._retrieval_target(part) for part in guide)
                 artifacts = sum(a != b for a, b in zip(guide, normalized))
-                size_delta = abs(
-                    sum(molecule(part).GetNumHeavyAtoms() for part in normalized)
-                    - self.hit_mol.GetNumHeavyAtoms()
-                )
+                size_delta = self._outer_size_delta(rule, guide, normalized, artifacts)
                 centers = self._guide_centers[(rule.id, self.hit, guide)]
                 proven = tuple(center for center in centers if center)
                 if proven:
