@@ -1,0 +1,3705 @@
+{
+  "schema": "synthesis-route-pre-evidence-v15",
+  "date": "2026-10-24",
+  "status": "complete_rejected_runtime_reverted",
+  "evaluated_runtime_commit": "8bb5104f82b8c8800dc3dd44074feb1f88a83f62",
+  "artifacts": {
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v15/plan.json": "605e609ce9c117a28924efff4f7ff7be45ddc1fedafb5802c34ed7593737ddbf",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v15/probe.py": "1f7a564666026c7f11bda94117b0fd39033c0fff82e1c2da20d5d7237ce05dc9",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v15/analyze.py": "8f2a518cce9ce290d8930e9aa9794f61744c3da782606e5041b42306561888ef",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v15/result.json": "cca900b37fa450446966ec03d86c97ff11e226494640325e1114f63ebf242177",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v15/analysis.json": "e5daf95792467da7ce671d4fe05b3a9c9ec2afe9627dbd6aeb6f212926fbd48a",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v15/run.log": "13a96ab5bd7163df9871847144dacbdd442bc04adb13b19632856911c91d74dd"
+  },
+  "saved_forward_status_join_artifact": {
+    "benchmark-results/route-first-development-20261023-v2/reactive-site-diagnostic-v2/result.json": "35ccdaa4779cb3925b370cb454a5aacbc9b4a80cdac72e5e08f0da030bf29395"
+  },
+  "summary": {
+    "v14": {
+      "covered_inputs": 6,
+      "unique_input_product_pairs": 56,
+      "routes": 59,
+      "one_step_routes": 24,
+      "two_step_routes": 35,
+      "generation_seconds_sum_excluding_catalog": 549.498,
+      "generation_seconds_median_excluding_catalog": 44.207,
+      "first_failure_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 6,
+        "Chemical-family tautomer enumeration incomplete: MaxTransformsReached": 2,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 284,
+        "hit_tanimoto": 52,
+        "polar_reference_capacity_below_minimum": 125,
+        "property: logp.upper_maximum:5.254800000000005>5": 1,
+        "property: logp.upper_maximum:5.2756200000000035>5": 2,
+        "property: logp.upper_maximum:5.2943200000000035>5": 1,
+        "property: logp.upper_maximum:5.294320000000004>5": 1,
+        "property: logp.upper_maximum:5.511220000000003>5": 1,
+        "property: logp.upper_maximum:5.511220000000004>5": 1,
+        "property: logp.upper_maximum:5.665720000000004>5": 2,
+        "property: logp.upper_maximum:5.684420000000004>5": 1,
+        "property: logp.upper_maximum:5.684420000000005>5": 1,
+        "property: mw.upper_maximum:511.6380000000003>500.0; logp.upper_maximum:5.063700000000005>5": 1,
+        "property: mw.upper_maximum:518.0210000000002>500.0": 2,
+        "property: mw.upper_maximum:529.6370000000003>500.0": 1,
+        "property: mw.upper_maximum:531.6530000000004>500.0": 1,
+        "property: mw.upper_maximum:579.7050000000002>500.0": 1,
+        "property: mw.upper_maximum:593.7320000000002>500.0": 1
+      },
+      "limits_reached_input_counts": {
+        "depth_one_fingerprint_budget": 6,
+        "generation_fingerprint_budget": 1,
+        "max_catalog_row_visits": 10,
+        "max_outer_guides": 11,
+        "max_rule_inspections": 12
+      }
+    },
+    "v15": {
+      "covered_inputs": 6,
+      "unique_input_product_pairs": 33,
+      "routes": 33,
+      "one_step_routes": 24,
+      "two_step_routes": 9,
+      "generation_seconds_sum_excluding_catalog": 534.853,
+      "generation_seconds_median_excluding_catalog": 43.374,
+      "first_failure_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 6,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 227,
+        "hit_tanimoto": 43,
+        "polar_reference_capacity_below_minimum": 130,
+        "property: logp.upper_maximum:5.139220000000005>5": 1,
+        "property: logp.upper_maximum:5.207800000000004>5": 1,
+        "property: logp.upper_maximum:5.254800000000005>5": 1,
+        "property: logp.upper_maximum:5.484900000000004>5": 2,
+        "property: logp.upper_maximum:5.529320000000006>5": 1,
+        "property: mw.upper_maximum:518.0210000000002>500.0": 2,
+        "property: mw.upper_maximum:529.6370000000003>500.0": 1,
+        "property: mw.upper_maximum:531.6530000000004>500.0": 1,
+        "property: mw.upper_maximum:579.7050000000002>500.0": 1,
+        "property: mw.upper_maximum:590.7210000000002>500.0": 1,
+        "property: mw.upper_maximum:593.7320000000002>500.0": 1,
+        "property: mw.upper_maximum:595.1400000000002>500.0; logp.upper_maximum:5.271900000000004>5": 1,
+        "property: mw.upper_maximum:646.7850000000003>500.0; logp.upper_maximum:5.005000000000005>5": 1,
+        "property: mw.upper_maximum:651.2040000000003>500.0; logp.upper_maximum:5.649800000000006>5": 1
+      },
+      "limits_reached_input_counts": {
+        "depth_one_fingerprint_budget": 6,
+        "generation_fingerprint_budget": 1,
+        "max_catalog_row_visits": 10,
+        "max_outer_guides": 11,
+        "max_rule_inspections": 12
+      },
+      "phase2_rule_preparation_numeric_totals": {
+        "phase2_rule_preparation_size_units": 5216,
+        "phase2_rule_preparation_unique_targets": 154,
+        "phase2_rule_preparation_slot_occurrences": 190,
+        "phase2_rule_preparation_aliased_occurrences": 36,
+        "phase2_rule_preparation_rule_inspections": 4272
+      },
+      "phase2_rule_preparation_fallback_reason_totals": {}
+    }
+  },
+  "per_input": [
+    {
+      "id": "CHEMBL4630839-query-1",
+      "v14_products": 32,
+      "v15_products": 20,
+      "unchanged_products": [
+        "CN(C)c1cc(C(=O)NCC2CC2)nc2ccccc12",
+        "CN(C)c1cc(C(=O)NCC2CCC2)nc2ccccc12",
+        "CN(CCCc1ccccc1)c1ccc(C(=O)NCC2CC2)nn1",
+        "CN(CCCc1ccccc1)c1ccc(C(=O)NCC2CCC2)nn1",
+        "CN(CCc1ccccc1)c1ccc(C(=O)NCC2CC2)nn1",
+        "CN(CCc1ccccc1)c1ccc(C(=O)NCC2CCC2)nn1",
+        "CN1CCN(c2ccc(C(=O)NCC3CC3)nn2)CC1",
+        "CN1CCN(c2ccc(C(=O)NCC3CCC3)nn2)CC1",
+        "COC(=O)Cc1cc(N2CCCCCCCC2)nc2ccccc12",
+        "COC(=O)Cc1cc(N2CCCCCCCCCC2)nc2ccccc12",
+        "Cc1cc(C(=O)O)nc(N(C)CCc2ccc(CC=O)cc2)n1",
+        "Cc1cc(C(=O)O)nc(N(C)CCc2ccccc2)n1",
+        "Cn1cc(NCCc2ccccc2)c(C(=O)NCC2CC2)n1",
+        "O=C(NCC1CCCC1)c1ccc(N2CCCCCCCC2)nn1",
+        "O=C(NCC1CCCC1)c1ccc(N2CCCCCCCCCC2)nn1"
+      ],
+      "gained_products": [
+        "C=C1CCC(N(CCc2ccccc2)c2ncc(Cl)c(C(=O)NCC3CC3)n2)CC1",
+        "C=CCCCN(CCc1ccccc1)c1nc(C)c(C(=O)NCC2CC2)s1",
+        "C=CCCCN(CCc1ccccc1)c1nc(C)c(C(=O)NCC2CCC2)s1",
+        "C=CCCCN(CCc1ccccc1)c1ncc(Cl)c(C(=O)NCC2CC2)n1",
+        "C=CCCCN(CCc1ccccc1)c1ncc(Cl)c(C(=O)NCC2CCC2)n1"
+      ],
+      "lost_products": [
+        "C#Cc1cccc(-c2cnc(N3CCCCC3)nc2C(=O)NCC2CC2)c1",
+        "CCCCN(C)c1ncc(-c2ccc(C)cc2)c(C(=O)NCC2CC2)n1",
+        "CCCCN(C)c1ncc(-c2ccc(C)cc2)c(C(=O)NCC2CCC2)n1",
+        "CCCCN(C)c1ncc(-c2ccccc2)c(C(=O)NCC2CC2)n1",
+        "CCCCN(C)c1ncc(-c2ccccc2)c(C(=O)NCC2CCC2)n1",
+        "COc1cc(C(=O)NCC2CC2)nc(N(C)CCCc2ccccc2)n1",
+        "COc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+        "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCCc2ccccc2)n1",
+        "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1",
+        "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCCc2ccccc2)n1",
+        "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+        "CSc1cc(C(=O)NCC2CCC2)nc(N(C)CCCc2ccccc2)n1",
+        "CSc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1",
+        "Cc1ccc(-c2cnc(N3CCCCC3)nc2C(=O)NCC2CC2)cc1",
+        "Cc1ccc(-c2cnc(N3CCCCC3)nc2C(=O)NCC2CCC2)cc1",
+        "O=C(NCC1CC1)c1nc(N2CCCCC2)ncc1-c1ccccc1",
+        "O=C(NCC1CCC1)c1nc(N2CCCCC2)ncc1-c1ccccc1"
+      ],
+      "v14_routes": 32,
+      "v15_routes": 20,
+      "unchanged_route_graph_sha256": [
+        "009d93edd004c9027d68d807ed80e00957bbf665eeba9ca218926658b102549f",
+        "0b0018f07bfe15c30f7c5612fda6fbb614ee31ba25dc1f67eb5fdad78668b1da",
+        "0b4a75d2b3f08dd8c2b000d55b4312e34f53700eb4cc9844ef28322642e4fd5b",
+        "10129ede6da3da47f50c1ac3b52ece670fbae087e4686056f7647a9318aa69ad",
+        "2e0cdfc1a06b071e0ec492bfed2e9e90061008dff37c80918961ca2303766897",
+        "369d644a5ff40a3a4ab7f3fd1335a752c7260c3e84cf5615a7b776b2f2b60c3d",
+        "39f691c3c71b150b246ae5254cf32b11f67228a85cf518fb80273c0b745462ae",
+        "4f126593da9c9cd11b0cb3cd35d8c33e1d1e064ecab274b0115cc241ad594432",
+        "56ff44bc5818bf7dc0b603498b433ad0ecc1e7c78cdb49d49da196d46c95632c",
+        "60d2823eb7465a97d859fe39a20b36a97d203bb50713fc6a267fc92391766b35",
+        "6b67f023499d85d5c1ca4e7a8c512001e1349b2fb5f499fff17121f625c937ab",
+        "712a008eec6685d3b1cfefab59ddf171e9a449451d5b71188a0158310483b9f5",
+        "b634fa1db974729937692cae7c08b5f7d3a2206e118389494d943578450ce6ad",
+        "c179a8c5ebb4f2e085757cfd9152876f49556176f93a5b8e323539178350b4fa",
+        "dd41c6ccc7dfdc8ad2d327850f55651f97672cad8db8417a7cd09e172a4dd567"
+      ],
+      "gained_route_graph_sha256": [
+        "012cc62b991ac64785d26e776c1cd850f9be980bd1fd51b15458ff405d0a6db2",
+        "0f4ff7352125e58bb150640a76626d0b9ee8eb37d7c30047c957d6c6634e2a14",
+        "71ea2cd3707fdf76a7ba2e9a4a024ec4dc4eee53c5cc95f140a3fdedaa909123",
+        "870fa9280727c62f51441ee0b8073937453f8c345ddee6988b2bd3b7a7bac033",
+        "d23a060c7d5c57ca38f373e09462e0efd9e0ebd359bae6e29e4b5eff3f7903a8"
+      ],
+      "lost_route_graph_sha256": [
+        "205c667b66b6d8210bf2a3b9a127cad551e484fe00b65029983b1b02ad8a4207",
+        "213ad0bd03091b50b00bfc9a614577e90710086a87603cbd91a2a3da497afb98",
+        "24a5b4eb90eccd6a600e081dac6b9070dcd30e495209a143f1c2550d185fdf14",
+        "24cdd5261cfe1b9d9c89bfec8046b16868f53c8a7d39038c63bac3e5cd261571",
+        "2d68c6feb8142ceb73d4e3ca803cbf3e8f42f5f07d8981beb51d27d8e343763f",
+        "368ad9fd2fab8cfcb118d69cef18504ea610eaee5bc150dc3701abd30a55994c",
+        "38e727e5eedf00d2a3576518d1f39f966e67a7c65033c3f2ea4aed673281e0f2",
+        "43e6b44054c69dfca05afa525a794e739078d4122b8fe843f9e9651d37a2d83f",
+        "485fca893824a336e2df794554023c4c7bf189f6b910a38a4f6aa69f21fe8a51",
+        "4f1f97c2c9695536a59f8c682a9fade9f3ac0d489bf9406dda3a895ec105be31",
+        "5b291bdd81df5cc033fc9b9e18c22751aaef9948d51c9766ac4339ac2c74b33f",
+        "637e0f81210db157dcb619232ae4737e270a00cf321e456a0e547b0d751d1d51",
+        "7640d09ab652178e9901999a40c02507eb941e9dd8ab120e028a7580482822a2",
+        "8230e966a65a394178c59c14dea222042c425767b33beeb4a7bc45ecda5a20cf",
+        "864ed3d3b80592896fc8b0f4257581a275ddc4251913ce7108258e7ad73b247f",
+        "bbeb42abd74d14e63437a19a2e9965c861fb0b4240ec671f5aafbc94bb499b39",
+        "f5c5610341acf478328ab9204dad388d8998244abcca7fb0a1d7e8e4b30b3b7e"
+      ],
+      "v14_one_step_routes": 15,
+      "v15_one_step_routes": 15,
+      "v14_two_step_routes": 17,
+      "v15_two_step_routes": 5,
+      "inner_rule_preparation_work": {
+        "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+        "phase2_rule_preparation_limits": {
+          "unique_targets": 16,
+          "slot_occurrences": 16,
+          "target_atoms": 256,
+          "target_characters": 4096,
+          "size_units": 8192
+        },
+        "phase2_rule_preparation_applied": true,
+        "phase2_rule_preparation_fallback_reason": null,
+        "phase2_rule_preparation_size_units": 464,
+        "phase2_rule_preparation_unique_targets": 16,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 0,
+        "phase2_rule_preparation_group_collection_complete": true,
+        "phase2_rule_preparation_rule_inspections": 356,
+        "phase2_rule_preparation_target_summary": [
+          {
+            "target": "O=C(NCC1CC1)c1cc(N2CCCC2)nc(NCCc2ccccc2)n1",
+            "priority_rank": 0,
+            "heavy_atoms": 27,
+            "atom_count": 27,
+            "first_plan_slot": [
+              6,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CN(CCc1ccccc1)c1nc(C(=O)O)cc(N2CCCC2)n1",
+            "priority_rank": 1,
+            "heavy_atoms": 24,
+            "atom_count": 24,
+            "first_plan_slot": [
+              0,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-030",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CN(CCc1ccccc1)c1nc(Cl)cc(C(=O)NCC2CC2)n1",
+            "priority_rank": 2,
+            "heavy_atoms": 24,
+            "atom_count": 24,
+            "first_plan_slot": [
+              1,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CN(CCc1ccccc1)c1nc(C(N)=O)cc(N2CCCC2)n1",
+            "priority_rank": 3,
+            "heavy_atoms": 24,
+            "atom_count": 24,
+            "first_plan_slot": [
+              7,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CN(CCBr)c1nc(C(=O)NCC2CC2)cc(N2CCCC2)n1",
+            "priority_rank": 4,
+            "heavy_atoms": 23,
+            "atom_count": 23,
+            "first_plan_slot": [
+              4,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CN(CCc1ccccc1)c1nccc(N2CCCC2)n1",
+            "priority_rank": 5,
+            "heavy_atoms": 21,
+            "atom_count": 21,
+            "first_plan_slot": [
+              5,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 52,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031",
+              "synllama-rule-036"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CNc1nc(C(=O)NCC2CC2)cc(N2CCCC2)n1",
+            "priority_rank": 6,
+            "heavy_atoms": 20,
+            "atom_count": 20,
+            "first_plan_slot": [
+              3,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 49,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-027",
+              "synllama-rule-029"
+            ],
+            "status": "partial"
+          },
+          {
+            "target": "O=C(NCC1CC1)c1cc(N2CCCC2)nc(Cl)n1",
+            "priority_rank": 7,
+            "heavy_atoms": 19,
+            "atom_count": 19,
+            "first_plan_slot": [
+              2,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "CNCCc1ccccc1",
+            "priority_rank": 8,
+            "heavy_atoms": 10,
+            "atom_count": 10,
+            "first_plan_slot": [
+              2,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=CCc1ccccc1",
+            "priority_rank": 9,
+            "heavy_atoms": 9,
+            "atom_count": 9,
+            "first_plan_slot": [
+              3,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "Brc1ccccc1",
+            "priority_rank": 10,
+            "heavy_atoms": 7,
+            "atom_count": 7,
+            "first_plan_slot": [
+              4,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=CNCC1CC1",
+            "priority_rank": 11,
+            "heavy_atoms": 7,
+            "atom_count": 7,
+            "first_plan_slot": [
+              5,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "NCC1CC1",
+            "priority_rank": 12,
+            "heavy_atoms": 5,
+            "atom_count": 5,
+            "first_plan_slot": [
+              0,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "C1CCNC1",
+            "priority_rank": 13,
+            "heavy_atoms": 5,
+            "atom_count": 5,
+            "first_plan_slot": [
+              1,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=CC1CC1",
+            "priority_rank": 14,
+            "heavy_atoms": 5,
+            "atom_count": 5,
+            "first_plan_slot": [
+              7,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "C=O",
+            "priority_rank": 15,
+            "heavy_atoms": 2,
+            "atom_count": 2,
+            "first_plan_slot": [
+              6,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          }
+        ]
+      },
+      "base_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_perceptions": 63,
+        "catalog_stereo_atom_bond_charges": 1535,
+        "total_fingerprint_calls": 39909,
+        "rule_inspections": 512,
+        "reverse_role_work": 242,
+        "topology_match_requests": 27,
+        "topology_spec_graph_visits": 3477,
+        "combinations": 92,
+        "products_generated": 92,
+        "route_audit_attempts": 20,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_window_match_requests": 93,
+        "reaction_pool_site_match_requests": 261,
+        "reaction_pool_query_pairs": 93,
+        "reaction_pool_graph_visits": 17741,
+        "fallback_hit_second_tanimotos": 0,
+        "phase2_rule_preparation_size_units": 464,
+        "phase2_rule_preparation_unique_targets": 16,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 0,
+        "phase2_rule_preparation_rule_inspections": 356
+      }
+    },
+    {
+      "id": "CHEMBL4630839-query-2",
+      "v14_products": 1,
+      "v15_products": 1,
+      "unchanged_products": [
+        "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6CC6)nn5)C4)cc3)nc12"
+      ],
+      "gained_products": [],
+      "lost_products": [],
+      "v14_routes": 1,
+      "v15_routes": 1,
+      "unchanged_route_graph_sha256": [
+        "c538f9275c07126ee68bfcac61f77db6342697746cfa62468fb13df1b4334670"
+      ],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "v14_one_step_routes": 1,
+      "v15_one_step_routes": 1,
+      "v14_two_step_routes": 0,
+      "v15_two_step_routes": 0,
+      "inner_rule_preparation_work": {
+        "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+        "phase2_rule_preparation_limits": {
+          "unique_targets": 16,
+          "slot_occurrences": 16,
+          "target_atoms": 256,
+          "target_characters": 4096,
+          "size_units": 8192
+        },
+        "phase2_rule_preparation_applied": true,
+        "phase2_rule_preparation_fallback_reason": null,
+        "phase2_rule_preparation_size_units": 478,
+        "phase2_rule_preparation_unique_targets": 14,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 2,
+        "phase2_rule_preparation_group_collection_complete": true,
+        "phase2_rule_preparation_rule_inspections": 356,
+        "phase2_rule_preparation_target_summary": [
+          {
+            "target": "O=C(N[C]B(O)O)c1cc(N2CCOCC2)nc(N2CCC[C@@H](c3ccccc3)C2)n1",
+            "priority_rank": 0,
+            "heavy_atoms": 31,
+            "atom_count": 31,
+            "first_plan_slot": [
+              5,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C(O)c1cc(N2CCOCC2)nc(N2CCC[C@@H](c3ccccc3)C2)n1",
+            "priority_rank": 1,
+            "heavy_atoms": 27,
+            "atom_count": 27,
+            "first_plan_slot": [
+              0,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 55,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-030",
+              "synllama-rule-036",
+              "synllama-rule-042"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "NC(=O)c1cc(N2CCOCC2)nc(N2CCC[C@@H](c3ccccc3)C2)n1",
+            "priority_rank": 2,
+            "heavy_atoms": 27,
+            "atom_count": 27,
+            "first_plan_slot": [
+              4,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C(NCC1CC1)c1cc(Cl)nc(N2CCC[C@@H](c3ccccc3)C2)n1",
+            "priority_rank": 3,
+            "heavy_atoms": 26,
+            "atom_count": 26,
+            "first_plan_slot": [
+              1,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C(NCC1CC1)c1cc(F)nc(N2CCC[C@@H](c3ccccc3)C2)n1",
+            "priority_rank": 4,
+            "heavy_atoms": 26,
+            "atom_count": 26,
+            "first_plan_slot": [
+              6,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "c1ccc([C@@H]2CCCN(c3nccc(N4CCOCC4)n3)C2)cc1",
+            "priority_rank": 5,
+            "heavy_atoms": 24,
+            "atom_count": 24,
+            "first_plan_slot": [
+              3,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 57,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-036",
+              "synllama-rule-042",
+              "synllama-rule-045"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C(NCC1CC1)c1cc(N2CCOCC2)nc(Cl)n1",
+            "priority_rank": 6,
+            "heavy_atoms": 20,
+            "atom_count": 20,
+            "first_plan_slot": [
+              2,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 40,
+            "selected_rule_ids": [],
+            "status": "partial"
+          },
+          {
+            "target": "O=C(NCC1CC1)c1cc(N2CCOCC2)nc(F)n1",
+            "priority_rank": 7,
+            "heavy_atoms": 20,
+            "atom_count": 20,
+            "first_plan_slot": [
+              7,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "c1ccc([C@@H]2CCCNC2)cc1",
+            "priority_rank": 8,
+            "heavy_atoms": 12,
+            "atom_count": 12,
+            "first_plan_slot": [
+              2,
+              1
+            ],
+            "references": 2,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=CNCC1CC1",
+            "priority_rank": 9,
+            "heavy_atoms": 7,
+            "atom_count": 7,
+            "first_plan_slot": [
+              3,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "C1COCCN1",
+            "priority_rank": 10,
+            "heavy_atoms": 6,
+            "atom_count": 6,
+            "first_plan_slot": [
+              1,
+              1
+            ],
+            "references": 2,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "NCC1CC1",
+            "priority_rank": 11,
+            "heavy_atoms": 5,
+            "atom_count": 5,
+            "first_plan_slot": [
+              0,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=CC1CC1",
+            "priority_rank": 12,
+            "heavy_atoms": 5,
+            "atom_count": 5,
+            "first_plan_slot": [
+              4,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "[C]1CC1",
+            "priority_rank": 13,
+            "heavy_atoms": 3,
+            "atom_count": 3,
+            "first_plan_slot": [
+              5,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          }
+        ]
+      },
+      "base_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_perceptions": 63,
+        "catalog_stereo_atom_bond_charges": 1785,
+        "total_fingerprint_calls": 53392,
+        "rule_inspections": 512,
+        "reverse_role_work": 220,
+        "topology_match_requests": 38,
+        "topology_spec_graph_visits": 12770,
+        "combinations": 82,
+        "products_generated": 86,
+        "route_audit_attempts": 1,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_window_match_requests": 55,
+        "reaction_pool_site_match_requests": 141,
+        "reaction_pool_query_pairs": 55,
+        "reaction_pool_graph_visits": 11734,
+        "fallback_hit_second_tanimotos": 0,
+        "phase2_rule_preparation_size_units": 478,
+        "phase2_rule_preparation_unique_targets": 14,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 2,
+        "phase2_rule_preparation_rule_inspections": 356
+      }
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "v14_products": 11,
+      "v15_products": 2,
+      "unchanged_products": [
+        "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(CN)c3)C2)n1",
+        "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1"
+      ],
+      "gained_products": [],
+      "lost_products": [
+        "CC(C)(C)OC(=O)Nc1nccc(NCc2cccc(CNC(=O)[C@H]3CCCNC3)c2)n1",
+        "COc1cc(Nc2ccnc(C)n2)cc(N2CCC[C@H](CN3CCOCC3)C2)c1OC",
+        "COc1cc(Nc2ccnc(Cl)n2)cc(N2CCC[C@H](CN3CCOCC3)C2)c1OC",
+        "COc1cc(Nc2ccnc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+        "COc1cc(Nc2ccnc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+        "COc1cc(Nc2nccc(Cl)n2)cc(N2CCC[C@H](CN3CCOCC3)C2)c1OC",
+        "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(C=O)c1OC",
+        "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+        "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC"
+      ],
+      "v14_routes": 14,
+      "v15_routes": 2,
+      "unchanged_route_graph_sha256": [
+        "67888699e48ec30d7ddae382f3fd4c42055501652843ccb80d3879277d94e005",
+        "82cc9e1f7dd6a5f5dadf857be368c20bf83887e0de49a10d5a3cf40664d4023e"
+      ],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [
+        "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+        "1dd42d6994e2f6d5d30bd77e6b4d701b05dab24bc6776fb3e40e59a6993545db",
+        "34459edc5c5412fab62319ba45202405b10daa83b84255063d5275f4029b6a41",
+        "3cbf9cbb9ca08f7484ec54accfe18391ff9689023e81047ccb36046dfe4ee5ca",
+        "50e1848a9af20738013eeb4eedd83358d6701921bc843203011a73f5e64304d0",
+        "5a730f3a3df5597633758060407451000911454ca2c61390c5a4d04ba55fe205",
+        "6bcc442dbec74b47433825dc90d0d4996d0af752e90a03b3db93a55eab041445",
+        "7c911ccd658ab09ea97bf58fe9613753eefb4691d12e3260fa44a3c73cda55aa",
+        "7de72d66b33ea12132e75db240d4a28ff7fb1d3c80ed936351c62b3783c93722",
+        "a4da25cc361d0730dd91c43ad409dff38e27a89ea11e2f07b2963d53dd0136d1",
+        "a736ce772b8a9aea14a403451a1941eaf3858a64553488b135803adf917acd48",
+        "b0a95c717b367c3615d10062d43ab3bcb5a9f01071ab00d100ca3637a7caa69f"
+      ],
+      "v14_one_step_routes": 0,
+      "v15_one_step_routes": 0,
+      "v14_two_step_routes": 14,
+      "v15_two_step_routes": 2,
+      "inner_rule_preparation_work": {
+        "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+        "phase2_rule_preparation_limits": {
+          "unique_targets": 16,
+          "slot_occurrences": 16,
+          "target_atoms": 256,
+          "target_characters": 4096,
+          "size_units": 8192
+        },
+        "phase2_rule_preparation_applied": true,
+        "phase2_rule_preparation_fallback_reason": null,
+        "phase2_rule_preparation_size_units": 670,
+        "phase2_rule_preparation_unique_targets": 16,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 0,
+        "phase2_rule_preparation_group_collection_complete": true,
+        "phase2_rule_preparation_rule_inspections": 356,
+        "phase2_rule_preparation_target_summary": [
+          {
+            "target": "COc1cc(Nc2nccc(N3CCC[C@H](C(=O)NCc4cccc(N5CCOCC5)c4)C3)n2)cc(O)c1OC",
+            "priority_rank": 0,
+            "heavy_atoms": 40,
+            "atom_count": 40,
+            "first_plan_slot": [
+              7,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 49,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-080",
+              "synllama-rule-027",
+              "synllama-rule-029"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "COc1cc(Nc2nccc(N3CCC[C@H](C(=O)NCc4cccc(Cl)c4)C3)n2)cc(OC)c1OC",
+            "priority_rank": 1,
+            "heavy_atoms": 36,
+            "atom_count": 36,
+            "first_plan_slot": [
+              3,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 49,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-080",
+              "synllama-rule-027",
+              "synllama-rule-029"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+            "priority_rank": 2,
+            "heavy_atoms": 29,
+            "atom_count": 29,
+            "first_plan_slot": [
+              1,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 49,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-080",
+              "synllama-rule-027",
+              "synllama-rule-029"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCN(c2ccnc(Cl)n2)C1",
+            "priority_rank": 3,
+            "heavy_atoms": 29,
+            "atom_count": 29,
+            "first_plan_slot": [
+              4,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 49,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-080",
+              "synllama-rule-027",
+              "synllama-rule-029"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CNC(=O)[C@H]1CCCN(c2ccnc(Nc3cc(OC)c(OC)c(OC)c3)n2)C1",
+            "priority_rank": 4,
+            "heavy_atoms": 29,
+            "atom_count": 29,
+            "first_plan_slot": [
+              6,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 49,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-080",
+              "synllama-rule-027",
+              "synllama-rule-029"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "COc1cc(Nc2nccc(N3CCC[C@H](C(=O)O)C3)n2)cc(OC)c1OC",
+            "priority_rank": 5,
+            "heavy_atoms": 28,
+            "atom_count": 28,
+            "first_plan_slot": [
+              0,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 55,
+            "selected_rule_ids": [
+              "synllama-rule-080",
+              "synllama-rule-027",
+              "synllama-rule-030",
+              "synllama-rule-042"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "COc1cc(Nc2nccc(N3CCC[C@H](I)C3)n2)cc(OC)c1OC",
+            "priority_rank": 6,
+            "heavy_atoms": 26,
+            "atom_count": 26,
+            "first_plan_slot": [
+              5,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 56,
+            "selected_rule_ids": [
+              "synllama-rule-030",
+              "synllama-rule-042"
+            ],
+            "status": "partial"
+          },
+          {
+            "target": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+            "priority_rank": 7,
+            "heavy_atoms": 22,
+            "atom_count": 22,
+            "first_plan_slot": [
+              2,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "priority_rank": 8,
+            "heavy_atoms": 20,
+            "atom_count": 20,
+            "first_plan_slot": [
+              2,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=CNCc1cccc(N2CCOCC2)c1",
+            "priority_rank": 9,
+            "heavy_atoms": 16,
+            "atom_count": 16,
+            "first_plan_slot": [
+              5,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "NCc1cccc(N2CCOCC2)c1",
+            "priority_rank": 10,
+            "heavy_atoms": 14,
+            "atom_count": 14,
+            "first_plan_slot": [
+              0,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "COc1cc(Cl)cc(OC)c1OC",
+            "priority_rank": 11,
+            "heavy_atoms": 13,
+            "atom_count": 13,
+            "first_plan_slot": [
+              1,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "COc1cc(N)cc(OC)c1OC",
+            "priority_rank": 12,
+            "heavy_atoms": 13,
+            "atom_count": 13,
+            "first_plan_slot": [
+              4,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "c1ccc(N2CCOCC2)cc1",
+            "priority_rank": 13,
+            "heavy_atoms": 12,
+            "atom_count": 12,
+            "first_plan_slot": [
+              6,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "C1COCCN1",
+            "priority_rank": 14,
+            "heavy_atoms": 6,
+            "atom_count": 6,
+            "first_plan_slot": [
+              3,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "[CH]O",
+            "priority_rank": 15,
+            "heavy_atoms": 2,
+            "atom_count": 2,
+            "first_plan_slot": [
+              7,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          }
+        ]
+      },
+      "base_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 256230,
+        "catalog_stereo_perceptions": 91,
+        "catalog_stereo_atom_bond_charges": 2698,
+        "total_fingerprint_calls": 63533,
+        "rule_inspections": 512,
+        "reverse_role_work": 301,
+        "topology_match_requests": 45,
+        "topology_spec_graph_visits": 30626,
+        "combinations": 102,
+        "products_generated": 108,
+        "route_audit_attempts": 2,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_window_match_requests": 29,
+        "reaction_pool_site_match_requests": 54,
+        "reaction_pool_query_pairs": 29,
+        "reaction_pool_graph_visits": 6928,
+        "fallback_hit_second_tanimotos": 0,
+        "phase2_rule_preparation_size_units": 670,
+        "phase2_rule_preparation_unique_targets": 16,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 0,
+        "phase2_rule_preparation_rule_inspections": 356
+      }
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "v14_products": 4,
+      "v15_products": 2,
+      "unchanged_products": [
+        "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+        "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12"
+      ],
+      "gained_products": [],
+      "lost_products": [
+        "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+        "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1"
+      ],
+      "v14_routes": 4,
+      "v15_routes": 2,
+      "unchanged_route_graph_sha256": [
+        "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+        "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc"
+      ],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [
+        "9883b82f2c704b8ddb3966b89e1d53c202eed3177667bd0ee56f35cfeeb63dee",
+        "a0e584eba8504779abfa2c34df1d4ed2f4f9180236103284c1125679c9022519"
+      ],
+      "v14_one_step_routes": 0,
+      "v15_one_step_routes": 0,
+      "v14_two_step_routes": 4,
+      "v15_two_step_routes": 2,
+      "inner_rule_preparation_work": {
+        "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+        "phase2_rule_preparation_limits": {
+          "unique_targets": 16,
+          "slot_occurrences": 16,
+          "target_atoms": 256,
+          "target_characters": 4096,
+          "size_units": 8192
+        },
+        "phase2_rule_preparation_applied": true,
+        "phase2_rule_preparation_fallback_reason": null,
+        "phase2_rule_preparation_size_units": 674,
+        "phase2_rule_preparation_unique_targets": 16,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 0,
+        "phase2_rule_preparation_group_collection_complete": true,
+        "phase2_rule_preparation_rule_inspections": 356,
+        "phase2_rule_preparation_target_summary": [
+          {
+            "target": "COc1cc(C2CCN(CC=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+            "priority_rank": 0,
+            "heavy_atoms": 40,
+            "atom_count": 40,
+            "first_plan_slot": [
+              4,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 50,
+            "selected_rule_ids": [
+              "synllama-rule-080",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-030"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2ccc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+            "priority_rank": 1,
+            "heavy_atoms": 40,
+            "atom_count": 40,
+            "first_plan_slot": [
+              6,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 49,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-080",
+              "synllama-rule-027",
+              "synllama-rule-029"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "COc1cc(C2CCN(CI)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+            "priority_rank": 2,
+            "heavy_atoms": 39,
+            "atom_count": 39,
+            "first_plan_slot": [
+              5,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-030",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(-c3ccccc3)n2n1",
+            "priority_rank": 3,
+            "heavy_atoms": 35,
+            "atom_count": 35,
+            "first_plan_slot": [
+              7,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 49,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-080",
+              "synllama-rule-027",
+              "synllama-rule-029"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "COc1cc(B(O)O)ccc1Nc1ncc2c(C)cc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+            "priority_rank": 4,
+            "heavy_atoms": 34,
+            "atom_count": 34,
+            "first_plan_slot": [
+              3,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-030",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(Cl)n2n1",
+            "priority_rank": 5,
+            "heavy_atoms": 30,
+            "atom_count": 30,
+            "first_plan_slot": [
+              2,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 49,
+            "selected_rule_ids": [
+              "synllama-rule-077",
+              "synllama-rule-080",
+              "synllama-rule-027",
+              "synllama-rule-029"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12",
+            "priority_rank": 6,
+            "heavy_atoms": 23,
+            "atom_count": 23,
+            "first_plan_slot": [
+              0,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 52,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031",
+              "synllama-rule-036"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(Cl)ncc12",
+            "priority_rank": 7,
+            "heavy_atoms": 23,
+            "atom_count": 23,
+            "first_plan_slot": [
+              1,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 5,
+            "selected_rule_ids": [],
+            "status": "partial"
+          },
+          {
+            "target": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+            "priority_rank": 8,
+            "heavy_atoms": 19,
+            "atom_count": 19,
+            "first_plan_slot": [
+              0,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N",
+            "priority_rank": 9,
+            "heavy_atoms": 19,
+            "atom_count": 19,
+            "first_plan_slot": [
+              1,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "CN(c1ccccc1Br)S(C)(=O)=O",
+            "priority_rank": 10,
+            "heavy_atoms": 13,
+            "atom_count": 13,
+            "first_plan_slot": [
+              2,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "NC(=O)CN1CC[C](Cl)CC1",
+            "priority_rank": 11,
+            "heavy_atoms": 11,
+            "atom_count": 11,
+            "first_plan_slot": [
+              3,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "CNS(C)(=O)=O",
+            "priority_rank": 12,
+            "heavy_atoms": 6,
+            "atom_count": 6,
+            "first_plan_slot": [
+              7,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "NC=O",
+            "priority_rank": 13,
+            "heavy_atoms": 3,
+            "atom_count": 3,
+            "first_plan_slot": [
+              5,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "N",
+            "priority_rank": 14,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              4,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "C",
+            "priority_rank": 15,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              6,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          }
+        ]
+      },
+      "base_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_perceptions": 49,
+        "catalog_stereo_atom_bond_charges": 1411,
+        "total_fingerprint_calls": 52045,
+        "rule_inspections": 512,
+        "reverse_role_work": 262,
+        "topology_match_requests": 35,
+        "topology_spec_graph_visits": 16771,
+        "combinations": 80,
+        "products_generated": 84,
+        "route_audit_attempts": 2,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_window_match_requests": 80,
+        "reaction_pool_site_match_requests": 228,
+        "reaction_pool_query_pairs": 80,
+        "reaction_pool_graph_visits": 25452,
+        "fallback_hit_second_tanimotos": 0,
+        "phase2_rule_preparation_size_units": 674,
+        "phase2_rule_preparation_unique_targets": 16,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 0,
+        "phase2_rule_preparation_rule_inspections": 356
+      }
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "v14_products": 0,
+      "v15_products": 0,
+      "unchanged_products": [],
+      "gained_products": [],
+      "lost_products": [],
+      "v14_routes": 0,
+      "v15_routes": 0,
+      "unchanged_route_graph_sha256": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "v14_one_step_routes": 0,
+      "v15_one_step_routes": 0,
+      "v14_two_step_routes": 0,
+      "v15_two_step_routes": 0,
+      "inner_rule_preparation_work": {
+        "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+        "phase2_rule_preparation_limits": {
+          "unique_targets": 16,
+          "slot_occurrences": 16,
+          "target_atoms": 256,
+          "target_characters": 4096,
+          "size_units": 8192
+        },
+        "phase2_rule_preparation_applied": true,
+        "phase2_rule_preparation_fallback_reason": null,
+        "phase2_rule_preparation_size_units": 356,
+        "phase2_rule_preparation_unique_targets": 10,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 6,
+        "phase2_rule_preparation_group_collection_complete": true,
+        "phase2_rule_preparation_rule_inspections": 356,
+        "phase2_rule_preparation_target_summary": [
+          {
+            "target": "O=S(=O)(Nc1nccs1)c1ccc(S(=O)(=O)N2CC[C@H](Oc3ccccn3)C2)cc1F",
+            "priority_rank": 0,
+            "heavy_atoms": 31,
+            "atom_count": 31,
+            "first_plan_slot": [
+              1,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 55,
+            "selected_rule_ids": [
+              "synllama-rule-081",
+              "synllama-rule-030",
+              "synllama-rule-039",
+              "synllama-rule-042"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=S(=O)(Cl)c1ccc(S(=O)(=O)N2CC[C@H](Oc3ccc(C(F)(F)F)cn3)C2)cc1F",
+            "priority_rank": 1,
+            "heavy_atoms": 30,
+            "atom_count": 30,
+            "first_plan_slot": [
+              0,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 53,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-030",
+              "synllama-rule-036",
+              "synllama-rule-039"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "NS(=O)(=O)c1ccc(S(=O)(=O)N2CC[C@H](Oc3ccc(C(F)(F)F)cn3)C2)cc1F",
+            "priority_rank": 2,
+            "heavy_atoms": 30,
+            "atom_count": 30,
+            "first_plan_slot": [
+              2,
+              1
+            ],
+            "references": 4,
+            "rule_inspections": 53,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-030",
+              "synllama-rule-036",
+              "synllama-rule-039"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=S(=O)(Nc1nccs1)c1ccc(S(=O)(=O)N2CC[C@H](O)C2)cc1F",
+            "priority_rank": 3,
+            "heavy_atoms": 25,
+            "atom_count": 25,
+            "first_plan_slot": [
+              3,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 55,
+            "selected_rule_ids": [
+              "synllama-rule-081",
+              "synllama-rule-030",
+              "synllama-rule-039",
+              "synllama-rule-042"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=S(=O)(Cl)c1ccc(S(=O)(=O)Nc2nccs2)c(F)c1",
+            "priority_rank": 4,
+            "heavy_atoms": 20,
+            "atom_count": 20,
+            "first_plan_slot": [
+              4,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 57,
+            "selected_rule_ids": [
+              "synllama-rule-081",
+              "synllama-rule-039",
+              "synllama-rule-042",
+              "synllama-rule-045"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "FC(F)(F)c1ccc(O[C@H]2CCNC2)nc1",
+            "priority_rank": 5,
+            "heavy_atoms": 16,
+            "atom_count": 16,
+            "first_plan_slot": [
+              4,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 64,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-030",
+              "synllama-rule-036",
+              "synllama-rule-073"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "Oc1ccc(C(F)(F)F)cn1",
+            "priority_rank": 6,
+            "heavy_atoms": 11,
+            "atom_count": 11,
+            "first_plan_slot": [
+              3,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 19,
+            "selected_rule_ids": [],
+            "status": "partial"
+          },
+          {
+            "target": "Nc1nccs1",
+            "priority_rank": 7,
+            "heavy_atoms": 6,
+            "atom_count": 6,
+            "first_plan_slot": [
+              0,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "c1cscn1",
+            "priority_rank": 8,
+            "heavy_atoms": 5,
+            "atom_count": 5,
+            "first_plan_slot": [
+              2,
+              0
+            ],
+            "references": 4,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "FC(F)F",
+            "priority_rank": 9,
+            "heavy_atoms": 4,
+            "atom_count": 4,
+            "first_plan_slot": [
+              1,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          }
+        ]
+      },
+      "base_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_perceptions": 56,
+        "catalog_stereo_atom_bond_charges": 1545,
+        "total_fingerprint_calls": 31362,
+        "rule_inspections": 512,
+        "reverse_role_work": 166,
+        "topology_match_requests": 48,
+        "topology_spec_graph_visits": 35760,
+        "combinations": 94,
+        "products_generated": 94,
+        "route_audit_attempts": 0,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_window_match_requests": 50,
+        "reaction_pool_site_match_requests": 117,
+        "reaction_pool_query_pairs": 50,
+        "reaction_pool_graph_visits": 8879,
+        "fallback_hit_second_tanimotos": 0,
+        "phase2_rule_preparation_size_units": 356,
+        "phase2_rule_preparation_unique_targets": 10,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 6,
+        "phase2_rule_preparation_rule_inspections": 356
+      }
+    },
+    {
+      "id": "CHEMBL5163-query-2",
+      "v14_products": 0,
+      "v15_products": 0,
+      "unchanged_products": [],
+      "gained_products": [],
+      "lost_products": [],
+      "v14_routes": 0,
+      "v15_routes": 0,
+      "unchanged_route_graph_sha256": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "v14_one_step_routes": 0,
+      "v15_one_step_routes": 0,
+      "v14_two_step_routes": 0,
+      "v15_two_step_routes": 0,
+      "inner_rule_preparation_work": {
+        "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+        "phase2_rule_preparation_limits": {
+          "unique_targets": 16,
+          "slot_occurrences": 16,
+          "target_atoms": 256,
+          "target_characters": 4096,
+          "size_units": 8192
+        },
+        "phase2_rule_preparation_applied": true,
+        "phase2_rule_preparation_fallback_reason": null,
+        "phase2_rule_preparation_size_units": 188,
+        "phase2_rule_preparation_unique_targets": 9,
+        "phase2_rule_preparation_slot_occurrences": 14,
+        "phase2_rule_preparation_aliased_occurrences": 5,
+        "phase2_rule_preparation_group_collection_complete": true,
+        "phase2_rule_preparation_rule_inspections": 356,
+        "phase2_rule_preparation_target_summary": [
+          {
+            "target": "NC1=N[C@H](O)[C@H]2[C@H]3O[C@]4(O)O[C@@H]([C@@H](O)[C@@]2(N1)[C@@H]4O)[C@]3(O)B(O)O",
+            "priority_rank": 0,
+            "heavy_atoms": 23,
+            "atom_count": 23,
+            "first_plan_slot": [
+              2,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 50,
+            "selected_rule_ids": [
+              "synllama-rule-048",
+              "synllama-rule-049",
+              "synllama-rule-029",
+              "synllama-rule-030"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "NC1=N[C@H](O)[C@H]2[C@H]3O[C@]4(O)O[C@@H]([C@@H](O)[C@@]2(N1)[C@@H]4O)[C@]3(O)CO",
+            "priority_rank": 1,
+            "heavy_atoms": 22,
+            "atom_count": 22,
+            "first_plan_slot": [
+              1,
+              0
+            ],
+            "references": 3,
+            "rule_inspections": 48,
+            "selected_rule_ids": [
+              "synllama-rule-038",
+              "synllama-rule-048",
+              "synllama-rule-049",
+              "synllama-rule-027"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "OC[C@]1(O)[C@@H]2O[C@]3(O)O[C@H]1[C@@H](O)[C@@]1(N=C=N[C@H](O)[C@@H]21)[C@@H]3O",
+            "priority_rank": 2,
+            "heavy_atoms": 21,
+            "atom_count": 21,
+            "first_plan_slot": [
+              0,
+              0
+            ],
+            "references": 2,
+            "rule_inspections": 64,
+            "selected_rule_ids": [
+              "synllama-rule-038",
+              "synllama-rule-027",
+              "synllama-rule-030",
+              "synllama-rule-073"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "NC1=N[C@H](O)[C@H]2[C@H]3O[C@]4(O)O[C@@H]([C@@H](O)[C@@]2(N1)[C@@H]4O)[C@]3(O)Br",
+            "priority_rank": 3,
+            "heavy_atoms": 21,
+            "atom_count": 21,
+            "first_plan_slot": [
+              6,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 50,
+            "selected_rule_ids": [
+              "synllama-rule-048",
+              "synllama-rule-049",
+              "synllama-rule-029",
+              "synllama-rule-030"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "[C]O",
+            "priority_rank": 4,
+            "heavy_atoms": 2,
+            "atom_count": 2,
+            "first_plan_slot": [
+              2,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 65,
+            "selected_rule_ids": [
+              "synllama-rule-030"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CO",
+            "priority_rank": 5,
+            "heavy_atoms": 2,
+            "atom_count": 2,
+            "first_plan_slot": [
+              6,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 65,
+            "selected_rule_ids": [
+              "synllama-rule-030"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "N",
+            "priority_rank": 6,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              0,
+              1
+            ],
+            "references": 2,
+            "rule_inspections": 14,
+            "selected_rule_ids": [],
+            "status": "partial"
+          },
+          {
+            "target": "[OH]",
+            "priority_rank": 7,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              1,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "C",
+            "priority_rank": 8,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              3,
+              1
+            ],
+            "references": 2,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          }
+        ]
+      },
+      "base_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 206279,
+        "catalog_stereo_perceptions": 53,
+        "catalog_stereo_atom_bond_charges": 1399,
+        "total_fingerprint_calls": 24800,
+        "rule_inspections": 512,
+        "reverse_role_work": 60,
+        "topology_match_requests": 29,
+        "topology_spec_graph_visits": 18335,
+        "combinations": 88,
+        "products_generated": 142,
+        "route_audit_attempts": 0,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_window_match_requests": 23,
+        "reaction_pool_site_match_requests": 48,
+        "reaction_pool_query_pairs": 23,
+        "reaction_pool_graph_visits": 4929,
+        "fallback_hit_second_tanimotos": 911,
+        "phase2_rule_preparation_size_units": 188,
+        "phase2_rule_preparation_unique_targets": 9,
+        "phase2_rule_preparation_slot_occurrences": 14,
+        "phase2_rule_preparation_aliased_occurrences": 5,
+        "phase2_rule_preparation_rule_inspections": 356
+      }
+    },
+    {
+      "id": "CHEMBL3334418-query-1",
+      "v14_products": 6,
+      "v15_products": 6,
+      "unchanged_products": [
+        "C=C[C@@H]1CCC[C@H]1Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+        "C=C[C@@H]1CCC[C@H]1Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O",
+        "C[C@H](CC1CCCCC1)Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+        "C[C@H](CC1CCCCC1)Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O",
+        "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(O)c2OCC1CCCCC1",
+        "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(OCC1CCCCC1)c2O"
+      ],
+      "gained_products": [],
+      "lost_products": [],
+      "v14_routes": 6,
+      "v15_routes": 6,
+      "unchanged_route_graph_sha256": [
+        "55603a0e2332970e0095bcc7b6098647bf18b59cb08747ddd7013dece621deb3",
+        "5cb18ca6397b10d76fa581d52ad18fb955850ff5d5e29a5f6324ebf26431fd68",
+        "c8d8e070990d966a7d739bd04940156723d248696f9daebddb0038203da6882f",
+        "dd662255a3d132ac485cb1899feccfaa114eb9344e91910daaa34f08a861fc9a",
+        "ebed361a88413baf60bbb215aacf6956fc4619987d6667dd7552f6a12760ba85",
+        "ed4151280cbd08c77b6b3eb878c23900ff76aa03eaa04bd511095ef00b5cb6d9"
+      ],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "v14_one_step_routes": 6,
+      "v15_one_step_routes": 6,
+      "v14_two_step_routes": 0,
+      "v15_two_step_routes": 0,
+      "inner_rule_preparation_work": {
+        "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+        "phase2_rule_preparation_limits": {
+          "unique_targets": 16,
+          "slot_occurrences": 16,
+          "target_atoms": 256,
+          "target_characters": 4096,
+          "size_units": 8192
+        },
+        "phase2_rule_preparation_applied": true,
+        "phase2_rule_preparation_fallback_reason": null,
+        "phase2_rule_preparation_size_units": 432,
+        "phase2_rule_preparation_unique_targets": 12,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 4,
+        "phase2_rule_preparation_group_collection_complete": true,
+        "phase2_rule_preparation_rule_inspections": 356,
+        "phase2_rule_preparation_target_summary": [
+          {
+            "target": "O=C1c2ccccc2C(=O)c2c1cc(NS(=O)(=O)c1ccc(C3CCCCC3)cc1)c(O)c2O",
+            "priority_rank": 0,
+            "heavy_atoms": 34,
+            "atom_count": 34,
+            "first_plan_slot": [
+              3,
+              0
+            ],
+            "references": 2,
+            "rule_inspections": 53,
+            "selected_rule_ids": [
+              "synllama-rule-081",
+              "synllama-rule-027",
+              "synllama-rule-036",
+              "synllama-rule-039"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C1c2ccccc2C(=O)c2c1cc(NS(=O)(=O)c1ccc(B(O)O)cc1)c(O)c2O",
+            "priority_rank": 1,
+            "heavy_atoms": 31,
+            "atom_count": 31,
+            "first_plan_slot": [
+              0,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 57,
+            "selected_rule_ids": [
+              "synllama-rule-081",
+              "synllama-rule-039",
+              "synllama-rule-042",
+              "synllama-rule-045"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C1c2ccccc2C(=O)c2c1cc(NS(=O)(=O)c1ccc(Cl)cc1)c(O)c2O",
+            "priority_rank": 2,
+            "heavy_atoms": 29,
+            "atom_count": 29,
+            "first_plan_slot": [
+              5,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 57,
+            "selected_rule_ids": [
+              "synllama-rule-081",
+              "synllama-rule-039",
+              "synllama-rule-042",
+              "synllama-rule-045"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C1c2ccccc2C(=O)c2c1cc(NS(=O)(=O)c1ccc(Br)cc1)c(O)c2O",
+            "priority_rank": 3,
+            "heavy_atoms": 29,
+            "atom_count": 29,
+            "first_plan_slot": [
+              6,
+              1
+            ],
+            "references": 2,
+            "rule_inspections": 57,
+            "selected_rule_ids": [
+              "synllama-rule-081",
+              "synllama-rule-039",
+              "synllama-rule-042",
+              "synllama-rule-045"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "Nc1cc2c(c(O)c1O)C(=O)c1ccccc1C2=O",
+            "priority_rank": 4,
+            "heavy_atoms": 19,
+            "atom_count": 19,
+            "first_plan_slot": [
+              1,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 59,
+            "selected_rule_ids": [
+              "synllama-rule-042",
+              "synllama-rule-045",
+              "synllama-rule-046",
+              "synllama-rule-047"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C1c2ccccc2C(=O)c2c1ccc(O)c2O",
+            "priority_rank": 5,
+            "heavy_atoms": 18,
+            "atom_count": 18,
+            "first_plan_slot": [
+              2,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 65,
+            "selected_rule_ids": [],
+            "status": "complete"
+          },
+          {
+            "target": "O=S(=O)(Cl)c1ccc(C2CCCCC2)cc1",
+            "priority_rank": 6,
+            "heavy_atoms": 16,
+            "atom_count": 16,
+            "first_plan_slot": [
+              1,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 8,
+            "selected_rule_ids": [],
+            "status": "partial"
+          },
+          {
+            "target": "NS(=O)(=O)c1ccc(C2CCCCC2)cc1",
+            "priority_rank": 7,
+            "heavy_atoms": 16,
+            "atom_count": 16,
+            "first_plan_slot": [
+              2,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "OB(O)[C]1CCCCC1",
+            "priority_rank": 8,
+            "heavy_atoms": 9,
+            "atom_count": 9,
+            "first_plan_slot": [
+              5,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "Cl[C]1CCCCC1",
+            "priority_rank": 9,
+            "heavy_atoms": 7,
+            "atom_count": 7,
+            "first_plan_slot": [
+              0,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "BrC1CCCCC1",
+            "priority_rank": 10,
+            "heavy_atoms": 7,
+            "atom_count": 7,
+            "first_plan_slot": [
+              6,
+              0
+            ],
+            "references": 2,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "C",
+            "priority_rank": 11,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              3,
+              1
+            ],
+            "references": 2,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          }
+        ]
+      },
+      "base_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_perceptions": 67,
+        "catalog_stereo_atom_bond_charges": 1658,
+        "total_fingerprint_calls": 34188,
+        "rule_inspections": 512,
+        "reverse_role_work": 124,
+        "topology_match_requests": 38,
+        "topology_spec_graph_visits": 94878,
+        "combinations": 138,
+        "products_generated": 150,
+        "route_audit_attempts": 6,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_window_match_requests": 37,
+        "reaction_pool_site_match_requests": 93,
+        "reaction_pool_query_pairs": 37,
+        "reaction_pool_graph_visits": 7181,
+        "fallback_hit_second_tanimotos": 2205,
+        "phase2_rule_preparation_size_units": 432,
+        "phase2_rule_preparation_unique_targets": 12,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 4,
+        "phase2_rule_preparation_rule_inspections": 356
+      }
+    },
+    {
+      "id": "CHEMBL3334418-query-2",
+      "v14_products": 2,
+      "v15_products": 2,
+      "unchanged_products": [
+        "CNc1ccc(NC(C)(C)c2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+        "CNc1ccc(Nc2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O"
+      ],
+      "gained_products": [],
+      "lost_products": [],
+      "v14_routes": 2,
+      "v15_routes": 2,
+      "unchanged_route_graph_sha256": [
+        "40fd767ca6348495290b3af78cdfd4d7955fdfc00499528b92ba548882d6496a",
+        "e4b9f9a9a95ef9479d397883642774a7f301539e5de3c4d42bca78a02ab1dd30"
+      ],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "v14_one_step_routes": 2,
+      "v15_one_step_routes": 2,
+      "v14_two_step_routes": 0,
+      "v15_two_step_routes": 0,
+      "inner_rule_preparation_work": {
+        "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+        "phase2_rule_preparation_limits": {
+          "unique_targets": 16,
+          "slot_occurrences": 16,
+          "target_atoms": 256,
+          "target_characters": 4096,
+          "size_units": 8192
+        },
+        "phase2_rule_preparation_applied": true,
+        "phase2_rule_preparation_fallback_reason": null,
+        "phase2_rule_preparation_size_units": 268,
+        "phase2_rule_preparation_unique_targets": 8,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 8,
+        "phase2_rule_preparation_group_collection_complete": true,
+        "phase2_rule_preparation_rule_inspections": 356,
+        "phase2_rule_preparation_target_summary": [
+          {
+            "target": "O=C1c2ccccc2C(=O)c2c1cc(NS(=O)(=O)c1ccc(F)c(C(F)(F)F)c1)c(O)c2O",
+            "priority_rank": 0,
+            "heavy_atoms": 33,
+            "atom_count": 33,
+            "first_plan_slot": [
+              3,
+              0
+            ],
+            "references": 2,
+            "rule_inspections": 53,
+            "selected_rule_ids": [
+              "synllama-rule-081",
+              "synllama-rule-027",
+              "synllama-rule-036",
+              "synllama-rule-039"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C1c2ccccc2C(=O)c2c1cc(NS(=O)(=O)c1ccc(F)cc1)c(O)c2O",
+            "priority_rank": 1,
+            "heavy_atoms": 29,
+            "atom_count": 29,
+            "first_plan_slot": [
+              1,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 57,
+            "selected_rule_ids": [
+              "synllama-rule-081",
+              "synllama-rule-039",
+              "synllama-rule-042",
+              "synllama-rule-045"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "Nc1cc2c(c(O)c1O)C(=O)c1ccccc1C2=O",
+            "priority_rank": 2,
+            "heavy_atoms": 19,
+            "atom_count": 19,
+            "first_plan_slot": [
+              0,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 59,
+            "selected_rule_ids": [
+              "synllama-rule-042",
+              "synllama-rule-045",
+              "synllama-rule-046",
+              "synllama-rule-047"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C1c2ccccc2C(=O)c2c1ccc(O)c2O",
+            "priority_rank": 3,
+            "heavy_atoms": 18,
+            "atom_count": 18,
+            "first_plan_slot": [
+              2,
+              0
+            ],
+            "references": 4,
+            "rule_inspections": 65,
+            "selected_rule_ids": [],
+            "status": "complete"
+          },
+          {
+            "target": "O=S(=O)(Cl)c1ccc(F)c(C(F)(F)F)c1",
+            "priority_rank": 4,
+            "heavy_atoms": 15,
+            "atom_count": 15,
+            "first_plan_slot": [
+              0,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 65,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-036",
+              "synllama-rule-073",
+              "synllama-rule-074"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "NS(=O)(=O)c1ccc(F)c(C(F)(F)F)c1",
+            "priority_rank": 5,
+            "heavy_atoms": 15,
+            "atom_count": 15,
+            "first_plan_slot": [
+              2,
+              1
+            ],
+            "references": 4,
+            "rule_inspections": 57,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-036",
+              "synllama-rule-039"
+            ],
+            "status": "partial"
+          },
+          {
+            "target": "FC(F)F",
+            "priority_rank": 6,
+            "heavy_atoms": 4,
+            "atom_count": 4,
+            "first_plan_slot": [
+              1,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "C",
+            "priority_rank": 7,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              3,
+              1
+            ],
+            "references": 2,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          }
+        ]
+      },
+      "base_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_perceptions": 59,
+        "catalog_stereo_atom_bond_charges": 1511,
+        "total_fingerprint_calls": 31614,
+        "rule_inspections": 512,
+        "reverse_role_work": 151,
+        "topology_match_requests": 33,
+        "topology_spec_graph_visits": 61951,
+        "combinations": 136,
+        "products_generated": 140,
+        "route_audit_attempts": 2,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_window_match_requests": 40,
+        "reaction_pool_site_match_requests": 102,
+        "reaction_pool_query_pairs": 40,
+        "reaction_pool_graph_visits": 6327,
+        "fallback_hit_second_tanimotos": 2205,
+        "phase2_rule_preparation_size_units": 268,
+        "phase2_rule_preparation_unique_targets": 8,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 8,
+        "phase2_rule_preparation_rule_inspections": 356
+      }
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "v14_products": 0,
+      "v15_products": 0,
+      "unchanged_products": [],
+      "gained_products": [],
+      "lost_products": [],
+      "v14_routes": 0,
+      "v15_routes": 0,
+      "unchanged_route_graph_sha256": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "v14_one_step_routes": 0,
+      "v15_one_step_routes": 0,
+      "v14_two_step_routes": 0,
+      "v15_two_step_routes": 0,
+      "inner_rule_preparation_work": {
+        "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+        "phase2_rule_preparation_limits": {
+          "unique_targets": 16,
+          "slot_occurrences": 16,
+          "target_atoms": 256,
+          "target_characters": 4096,
+          "size_units": 8192
+        },
+        "phase2_rule_preparation_applied": true,
+        "phase2_rule_preparation_fallback_reason": null,
+        "phase2_rule_preparation_size_units": 552,
+        "phase2_rule_preparation_unique_targets": 15,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 1,
+        "phase2_rule_preparation_group_collection_complete": true,
+        "phase2_rule_preparation_rule_inspections": 356,
+        "phase2_rule_preparation_target_summary": [
+          {
+            "target": "O=C(O)COC[C@H]1CC[C@@H](Cn2nc(-c3ccccc3)c(-c3ccccc3)c2SC[CH]O)CC1",
+            "priority_rank": 0,
+            "heavy_atoms": 34,
+            "atom_count": 34,
+            "first_plan_slot": [
+              6,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 48,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-026",
+              "synllama-rule-080",
+              "synllama-rule-027"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=CCOC[C@H]1CC[C@@H](Cn2nc(-c3ccccc3)c(-c3ccccc3)c2SCCO)CC1",
+            "priority_rank": 1,
+            "heavy_atoms": 33,
+            "atom_count": 33,
+            "first_plan_slot": [
+              5,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 48,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-026",
+              "synllama-rule-080",
+              "synllama-rule-027"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "OCCSc1c(-c2ccccc2)c(-c2ccccc2)nn1C[C@H]1CC[C@@H](COCI)CC1",
+            "priority_rank": 2,
+            "heavy_atoms": 32,
+            "atom_count": 32,
+            "first_plan_slot": [
+              4,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 50,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-026",
+              "synllama-rule-027",
+              "synllama-rule-030"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "OCCSc1c(-c2ccccc2)c(-c2ccccc2)nn1C[C@H]1CC[C@](B(O)O)CC1",
+            "priority_rank": 3,
+            "heavy_atoms": 31,
+            "atom_count": 31,
+            "first_plan_slot": [
+              7,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 52,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-027",
+              "synllama-rule-030",
+              "synllama-rule-036"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "OCCSc1c(-c2ccccc2)c(-c2ccccc2)nn1C[C@H]1CC[C@@H](CCl)CC1",
+            "priority_rank": 4,
+            "heavy_atoms": 30,
+            "atom_count": 30,
+            "first_plan_slot": [
+              0,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 52,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-027",
+              "synllama-rule-030",
+              "synllama-rule-036"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "OCCSc1c(-c2ccccc2)c(-c2ccccc2)nn1C[C@H]1CC[C@@H](CO)CC1",
+            "priority_rank": 5,
+            "heavy_atoms": 30,
+            "atom_count": 30,
+            "first_plan_slot": [
+              1,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 52,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-027",
+              "synllama-rule-030",
+              "synllama-rule-036"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C(O)COC[C@H]1CC[C@@H](Cn2nc(-c3ccccc3)c(Cl)c2SCCO)CC1",
+            "priority_rank": 6,
+            "heavy_atoms": 29,
+            "atom_count": 29,
+            "first_plan_slot": [
+              2,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 48,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-026",
+              "synllama-rule-080",
+              "synllama-rule-027"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=C(O)COC[C@H]1CC[C@@H](Cn2nc(Cl)c(-c3ccccc3)c2SCCO)CC1",
+            "priority_rank": 7,
+            "heavy_atoms": 29,
+            "atom_count": 29,
+            "first_plan_slot": [
+              3,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 6,
+            "selected_rule_ids": [],
+            "status": "partial"
+          },
+          {
+            "target": "Brc1ccccc1",
+            "priority_rank": 8,
+            "heavy_atoms": 7,
+            "atom_count": 7,
+            "first_plan_slot": [
+              2,
+              0
+            ],
+            "references": 2,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "[C]OCC(=O)O",
+            "priority_rank": 9,
+            "heavy_atoms": 6,
+            "atom_count": 6,
+            "first_plan_slot": [
+              7,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=C(O)CO",
+            "priority_rank": 10,
+            "heavy_atoms": 5,
+            "atom_count": 5,
+            "first_plan_slot": [
+              0,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=C(O)CCl",
+            "priority_rank": 11,
+            "heavy_atoms": 5,
+            "atom_count": 5,
+            "first_plan_slot": [
+              1,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=CO",
+            "priority_rank": 12,
+            "heavy_atoms": 3,
+            "atom_count": 3,
+            "first_plan_slot": [
+              4,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O",
+            "priority_rank": 13,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              5,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "[OH]",
+            "priority_rank": 14,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              6,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          }
+        ]
+      },
+      "base_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_perceptions": 57,
+        "catalog_stereo_atom_bond_charges": 1884,
+        "total_fingerprint_calls": 35670,
+        "rule_inspections": 512,
+        "reverse_role_work": 303,
+        "topology_match_requests": 35,
+        "topology_spec_graph_visits": 14535,
+        "combinations": 90,
+        "products_generated": 92,
+        "route_audit_attempts": 0,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_window_match_requests": 81,
+        "reaction_pool_site_match_requests": 204,
+        "reaction_pool_query_pairs": 81,
+        "reaction_pool_graph_visits": 24807,
+        "fallback_hit_second_tanimotos": 0,
+        "phase2_rule_preparation_size_units": 552,
+        "phase2_rule_preparation_unique_targets": 15,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 1,
+        "phase2_rule_preparation_rule_inspections": 356
+      }
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "v14_products": 0,
+      "v15_products": 0,
+      "unchanged_products": [],
+      "gained_products": [],
+      "lost_products": [],
+      "v14_routes": 0,
+      "v15_routes": 0,
+      "unchanged_route_graph_sha256": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "v14_one_step_routes": 0,
+      "v15_one_step_routes": 0,
+      "v14_two_step_routes": 0,
+      "v15_two_step_routes": 0,
+      "inner_rule_preparation_work": {
+        "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+        "phase2_rule_preparation_limits": {
+          "unique_targets": 16,
+          "slot_occurrences": 16,
+          "target_atoms": 256,
+          "target_characters": 4096,
+          "size_units": 8192
+        },
+        "phase2_rule_preparation_applied": true,
+        "phase2_rule_preparation_fallback_reason": null,
+        "phase2_rule_preparation_size_units": 478,
+        "phase2_rule_preparation_unique_targets": 14,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 2,
+        "phase2_rule_preparation_group_collection_complete": true,
+        "phase2_rule_preparation_rule_inspections": 356,
+        "phase2_rule_preparation_target_summary": [
+          {
+            "target": "CSc1c(-c2cncc(F)c2)c(-c2ccccc2)nn1C[C@H]1CC[C@@H](COCC(=O)O)CC1",
+            "priority_rank": 0,
+            "heavy_atoms": 33,
+            "atom_count": 33,
+            "first_plan_slot": [
+              6,
+              1
+            ],
+            "references": 2,
+            "rule_inspections": 48,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-026",
+              "synllama-rule-080",
+              "synllama-rule-027"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CSc1c(-c2cncc(F)c2)c(-c2ccccc2)nn1C[C@H]1CC[C@@H](COCC=O)CC1",
+            "priority_rank": 1,
+            "heavy_atoms": 32,
+            "atom_count": 32,
+            "first_plan_slot": [
+              5,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 48,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-026",
+              "synllama-rule-080",
+              "synllama-rule-027"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CSc1c(-c2cncc(F)c2)c(-c2ccccc2)nn1C[C@H]1CC[C@@H](COCI)CC1",
+            "priority_rank": 2,
+            "heavy_atoms": 31,
+            "atom_count": 31,
+            "first_plan_slot": [
+              4,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 50,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-026",
+              "synllama-rule-027",
+              "synllama-rule-030"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CSc1c(-c2cncc(F)c2)c(-c2ccccc2)nn1C[C@H]1CC[C@@H](CO)CC1",
+            "priority_rank": 3,
+            "heavy_atoms": 29,
+            "atom_count": 29,
+            "first_plan_slot": [
+              0,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 52,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-027",
+              "synllama-rule-030",
+              "synllama-rule-036"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CSc1c(-c2cncc(F)c2)c(-c2ccccc2)nn1C[C@H]1CC[C@@H](CCl)CC1",
+            "priority_rank": 4,
+            "heavy_atoms": 29,
+            "atom_count": 29,
+            "first_plan_slot": [
+              1,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 56,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-027",
+              "synllama-rule-036",
+              "synllama-rule-044"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CSc1c(-c2cncc(F)c2)c(Cl)nn1C[C@H]1CC[C@@H](COCC(=O)O)CC1",
+            "priority_rank": 5,
+            "heavy_atoms": 28,
+            "atom_count": 28,
+            "first_plan_slot": [
+              2,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 48,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-026",
+              "synllama-rule-080",
+              "synllama-rule-027"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "CSc1c(Br)c(-c2ccccc2)nn1C[C@H]1CC[C@@H](COCC(=O)O)CC1",
+            "priority_rank": 6,
+            "heavy_atoms": 27,
+            "atom_count": 27,
+            "first_plan_slot": [
+              3,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 48,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-026",
+              "synllama-rule-080",
+              "synllama-rule-027"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "Fc1cncc(Cl)c1",
+            "priority_rank": 7,
+            "heavy_atoms": 8,
+            "atom_count": 8,
+            "first_plan_slot": [
+              3,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 6,
+            "selected_rule_ids": [],
+            "status": "partial"
+          },
+          {
+            "target": "Brc1ccccc1",
+            "priority_rank": 8,
+            "heavy_atoms": 7,
+            "atom_count": 7,
+            "first_plan_slot": [
+              2,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=C(O)CCl",
+            "priority_rank": 9,
+            "heavy_atoms": 5,
+            "atom_count": 5,
+            "first_plan_slot": [
+              0,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=C(O)CO",
+            "priority_rank": 10,
+            "heavy_atoms": 5,
+            "atom_count": 5,
+            "first_plan_slot": [
+              1,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=CO",
+            "priority_rank": 11,
+            "heavy_atoms": 3,
+            "atom_count": 3,
+            "first_plan_slot": [
+              4,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O",
+            "priority_rank": 12,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              5,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "C",
+            "priority_rank": 13,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              6,
+              0
+            ],
+            "references": 2,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          }
+        ]
+      },
+      "base_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_perceptions": 50,
+        "catalog_stereo_atom_bond_charges": 1537,
+        "total_fingerprint_calls": 38570,
+        "rule_inspections": 512,
+        "reverse_role_work": 336,
+        "topology_match_requests": 36,
+        "topology_spec_graph_visits": 17635,
+        "combinations": 104,
+        "products_generated": 116,
+        "route_audit_attempts": 0,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_window_match_requests": 81,
+        "reaction_pool_site_match_requests": 204,
+        "reaction_pool_query_pairs": 81,
+        "reaction_pool_graph_visits": 21668,
+        "fallback_hit_second_tanimotos": 0,
+        "phase2_rule_preparation_size_units": 478,
+        "phase2_rule_preparation_unique_targets": 14,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 2,
+        "phase2_rule_preparation_rule_inspections": 356
+      }
+    },
+    {
+      "id": "CHEMBL3864-query-1",
+      "v14_products": 0,
+      "v15_products": 0,
+      "unchanged_products": [],
+      "gained_products": [],
+      "lost_products": [],
+      "v14_routes": 0,
+      "v15_routes": 0,
+      "unchanged_route_graph_sha256": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "v14_one_step_routes": 0,
+      "v15_one_step_routes": 0,
+      "v14_two_step_routes": 0,
+      "v15_two_step_routes": 0,
+      "inner_rule_preparation_work": {
+        "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+        "phase2_rule_preparation_limits": {
+          "unique_targets": 16,
+          "slot_occurrences": 16,
+          "target_atoms": 256,
+          "target_characters": 4096,
+          "size_units": 8192
+        },
+        "phase2_rule_preparation_applied": true,
+        "phase2_rule_preparation_fallback_reason": null,
+        "phase2_rule_preparation_size_units": 194,
+        "phase2_rule_preparation_unique_targets": 10,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 6,
+        "phase2_rule_preparation_group_collection_complete": true,
+        "phase2_rule_preparation_rule_inspections": 356,
+        "phase2_rule_preparation_target_summary": [
+          {
+            "target": "O=C(O)c1cc(O)c(=O)c2c(O)c(O)ccc2c1",
+            "priority_rank": 0,
+            "heavy_atoms": 18,
+            "atom_count": 18,
+            "first_plan_slot": [
+              2,
+              1
+            ],
+            "references": 2,
+            "rule_inspections": 60,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-030",
+              "synllama-rule-036",
+              "synllama-rule-071"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=c1c(O)cc(B(O)O)cc2ccc(O)c(O)c12",
+            "priority_rank": 1,
+            "heavy_atoms": 18,
+            "atom_count": 18,
+            "first_plan_slot": [
+              6,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 65,
+            "selected_rule_ids": [],
+            "status": "complete"
+          },
+          {
+            "target": "O=Cc1cc(O)c(=O)c2c(O)c(O)ccc2c1",
+            "priority_rank": 2,
+            "heavy_atoms": 17,
+            "atom_count": 17,
+            "first_plan_slot": [
+              1,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 64,
+            "selected_rule_ids": [
+              "synllama-rule-027",
+              "synllama-rule-036",
+              "synllama-rule-071",
+              "synllama-rule-073"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "O=c1c(O)cccc2ccc(O)c(O)c12",
+            "priority_rank": 3,
+            "heavy_atoms": 15,
+            "atom_count": 15,
+            "first_plan_slot": [
+              0,
+              1
+            ],
+            "references": 3,
+            "rule_inspections": 65,
+            "selected_rule_ids": [],
+            "status": "complete"
+          },
+          {
+            "target": "O=c1c(O)c[c]cc2ccc(O)c(O)c12",
+            "priority_rank": 4,
+            "heavy_atoms": 15,
+            "atom_count": 15,
+            "first_plan_slot": [
+              5,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 65,
+            "selected_rule_ids": [],
+            "status": "complete"
+          },
+          {
+            "target": "O=C(O)B(O)O",
+            "priority_rank": 5,
+            "heavy_atoms": 6,
+            "atom_count": 6,
+            "first_plan_slot": [
+              5,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 37,
+            "selected_rule_ids": [],
+            "status": "partial"
+          },
+          {
+            "target": "O=CO",
+            "priority_rank": 6,
+            "heavy_atoms": 3,
+            "atom_count": 3,
+            "first_plan_slot": [
+              0,
+              0
+            ],
+            "references": 3,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O=[C]O",
+            "priority_rank": 7,
+            "heavy_atoms": 3,
+            "atom_count": 3,
+            "first_plan_slot": [
+              6,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "O",
+            "priority_rank": 8,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              1,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "C",
+            "priority_rank": 9,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              2,
+              0
+            ],
+            "references": 2,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          }
+        ]
+      },
+      "base_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 249303,
+        "catalog_stereo_perceptions": 39,
+        "catalog_stereo_atom_bond_charges": 783,
+        "total_fingerprint_calls": 31098,
+        "rule_inspections": 512,
+        "reverse_role_work": 71,
+        "topology_match_requests": 25,
+        "topology_spec_graph_visits": 35017,
+        "combinations": 96,
+        "products_generated": 106,
+        "route_audit_attempts": 0,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_window_match_requests": 24,
+        "reaction_pool_site_match_requests": 54,
+        "reaction_pool_query_pairs": 24,
+        "reaction_pool_graph_visits": 2483,
+        "fallback_hit_second_tanimotos": 0,
+        "phase2_rule_preparation_size_units": 194,
+        "phase2_rule_preparation_unique_targets": 10,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 6,
+        "phase2_rule_preparation_rule_inspections": 356
+      }
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "v14_products": 0,
+      "v15_products": 0,
+      "unchanged_products": [],
+      "gained_products": [],
+      "lost_products": [],
+      "v14_routes": 0,
+      "v15_routes": 0,
+      "unchanged_route_graph_sha256": [],
+      "gained_route_graph_sha256": [],
+      "lost_route_graph_sha256": [],
+      "v14_one_step_routes": 0,
+      "v15_one_step_routes": 0,
+      "v14_two_step_routes": 0,
+      "v15_two_step_routes": 0,
+      "inner_rule_preparation_work": {
+        "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+        "phase2_rule_preparation_limits": {
+          "unique_targets": 16,
+          "slot_occurrences": 16,
+          "target_atoms": 256,
+          "target_characters": 4096,
+          "size_units": 8192
+        },
+        "phase2_rule_preparation_applied": true,
+        "phase2_rule_preparation_fallback_reason": null,
+        "phase2_rule_preparation_size_units": 462,
+        "phase2_rule_preparation_unique_targets": 14,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 2,
+        "phase2_rule_preparation_group_collection_complete": true,
+        "phase2_rule_preparation_rule_inspections": 356,
+        "phase2_rule_preparation_target_summary": [
+          {
+            "target": "Cc1nc(N)ccc1-c1n[nH]c2nc(N3CCC4(CC3)CO[C@@H](C)[C@H]4O)n(C)c(=O)c12",
+            "priority_rank": 0,
+            "heavy_atoms": 31,
+            "atom_count": 31,
+            "first_plan_slot": [
+              4,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 52,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-027",
+              "synllama-rule-030",
+              "synllama-rule-036"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "C[C@@H]1OCC2(CCN(c3nc4[nH]nc(-c5ccc(N)nc5)c4c(=O)n3C)CC2)[C@@H]1N",
+            "priority_rank": 1,
+            "heavy_atoms": 30,
+            "atom_count": 30,
+            "first_plan_slot": [
+              2,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "Cc1ncccc1-c1n[nH]c2nc(N3CCC4(CC3)CO[C@@H](C)[C@H]4N)n(C)c(=O)c12",
+            "priority_rank": 2,
+            "heavy_atoms": 30,
+            "atom_count": 30,
+            "first_plan_slot": [
+              3,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "C[C@@H]1OCC2(CCN(c3nc4[nH]nc(Br)c4c(=O)n3C)CC2)[C@@H]1N",
+            "priority_rank": 3,
+            "heavy_atoms": 24,
+            "atom_count": 24,
+            "first_plan_slot": [
+              1,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "C[C@@H]1OCC2(CCN(c3nc4[nH]nc(Cl)c4c(=O)n3C)CC2)[C@@H]1N",
+            "priority_rank": 4,
+            "heavy_atoms": 24,
+            "atom_count": 24,
+            "first_plan_slot": [
+              6,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 51,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-027",
+              "synllama-rule-029",
+              "synllama-rule-031"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "Cc1nc(N)ccc1-c1n[nH]c2nc(Cl)n(C)c(=O)c12",
+            "priority_rank": 5,
+            "heavy_atoms": 20,
+            "atom_count": 20,
+            "first_plan_slot": [
+              0,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 55,
+            "selected_rule_ids": [
+              "synllama-rule-062",
+              "synllama-rule-027",
+              "synllama-rule-036",
+              "synllama-rule-042"
+            ],
+            "status": "complete"
+          },
+          {
+            "target": "Cc1nc(N)ccc1-c1n[nH]c2nc(F)n(C)c(=O)c12",
+            "priority_rank": 6,
+            "heavy_atoms": 20,
+            "atom_count": 20,
+            "first_plan_slot": [
+              5,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 45,
+            "selected_rule_ids": [
+              "synllama-rule-062"
+            ],
+            "status": "partial"
+          },
+          {
+            "target": "Cc1nc(N)ccc1-c1n[nH]c2ncn(C)c(=O)c12",
+            "priority_rank": 7,
+            "heavy_atoms": 19,
+            "atom_count": 19,
+            "first_plan_slot": [
+              7,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "C[C@@H]1OCC2(CCNCC2)[C@@H]1N",
+            "priority_rank": 8,
+            "heavy_atoms": 12,
+            "atom_count": 12,
+            "first_plan_slot": [
+              0,
+              1
+            ],
+            "references": 3,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "Cc1nc(N)ccc1Cl",
+            "priority_rank": 9,
+            "heavy_atoms": 9,
+            "atom_count": 9,
+            "first_plan_slot": [
+              1,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "Cc1nc(N)ccc1Br",
+            "priority_rank": 10,
+            "heavy_atoms": 9,
+            "atom_count": 9,
+            "first_plan_slot": [
+              6,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "C",
+            "priority_rank": 11,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              2,
+              0
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "N",
+            "priority_rank": 12,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              3,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          },
+          {
+            "target": "[NH]",
+            "priority_rank": 13,
+            "heavy_atoms": 1,
+            "atom_count": 1,
+            "first_plan_slot": [
+              4,
+              1
+            ],
+            "references": 1,
+            "rule_inspections": 0,
+            "selected_rule_ids": [],
+            "status": "unvisited_rule_budget"
+          }
+        ]
+      },
+      "base_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_perceptions": 62,
+        "catalog_stereo_atom_bond_charges": 1643,
+        "total_fingerprint_calls": 40426,
+        "rule_inspections": 512,
+        "reverse_role_work": 219,
+        "topology_match_requests": 43,
+        "topology_spec_graph_visits": 14757,
+        "combinations": 116,
+        "products_generated": 148,
+        "route_audit_attempts": 0,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_window_match_requests": 49,
+        "reaction_pool_site_match_requests": 114,
+        "reaction_pool_query_pairs": 49,
+        "reaction_pool_graph_visits": 11517,
+        "fallback_hit_second_tanimotos": 0,
+        "phase2_rule_preparation_size_units": 462,
+        "phase2_rule_preparation_unique_targets": 14,
+        "phase2_rule_preparation_slot_occurrences": 16,
+        "phase2_rule_preparation_aliased_occurrences": 2,
+        "phase2_rule_preparation_rule_inspections": 356
+      }
+    }
+  ],
+  "existing_forward_evidence_join": [
+    {
+      "id": "CHEMBL4630839-query-1",
+      "pre_evidence_routes": 20,
+      "known_exact_graphs_with_completed_step_nonmatch": [],
+      "graphs_not_excluded_by_that_saved_nonmatch_test": [
+        "dd41c6ccc7dfdc8ad2d327850f55651f97672cad8db8417a7cd09e172a4dd567",
+        "c179a8c5ebb4f2e085757cfd9152876f49556176f93a5b8e323539178350b4fa",
+        "56ff44bc5818bf7dc0b603498b433ad0ecc1e7c78cdb49d49da196d46c95632c",
+        "10129ede6da3da47f50c1ac3b52ece670fbae087e4686056f7647a9318aa69ad",
+        "2e0cdfc1a06b071e0ec492bfed2e9e90061008dff37c80918961ca2303766897",
+        "0b0018f07bfe15c30f7c5612fda6fbb614ee31ba25dc1f67eb5fdad78668b1da",
+        "60d2823eb7465a97d859fe39a20b36a97d203bb50713fc6a267fc92391766b35",
+        "6b67f023499d85d5c1ca4e7a8c512001e1349b2fb5f499fff17121f625c937ab",
+        "0b4a75d2b3f08dd8c2b000d55b4312e34f53700eb4cc9844ef28322642e4fd5b",
+        "39f691c3c71b150b246ae5254cf32b11f67228a85cf518fb80273c0b745462ae",
+        "712a008eec6685d3b1cfefab59ddf171e9a449451d5b71188a0158310483b9f5",
+        "b634fa1db974729937692cae7c08b5f7d3a2206e118389494d943578450ce6ad",
+        "870fa9280727c62f51441ee0b8073937453f8c345ddee6988b2bd3b7a7bac033",
+        "0f4ff7352125e58bb150640a76626d0b9ee8eb37d7c30047c957d6c6634e2a14",
+        "012cc62b991ac64785d26e776c1cd850f9be980bd1fd51b15458ff405d0a6db2",
+        "009d93edd004c9027d68d807ed80e00957bbf665eeba9ca218926658b102549f",
+        "71ea2cd3707fdf76a7ba2e9a4a024ec4dc4eee53c5cc95f140a3fdedaa909123",
+        "d23a060c7d5c57ca38f373e09462e0efd9e0ebd359bae6e29e4b5eff3f7903a8",
+        "4f126593da9c9cd11b0cb3cd35d8c33e1d1e064ecab274b0115cc241ad594432",
+        "369d644a5ff40a3a4ab7f3fd1335a752c7260c3e84cf5615a7b776b2f2b60c3d"
+      ],
+      "possibly_supported_input_under_unchanged_saved_evidence": true
+    },
+    {
+      "id": "CHEMBL4630839-query-2",
+      "pre_evidence_routes": 1,
+      "known_exact_graphs_with_completed_step_nonmatch": [],
+      "graphs_not_excluded_by_that_saved_nonmatch_test": [
+        "c538f9275c07126ee68bfcac61f77db6342697746cfa62468fb13df1b4334670"
+      ],
+      "possibly_supported_input_under_unchanged_saved_evidence": true
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "pre_evidence_routes": 2,
+      "known_exact_graphs_with_completed_step_nonmatch": [],
+      "graphs_not_excluded_by_that_saved_nonmatch_test": [
+        "67888699e48ec30d7ddae382f3fd4c42055501652843ccb80d3879277d94e005",
+        "82cc9e1f7dd6a5f5dadf857be368c20bf83887e0de49a10d5a3cf40664d4023e"
+      ],
+      "possibly_supported_input_under_unchanged_saved_evidence": true
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "pre_evidence_routes": 2,
+      "known_exact_graphs_with_completed_step_nonmatch": [
+        {
+          "graph_sha256": "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+          "saved_step_statuses": [
+            "matched",
+            "mismatched"
+          ]
+        },
+        {
+          "graph_sha256": "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc",
+          "saved_step_statuses": [
+            "matched",
+            "mismatched"
+          ]
+        }
+      ],
+      "graphs_not_excluded_by_that_saved_nonmatch_test": [],
+      "possibly_supported_input_under_unchanged_saved_evidence": false
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "pre_evidence_routes": 0,
+      "known_exact_graphs_with_completed_step_nonmatch": [],
+      "graphs_not_excluded_by_that_saved_nonmatch_test": [],
+      "possibly_supported_input_under_unchanged_saved_evidence": false
+    },
+    {
+      "id": "CHEMBL5163-query-2",
+      "pre_evidence_routes": 0,
+      "known_exact_graphs_with_completed_step_nonmatch": [],
+      "graphs_not_excluded_by_that_saved_nonmatch_test": [],
+      "possibly_supported_input_under_unchanged_saved_evidence": false
+    },
+    {
+      "id": "CHEMBL3334418-query-1",
+      "pre_evidence_routes": 6,
+      "known_exact_graphs_with_completed_step_nonmatch": [
+        {
+          "graph_sha256": "c8d8e070990d966a7d739bd04940156723d248696f9daebddb0038203da6882f",
+          "saved_step_statuses": [
+            "mismatched"
+          ]
+        },
+        {
+          "graph_sha256": "dd662255a3d132ac485cb1899feccfaa114eb9344e91910daaa34f08a861fc9a",
+          "saved_step_statuses": [
+            "mismatched"
+          ]
+        },
+        {
+          "graph_sha256": "5cb18ca6397b10d76fa581d52ad18fb955850ff5d5e29a5f6324ebf26431fd68",
+          "saved_step_statuses": [
+            "mismatched"
+          ]
+        },
+        {
+          "graph_sha256": "55603a0e2332970e0095bcc7b6098647bf18b59cb08747ddd7013dece621deb3",
+          "saved_step_statuses": [
+            "mismatched"
+          ]
+        },
+        {
+          "graph_sha256": "ed4151280cbd08c77b6b3eb878c23900ff76aa03eaa04bd511095ef00b5cb6d9",
+          "saved_step_statuses": [
+            "mismatched"
+          ]
+        },
+        {
+          "graph_sha256": "ebed361a88413baf60bbb215aacf6956fc4619987d6667dd7552f6a12760ba85",
+          "saved_step_statuses": [
+            "mismatched"
+          ]
+        }
+      ],
+      "graphs_not_excluded_by_that_saved_nonmatch_test": [],
+      "possibly_supported_input_under_unchanged_saved_evidence": false
+    },
+    {
+      "id": "CHEMBL3334418-query-2",
+      "pre_evidence_routes": 2,
+      "known_exact_graphs_with_completed_step_nonmatch": [],
+      "graphs_not_excluded_by_that_saved_nonmatch_test": [
+        "40fd767ca6348495290b3af78cdfd4d7955fdfc00499528b92ba548882d6496a",
+        "e4b9f9a9a95ef9479d397883642774a7f301539e5de3c4d42bca78a02ab1dd30"
+      ],
+      "possibly_supported_input_under_unchanged_saved_evidence": true
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "pre_evidence_routes": 0,
+      "known_exact_graphs_with_completed_step_nonmatch": [],
+      "graphs_not_excluded_by_that_saved_nonmatch_test": [],
+      "possibly_supported_input_under_unchanged_saved_evidence": false
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "pre_evidence_routes": 0,
+      "known_exact_graphs_with_completed_step_nonmatch": [],
+      "graphs_not_excluded_by_that_saved_nonmatch_test": [],
+      "possibly_supported_input_under_unchanged_saved_evidence": false
+    },
+    {
+      "id": "CHEMBL3864-query-1",
+      "pre_evidence_routes": 0,
+      "known_exact_graphs_with_completed_step_nonmatch": [],
+      "graphs_not_excluded_by_that_saved_nonmatch_test": [],
+      "possibly_supported_input_under_unchanged_saved_evidence": false
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "pre_evidence_routes": 0,
+      "known_exact_graphs_with_completed_step_nonmatch": [],
+      "graphs_not_excluded_by_that_saved_nonmatch_test": [],
+      "possibly_supported_input_under_unchanged_saved_evidence": false
+    }
+  ],
+  "conditional_supported_input_upper_bound": 4,
+  "conditional_bound_scope": "Upper bound over the saved v15 candidate graphs under unchanged pinned forward evidence/config, taking every unassessed graph optimistically. Not newly measured actual support, chemical impossibility or future-policy bound. No failed input is promoted by normalization or sibling graph inference.",
+  "historical_actual_primary": {
+    "supported_inputs": 4,
+    "inputs": 12,
+    "baseline_supported_inputs": 5,
+    "revised": false
+  },
+  "comparison": {
+    "new_model_calls": 0,
+    "new_3d_calls": 0,
+    "exact_input_product_gains": 5,
+    "exact_input_product_losses": 28,
+    "previous_qualified_products_retained": 0,
+    "previous_qualified_products": 3,
+    "newly_covered_inputs": 0
+  },
+  "source_and_harness_plan_prepost_checks_passed": true,
+  "interpretation": "Preparation count gains did not become viable downstream route gains. Two-step routes declined35\u21929, while all24 one-step routes remained. Generation times are descriptive across nonrandom historical runs excluding shared catalog load, not causal speedup evidence.",
+  "decision": "Reject larger-target-first preparation and restore serial preparation exactly. Preserve evaluated commit8bb5104, tests, frozen v15 evidence and failure analysis. No full forward rerun because both missing-support inputs retain only exact paths with saved completed step nonmatches.",
+  "restored_runtime_files": {
+    "chembounce_synthesis/route_first.py": "b6f5e70ea69ce342b143b79805c1761100cf3e9c49f9831679ff48e309be3363",
+    "tests/synthesis/test_route_first.py": "894f11ef1fedd2ca2f34558fc68b2e27a84f40a8be5a118da8f99da313d163fb"
+  },
+  "review": {
+    "agent": "route_first_p1_astra",
+    "status": "PASS",
+    "scope": "Frozen outcome/gain-loss and exact saved status joins; no rerun against restored source"
+  },
+  "next_step": "Diagnose bounded atom-origin correspondence between an outer reaction role and inner reverse precursor hints before SMILES conversion. A role embedding intact in one hint does not prove a necessary condition on every valid concrete leaf: another leaf, a new bond or a different site may supply the role. Any subsequent fixed-policy control must use a non-exclusionary second-choice preference within the existing visited pool, first choice and top-two reservations; ambiguous/incomplete correspondence preserves legacy selection. No new policy implemented/evaluated yet.",
+  "restoration_validation": {
+    "date": "2026-10-24",
+    "runtime_and_test_byte_identical_to": "ba639c8",
+    "command": ".venv-research/bin/python -m pytest tests/synthesis/test_route_first.py tests/test_phase_telemetry.py -q",
+    "passed": 64,
+    "duration_seconds": 11.72,
+    "ruff_check": "passed",
+    "ruff_format_check": "passed",
+    "artifact_hashes_checked": 9,
+    "twelve_input_summary_totals": "passed",
+    "documentation_relative_links": "passed",
+    "scope": "Restored source focused regression and receipt consistency; not a full repository test run or new scientific comparison."
+  }
+}

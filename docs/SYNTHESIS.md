@@ -263,24 +263,17 @@ were mismatched by the fixed top-three model output. This developmental control
 does not revise the completed primary comparison. The primary route-first result remains four
 supported inputs against the five-input baseline, so P1 remains incomplete.
 
-The next **experimental** change allocates the existing phase-two rule
-inspection budget across the already chosen outer plans. It gathers up to 16
-distinct exact inner-target strings from at most 16 plan/slot occurrences,
-checks at most 256 atoms and 4,096 characters per target, and charges at most
-8,192 metadata size units (two per target atom). It selects inner rules for
-those target groups in descending heavy-atom count, then original first
-plan/slot order and target string. Each group still uses the original
-product-template priority, topology checks and global 512-rule-inspection
-limit, which includes static and outer selection. Completed selection cache
-entries remain distinct from partial lists. Oversize, invalid or otherwise
-unsupported metadata restores the entire original serial selection order
-before any priority selection. The chosen lists are then attached to the
-original slots; reverse-guide preparation and the existing typed-first,
-plan-round-robin execution retain their original order. Reports identify
-groups, aliases, completed/partial/unvisited choices, metadata and inspection
-work, and any fallback reason. The planning-only control showed both gains
-and losses in selected rules across the fixed panel; product generation,
-forward support and coverage for this policy have not yet been measured.
+An experimental fifteenth probe tested a different allocation of the same
+512 phase-two rule inspections: larger unique precursor targets were selected
+first, while the original per-target rule order and downstream work-item order
+were retained. On the fixed 12-input panel it still covered six inputs before
+model checks, but exact input/product pairs fell from 56 to 33 and audited
+routes from 59 to 33; two-step routes fell from 35 to nine. Five products were
+gained on one input and 28 were lost overall. All three previously qualified
+products were absent from the new pre-evidence set. The policy was rejected
+without another full model comparison, and the original serial inner-rule
+preparation has been restored. The saved v15 result remains developmental
+evidence; it does not change the completed primary comparison or P1 status.
 
 ## Optional catalog byte binding
 
