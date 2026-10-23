@@ -1,0 +1,130 @@
+{
+  "artifacts": {
+    "bindings.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/saved-forward-interface-audit-v1/bindings.json",
+      "sha256": "add38a05406ce5d2c3f384e6cc3efdbf69edbff15f35a87d5a9880fa6dc52903"
+    },
+    "check.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/saved-forward-interface-audit-v1/check.py",
+      "sha256": "63b899363fbb3fc9fd28c2c67b95f37b92f9b0345b943756e8d9669e2ce28f9b"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/saved-forward-interface-audit-v1/result.json",
+      "sha256": "baba62ca5bec0f733ad94c363b569ed4edd34212cba1f4f2fbeaf4abd41031c5"
+    }
+  },
+  "counts": {
+    "beam_records": 81,
+    "complete_beams": 81,
+    "distinct_prompt_sha256": 24,
+    "invalid_beams": 2,
+    "matched": 20,
+    "mismatched": 6,
+    "partially_evaluated": 1,
+    "route_records": 16,
+    "step_records": 27
+  },
+  "examples": [
+    {
+      "expected_product": "C=C[C@@H]1CCC[C@H]1Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O",
+      "input_id": "CHEMBL3334418-query-1",
+      "node_id": "or",
+      "prompt_sha256": "0bd491aa8fa4903171c4468097a6394e0d2e7112c2f9b3695ad0674ea46c13ea",
+      "reactants": [
+        "C=C[C@@H]1CCC[C@H]1O",
+        "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(O)c2O"
+      ],
+      "reason_code": "completed_top_three_nonmatch",
+      "route_id": "route_000000",
+      "rule_id": "synllama-rule-030",
+      "saved_predicted_products": [
+        "C=CC1CCCC1Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O.[Na+]",
+        "C=CC1CCCC1Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O.O=C1c2ccccc2C(=O)c2c1ccc(O)c2O",
+        "C=CC1CCCC1O"
+      ]
+    },
+    {
+      "expected_product": "Cc1ccc(-c2ccccc2S(C)(=O)=O)c2nc(Cl)ncc12",
+      "input_id": "CHEMBL4247-query-2",
+      "node_id": "ir",
+      "prompt_sha256": "69b58c349694bc7e4d0904b751bddc33574c24c781ffea38c2bb7dff50439816",
+      "reactants": [
+        "Cc1ccc(Br)c2nc(Cl)ncc12",
+        "CS(=O)(=O)c1ccccc1Cl"
+      ],
+      "reason_code": "completed_top_three_nonmatch",
+      "route_id": "route_000000",
+      "rule_id": "synllama-rule-036",
+      "saved_predicted_products": [
+        "Cc1ccc(S(C)(=O)=O)c2nc(Cl)ncc12",
+        "Cc1ccc(S(C)(=O)=O)cc1-c1ncc2c(C)ccc(Br)c2n1",
+        "Cc1ccc(C#N)c2nc(Cl)ncc12"
+      ]
+    },
+    {
+      "expected_product": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+      "input_id": "CHEMBL4247-query-2",
+      "node_id": "or",
+      "prompt_sha256": "1505f09aeb7b5761462f06ddf89b0e756bc26e8f04779b0f734ec0fa8a6598cd",
+      "reactants": [
+        "COc1cc(CC(=O)O)ccc1Cl",
+        "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1"
+      ],
+      "reason_code": "completed_top_three_nonmatch",
+      "route_id": "route_000001",
+      "rule_id": "synllama-rule-042",
+      "saved_predicted_products": [
+        "COc1cc(CC(=O)Nc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)ccc1Cl",
+        "COc1cc(Nc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)ccc1Cl",
+        "COc1cc(CCNc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)ccc1Cl"
+      ]
+    }
+  ],
+  "file_sha256": {
+    "benchmark-results/research-validation/models/ReactionT5v2-forward/README.md": "1a689168cf12a60fb49166cdc5245308f6ef18d28d8fec165295edf7404449c2",
+    "benchmark-results/research-validation/models/ReactionT5v2-forward/config.json": "a80eac6938e51ccabfc6a8b281497c6553626145e57b2268101f718fbaa034a2",
+    "benchmark-results/research-validation/models/ReactionT5v2-forward/generation_config.json": "aed028489d41ae6a673920da9d103f2f58a650c3fbc50bd880b35e30a481dba6",
+    "benchmark-results/research-validation/models/ReactionT5v2-forward/special_tokens_map.json": "0f385cf62b07c1b63aaa84d4c86a313c751df7039d958a7d7bd7e723d933bcd9",
+    "benchmark-results/research-validation/models/ReactionT5v2-forward/tokenizer.json": "511dfd8bb25c19cccae8d7d996c1ff0f1b5263207be4cdd275f23b75da8113b6",
+    "benchmark-results/research-validation/models/ReactionT5v2-forward/tokenizer_config.json": "ac38d16067df56f00dfa2c2e0d1546a6ff08aa37814662a6fc38dea66cd13d9d",
+    "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL3334418-query-1/synthesis/routes.json": "9e7b96854edaeb302e3bbf35b2c4843e9f7fed48f2b7532dc449bf263a09b511",
+    "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL3334418-query-2/synthesis/routes.json": "8e320a322570e7e226759eccd7913f7d99ff71ed207f926b61cfdc481d14d29a",
+    "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4247-query-1/synthesis/routes.json": "a2b7a0a6bf585dae4d04a4b5fb2cdd72d34573e283575a240178e7e345760492",
+    "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4247-query-2/synthesis/routes.json": "6c44f0de211e3837b0fdbbb51d9c577d370205179a0eb0c58897a1a09331af91",
+    "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4630839-query-1/synthesis/routes.json": "1ff0add0858c41471ba2ae46bfe0e7442402ff80e77e19a094c6055a7f0be280",
+    "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4630839-query-2/synthesis/routes.json": "bbfbbb181db2ea2364a280c04b487cbd2a083c3e6ea1cde973354f112d909cc6",
+    "chembounce_synthesis/computational_support.py": "bcab97bb6a1cf69c900b3b6798f0ff67e48c0d7a3adf1545d1b67aae13322245",
+    "chembounce_synthesis/evidence.py": "91532a70e9e250eb61c683e6e0adb2e09153f4fbf0f201a2768ffdc8524e57c9",
+    "chembounce_synthesis/forward_support.py": "aa770b6e499fb81ca88c53b2baff1db8203203bf57d699a09dddee499a13261f"
+  },
+  "finding": "No saved evidence of reactant order, prompt serialization, request/model binding, input-token length, decoder truncation, or concrete replay mismatch. All 81 saved beams are marked complete; 2 have invalid/unsupported SMILES and one step is partial. All archived step contexts have no supplied reagents or conditions; adding them would invent context. Completed nonmatch reflects a bounded model prediction differing from the exact expected full product.",
+  "limitations": "Executed strict audit, raw decoding validation, and molecular canonicalization are archived statuses, not recomputed here. Token IDs were only length-checked. Distinct prompts (24) are not a new predictor-call count; repeated steps can reuse cache. Missing chemistry context and model scope remain possible explanations, not proven software defects. No production fix is justified by this interface audit. Local model weight bytes were not rehashed; the archived file-hash map was checked for consistency and local README/config/tokenizer metadata bytes were bound.",
+  "same_rule_controls": "Rule036 has 2 matched and 1 completed nonmatch; rule042 has 13 matched, 3 completed nonmatch, and 1 partial. This argues against a blanket rule-ID or prompt-format defect, without proving model chemistry quality.",
+  "schema": "saved-forward-interface-audit-portable-v1",
+  "scope": "Archived actual-v2 16 route records/27 step records; JSON-only comparison of saved prompt, provenance, token-ID length, complete-beam flags and exact stored product equality. No chemistry replay, tokenizer/model inference, catalog, or new candidate evaluation.",
+  "source_vs_executed_provenance": {
+    "evidence_py_matches_archived_base_adapter": true,
+    "forward_support_py_matches_archived_adapter": true,
+    "local_readme_config_and_tokenizer_metadata_match_archived_hashes": true,
+    "model_weights_rehashed_or_loaded": false,
+    "recorded_model_file_binding_consistent_across_archived_routes": true
+  },
+  "status": "complete_read_only",
+  "step_status_by_rule": {
+    "synllama-rule-030": {
+      "mismatched": 2
+    },
+    "synllama-rule-036": {
+      "matched": 2,
+      "mismatched": 1
+    },
+    "synllama-rule-042": {
+      "matched": 13,
+      "mismatched": 3,
+      "partially_evaluated": 1
+    },
+    "synllama-rule-077": {
+      "matched": 5
+    }
+  }
+}
