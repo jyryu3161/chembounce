@@ -163,7 +163,7 @@ decisions, including repeated blocks across queries. Unspecified-product
 first-failure records fell from 50 to 14, but this did not improve eligible
 coverage. No model or 3D comparison was run; P1 remains incomplete.
 
-The next untested route-first revision changes only bounded catalog retrieval.
+The twelfth route-first revision changed only bounded catalog retrieval.
 It selects the two most frequent exact reactant roles among the already chosen
 outer plans, with normalized SMARTS as the deterministic tie-break. Atom maps
 are removed from those role queries; recursive, stereo and other SMARTS
@@ -197,7 +197,30 @@ saved route inside at least one relevant capped query, including a guide reused
 from the first stage in a later inner stage. It did not run candidate fingerprint
 ranking, forward reactions or route audit, and does not establish that one
 work item selects those three leaves or recovers the route. The current code
-has not yet been evaluated on the fixed panel; P1 remains incomplete.
+was then evaluated on the fixed panel. The twelfth probe reached five of 12
+inputs, 41 distinct input/product pairs and 41 eligible routes (20 one-step,
+21 two-step). It gained four two-step products on one previously uncovered
+input, while another input lost five eligible products. The latter generated
+120 exact products but reached the 65,536 total fingerprint budget before any
+product admission was observed. No model or 3D comparison was run because the
+fixed entry condition of more than five inputs was not met; P1 remains
+incomplete.
+
+The next untested revision reserves fingerprint work for product admission:
+`min(2 × max_products, max_fingerprint_calls // 2)` calls, leaving a separate
+generation ceiling. For two-step searches, the first-stage ceiling is the smaller of half the total
+and that generation ceiling; a one-step search uses the full generation ceiling. The initial hit fingerprint counts as generation
+setup work. Admission can also use generation allowance that was not spent,
+without exceeding the same global cap. Once generation reaches its ceiling, already pending products can
+still be ranked and admitted. A deterministic subset considers cached product
+fingerprints first, then canonical SMILES; each selected product reserves its
+zero-or-one new rank fingerprint and at most one admission-callback fingerprint.
+Unranked products are recorded as fingerprint-unassessed, not chemical
+rejections. Ranked, admitted products still undergo the unchanged concrete
+forward replay and strict route audit. The total fingerprint cap, deadline,
+product and route caps, and all qualification gates remain unchanged. Separate
+generation, admission-ranking and admission-callback counters make budget use
+reviewable. This revision has not yet been run on the fixed panel.
 
 ## Optional catalog byte binding
 

@@ -540,6 +540,9 @@ class RouteFirstSearch:
         self.catalog, self.rules, self.limits = catalog, rules, limits
         self.deadline = deadline_monotonic
         self.accept = accept or (lambda product: None)
+        self._admission_fp_reserve = min(2 * limits.max_products, limits.max_fingerprint_calls // 2)
+        self._generation_fp_ceiling = limits.max_fingerprint_calls - self._admission_fp_reserve
+        self._depth_one_fp_ceiling = min(limits.max_fingerprint_calls // 2, self._generation_fp_ceiling)
         self.report = {
             "version": VERSION,
             "limits": asdict(limits),
@@ -659,7 +662,20 @@ class RouteFirstSearch:
             "reaction_pool_indexed_rows_selected": 0,
             "reaction_pool_ordinary_rows_selected": 0,
             "fingerprint_calls": 1,
+            "hit_fingerprint_calls": 1,
+            "generation_fingerprint_calls": 0,
+            "admission_rank_fingerprint_calls": 0,
             "admission_fingerprint_calls": 0,
+            "admission_fingerprint_reserve": self._admission_fp_reserve,
+            "generation_fingerprint_ceiling": self._generation_fp_ceiling,
+            "depth_one_fingerprint_ceiling": self._depth_one_fp_ceiling,
+            "admission_pending_unique_products": 0,
+            "admission_reserved_cost_units": 0,
+            "admission_ranked_products": 0,
+            "admission_attempted_products": 0,
+            "admission_fp_unassessed_products": 0,
+            "admission_callback_unattempted_products": 0,
+            "admission_rank_selection_policy": "cached fingerprint first, then canonical SMILES; reserve one possible callback fingerprint plus zero or one new rank fingerprint per selected product",
             "role_queries": 0,
             "combinations": 0,
             "products_generated": 0,
@@ -721,22 +737,25 @@ class RouteFirstSearch:
             -DataStructs.TanimotoSimilarity(reference, fp) if fp is not None and reference is not None else 0
         )
 
-    def _fingerprint(self, smiles):
+    def _fingerprint(self, smiles, *, purpose="generation"):
         if smiles in self._fp_cache:
             return self._fp_cache[smiles]
-        phase_limit = (
-            self.limits.max_fingerprint_calls // 2
-            if self._phase == 1 and self.limits.max_steps == 2
-            else self.limits.max_fingerprint_calls
-        )
+        if purpose == "admission":
+            phase_limit = self.limits.max_fingerprint_calls
+            limit_reason = "admission_fingerprint_budget"
+        elif purpose == "generation":
+            depth_one = self._phase == 1 and self.limits.max_steps == 2
+            phase_limit = self._depth_one_fp_ceiling if depth_one else self._generation_fp_ceiling
+            limit_reason = "depth_one_fingerprint_budget" if depth_one else "generation_fingerprint_budget"
+        else:
+            raise ValueError("Unknown route-first fingerprint purpose")
         if self.report["fingerprint_calls"] + getattr(self.accept, "fingerprint_calls", 0) >= phase_limit:
-            self._stop(
-                "depth_one_fingerprint_budget"
-                if self._phase == 1 and self.limits.max_steps == 2
-                else "max_fingerprint_calls"
-            )
+            self._stop(limit_reason)
             return None
         self.report["fingerprint_calls"] += 1
+        self.report[
+            "admission_rank_fingerprint_calls" if purpose == "admission" else "generation_fingerprint_calls"
+        ] += 1
         fp = FP.GetFingerprint(molecule(smiles))
         self._fp_cache[smiles] = fp
         return fp
@@ -1881,22 +1900,43 @@ class RouteFirstSearch:
             self._pending.append(state)
 
     def _admit(self):
-        if self._stop():
-            return
         unique_products = sorted({state["product"] for state in self._pending})
-        product_ranks = {product: self._rank(product) for product in unique_products}
-        if self._stop() or "max_fingerprint_calls" in self.report["limits_reached"]:
+        self.report["admission_pending_unique_products"] = len(unique_products)
+        self.report["admission_fp_unassessed_products"] = len(unique_products)
+        if self._stop() or not unique_products:
             return
-        eligible = set()
-        for product in sorted(unique_products, key=lambda product: (product_ranks[product], product)):
+        available = max(
+            0,
+            self.limits.max_fingerprint_calls
+            - self.report["fingerprint_calls"]
+            - getattr(self.accept, "fingerprint_calls", 0),
+        )
+        product_ranks = {}
+        # Select a bounded subset before similarity ordering. Each selected
+        # product gets its possible new rank fingerprint and one callback
+        # fingerprint reserved; an unranked product has no artificial score.
+        for product in sorted(unique_products, key=lambda item: (item not in self._fp_cache, item)):
             if self._stop():
-                return
-            if (
-                self.report["fingerprint_calls"] + getattr(self.accept, "fingerprint_calls", 0)
-                >= self.limits.max_fingerprint_calls
-            ):
-                self._stop("max_fingerprint_calls")
                 break
+            required = (product not in self._fp_cache) + 1
+            if available < required:
+                continue
+            available -= required
+            self.report["admission_reserved_cost_units"] += required
+            fp = self._fingerprint(product, purpose="admission")
+            if fp is None:
+                continue
+            product_ranks[product] = -DataStructs.TanimotoSimilarity(self.hit_fp, fp)
+        self.report["admission_ranked_products"] = len(product_ranks)
+        self.report["admission_fp_unassessed_products"] = len(unique_products) - len(product_ranks)
+        if self.report["admission_fp_unassessed_products"] and not self._stop():
+            self._stop("admission_fingerprint_reserve_exhausted")
+        eligible = set()
+        for product in sorted(product_ranks, key=lambda item: (product_ranks[item], item)):
+            if self._stop():
+                break
+            self.report["admission_attempted_products"] += 1
+            before_accept = getattr(self.accept, "fingerprint_calls", 0)
             try:
                 self.accept(product)
             except (ValueError, KeyError, TypeError) as exc:
@@ -1906,8 +1946,17 @@ class RouteFirstSearch:
                 )
                 continue
             finally:
-                self.report["admission_fingerprint_calls"] = getattr(self.accept, "fingerprint_calls", 0)
+                after_accept = getattr(self.accept, "fingerprint_calls", 0)
+                self.report["admission_fingerprint_calls"] = after_accept
+                if (
+                    not 0 <= after_accept - before_accept <= 1
+                    or self.report["fingerprint_calls"] + after_accept > self.limits.max_fingerprint_calls
+                ):
+                    raise RuntimeError("Route-first admission callback exceeded its one-fingerprint contract")
             eligible.add(product)
+        self.report["admission_callback_unattempted_products"] = (
+            len(product_ranks) - self.report["admission_attempted_products"]
+        )
         if self._stop():
             return
         states = sorted(
@@ -2252,6 +2301,13 @@ class RouteFirstSearch:
         self.report["total_fingerprint_calls"] = (
             self.report["fingerprint_calls"] + self.report["admission_fingerprint_calls"]
         )
+        if self.report["total_fingerprint_calls"] != (
+            self.report["hit_fingerprint_calls"]
+            + self.report["generation_fingerprint_calls"]
+            + self.report["admission_rank_fingerprint_calls"]
+            + self.report["admission_fingerprint_calls"]
+        ):
+            raise RuntimeError("Route-first fingerprint purpose accounting mismatch")
         self.report["distinct_exact_products"] = len(
             {item["verification"]["product"] for item in self.routes}
         )

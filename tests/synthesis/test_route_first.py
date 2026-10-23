@@ -56,6 +56,17 @@ def test_actual_one_and_two_step_routes_have_complete_forward_and_atom_stereo_re
     assert report["catalog_row_visits"] <= 200
     assert report["fingerprint_calls"] <= 200
     assert report["total_fingerprint_calls"] <= 200
+    assert report["total_fingerprint_calls"] == (
+        report["hit_fingerprint_calls"]
+        + report["generation_fingerprint_calls"]
+        + report["admission_rank_fingerprint_calls"]
+        + report["admission_fingerprint_calls"]
+    )
+    assert report["admission_attempted_products"] <= report["admission_ranked_products"]
+    assert (
+        report["admission_ranked_products"] + report["admission_fp_unassessed_products"]
+        == report["admission_pending_unique_products"]
+    )
     assert report["combinations"] <= 100
     assert (
         0
@@ -238,6 +249,191 @@ def test_global_retrieval_combination_and_deadline_caps(assets):
     assert "deadline_monotonic" in expired["limits_reached"]
     _, combinations = generate(TWO_STEP_HIT, catalog, rules, limits(max_combinations=2))
     assert combinations["combinations"] <= 2
+
+
+def test_generation_fingerprint_ceiling_preserves_pending_route_admission(assets, route):
+    catalog, rules = assets
+
+    def accept(_product):
+        accept.fingerprint_calls += 1
+
+    accept.fingerprint_calls = 0
+    search = RouteFirstSearch(
+        HIT,
+        catalog,
+        rules,
+        RouteFirstLimits(**limits(max_steps=1, max_fingerprint_calls=8, max_products=1)),
+        accept=accept,
+    )
+    search._pending = [
+        {"root": route["root"], "product": route["nodes"][-1]["product"], "nodes": route["nodes"]}
+    ]
+    assert search.report["admission_fingerprint_reserve"] == 2
+    assert search.report["generation_fingerprint_ceiling"] == 6
+    assert search.report["depth_one_fingerprint_ceiling"] == 4
+    search.report["fingerprint_calls"] = 4
+    assert search._fingerprint("CCCC", purpose="generation") is not None
+    assert search._fingerprint("CCCCC", purpose="generation") is not None
+    assert search._fingerprint("CCCCCC", purpose="generation") is None
+    assert "generation_fingerprint_budget" in search.report["limits_reached"]
+    assert "depth_one_fingerprint_budget" not in search.report["limits_reached"]
+    search._admit()
+    assert search.report["admission_pending_unique_products"] == 1
+    assert search.report["admission_ranked_products"] == search.report["admission_attempted_products"] == 1
+    assert search.report["admission_fp_unassessed_products"] == 0
+    assert search.report["admission_callback_unattempted_products"] == 0
+    assert search.report["routes_verified"] == 1
+    assert search.routes[0]["verification"]["product"] == canonical("CC(=O)Nc1ccncc1")
+    assert search.report["fingerprint_calls"] + search.report["admission_fingerprint_calls"] <= 8
+
+    accept.fingerprint_calls = 0
+    two_step = RouteFirstSearch(
+        HIT,
+        catalog,
+        rules,
+        RouteFirstLimits(**limits(max_steps=2, max_fingerprint_calls=8, max_products=1)),
+        accept=accept,
+    )
+    two_step.report["fingerprint_calls"] = 4
+    assert two_step._fingerprint("CCCC", purpose="generation") is None
+    assert "depth_one_fingerprint_budget" in two_step.report["limits_reached"]
+    two_step._phase = 2
+    assert two_step._fingerprint("CCCC", purpose="generation") is not None
+
+
+def test_tiny_fingerprint_reservation_handles_cached_and_uncached_products(assets):
+    catalog, rules = assets
+    hit_route = {
+        "root": "r0",
+        "product": canonical(HIT),
+        "nodes": [
+            {"id": "b0", "building_block_id": "acetic"},
+            {"id": "b1", "building_block_id": "phenyl"},
+            {"id": "r0", "rule_id": "amide", "reactants": ["b0", "b1"], "product": canonical(HIT)},
+        ],
+    }
+    uncached = {
+        "root": "r0",
+        "product": canonical("CC(=O)Nc1ccncc1"),
+        "nodes": [
+            {"id": "b0", "building_block_id": "acetic"},
+            {"id": "b1", "building_block_id": "pyridyl"},
+            {
+                "id": "r0",
+                "rule_id": "amide",
+                "reactants": ["b0", "b1"],
+                "product": canonical("CC(=O)Nc1ccncc1"),
+            },
+        ],
+    }
+
+    def accept(_product):
+        accept.fingerprint_calls += 1
+
+    accept.fingerprint_calls = 0
+    search = RouteFirstSearch(
+        HIT,
+        catalog,
+        rules,
+        RouteFirstLimits(**limits(max_steps=1, max_fingerprint_calls=2, max_products=2)),
+        accept=accept,
+    )
+    search._pending = [hit_route, uncached]
+    search._admit()
+    assert search.report["admission_fingerprint_reserve"] == 1
+    assert search.report["admission_pending_unique_products"] == 2
+    assert search.report["admission_ranked_products"] == search.report["admission_attempted_products"] == 1
+    assert search.report["admission_fp_unassessed_products"] == 1
+    assert search.report["routes_verified"] == 1
+    assert search.routes[0]["verification"]["product"] == canonical(HIT)
+    assert search.report["fingerprint_calls"] + search.report["admission_fingerprint_calls"] == 2
+
+    accept.fingerprint_calls = 0
+    miss = RouteFirstSearch(
+        HIT,
+        catalog,
+        rules,
+        RouteFirstLimits(**limits(max_steps=1, max_fingerprint_calls=2, max_products=2)),
+        accept=accept,
+    )
+    miss._pending = [uncached]
+    miss._admit()
+    assert miss.report["admission_ranked_products"] == miss.report["admission_attempted_products"] == 0
+    assert miss.report["admission_fp_unassessed_products"] == 1
+    assert miss.report["routes_verified"] == 0
+    assert not miss.report["product_rejections"]  # Unassessed is not a chemical failure.
+
+    accept.fingerprint_calls = 0
+    spare_generation = RouteFirstSearch(
+        HIT,
+        catalog,
+        rules,
+        RouteFirstLimits(**limits(max_steps=1, max_fingerprint_calls=3, max_products=2)),
+        accept=accept,
+    )
+    spare_generation._pending = [uncached]
+    spare_generation._admit()
+    assert spare_generation.report["admission_fingerprint_reserve"] == 1
+    assert spare_generation.report["admission_reserved_cost_units"] == 2
+    assert spare_generation.report["admission_ranked_products"] == 1
+    assert spare_generation.report["routes_verified"] == 1
+    assert (
+        spare_generation.report["fingerprint_calls"] + spare_generation.report["admission_fingerprint_calls"]
+        == 3
+    )
+
+
+def test_admission_reservation_deadline_and_callback_counter_contract(assets):
+    catalog, rules = assets
+    state = {"root": "r0", "product": canonical(HIT), "nodes": []}
+    expired = RouteFirstSearch(
+        HIT,
+        catalog,
+        rules,
+        RouteFirstLimits(**limits(max_steps=1, max_fingerprint_calls=2)),
+        deadline_monotonic=time.monotonic() - 1,
+    )
+    expired._pending = [state]
+    expired._admit()
+    assert expired.report["admission_pending_unique_products"] == 1
+    assert expired.report["admission_fp_unassessed_products"] == 1
+    assert expired.report["admission_attempted_products"] == 0
+    assert expired.report["admission_callback_unattempted_products"] == 0
+    assert "deadline_monotonic" in expired.report["limits_reached"]
+
+    def deadline_after_first(_product):
+        deadline_after_first.fingerprint_calls += 1
+        partially_ranked.deadline = time.monotonic() - 1
+
+    deadline_after_first.fingerprint_calls = 0
+    partially_ranked = RouteFirstSearch(
+        HIT,
+        catalog,
+        rules,
+        RouteFirstLimits(**limits(max_steps=1, max_fingerprint_calls=4)),
+        accept=deadline_after_first,
+    )
+    partially_ranked._pending = [state, {**state, "product": canonical("CC(=O)Nc1ccncc1")}]
+    partially_ranked._admit()
+    assert partially_ranked.report["admission_ranked_products"] == 2
+    assert partially_ranked.report["admission_attempted_products"] == 1
+    assert partially_ranked.report["admission_callback_unattempted_products"] == 1
+    assert partially_ranked.report["admission_fp_unassessed_products"] == 0
+
+    def broken_accept(_product):
+        broken_accept.fingerprint_calls += 2
+
+    broken_accept.fingerprint_calls = 0
+    broken = RouteFirstSearch(
+        HIT,
+        catalog,
+        rules,
+        RouteFirstLimits(**limits(max_steps=1, max_fingerprint_calls=4)),
+        accept=broken_accept,
+    )
+    broken._pending = [state]
+    with pytest.raises(RuntimeError, match="one-fingerprint contract"):
+        broken._admit()
     _, capped = generate(TWO_STEP_HIT, catalog, rules, limits(max_routes=2))
     assert capped["routes_verified"] <= 2
     assert capped["route_audit_attempts"] <= 2

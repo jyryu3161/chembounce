@@ -1,0 +1,65 @@
+{
+  "schema": "admission-reserve-review-portable-v1",
+  "review_artifact": "benchmark-results/qualified-development-20261023/route-first-v2-admission-reserve-review-v1/report.json",
+  "review_sha256": "465860fff15ce62f4c17abf928e407938881e58765dc31c02584be6b2a52ef2d",
+  "review": {
+    "schema": "route-first-focused-review-v1",
+    "verdict": "pass_for_bounded_admission_fingerprint_reserve",
+    "scope": "Admission-reserve/purpose accounting/subset/contract delta and v13 pending-graph/counter harness only; no actual catalog/model run, metadata parity rerun or broad full suite.",
+    "source_sha256": {
+      "chembounce_synthesis/route_first.py": "6d09272729586b5539e49c67d971bd43d7fc6dde9ab70f5f548e47bce0d342b9",
+      "tests/synthesis/test_route_first.py": "2a5136561a74e0e7f7e17350c69d4c9d746c6da2f1345c581a9f83537d87ec8b",
+      "tests/test_phase_telemetry_develop_hooks.py": "008097bdf9f66b7c17ca025f715398300d50e477af0e0c9d1d64cd62eb4dc6c5",
+      "docs/SYNTHESIS.md": "c48e7d44b1389156ca5d668d2579c08f5b0e77cb241cda417317c8124bfeb778",
+      "benchmark-results/route-first-development-20261023-v2/development-probe-v13/probe.py": "f9915a059025390cd500c4087cef15cdabdb5b347e9384a8e838ebd5a449ff2c"
+    },
+    "blocking_findings": [],
+    "resolved_findings": [
+      {
+        "issue": "Admission used min(reserve, actual remaining), discarding a rankable uncached product when max_fp3 left2 calls but reserve1.",
+        "resolution": "Subset selection uses actual global remainder; reserve only protects admission by limiting generation. Real audited-route regression verifies total3 and successful admission."
+      },
+      {
+        "issue": "Phase1 half cap was applied to max_steps1 as well as two-step generation.",
+        "resolution": "Depth cap requires phase1 AND max_steps2. One-step regression computes uncached fingerprints beyond half toward G; separate two-step control retains phase1 cap."
+      },
+      {
+        "issue": "Rank-unassessed and ranked-but-callback-unattempted were conflated in interpretation.",
+        "resolution": "Separate admission_callback_unattempted_products plus existing pending/ranked/attempted counters; deadline-after-first-callback regression verifies distinction."
+      }
+    ],
+    "reviewed_invariants": [
+      "R=min(2*max_products,max_fp//2), G=max_fp-R. Initial hit is charged once. Two-step phase1 uses min(max_fp//2,G); single-step and phase2 use G. Admission uses global ceiling.",
+      "Cached-product-first then canonical-SMILES deterministic subset reserves zero-or-one new rank fingerprint plus one possible callback fingerprint for each selected product before similarity ordering. Products without a fingerprint are never given a synthetic similarity rank.",
+      "Generation exhaustion has separate labels and historical global exhaustion no longer causes wholesale pending-product discard. Eligible subset proceeds to unchanged exact forward replay/strict route audit subject to deadline and route cap.",
+      "Admission may spend unused generation allowance without exceeding total budget for callbacks obeying the existing zero-or-one counted fingerprint contract.",
+      "Callback counter delta is checked in finally, including rejection paths; decrease/more-than-one/total overflow raises RuntimeError after recording observed count. This detects but cannot prevent arbitrary custom callbacks from violating their contract; no silent clamping or masked charges.",
+      "Purpose sum hit+generation+admission ranking+callback is checked against reported total at completion. Rank-unassessed includes unranked products due to budget or deadline, not chemical failure; ranked-but-unattempted has a distinct counter.",
+      "v13 retains existing panel/config/gates/four-source before-after binding/result overwrite guard. Added pending graphs are explicitly unverified snapshots bounded by max_products, separate from eligible route details; all new purpose/admission counters are captured."
+    ],
+    "independent_checks": [
+      {
+        "command": ".venv-research/bin/python -m pytest -q tests/synthesis/test_route_first.py tests/test_phase_telemetry_develop_hooks.py",
+        "result": "66 passed in13.18s on final runtime/test hashes. Covers real audited pending-route admission after generation exhaustion, tiny cached/uncached budgets, spare generation reuse, single/two-step ceiling distinction, deadline callback interruption, contract violation and existing replay/telemetry controls."
+      },
+      {
+        "command": "git diff --check",
+        "result": "passed"
+      },
+      {
+        "check": "Final runtime/test/docs/harness hashes",
+        "result": "Match frozen handoff; no source changes after verification."
+      }
+    ],
+    "author_reported_checks": {
+      "focused_tests": "61 reported separately by author; independent exact command/count above is authoritative for this receipt.",
+      "format": "Whole-repository Ruff check/format and diff-check reported passed."
+    },
+    "limitations": [
+      "No fixed-panel v13 or actual catalog/model run by reviewer; implementation pass is not efficacy evidence.",
+      "Callback safety assumes honest cumulative fingerprint accounting and at most one call per product; violation is detected after execution.",
+      "Deadline still stops work and can prevent pending or accepted products reaching audit; pending snapshots do not certify chemical eligibility.",
+      "Fixed P1 greater-than5/12 all-step-supported adoption criterion and all final gates unchanged; P1 remains active."
+    ]
+  }
+}
