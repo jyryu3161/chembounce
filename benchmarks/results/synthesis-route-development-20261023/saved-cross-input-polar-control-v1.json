@@ -1,0 +1,276 @@
+{
+  "bindings": {
+    "input_sha256": {
+      "actual_v2": "2cb848e63da912b11e565c588e5b396e9d025ce94a8328fd5e3d22ea7434b468",
+      "fixed_input": "83300afd5468eea515b577990bbac4d9766a1aa68bc90b9bdbcfbf8714ded687",
+      "joint_helper": "9afb85c25339d333d9e89b6a8ce01b824caf3275495b2dbfc23c5cab62234f30",
+      "q1_manifest": "6b12dae1b5d50308a4f785ba393de1eba27ed2756923fafa59fc20571d0fe812",
+      "q1_source_trace": "f21deb7dce8bdf9c0b1c21b318ad4e9084ffaf98edc8304b203439b2180936d0",
+      "q1_summary": "5226aa51b033949a6eb2c71f7018a8a32055b7a5993748996ef84eea61cf9cbb",
+      "q2_manifest": "c8d906d4231bf602ec241be4ec7ff946b25b2cdfb133eb44f1f49eb262a5b911",
+      "q2_source_record": "b2b536d384f00d77c54c1a4f83e0aadc34a78e98b4da6020d437bf1d9d8cef79",
+      "q2_summary": "4ae4d48f0e89f6f63b2916c5a87160f7868f2e70c3a2bef16f2313eaf26f6ed5",
+      "q2_supported_routes": "8e320a322570e7e226759eccd7913f7d99ff71ed207f926b61cfdc481d14d29a",
+      "v17": "f86e0d441e8e9f9d759476febba4d6a92b8acd831a9dfda06a7df6366983f56e"
+    },
+    "original_q1_polar_reference": {
+      "Acceptor": 6,
+      "Donor": 3
+    },
+    "original_q2_polar_reference": {
+      "Acceptor": 7,
+      "Donor": 3
+    },
+    "rdkit_version": "2025.09.6",
+    "source_sha256": {
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "chembounce_synthesis/route_first.py": "8303df88df9755f332dce635b64fde742b04907ca0953e480075c73acadce136",
+      "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+      "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+    }
+  },
+  "decision": "lead_falsified_for_both_fixed_q2_products",
+  "frozen_artifacts": {
+    "input.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/saved-cross-input-polar-control-v1/input.json",
+      "sha256": "83300afd5468eea515b577990bbac4d9766a1aa68bc90b9bdbcfbf8714ded687"
+    },
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/saved-cross-input-polar-control-v1/plan.json",
+      "sha256": "65e71276df2046ffe85c5e4aa08464db24af3291a9da33f799e328e9134fe9a5"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/saved-cross-input-polar-control-v1/probe.py",
+      "sha256": "d80e155fa6751e98dfe7e5659e718a2663546b7ffea67fc671b679e1e49331df"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/saved-cross-input-polar-control-v1/result.json",
+      "sha256": "ca35c35b74474fa113365335ec983224d2fb26b80172b149eb3482e378353c81"
+    }
+  },
+  "interpretation": "Both historically q2-supported exact products fail q1 hit bit Tanimoto at 0.295775/0.303030 versus 0.35 despite q1 polar recall 8/9 passing. All four observed q1 products pass q1 Tanimoto at 0.375-0.402985 but fail q1 polar recall at 4/9-6/9. Thus this fixed cross-input alternative does not pass joint q1 gates. This does not prove other products or routes impossible, isolate N substitution as a cause, or change the primary metric.",
+  "rows": [
+    {
+      "gate_status": {
+        "anchor": "passed",
+        "hit_bit_tanimoto": "passed",
+        "polar_capacity": "failed",
+        "properties": "passed",
+        "scaffold_and_core": "passed",
+        "specified_stereo": "passed",
+        "typed_preflight": "passed"
+      },
+      "graph_sha256": "f71cdae6d985fcfd114fc48fecaacc7d8ad7c7bf141a82f6210746b141d72e21",
+      "historical_q2_actual_v2_all_step_supported": false,
+      "input_id": "CHEMBL3334418-query-1",
+      "leaf_ids": [
+        "structure-sha256:4ba19eba4379c88d57d6bdee2ba950b879c2a4f7837770b70e5e2e3a459d9d61",
+        "structure-sha256:4cc0162540d34e41a3fd5cb6cbd97d17dd93004e86da9e9aed3746df1858594f"
+      ],
+      "original_input_polar_status": "capacity_rejected",
+      "product": "NS(=O)(=O)c1ccc(C2CCN(c3ccc4c(c3)-c3ccccc3C(=O)C4=O)CC2)cc1",
+      "q1_hit_bit_tanimoto": 0.375,
+      "q1_hit_bit_tanimoto_minimum": 0.35,
+      "q1_polar_denominator": 9,
+      "q1_polar_missing_feature_families": {
+        "Acceptor": 2,
+        "Donor": 2
+      },
+      "q1_polar_numerator": 5,
+      "vector_status": "complete_vector"
+    },
+    {
+      "gate_status": {
+        "anchor": "passed",
+        "hit_bit_tanimoto": "passed",
+        "polar_capacity": "failed",
+        "properties": "passed",
+        "scaffold_and_core": "passed",
+        "specified_stereo": "passed",
+        "typed_preflight": "passed"
+      },
+      "graph_sha256": "4c1a4dde1948727ae5ca687d382c89654b73adf1db7beacb79c98c00e1b40ec0",
+      "historical_q2_actual_v2_all_step_supported": false,
+      "input_id": "CHEMBL3334418-query-1",
+      "leaf_ids": [
+        "structure-sha256:4ba19eba4379c88d57d6bdee2ba950b879c2a4f7837770b70e5e2e3a459d9d61",
+        "structure-sha256:deab9a239e141b32a47fb1e9da875f3b54d327945266b742b7217607822503a1"
+      ],
+      "original_input_polar_status": "capacity_rejected",
+      "product": "O=C1C(=O)c2ccc(N3CCC(c4ccc(S(=O)(=O)F)cc4)CC3)cc2-c2ccccc21",
+      "q1_hit_bit_tanimoto": 0.375,
+      "q1_hit_bit_tanimoto_minimum": 0.35,
+      "q1_polar_denominator": 9,
+      "q1_polar_missing_feature_families": {
+        "Acceptor": 2,
+        "Donor": 3
+      },
+      "q1_polar_numerator": 4,
+      "vector_status": "complete_vector"
+    },
+    {
+      "gate_status": {
+        "anchor": "passed",
+        "hit_bit_tanimoto": "passed",
+        "polar_capacity": "failed",
+        "properties": "passed",
+        "scaffold_and_core": "passed",
+        "specified_stereo": "passed",
+        "typed_preflight": "passed"
+      },
+      "graph_sha256": "3520a706770a4536a4ba8116e8c75bd790bec3a225e9aabc98d517dd6be33329",
+      "historical_q2_actual_v2_all_step_supported": false,
+      "input_id": "CHEMBL3334418-query-1",
+      "leaf_ids": [
+        "structure-sha256:7757302e0a10bd09a1682c384684a54e4db5821c72b83536e868b1bcaa76ae29",
+        "structure-sha256:4cc0162540d34e41a3fd5cb6cbd97d17dd93004e86da9e9aed3746df1858594f"
+      ],
+      "original_input_polar_status": "capacity_rejected",
+      "product": "CNc1ccc(N2CCC(c3ccc(S(N)(=O)=O)cc3)CC2)c2c1C(=O)c1ccccc1C2=O",
+      "q1_hit_bit_tanimoto": 0.40298507462686567,
+      "q1_hit_bit_tanimoto_minimum": 0.35,
+      "q1_polar_denominator": 9,
+      "q1_polar_missing_feature_families": {
+        "Acceptor": 2,
+        "Donor": 1
+      },
+      "q1_polar_numerator": 6,
+      "vector_status": "complete_vector"
+    },
+    {
+      "gate_status": {
+        "anchor": "passed",
+        "hit_bit_tanimoto": "passed",
+        "polar_capacity": "failed",
+        "properties": "passed",
+        "scaffold_and_core": "passed",
+        "specified_stereo": "passed",
+        "typed_preflight": "passed"
+      },
+      "graph_sha256": "485bb3b211a1fc1d2eb1f1f16a70f5361cde029ddc8ef926da8a027d9fa646d5",
+      "historical_q2_actual_v2_all_step_supported": false,
+      "input_id": "CHEMBL3334418-query-1",
+      "leaf_ids": [
+        "structure-sha256:7757302e0a10bd09a1682c384684a54e4db5821c72b83536e868b1bcaa76ae29",
+        "structure-sha256:deab9a239e141b32a47fb1e9da875f3b54d327945266b742b7217607822503a1"
+      ],
+      "original_input_polar_status": "capacity_rejected",
+      "product": "CNc1ccc(N2CCC(c3ccc(S(=O)(=O)F)cc3)CC2)c2c1C(=O)c1ccccc1C2=O",
+      "q1_hit_bit_tanimoto": 0.40298507462686567,
+      "q1_hit_bit_tanimoto_minimum": 0.35,
+      "q1_polar_denominator": 9,
+      "q1_polar_missing_feature_families": {
+        "Acceptor": 2,
+        "Donor": 2
+      },
+      "q1_polar_numerator": 5,
+      "vector_status": "complete_vector"
+    },
+    {
+      "gate_status": {
+        "anchor": "passed",
+        "hit_bit_tanimoto": "failed",
+        "polar_capacity": "passed",
+        "properties": "passed",
+        "scaffold_and_core": "passed",
+        "specified_stereo": "passed",
+        "typed_preflight": "passed"
+      },
+      "graph_sha256": "adfe9d9f2b4c4b13fcbd5b60f4ff45c722ebf32ac7346d6f9473ed5cfe48c6a3",
+      "historical_q2_actual_v2_all_step_supported": true,
+      "input_id": "CHEMBL3334418-query-2",
+      "leaf_ids": [
+        "structure-sha256:7757302e0a10bd09a1682c384684a54e4db5821c72b83536e868b1bcaa76ae29",
+        "structure-sha256:2333e0b666a57746639beb3cc2b3178f6760a3cf0a65e27b3de39e9d50c8e6e1"
+      ],
+      "original_input_polar_status": "possible",
+      "product": "CNc1ccc(NC(C)(C)c2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+      "q1_hit_bit_tanimoto": 0.29577464788732394,
+      "q1_hit_bit_tanimoto_minimum": 0.35,
+      "q1_polar_denominator": 9,
+      "q1_polar_missing_feature_families": {
+        "Acceptor": 1
+      },
+      "q1_polar_numerator": 8,
+      "vector_status": "complete_vector"
+    },
+    {
+      "gate_status": {
+        "anchor": "passed",
+        "hit_bit_tanimoto": "failed",
+        "polar_capacity": "passed",
+        "properties": "passed",
+        "scaffold_and_core": "passed",
+        "specified_stereo": "passed",
+        "typed_preflight": "passed"
+      },
+      "graph_sha256": "36508edaf5735f24af2ae95219a0a1a20a03e737fcd47bb49cfd4a0878722923",
+      "historical_q2_actual_v2_all_step_supported": true,
+      "input_id": "CHEMBL3334418-query-2",
+      "leaf_ids": [
+        "structure-sha256:7757302e0a10bd09a1682c384684a54e4db5821c72b83536e868b1bcaa76ae29",
+        "structure-sha256:b6bac035d0c6e90199bde37d30287f427f2537bcdc89c123ca12c9d946e3b725"
+      ],
+      "original_input_polar_status": "possible",
+      "product": "CNc1ccc(Nc2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+      "q1_hit_bit_tanimoto": 0.30303030303030304,
+      "q1_hit_bit_tanimoto_minimum": 0.35,
+      "q1_polar_denominator": 9,
+      "q1_polar_missing_feature_families": {
+        "Acceptor": 1
+      },
+      "q1_polar_numerator": 8,
+      "vector_status": "complete_vector"
+    }
+  ],
+  "schema": "saved-cross-input-polar-control-portable-v1",
+  "scope": "Known-outcome-selected fixed four q1 root042 pending graphs plus two historically all-step-supported q2 root042 graphs; all six evaluated under unchanged q1 pre-evidence gates. No generation, catalog, model, 3D, or ranking.",
+  "selection_bias": "Products were chosen from saved outcomes with known q2 support; this is a development falsifier, not prospective validation. q1/q2 original hits and polar references differ. Historical q2 support is not credited to q1.",
+  "static_rule_scope_observation": {
+    "literal_smarts": {
+      "synllama-rule-039": "[S;$(S(=O)(=O)[C,N]):1][Cl].[N;$(NC);!$(N=*);!$([N-]);!$(N#*);!$([ND3]);!$([ND4]);!$(N[c,O]);!$(N[C,S]=[S,O,N]):2]>>[S:1][N+0:2]",
+      "synllama-rule-081": "[Cl:5][S$(S(=O)(=O)(Cl)([CX4])):2](=[O:3])=[O:4].[NH2+0,NH3+:6]-[C$(C(N)([CX4,c])([CX4,c])([CX4,c])),C$([CH](N)([CX4,c])([CX4,c])),C$([CH2](N)([CX4,c])),C$([CH3](N)),c$(c(N)):7]>>[C,c:7]-[NH+0:6][S:2](=[O:4])=[O:3]"
+    },
+    "observation": "Rule039 sulfur role requires S(=O)(=O) attached to aliphatic [C,N] and its N role excludes N[c,O]. Rule081 sulfur role requires [CX4] on the sulfur-side substituent while its N role permits aniline N. These literal templates do not directly encode aryl-SO2-N(aryl) formation; this is a possible rule-coverage gap, not evidence that all 1-2 step routes are impossible.",
+    "rules_path": ".chembounce-data-synthesis/rules.json",
+    "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "source_only_not_part_of_six_product_control": true
+  },
+  "status": "complete_development_falsifier",
+  "summary": {
+    "complete_vectors": 6,
+    "q1_graphs": 4,
+    "q1_joint_gate_passes": 0,
+    "q2_graphs": 2,
+    "q2_products_passing_q1_gates": 0,
+    "q2_products_with_definite_q1_gate_failure": 2,
+    "unknown_vectors": 0
+  },
+  "work": {
+    "component_requests": {
+      "anchor": 6,
+      "polar_capacity": 6,
+      "properties": 6,
+      "scaffold_and_core": 6,
+      "specified_stereo": 6,
+      "typed_preflight": 6
+    },
+    "hit_fingerprint_attempts": 1,
+    "polar": {
+      "cache_hits": 0,
+      "capacity_rejections": 4,
+      "deadline_events": 0,
+      "evaluations": 6,
+      "evictions": 0,
+      "preflight_failures": 0,
+      "requests": 6
+    },
+    "product_fingerprint_attempts": 6,
+    "product_parse_attempts": 6,
+    "setup_attempts": 1
+  }
+}
