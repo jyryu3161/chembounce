@@ -1,0 +1,688 @@
+{
+  "schema": "reaction-local-pool-prototype-portable-v1",
+  "status": "complete_not_adopted",
+  "scope": "Metadata-only reconstruction and fixed feature-window evaluation; no generator, fingerprint, role-filtered catalog retrieval, forward chemistry or model",
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "bc5cc5ef47aba1bede5ec188667a006381d18554a4c0ef1d4145946296d02c2b",
+    "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b"
+  },
+  "source_unchanged": true,
+  "artifacts": {
+    "benchmark-results/route-first-development-20261023-v2/reaction-local-pool-prototype-v1/probe.py": "1c543798d2107d2e086346ca916479ab2751f83c94b9ce1d44260f9b2d940c53",
+    "benchmark-results/route-first-development-20261023-v2/reaction-local-pool-prototype-v1/result.json": "98dbb8f342b18960bf3adc640f31f4a52000d9ab9282a4d44bd617f15eb1d99e",
+    "benchmark-results/route-first-development-20261023-v2/reaction-local-pool-prototype-v1/analysis.json": "055a938a5d2cb7e35323a4709994dcfe65c3a27c1a3d353fdda14b0fdccbcb20"
+  },
+  "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+  "bounds": {
+    "unique_query_role_pairs": 128,
+    "match_sentinel": 65,
+    "max_query_atoms": 256,
+    "max_query_bonds": 512,
+    "graph_visits": 262144,
+    "pool_rows": 8192
+  },
+  "analysis": {
+    "schema": "reaction-local-pool-prototype-analysis-v1",
+    "executed_result_sha256": "98dbb8f342b18960bf3adc640f31f4a52000d9ab9282a4d44bd617f15eb1d99e",
+    "status": "complete",
+    "legacy_pool_membership_checks": 160,
+    "legacy_pool_membership_mismatches": 0,
+    "catalog_stream": {
+      "raw_rows": 238542,
+      "eligible_rows": 238542,
+      "duplicate_eligible_rows": 0,
+      "unique_eligible_canonical_smiles": 238542,
+      "bucket_count": 920
+    },
+    "query_role_pairs": 76,
+    "query_metadata_meter": {
+      "match_requests": 76,
+      "graph_visits": 4033
+    },
+    "local_fallback_counts": {
+      "None": 33,
+      "no_role_match": 43
+    },
+    "relevant_witness_leaf_queries": [
+      {
+        "route_id": "route_000008",
+        "leaf_node": "b0",
+        "leaf_catalog_id": "structure-sha256:54489d4bc382b9f092e2cbd64927a988e4ffd2eca9495c07fa8288224f252e94",
+        "leaf_smiles": "CN(C)c1ccccc1Br",
+        "nearest_call_index": 4,
+        "phase": 1,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 0,
+        "query": "CN(c1ccccc1Br)S(C)(=O)=O",
+        "legacy_features": [
+          3,
+          2,
+          1,
+          1
+        ],
+        "local_features": [
+          2,
+          1,
+          1,
+          1
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 117337,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 13757,
+        "rows_before_bucket": 112769,
+        "within_bucket_rank": 4568,
+        "local_rank": 4568,
+        "local_reached": true
+      },
+      {
+        "route_id": "route_000008",
+        "leaf_node": "b0",
+        "leaf_catalog_id": "structure-sha256:54489d4bc382b9f092e2cbd64927a988e4ffd2eca9495c07fa8288224f252e94",
+        "leaf_smiles": "CN(C)c1ccccc1Br",
+        "nearest_call_index": 12,
+        "phase": 1,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 0,
+        "query": "C",
+        "legacy_features": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "local_features": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "local_fallback_reason": "no_role_match",
+        "legacy_rank": 36109,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 13757,
+        "rows_before_bucket": 31541,
+        "within_bucket_rank": 4568,
+        "local_rank": 36109,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000008",
+        "leaf_node": "b0",
+        "leaf_catalog_id": "structure-sha256:54489d4bc382b9f092e2cbd64927a988e4ffd2eca9495c07fa8288224f252e94",
+        "leaf_smiles": "CN(C)c1ccccc1Br",
+        "nearest_call_index": 29,
+        "phase": 2,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 0,
+        "query": "Cc1cc(Br)n2nc(Cl)ncc12",
+        "legacy_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 167810,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 13757,
+        "rows_before_bucket": 163242,
+        "within_bucket_rank": 4568,
+        "local_rank": 167810,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000008",
+        "leaf_node": "b2",
+        "leaf_catalog_id": "structure-sha256:9eba082d36a1edde6e2f0578a8603a93e6d0eac2df5b89c15c901a1e2d5cdfa6",
+        "leaf_smiles": "Clc1ccc2ncc(Br)n2n1",
+        "nearest_call_index": 5,
+        "phase": 1,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 1,
+        "query": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(Cl)n2n1",
+        "legacy_features": [
+          7,
+          4,
+          3,
+          4
+        ],
+        "local_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 109109,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 1942,
+        "rows_before_bucket": 107900,
+        "within_bucket_rank": 1209,
+        "local_rank": 31327,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000008",
+        "leaf_node": "b2",
+        "leaf_catalog_id": "structure-sha256:9eba082d36a1edde6e2f0578a8603a93e6d0eac2df5b89c15c901a1e2d5cdfa6",
+        "leaf_smiles": "Clc1ccc2ncc(Br)n2n1",
+        "nearest_call_index": 13,
+        "phase": 1,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 1,
+        "query": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2ccc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+        "legacy_features": [
+          10,
+          6,
+          5,
+          5
+        ],
+        "local_features": [
+          10,
+          6,
+          5,
+          5
+        ],
+        "local_fallback_reason": "no_role_match",
+        "legacy_rank": 109276,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 1942,
+        "rows_before_bucket": 108067,
+        "within_bucket_rank": 1209,
+        "local_rank": 109276,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000008",
+        "leaf_node": "b2",
+        "leaf_catalog_id": "structure-sha256:9eba082d36a1edde6e2f0578a8603a93e6d0eac2df5b89c15c901a1e2d5cdfa6",
+        "leaf_smiles": "Clc1ccc2ncc(Br)n2n1",
+        "nearest_call_index": 20,
+        "phase": 2,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 1,
+        "query": "Cc1cc(Cl)n2nc(Cl)ncc12",
+        "legacy_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 31327,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 1942,
+        "rows_before_bucket": 30118,
+        "within_bucket_rank": 1209,
+        "local_rank": 31327,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000008",
+        "leaf_node": "b2",
+        "leaf_catalog_id": "structure-sha256:9eba082d36a1edde6e2f0578a8603a93e6d0eac2df5b89c15c901a1e2d5cdfa6",
+        "leaf_smiles": "Clc1ccc2ncc(Br)n2n1",
+        "nearest_call_index": 30,
+        "phase": 2,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 1,
+        "query": "CN(c1ccccc1Cl)S(C)(=O)=O",
+        "legacy_features": [
+          3,
+          2,
+          1,
+          1
+        ],
+        "local_features": [
+          2,
+          1,
+          1,
+          1
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 150671,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 1942,
+        "rows_before_bucket": 149462,
+        "within_bucket_rank": 1209,
+        "local_rank": 90550,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000008",
+        "leaf_node": "b2",
+        "leaf_catalog_id": "structure-sha256:9eba082d36a1edde6e2f0578a8603a93e6d0eac2df5b89c15c901a1e2d5cdfa6",
+        "leaf_smiles": "Clc1ccc2ncc(Br)n2n1",
+        "nearest_call_index": 38,
+        "phase": 2,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 1,
+        "query": "Cc1cc(Cl)n2nc(N)ncc12",
+        "legacy_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 31327,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 1942,
+        "rows_before_bucket": 30118,
+        "within_bucket_rank": 1209,
+        "local_rank": 31327,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000008",
+        "leaf_node": "b1",
+        "leaf_catalog_id": "structure-sha256:66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a",
+        "leaf_smiles": "COc1cc(CC(=O)O)ccc1N",
+        "nearest_call_index": 1,
+        "phase": 1,
+        "rule_id": "synllama-rule-042",
+        "role_slot": 1,
+        "query": "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12",
+        "legacy_features": [
+          5,
+          4,
+          3,
+          3
+        ],
+        "local_features": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 118868,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 18666,
+        "rows_before_bucket": 111404,
+        "within_bucket_rank": 7464,
+        "local_rank": 118888,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000008",
+        "leaf_node": "b1",
+        "leaf_catalog_id": "structure-sha256:66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a",
+        "leaf_smiles": "COc1cc(CC(=O)O)ccc1N",
+        "nearest_call_index": 3,
+        "phase": 1,
+        "rule_id": "synllama-rule-042",
+        "role_slot": 1,
+        "query": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N",
+        "legacy_features": [
+          4,
+          2,
+          1,
+          2
+        ],
+        "local_features": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 51272,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 18666,
+        "rows_before_bucket": 43808,
+        "within_bucket_rank": 7464,
+        "local_rank": 118888,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000006",
+        "leaf_node": "b0",
+        "leaf_catalog_id": "structure-sha256:54489d4bc382b9f092e2cbd64927a988e4ffd2eca9495c07fa8288224f252e94",
+        "leaf_smiles": "CN(C)c1ccccc1Br",
+        "nearest_call_index": 4,
+        "phase": 1,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 0,
+        "query": "CN(c1ccccc1Br)S(C)(=O)=O",
+        "legacy_features": [
+          3,
+          2,
+          1,
+          1
+        ],
+        "local_features": [
+          2,
+          1,
+          1,
+          1
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 117337,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 13757,
+        "rows_before_bucket": 112769,
+        "within_bucket_rank": 4568,
+        "local_rank": 4568,
+        "local_reached": true
+      },
+      {
+        "route_id": "route_000006",
+        "leaf_node": "b0",
+        "leaf_catalog_id": "structure-sha256:54489d4bc382b9f092e2cbd64927a988e4ffd2eca9495c07fa8288224f252e94",
+        "leaf_smiles": "CN(C)c1ccccc1Br",
+        "nearest_call_index": 12,
+        "phase": 1,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 0,
+        "query": "C",
+        "legacy_features": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "local_features": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "local_fallback_reason": "no_role_match",
+        "legacy_rank": 36109,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 13757,
+        "rows_before_bucket": 31541,
+        "within_bucket_rank": 4568,
+        "local_rank": 36109,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000006",
+        "leaf_node": "b0",
+        "leaf_catalog_id": "structure-sha256:54489d4bc382b9f092e2cbd64927a988e4ffd2eca9495c07fa8288224f252e94",
+        "leaf_smiles": "CN(C)c1ccccc1Br",
+        "nearest_call_index": 29,
+        "phase": 2,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 0,
+        "query": "Cc1cc(Br)n2nc(Cl)ncc12",
+        "legacy_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 167810,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 13757,
+        "rows_before_bucket": 163242,
+        "within_bucket_rank": 4568,
+        "local_rank": 167810,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000006",
+        "leaf_node": "b2",
+        "leaf_catalog_id": "structure-sha256:de00325d7efc3cf47f15bb66432f5afe9e49043437e97b9abd14de3c7590237d",
+        "leaf_smiles": "Cc1cc2ncc(I)n2nc1Cl",
+        "nearest_call_index": 5,
+        "phase": 1,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 1,
+        "query": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2c(C)cc(Cl)n2n1",
+        "legacy_features": [
+          7,
+          4,
+          3,
+          4
+        ],
+        "local_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 68236,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 11522,
+        "rows_before_bucket": 58227,
+        "within_bucket_rank": 10009,
+        "local_rank": 10009,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000006",
+        "leaf_node": "b2",
+        "leaf_catalog_id": "structure-sha256:de00325d7efc3cf47f15bb66432f5afe9e49043437e97b9abd14de3c7590237d",
+        "leaf_smiles": "Cc1cc2ncc(I)n2nc1Cl",
+        "nearest_call_index": 13,
+        "phase": 1,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 1,
+        "query": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Nc1ncc2ccc(-c3ccccc3N(C)S(C)(=O)=O)n2n1",
+        "legacy_features": [
+          10,
+          6,
+          5,
+          5
+        ],
+        "local_features": [
+          10,
+          6,
+          5,
+          5
+        ],
+        "local_fallback_reason": "no_role_match",
+        "legacy_rank": 68486,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 11522,
+        "rows_before_bucket": 58477,
+        "within_bucket_rank": 10009,
+        "local_rank": 68486,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000006",
+        "leaf_node": "b2",
+        "leaf_catalog_id": "structure-sha256:de00325d7efc3cf47f15bb66432f5afe9e49043437e97b9abd14de3c7590237d",
+        "leaf_smiles": "Cc1cc2ncc(I)n2nc1Cl",
+        "nearest_call_index": 20,
+        "phase": 2,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 1,
+        "query": "Cc1cc(Cl)n2nc(Cl)ncc12",
+        "legacy_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 10009,
+        "legacy_loss_stage": "within_bucket_partial_cut",
+        "bucket_size": 11522,
+        "rows_before_bucket": 0,
+        "within_bucket_rank": 10009,
+        "local_rank": 10009,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000006",
+        "leaf_node": "b2",
+        "leaf_catalog_id": "structure-sha256:de00325d7efc3cf47f15bb66432f5afe9e49043437e97b9abd14de3c7590237d",
+        "leaf_smiles": "Cc1cc2ncc(I)n2nc1Cl",
+        "nearest_call_index": 30,
+        "phase": 2,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 1,
+        "query": "CN(c1ccccc1Cl)S(C)(=O)=O",
+        "legacy_features": [
+          3,
+          2,
+          1,
+          1
+        ],
+        "local_features": [
+          2,
+          1,
+          1,
+          1
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 77467,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 11522,
+        "rows_before_bucket": 67458,
+        "within_bucket_rank": 10009,
+        "local_rank": 166808,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000006",
+        "leaf_node": "b2",
+        "leaf_catalog_id": "structure-sha256:de00325d7efc3cf47f15bb66432f5afe9e49043437e97b9abd14de3c7590237d",
+        "leaf_smiles": "Cc1cc2ncc(I)n2nc1Cl",
+        "nearest_call_index": 38,
+        "phase": 2,
+        "rule_id": "synllama-rule-036",
+        "role_slot": 1,
+        "query": "Cc1cc(Cl)n2nc(N)ncc12",
+        "legacy_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_features": [
+          3,
+          2,
+          2,
+          2
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 10009,
+        "legacy_loss_stage": "within_bucket_partial_cut",
+        "bucket_size": 11522,
+        "rows_before_bucket": 0,
+        "within_bucket_rank": 10009,
+        "local_rank": 10009,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000006",
+        "leaf_node": "b1",
+        "leaf_catalog_id": "structure-sha256:66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a",
+        "leaf_smiles": "COc1cc(CC(=O)O)ccc1N",
+        "nearest_call_index": 1,
+        "phase": 1,
+        "rule_id": "synllama-rule-042",
+        "role_slot": 1,
+        "query": "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12",
+        "legacy_features": [
+          5,
+          4,
+          3,
+          3
+        ],
+        "local_features": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 118868,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 18666,
+        "rows_before_bucket": 111404,
+        "within_bucket_rank": 7464,
+        "local_rank": 118888,
+        "local_reached": false
+      },
+      {
+        "route_id": "route_000006",
+        "leaf_node": "b1",
+        "leaf_catalog_id": "structure-sha256:66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a",
+        "leaf_smiles": "COc1cc(CC(=O)O)ccc1N",
+        "nearest_call_index": 3,
+        "phase": 1,
+        "rule_id": "synllama-rule-042",
+        "role_slot": 1,
+        "query": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N",
+        "legacy_features": [
+          4,
+          2,
+          1,
+          2
+        ],
+        "local_features": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "local_fallback_reason": null,
+        "legacy_rank": 51272,
+        "legacy_loss_stage": "bucket_not_visited",
+        "bucket_size": 18666,
+        "rows_before_bucket": 43808,
+        "within_bucket_rank": 7464,
+        "local_rank": 118888,
+        "local_reached": false
+      }
+    ],
+    "relevant_legacy_loss_counts": {
+      "bucket_not_visited": 18,
+      "within_bucket_partial_cut": 2
+    },
+    "relevant_local_reached": 2,
+    "interpretation": "Current pool loss is primarily whole-bucket nonvisitation; one heteroaryl iodide context is a within-bucket partial cut. The fixed reaction-local window reaches the shared aryl-bromide leaf for one rule-036 guide but neither heteroaryl leaf nor the aniline leaf for any relevant full-pool query. This is only a metadata rank calculation under unchanged catalog buckets; no role filtering, fingerprint scoring, generation, route audit or forward support was run."
+  },
+  "decision": {
+    "production_applied": false,
+    "reason": "Only one of four distinct known route leaves enters any relevant capped pool; neither complete three-leaf witness set is recovered.",
+    "known_limitation": "An explicit unary N role with recursive aromatic context returns only N in its match tuple. Ring closure before considering immediate neighbors omits the attached aromatic ring and yields an unsuitable local feature vector.",
+    "next_metadata_comparison": "Legacy versus neighbor-seeded local-window v2 crossed with exact normalized-role catalog index versus no role index. Top two roles are selected from all chosen outer-plan occurrences by descending frequency and normalized-SMARTS tie-break before catalog matching. No cross-role inference.",
+    "claims_excluded": [
+      "production retrieval improvement",
+      "recovered complete route",
+      "forward-model support",
+      "experimental synthesis feasibility"
+    ]
+  }
+}
