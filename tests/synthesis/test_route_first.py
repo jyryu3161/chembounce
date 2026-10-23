@@ -62,6 +62,14 @@ def test_actual_one_and_two_step_routes_have_complete_forward_and_atom_stereo_re
         <= 200
     )
     assert report["route_audit_attempts"] <= report["limits"]["max_routes"]
+    assert len(report["phase2_plan_trace"]) <= 8
+    assert any(slot["inner_stage_calls"] for plan in report["phase2_plan_trace"] for slot in plan["slots"])
+    assert all(
+        slot["inner_role_compatible_states"] <= slot["inner_stage_states"]
+        and slot["pool_selected_blocks"] <= slot["pool_role_compatible"] + slot["pool_cache_hits"] * 2
+        for plan in report["phase2_plan_trace"]
+        for slot in plan["slots"]
+    )
     assert all(item["generation"]["reference"] == "self_product_design" for item in routes)
     for item in routes:
         verified = verify_route(item["route"], catalog, rules, 16)
@@ -165,6 +173,130 @@ def test_reverse_guides_require_disjoint_complete_parent_atom_partition(tmp_path
     assert unary._reverse(rules.get("unary"), "CCO", False)
     assert unary.report["reverse_partition_checks"] == 1
     assert unary.report["reverse_partition_rejections"] == {}
+
+
+def test_optional_outer_center_metadata_never_repeats_cached_reverse_work(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [{"id": "split", "smarts": "[C:1].[C:2]>>[C:1][C:2]", "source": "test"}],
+            }
+        )
+    )
+    rules = Rules(path)
+    rule = rules.get("split")
+    search = RouteFirstSearch("CC", SimpleNamespace(sha256="test"), rules, RouteFirstLimits(**limits()))
+    guides = search._reverse(rule, search.hit, False, record_centers=True)
+    before = (search.report["reverse_attempts"], search.report["reverse_role_trials"])
+    assert search._reverse(rule, search.hit, False) == guides
+    assert (search.report["reverse_attempts"], search.report["reverse_role_trials"]) == before
+    assert search._guide_centers[(rule.id, search.hit, guides[0])] == (((0, 1),),)
+
+    inner_first = RouteFirstSearch("CC", SimpleNamespace(sha256="test"), rules, RouteFirstLimits(**limits()))
+    guides = inner_first._reverse(rule, inner_first.hit, False)
+    before = (inner_first.report["reverse_attempts"], inner_first.report["reverse_role_trials"])
+    assert inner_first._reverse(rule, inner_first.hit, False, record_centers=True) == guides
+    assert (inner_first.report["reverse_attempts"], inner_first.report["reverse_role_trials"]) == before
+    assert inner_first._guide_centers[(rule.id, inner_first.hit, guides[0])] == (None,)
+
+
+def test_outer_plan_cut_diversity_and_approximate_fallback_reachability(tmp_path, monkeypatch):
+    import chembounce_synthesis.route_first as route_first
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {"id": "split", "smarts": "[C:1].[C:2]>>[C:1][C:2]", "source": "test"},
+                    {"id": "unary", "smarts": "[C:1][C:2]>>[C:1][C:2]", "source": "test"},
+                    {"id": "fallback", "smarts": "[C:1].[O:2]>>[C:1]=[O:2]", "source": "test"},
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+
+    def plan_only():
+        search = RouteFirstSearch(
+            "CC",
+            SimpleNamespace(sha256="test"),
+            rules,
+            RouteFirstLimits(**limits(max_steps=1, max_rules=3, fallback_rules=1, max_outer_guides=3)),
+        )
+        search._stage = lambda *_args, **_kwargs: []
+        return search.run()[1]
+
+    report = plan_only()
+    assert [(row["rule_id"], row["center_kind"]) for row in report["outer_plans_selected"]] == [
+        ("split", "cut"),
+        ("unary", "no_cut"),
+        ("fallback", "explicit_fallback"),
+    ]
+    assert len({tuple(row["guide"]) for row in report["outer_plans_selected"]}) == 3
+    assert report["outer_plans_selected"][0]["cut_bond_centers"] == [[[0, 1]]]
+
+    monkeypatch.setattr(route_first, "MAX_OUTER_CENTER_METADATA_CHECKS", 0)
+    unknown = plan_only()
+    assert any(row["center_kind"] == "unknown" for row in unknown["outer_plans_selected"])
+    assert unknown["outer_center_metadata_incomplete"] >= 1
+    assert len(unknown["outer_plans_selected"]) == 3
+
+    approximate_path = tmp_path / "approximate.json"
+    approximate_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {"id": "aryl-h2", "smarts": "[Cl,Br,I][c:1].[N;H2:2]>>[c:1][N:2]", "source": "test"}
+                ],
+            }
+        )
+    )
+    approximate_rules = Rules(approximate_path)
+    approximate = RouteFirstSearch(
+        "c1ccc(N2CCC[C@H](C)C2)cc1",
+        SimpleNamespace(sha256="test"),
+        approximate_rules,
+        RouteFirstLimits(**limits(max_steps=1, max_outer_guides=1)),
+    )
+    approximate._stage = lambda *_args, **_kwargs: []
+    _, retained = approximate.run()
+    assert retained["outer_plans_selected"][0]["hint_quality"] == "approximate"
+
+
+def test_two_distinct_cut_centers_from_one_rule_keep_two_outer_slots(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [{"id": "aryl", "smarts": "[Cl,F][c:1].[N:2]>>[c:1][N:2]", "source": "test"}],
+            }
+        )
+    )
+    rules = Rules(path)
+    search = RouteFirstSearch(
+        "Nc1ccc(Nc2ccccc2)cc1",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits(max_steps=1, max_outer_guides=2)),
+    )
+    search._stage = lambda *_args, **_kwargs: []
+    _, report = search.run()
+    plans = report["outer_plans_selected"]
+    assert len(plans) == 2
+    assert all(plan["rule_id"] == "aryl" and plan["hint_quality"] == "typed" for plan in plans)
+    assert plans[0]["cut_bond_centers"] != plans[1]["cut_bond_centers"]
+    assert len({tuple(plan["guide"]) for plan in plans}) == 2
 
 
 def test_reverse_partition_metadata_rejects_missing_reused_and_invalid_origins():

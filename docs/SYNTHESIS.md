@@ -75,6 +75,27 @@ enumeration may be truncated and rejects typed construction. These bounds do
 not raise the existing reverse-outcome, catalog, product, fingerprint or route
 caps.
 
+An eighth v2 development probe that changed the second catalog-block choice
+reached only two of 12 inputs before model and 3D checks, so that change was
+reverted. The current pending revision instead allocates the existing eight
+outer search plans across distinct original-hit cut bonds recovered from the
+same capped reverse outcomes. It prefers complete role-conforming hints while
+retaining approximate, unary and explicit fallback plans. Each original-parent
+origin atom or bond inspected for cut metadata is charged to a 32,768-check
+search cap; unavailable metadata remains labelled unknown. No extra reverse
+outcomes or catalog rows are read for this decision. A catalog-free control
+retains both central typed aryl–amine disconnections that the prior plan order
+omitted on one development input. That control is a plan-selection result, not
+evidence that the catalog search or final gates produce a route. The revision
+has not yet been run on the fixed development panel.
+On those two retained guides, a separate catalog-free check found that the
+needed inner coupling rule remains outside the current four-rule selection.
+Under a hypothetical call to that rule with the unchanged four-outcome reverse
+cap, one guide yields no partition-valid outcome and the other yields only a
+peripheral methyl-bond cut. The inter-aromatic cut appears later in bounded
+product-template matches. The current center change therefore addresses one
+outer-plan loss without demonstrating recovery of the saved two-step route.
+
 ## Optional catalog byte binding
 
 A configuration can pin both the catalog TSV and its import manifest:

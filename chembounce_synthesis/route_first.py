@@ -26,6 +26,7 @@ REVERSE_ROLE_REPRESENTATIVES = (
 MAX_REVERSE_ROLE_TRIALS_PER_OUTCOME = 16
 MAX_REVERSE_ROLE_WORK_PER_SEARCH = 1024
 MAX_REVERSE_ROLE_MATCHES = 65
+MAX_OUTER_CENTER_METADATA_CHECKS = 32768
 
 
 def reverse_partition_issue(outcome, target_atoms):
@@ -481,6 +482,13 @@ class RouteFirstSearch:
                 "implicit_fallback": 0,
             },
             "reverse_local_template_compiles": 0,
+            "outer_center_metadata_check_limit": MAX_OUTER_CENTER_METADATA_CHECKS,
+            "outer_center_metadata_checks": 0,
+            "outer_center_metadata_incomplete": 0,
+            "outer_plan_candidates": 0,
+            "outer_distinct_cut_centers": 0,
+            "phase2_plan_trace": [],
+            "phase2_plan_trace_truncated": 0,
             "reverse_outcomes": 0,
             "reverse_fallbacks": 0,
             "retrieval_guides_normalized": 0,
@@ -522,6 +530,8 @@ class RouteFirstSearch:
         self._reverse_cache = {}
         self._tagged_reverse_cache = {}
         self._guide_quality = {}
+        self._guide_centers = {}
+        self._active_phase2_slot = None
         self._retrieval_target_cache = {}
         self._fp_cache = {self.hit: self.hit_fp}
         self._catalog_index = None
@@ -757,6 +767,35 @@ class RouteFirstSearch:
     def _count_role_match(self):
         self.report["reverse_role_match_checks"] += 1
 
+    def _outer_center_work(self):
+        if self._stop():
+            return False
+        if self.report["outer_center_metadata_checks"] >= MAX_OUTER_CENTER_METADATA_CHECKS:
+            self._stop("outer_center_metadata_budget")
+            return False
+        self.report["outer_center_metadata_checks"] += 1
+        return True
+
+    def _reverse_cut_bonds(self, outcome, parent):
+        """Cross-precursor bonds of original parent atoms, after partition validation."""
+        owners = {}
+        for slot, precursor in enumerate(outcome):
+            for atom in precursor.GetAtoms():
+                if not self._outer_center_work():
+                    self.report["outer_center_metadata_incomplete"] += 1
+                    return None
+                if atom.HasProp("react_atom_idx"):
+                    owners[atom.GetIntProp("react_atom_idx")] = slot
+        cuts = []
+        for bond in parent.GetBonds():
+            if not self._outer_center_work():
+                self.report["outer_center_metadata_incomplete"] += 1
+                return None
+            first, second = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
+            if owners[first] != owners[second]:
+                cuts.append((min(first, second), max(first, second)))
+        return tuple(sorted(cuts))
+
     def _typed_reverse_outcome(self, outcome, parent, rule, tags):
         parts, resets, instantiated, trials = [], 0, 0, 0
         for slot, raw in enumerate(outcome):
@@ -824,12 +863,19 @@ class RouteFirstSearch:
             "typed_reset_template_n_hydrogens": resets,
         }
 
-    def _reverse(self, rule, target, fallback):
+    def _reverse(self, rule, target, fallback, *, record_centers=False):
         key = (rule.id, target, fallback)
         if key in self._reverse_cache:
+            if record_centers:
+                # Metadata is optional. A guide already cached by an inner
+                # call cannot justify rerunning reverse chemistry; retain it
+                # with explicitly unknown cut provenance instead.
+                for guide in self._reverse_cache[key]:
+                    self._guide_centers.setdefault((rule.id, target, guide), (None,))
             return self._reverse_cache[key]
         guides = []
         qualities = {}
+        centers = {}
         raw_seen = False
         reverse_failed = False
         if not fallback and not self._stop():
@@ -855,6 +901,7 @@ class RouteFirstSearch:
                         counts = self.report["reverse_partition_rejections"]
                         counts[issue] = counts.get(issue, 0) + 1
                         continue
+                    cut_bonds = self._reverse_cut_bonds(outcome, parent) if record_centers else None
                     typed = self._typed_reverse_outcome(outcome, parent, rule, tags)
                     if self._stop():
                         break
@@ -883,6 +930,8 @@ class RouteFirstSearch:
                             self.report["reverse_failures"] += 1
                             continue
                     guides.append(guide)
+                    if record_centers:
+                        centers.setdefault(guide, set()).add(cut_bonds)
                     if quality == "typed" or guide not in qualities:
                         qualities[guide] = quality
                     for label, count in changes.items():
@@ -918,11 +967,17 @@ class RouteFirstSearch:
                 )
             ]
             qualities = {guides[0]: "implicit_fallback" if implicit else "explicit_fallback"}
+            if record_centers:
+                centers = {guides[0]: {None}}
         guides = sorted(set(guides))[: self.limits.max_reverse_outcomes]
         self.report["reverse_outcomes"] += len(guides)
         for guide in guides:
             quality = qualities[guide]
             self._guide_quality[(rule.id, target, guide)] = quality
+            if record_centers:
+                self._guide_centers[(rule.id, target, guide)] = tuple(
+                    sorted(centers[guide], key=lambda value: (value is None, value or ()))
+                )
             self.report["reverse_hint_quality_counts"][quality] += 1
         self._reverse_cache[key] = guides
         return guides
@@ -986,7 +1041,13 @@ class RouteFirstSearch:
 
     def _nearest(self, target, role):
         key = (target, role)
+        trace = self._active_phase2_slot
+        if trace is not None:
+            trace["pool_queries"] += 1
         if key in self._nearest_cache:
+            if trace is not None:
+                trace["pool_cache_hits"] += 1
+                trace["pool_selected_blocks"] += len(self._nearest_cache[key])
             return self._nearest_cache[key]
         self.report["role_queries"] += 1
         query = Chem.MolFromSmarts(role)
@@ -1004,6 +1065,8 @@ class RouteFirstSearch:
             return ()
         ranked = []
         pool = self._pool(retrieval_target)
+        if trace is not None:
+            trace["pool_bucket_candidates"] += len(pool)
         active_anchors = self._guide_anchors(target)
         anchor_strength = {}
         for index in active_anchors:
@@ -1037,6 +1100,8 @@ class RouteFirstSearch:
                 break
             self.report["catalog_row_visits"] += 1
             self.report["anchor_role_checks"] += 1
+            if trace is not None:
+                trace["pool_role_checks"] += 1
             posting_attempts += 1
             mol = self.catalog.mols[smiles]
             if mol.HasSubstructMatch(query, useChirality=True):
@@ -1057,8 +1122,12 @@ class RouteFirstSearch:
                     break
                 self.report["catalog_row_visits"] += 1
                 mol = self.catalog.mols[smiles]
+                if trace is not None:
+                    trace["pool_role_checks"] += 1
                 if not mol.HasSubstructMatch(query, useChirality=True):
                     continue
+            if trace is not None:
+                trace["pool_role_compatible"] += 1
             candidate_fp = self._fingerprint(smiles)
             if candidate_fp is None:
                 complete = False
@@ -1077,6 +1146,8 @@ class RouteFirstSearch:
             self.catalog.blocks[sorted(self.catalog.by_smiles[smiles])[0]]
             for _score, _anchors, smiles in selected
         )
+        if trace is not None:
+            trace["pool_selected_blocks"] += len(blocks)
         if complete:
             self._nearest_cache[key] = blocks
         return blocks
@@ -1260,7 +1331,7 @@ class RouteFirstSearch:
         for rule, fallback in outer:
             if self._stop():
                 break
-            for guide in self._reverse(rule, self.hit, fallback):
+            for guide in self._reverse(rule, self.hit, fallback, record_centers=True):
                 if self._stop():
                     break
                 normalized = tuple(self._retrieval_target(part) for part in guide)
@@ -1269,10 +1340,41 @@ class RouteFirstSearch:
                     sum(molecule(part).GetNumHeavyAtoms() for part in normalized)
                     - self.hit_mol.GetNumHeavyAtoms()
                 )
-                plan_candidates.append((rule, guide, fallback, artifacts, size_delta))
+                centers = self._guide_centers[(rule.id, self.hit, guide)]
+                proven = tuple(center for center in centers if center)
+                if proven:
+                    center_keys = tuple(("cut", center) for center in proven)
+                    center_kind = "cut"
+                else:
+                    center_kind = "unknown" if None in centers else "no_cut"
+                quality = self._guide_quality[(rule.id, self.hit, guide)]
+                if quality in ("explicit_fallback", "implicit_fallback"):
+                    center_kind = quality
+                if not proven:
+                    center_keys = ((center_kind, rule.id, guide),)
+                plan_candidates.append(
+                    (rule, guide, fallback, artifacts, size_delta, center_keys, center_kind, quality)
+                )
+        self.report["outer_plan_candidates"] = len(plan_candidates)
+        self.report["outer_distinct_cut_centers"] = len(
+            {
+                key
+                for _rule, _guide, _fallback, _artifacts, _size_delta, keys, _kind, _quality in plan_candidates
+                for key in keys
+                if key[0] == "cut"
+            }
+        )
         plan_candidates.sort(
             key=lambda item: (
                 item[2],
+                {"typed": 0, "approximate": 1, "implicit_fallback": 2, "explicit_fallback": 2}[item[7]],
+                {
+                    "cut": 0,
+                    "no_cut": 1,
+                    "unknown": 2,
+                    "explicit_fallback": 3,
+                    "implicit_fallback": 3,
+                }[item[6]],
                 -item[0].reaction.GetProducts()[0].GetNumHeavyAtoms(),
                 item[3],
                 item[4],
@@ -1281,31 +1383,34 @@ class RouteFirstSearch:
             )
         )
         plans = []
-        seen_rules = set()
-        for only_new_rules in (True, False):
-            for rule, guide, _fallback, _artifacts, _size_delta in plan_candidates:
+        covered_centers = set()
+        for only_new_centers in (True, False):
+            for rule, guide, fallback, _artifacts, _size_delta, keys, kind, quality in plan_candidates:
                 if len(plans) >= self.limits.max_outer_guides:
                     break
-                if only_new_rules and rule.id in seen_rules:
+                if only_new_centers and all(key in covered_centers for key in keys):
                     continue
-                if (rule, guide) in plans:
+                if any(item[0] == rule and item[1] == guide for item in plans):
                     continue
-                plans.append((rule, guide))
-                seen_rules.add(rule.id)
+                plans.append((rule, guide, fallback, keys, kind, quality))
+                covered_centers.update(keys)
         if len(plan_candidates) > len(plans):
             self._stop("max_outer_guides")
         self.report["outer_plans_selected"] = [
             {
                 "rule_id": rule.id,
                 "guide": list(guide),
-                "hint_quality": self._guide_quality[(rule.id, self.hit, guide)],
+                "fallback": fallback,
+                "hint_quality": quality,
+                "center_kind": kind,
+                "cut_bond_centers": [list(map(list, key[1])) for key in keys if key[0] == "cut"],
             }
-            for rule, guide in plans
+            for rule, guide, fallback, keys, kind, quality in plans
         ]
         depth_one_product_budget = (
             self.limits.max_products if self.limits.max_steps == 1 else max(1, self.limits.max_products // 2)
         )
-        for rule, guide in plans:
+        for rule, guide, _fallback, _keys, _kind, _quality in plans:
             if self._stop() or self.report["combinations"] >= depth_one_budget:
                 break
             states = self._stage(
@@ -1318,27 +1423,79 @@ class RouteFirstSearch:
             self._retain(states)
         if self.limits.max_steps == 2 and not self._stop():
             self._phase = 2
-            for outer_rule, guide in plans:
+            for plan_index, (outer_rule, guide, _fallback, _keys, _kind, _quality) in enumerate(plans):
+                plan_trace = None
+                if len(self.report["phase2_plan_trace"]) < 8:
+                    plan_trace = {"plan_index": plan_index, "rule_id": outer_rule.id, "slots": []}
+                    self.report["phase2_plan_trace"].append(plan_trace)
+                else:
+                    self.report["phase2_plan_trace_truncated"] += 1
                 for slot, target in enumerate(guide):
                     if self._stop() or self.report["combinations"] >= self.limits.max_combinations:
                         break
-                    inner_rules = self._select_rules(target, self.limits.max_inner_rules)
-                    for inner_rule, _ in inner_rules:
-                        for inner_guide in self._reverse(inner_rule, target, False):
-                            inner = self._stage(inner_rule, inner_guide, "i")
-                            inner = self._compatible_inner(inner, outer_rule, slot)
-                            if self._stop():
-                                break
-                            inner = sorted(
-                                inner,
-                                key=lambda state: (self._rank(state["product"], target), state["product"]),
-                            )[: self.limits.beam_width]
-                            if not inner:
-                                continue
-                            states = self._stage(outer_rule, guide, "o", replace=(slot, inner))
-                            self._retain(states)
-                            if self._stop() or self.report["combinations"] >= self.limits.max_combinations:
-                                break
+                    slot_trace = None
+                    if plan_trace is not None:
+                        slot_trace = {
+                            "slot": slot,
+                            "target": target,
+                            "inner_rules_selected": [],
+                            "inner_reverse_guides": 0,
+                            "inner_stage_calls": 0,
+                            "inner_stage_states": 0,
+                            "inner_role_compatible_states": 0,
+                            "inner_beam_states": 0,
+                            "outer_stage_calls": 0,
+                            "outer_stage_states": 0,
+                            "pool_queries": 0,
+                            "pool_cache_hits": 0,
+                            "pool_bucket_candidates": 0,
+                            "pool_role_checks": 0,
+                            "pool_role_compatible": 0,
+                            "pool_selected_blocks": 0,
+                        }
+                        plan_trace["slots"].append(slot_trace)
+                    self._active_phase2_slot = slot_trace
+                    try:
+                        inner_rules = self._select_rules(target, self.limits.max_inner_rules)
+                        if slot_trace is not None:
+                            slot_trace["inner_rules_selected"] = [rule.id for rule, _ in inner_rules]
+                        for inner_rule, _ in inner_rules:
+                            inner_guides = self._reverse(inner_rule, target, False)
+                            if slot_trace is not None:
+                                slot_trace["inner_reverse_guides"] += len(inner_guides)
+                            for inner_guide in inner_guides:
+                                inner = self._stage(inner_rule, inner_guide, "i")
+                                if slot_trace is not None:
+                                    slot_trace["inner_stage_calls"] += 1
+                                    slot_trace["inner_stage_states"] += len(inner)
+                                inner = self._compatible_inner(inner, outer_rule, slot)
+                                if slot_trace is not None:
+                                    slot_trace["inner_role_compatible_states"] += len(inner)
+                                if self._stop():
+                                    break
+                                inner = sorted(
+                                    inner,
+                                    key=lambda state: (
+                                        self._rank(state["product"], target),
+                                        state["product"],
+                                    ),
+                                )[: self.limits.beam_width]
+                                if slot_trace is not None:
+                                    slot_trace["inner_beam_states"] += len(inner)
+                                if not inner:
+                                    continue
+                                states = self._stage(outer_rule, guide, "o", replace=(slot, inner))
+                                if slot_trace is not None:
+                                    slot_trace["outer_stage_calls"] += 1
+                                    slot_trace["outer_stage_states"] += len(states)
+                                self._retain(states)
+                                if (
+                                    self._stop()
+                                    or self.report["combinations"] >= self.limits.max_combinations
+                                ):
+                                    break
+                    finally:
+                        self._active_phase2_slot = None
 
         self._admit()
         self.report["total_fingerprint_calls"] = (
