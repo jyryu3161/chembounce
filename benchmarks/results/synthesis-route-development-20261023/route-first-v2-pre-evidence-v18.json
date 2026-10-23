@@ -1,0 +1,362 @@
+{
+  "artifacts": {
+    "analysis": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v18/analysis.json",
+      "sha256": "26d79051f49e6863782269dc2cfc48c3367bc8e106db1bb66b0b34e37b73484d"
+    },
+    "analysis_plan": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v18/analysis-plan.json",
+      "sha256": "285beb31cd22304a2490d5accf5764aaf0b60b819a4237c9ddf8951dcd9b62d6"
+    },
+    "analysis_plan_initial_status_rejection": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v18/analysis-plan-rejected-status.json",
+      "sha256": "733fb3c403954a16766ffefa626dd9dbed1c971bcf38695f44d97e7f21c2ce7a"
+    },
+    "analysis_plan_review_draft": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v18/analysis-plan-draft-reviewed.json",
+      "sha256": "5acf04064421bfc9552af2676e179f5c516de66ee0163e038fb827fe4b8b6b9c"
+    },
+    "analyzer": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v18/analyze.py",
+      "sha256": "3ff5ade7770acb8c326a6cdbb95cc469cec057836e0b7e8e4a9cfc3887f613f7"
+    },
+    "frozen_plan": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v18/plan.json",
+      "sha256": "75852cc6e1c196cbc1c1f8581b18a535c438b61a0edeae212e08f1494fcb4831"
+    },
+    "loss_diagnosis": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v18/loss-diagnosis-v1.json",
+      "sha256": "b4fe1d185b928b0f4b8e8f842daf51487f3a2b0788fc84c0337c8f81772132f5"
+    },
+    "plan_review_draft": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v18/plan-draft-reviewed.json",
+      "sha256": "56565a6eb010b50e2a06b60dee67342b1bc69e88391c2720190ff2e17feae090"
+    },
+    "probe": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v18/probe.py",
+      "sha256": "c6dd6945bb5c207b42c06be4c5090556d1425ff146e1bb54c5b0d0d115792d98"
+    },
+    "result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v18/result.json",
+      "sha256": "7675112a51d049db4c1da3bb499e8073db9f881b0de78caf4e8ee551f2b3159f"
+    },
+    "v17_result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v17/result.json",
+      "sha256": "f86e0d441e8e9f9d759476febba4d6a92b8acd831a9dfda06a7df6366983f56e"
+    }
+  },
+  "assets": {
+    "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "config_sha256": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+    "manifest_sha256": {
+      "CHEMBL3334418-query-1": "6b12dae1b5d50308a4f785ba393de1eba27ed2756923fafa59fc20571d0fe812",
+      "CHEMBL3334418-query-2": "c8d906d4231bf602ec241be4ec7ff946b25b2cdfb133eb44f1f49eb262a5b911",
+      "CHEMBL3864-query-1": "4a968e55ab7c40947beee7db5cdcee24b35e04253feb1faf379007d12eaf525b",
+      "CHEMBL3864-query-2": "b038c40adf103153dd78182be09cb9c2ee3258e05a5eff7dc8837ebabeb04fc0",
+      "CHEMBL4247-query-1": "500fda8ed7a5dbc447fe8b9aa1f6ea85c97ac8d389eebf089b919360aa6371cb",
+      "CHEMBL4247-query-2": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "CHEMBL4630839-query-1": "4550b2df1b553049fb94a78835fec0544cca3980c044823ad0e9cbc51f521739",
+      "CHEMBL4630839-query-2": "b8d631a17140f78af64e6ce4f188c5b64aa1f74d5cc6b8acaaaed07f440a10cc",
+      "CHEMBL4869-query-1": "1669db70ff4d09c9a93d586d872d256d3482e10c6e729c7637f15a176eab262d",
+      "CHEMBL4869-query-2": "7c4ef94083ab953bb45c9651f3bb80d5d00cbff155849752ec2135655f0ede7b",
+      "CHEMBL5163-query-1": "cf83f89e9df2e11ccc259628a9f7b59aee066c2f64e4a01a2eda829922926baf",
+      "CHEMBL5163-query-2": "53066839233b041e4d65b62284a722b995a9ab08c65692cb83ae8f479f335145"
+    },
+    "panel_sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+    "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39"
+  },
+  "base_caps": {
+    "arms": 1,
+    "building_block_top_k": 2,
+    "catalog_index_rows": 250000,
+    "catalog_loads": 1,
+    "catalog_row_visits_per_arm": 262144,
+    "combinations_per_arm": 512,
+    "fingerprint_calls_per_arm": 65536,
+    "inputs": 12,
+    "per_input_per_arm_cooperative_seconds": 960,
+    "products_per_arm": 1024,
+    "reverse_outcomes_per_call": 4,
+    "route_audits_per_arm": 64,
+    "rows_per_query": 8192,
+    "rule_inspections_per_arm": 512,
+    "stereo_atom_bond_units_per_arm": 131072,
+    "stereo_perceptions_per_arm": 2048
+  },
+  "costs": {
+    "v17_catalog_row_visits": 2918240,
+    "v17_generation_seconds_sum_excluding_catalog": 560.412,
+    "v17_products_generated": 1378,
+    "v18_catalog_row_visits": 2906505,
+    "v18_generation_seconds_sum_excluding_catalog": 549.168,
+    "v18_products_generated": 1482
+  },
+  "decision": {
+    "global_typed_prefix_policy": "REJECT for P1 adoption: pre-evidence coverage fell from6 to5, known qualified3 graphs retained but net products and routes decreased; conditional optimistic input bound4 does not justify a new full model run.",
+    "next_action": "Hold runtime until outcome review. A prospective general correction would discount only a provenance-proven originless typed representative atom inside absolute size reconstruction error, with raw-alternative agreement/unknown legacy fallback; preserve all caps/gates and test all12 bounded plan-only before any catalog run. No rule ID or saved witness exception."
+  },
+  "loss_localization": {
+    "4247_exact_loss_stage": "Unresolved within inner guide/source choice, outer-role compatibility and final combination: saved aggregate counters do not bind individual lost graph to workitem.",
+    "all_four_lost_products_absent_from_new_pending": true,
+    "lost_333q2_final_rule042_no_longer_selected_as_outer_plan": true,
+    "lost_4247q2_final_rule042_still_selected": true,
+    "methods": {
+      "graph_loss": "Saved v17/v18 result and analysis JSON only; exact products/route graphs and pending node identities.",
+      "sort_key": "Only two affected input hits and recorded guide SMILES parsed for RDKit heavy-atom counts; source _retrieval_target and fixed rule product-template sizes inspected. No reaction execution or catalog lookup."
+    },
+    "raw_report": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v18/loss-diagnosis-v1.json",
+      "sha256": "b4fe1d185b928b0f4b8e8f842daf51487f3a2b0788fc84c0337c8f81772132f5"
+    },
+    "sort_key_observation": "Both affected inputs: same-center rule042 and045 approximate candidates tie on earlier fields (including template heavy2, artifacts0); typed-prefix adds one guide heavy atom to042, changing absolute size_delta0\u21921 while uncorrected045 stays0 and sorts earlier. This explains plan replacement, not every downstream product loss."
+  },
+  "rows": [
+    {
+      "anchor_passed_v17": 58,
+      "anchor_passed_v18": 58,
+      "gained_products": [],
+      "gained_route_graphs": 0,
+      "historical_qualified_graphs_retained": 3,
+      "id": "CHEMBL4630839-query-1",
+      "lost_products": [],
+      "lost_route_graphs": 0,
+      "mixed_typed_prefix_hints": 10,
+      "mixed_typed_prefix_parts": 10,
+      "saved_forward_exact_status_counts": {
+        "no_saved_exact_graph_step_association": 2,
+        "saved_all_steps_matched": 3,
+        "saved_unassessed_or_mixed": 29
+      },
+      "v17_products": 34,
+      "v18_products": 34
+    },
+    {
+      "anchor_passed_v17": 9,
+      "anchor_passed_v18": 9,
+      "gained_products": [],
+      "gained_route_graphs": 0,
+      "historical_qualified_graphs_retained": 0,
+      "id": "CHEMBL4630839-query-2",
+      "lost_products": [],
+      "lost_route_graphs": 0,
+      "mixed_typed_prefix_hints": 8,
+      "mixed_typed_prefix_parts": 8,
+      "saved_forward_exact_status_counts": {
+        "saved_all_steps_matched": 1
+      },
+      "v17_products": 1,
+      "v18_products": 1
+    },
+    {
+      "anchor_passed_v17": 30,
+      "anchor_passed_v18": 30,
+      "gained_products": [],
+      "gained_route_graphs": 0,
+      "historical_qualified_graphs_retained": 0,
+      "id": "CHEMBL4247-query-1",
+      "lost_products": [],
+      "lost_route_graphs": 0,
+      "mixed_typed_prefix_hints": 15,
+      "mixed_typed_prefix_parts": 15,
+      "saved_forward_exact_status_counts": {
+        "no_saved_exact_graph_step_association": 2,
+        "saved_all_steps_matched": 3,
+        "saved_mismatched": 1,
+        "saved_partially_evaluated": 1,
+        "saved_unassessed_or_mixed": 9
+      },
+      "v17_products": 11,
+      "v18_products": 11
+    },
+    {
+      "anchor_passed_v17": 60,
+      "anchor_passed_v18": 86,
+      "gained_products": [
+        "COc1cc(CC(=O)O)ccc1Nc1ncc2cc(-c3ccccc3S(C)(=O)=O)cn2n1"
+      ],
+      "gained_route_graphs": 1,
+      "historical_qualified_graphs_retained": 0,
+      "id": "CHEMBL4247-query-2",
+      "lost_products": [
+        "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+        "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1"
+      ],
+      "lost_route_graphs": 2,
+      "mixed_typed_prefix_hints": 15,
+      "mixed_typed_prefix_parts": 15,
+      "saved_forward_exact_status_counts": {
+        "no_saved_exact_graph_step_association": 3,
+        "saved_mismatched": 2
+      },
+      "v17_products": 4,
+      "v18_products": 3
+    },
+    {
+      "anchor_passed_v17": 12,
+      "anchor_passed_v18": 12,
+      "gained_products": [],
+      "gained_route_graphs": 0,
+      "historical_qualified_graphs_retained": 0,
+      "id": "CHEMBL5163-query-1",
+      "lost_products": [],
+      "lost_route_graphs": 0,
+      "mixed_typed_prefix_hints": 9,
+      "mixed_typed_prefix_parts": 9,
+      "saved_forward_exact_status_counts": {},
+      "v17_products": 0,
+      "v18_products": 0
+    },
+    {
+      "anchor_passed_v17": 0,
+      "anchor_passed_v18": 0,
+      "gained_products": [],
+      "gained_route_graphs": 0,
+      "historical_qualified_graphs_retained": 0,
+      "id": "CHEMBL5163-query-2",
+      "lost_products": [],
+      "lost_route_graphs": 0,
+      "mixed_typed_prefix_hints": 5,
+      "mixed_typed_prefix_parts": 5,
+      "saved_forward_exact_status_counts": {},
+      "v17_products": 0,
+      "v18_products": 0
+    },
+    {
+      "anchor_passed_v17": 34,
+      "anchor_passed_v18": 34,
+      "gained_products": [],
+      "gained_route_graphs": 0,
+      "historical_qualified_graphs_retained": 0,
+      "id": "CHEMBL3334418-query-1",
+      "lost_products": [],
+      "lost_route_graphs": 0,
+      "mixed_typed_prefix_hints": 5,
+      "mixed_typed_prefix_parts": 5,
+      "saved_forward_exact_status_counts": {
+        "saved_mismatched": 6
+      },
+      "v17_products": 6,
+      "v18_products": 6
+    },
+    {
+      "anchor_passed_v17": 34,
+      "anchor_passed_v18": 34,
+      "gained_products": [],
+      "gained_route_graphs": 0,
+      "historical_qualified_graphs_retained": 0,
+      "id": "CHEMBL3334418-query-2",
+      "lost_products": [
+        "CNc1ccc(NC(C)(C)c2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+        "CNc1ccc(Nc2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O"
+      ],
+      "lost_route_graphs": 2,
+      "mixed_typed_prefix_hints": 9,
+      "mixed_typed_prefix_parts": 9,
+      "saved_forward_exact_status_counts": {},
+      "v17_products": 2,
+      "v18_products": 0
+    },
+    {
+      "anchor_passed_v17": 0,
+      "anchor_passed_v18": 0,
+      "gained_products": [],
+      "gained_route_graphs": 0,
+      "historical_qualified_graphs_retained": 0,
+      "id": "CHEMBL4869-query-1",
+      "lost_products": [],
+      "lost_route_graphs": 0,
+      "mixed_typed_prefix_hints": 9,
+      "mixed_typed_prefix_parts": 9,
+      "saved_forward_exact_status_counts": {},
+      "v17_products": 0,
+      "v18_products": 0
+    },
+    {
+      "anchor_passed_v17": 0,
+      "anchor_passed_v18": 0,
+      "gained_products": [],
+      "gained_route_graphs": 0,
+      "historical_qualified_graphs_retained": 0,
+      "id": "CHEMBL4869-query-2",
+      "lost_products": [],
+      "lost_route_graphs": 0,
+      "mixed_typed_prefix_hints": 15,
+      "mixed_typed_prefix_parts": 15,
+      "saved_forward_exact_status_counts": {},
+      "v17_products": 0,
+      "v18_products": 0
+    },
+    {
+      "anchor_passed_v17": 34,
+      "anchor_passed_v18": 47,
+      "gained_products": [],
+      "gained_route_graphs": 0,
+      "historical_qualified_graphs_retained": 0,
+      "id": "CHEMBL3864-query-1",
+      "lost_products": [],
+      "lost_route_graphs": 0,
+      "mixed_typed_prefix_hints": 5,
+      "mixed_typed_prefix_parts": 5,
+      "saved_forward_exact_status_counts": {},
+      "v17_products": 0,
+      "v18_products": 0
+    },
+    {
+      "anchor_passed_v17": 0,
+      "anchor_passed_v18": 0,
+      "gained_products": [],
+      "gained_route_graphs": 0,
+      "historical_qualified_graphs_retained": 0,
+      "id": "CHEMBL3864-query-2",
+      "lost_products": [],
+      "lost_route_graphs": 0,
+      "mixed_typed_prefix_hints": 19,
+      "mixed_typed_prefix_parts": 19,
+      "saved_forward_exact_status_counts": {},
+      "v17_products": 0,
+      "v18_products": 0
+    }
+  ],
+  "runtime_commit": "038a755af21844f5ce2f3e95b5174f7de553011f",
+  "schema": "route-first-v2-pre-evidence-v18-portable",
+  "scope": "One fixed 12-input model-free ON panel with continuation preference and optional typed-prefix preservation, compared after generation to immutable saved v17 ON. Same configs/assets/gates/caps and 960-second cooperative deadline per input; one shared Catalog load. No old-arm rerun, forward model, 3D or primary comparison rerun.",
+  "source_sha256": {
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+    "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+    "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+    "chembounce_synthesis/route_first.py": "9c3167b37f2d2b822eb457ad4d27f0cbf4ef3d0ff6b6bcb05affdd02fe731d45",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e"
+  },
+  "status": "complete",
+  "summary": {
+    "actual_baseline_supported_inputs": 5,
+    "actual_primary_supported_inputs_unchanged": 4,
+    "conditional_optimistic_possible_inputs": 4,
+    "gross_graph_gains": 1,
+    "gross_graph_losses": 4,
+    "gross_product_gains": 1,
+    "gross_product_losses": 4,
+    "historical_three_qualified_exact_graphs_retained": 3,
+    "mixed_typed_prefix_hints": 124,
+    "mixed_typed_prefix_parts": 124,
+    "saved_exact_all_step_matched_inputs": 3,
+    "v17_covered_inputs": 6,
+    "v17_input_product_pairs": 58,
+    "v17_one_step_routes": 24,
+    "v17_routes": 65,
+    "v17_two_step_routes": 41,
+    "v18_covered_inputs": 5,
+    "v18_input_product_pairs": 55,
+    "v18_one_step_routes": 22,
+    "v18_routes": 62,
+    "v18_two_step_routes": 40
+  },
+  "validation": {
+    "analysis_first_attempt": "Rejected frozen_preexecution analysis-plan status before analysis; preserved failure receipt. Corrected to required frozen_preanalysis; one JSON-only terminal analyzer then passed. No candidate generation, reaction application, model or 3D rerun.",
+    "astra_production_review": "PASS",
+    "focused_route_first_plus_phase_telemetry": "79 passed before freeze",
+    "ruff_and_diff_check": "PASS before freeze",
+    "source_harness_plan_before_after_equal": true
+  }
+}
