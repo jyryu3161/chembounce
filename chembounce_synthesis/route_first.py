@@ -44,6 +44,11 @@ MAX_POOL_GRAPH_VISITS = 262144
 MAX_ROLE_INDEX_MATCH_CHECKS = 500000
 MAX_FALLBACK_HIT_SECOND_TANIMOTOS = 65536
 MAX_FALLBACK_HIT_SECOND_SAMPLES = 16
+MAX_PHASE2_PREPARATION_TARGETS = 16
+MAX_PHASE2_PREPARATION_OCCURRENCES = 16
+MAX_PHASE2_PREPARATION_TARGET_ATOMS = 256
+MAX_PHASE2_PREPARATION_TARGET_CHARACTERS = 4096
+MAX_PHASE2_PREPARATION_SIZE_UNITS = 8192
 
 
 def _pool_raw_counts(mol, atoms=None):
@@ -600,6 +605,23 @@ class RouteFirstSearch:
             "outer_distinct_cut_centers": 0,
             "phase2_plan_trace": [],
             "phase2_plan_trace_truncated": 0,
+            "phase2_rule_preparation_policy": "unique targets by descending heavy atoms, first plan/slot, then target; original per-target rule priority",
+            "phase2_rule_preparation_limits": {
+                "unique_targets": MAX_PHASE2_PREPARATION_TARGETS,
+                "slot_occurrences": MAX_PHASE2_PREPARATION_OCCURRENCES,
+                "target_atoms": MAX_PHASE2_PREPARATION_TARGET_ATOMS,
+                "target_characters": MAX_PHASE2_PREPARATION_TARGET_CHARACTERS,
+                "size_units": MAX_PHASE2_PREPARATION_SIZE_UNITS,
+            },
+            "phase2_rule_preparation_applied": False,
+            "phase2_rule_preparation_fallback_reason": None,
+            "phase2_rule_preparation_size_units": 0,
+            "phase2_rule_preparation_unique_targets": 0,
+            "phase2_rule_preparation_slot_occurrences": 0,
+            "phase2_rule_preparation_aliased_occurrences": 0,
+            "phase2_rule_preparation_group_collection_complete": False,
+            "phase2_rule_preparation_rule_inspections": 0,
+            "phase2_rule_preparation_target_summary": [],
             "reverse_outcomes": 0,
             "reverse_fallbacks": 0,
             "retrieval_guides_normalized": 0,
@@ -2123,6 +2145,121 @@ class RouteFirstSearch:
             )
             self.report["routes_verified"] += 1
 
+    def _phase2_prioritized_rules(self, plans):
+        """Select bounded inner rules before reverse work, then restore plan order."""
+        report = self.report
+        occurrences = {}
+        slot_occurrences = 0
+        for plan_index, (_rule, guide, _fallback, _keys, _kind, _quality) in enumerate(plans):
+            for slot, target in enumerate(guide):
+                if self._stop():
+                    report["phase2_rule_preparation_fallback_reason"] = "deadline_monotonic"
+                    report["phase2_rule_preparation_unique_targets"] = len(occurrences)
+                    report["phase2_rule_preparation_aliased_occurrences"] = sum(
+                        entry["references"] - 1 for entry in occurrences.values()
+                    )
+                    return None
+                if slot_occurrences >= MAX_PHASE2_PREPARATION_OCCURRENCES:
+                    report["phase2_rule_preparation_fallback_reason"] = "slot_occurrence_cap"
+                    report["phase2_rule_preparation_unique_targets"] = len(occurrences)
+                    report["phase2_rule_preparation_aliased_occurrences"] = sum(
+                        entry["references"] - 1 for entry in occurrences.values()
+                    )
+                    return None
+                slot_occurrences += 1
+                report["phase2_rule_preparation_slot_occurrences"] = slot_occurrences
+                if target not in occurrences:
+                    if len(occurrences) >= MAX_PHASE2_PREPARATION_TARGETS:
+                        report["phase2_rule_preparation_fallback_reason"] = "unique_target_cap"
+                        report["phase2_rule_preparation_unique_targets"] = len(occurrences)
+                        report["phase2_rule_preparation_aliased_occurrences"] = sum(
+                            entry["references"] - 1 for entry in occurrences.values()
+                        )
+                        return None
+                    occurrences[target] = {"first": (plan_index, slot), "references": 0}
+                occurrences[target]["references"] += 1
+        report["phase2_rule_preparation_group_collection_complete"] = True
+        report["phase2_rule_preparation_unique_targets"] = len(occurrences)
+        report["phase2_rule_preparation_aliased_occurrences"] = sum(
+            entry["references"] - 1 for entry in occurrences.values()
+        )
+        # Finish every metadata check before changing the legacy selection
+        # order. A bad or unsupported guide falls back for the entire phase.
+        groups = []
+        units = 0
+        for target, entry in occurrences.items():
+            if self._stop():
+                report["phase2_rule_preparation_fallback_reason"] = "deadline_monotonic"
+                return None
+            if len(target) > MAX_PHASE2_PREPARATION_TARGET_CHARACTERS:
+                report["phase2_rule_preparation_fallback_reason"] = "target_character_cap"
+                return None
+            try:
+                mol = molecule(target)
+            except (ValueError, RuntimeError):
+                report["phase2_rule_preparation_fallback_reason"] = "target_parse_failed"
+                return None
+            atoms = mol.GetNumAtoms()
+            if atoms > MAX_PHASE2_PREPARATION_TARGET_ATOMS:
+                report["phase2_rule_preparation_fallback_reason"] = "target_atom_cap"
+                return None
+            if units + 2 * atoms > MAX_PHASE2_PREPARATION_SIZE_UNITS:
+                report["phase2_rule_preparation_fallback_reason"] = "size_unit_cap"
+                return None
+            units += 2 * atoms
+            report["phase2_rule_preparation_size_units"] = units
+            groups.append((target, mol.GetNumHeavyAtoms(), atoms, entry))
+        if self._stop():
+            report["phase2_rule_preparation_fallback_reason"] = "deadline_monotonic"
+            return None
+        # The normal run has already completed this bounded precheck during
+        # outer selection. Keep its charge separate when called directly.
+        self._eligible_rule_ids()
+        if self._stop():
+            report["phase2_rule_preparation_fallback_reason"] = "deadline_monotonic"
+            return None
+        groups.sort(key=lambda item: (-item[1], item[3]["first"], item[0]))
+        report["phase2_rule_preparation_applied"] = True
+        choices = {}
+        for rank, (target, heavy, atoms, entry) in enumerate(groups):
+            key = (target, self.limits.max_inner_rules, 0, True)
+            if key in self._rule_selection_cache:
+                selected = tuple(self._select_rules(target, self.limits.max_inner_rules))
+                status, charged = "complete", 0
+            elif self._stop():
+                status, selected, charged = "unvisited_deadline", (), 0
+            elif report["rule_inspections"] >= self.limits.max_rule_inspections:
+                self._stop("max_rule_inspections")
+                status, selected, charged = "unvisited_rule_budget", (), 0
+            else:
+                before = report["rule_inspections"]
+                selected = tuple(self._select_rules(target, self.limits.max_inner_rules))
+                charged = report["rule_inspections"] - before
+                status = "complete" if key in self._rule_selection_cache else "partial"
+            choices[target] = {
+                "rules": selected,
+                "charged": charged,
+                "first": entry["first"],
+                "status": status,
+                "rank": rank,
+                "references": entry["references"],
+            }
+            report["phase2_rule_preparation_rule_inspections"] += charged
+            report["phase2_rule_preparation_target_summary"].append(
+                {
+                    "target": target,
+                    "priority_rank": rank,
+                    "heavy_atoms": heavy,
+                    "atom_count": atoms,
+                    "first_plan_slot": list(entry["first"]),
+                    "references": entry["references"],
+                    "rule_inspections": charged,
+                    "selected_rule_ids": [rule.id for rule, _ in selected],
+                    "status": status,
+                }
+            )
+        return choices
+
     def run(self):
         outer = self._select_rules(self.hit, self.limits.max_rules, fallback=self.limits.fallback_rules)
         self.report["rules_selected"] = [
@@ -2235,6 +2372,8 @@ class RouteFirstSearch:
             self._retain(states)
         if self.limits.max_steps == 2 and not self._stop():
             self._phase = 2
+            phase2_rule_inspections_before = self.report["rule_inspections"]
+            phase2_rule_choices = self._phase2_prioritized_rules(plans)
             work_by_plan = []
             plan_traces = []
             for plan_index, (outer_rule, guide, _fallback, _keys, _kind, _quality) in enumerate(plans):
@@ -2290,6 +2429,10 @@ class RouteFirstSearch:
                             "pool_role_compatible": 0,
                             "pool_selected_blocks": 0,
                             "rule_inspections_preparation": 0,
+                            "rule_preparation_priority_rank": None,
+                            "rule_preparation_status": "legacy_serial",
+                            "rule_preparation_references": 1,
+                            "rule_preparation_alias": False,
                             "prepared_work_items": 0,
                             "work_items_attempted": 0,
                             "typed_attempted": 0,
@@ -2298,9 +2441,19 @@ class RouteFirstSearch:
                             "catalog_rows_execution": 0,
                         }
                         plan_trace["slots"].append(slot_trace)
-                    before_rules = self.report["rule_inspections"]
-                    inner_rules = self._select_rules(target, self.limits.max_inner_rules)
-                    inspections = self.report["rule_inspections"] - before_rules
+                    if phase2_rule_choices is None:
+                        before_rules = self.report["rule_inspections"]
+                        inner_rules = self._select_rules(target, self.limits.max_inner_rules)
+                        inspections = self.report["rule_inspections"] - before_rules
+                    else:
+                        choice = phase2_rule_choices[target]
+                        inner_rules = choice["rules"]
+                        inspections = choice["charged"] if choice["first"] == (plan_index, slot) else 0
+                        if slot_trace is not None:
+                            slot_trace["rule_preparation_priority_rank"] = choice["rank"]
+                            slot_trace["rule_preparation_status"] = choice["status"]
+                            slot_trace["rule_preparation_references"] = choice["references"]
+                            slot_trace["rule_preparation_alias"] = choice["first"] != (plan_index, slot)
                     if plan_trace is not None:
                         plan_trace["rule_inspections_preparation"] += inspections
                         slot_trace["rule_inspections_preparation"] += inspections
@@ -2338,6 +2491,10 @@ class RouteFirstSearch:
                 # Python's stable sort preserves original slot/rule/guide
                 # order within a quality class. This does not add outcomes.
                 work.sort(key=lambda item: item[4] != "typed")
+
+            self.report["phase2_rule_preparation_rule_inspections"] = (
+                self.report["rule_inspections"] - phase2_rule_inspections_before
+            )
 
             offsets = [0] * len(plans)
             while any(offset < len(work) for offset, work in zip(offsets, work_by_plan)):

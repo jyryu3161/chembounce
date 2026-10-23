@@ -1,0 +1,473 @@
+{
+  "schema": "synthesis-route-inner-rule-preparation-control-v1",
+  "date": "2026-10-24",
+  "status": "complete_rejected",
+  "runtime_commit": "d3dcadb3a4bde5bcf79f7c18e03e84e799d97e9a",
+  "source_head_at_execution": "ba639c8",
+  "artifacts": {
+    "benchmark-results/route-first-development-20261023-v2/inner-rule-preparation-control-v1/plan.json": "885df2429a3c3380d803f8f4b98f9ae45637f51554d80e09a3fb35c0a32b33a3",
+    "benchmark-results/route-first-development-20261023-v2/inner-rule-preparation-control-v1/probe.py": "d7f845d4997cfbc4a46ef894db25a63235ca42f8b34357279bbaece90a04483a",
+    "benchmark-results/route-first-development-20261023-v2/inner-rule-preparation-control-v1/result.json": "b4d73906d7a198d1d45cf202b1671075622e203650166c79fb916906a4a5d024",
+    "benchmark-results/route-first-development-20261023-v2/inner-rule-preparation-control-v1/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Planning only on same fixed12 inputs/95 outer plans/190 slot occurrences; static+outer prefix charges included in512 inspections/arm/input. SHA-only catalog namespace; no catalog rows, reverse reaction, product generation, model or3D.",
+  "policy": "One rule-entry inspection per unique target per round; preserve product-template-size/id priority, strict eligibility and per-rule topology logic; partial results explicitly marked and not cached as complete.",
+  "summary": {
+    "serial_controls_reproduced": 12,
+    "gained_selected_rule_occurrences_by_input": {
+      "CHEMBL4630839-query-1": 0,
+      "CHEMBL4630839-query-2": 0,
+      "CHEMBL4247-query-1": 0,
+      "CHEMBL4247-query-2": 0,
+      "CHEMBL5163-query-1": 0,
+      "CHEMBL5163-query-2": 0,
+      "CHEMBL3334418-query-1": 0,
+      "CHEMBL3334418-query-2": 2,
+      "CHEMBL4869-query-1": 0,
+      "CHEMBL4869-query-2": 0,
+      "CHEMBL3864-query-1": 0,
+      "CHEMBL3864-query-2": 0
+    },
+    "lost_selected_rule_occurrences_by_input": {
+      "CHEMBL4630839-query-1": 20,
+      "CHEMBL4630839-query-2": 24,
+      "CHEMBL4247-query-1": 21,
+      "CHEMBL4247-query-2": 27,
+      "CHEMBL5163-query-1": 28,
+      "CHEMBL5163-query-2": 20,
+      "CHEMBL3334418-query-1": 12,
+      "CHEMBL3334418-query-2": 11,
+      "CHEMBL4869-query-1": 20,
+      "CHEMBL4869-query-2": 20,
+      "CHEMBL3864-query-1": 10,
+      "CHEMBL3864-query-2": 28
+    },
+    "route_reachability_tested": false
+  },
+  "per_input_distinct_target_rule_counts": [
+    {
+      "input_id": "CHEMBL4630839-query-1",
+      "unique_target_rule_pairs_before": 20,
+      "unique_target_rule_pairs_after": 0,
+      "gained_unique_pairs": 0,
+      "lost_unique_pairs": 20,
+      "serial_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 26,
+        "topology_spec_graph_visits": 2452,
+        "topology_static_checks": 16,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 6,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      },
+      "prospective_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 0,
+        "topology_spec_graph_visits": 131,
+        "topology_static_checks": 15,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 0,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      }
+    },
+    {
+      "input_id": "CHEMBL4630839-query-2",
+      "unique_target_rule_pairs_before": 20,
+      "unique_target_rule_pairs_after": 0,
+      "gained_unique_pairs": 0,
+      "lost_unique_pairs": 20,
+      "serial_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 38,
+        "topology_spec_graph_visits": 8063,
+        "topology_static_checks": 17,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 18,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      },
+      "prospective_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 0,
+        "topology_spec_graph_visits": 140,
+        "topology_static_checks": 16,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 0,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      }
+    },
+    {
+      "input_id": "CHEMBL4247-query-1",
+      "unique_target_rule_pairs_before": 21,
+      "unique_target_rule_pairs_after": 0,
+      "gained_unique_pairs": 0,
+      "lost_unique_pairs": 21,
+      "serial_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 42,
+        "topology_spec_graph_visits": 21484,
+        "topology_static_checks": 18,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 21,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      },
+      "prospective_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 0,
+        "topology_spec_graph_visits": 158,
+        "topology_static_checks": 16,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 0,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      }
+    },
+    {
+      "input_id": "CHEMBL4247-query-2",
+      "unique_target_rule_pairs_before": 27,
+      "unique_target_rule_pairs_after": 0,
+      "gained_unique_pairs": 0,
+      "lost_unique_pairs": 27,
+      "serial_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 33,
+        "topology_spec_graph_visits": 11068,
+        "topology_static_checks": 16,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 6,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      },
+      "prospective_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 0,
+        "topology_spec_graph_visits": 155,
+        "topology_static_checks": 16,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 0,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      }
+    },
+    {
+      "input_id": "CHEMBL5163-query-1",
+      "unique_target_rule_pairs_before": 16,
+      "unique_target_rule_pairs_after": 0,
+      "gained_unique_pairs": 0,
+      "lost_unique_pairs": 16,
+      "serial_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 35,
+        "topology_spec_graph_visits": 23865,
+        "topology_static_checks": 16,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 19,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      },
+      "prospective_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 0,
+        "topology_spec_graph_visits": 142,
+        "topology_static_checks": 16,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 0,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      }
+    },
+    {
+      "input_id": "CHEMBL5163-query-2",
+      "unique_target_rule_pairs_before": 13,
+      "unique_target_rule_pairs_after": 2,
+      "gained_unique_pairs": 0,
+      "lost_unique_pairs": 11,
+      "serial_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 21,
+        "topology_spec_graph_visits": 13712,
+        "topology_static_checks": 11,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 8,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      },
+      "prospective_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 8,
+        "topology_spec_graph_visits": 8953,
+        "topology_static_checks": 11,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 6,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      }
+    },
+    {
+      "input_id": "CHEMBL3334418-query-1",
+      "unique_target_rule_pairs_before": 12,
+      "unique_target_rule_pairs_after": 0,
+      "gained_unique_pairs": 0,
+      "lost_unique_pairs": 12,
+      "serial_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 28,
+        "topology_spec_graph_visits": 48849,
+        "topology_static_checks": 12,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 16,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      },
+      "prospective_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 0,
+        "topology_spec_graph_visits": 114,
+        "topology_static_checks": 12,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 0,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      }
+    },
+    {
+      "input_id": "CHEMBL3334418-query-2",
+      "unique_target_rule_pairs_before": 12,
+      "unique_target_rule_pairs_after": 2,
+      "gained_unique_pairs": 1,
+      "lost_unique_pairs": 11,
+      "serial_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 25,
+        "topology_spec_graph_visits": 46597,
+        "topology_static_checks": 12,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 13,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      },
+      "prospective_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 2,
+        "topology_spec_graph_visits": 448,
+        "topology_static_checks": 12,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 0,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      }
+    },
+    {
+      "input_id": "CHEMBL4869-query-1",
+      "unique_target_rule_pairs_before": 20,
+      "unique_target_rule_pairs_after": 0,
+      "gained_unique_pairs": 0,
+      "lost_unique_pairs": 20,
+      "serial_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 28,
+        "topology_spec_graph_visits": 8790,
+        "topology_static_checks": 12,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 8,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      },
+      "prospective_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 0,
+        "topology_spec_graph_visits": 145,
+        "topology_static_checks": 12,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 0,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      }
+    },
+    {
+      "input_id": "CHEMBL4869-query-2",
+      "unique_target_rule_pairs_before": 20,
+      "unique_target_rule_pairs_after": 0,
+      "gained_unique_pairs": 0,
+      "lost_unique_pairs": 20,
+      "serial_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 29,
+        "topology_spec_graph_visits": 10422,
+        "topology_static_checks": 12,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 9,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      },
+      "prospective_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 0,
+        "topology_spec_graph_visits": 145,
+        "topology_static_checks": 12,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 0,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      }
+    },
+    {
+      "input_id": "CHEMBL3864-query-1",
+      "unique_target_rule_pairs_before": 6,
+      "unique_target_rule_pairs_after": 0,
+      "gained_unique_pairs": 0,
+      "lost_unique_pairs": 6,
+      "serial_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 12,
+        "topology_spec_graph_visits": 11917,
+        "topology_static_checks": 7,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 6,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      },
+      "prospective_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 0,
+        "topology_spec_graph_visits": 67,
+        "topology_static_checks": 7,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 0,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      }
+    },
+    {
+      "input_id": "CHEMBL3864-query-2",
+      "unique_target_rule_pairs_before": 20,
+      "unique_target_rule_pairs_after": 0,
+      "gained_unique_pairs": 0,
+      "lost_unique_pairs": 20,
+      "serial_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 32,
+        "topology_spec_graph_visits": 8285,
+        "topology_static_checks": 16,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 12,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      },
+      "prospective_work": {
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_match_requests": 0,
+        "topology_spec_graph_visits": 161,
+        "topology_static_checks": 16,
+        "topology_assessment_cache_hits": 0,
+        "topology_pruned_rules": 0,
+        "fingerprint_calls": 1,
+        "limits_reached": [
+          "max_rule_inspections"
+        ],
+        "topology_unknown_reasons": {}
+      }
+    }
+  ],
+  "observed_zero_selection_inputs": 10,
+  "binding_checks": true,
+  "interpretation": "All12 serial controls exactly reproduce saved per-slot choices and inspection deltas. Shallow round-robin visits fail to reach matching lower-ranked templates before512 budget in10inputs. A single new unique target/rule pair on3334418-query-2 (two aliased occurrences) cannot offset losses. This rejects this schedule, not all fair allocation policies or chemical reachability.",
+  "decision": "No production implementation or full candidate rerun. Next prospective policy may prioritize larger concrete fragment queries while keeping unchanged per-target rule ordering and all original caps. Freeze before evaluation, measure losses as well as new selections. Primary4/12 unchanged."
+}

@@ -253,6 +253,35 @@ missing cached fingerprints, unknown stereo or deadline expiry keeps the
 original second block without caching an incomplete choice. Informative,
 approximate and implicit fallback guides keep their previous selection.
 
+The fourteenth fixed-panel development probe reached six of 12 inputs before
+model checks, with 56 distinct input/product pairs and 59 strict-audited routes.
+It retained the earlier eligible products and added four one-step products on
+one input. A separate five-route forward control evaluated all four new routes
+and an archived supported positive under the pinned model. The positive
+reproduced its exact match and raw prediction, while all four new route products
+were mismatched by the fixed top-three model output. This developmental control
+does not revise the completed primary comparison. The primary route-first result remains four
+supported inputs against the five-input baseline, so P1 remains incomplete.
+
+The next **experimental** change allocates the existing phase-two rule
+inspection budget across the already chosen outer plans. It gathers up to 16
+distinct exact inner-target strings from at most 16 plan/slot occurrences,
+checks at most 256 atoms and 4,096 characters per target, and charges at most
+8,192 metadata size units (two per target atom). It selects inner rules for
+those target groups in descending heavy-atom count, then original first
+plan/slot order and target string. Each group still uses the original
+product-template priority, topology checks and global 512-rule-inspection
+limit, which includes static and outer selection. Completed selection cache
+entries remain distinct from partial lists. Oversize, invalid or otherwise
+unsupported metadata restores the entire original serial selection order
+before any priority selection. The chosen lists are then attached to the
+original slots; reverse-guide preparation and the existing typed-first,
+plan-round-robin execution retain their original order. Reports identify
+groups, aliases, completed/partial/unvisited choices, metadata and inspection
+work, and any fallback reason. The planning-only control showed both gains
+and losses in selected rules across the fixed panel; product generation,
+forward support and coverage for this policy have not yet been measured.
+
 ## Optional catalog byte binding
 
 A configuration can pin both the catalog TSV and its import manifest:

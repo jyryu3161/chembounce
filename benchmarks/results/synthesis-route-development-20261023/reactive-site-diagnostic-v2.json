@@ -1,0 +1,182 @@
+{
+  "schema": "synthesis-route-reactive-site-diagnostic-v2",
+  "date": "2026-10-24",
+  "status": "complete_analysis_only",
+  "runtime_commit": "d3dcadb3a4bde5bcf79f7c18e03e84e799d97e9a",
+  "source_head_at_execution": "ba639c8",
+  "scope": "All59 v14 eligible saved route graphs/94 step instances from fixed12 development inputs. Bounded structural template census, then exact input/graph/node/product join to saved actual-v2 and finite v14 evidence. No new catalog loading, reaction generation, model or3D calls.",
+  "artifacts": {
+    "benchmark-results/route-first-development-20261023-v2/reactive-site-diagnostic-v1/plan.json": "4a06044c09f34b221b815d562a4099a08be0cb35a42deed79e1c37cbec7e9dd7",
+    "benchmark-results/route-first-development-20261023-v2/reactive-site-diagnostic-v1/probe.py": "fce77533b524a98dd5d0e57103fbed612278a8157a54b46f0b6d486ca9054d80",
+    "benchmark-results/route-first-development-20261023-v2/reactive-site-diagnostic-v1/result.json": "934ffc3c167b26779ce16302256bac19ea10716bc33d83d93bf46c3463efa741",
+    "benchmark-results/route-first-development-20261023-v2/reactive-site-diagnostic-v1/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmark-results/route-first-development-20261023-v2/reactive-site-diagnostic-v2/plan.json": "57081e42197d44bf1463fe664cf6e09e67433eba3f39ab164779278fd5a91c2f",
+    "benchmark-results/route-first-development-20261023-v2/reactive-site-diagnostic-v2/analyze.py": "579f271e7f78b9230484ebd264664f57ae8417e36709f4fd08fd8d88f23b8940",
+    "benchmark-results/route-first-development-20261023-v2/reactive-site-diagnostic-v2/result.json": "35ccdaa4779cb3925b370cb454a5aacbc9b4a80cdac72e5e08f0da030bf29395",
+    "benchmark-results/route-first-development-20261023-v2/reactive-site-diagnostic-v2/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "summary": {
+    "graphs": 59,
+    "step_instances": 94,
+    "step_forward_statuses": {
+      "matched": 20,
+      "unassessed": 63,
+      "mismatched": 10,
+      "partially_evaluated": 1
+    },
+    "route_forward_statuses": {
+      "matched": 9,
+      "unassessed_or_mixed": 39,
+      "mismatched": 10,
+      "partially_evaluated": 1
+    },
+    "counts_are_saved_associations_not_new_model_calls": true
+  },
+  "by_saved_step_status": {
+    "matched": {
+      "step_instances": 20,
+      "multiple_role_atom_set_matches_any_slot": 1,
+      "has_compatible_selected_outer_rule_alternative": 12
+    },
+    "unassessed": {
+      "step_instances": 63,
+      "multiple_role_atom_set_matches_any_slot": 14,
+      "has_compatible_selected_outer_rule_alternative": 20
+    },
+    "mismatched": {
+      "step_instances": 10,
+      "multiple_role_atom_set_matches_any_slot": 7,
+      "has_compatible_selected_outer_rule_alternative": 2
+    },
+    "partially_evaluated": {
+      "step_instances": 1,
+      "multiple_role_atom_set_matches_any_slot": 1,
+      "has_compatible_selected_outer_rule_alternative": 0
+    }
+  },
+  "deduplicated_rule_ordered_reactants_product_by_status": {
+    "matched": {
+      "distinct_steps": 18,
+      "multiple_role_atom_set_matches_any_slot": 1
+    },
+    "unassessed": {
+      "distinct_steps": 56,
+      "multiple_role_atom_set_matches_any_slot": 12
+    },
+    "mismatched": {
+      "distinct_steps": 10,
+      "multiple_role_atom_set_matches_any_slot": 7
+    },
+    "partially_evaluated": {
+      "distinct_steps": 1,
+      "multiple_role_atom_set_matches_any_slot": 1
+    }
+  },
+  "input_manifest_inventory": {
+    "CHEMBL4630839-query-1": {
+      "status": "initialized",
+      "reaction_context_count": 0,
+      "observation_record_count": 0,
+      "physical_context": "Temperature/time are not model inputs; missing physical context remains conditional"
+    },
+    "CHEMBL4630839-query-2": {
+      "status": "initialized",
+      "reaction_context_count": 0,
+      "observation_record_count": 0,
+      "physical_context": "Temperature/time are not model inputs; missing physical context remains conditional"
+    },
+    "CHEMBL4247-query-1": {
+      "status": "initialized",
+      "reaction_context_count": 0,
+      "observation_record_count": 0,
+      "physical_context": "Temperature/time are not model inputs; missing physical context remains conditional"
+    },
+    "CHEMBL4247-query-2": {
+      "status": "initialized",
+      "reaction_context_count": 0,
+      "observation_record_count": 0,
+      "physical_context": "Temperature/time are not model inputs; missing physical context remains conditional"
+    },
+    "CHEMBL5163-query-1": {
+      "status": "not_initialized",
+      "reason": "No route-first generated design passed bounded intake; this does not establish that no qualifying chemistry exists",
+      "reaction_context_count": null,
+      "observation_record_count": null
+    },
+    "CHEMBL5163-query-2": {
+      "status": "not_initialized",
+      "reason": "No route-first generated design passed bounded intake; this does not establish that no qualifying chemistry exists",
+      "reaction_context_count": null,
+      "observation_record_count": null
+    },
+    "CHEMBL3334418-query-1": {
+      "status": "initialized",
+      "reaction_context_count": 0,
+      "observation_record_count": 0,
+      "physical_context": "Temperature/time are not model inputs; missing physical context remains conditional"
+    },
+    "CHEMBL3334418-query-2": {
+      "status": "initialized",
+      "reaction_context_count": 0,
+      "observation_record_count": 0,
+      "physical_context": "Temperature/time are not model inputs; missing physical context remains conditional"
+    },
+    "CHEMBL4869-query-1": {
+      "status": "not_initialized",
+      "reason": "No route-first generated design passed bounded intake; this does not establish that no qualifying chemistry exists",
+      "reaction_context_count": null,
+      "observation_record_count": null
+    },
+    "CHEMBL4869-query-2": {
+      "status": "not_initialized",
+      "reason": "No route-first generated design passed bounded intake; this does not establish that no qualifying chemistry exists",
+      "reaction_context_count": null,
+      "observation_record_count": null
+    },
+    "CHEMBL3864-query-1": {
+      "status": "not_initialized",
+      "reason": "No route-first generated design passed bounded intake; this does not establish that no qualifying chemistry exists",
+      "reaction_context_count": null,
+      "observation_record_count": null
+    },
+    "CHEMBL3864-query-2": {
+      "status": "not_initialized",
+      "reason": "No route-first generated design passed bounded intake; this does not establish that no qualifying chemistry exists",
+      "reaction_context_count": null,
+      "observation_record_count": null
+    }
+  },
+  "descriptor_work": {
+    "rule_template_specifications": 91,
+    "template_map_calls": 182,
+    "role_match_requests": 2976,
+    "precharged_match_tuple_slots": 199550,
+    "precharged_match_atom_slots": 400400,
+    "returned_match_tuples": 979,
+    "product_template_match_requests": 94,
+    "alternative_rule_inspections": 1394
+  },
+  "descriptor_work_note": "template_map_calls charges2 per rule as a conservative allowance (explicit plus possible topology helper), not exact observed helper calls. Full-role/product match requests are charged separately;65 sentinel bounds each.",
+  "failed_first_attempt": {
+    "status": "inconclusive_diagnostic_error",
+    "error": {
+      "type": "KeyError",
+      "message": "'reaction_context_count'"
+    },
+    "descriptor_count": 59,
+    "step_instances": 94,
+    "resolution": "v1 completed/preserved structural descriptors but label inventory assumed initialized evaluator fields on zero-candidate inputs. v2 pure JSON analyzer reused descriptors with initialized/not_initialized schema handling; missing counts remain null. No reenumeration or repeated scientific model work."
+  },
+  "binding_checks": {
+    "v1_before_after_equal": true,
+    "v2_before_after_equal": true
+  },
+  "interpretation": [
+    "RDKit uniquify=True counts atom-set-unique structural embeddings. All mapping-distinct cut orientations remain unknown; one endpoint set is not proof of chemical selectivity.",
+    "Multiple role matches appear in7/10 mismatched and1/20 matched step instances, but shared requests/regioisomers and development selection make this descriptive, not an independent predictive or causal estimate. Do not automatically exclude multiply matching reactants.",
+    "Compatible alternative templates occur in12/20 matched step instances, so alternative-template compatibility alone is also not a valid rejection rule.",
+    "63 step instances/39 route graphs remain unassessed or mixed under exact saved joins. No sibling graph status was promoted by shared chemistry.",
+    "Context/stoichiometry/selectivity information is unverified or absent for these routes. These structural descriptors do not establish physical reaction outcomes."
+  ],
+  "decision": "Do not introduce a blanket multiplicity/alternative-rule exclusion. Retain evidence for prospective general policies and review; actual primary remains4/12 and P1 incomplete."
+}

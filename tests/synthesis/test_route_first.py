@@ -126,12 +126,22 @@ def test_phase_two_executes_typed_guides_one_per_outer_plan_before_later_guides(
     )
     rules = Rules(path)
     settings = RouteFirstLimits(
-        **limits(max_catalog_row_visits=10, max_outer_guides=2, max_rules=2, fallback_rules=1)
+        **limits(
+            max_catalog_row_visits=10,
+            max_outer_guides=2,
+            max_rules=2,
+            fallback_rules=1,
+            max_rule_inspections=16,
+        )
     )
 
     def make_search():
         search = RouteFirstSearch("CCO", SimpleNamespace(sha256="test"), rules, settings)
+        # The production outer selector completes the static eligibility
+        # precheck before phase two; the mock outer selector below must too.
+        search._eligible_rule_ids()
         attempts = []
+        reverse_order = []
 
         def select(target, maximum, fallback=0):
             search.report["rule_inspections"] += 1
@@ -145,6 +155,7 @@ def test_phase_two_executes_typed_guides_one_per_outer_plan_before_later_guides(
                 search._guide_quality[(rule.id, target, guide)] = "typed"
                 search._guide_centers[(rule.id, target, guide)] = (None,)
                 return [guide]
+            reverse_order.append((target, rule.id))
             guides = [("C", "O"), ("C", "N")] if rule.id == "inner-a" else [("CC", "N")]
             for guide in guides:
                 if guide == ("C", "N"):
@@ -166,6 +177,7 @@ def test_phase_two_executes_typed_guides_one_per_outer_plan_before_later_guides(
         monkeypatch.setattr(search, "_reverse", reverse)
         monkeypatch.setattr(search, "_stage", stage)
         monkeypatch.setattr(search, "_admit", lambda: None)
+        search.reverse_order = reverse_order
         return search, attempts
 
     search, attempts = make_search()
@@ -175,12 +187,27 @@ def test_phase_two_executes_typed_guides_one_per_outer_plan_before_later_guides(
     plans = report["phase2_plan_trace"]
     assert [row["catalog_rows_execution"] for row in plans] == [5, 5]
     assert [row["rule_inspections_preparation"] for row in plans] == [2, 2]
+    assert search.reverse_order == [
+        (target, rule_id) for target in ("CC", "O", "CCC", "N") for rule_id in ("inner-a", "inner-b")
+    ]
+    assert report["phase2_rule_preparation_applied"]
+    assert report["phase2_rule_preparation_rule_inspections"] == 4
     assert [row["typed_prepared"] for row in plans] == [2, 2]
     assert [row["approximate_prepared"] for row in plans] == [2, 2]
     assert [row["fallback_prepared"] for row in plans] == [2, 2]
     assert all(row["typed_attempted"] >= 1 for row in plans)
     assert all(row["fallback_attempted"] >= 1 for row in plans)
     assert all(row["catalog_exhausted_attempts"] > 0 for row in plans)
+
+    with monkeypatch.context() as bounded:
+        bounded.setattr(route_first_module, "MAX_PHASE2_PREPARATION_TARGETS", 1)
+        legacy, legacy_attempts = make_search()
+        _, legacy_report = legacy.run()
+    assert not legacy_report["phase2_rule_preparation_applied"]
+    assert legacy_report["phase2_rule_preparation_fallback_reason"] == "unique_target_cap"
+    assert legacy.reverse_order == search.reverse_order
+    assert legacy_attempts == attempts
+    assert [row["rule_inspections_preparation"] for row in legacy_report["phase2_plan_trace"]] == [2, 2]
 
     expired, attempted = make_search()
     original_stage = expired._stage
@@ -216,6 +243,186 @@ def test_phase_two_executes_typed_guides_one_per_outer_plan_before_later_guides(
     assert first_plan["preparation_limit_observed"] == "deadline_monotonic"
     assert first_plan["work_items_deferred"] == first_plan["prepared_work_items"]
     assert not preparation_attempts
+
+
+def test_phase_two_large_target_rule_preparation_uses_original_budget_and_order(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "large_target_rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {"id": "large", "smarts": "[C:1][C:2][C:3][C:4]>>[C:1][C:2][C:3][C:4]", "source": "test"},
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    catalog = SimpleNamespace(sha256="test")
+    rule = rules.get("large")
+    plans = [(rule, (target,), False, (), "no_cut", "approximate") for target in ("C", "CCCC")]
+    tight = RouteFirstLimits(**limits(max_rule_inspections=2, max_rule_scans_per_target=1, max_inner_rules=1))
+    legacy = RouteFirstSearch("CCCC", catalog, rules, tight)
+    legacy._phase = 2
+    assert legacy._select_rules("C", 1) == []
+    assert legacy._select_rules("CCCC", 1) == []
+    assert legacy.report["rule_inspections"] == 2
+
+    prioritized = RouteFirstSearch("CCCC", catalog, rules, tight)
+    prioritized._phase = 2
+    chosen = prioritized._phase2_prioritized_rules(plans)
+    assert [rule.id for rule, _ in chosen["CCCC"]["rules"]] == ["large"]
+    assert chosen["C"]["status"] == "unvisited_rule_budget"
+    assert prioritized.report["rule_inspections"] == 2  # one static, one large target
+    assert prioritized.report["phase2_rule_preparation_rule_inspections"] == 1
+    assert prioritized.report["phase2_rule_preparation_group_collection_complete"]
+    assert [row["target"] for row in prioritized.report["phase2_rule_preparation_target_summary"]] == [
+        "CCCC",
+        "C",
+    ]
+    assert prioritized.report["fingerprint_calls"] == 1
+
+    ample = RouteFirstLimits(**limits(max_rule_inspections=3, max_rule_scans_per_target=1, max_inner_rules=1))
+    serial = RouteFirstSearch("CCCC", catalog, rules, ample)
+    serial._phase = 2
+    old = {target: [rule.id for rule, _ in serial._select_rules(target, 1)] for target in ("C", "CCCC")}
+    fair = RouteFirstSearch("CCCC", catalog, rules, ample)
+    fair._phase = 2
+    new = fair._phase2_prioritized_rules(plans)
+    assert {target: [rule.id for rule, _ in new[target]["rules"]] for target in old} == old
+    assert fair.report["rule_inspections"] == serial.report["rule_inspections"] == 3
+
+
+def test_phase_two_rule_preparation_aliases_partial_without_completed_cache(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "alias_rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "a-large",
+                        "smarts": "[C:1][C:2][C:3][C:4]>>[C:1][C:2][C:3][C:4]",
+                        "source": "test",
+                    },
+                    {"id": "b-small", "smarts": "[C:1][C:2]>>[C:1][C:2]", "source": "test"},
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    search = RouteFirstSearch(
+        "CC",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits(max_rule_inspections=3, max_rule_scans_per_target=2, max_inner_rules=2)),
+    )
+    search._phase = 2
+    rule = rules.get("b-small")
+    plans = [(rule, ("CC",), False, (), "no_cut", "approximate")] * 2
+    choices = search._phase2_prioritized_rules(plans)
+    assert choices["CC"]["charged"] == 1
+    assert choices["CC"]["references"] == 2
+    assert choices["CC"]["status"] == "partial"
+    assert ("CC", 2, 0, True) not in search._rule_selection_cache
+    assert search.report["phase2_rule_preparation_aliased_occurrences"] == 1
+    assert search.report["phase2_rule_preparation_rule_inspections"] == 1
+
+
+def test_phase_two_rule_preparation_uses_completed_cache_at_rule_cap(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "cached_rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {"id": "identity", "smarts": "[C:1]>>[C:1]", "source": "test"},
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    search = RouteFirstSearch(
+        "CC",
+        SimpleNamespace(sha256="test"),
+        rules,
+        RouteFirstLimits(**limits(max_rule_inspections=3, max_rule_scans_per_target=1, max_inner_rules=1)),
+    )
+    search._phase = 2
+    assert [rule.id for rule, _ in search._select_rules("CC", 1)] == ["identity"]
+    search.report["rule_inspections"] = search.limits.max_rule_inspections
+    choices = search._phase2_prioritized_rules(
+        [(rules.get("identity"), ("CC",), False, (), "no_cut", "approximate")]
+    )
+    assert choices["CC"]["status"] == "complete"
+    assert [rule.id for rule, _ in choices["CC"]["rules"]] == ["identity"]
+    assert choices["CC"]["charged"] == 0
+    assert search.report["rule_inspections"] == search.limits.max_rule_inspections
+
+
+def test_phase_two_rule_preparation_ties_and_metadata_fallback(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "tie_rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {"id": "identity", "smarts": "[C:1]>>[C:1]", "source": "test"},
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    rule = rules.get("identity")
+    settings = RouteFirstLimits(
+        **limits(max_rule_inspections=4, max_rule_scans_per_target=1, max_inner_rules=1)
+    )
+
+    def search():
+        item = RouteFirstSearch("CCO", SimpleNamespace(sha256="test"), rules, settings)
+        item._phase = 2
+        return item
+
+    tied = search()
+    tied._phase2_prioritized_rules([(rule, ("CCO", "CCN"), False, (), "no_cut", "approximate")])
+    assert [row["target"] for row in tied.report["phase2_rule_preparation_target_summary"]] == [
+        "CCO",
+        "CCN",
+    ]  # first slot precedes lexical CCN at equal heavy-atom count
+
+    oversized = search()
+    assert (
+        oversized._phase2_prioritized_rules([(rule, ("CCO", "C" * 4097), False, (), "no_cut", "approximate")])
+        is None
+    )
+    assert oversized.report["phase2_rule_preparation_fallback_reason"] == "target_character_cap"
+    assert not oversized.report["phase2_rule_preparation_applied"]
+    assert oversized.report["rule_inspections"] == 0
+    assert not oversized.report["phase2_rule_preparation_target_summary"]
+
+    too_many_slots = search()
+    assert (
+        too_many_slots._phase2_prioritized_rules([(rule, ("CCO",), False, (), "no_cut", "approximate")] * 17)
+        is None
+    )
+    assert too_many_slots.report["phase2_rule_preparation_fallback_reason"] == "slot_occurrence_cap"
+    assert too_many_slots.report["phase2_rule_preparation_slot_occurrences"] == 16
+    assert not too_many_slots.report["phase2_rule_preparation_group_collection_complete"]
+    assert too_many_slots.report["rule_inspections"] == 0
+
+    expired = search()
+    expired.deadline = time.monotonic() - 1
+    assert expired._phase2_prioritized_rules([(rule, ("CCO",), False, (), "no_cut", "approximate")]) is None
+    assert expired.report["phase2_rule_preparation_fallback_reason"] == "deadline_monotonic"
+    assert expired.report["rule_inspections"] == 0
 
 
 def test_product_anchor_and_stereo_are_not_invented_and_search_is_deterministic(assets):

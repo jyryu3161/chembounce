@@ -1,0 +1,46 @@
+{
+  "schema": "synthesis-route-large-target-preparation-review-v1",
+  "date": "2026-10-24",
+  "status": "scoped_review_pass_experimental",
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "b642c53f1ee788a9a11cd65ff439bb06f1bc4bcc8da2767a11c66f47d00947ab",
+    "tests/synthesis/test_route_first.py": "a5d4962e31d7aa47e9e0151c09f2d3649c0966ebdb08a507c2d57127ebb631f8"
+  },
+  "change": "Allocate existing phase2 inner-rule selection budget by descending target heavy atoms; remap choices to original reverse/workitem/outer-plan execution order. Default v7 remains unchanged.",
+  "implementation_scope": [
+    "At most16 slot occurrences and16 unique exact target strings;256atoms/4096characters pertarget and8192metadata size units. Earlydeadline/collection guard; observed-prefix status on fallback.",
+    "All metadata checks before priorityselection; wholelegacyserial fallback forunsupported/oversized metadata.",
+    "Existing pertarget ruleorder/topology/max512 default remains; static+outer charges included.",
+    "Completed cache canbe reused atinspection cap; partialselectedgroup aliases share knownchoices but do not becomecompletecache.",
+    "Each unique target inspection charge assignedonce atfirst originalslot; group/slot aliases andunvisited reasons explicit."
+  ],
+  "validation": {
+    "command": ".venv-research/bin/python -m pytest tests/synthesis/test_route_first.py tests/test_phase_telemetry.py -q",
+    "passed": 68,
+    "elapsed_seconds_reported": 11.84,
+    "reported_by": "route_first_p1_sol",
+    "scope": "Focused route-first behavior and phase telemetry; not full repository validation.",
+    "ruff_check": "passed on changed source/test",
+    "ruff_format_check": "passed on changed source/test",
+    "git_diff_check": "passed",
+    "meaningful_cases": [
+      "later larger target access under tight rule budget",
+      "alias charging and incomplete cache exclusion",
+      "same-size deterministic priority",
+      "full-budget selection parity with serial",
+      "metadata/deadline/oversize fallback",
+      "existing reverse/workitem order and real audited two-step positive route"
+    ]
+  },
+  "review": {
+    "agent": "route_first_p1_astra",
+    "status": "PASS",
+    "reviewed_source_and_test_hashes_match": true,
+    "tests_reexecuted_by_reviewer": false,
+    "blocking_findings": []
+  },
+  "limitations": "Planning-only allocation control increased selectedpairs but loses someoldpairs. No candidate generation/model/3D efficacy hasbeen demonstrated for this runtime. Full12 pre-evidence comparison next; fullrepository validation required before actualadoption comparison.",
+  "actual_primary_supported_inputs": 4,
+  "actual_primary_denominator": 12,
+  "p1_complete": false
+}
