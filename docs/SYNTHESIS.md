@@ -289,6 +289,23 @@ is only five, so the policy has not met P1 or entered the workflow configuration
 The actual primary result remains four supported inputs. This probe made no
 forward-model or 3D calls; its gains are pre-evidence supply gains only.
 
+A [saved-graph stereo-anchor diagnostic](../benchmarks/results/synthesis-route-development-20261023/stereo-anchor-stage-diagnostic-v1.json)
+then inspected all 218 pending graph states from three inputs with no eligible
+product: 206 input/final-product pairs, 46 intermediate pairs and 79 selected
+source IDs. The main observed failure was missing full local query context,
+with some ambiguous root mappings; no explicit stereo mismatch was observed.
+One input retained one anchor in a source and a final product, but no final
+product retained both required anchors. One observed context-loss transition
+already occurred in the off arm. These are unverified saved graphs, without
+reaction replay or atom-lineage evidence of inversion or stereo-center loss.
+Four cyclohexane projections lost defined stereo and remained unknown; the two
+spiro projections equaled the full queries and provide no independent evidence.
+The diagnostic passed nine fixture controls and exact pass/fail parity against
+the original anchor check for all 218 roots. It made no generation, model or
+3D calls and did not change production selection or the four-input primary
+result. The next priority is joint stereo-core, attachment and downstream-role
+selection; original final gates remain unchanged.
+
 ## Optional catalog byte binding
 
 A configuration can pin both the catalog TSV and its import manifest:

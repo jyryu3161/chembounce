@@ -1,0 +1,492 @@
+{
+  "schema": "route-first-stereo-anchor-stage-diagnostic-v1-portable",
+  "status": "complete",
+  "runtime_commit": "74c86ee",
+  "scope": "One read-only diagnostic of all saved pending graphs for three fixed v16 on-arm inputs. These snapshots are not replayed or audited routes. Counts are structural query observations, not synthetic feasibility or new forward support.",
+  "summary": {
+    "inputs": 3,
+    "pending_graph_states": 218,
+    "distinct_input_final_product_pairs": 206,
+    "distinct_input_intermediate_pairs": 46,
+    "unique_source_leaf_ids": 79,
+    "source_leaf_input_pairs": 88,
+    "all_anchor_passed_final_products": 0,
+    "forward_model_calls": 0,
+    "new_generation_calls": 0,
+    "three_dimensional_scoring_calls": 0,
+    "full_catalog_object_loads": 0,
+    "catalog_tsv_streams": 1
+  },
+  "work": {
+    "graph_states": 218,
+    "graph_node_occurrences": 962,
+    "selected_leaf_ids": 79,
+    "catalog_data_rows_streamed": 238542,
+    "molecule_perceptions_excluding_three_hit_compilations": 338,
+    "match_requests_excluding_HitStereoAnchors_compilation_and_authoritative_check": 1084,
+    "authoritative_anchor_check_calls": 218,
+    "returned_match_tuples": 46
+  },
+  "caps": {
+    "catalog_tsv_streams": 1,
+    "catalog_data_rows": 250000,
+    "selected_leaf_ids": 79,
+    "graph_states": 218,
+    "graph_node_occurrences": 1024,
+    "saved_structure_molecules_perceived_excluding_three_hit_compilations": 384,
+    "authoritative_molecule_reparses_bound": 256,
+    "HitStereoAnchors_hit_parses_bound": 3,
+    "molecule_atoms": 128,
+    "anchor_query_atoms": 64,
+    "match_sentinel": 65,
+    "metered_match_requests": 4096,
+    "metered_returned_match_tuples": 262144,
+    "authoritative_anchor_check_calls": 256,
+    "authoritative_match_requests_bound": 1024,
+    "HitStereoAnchors_compilation_match_requests_bound": 96,
+    "total_substructure_match_requests_upper_bound": 5216
+  },
+  "validation": {
+    "fixture_controls_passed": 9,
+    "rdkit_version": "2025.09.6",
+    "authoritative_final_pass_parity_checked_graphs": 218,
+    "source_input_entry_exit_hashes_equal": true,
+    "astra_harness_review": "PASS; root reviewed final addition of actual rules entry/exit SHA check",
+    "astra_outcome_review": "PASS",
+    "full_repository_tests": "Not rerun: diagnostic and documentation only; no production source change."
+  },
+  "rows": [
+    {
+      "id": "CHEMBL4869-query-1",
+      "compiled_anchors": [
+        {
+          "index": 0,
+          "query_smiles": "C[C@H]1CC[C@@H](CO)CC1",
+          "root_source_indices": [
+            6
+          ],
+          "root_query_positions": [
+            4
+          ],
+          "radius": 2,
+          "projection_status": "unknown_projection_stereo_undefined",
+          "projection_smiles": null
+        },
+        {
+          "index": 1,
+          "query_smiles": "C[C@H]1CC[C@@H](Cn2cccn2)CC1",
+          "root_source_indices": [
+            9
+          ],
+          "root_query_positions": [
+            4
+          ],
+          "radius": 2,
+          "projection_status": "unknown_projection_stereo_undefined",
+          "projection_smiles": null
+        }
+      ],
+      "graph_states": 40,
+      "stages": {
+        "source_leaf": {
+          "distinct_input_structure_or_leaf_id_pairs": 28,
+          "anchors": [
+            {
+              "anchor_index": 0,
+              "full_query_status_counts": {
+                "ambiguous_root_correspondence": 1,
+                "full_anchor_preserved": 1,
+                "full_topology_absent": 26
+              },
+              "projection_status_counts": {
+                "unknown_projection_stereo_undefined": 28
+              }
+            },
+            {
+              "anchor_index": 1,
+              "full_query_status_counts": {
+                "full_topology_absent": 28
+              },
+              "projection_status_counts": {
+                "unknown_projection_stereo_undefined": 28
+              }
+            }
+          ]
+        },
+        "intermediate": {
+          "distinct_input_structure_or_leaf_id_pairs": 4,
+          "anchors": [
+            {
+              "anchor_index": 0,
+              "full_query_status_counts": {
+                "full_topology_absent": 4
+              },
+              "projection_status_counts": {
+                "unknown_projection_stereo_undefined": 4
+              }
+            },
+            {
+              "anchor_index": 1,
+              "full_query_status_counts": {
+                "full_topology_absent": 4
+              },
+              "projection_status_counts": {
+                "unknown_projection_stereo_undefined": 4
+              }
+            }
+          ]
+        },
+        "final": {
+          "distinct_input_structure_or_leaf_id_pairs": 34,
+          "anchors": [
+            {
+              "anchor_index": 0,
+              "full_query_status_counts": {
+                "ambiguous_root_correspondence": 4,
+                "full_anchor_preserved": 1,
+                "full_topology_absent": 29
+              },
+              "projection_status_counts": {
+                "unknown_projection_stereo_undefined": 34
+              }
+            },
+            {
+              "anchor_index": 1,
+              "full_query_status_counts": {
+                "full_topology_absent": 34
+              },
+              "projection_status_counts": {
+                "unknown_projection_stereo_undefined": 34
+              }
+            }
+          ]
+        }
+      },
+      "authoritative_check_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 40
+      },
+      "transition_occurrences": {
+        "unique_full_anchor_preservation_not_observed": 94,
+        "unique_full_anchor_preservation_still_observed": 1,
+        "unique_full_anchor_preservation_no_longer_observed_at_reaction_output": 1
+      }
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "compiled_anchors": [
+        {
+          "index": 0,
+          "query_smiles": "C[C@H]1CC[C@@H](Cn2cccn2)CC1",
+          "root_source_indices": [
+            21
+          ],
+          "root_query_positions": [
+            4
+          ],
+          "radius": 2,
+          "projection_status": "unknown_projection_stereo_undefined",
+          "projection_smiles": null
+        },
+        {
+          "index": 1,
+          "query_smiles": "C[C@H]1CC[C@@H](CO)CC1",
+          "root_source_indices": [
+            24
+          ],
+          "root_query_positions": [
+            4
+          ],
+          "radius": 2,
+          "projection_status": "unknown_projection_stereo_undefined",
+          "projection_smiles": null
+        }
+      ],
+      "graph_states": 42,
+      "stages": {
+        "source_leaf": {
+          "distinct_input_structure_or_leaf_id_pairs": 21,
+          "anchors": [
+            {
+              "anchor_index": 0,
+              "full_query_status_counts": {
+                "full_topology_absent": 21
+              },
+              "projection_status_counts": {
+                "unknown_projection_stereo_undefined": 21
+              }
+            },
+            {
+              "anchor_index": 1,
+              "full_query_status_counts": {
+                "ambiguous_root_correspondence": 1,
+                "full_topology_absent": 20
+              },
+              "projection_status_counts": {
+                "unknown_projection_stereo_undefined": 21
+              }
+            }
+          ]
+        },
+        "intermediate": {
+          "distinct_input_structure_or_leaf_id_pairs": 12,
+          "anchors": [
+            {
+              "anchor_index": 0,
+              "full_query_status_counts": {
+                "full_topology_absent": 12
+              },
+              "projection_status_counts": {
+                "unknown_projection_stereo_undefined": 12
+              }
+            },
+            {
+              "anchor_index": 1,
+              "full_query_status_counts": {
+                "full_topology_absent": 12
+              },
+              "projection_status_counts": {
+                "unknown_projection_stereo_undefined": 12
+              }
+            }
+          ]
+        },
+        "final": {
+          "distinct_input_structure_or_leaf_id_pairs": 38,
+          "anchors": [
+            {
+              "anchor_index": 0,
+              "full_query_status_counts": {
+                "full_topology_absent": 38
+              },
+              "projection_status_counts": {
+                "unknown_projection_stereo_undefined": 38
+              }
+            },
+            {
+              "anchor_index": 1,
+              "full_query_status_counts": {
+                "ambiguous_root_correspondence": 2,
+                "full_topology_absent": 36
+              },
+              "projection_status_counts": {
+                "unknown_projection_stereo_undefined": 38
+              }
+            }
+          ]
+        }
+      },
+      "authoritative_check_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 42
+      },
+      "transition_occurrences": {
+        "unique_full_anchor_preservation_not_observed": 140
+      }
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "compiled_anchors": [
+        {
+          "index": 0,
+          "query_smiles": "C[C@H]1CC2(CCNCC2)CO1",
+          "root_source_indices": [
+            22
+          ],
+          "root_query_positions": [
+            1
+          ],
+          "radius": 1,
+          "projection_status": "bounded_ring_projection_defined",
+          "projection_smiles": "C[C@H]1CC2(CCNCC2)CO1"
+        },
+        {
+          "index": 1,
+          "query_smiles": "N[C@@H]1COCC12CCNCC2",
+          "root_source_indices": [
+            24
+          ],
+          "root_query_positions": [
+            1
+          ],
+          "radius": 1,
+          "projection_status": "bounded_ring_projection_defined",
+          "projection_smiles": "N[C@@H]1COCC12CCNCC2"
+        }
+      ],
+      "graph_states": 136,
+      "stages": {
+        "source_leaf": {
+          "distinct_input_structure_or_leaf_id_pairs": 39,
+          "anchors": [
+            {
+              "anchor_index": 0,
+              "full_query_status_counts": {
+                "full_topology_absent": 39
+              },
+              "projection_status_counts": {
+                "full_topology_absent": 39
+              }
+            },
+            {
+              "anchor_index": 1,
+              "full_query_status_counts": {
+                "full_topology_absent": 39
+              },
+              "projection_status_counts": {
+                "full_topology_absent": 39
+              }
+            }
+          ]
+        },
+        "intermediate": {
+          "distinct_input_structure_or_leaf_id_pairs": 30,
+          "anchors": [
+            {
+              "anchor_index": 0,
+              "full_query_status_counts": {
+                "full_topology_absent": 30
+              },
+              "projection_status_counts": {
+                "full_topology_absent": 30
+              }
+            },
+            {
+              "anchor_index": 1,
+              "full_query_status_counts": {
+                "full_topology_absent": 30
+              },
+              "projection_status_counts": {
+                "full_topology_absent": 30
+              }
+            }
+          ]
+        },
+        "final": {
+          "distinct_input_structure_or_leaf_id_pairs": 134,
+          "anchors": [
+            {
+              "anchor_index": 0,
+              "full_query_status_counts": {
+                "full_topology_absent": 134
+              },
+              "projection_status_counts": {
+                "full_topology_absent": 134
+              }
+            },
+            {
+              "anchor_index": 1,
+              "full_query_status_counts": {
+                "full_topology_absent": 134
+              },
+              "projection_status_counts": {
+                "full_topology_absent": 134
+              }
+            }
+          ]
+        }
+      },
+      "authoritative_check_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 136
+      },
+      "transition_occurrences": {
+        "unique_full_anchor_preservation_not_observed": 508
+      }
+    }
+  ],
+  "observed_context_change_examples": [
+    {
+      "input_id": "CHEMBL4869-query-1",
+      "pending_index": 19,
+      "state_sha256": "54aa6271f03da6de5a1182a10827fb986280730f482986507a29306ea5937420",
+      "already_present_in_off_arm": true,
+      "nodes": [
+        {
+          "node_id": "ob0",
+          "kind": "source_leaf",
+          "smiles": "O=C(NC[C@]1(F)CC[C@H](C(=O)O)CC1)OCC1c2ccccc2-c2ccccc21",
+          "building_block_id": "structure-sha256:1682a70b2670d406a58d8d5646de970b146b5c096430782e7d8874307de5b454"
+        },
+        {
+          "node_id": "ob1",
+          "kind": "source_leaf",
+          "smiles": "N#CCCS",
+          "building_block_id": "structure-sha256:81241be3a5e3bd4d3d9c36538c1686d1c9f75ba31bfbf9ad41f4f7d0392c3639"
+        },
+        {
+          "node_id": "or",
+          "kind": "reaction_output",
+          "smiles": "N#CCCSC(=O)[C@H]1CC[C@@](F)(CNC(=O)OCC2c3ccccc3-c3ccccc32)CC1",
+          "rule_id": "synllama-rule-071",
+          "ordered_reactants": [
+            "ob0",
+            "ob1"
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "node_id": "or",
+          "rule_id": "synllama-rule-071",
+          "anchor_index": 0,
+          "ordered_parent_statuses": [
+            "full_anchor_preserved",
+            "full_topology_absent"
+          ],
+          "output_status": "full_topology_absent",
+          "transition": "unique_full_anchor_preservation_no_longer_observed_at_reaction_output"
+        },
+        {
+          "node_id": "or",
+          "rule_id": "synllama-rule-071",
+          "anchor_index": 1,
+          "ordered_parent_statuses": [
+            "full_topology_absent",
+            "full_topology_absent"
+          ],
+          "output_status": "full_topology_absent",
+          "transition": "unique_full_anchor_preservation_not_observed"
+        }
+      ],
+      "interpretation": "Local query context no longer matches; not evidence of a reaction-caused inversion or of a continuation-preference regression."
+    }
+  ],
+  "limitations": [
+    "Four cyclohexane ring projections lose defined stereo and are unknown; they do not establish ring-core absence.",
+    "The two spiro projections equal the full query, so they are not independent evidence.",
+    "Topology absence refers to the compiled local query, not absence of every ring core or chemical impossibility.",
+    "No atom lineage, reaction replay, forward prediction, synthesis conditions, yield, or activity was established by this diagnostic.",
+    "Stage-level molecule counts may overlap; 338 perceived input/SMILES pairs differ from the sum of stage-specific pairs.",
+    "The same 12-input development panel has been reused; this is not held-out validation."
+  ],
+  "decision": {
+    "p1_complete": false,
+    "actual_supported_input_coverage": {
+      "route_first": 4,
+      "baseline": 5,
+      "denominator": 12
+    },
+    "default_profile_changed": false,
+    "develop_merge": false,
+    "next_priority": "Determine whether the selected source pool preserves the joint stereo ring core but lacks a required attachment, then test one general source/intermediate selection policy that satisfies both the stereo core and downstream reaction roles. Keep original final gates and limits."
+  },
+  "artifacts_sha256": {
+    "benchmark-results/route-first-development-20261023-v2/stereo-anchor-stage-diagnostic-v1/probe.py": "b9d8b20d90b1d481726ef2db048c64906486d3f2d4daebc48078db77a42c1a49",
+    "benchmark-results/route-first-development-20261023-v2/stereo-anchor-stage-diagnostic-v1/fixtures.json": "fa7bb5fc9da99090f9ca6fd26a454785b64104f09b3f1bb69a11c9a6f30c1277",
+    "benchmark-results/route-first-development-20261023-v2/stereo-anchor-stage-diagnostic-v1/plan-draft.json": "225e563b102587e5a55caf24826d7e43e16859a5a6f8f6b2b31bf4a6b2fbdbce",
+    "benchmark-results/route-first-development-20261023-v2/stereo-anchor-stage-diagnostic-v1/plan.json": "9af1b868ce094dd4ac363e02feeb2c1179a5440f5f18a1d3702b2154ebc0bc8f",
+    "benchmark-results/route-first-development-20261023-v2/stereo-anchor-stage-diagnostic-v1/result.json": "fef192c950a8c1642186ac2ac6eaa10ec923800a42bf276363421d514eaf7220",
+    "benchmark-results/route-first-development-20261023-v2/stereo-anchor-stage-diagnostic-v1/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v16/result.json": "1ab2c75a19d4b94f47ef4bb6aa3af9a148a6dc901ff3e97d2b3decab6afe7ad2"
+  },
+  "runtime_source_sha256": {
+    "chembounce_synthesis/route_first.py": "ac1b0da44c0aaee4a85f96a5e3a7ab9dd0d189c5bce25d2e979ea75c6b5fbccc",
+    "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+    "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329"
+  },
+  "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+  "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+  "leaf_inventory_sha256": "05a1287e9fb01171a0288d7c066401986abdd46285dbc8d2bffa865948b27e26",
+  "leaf_smiles_sha256": "78c3e037f2a973aeadb1faa85f2d58c943eeab3f70c951dac3f528985c47bbfd"
+}
