@@ -1,0 +1,282 @@
+{
+  "schema": "route-query-hybrid-development-prototype-v1",
+  "status": "complete_local_prototype_production_validation_pending",
+  "scope": "Retrieval query construction only; not forward-supported routes, qualification, or experimental synthesis",
+  "source_sha256": "a02ad56dfa7401fa991b137ef4494791b0394556dfd157390222c7d089c0894a",
+  "panel_sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+  "config_sha256": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+  "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+  "bounds": {
+    "trial_cap_per_outcome": 16,
+    "trial_cap_per_search": 1024,
+    "match_cap_per_trial": 65,
+    "raw_outcome_cap": 4
+  },
+  "selected_plan_totals": {
+    "selected_plan_count": 93,
+    "selected_typed": 14,
+    "selected_approximate": 71,
+    "selected_explicit_fallback": 8
+  },
+  "maximum_construction_trials_per_input": 90,
+  "rows": [
+    {
+      "id": "CHEMBL4630839-query-1",
+      "selected_plan_count": 8,
+      "selected_typed": 3,
+      "selected_approximate": 5,
+      "selected_explicit_fallback": 0,
+      "counters": {
+        "approximate_hint_failed": 3,
+        "approximate_raw_outcomes": 25,
+        "partition_reused_parent_atom": 11,
+        "raw_outcomes": 47,
+        "rejected_role_mismatch_at_mapped_positions": 93,
+        "rejected_sanitization_failed": 3,
+        "trials": 88,
+        "typed_raw_outcomes": 8
+      }
+    },
+    {
+      "id": "CHEMBL4630839-query-2",
+      "selected_plan_count": 8,
+      "selected_typed": 3,
+      "selected_approximate": 5,
+      "selected_explicit_fallback": 0,
+      "counters": {
+        "approximate_hint_failed": 3,
+        "approximate_raw_outcomes": 16,
+        "partition_reused_parent_atom": 23,
+        "raw_outcomes": 47,
+        "rejected_role_mismatch_at_mapped_positions": 57,
+        "rejected_sanitization_failed": 3,
+        "trials": 54,
+        "typed_raw_outcomes": 5
+      }
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "selected_plan_count": 8,
+      "selected_typed": 2,
+      "selected_approximate": 6,
+      "selected_explicit_fallback": 0,
+      "counters": {
+        "approximate_hint_failed": 2,
+        "approximate_raw_outcomes": 18,
+        "partition_reused_parent_atom": 26,
+        "raw_outcomes": 52,
+        "rejected_role_mismatch_at_mapped_positions": 88,
+        "rejected_sanitization_failed": 2,
+        "trials": 90,
+        "typed_raw_outcomes": 6
+      }
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "selected_plan_count": 8,
+      "selected_typed": 0,
+      "selected_approximate": 8,
+      "selected_explicit_fallback": 0,
+      "counters": {
+        "approximate_hint_failed": 2,
+        "approximate_raw_outcomes": 18,
+        "partition_reused_parent_atom": 22,
+        "raw_outcomes": 44,
+        "rejected_role_mismatch_at_mapped_positions": 74,
+        "rejected_sanitization_failed": 2,
+        "trials": 71,
+        "typed_raw_outcomes": 2
+      }
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "selected_plan_count": 8,
+      "selected_typed": 0,
+      "selected_approximate": 8,
+      "selected_explicit_fallback": 0,
+      "counters": {
+        "approximate_raw_outcomes": 9,
+        "partition_reused_parent_atom": 30,
+        "raw_outcomes": 39,
+        "rejected_role_mismatch_at_mapped_positions": 29,
+        "trials": 24
+      }
+    },
+    {
+      "id": "CHEMBL5163-query-2",
+      "selected_plan_count": 5,
+      "selected_typed": 0,
+      "selected_approximate": 3,
+      "selected_explicit_fallback": 2,
+      "counters": {
+        "approximate_hint_failed": 5,
+        "approximate_raw_outcomes": 3,
+        "partition_reused_parent_atom": 32,
+        "raw_outcomes": 40,
+        "rejected_role_mismatch_at_mapped_positions": 3,
+        "rejected_sanitization_failed": 5
+      }
+    },
+    {
+      "id": "CHEMBL3334418-query-1",
+      "selected_plan_count": 8,
+      "selected_typed": 0,
+      "selected_approximate": 6,
+      "selected_explicit_fallback": 2,
+      "counters": {
+        "approximate_raw_outcomes": 7,
+        "partition_reused_parent_atom": 24,
+        "raw_outcomes": 31,
+        "rejected_role_mismatch_at_mapped_positions": 24,
+        "trials": 21
+      }
+    },
+    {
+      "id": "CHEMBL3334418-query-2",
+      "selected_plan_count": 8,
+      "selected_typed": 0,
+      "selected_approximate": 6,
+      "selected_explicit_fallback": 2,
+      "counters": {
+        "approximate_raw_outcomes": 7,
+        "partition_reused_parent_atom": 24,
+        "raw_outcomes": 31,
+        "rejected_role_mismatch_at_mapped_positions": 24,
+        "trials": 21
+      }
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "selected_plan_count": 8,
+      "selected_typed": 2,
+      "selected_approximate": 6,
+      "selected_explicit_fallback": 0,
+      "counters": {
+        "approximate_hint_failed": 7,
+        "approximate_raw_outcomes": 16,
+        "partition_reused_parent_atom": 10,
+        "raw_outcomes": 37,
+        "rejected_role_mismatch_at_mapped_positions": 67,
+        "rejected_sanitization_failed": 3,
+        "trials": 61,
+        "typed_raw_outcomes": 4
+      }
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "selected_plan_count": 8,
+      "selected_typed": 3,
+      "selected_approximate": 5,
+      "selected_explicit_fallback": 0,
+      "counters": {
+        "approximate_hint_failed": 3,
+        "approximate_raw_outcomes": 7,
+        "partition_reused_parent_atom": 23,
+        "raw_outcomes": 38,
+        "rejected_role_mismatch_at_mapped_positions": 34,
+        "rejected_sanitization_failed": 3,
+        "trials": 37,
+        "typed_raw_outcomes": 5
+      }
+    },
+    {
+      "id": "CHEMBL3864-query-1",
+      "selected_plan_count": 8,
+      "selected_typed": 0,
+      "selected_approximate": 6,
+      "selected_explicit_fallback": 2,
+      "counters": {
+        "approximate_hint_failed": 1,
+        "approximate_raw_outcomes": 9,
+        "partition_reused_parent_atom": 13,
+        "raw_outcomes": 23,
+        "rejected_role_mismatch_at_mapped_positions": 42,
+        "rejected_sanitization_failed": 1,
+        "trials": 41
+      }
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "selected_plan_count": 8,
+      "selected_typed": 1,
+      "selected_approximate": 7,
+      "selected_explicit_fallback": 0,
+      "counters": {
+        "approximate_hint_failed": 3,
+        "approximate_raw_outcomes": 13,
+        "partition_reused_parent_atom": 28,
+        "raw_outcomes": 46,
+        "rejected_role_mismatch_at_mapped_positions": 49,
+        "rejected_sanitization_failed": 3,
+        "trials": 46,
+        "typed_raw_outcomes": 2
+      }
+    }
+  ],
+  "policy": "One query tuple per raw outcome: typed representative when safe and fully role-corresponding; otherwise retain the existing safe approximate tuple; explicitly selected fallback remains separately labelled. Preserve existing plan ordering and caps.",
+  "rejected_alternative": "Typed-only construction reduced reachability, including inputs with currently eligible products. The earlier prototype is retained and is not the adoption policy.",
+  "eligible_route_rule_diagnostic": {
+    "scope": "Read-only rule IDs for currently eligible routes on three fixed inputs; no saved products as inputs, model, 3D, forward support or qualification",
+    "source_sha256": {
+      "chembounce_synthesis/route_first.py": "a02ad56dfa7401fa991b137ef4494791b0394556dfd157390222c7d089c0894a",
+      "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+      "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff"
+    },
+    "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "rows": [
+      {
+        "id": "CHEMBL4630839-query-1",
+        "eligible_distinct_products": 6,
+        "eligible_routes": 8,
+        "one_step_routes": 8,
+        "two_step_routes": 0,
+        "rule_counts": {
+          "synllama-rule-077": 4,
+          "synllama-rule-042": 2,
+          "synllama-rule-045": 2
+        }
+      },
+      {
+        "id": "CHEMBL3334418-query-1",
+        "eligible_distinct_products": 2,
+        "eligible_routes": 2,
+        "one_step_routes": 2,
+        "two_step_routes": 0,
+        "rule_counts": {
+          "synllama-rule-030": 2
+        }
+      },
+      {
+        "id": "CHEMBL3334418-query-2",
+        "eligible_distinct_products": 2,
+        "eligible_routes": 2,
+        "one_step_routes": 2,
+        "two_step_routes": 0,
+        "rule_counts": {
+          "synllama-rule-042": 2
+        }
+      }
+    ],
+    "note": "This separate three-input diagnostic repeats generation because the preceding full harness did not retain eligible route details. Future combined probes will retain them, avoiding this extra run. Saved products were not used as generation seeds."
+  },
+  "evidence": {
+    "hybrid_all12": {
+      "path": "benchmark-results/route-first-development-20261023-v2/role-preserving-prototype-v2/all12-result.json",
+      "sha256": "99b5baca831215dac7b8c82d691001fc6ef08730c6dc29fc1b6cd023d2e165a5"
+    },
+    "hybrid_actual_rule_controls": {
+      "path": "benchmark-results/route-first-development-20261023-v2/role-preserving-prototype-v2/result.json",
+      "sha256": "8a2dffa8cb2a0f73ee155d33af540b6fadc0205d99dcfc313d6dafd4a9863f06"
+    },
+    "typed_only_all12": {
+      "path": "benchmark-results/route-first-development-20261023-v2/role-preserving-prototype-v1/all12-result.json",
+      "sha256": "c25914b4cac516d33821c9b9554abba2924de1aaef63a57f2c46e2bdaee716fb"
+    },
+    "eligible_route_rule_ids": {
+      "path": "benchmark-results/route-first-development-20261023-v2/eligible-route-ids-v1/result.json",
+      "sha256": "b1fb8d9d32393a95cf9eecf497d461d5be712f96a204136c3b1f74e3cbb2574b"
+    }
+  },
+  "primary_comparison_run": false,
+  "next_gate": "Reviewed production implementation, then a single frozen all12 pre-evidence probe retaining eligible and rejected routes. Actual model comparison only if input eligibility can exceed the fixed 5/12 supported-input baseline."
+}
