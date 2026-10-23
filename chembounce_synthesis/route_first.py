@@ -11,7 +11,7 @@ from rdkit import Chem, DataStructs, rdBase
 from rdkit.Chem import rdChemReactions
 
 from .common import FP, absolute_smiles, canonical, molecule, positive
-from .route_audit import audit_route
+from .route_audit import audit_route, template_maps
 from .routes import verify_route
 
 VERSION = "catalog-rule-route-first-v2"
@@ -210,6 +210,8 @@ class RouteFirstSearch:
             "catalog_sha256": catalog.sha256,
             "rules_sha256": rules.sha256,
             "rule_inspections": 0,
+            "rule_template_checks": 0,
+            "rule_template_exclusions": [],
             "rules_selected": [],
             "reverse_attempts": 0,
             "reverse_failures": 0,
@@ -247,6 +249,7 @@ class RouteFirstSearch:
         }
         self._nearest_cache = {}
         self._rule_selection_cache = {}
+        self._eligible_rules = None
         self._reverse_cache = {}
         self._retrieval_target_cache = {}
         self._fp_cache = {self.hit: self.hit_fp}
@@ -394,23 +397,63 @@ class RouteFirstSearch:
         self._catalog_pools[target] = pool
         return pool
 
-    def _select_rules(self, target, maximum, fallback=0):
-        key = (target, maximum, fallback)
-        if key in self._rule_selection_cache:
-            return self._rule_selection_cache[key]
-        mol = molecule(target)
-        primary, secondary = [], []
-        for ident in sorted(self.rules.rules)[: self.limits.max_rule_scans_per_target]:
+    def _eligible_rule_ids(self):
+        if self._eligible_rules is not None:
+            return self._eligible_rules
+        eligible = []
+        bounded_ids = sorted(self.rules.rules)[: self.limits.max_rule_scans_per_target]
+        for ident in bounded_ids:
             if self._stop():
                 break
             if self.report["rule_inspections"] >= self.limits.max_rule_inspections:
                 self._stop("max_rule_inspections")
                 break
             self.report["rule_inspections"] += 1
+            self.report["rule_template_checks"] += 1
+            rule = self.rules.get(ident)
+            _, issues = template_maps(rule.reaction)
+            if any(issues.values()):
+                self.report["rule_template_exclusions"].append(
+                    {"rule_id": ident, "template_audit": issues}
+                )
+            else:
+                eligible.append(ident)
+        # A partial precheck is usable, but never admits uninspected rules.
+        self._eligible_rules = tuple(eligible)
+        return self._eligible_rules
+
+    def _select_rules(self, target, maximum, fallback=0):
+        key = (target, maximum, fallback)
+        if key in self._rule_selection_cache:
+            return self._rule_selection_cache[key]
+        mol = molecule(target)
+        primary, secondary = [], []
+        eligible_ids = self._eligible_rule_ids()
+        # For inner searches, this is the same ordering used by the original
+        # full scan's primary sort, so the first maximum matches are final.
+        if not fallback:
+            eligible_ids = tuple(sorted(
+                eligible_ids,
+                key=lambda ident: (
+                    -self.rules.get(ident).reaction.GetProducts()[0].GetNumHeavyAtoms(), ident
+                ),
+            ))
+        complete = True
+        for ident in eligible_ids:
+            if self._stop():
+                complete = False
+                break
+            if self.report["rule_inspections"] >= self.limits.max_rule_inspections:
+                self._stop("max_rule_inspections")
+                complete = False
+                break
+            self.report["rule_inspections"] += 1
             rule = self.rules.get(ident)
             product_template = rule.reaction.GetProducts()[0]
             if mol.HasSubstructMatch(product_template, useChirality=True):
                 primary.append(rule)
+                if not fallback and len(primary) >= maximum:
+                    break
             elif fallback and any(
                 mol.HasSubstructMatch(q, useChirality=True) for q in rule.reaction.GetReactants()
             ):
@@ -420,7 +463,7 @@ class RouteFirstSearch:
         selected = [(rule, False) for rule in primary[:maximum]] + [
             (rule, True) for rule in secondary[: max(0, min(fallback, maximum - len(primary)))]
         ]
-        if not self._stop() and self.report["rule_inspections"] < self.limits.max_rule_inspections:
+        if complete and not self._stop():
             self._rule_selection_cache[key] = selected
         return selected
 

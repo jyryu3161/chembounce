@@ -124,6 +124,85 @@ def test_feature_index_targets_guide_size_without_unbounded_per_query_scan(asset
     assert search.report["catalog_row_visits"] <= search.limits.max_catalog_row_visits
 
 
+def test_template_filter_and_inner_early_stop_preserve_full_scan_priority(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    specifications = [
+        ("a-small", "[C:1]>>[C:1]"),
+        ("b-medium", "[C:1][C:2]>>[C:1][C:2]"),
+        ("c-invalid", "[C:1][C:2][C:3]>>[C:1][C:2][C:3]N"),
+        ("d-large", "[C:1][C:2][C:3]>>[C:1][C:2][C:3]"),
+        ("e-tie", "[C:1][C:2][C:3]>>[C:1]([C:2])[C:3]"),
+        ("f-fallback", "[C:1].[O:2]>>[C:1]=[O:2]"),
+        ("z-outside", "[C:1][C:2][C:3][C:4]>>[C:1][C:2][C:3][C:4]"),
+    ]
+    path = tmp_path / "rules.json"
+    path.write_text(json.dumps({
+        "schema_version": 1,
+        "rules": [
+            {"id": ident, "smarts": smarts, "source": "test"}
+            for ident, smarts in specifications
+        ],
+    }))
+    rules = Rules(path)
+    catalog = SimpleNamespace(sha256="test")
+    search = RouteFirstSearch(
+        "CCCC", catalog, rules,
+        RouteFirstLimits(**limits(
+            max_steps=1, max_rule_inspections=12, max_rule_scans_per_target=6,
+            max_inner_rules=2, max_rules=3,
+        )),
+    )
+    inner = search._select_rules("CCCC", 2)
+    assert [rule.id for rule, _ in inner] == ["d-large", "e-tie"]
+    assert search.report["rule_template_checks"] == 6
+    assert [row["rule_id"] for row in search.report["rule_template_exclusions"]] == ["c-invalid"]
+    assert search.report["rule_inspections"] == 8  # 6 static + 2 priority matches
+    assert [rule.id for rule, _ in search._select_rules("CCCC", 2)] == ["d-large", "e-tie"]
+    assert search.report["rule_inspections"] == 8  # cached selection
+    assert "z-outside" not in [rule.id for rule, _ in inner]
+
+    # The outer selection still scans the bounded ID prefix, then applies its
+    # original product-first and reactant-role fallback policy.
+    outer_search = RouteFirstSearch(
+        "CCCC", catalog, rules,
+        RouteFirstLimits(**limits(
+            max_steps=1, max_rule_inspections=12, max_rule_scans_per_target=6,
+            max_rules=5, fallback_rules=1,
+        )),
+    )
+    outer = outer_search._select_rules("CCCC", 5, fallback=1)
+    assert [rule.id for rule, fallback in outer if not fallback] == [
+        "d-large", "e-tie", "b-medium", "a-small"
+    ]
+    assert [(rule.id, fallback) for rule, fallback in outer if fallback] == [
+        ("f-fallback", True)
+    ]
+    assert outer_search.report["rule_inspections"] == 11
+    assert outer_search.report["rule_inspections"] <= outer_search.limits.max_rule_inspections
+
+
+def test_template_checks_share_global_rule_budget(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(json.dumps({
+        "schema_version": 1,
+        "rules": [
+            {"id": f"r{i}", "smarts": f"[C:{i + 1}]>>[C:{i + 1}]", "source": "test"}
+            for i in range(5)
+        ],
+    }))
+    rules = Rules(path)
+    search = RouteFirstSearch(
+        "C", SimpleNamespace(sha256="test"), rules,
+        RouteFirstLimits(**limits(max_steps=1, max_rule_inspections=5, max_rule_scans_per_target=5)),
+    )
+    assert search._select_rules("C", 1) == []
+    assert search.report["rule_template_checks"] == search.report["rule_inspections"] == 5
+    assert "max_rule_inspections" in search.report["limits_reached"]
+
+
 def test_exact_catalog_target_replaces_pool_row_within_query_cap(assets):
     catalog, rules = assets
     search = RouteFirstSearch(
@@ -209,7 +288,9 @@ def test_unmapped_product_atom_and_unspecified_stereo_fail_strict_route_audit(tm
     )
     routes, report = generate("CCC", Catalog(catalog_path), Rules(rules_path), limits(max_steps=1))
     assert routes == []
-    assert any("atom/stereo audit" in reason for reason in report["product_rejections"])
+    assert report["rule_template_exclusions"][0]["rule_id"] == "bad"
+    assert report["rule_template_exclusions"][0]["template_audit"]["unbound_product_atoms"]
+    assert report["route_audit_attempts"] == 0
 
     catalog_path.write_text(
         "id\tsmiles\tsource\tsnapshot\n"
