@@ -1,0 +1,1100 @@
+{
+  "schema": "synthesis-route-competing-final-rule-control-v2",
+  "date": "2026-10-24",
+  "status": "complete_not_adopted",
+  "runtime_commit": "d3dcadb3a4bde5bcf79f7c18e03e84e799d97e9a",
+  "source_head_at_execution": "425200f",
+  "scope": "Fixed reused development panel; whole selected actual-v2 scope16 graphs/14 ordered final-reactant tuples. Candidate generation blind to archived beam labels, investigators aware of previous development outcomes. Saved-beam association after candidate freezing, not new inference or new actual comparison.",
+  "previous_attempt": {
+    "status": "failed_before_first_input_row",
+    "files_sha256": {
+      "plan.json": "86b0aa628f0287bb50acdb109b120927345995919cccd7f9930471a7d31a4fc3",
+      "input.json": "9ca73044a1f1f2d5871000b013c0266ef56a1229a379f0aeb3fe03d92ccd59be",
+      "candidates.json": "42bdb94dfa466dd84eb87b33c058d7f52069579dec2648fa4c8bf45da534fada",
+      "generation.log": "30a3bacbe31d88a49f18e2fba6bd1902b4cdb5e4cb85f5e1fccfed703b3856d3",
+      "failure-receipt.json": "14a50438c60e4d4bad4d83b4fb3177a01466e6f8e2f145dd9f5163e8c2080a46",
+      "extract_inputs.py": "a30174d5338619dfc33957590fa63a32b37ed4cbd0ddb6d3be471cca276f7858",
+      "generate_candidates.py": "198f28c2db57a3d6b668aef9e9facdad686363aeabc8b6ccf3d48d4a745192b3",
+      "analyze_saved_beams.py": "ffd159cdb3e632d94ed8bdf8b9be5c62ca8d312c3319716e3a92f1d36c2de701"
+    },
+    "candidate_status": "in_progress",
+    "candidate_rows": 0,
+    "error": "selective_scoring.configured_constraints rejected the extracted partial config because recommendation.mode, mode and refinement were omitted. No candidate row, new rule call, audit or model call completed. Preserve v1 immutable.",
+    "scope": "The corrected input projection is a configuration binding fix, not a scientific gate/cap change."
+  },
+  "failure_accounting": "v1 failed before row0 due incomplete configuration projection after shared catalog load and one hit fingerprint. No generation/audit/model calls. v2 copies exact whole effective configs; v1 remains immutable. Catalog work/time of failed attempt not fully instrumented.",
+  "artifacts": {
+    "benchmark-results/route-first-development-20261023-v2/competing-final-rule-control-v2/plan-review-draft.json": "391a55025b67c8aca45b8bbe904c16c8f64276c9731aea62b83c39f8f9d59b3a",
+    "benchmark-results/route-first-development-20261023-v2/competing-final-rule-control-v2/plan-extraction.json": "631c08787e40094b2274c29d56416a20a900f0a0189c449140e52f2aed9c9b76",
+    "benchmark-results/route-first-development-20261023-v2/competing-final-rule-control-v2/plan.json": "afaf8f3ca12d48f3d1c7610044114119cb4b2e1ac44feff42255a761228eddfc",
+    "benchmark-results/route-first-development-20261023-v2/competing-final-rule-control-v2/input.json": "523145a736284bde515d192c450f7c95cce1941aa6948a30c499d6deb5c1b79d",
+    "benchmark-results/route-first-development-20261023-v2/competing-final-rule-control-v2/extract_inputs.py": "dceedf31d0b5e705443c4baa8f07b3f1e7c7d4366622cd660d11b127d5e2b788",
+    "benchmark-results/route-first-development-20261023-v2/competing-final-rule-control-v2/generate_candidates.py": "a664d6695bed72b8190f39d7458fc6bd8dd7b8c8cc74c99765316d0298cfe85a",
+    "benchmark-results/route-first-development-20261023-v2/competing-final-rule-control-v2/candidates.json": "b2b536d384f00d77c54c1a4f83e0aadc34a78e98b4da6020d437bf1d9d8cef79",
+    "benchmark-results/route-first-development-20261023-v2/competing-final-rule-control-v2/generation.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmark-results/route-first-development-20261023-v2/competing-final-rule-control-v2/analysis-freeze.json": "41aa8987be8c31e9f4e9816b32481f2e99e698127740fd967366521e383446ee",
+    "benchmark-results/route-first-development-20261023-v2/competing-final-rule-control-v2/analyze_saved_beams.py": "f6a5f25c1faa5a9fd16188fd3aa7383fba8407d089d6fa985dc21bb79861147e",
+    "benchmark-results/route-first-development-20261023-v2/competing-final-rule-control-v2/analysis.json": "9e136707fe6d01961ab600dd4f9de7932ef98a8f68249d071e2fc3da016559e9",
+    "benchmark-results/route-first-development-20261023-v2/competing-final-rule-control-v2/analysis.log": "d0f8a869ef0e336013168ca50b92463d3a3bb05c080cffa39ae510315f37c2e5"
+  },
+  "policy": {
+    "input_queries": [
+      "CHEMBL4630839-query-1",
+      "CHEMBL4630839-query-2",
+      "CHEMBL4247-query-1",
+      "CHEMBL4247-query-2",
+      "CHEMBL5163-query-1",
+      "CHEMBL5163-query-2",
+      "CHEMBL3334418-query-1",
+      "CHEMBL3334418-query-2",
+      "CHEMBL4869-query-1",
+      "CHEMBL4869-query-2",
+      "CHEMBL3864-query-1",
+      "CHEMBL3864-query-2"
+    ],
+    "expected_route_records": 16,
+    "expected_unique_input_ordered_final_reactant_tuples": 14,
+    "round_robin": "Within each input, group source records by exact ordered final reactant tuple in first-occurrence route order. One selected-rule entry per still-active tuple each round. Keep each source graph as a separate upstream context.",
+    "rule_order": "Use each input current v14 outer_rules_selected exact order/list, including listed fallback flags; never reorder by source product or saved model output. Exclude only that tuple\u2019s original final rule. No role permutation. A repeated rule ID entry remains a charged visit but cannot be selected as a second distinct alternative for the same tuple.",
+    "eligibility": "Charge one inspection for every visited rule-list entry, including original/unsupported/invalid entries. Require same reactant count, complete strict template_maps with no issues, and exact per-slot HasSubstructMatch(useChirality=True). Stop this tuple after its first two role-compatible strict-template alternatives, including zero-product or gate-failed calls; do not walk further based on products. role_checks counts explicit preselection checks. Rules.apply repeats at most three role checks per generation call; its bounded calls and a conservative internal-check upper bound are reported separately.",
+    "generation": "Rules.apply(rule_id, ordered_original_final_reactants, product_limit16) once per selected tuple/rule. Attach each returned product to every unchanged upstream graph variant of that tuple by changing only final rule_id and final product. Preserve all raw truncation flags, gate failures and audit-unassessed graphs. No graph deduplication is implicit: retain every source lineage and explicitly count any identical candidate graphs if they occur.",
+    "pregates": "Use unchanged v14 HitStereoAnchors, hop changed-scaffold/required core, _check_stereo, selective preflight/POLAR, property thresholds, and original-hit 2048-bit Morgan Tanimoto, in that order. Same fixed per-input effective config.",
+    "audit": "Audit gate-passing new graphs with audit_route product_limit64, strict_eligible only; cap64 new audits/input. Original16 graph controls each get same pregates plus fresh verify_route64 and audit_route64. Control costs separate from new-audit cap. The fixed original control audits are separate diagnostic work from the at-most64 new audits, with combined per-input maximum69. This does not assert a future production total64 audit budget can be met; future production must share its original total across old/new candidates.",
+    "analyzer": "Candidate set and all work counters must be terminal and SHA-frozen first. Then compare only exact unchanged reactant/reagent request and pinned provenance to previously saved actual-v2 raw beams; no new predictor/model calls. A tokenizer-only read is allowed for input token/beam validation if reviewed; model weights never loaded. The offline borrowed methods in evidence.py/forward_support.py/common.py, plus tokenizer/RDKit/Python runtime and analysis-freeze bytes, are checked before tokenization and after analysis.",
+    "input_config": "Copy each actual-v2 synthesis manifest complete effective config byte-for-byte as JSON data into the blind input, with canonical SHA256 separately bound by plan for every input. This config includes predictor settings only; it contains no route synthesis_evidence labels or beam outputs. Candidate generator does not index synthesis_evidence or load weights. Call configured_constraints(config,hit) for ALL12 complete configs BEFORE Catalog loading to fail early on configuration drift."
+  },
+  "caps": {
+    "rule_inspections_per_input": 128,
+    "role_checks_per_input": 384,
+    "role_compatible_strict_alternatives_per_tuple": 2,
+    "reaction_product_limit_per_call": 16,
+    "runreactants_raw_sentinel_per_uncached_call": 17,
+    "new_audits_per_input": 64,
+    "candidate_generated_instances_per_input": 1024,
+    "fingerprint_calls_per_input": 65536,
+    "cooperative_seconds_per_input_excluding_shared_catalog_load": 960,
+    "catalog_loads": 1,
+    "rules_loads": 1,
+    "candidate_model_calls": 0,
+    "analysis_model_calls": 0,
+    "max_combinations_original_search": 512,
+    "max_products_original_search": 1024,
+    "original_control_audits_per_input_max_observed": 5,
+    "diagnostic_combined_original_plus_new_audits_per_input": 69
+  },
+  "totals": {
+    "fingerprint_calls": 34,
+    "original_verify_calls": 16,
+    "original_audit_calls": 16,
+    "new_audit_calls": 7,
+    "diagnostic_combined_audit_calls": 23,
+    "rule_inspections": 218,
+    "role_checks": 223,
+    "template_checks": 87,
+    "template_cache_hits": 117,
+    "generation_apply_calls": 8,
+    "generation_apply_cache_misses": 8,
+    "returned_products": 8,
+    "candidate_graphs": 9,
+    "generation_truncated_calls": 0,
+    "apply_internal_role_checks_upper_bound": 24
+  },
+  "rows": [
+    {
+      "id": "CHEMBL4630839-query-1",
+      "status": "complete",
+      "original_controls": 3,
+      "original_controls_passed": true,
+      "ordered_tuple_groups": 3,
+      "generated_graphs": 3,
+      "gate_and_audit_passed_graphs": 3,
+      "new_eligible_products_relative_to_same_input_original_controls": [],
+      "gate_failure_counts": {},
+      "archived_association_counts": {
+        "all_steps_matched_saved_beams": 3
+      },
+      "work": {
+        "fingerprint_calls": 7,
+        "original_verify_calls": 3,
+        "original_audit_calls": 3,
+        "new_audit_calls": 3,
+        "diagnostic_combined_audit_calls": 6,
+        "rule_inspections": 48,
+        "role_checks": 48,
+        "template_checks": 15,
+        "template_cache_hits": 30,
+        "generation_apply_calls": 3,
+        "generation_apply_cache_misses": 3,
+        "returned_products": 3,
+        "candidate_graphs": 3,
+        "generation_truncated_calls": 0,
+        "apply_internal_role_checks_upper_bound": 9
+      },
+      "elapsed_seconds_excluding_shared_catalog_load": 2.455,
+      "candidate_summary": [
+        {
+          "source_route_id": "route_000000",
+          "rule_id": "synllama-rule-045",
+          "route_graph_sha256": "c6f2ff55ed842201fc1344e156617b55e73f6aa20255a9db28baebad05a5cc7b",
+          "product": "COc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+          "pregate": {
+            "passed": true,
+            "hit_bit_tanimoto": 0.6935483870967742,
+            "fingerprint_calls": 1
+          },
+          "audit_status": "completed",
+          "step_associations": [
+            {
+              "node_id": "ir",
+              "status": "matched_saved_beam",
+              "matched_rank": 2,
+              "prepared_input_sha256": "c600753d63be39e883514b734c4400ce9eeb655069c5cb2acb46547bde0ed393",
+              "raw_sha256": "0ee0aeac8b5b5f58dde5fcae3d2979a8b3336d203757d34aa048a5ab54fc35ce",
+              "matching_saved_requests": 1,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4630839-query-1",
+                  "route_id": "route_000000",
+                  "node_id": "ir"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "COc1cc(C(=O)O)nc(NCC2CC2)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "COc1cc(C(=O)NCC2CC2)nc(Cl)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "COc1cc(C(=O)O)nc(CC2CC2)n1",
+                  "complete": true
+                }
+              ]
+            },
+            {
+              "node_id": "or",
+              "status": "matched_saved_beam",
+              "matched_rank": 1,
+              "prepared_input_sha256": "d5ebda07538c26634e32072d41367ec54da99b3d2c1564759244b6a9a4a78e6b",
+              "raw_sha256": "46a94fd34106461a807c94fdd6a2e5f53bfd5999f6ece818edaa2836ca80543b",
+              "matching_saved_requests": 1,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4630839-query-1",
+                  "route_id": "route_000000",
+                  "node_id": "or"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "COc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "CNCCc1ccccc1-c1nc(OC)cc(C(=O)NCC2CC2)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "COc1cc(C(=O)NCC2CC2)nc(N(C)Cc2ccccc2)n1",
+                  "complete": true
+                }
+              ]
+            }
+          ],
+          "association_status": "all_steps_matched_saved_beams"
+        },
+        {
+          "source_route_id": "route_000001",
+          "rule_id": "synllama-rule-045",
+          "route_graph_sha256": "c019c46dbecfc601dc9ee5cec8342aa24dcb35064cc0b8fcefb58cb5525c7622",
+          "product": "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+          "pregate": {
+            "passed": true,
+            "hit_bit_tanimoto": 0.6935483870967742,
+            "fingerprint_calls": 1
+          },
+          "audit_status": "completed",
+          "step_associations": [
+            {
+              "node_id": "ir",
+              "status": "matched_saved_beam",
+              "matched_rank": 2,
+              "prepared_input_sha256": "6c3b7699bd6db01dbfdc06669138c4dc05bcc426fab1d8aa078a4591a2dc8a37",
+              "raw_sha256": "e2eaad9b6a154784def6462e483c9ea7ab8987b4c2ec8ca3517d8977961f8566",
+              "matching_saved_requests": 1,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4630839-query-1",
+                  "route_id": "route_000001",
+                  "node_id": "ir"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "CSc1cc(C(=O)O)nc(NCC2CC2)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "CSc1cc(C(=O)NCC2CC2)nc(Cl)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "O=C(O)c1cc(SC2CC2)nc(Cl)n1",
+                  "complete": true
+                }
+              ]
+            },
+            {
+              "node_id": "or",
+              "status": "matched_saved_beam",
+              "matched_rank": 1,
+              "prepared_input_sha256": "22b5deb24eb71a79c901ef8b67728aade3b5e9d58be4da168281171f55765472",
+              "raw_sha256": "1888b9583d9263b1d7a4741108b7964a16e60621e5a1bff5315fc1ba812fe466",
+              "matching_saved_requests": 1,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4630839-query-1",
+                  "route_id": "route_000001",
+                  "node_id": "or"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "CSc1cc(C(=O)NCC2CC2)nc(NCCc2ccccc2)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "CSc1cc(C(=O)O)nc(N(C)CCc2ccccc2)n1",
+                  "complete": true
+                }
+              ]
+            }
+          ],
+          "association_status": "all_steps_matched_saved_beams"
+        },
+        {
+          "source_route_id": "route_000002",
+          "rule_id": "synllama-rule-045",
+          "route_graph_sha256": "2d82111063ad1fa5dd53b4eb99c7587f074f25a760fc65ba847d578ae4d55d18",
+          "product": "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1",
+          "pregate": {
+            "passed": true,
+            "hit_bit_tanimoto": 0.671875,
+            "fingerprint_calls": 1
+          },
+          "audit_status": "completed",
+          "step_associations": [
+            {
+              "node_id": "ir",
+              "status": "matched_saved_beam",
+              "matched_rank": 2,
+              "prepared_input_sha256": "2a0401e8c0ac17a8f0d90bc6b123919987436c6d176403bf3c124d3d399e8179",
+              "raw_sha256": "832a0f8ff70b7a198d40f0ce9e6c65c58885954624df7ca8aeedc585c34e05e2",
+              "matching_saved_requests": 1,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4630839-query-1",
+                  "route_id": "route_000002",
+                  "node_id": "ir"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "COc1cc(C(=O)O)nc(NCC2CCC2)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "COc1cc(C(=O)NCC2CCC2)nc(Cl)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "COc1cc(C(=O)NCC2CCC2)nc(NCC2CCC2)n1",
+                  "complete": true
+                }
+              ]
+            },
+            {
+              "node_id": "or",
+              "status": "matched_saved_beam",
+              "matched_rank": 1,
+              "prepared_input_sha256": "584d65268d277b8f8bdcf67ca38d3ee6dea74eea9cf2907c554dc2d153e2f6cd",
+              "raw_sha256": "2c336458797213a2c93a8744cffe74a6d175dcee269ada26bb43797d2cce56e3",
+              "matching_saved_requests": 1,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4630839-query-1",
+                  "route_id": "route_000002",
+                  "node_id": "or"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "CN(CCc1ccccc1)c1nc(C(=O)NCC2CCC2)cc(=O)[nH]1",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "CNCCc1ccccc1-c1nc(OC)cc(C(=O)NCC2CCC2)n1",
+                  "complete": true
+                }
+              ]
+            }
+          ],
+          "association_status": "all_steps_matched_saved_beams"
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL4630839-query-2",
+      "status": "complete",
+      "original_controls": 1,
+      "original_controls_passed": true,
+      "ordered_tuple_groups": 1,
+      "generated_graphs": 0,
+      "gate_and_audit_passed_graphs": 0,
+      "new_eligible_products_relative_to_same_input_original_controls": [],
+      "gate_failure_counts": {},
+      "archived_association_counts": {},
+      "work": {
+        "fingerprint_calls": 2,
+        "original_verify_calls": 1,
+        "original_audit_calls": 1,
+        "new_audit_calls": 0,
+        "diagnostic_combined_audit_calls": 1,
+        "rule_inspections": 16,
+        "role_checks": 15,
+        "template_checks": 15,
+        "template_cache_hits": 0,
+        "generation_apply_calls": 0,
+        "generation_apply_cache_misses": 0,
+        "returned_products": 0,
+        "candidate_graphs": 0,
+        "generation_truncated_calls": 0,
+        "apply_internal_role_checks_upper_bound": 0
+      },
+      "elapsed_seconds_excluding_shared_catalog_load": 0.395,
+      "candidate_summary": []
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "status": "complete",
+      "original_controls": 5,
+      "original_controls_passed": true,
+      "ordered_tuple_groups": 4,
+      "generated_graphs": 4,
+      "gate_and_audit_passed_graphs": 4,
+      "new_eligible_products_relative_to_same_input_original_controls": [],
+      "gate_failure_counts": {},
+      "archived_association_counts": {
+        "all_steps_matched_saved_beams": 2,
+        "unassessed_saved_beam_missing_or_incomplete": 1,
+        "some_step_complete_saved_beam_nonmatch": 1
+      },
+      "work": {
+        "fingerprint_calls": 9,
+        "original_verify_calls": 5,
+        "original_audit_calls": 5,
+        "new_audit_calls": 4,
+        "diagnostic_combined_audit_calls": 9,
+        "rule_inspections": 64,
+        "role_checks": 64,
+        "template_checks": 16,
+        "template_cache_hits": 44,
+        "generation_apply_calls": 3,
+        "generation_apply_cache_misses": 3,
+        "returned_products": 3,
+        "candidate_graphs": 4,
+        "generation_truncated_calls": 0,
+        "apply_internal_role_checks_upper_bound": 9
+      },
+      "elapsed_seconds_excluding_shared_catalog_load": 3.637,
+      "candidate_summary": [
+        {
+          "source_route_id": "route_000001",
+          "rule_id": "synllama-rule-045",
+          "route_graph_sha256": "e1938677ce97bf212838fcb59a79a678fdfcb3a9ed303c3f1f34c39e218732e8",
+          "product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+          "pregate": {
+            "passed": true,
+            "hit_bit_tanimoto": 0.7023809523809523,
+            "fingerprint_calls": 1
+          },
+          "audit_status": "completed",
+          "step_associations": [
+            {
+              "node_id": "ir",
+              "status": "matched_saved_beam",
+              "matched_rank": 1,
+              "prepared_input_sha256": "eaef93d033ade9e87a3c628209cac5bcc59dbd06239e5b7773bff3b878a3064b",
+              "raw_sha256": "49f84cc0b0683138c4613fb5ee5b8a643f194b9870391251e6d84e68442a5a6e",
+              "matching_saved_requests": 1,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4247-query-1",
+                  "route_id": "route_000001",
+                  "node_id": "ir"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "O=C(O)[C@H]1CCCN(Cc2cccc(N3CCOCC3)c2)C1",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "O=C(O)[C@H]1CCCNC1.O=C(O)[C@H]1CCCNC1",
+                  "complete": true
+                }
+              ]
+            },
+            {
+              "node_id": "or",
+              "status": "matched_saved_beam",
+              "matched_rank": 1,
+              "prepared_input_sha256": "1b51dd129e4a41579228a7e2d7a0ad207e97a0d7a9b825c111971da78ae45143",
+              "raw_sha256": "c49220fa604352a42d4b9e173d76d9063cdf46113b06704130b3f8e57a995ab4",
+              "matching_saved_requests": 1,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4247-query-1",
+                  "route_id": "route_000001",
+                  "node_id": "or"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+                  "complete": true
+                }
+              ]
+            }
+          ],
+          "association_status": "all_steps_matched_saved_beams"
+        },
+        {
+          "source_route_id": "route_000002",
+          "rule_id": "synllama-rule-045",
+          "route_graph_sha256": "8431b8045d8042a88d7dfd28ab7b61fcbc149f6319213196c50c0ab7f735ae8b",
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "pregate": {
+            "passed": true,
+            "hit_bit_tanimoto": 0.6049382716049383,
+            "fingerprint_calls": 1
+          },
+          "audit_status": "completed",
+          "step_associations": [
+            {
+              "node_id": "ir",
+              "status": "matched_saved_beam",
+              "matched_rank": 1,
+              "prepared_input_sha256": "7ec62d2e114995c3f35861244b70d95bfd5c71d48a685998fc1c7b520150489d",
+              "raw_sha256": "25b7488800e37876f454b9e9ecae4a9b4a87dff1c45e0c80293b33ae160b0aec",
+              "matching_saved_requests": 1,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4247-query-1",
+                  "route_id": "route_000002",
+                  "node_id": "ir"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "COc1cc(Nc2ccnc(Nc3cc(OC)c(OC)c(OC)c3)n2)cc(OC)c1OC",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "COc1cc(Nc2ccnc(Nc3cc(OC)c(OC)c(OC)c3)n2)cc(Cl)c1OC",
+                  "complete": true
+                }
+              ]
+            },
+            {
+              "node_id": "or",
+              "status": "matched_saved_beam",
+              "matched_rank": 1,
+              "prepared_input_sha256": "bb09df46fb5b70592b75220cf8d50312d7c07a6104e74f641fc06f262192f6fe",
+              "raw_sha256": "b1732e635ac4581c2eaec7d9c91acfe2e280c45afd39a83d227234356f5947b8",
+              "matching_saved_requests": 2,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4247-query-1",
+                  "route_id": "route_000002",
+                  "node_id": "or"
+                },
+                {
+                  "input_id": "CHEMBL4247-query-1",
+                  "route_id": "route_000003",
+                  "node_id": "or"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC.Cl",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "COc1cc(Nc2nccc(N3CCC[C@@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+                  "complete": true
+                }
+              ]
+            }
+          ],
+          "association_status": "all_steps_matched_saved_beams"
+        },
+        {
+          "source_route_id": "route_000003",
+          "rule_id": "synllama-rule-045",
+          "route_graph_sha256": "ac2ddec6355d63e6bcc44d99ec213bc0fab3fe712e9bd812d2bc7c4688276efa",
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "pregate": {
+            "passed": true,
+            "hit_bit_tanimoto": 0.6049382716049383,
+            "fingerprint_calls": 1
+          },
+          "audit_status": "completed",
+          "step_associations": [
+            {
+              "node_id": "ir",
+              "status": "unassessed_incomplete_or_invalid_saved_beam",
+              "matched_rank": null,
+              "prepared_input_sha256": "1f51f3fc42a98d2c02ff3c3358a8d29376cb2225b40a20245c98884dd9df499b",
+              "raw_sha256": "7e1052e342682b320ec89bb1a67c22b0345f435504fce07534b4d851f1c4fe8e",
+              "matching_saved_requests": 1,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4247-query-1",
+                  "route_id": "route_000003",
+                  "node_id": "ir"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "COc1cc(Nc2ccnc(Nc3cc(OC)c(OC)c(OC)c3)n2)cc(OC)c1OC",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "CNc1cc(Nc2ccnc(Nc3cc(OC)c(OC)c(OC)c3)n2)cc(OC)c1OC",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": null,
+                  "complete": true
+                }
+              ]
+            },
+            {
+              "node_id": "or",
+              "status": "matched_saved_beam",
+              "matched_rank": 1,
+              "prepared_input_sha256": "bb09df46fb5b70592b75220cf8d50312d7c07a6104e74f641fc06f262192f6fe",
+              "raw_sha256": "b1732e635ac4581c2eaec7d9c91acfe2e280c45afd39a83d227234356f5947b8",
+              "matching_saved_requests": 2,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4247-query-1",
+                  "route_id": "route_000002",
+                  "node_id": "or"
+                },
+                {
+                  "input_id": "CHEMBL4247-query-1",
+                  "route_id": "route_000003",
+                  "node_id": "or"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC.Cl",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "COc1cc(Nc2nccc(N3CCC[C@@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+                  "complete": true
+                }
+              ]
+            }
+          ],
+          "association_status": "unassessed_saved_beam_missing_or_incomplete"
+        },
+        {
+          "source_route_id": "route_000004",
+          "rule_id": "synllama-rule-045",
+          "route_graph_sha256": "77463955f42f09e322e8ae39d434f6511a63bc9937b7af430e7873763fed5c0b",
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+          "pregate": {
+            "passed": true,
+            "hit_bit_tanimoto": 0.5517241379310345,
+            "fingerprint_calls": 1
+          },
+          "audit_status": "completed",
+          "step_associations": [
+            {
+              "node_id": "ir",
+              "status": "complete_saved_beam_nonmatch",
+              "matched_rank": null,
+              "prepared_input_sha256": "e9478735504d89a80ab137f0a33062069721b80059084aa67612b192cdddc6cc",
+              "raw_sha256": "247c22f2d893e0766ada147c669f9225037a5fe1886ae97c32464ad4d50d2977",
+              "matching_saved_requests": 1,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4247-query-1",
+                  "route_id": "route_000004",
+                  "node_id": "ir"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "COc1cc(Nc2ccnc(Nc3cc(Cl)c(OC)c(OC)c3)n2)cc(Cl)c1OC",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "COc1cc(Nc2nccc(Nc3cc(Cl)c(OC)c(OC)c3)n2)cc(C)c1OC",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "COc1cc(Nc2nccc(Nc3cc(Cl)c(OC)c(OC)c3)n2)cc(F)c1OC",
+                  "complete": true
+                }
+              ]
+            },
+            {
+              "node_id": "or",
+              "status": "matched_saved_beam",
+              "matched_rank": 1,
+              "prepared_input_sha256": "ba5ea0b0e5ada0c55ab32fc4badaad5e44ac2358d087b4d72403c01e2a524c88",
+              "raw_sha256": "c3632aa4ccdbc1992cd26a92db612bb343c4f92ad0e207b9573bfc5735765fb6",
+              "matching_saved_requests": 1,
+              "source_requests": [
+                {
+                  "input_id": "CHEMBL4247-query-1",
+                  "route_id": "route_000004",
+                  "node_id": "or"
+                }
+              ],
+              "three_predictions": [
+                {
+                  "rank": 1,
+                  "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+                  "complete": true
+                },
+                {
+                  "rank": 2,
+                  "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC.Cl",
+                  "complete": true
+                },
+                {
+                  "rank": 3,
+                  "product": "COc1cc(Nc2nccc(N3CCC[C@@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+                  "complete": true
+                }
+              ]
+            }
+          ],
+          "association_status": "some_step_complete_saved_beam_nonmatch"
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "status": "complete",
+      "original_controls": 3,
+      "original_controls_passed": true,
+      "ordered_tuple_groups": 3,
+      "generated_graphs": 2,
+      "gate_and_audit_passed_graphs": 0,
+      "new_eligible_products_relative_to_same_input_original_controls": [],
+      "gate_failure_counts": {
+        "polar_reference_capacity_below_minimum": 2
+      },
+      "archived_association_counts": {
+        "not_assessed_without_gate_and_completed_audit": 2
+      },
+      "work": {
+        "fingerprint_calls": 4,
+        "original_verify_calls": 3,
+        "original_audit_calls": 3,
+        "new_audit_calls": 0,
+        "diagnostic_combined_audit_calls": 3,
+        "rule_inspections": 48,
+        "role_checks": 50,
+        "template_checks": 15,
+        "template_cache_hits": 30,
+        "generation_apply_calls": 2,
+        "generation_apply_cache_misses": 2,
+        "returned_products": 2,
+        "candidate_graphs": 2,
+        "generation_truncated_calls": 0,
+        "apply_internal_role_checks_upper_bound": 6
+      },
+      "elapsed_seconds_excluding_shared_catalog_load": 1.354,
+      "candidate_summary": [
+        {
+          "source_route_id": "route_000001",
+          "rule_id": "synllama-rule-077",
+          "route_graph_sha256": "998ec65fe6469a14035147a9c70ed6ee3bcbc14bdb77eb77c696fe3e80184b50",
+          "product": "COc1cc(CC(=O)Nc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)ccc1Cl",
+          "pregate": {
+            "passed": false,
+            "reason": "polar_reference_capacity_below_minimum",
+            "fingerprint_calls": 0
+          },
+          "audit_status": "not_attempted_pregate_failed_or_unknown",
+          "association_status": "not_assessed_without_gate_and_completed_audit"
+        },
+        {
+          "source_route_id": "route_000002",
+          "rule_id": "synllama-rule-077",
+          "route_graph_sha256": "fbda79fd12e16466062943df38e3132a3e678ae33399ee01cb862d175e22a061",
+          "product": "COc1cc(C(=O)Nc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)ccc1Cl",
+          "pregate": {
+            "passed": false,
+            "reason": "polar_reference_capacity_below_minimum",
+            "fingerprint_calls": 0
+          },
+          "audit_status": "not_attempted_pregate_failed_or_unknown",
+          "association_status": "not_assessed_without_gate_and_completed_audit"
+        }
+      ]
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "status": "complete",
+      "original_controls": 0,
+      "original_controls_passed": true,
+      "ordered_tuple_groups": 0,
+      "generated_graphs": 0,
+      "gate_and_audit_passed_graphs": 0,
+      "new_eligible_products_relative_to_same_input_original_controls": [],
+      "gate_failure_counts": {},
+      "archived_association_counts": {},
+      "work": {
+        "fingerprint_calls": 1,
+        "original_verify_calls": 0,
+        "original_audit_calls": 0,
+        "new_audit_calls": 0,
+        "diagnostic_combined_audit_calls": 0,
+        "rule_inspections": 0,
+        "role_checks": 0,
+        "template_checks": 0,
+        "template_cache_hits": 0,
+        "generation_apply_calls": 0,
+        "generation_apply_cache_misses": 0,
+        "returned_products": 0,
+        "candidate_graphs": 0,
+        "generation_truncated_calls": 0,
+        "apply_internal_role_checks_upper_bound": 0
+      },
+      "elapsed_seconds_excluding_shared_catalog_load": 0.03,
+      "candidate_summary": []
+    },
+    {
+      "id": "CHEMBL5163-query-2",
+      "status": "complete",
+      "original_controls": 0,
+      "original_controls_passed": true,
+      "ordered_tuple_groups": 0,
+      "generated_graphs": 0,
+      "gate_and_audit_passed_graphs": 0,
+      "new_eligible_products_relative_to_same_input_original_controls": [],
+      "gate_failure_counts": {},
+      "archived_association_counts": {},
+      "work": {
+        "fingerprint_calls": 1,
+        "original_verify_calls": 0,
+        "original_audit_calls": 0,
+        "new_audit_calls": 0,
+        "diagnostic_combined_audit_calls": 0,
+        "rule_inspections": 0,
+        "role_checks": 0,
+        "template_checks": 0,
+        "template_cache_hits": 0,
+        "generation_apply_calls": 0,
+        "generation_apply_cache_misses": 0,
+        "returned_products": 0,
+        "candidate_graphs": 0,
+        "generation_truncated_calls": 0,
+        "apply_internal_role_checks_upper_bound": 0
+      },
+      "elapsed_seconds_excluding_shared_catalog_load": 0.028,
+      "candidate_summary": []
+    },
+    {
+      "id": "CHEMBL3334418-query-1",
+      "status": "complete",
+      "original_controls": 2,
+      "original_controls_passed": true,
+      "ordered_tuple_groups": 1,
+      "generated_graphs": 0,
+      "gate_and_audit_passed_graphs": 0,
+      "new_eligible_products_relative_to_same_input_original_controls": [],
+      "gate_failure_counts": {},
+      "archived_association_counts": {},
+      "work": {
+        "fingerprint_calls": 3,
+        "original_verify_calls": 2,
+        "original_audit_calls": 2,
+        "new_audit_calls": 0,
+        "diagnostic_combined_audit_calls": 2,
+        "rule_inspections": 14,
+        "role_checks": 14,
+        "template_checks": 13,
+        "template_cache_hits": 0,
+        "generation_apply_calls": 0,
+        "generation_apply_cache_misses": 0,
+        "returned_products": 0,
+        "candidate_graphs": 0,
+        "generation_truncated_calls": 0,
+        "apply_internal_role_checks_upper_bound": 0
+      },
+      "elapsed_seconds_excluding_shared_catalog_load": 0.819,
+      "candidate_summary": []
+    },
+    {
+      "id": "CHEMBL3334418-query-2",
+      "status": "complete",
+      "original_controls": 2,
+      "original_controls_passed": true,
+      "ordered_tuple_groups": 2,
+      "generated_graphs": 0,
+      "gate_and_audit_passed_graphs": 0,
+      "new_eligible_products_relative_to_same_input_original_controls": [],
+      "gate_failure_counts": {},
+      "archived_association_counts": {},
+      "work": {
+        "fingerprint_calls": 3,
+        "original_verify_calls": 2,
+        "original_audit_calls": 2,
+        "new_audit_calls": 0,
+        "diagnostic_combined_audit_calls": 2,
+        "rule_inspections": 28,
+        "role_checks": 32,
+        "template_checks": 13,
+        "template_cache_hits": 13,
+        "generation_apply_calls": 0,
+        "generation_apply_cache_misses": 0,
+        "returned_products": 0,
+        "candidate_graphs": 0,
+        "generation_truncated_calls": 0,
+        "apply_internal_role_checks_upper_bound": 0
+      },
+      "elapsed_seconds_excluding_shared_catalog_load": 0.847,
+      "candidate_summary": []
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "status": "complete",
+      "original_controls": 0,
+      "original_controls_passed": true,
+      "ordered_tuple_groups": 0,
+      "generated_graphs": 0,
+      "gate_and_audit_passed_graphs": 0,
+      "new_eligible_products_relative_to_same_input_original_controls": [],
+      "gate_failure_counts": {},
+      "archived_association_counts": {},
+      "work": {
+        "fingerprint_calls": 1,
+        "original_verify_calls": 0,
+        "original_audit_calls": 0,
+        "new_audit_calls": 0,
+        "diagnostic_combined_audit_calls": 0,
+        "rule_inspections": 0,
+        "role_checks": 0,
+        "template_checks": 0,
+        "template_cache_hits": 0,
+        "generation_apply_calls": 0,
+        "generation_apply_cache_misses": 0,
+        "returned_products": 0,
+        "candidate_graphs": 0,
+        "generation_truncated_calls": 0,
+        "apply_internal_role_checks_upper_bound": 0
+      },
+      "elapsed_seconds_excluding_shared_catalog_load": 0.038,
+      "candidate_summary": []
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "status": "complete",
+      "original_controls": 0,
+      "original_controls_passed": true,
+      "ordered_tuple_groups": 0,
+      "generated_graphs": 0,
+      "gate_and_audit_passed_graphs": 0,
+      "new_eligible_products_relative_to_same_input_original_controls": [],
+      "gate_failure_counts": {},
+      "archived_association_counts": {},
+      "work": {
+        "fingerprint_calls": 1,
+        "original_verify_calls": 0,
+        "original_audit_calls": 0,
+        "new_audit_calls": 0,
+        "diagnostic_combined_audit_calls": 0,
+        "rule_inspections": 0,
+        "role_checks": 0,
+        "template_checks": 0,
+        "template_cache_hits": 0,
+        "generation_apply_calls": 0,
+        "generation_apply_cache_misses": 0,
+        "returned_products": 0,
+        "candidate_graphs": 0,
+        "generation_truncated_calls": 0,
+        "apply_internal_role_checks_upper_bound": 0
+      },
+      "elapsed_seconds_excluding_shared_catalog_load": 0.041,
+      "candidate_summary": []
+    },
+    {
+      "id": "CHEMBL3864-query-1",
+      "status": "complete",
+      "original_controls": 0,
+      "original_controls_passed": true,
+      "ordered_tuple_groups": 0,
+      "generated_graphs": 0,
+      "gate_and_audit_passed_graphs": 0,
+      "new_eligible_products_relative_to_same_input_original_controls": [],
+      "gate_failure_counts": {},
+      "archived_association_counts": {},
+      "work": {
+        "fingerprint_calls": 1,
+        "original_verify_calls": 0,
+        "original_audit_calls": 0,
+        "new_audit_calls": 0,
+        "diagnostic_combined_audit_calls": 0,
+        "rule_inspections": 0,
+        "role_checks": 0,
+        "template_checks": 0,
+        "template_cache_hits": 0,
+        "generation_apply_calls": 0,
+        "generation_apply_cache_misses": 0,
+        "returned_products": 0,
+        "candidate_graphs": 0,
+        "generation_truncated_calls": 0,
+        "apply_internal_role_checks_upper_bound": 0
+      },
+      "elapsed_seconds_excluding_shared_catalog_load": 0.028,
+      "candidate_summary": []
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "status": "complete",
+      "original_controls": 0,
+      "original_controls_passed": true,
+      "ordered_tuple_groups": 0,
+      "generated_graphs": 0,
+      "gate_and_audit_passed_graphs": 0,
+      "new_eligible_products_relative_to_same_input_original_controls": [],
+      "gate_failure_counts": {},
+      "archived_association_counts": {},
+      "work": {
+        "fingerprint_calls": 1,
+        "original_verify_calls": 0,
+        "original_audit_calls": 0,
+        "new_audit_calls": 0,
+        "diagnostic_combined_audit_calls": 0,
+        "rule_inspections": 0,
+        "role_checks": 0,
+        "template_checks": 0,
+        "template_cache_hits": 0,
+        "generation_apply_calls": 0,
+        "generation_apply_cache_misses": 0,
+        "returned_products": 0,
+        "candidate_graphs": 0,
+        "generation_truncated_calls": 0,
+        "apply_internal_role_checks_upper_bound": 0
+      },
+      "elapsed_seconds_excluding_shared_catalog_load": 0.034,
+      "candidate_summary": []
+    }
+  ],
+  "summary": {
+    "inputs": 12,
+    "original_controls_passed": 16,
+    "ordered_tuple_groups": 14,
+    "generated_instances": 8,
+    "generated_graphs": 9,
+    "gate_and_strict_audit_passed_graphs": 7,
+    "saved_beam_all_steps_matched_graphs": 5,
+    "eligible_products_new_relative_to_original_selected_same_input": 0,
+    "newly_covered_inputs": 0,
+    "saved_request_keys_validated": 24,
+    "new_model_calls": 0,
+    "new_3d_calls": 0,
+    "actual_primary_inputs_supported": 4,
+    "actual_primary_denominator": 12,
+    "baseline_primary_inputs_supported": 5,
+    "primary_metric_revised": false,
+    "production_policy_adopted": false
+  },
+  "interpretation": "All seven eligible alternative-rule graphs retain original selected products. The two changed products on CHEMBL4247-query-2 fail unchanged polar capacity; no saved-beam support claim is made for them. The rule-competition hypothesis is not adopted for P1 coverage. Rule replay and archived prediction association do not establish reaction conditions, selectivity, yield, physical synthesis or activity.",
+  "budget_interpretation": "Diagnostic original controls and new audits charged separately (observed maximum9 combined/input); production must share original64 total. Reserved rule inspections would have to fit within original512, not append free work. No production equal-compute result or reachability claim.",
+  "next_step": "Freeze all four new v14 CHEMBL3334418-query-1 routes plus one original positive control; verify unchanged gates and source16/downstream64 audits before finite actual model evaluation."
+}
