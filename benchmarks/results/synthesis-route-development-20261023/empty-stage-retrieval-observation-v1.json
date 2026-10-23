@@ -1,0 +1,253 @@
+{
+  "artifact": {
+    "path": "benchmark-results/route-first-development-20261023-v2/rule062-passive-two-input-v1/result.json",
+    "sha256": "ec542167a51a6735b7acd1224ba5c94edd50e2917fc9e83d355a8928f2080dfe"
+  },
+  "interpretation": {
+    "cost": "Counts are logical later queries, not measured per-query row/FP/time savings. No new catalog, chemistry, fingerprints, model or3D evaluation.",
+    "mechanism": "Once any options tuple is empty, its Cartesian product with remaining slots is empty. Later source retrieval cannot create a product in this stage, but may warm caches and consume global budgets.",
+    "next": "Default-off skip-empty-stage policy, strict boolean and counter/order fixtures, independent review, then a single fixed12 on run against retained v20 under unchanged caps/gates. Measure all gains/losses; no guaranteed new candidate or primary coverage improvement.",
+    "scope": "JSON-only extraction from two earlier fully captured rule062 passive traces; no claim that current v20 has identical pools/cache/order. The eager stage loop is still present at the recorded source commit. Empty returns describe this bounded search, not catalog-wide chemical absence."
+  },
+  "rows": [
+    {
+      "catalog_row_visit_limit": 262144,
+      "catalog_row_visits": 262144,
+      "id": "CHEMBL4869-query-1",
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "observed_zero_product_stages_with_queries_after_empty": [
+        {
+          "combinations_after": 84,
+          "combinations_before": 84,
+          "empty_role_slot": 0,
+          "guide": [
+            "N[NH2+]C[C@H]1CC[C@@H](CO)CC1",
+            "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1"
+          ],
+          "later_queries": [
+            {
+              "base_cache_hit": true,
+              "returned_blocks": 1,
+              "role_slot": 1,
+              "target": "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1"
+            }
+          ],
+          "rule_id": "synllama-rule-062",
+          "stage_kind": "inner",
+          "states_count": 0,
+          "workitem_index": 2
+        },
+        {
+          "combinations_after": 84,
+          "combinations_before": 84,
+          "empty_role_slot": 0,
+          "guide": [
+            "[NH2+]NC[C@H]1CC[C@@H](CO)CC1",
+            "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1"
+          ],
+          "later_queries": [
+            {
+              "base_cache_hit": true,
+              "returned_blocks": 1,
+              "role_slot": 1,
+              "target": "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1"
+            }
+          ],
+          "rule_id": "synllama-rule-062",
+          "stage_kind": "inner",
+          "states_count": 0,
+          "workitem_index": 3
+        },
+        {
+          "combinations_after": 84,
+          "combinations_before": 84,
+          "empty_role_slot": 0,
+          "guide": [
+            "N[NH2+]C[C@H]1CC[C@@H](CCl)CC1",
+            "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1"
+          ],
+          "later_queries": [
+            {
+              "base_cache_hit": true,
+              "returned_blocks": 1,
+              "role_slot": 1,
+              "target": "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1"
+            }
+          ],
+          "rule_id": "synllama-rule-062",
+          "stage_kind": "inner",
+          "states_count": 0,
+          "workitem_index": 4
+        },
+        {
+          "combinations_after": 84,
+          "combinations_before": 84,
+          "empty_role_slot": 0,
+          "guide": [
+            "[NH2+]NC[C@H]1CC[C@@H](CCl)CC1",
+            "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1"
+          ],
+          "later_queries": [
+            {
+              "base_cache_hit": true,
+              "returned_blocks": 1,
+              "role_slot": 1,
+              "target": "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1"
+            }
+          ],
+          "rule_id": "synllama-rule-062",
+          "stage_kind": "inner",
+          "states_count": 0,
+          "workitem_index": 5
+        }
+      ]
+    },
+    {
+      "catalog_row_visit_limit": 262144,
+      "catalog_row_visits": 262144,
+      "id": "CHEMBL4869-query-2",
+      "limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "observed_zero_product_stages_with_queries_after_empty": [
+        {
+          "combinations_after": 12,
+          "combinations_before": 12,
+          "empty_role_slot": 0,
+          "guide": [
+            "N[NH2+]C[C@H]1CC[C@@H](COCC(=O)O)CC1",
+            "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+          ],
+          "later_queries": [
+            {
+              "base_cache_hit": false,
+              "returned_blocks": 0,
+              "role_slot": 1,
+              "target": "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+            }
+          ],
+          "rule_id": "synllama-rule-062",
+          "stage_kind": "outer",
+          "states_count": 0,
+          "workitem_index": 0
+        },
+        {
+          "combinations_after": 100,
+          "combinations_before": 100,
+          "empty_role_slot": 0,
+          "guide": [
+            "[NH2+]NC[C@H]1CC[C@@H](COCC(=O)O)CC1",
+            "CSC(=O)C(C(=O)Cl)c1cncc(F)c1"
+          ],
+          "later_queries": [
+            {
+              "base_cache_hit": true,
+              "returned_blocks": 0,
+              "role_slot": 1,
+              "target": "CSC(=O)C(C(=O)Cl)c1cncc(F)c1"
+            }
+          ],
+          "rule_id": "synllama-rule-062",
+          "stage_kind": "inner",
+          "states_count": 0,
+          "workitem_index": 1
+        },
+        {
+          "combinations_after": 100,
+          "combinations_before": 100,
+          "empty_role_slot": 0,
+          "guide": [
+            "N[NH2+]C[C@H]1CC[C@@H](CO)CC1",
+            "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+          ],
+          "later_queries": [
+            {
+              "base_cache_hit": false,
+              "returned_blocks": 0,
+              "role_slot": 1,
+              "target": "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+            }
+          ],
+          "rule_id": "synllama-rule-062",
+          "stage_kind": "inner",
+          "states_count": 0,
+          "workitem_index": 2
+        },
+        {
+          "combinations_after": 100,
+          "combinations_before": 100,
+          "empty_role_slot": 0,
+          "guide": [
+            "[NH2+]NC[C@H]1CC[C@@H](CO)CC1",
+            "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+          ],
+          "later_queries": [
+            {
+              "base_cache_hit": false,
+              "returned_blocks": 0,
+              "role_slot": 1,
+              "target": "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+            }
+          ],
+          "rule_id": "synllama-rule-062",
+          "stage_kind": "inner",
+          "states_count": 0,
+          "workitem_index": 3
+        },
+        {
+          "combinations_after": 100,
+          "combinations_before": 100,
+          "empty_role_slot": 0,
+          "guide": [
+            "N[NH2+]C[C@H]1CC[C@@H](CCl)CC1",
+            "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+          ],
+          "later_queries": [
+            {
+              "base_cache_hit": false,
+              "returned_blocks": 0,
+              "role_slot": 1,
+              "target": "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+            }
+          ],
+          "rule_id": "synllama-rule-062",
+          "stage_kind": "inner",
+          "states_count": 0,
+          "workitem_index": 4
+        },
+        {
+          "combinations_after": 100,
+          "combinations_before": 100,
+          "empty_role_slot": 0,
+          "guide": [
+            "[NH2+]NC[C@H]1CC[C@@H](CCl)CC1",
+            "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+          ],
+          "later_queries": [
+            {
+              "base_cache_hit": false,
+              "returned_blocks": 0,
+              "role_slot": 1,
+              "target": "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+            }
+          ],
+          "rule_id": "synllama-rule-062",
+          "stage_kind": "inner",
+          "states_count": 0,
+          "workitem_index": 5
+        }
+      ]
+    }
+  ],
+  "schema": "empty-stage-retrieval-observation-v1",
+  "source_commit": "0026a97cb55a1e6732c0f085117f6d018420216a",
+  "source_stage_sha256": "a4976fe90f3ba31dc4aea6b2081d54ab1b9b7e98083d127b47ed29164ada8177",
+  "status": "saved_trace_extraction_complete_before_intervention"
+}

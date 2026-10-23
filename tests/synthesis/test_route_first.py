@@ -790,6 +790,114 @@ def limits(**overrides):
     }
 
 
+def test_empty_stage_retrieval_opt_in_preserves_legacy_calls_and_skips_unneeded_roles():
+    rule = SimpleNamespace(id="join", roles=("role0", "role1"))
+    applied = []
+    rules = SimpleNamespace(
+        sha256="test",
+        apply=lambda _rule, reactants, _limit: (applied.append(reactants) or ("CN",), False),
+    )
+    catalog = SimpleNamespace(sha256="test")
+
+    def search(enabled):
+        return RouteFirstSearch(
+            "CN",
+            catalog,
+            rules,
+            RouteFirstLimits(**limits(skip_empty_stage_retrieval=enabled)),
+        )
+
+    off, on = search(False), search(True)
+    off_calls, on_calls = [], []
+    off._nearest = lambda target, _role, **_kw: (
+        off_calls.append(target) or (() if target == "empty" else (SimpleNamespace(id="b", smiles="N"),))
+    )
+    on._nearest = lambda target, _role, **_kw: (
+        on_calls.append(target) or (() if target == "empty" else (SimpleNamespace(id="b", smiles="N"),))
+    )
+    assert off._stage(rule, ("empty", "later"), "x") == []
+    assert on._stage(rule, ("empty", "later"), "x") == []
+    assert off_calls == ["empty", "later"] and on_calls == ["empty"]
+    assert off.report["empty_stage_short_circuits"] == 0
+    assert on.report["empty_stage_short_circuits"] == 1
+    assert on.report["empty_stage_unvisited_role_queries"] == 1
+    assert off.report["combinations"] == on.report["combinations"] == 0
+    assert off.report["products_generated"] == on.report["products_generated"] == 0
+    assert not applied
+
+    # A known-empty replacement at slot 1 prevents even the earlier slot-0 lookup.
+    off_calls.clear()
+    on_calls.clear()
+    assert off._stage(rule, ("earlier", "replaced"), "x", replace=(1, [])) == []
+    assert on._stage(rule, ("earlier", "replaced"), "x", replace=(1, [])) == []
+    assert off_calls == ["earlier"] and on_calls == []
+    assert on.report["empty_replacement_stage_short_circuits"] == 1
+    assert on.report["empty_stage_unvisited_role_queries"] == 2
+    assert on.report["combinations"] == 0
+
+    # The same known-empty replacement at slot 0 cannot trigger either role lookup.
+    on_calls.clear()
+    assert on._stage(rule, ("replaced", "later"), "x", replace=(0, ())) == []
+    assert on_calls == []
+    assert on.report["empty_replacement_stage_short_circuits"] == 2
+    assert on.report["empty_stage_unvisited_role_queries"] == 3
+
+    # A slot that legacy zip would never replace must retain the legacy route.
+    on_calls.clear()
+    assert len(on._stage(rule, ("first", "second"), "x", replace=(0.5, []))) == 1
+    assert on_calls == ["first", "second"]
+    on_calls.clear()
+    assert on._stage(rule, ("earlier", "replaced"), "x", replace=(1, iter(()))) == []
+    assert on_calls == ["earlier"]
+    assert on.report["empty_replacement_stage_short_circuits"] == 2
+
+    on_calls.clear()
+    assert on._stage(rule, ("earlier", "empty"), "x") == []
+    assert on_calls == ["earlier", "empty"]
+    assert on.report["empty_stage_unvisited_role_queries"] == 3
+    assert len(off._stage(rule, (x for x in ("first", "second")), "x")) == 1
+
+
+def test_nonempty_stage_order_and_config_bool_are_unchanged():
+    rule = SimpleNamespace(id="join", roles=("role0", "role1"))
+    applied = []
+    rules = SimpleNamespace(
+        sha256="test",
+        apply=lambda _rule, reactants, _limit: (applied.append(reactants) or ("CN",), False),
+    )
+    catalog = SimpleNamespace(sha256="test")
+
+    def run(enabled):
+        search = RouteFirstSearch(
+            "CN",
+            catalog,
+            rules,
+            RouteFirstLimits(**limits(skip_empty_stage_retrieval=enabled)),
+        )
+        calls = []
+        search._nearest = lambda target, _role, **_kw: (
+            calls.append(target)
+            or (
+                SimpleNamespace(id=f"{target}-a", smiles="C"),
+                SimpleNamespace(id=f"{target}-b", smiles="N"),
+            )
+        )
+        states = search._stage(rule, ("first", "second"), "x")
+        return calls, states, search.report
+
+    off_calls, off_states, off_report = run(False)
+    on_calls, on_states, on_report = run(True)
+    assert off_calls == on_calls == ["first", "second"]
+    assert off_states == on_states
+    assert off_report["combinations"] == on_report["combinations"] == 4
+    assert off_report["products_generated"] == on_report["products_generated"] == 4
+    assert on_report["empty_stage_short_circuits"] == 0
+    assert applied == [("C", "C"), ("C", "N"), ("N", "C"), ("N", "N")] * 2
+    assert RouteFirstLimits(**limits()).skip_empty_stage_retrieval is False
+    with pytest.raises(ValueError, match="skip_empty_stage_retrieval must be a boolean"):
+        RouteFirstLimits(**limits(skip_empty_stage_retrieval=1))
+
+
 def test_actual_one_and_two_step_routes_have_complete_forward_and_atom_stereo_replay(assets):
     catalog, rules = assets
     routes, report = generate(TWO_STEP_HIT, catalog, rules, limits())

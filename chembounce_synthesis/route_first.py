@@ -912,15 +912,21 @@ class RouteFirstLimits:
     reaction_product_limit: int = 16
     prefer_continuation_second: bool = False
     prefer_mapped_nh_second: bool = False
+    skip_empty_stage_retrieval: bool = False
 
     def __post_init__(self):
         if self.version != VERSION:
             raise ValueError(f"route_first.version must be {VERSION}")
-        for name in ("prefer_continuation_second", "prefer_mapped_nh_second"):
+        for name in ("prefer_continuation_second", "prefer_mapped_nh_second", "skip_empty_stage_retrieval"):
             if type(getattr(self, name)) is not bool:
                 raise ValueError(f"route_first.{name} must be a boolean")
         for key, value in asdict(self).items():
-            if key not in ("version", "prefer_continuation_second", "prefer_mapped_nh_second"):
+            if key not in (
+                "version",
+                "prefer_continuation_second",
+                "prefer_mapped_nh_second",
+                "skip_empty_stage_retrieval",
+            ):
                 positive(value, f"route_first.{key}")
         if self.max_steps not in (1, 2):
             raise ValueError("route_first.max_steps must be 1 or 2")
@@ -1044,6 +1050,9 @@ class RouteFirstSearch:
             "outer_distinct_cut_centers": 0,
             "phase2_plan_trace": [],
             "phase2_plan_trace_truncated": 0,
+            "empty_stage_short_circuits": 0,
+            "empty_replacement_stage_short_circuits": 0,
+            "empty_stage_unvisited_role_queries": 0,
             "reverse_outcomes": 0,
             "reverse_fallbacks": 0,
             "retrieval_guides_normalized": 0,
@@ -3171,6 +3180,26 @@ class RouteFirstSearch:
         continuation_context=None,
         mapped_nh_context=None,
     ):
+        slot_count = None
+        if self.limits.skip_empty_stage_retrieval:
+            try:
+                slot_count = min(len(guide), len(rule.roles))
+            except TypeError:
+                # The normal route guides are tuples. Preserve zip semantics
+                # for other iterables without pre-consuming them.
+                pass
+        if (
+            self.limits.skip_empty_stage_retrieval
+            and replace is not None
+            and slot_count is not None
+            and replace[0] in range(slot_count)
+            and isinstance(replace[1], (tuple, list))
+            and not replace[1]
+        ):
+            self.report["empty_stage_short_circuits"] += 1
+            self.report["empty_replacement_stage_short_circuits"] += 1
+            self.report["empty_stage_unvisited_role_queries"] += slot_count - 1
+            return []
         options = []
         for slot, (target, role) in enumerate(zip(guide, rule.roles)):
             if replace is not None and replace[0] == slot:
@@ -3205,6 +3234,13 @@ class RouteFirstSearch:
                         )
                     )
                 )
+            if self.limits.skip_empty_stage_retrieval and not options[-1]:
+                self.report["empty_stage_short_circuits"] += 1
+                self.report["empty_stage_unvisited_role_queries"] += sum(
+                    replace is None or next_slot != replace[0]
+                    for next_slot in range(slot + 1, slot_count or slot + 1)
+                )
+                return []
         states = []
         for combination in itertools.product(*options):
             if self._stop():
