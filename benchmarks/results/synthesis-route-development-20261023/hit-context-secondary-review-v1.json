@@ -1,0 +1,41 @@
+{
+  "raw_review_path": "benchmark-results/qualified-development-20261023/route-first-v2-hit-context-secondary-review-v1/report.json",
+  "raw_review_sha256": "44d8d373944eacbc10e1bb6bd62667d48e474855cf8ea1205f459e6bc7ea303f",
+  "review": {
+    "schema": "route-first-hit-context-secondary-review-v1",
+    "verdict": "PASS_scoped_implementation_review",
+    "reviewer": "route_first_p1_astra",
+    "files_sha256": {
+      "chembounce_synthesis/route_first.py": "b6f5e70ea69ce342b143b79805c1761100cf3e9c49f9831679ff48e309be3363",
+      "tests/synthesis/test_route_first.py": "894f11ef1fedd2ca2f34558fc68b2e27a84f40a8be5a118da8f99da313d163fb",
+      "docs/SYNTHESIS.md": "d2e7ccd0a693379bbf74fdc711d16c3322bb9cdf584f11203615288e0979867a",
+      "benchmarks/results/synthesis-route-development-20261023/actual-v2-explicit-fallback-hit-context-control-v2.json": "28a4030e06749281f3135c400d4c7e41a57c0f3d9dfb92b1b2af3a209738f588",
+      "benchmark-results/route-first-development-20261023-v2/development-probe-v14/probe.py": "b975a922b185f83720d0019d2463f7c406773c8bc564b032b0eec8b36e1914fb"
+    },
+    "independent_validation": {
+      "command": ".venv-research/bin/python -m pytest -q tests/synthesis/test_route_first.py tests/test_phase_telemetry_develop_hooks.py",
+      "exit_code": 0,
+      "passed": 69,
+      "elapsed_seconds_reported": 12.67
+    },
+    "reviewed_invariants": [
+      "Explicit missing-role provenance is recorded only at explicit fallback construction; outer stages pass slot membership and inner stages retain legacy behavior. Literal C alone does not activate policy.",
+      "Nearest cache separates active context; original first and anchor/ordinary reservation remain fixed, only an ordinary second at top_k=2 may change.",
+      "Ranking uses existing visited role-compatible ordinary rows and cached original-hit/candidate fingerprints; no added fingerprint construction, catalog scan or reaction call.",
+      "Additional Tanimotos are bounded at 65536/search and existing per-query row bound; source stereo uses shared existing caps/cache.",
+      "Incomplete original pool, insufficient Tanimoto/stereo budget, missing cached fingerprint, unknown source stereo and deadline preserve original second without caching incomplete selection.",
+      "Up to16 replacement samples use scores already computed; query and replacement counters reflect cache-miss selection work.",
+      "v14 harness diff versus v13 preserves panel/config/gates/caps and route capture; adds pre/post plan/source bindings, asset checks and new report fields. Harness was not executed by reviewer."
+    ],
+    "resolved_before_final_snapshot": [
+      "Root-reported unknown-stereo replacement risk is guarded and regression-tested."
+    ],
+    "limitations": [
+      "No catalog generation, model run, full suite or new scientific experiment performed by reviewer.",
+      "Paired model-free control adds two strict-audited pre-gate products for one fixed input and partner context only. Forward-model support and panel improvement remain unmeasured.",
+      "Actual primary remains4/12 versus baseline5/12; fixed adoption requirement >5/12 and all gates unchanged.",
+      "Existing cache-hit behavior and unchanged pipeline architecture were not broadly re-audited.",
+      "Unexecuted v14 analyzer and final execution-plan freeze were outside this runtime review."
+    ]
+  }
+}

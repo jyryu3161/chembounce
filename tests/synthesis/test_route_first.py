@@ -565,6 +565,204 @@ def test_stereo_screen_preserves_one_anchor_one_ordinary_reservation(tmp_path):
     assert search.report["catalog_stereo_exclusions"] == 1
 
 
+def _fallback_second_search(tmp_path, *, hit="OC1CCCCC1"):
+    from chembounce_synthesis.catalog import Catalog
+
+    path = tmp_path / "fallback-second-catalog.tsv"
+    path.write_text(
+        "id\tsmiles\tsource\tsnapshot\n"
+        "alkyne\tC#CCO\ttest\ttest\n"
+        "branched\tCC(C)O\ttest\ttest\n"
+        "linear\tCCCO\ttest\ttest\n"
+        "ring\tOC1CCCCC1\ttest\ttest\n"
+        "unspecified\tCC(F)O\ttest\ttest\n"
+    )
+    catalog = Catalog(path)
+    return RouteFirstSearch(
+        hit,
+        catalog,
+        SimpleNamespace(sha256="test"),
+        RouteFirstLimits(**limits(max_steps=1, max_catalog_index_rows=10)),
+    )
+
+
+def test_explicit_missing_role_second_uses_hit_context_without_changing_first_or_fp_work(tmp_path):
+    search = _fallback_second_search(tmp_path)
+    old = search._nearest("C", "[C][O]")
+    fp_before = search.report["fingerprint_calls"]
+    assert [block.id for block in old] == ["alkyne", "branched"]
+    changed = search._nearest("C", "[C][O]", fallback_missing_role=True)
+    assert [block.id for block in changed] == ["alkyne", "ring"]
+    assert search.report["fingerprint_calls"] == fp_before
+    assert search.report["fallback_hit_second_replacements"] == 1
+    assert search.report["fallback_hit_second_tanimotos"] <= 5
+    assert (
+        search.report["fallback_hit_second_tanimotos"] <= route_first_module.MAX_FALLBACK_HIT_SECOND_TANIMOTOS
+    )
+    sample = search.report["fallback_hit_second_samples"][0]
+    assert (sample["first"], sample["old_second"], sample["new_second"]) == (
+        canonical("C#CCO"),
+        canonical("CC(C)O"),
+        canonical("OC1CCCCC1"),
+    )
+    assert sample["comparison_count"] == search.report["fallback_hit_second_tanimotos"]
+    assert sample["new_second_hit_tanimoto"] > sample["old_second_hit_tanimoto"]
+    assert search._nearest("C", "[C][O]") == old
+    assert search._nearest("C", "[C][O]", fallback_missing_role=True) == changed
+    assert len(search._nearest_cache) == 2  # active and ordinary contexts cannot alias
+
+    anchored = _fallback_second_search(tmp_path)
+    anchored._index()
+    anchored._anchor_queries = (Chem.MolFromSmarts("[C]"),)
+    anchored._anchor_postings = ((canonical("C#CCO"),),)
+    anchored._anchor_scores = {canonical("C#CCO"): 0}
+    assert [block.id for block in anchored._nearest("C", "[C][O]", fallback_missing_role=True)] == [
+        "alkyne",
+        "ring",
+    ]
+    assert anchored.report["fallback_hit_second_replacements"] == 1
+
+    unspecified = _fallback_second_search(tmp_path, hit="CC(F)O")
+    assert [block.id for block in unspecified._nearest("C", "[C][O]", fallback_missing_role=True)] == [
+        "alkyne",
+        "branched",
+    ]
+    assert unspecified.report["catalog_stereo_exclusions"] >= 1
+
+
+def test_explicit_fallback_provenance_marks_only_missing_role_and_not_implicit(tmp_path):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "fallback-rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [{"id": "join", "smarts": "[C:1].[N:2]>>[C:1][N:2]", "source": "test"}],
+            }
+        )
+    )
+    rules = Rules(path)
+    hit = "CCO"
+    explicit = RouteFirstSearch(
+        hit, SimpleNamespace(sha256="test"), rules, RouteFirstLimits(**limits(max_steps=1))
+    )
+    guide = explicit._reverse(rules.get("join"), hit, True)[0]
+    assert guide == (hit, "C")
+    assert explicit._guide_missing_role_slots[("join", hit, guide, True)] == (1,)
+    calls = []
+    explicit._nearest = lambda target, role, **kwargs: calls.append((target, kwargs)) or ()
+    explicit._stage(rules.get("join"), guide, "o", fallback_missing_slots=(1,))
+    assert [call[1]["fallback_missing_role"] for call in calls] == [False, True]
+    calls.clear()
+    explicit._stage(rules.get("join"), guide, "i")
+    assert [call[1]["fallback_missing_role"] for call in calls] == [False, False]
+
+    implicit = RouteFirstSearch(
+        hit, SimpleNamespace(sha256="test"), rules, RouteFirstLimits(**limits(max_steps=1))
+    )
+    implicit._topology_spec = lambda _rule: (None, "unsupported_for_test")
+    assert implicit._reverse(rules.get("join"), hit, False)[0] == guide
+    assert implicit._guide_missing_role_slots == {}
+    assert implicit._guide_quality[("join", hit, guide)] == "implicit_fallback"
+
+    plan_only = RouteFirstSearch(
+        hit, SimpleNamespace(sha256="test"), rules, RouteFirstLimits(**limits(max_steps=1))
+    )
+    propagated = []
+    plan_only._stage = lambda *_args, **kwargs: propagated.append(kwargs["fallback_missing_slots"]) or []
+    _routes, report = plan_only.run()
+    assert report["outer_plans_selected"][0]["hint_quality"] == "explicit_fallback"
+    assert propagated == [(1,)]
+
+
+def test_hit_context_second_budget_missing_cache_unknown_and_deadline_restore_old_second(
+    tmp_path, monkeypatch
+):
+    from chembounce_synthesis import route_first
+
+    baseline = _fallback_second_search(tmp_path)
+    old = baseline._nearest("C", "[C][O]")
+
+    monkeypatch.setattr(route_first, "MAX_FALLBACK_HIT_SECOND_TANIMOTOS", 0)
+    bounded = _fallback_second_search(tmp_path)
+    assert bounded._nearest("C", "[C][O]", fallback_missing_role=True) == old
+    assert bounded.report["fallback_hit_second_tanimotos"] == 0
+    assert bounded.report["fallback_hit_second_legacy_reasons"]["tanimoto_budget"] == 1
+    assert ("C", "[C][O]", True) not in bounded._nearest_cache
+    monkeypatch.setattr(route_first, "MAX_FALLBACK_HIT_SECOND_TANIMOTOS", 65536)
+
+    partial = _fallback_second_search(tmp_path)
+    original_pool = partial._pool
+
+    def incomplete_pool(*args, **kwargs):
+        pool = original_pool(*args, **kwargs)
+        partial._pool_last_complete = False
+        return pool
+
+    partial._pool = incomplete_pool
+    assert partial._nearest("C", "[C][O]", fallback_missing_role=True) == old
+    assert partial.report["fallback_hit_second_legacy_reasons"]["incomplete_original_selection"] == 1
+    assert ("C", "[C][O]", True) not in partial._nearest_cache
+
+    monkeypatch.setattr(route_first, "MAX_CATALOG_STEREO_PERCEPTIONS", 2)
+    stereo_capped = _fallback_second_search(tmp_path)
+    assert stereo_capped._nearest("C", "[C][O]", fallback_missing_role=True) == old
+    assert stereo_capped.report["fallback_hit_second_legacy_reasons"]["stereo_budget"] == 1
+    assert ("C", "[C][O]", True) not in stereo_capped._nearest_cache
+    monkeypatch.setattr(route_first, "MAX_CATALOG_STEREO_PERCEPTIONS", 2048)
+
+    missing = _fallback_second_search(tmp_path)
+    source_screen = missing._catalog_block_stereo_eligible
+
+    def evict_after_second(smiles):
+        result = source_screen(smiles)
+        if smiles == canonical("CC(C)O"):
+            missing._fp_cache.pop(canonical("OC1CCCCC1"), None)
+        return result
+
+    missing._catalog_block_stereo_eligible = evict_after_second
+    assert missing._nearest("C", "[C][O]", fallback_missing_role=True) == old
+    assert missing.report["fallback_hit_second_legacy_reasons"]["missing_cached_fingerprint"] == 1
+    assert ("C", "[C][O]", True) not in missing._nearest_cache
+
+    unknown = _fallback_second_search(tmp_path)
+    original = unknown._catalog_block_stereo_eligible
+
+    def uncertain_top(smiles):
+        if smiles == canonical("OC1CCCCC1"):
+            return None
+        return original(smiles)
+
+    unknown._catalog_block_stereo_eligible = uncertain_top
+    assert unknown._nearest("C", "[C][O]", fallback_missing_role=True) == old
+    assert unknown.report["fallback_hit_second_legacy_reasons"]["unknown_source_stereo"] == 1
+    assert ("C", "[C][O]", True) not in unknown._nearest_cache
+
+    deadline = _fallback_second_search(tmp_path)
+    similarity = route_first.DataStructs.TanimotoSimilarity
+
+    def expire_during_new_scores(reference, candidate):
+        score = similarity(reference, candidate)
+        if reference is deadline.hit_fp:
+            deadline.deadline = time.monotonic() - 1
+        return score
+
+    monkeypatch.setattr(route_first.DataStructs, "TanimotoSimilarity", expire_during_new_scores)
+    assert deadline._nearest("C", "[C][O]", fallback_missing_role=True) == old
+    assert deadline.report["fallback_hit_second_legacy_reasons"]["deadline_during_scoring"] == 1
+    assert ("C", "[C][O]", True) not in deadline._nearest_cache
+
+    monkeypatch.setattr(route_first, "MAX_FALLBACK_HIT_SECOND_SAMPLES", 0)
+    no_samples = _fallback_second_search(tmp_path)
+    assert [block.id for block in no_samples._nearest("C", "[C][O]", fallback_missing_role=True)] == [
+        "alkyne",
+        "ring",
+    ]
+    assert no_samples.report["fallback_hit_second_samples"] == []
+    assert no_samples.report["fallback_hit_second_samples_omitted"] == 1
+
+
 def test_reverse_guides_require_disjoint_complete_parent_atom_partition(tmp_path):
     from chembounce_synthesis.reactions import Rules
 

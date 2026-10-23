@@ -1,0 +1,55 @@
+{
+  "schema": "actual-v2-explicit-fallback-hit-context-control-v2",
+  "status": "bounded_model_free_pregate_and_strict_audit_positive",
+  "scope": "One fixed original input/explicit missing-role fallback context; original first and two partners fixed, only second candidate from frozen offline original-hit ranking. This does not revise 12-input actual comparison or downstream model support.",
+  "source_commit": "935ff0f",
+  "offline_policy_sha256": "01c573bdd5f0a133c0e68313040b74a7d992fc8ff5ed8b1ac0e05f7fb5808d39",
+  "offline_result_sha256": "d45d2ac354974d4a21b5a8db611009c2b12c5a4d3a23d9a4265fbda6807d0131",
+  "paired_plan_sha256": "a91425e20115cd77018ce67092d32845163fb977c4e5d85be41d33705788c830",
+  "paired_harness_sha256": "ae19d0b7c161990adeefa339b58ef00004797bea86192e6e08c8e8c7f5ef38f3",
+  "paired_result_sha256": "1e3135a9773b39b6eb898b93cf67c2b4c4b2c732beccd750ad5347944d5fc5b1",
+  "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+  "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+  "old_first_positive_product_parity": true,
+  "work": {
+    "generation_apply_calls": 8,
+    "verification_apply_calls": 6,
+    "audit_apply_calls": 6,
+    "generation_apply_cache_misses": 6,
+    "verification_apply_cache_misses": 0,
+    "audit_apply_cache_misses": 0,
+    "audit_route_calls": 6,
+    "gate_products_tested": 12,
+    "gate_fingerprint_calls": 8,
+    "hit_fingerprint_calls": 1
+  },
+  "generation_combinations": 8,
+  "retained_product_instances": 12,
+  "old_eligible_products": [
+    "C=C[C@@H]1CCC[C@H]1Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+    "C=C[C@@H]1CCC[C@H]1Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O"
+  ],
+  "new_eligible_products": [
+    "C=C[C@@H]1CCC[C@H]1Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+    "C=C[C@@H]1CCC[C@H]1Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O",
+    "C[C@H](CC1CCCCC1)Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+    "C[C@H](CC1CCCCC1)Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O"
+  ],
+  "new_products_vs_old": [
+    "C[C@H](CC1CCCCC1)Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+    "C[C@H](CC1CCCCC1)Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O"
+  ],
+  "new_second_product_witnesses": [
+    {
+      "product": "C[C@H](CC1CCCCC1)Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+      "hit_bit_tanimoto": 0.391304347826087,
+      "audit_route_binding_sha256": "fc362ce48ac17fc76f2cb200898d5ee1a54d04af8c7976f92cd70945b8b4afb4"
+    },
+    {
+      "product": "C[C@H](CC1CCCCC1)Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O",
+      "hit_bit_tanimoto": 0.4117647058823529,
+      "audit_route_binding_sha256": "e702fd59724e88351cbefe7d74f296b56dd8d0e10e23b2ec4b51468f2ce4afbe"
+    }
+  ],
+  "decision": "Fixed original-hit-context second supplies two additional pre-evidence gate-pass and strict-audited products with the same existing anionic partner; other partner still fails polar gate. Supports a narrow retrieval policy trial only; no model or fixed-panel adoption claim."
+}

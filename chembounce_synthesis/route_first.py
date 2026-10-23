@@ -42,6 +42,8 @@ MAX_POOL_QUERY_ATOMS = 256
 MAX_POOL_QUERY_BONDS = 512
 MAX_POOL_GRAPH_VISITS = 262144
 MAX_ROLE_INDEX_MATCH_CHECKS = 500000
+MAX_FALLBACK_HIT_SECOND_TANIMOTOS = 65536
+MAX_FALLBACK_HIT_SECOND_SAMPLES = 16
 
 
 def _pool_raw_counts(mol, atoms=None):
@@ -629,6 +631,14 @@ class RouteFirstSearch:
             "catalog_stereo_unknowns": {},
             "catalog_stereo_exclusion_samples": [],
             "catalog_stereo_exclusion_samples_truncated": 0,
+            "fallback_hit_second_limit": MAX_FALLBACK_HIT_SECOND_TANIMOTOS,
+            "fallback_hit_second_sample_limit": MAX_FALLBACK_HIT_SECOND_SAMPLES,
+            "fallback_hit_second_tanimotos": 0,
+            "fallback_hit_second_queries": 0,
+            "fallback_hit_second_replacements": 0,
+            "fallback_hit_second_legacy_reasons": {},
+            "fallback_hit_second_samples": [],
+            "fallback_hit_second_samples_omitted": 0,
             "catalog_bucket_rankings": 0,
             "reaction_pool_limits": {
                 "query_role_pairs": MAX_POOL_QUERY_ROLE_PAIRS,
@@ -699,6 +709,7 @@ class RouteFirstSearch:
         self._tagged_reverse_cache = {}
         self._nonring_unavailable_rules = set()
         self._guide_quality = {}
+        self._guide_missing_role_slots = {}
         self._guide_centers = {}
         self._active_phase2_slot = None
         self._retrieval_target_cache = {}
@@ -1544,13 +1555,15 @@ class RouteFirstSearch:
             # Coarse, explicitly capped fallback. Unmatched roles use a small
             # retrieval query so a pair of nearly whole-hit blocks is not forced.
             mol = molecule(target)
-            guides = [
-                tuple(
-                    target if mol.HasSubstructMatch(q, useChirality=True) else "C"
-                    for q in rule.reaction.GetReactants()
-                )
-            ]
+            role_matches = tuple(
+                mol.HasSubstructMatch(q, useChirality=True) for q in rule.reaction.GetReactants()
+            )
+            guides = [tuple(target if matched else "C" for matched in role_matches)]
             qualities = {guides[0]: "implicit_fallback" if implicit else "explicit_fallback"}
+            if not implicit:
+                self._guide_missing_role_slots[(rule.id, target, guides[0], True)] = tuple(
+                    slot for slot, matched in enumerate(role_matches) if not matched
+                )
             if record_centers:
                 centers = {guides[0]: {None}}
         guides = sorted(set(guides))[: self.limits.max_reverse_outcomes]
@@ -1659,8 +1672,10 @@ class RouteFirstSearch:
         counts[reason] = counts.get(reason, 0) + 1
         return None  # Unknown remains eligible at its legacy rank.
 
-    def _nearest(self, target, role, *, rule_id=None, role_slot=None):
-        key = (target, role)
+    def _nearest(self, target, role, *, rule_id=None, role_slot=None, fallback_missing_role=False):
+        # This context changes only the second block. Keep its completed
+        # selection separate from the ordinary nearest result for this query.
+        key = (target, role, fallback_missing_role)
         trace = self._active_phase2_slot
         if trace is not None:
             trace["pool_queries"] += 1
@@ -1808,17 +1823,106 @@ class RouteFirstSearch:
                 break
             if eligible_row(row):
                 selected.append(row)
+        hit_second_complete = True
+        if fallback_missing_role and self.limits.building_block_top_k == 2:
+            self.report["fallback_hit_second_queries"] += 1
+
+            def use_legacy(reason):
+                nonlocal hit_second_complete
+                hit_second_complete = False
+                counts = self.report["fallback_hit_second_legacy_reasons"]
+                counts[reason] = counts.get(reason, 0) + 1
+
+            if not complete or not stereo_complete or self._stop():
+                use_legacy("incomplete_original_selection")
+            elif len(selected) < 2 or selected[1][1] != 0:
+                # Preserve the existing anchor/ordinary reservation and first.
+                use_legacy("no_ordinary_second")
+            else:
+                candidates = [(rank, row) for rank, row in enumerate(ordinary) if row[2] != selected[0][2]]
+                remaining = MAX_FALLBACK_HIT_SECOND_TANIMOTOS - self.report["fallback_hit_second_tanimotos"]
+                if len(candidates) > self.limits.max_catalog_rows_per_query:
+                    use_legacy("ranked_query_cap")
+                elif len(candidates) > remaining:
+                    use_legacy("tanimoto_budget")
+                elif any(row[2] not in self._fp_cache for _rank, row in candidates):
+                    use_legacy("missing_cached_fingerprint")
+                else:
+                    scored = []
+                    for rank, row in candidates:
+                        if self._stop():
+                            use_legacy("deadline_during_scoring")
+                            break
+                        self.report["fallback_hit_second_tanimotos"] += 1
+                        score = DataStructs.TanimotoSimilarity(self.hit_fp, self._fp_cache[row[2]])
+                        scored.append((-score, rank, row[2], row))
+                    if hit_second_complete:
+                        hit_scores = {smiles: -score for score, _rank, smiles, _row in scored}
+                        for _score, _rank, smiles, row in sorted(scored):
+                            if self._stop():
+                                use_legacy("deadline_during_stereo_screen")
+                                break
+                            if smiles not in self._catalog_stereo_cache:
+                                mol = self.catalog.mols[smiles]
+                                cost = mol.GetNumAtoms() + mol.GetNumBonds()
+                                if (
+                                    self.report["catalog_stereo_perceptions"]
+                                    >= MAX_CATALOG_STEREO_PERCEPTIONS
+                                    or len(self._catalog_stereo_cache) >= MAX_CATALOG_STEREO_CACHE_ENTRIES
+                                    or self.report["catalog_stereo_atom_bond_charges"] + cost
+                                    > MAX_CATALOG_STEREO_ATOM_BOND_CHARGES
+                                ):
+                                    use_legacy("stereo_budget")
+                                    break
+                            eligible = eligible_row(row)
+                            if not stereo_complete:
+                                use_legacy("unknown_source_stereo")
+                                break
+                            if eligible:
+                                if self._stop():
+                                    use_legacy("deadline_after_stereo_screen")
+                                    break
+                                if row != selected[1]:
+                                    self.report["fallback_hit_second_replacements"] += 1
+                                    samples = self.report["fallback_hit_second_samples"]
+                                    if len(samples) < MAX_FALLBACK_HIT_SECOND_SAMPLES:
+                                        samples.append(
+                                            {
+                                                "rule_id": rule_id,
+                                                "role_slot": role_slot,
+                                                "placeholder_target": target,
+                                                "first": selected[0][2],
+                                                "old_second": selected[1][2],
+                                                "new_second": smiles,
+                                                "old_second_hit_tanimoto": hit_scores[selected[1][2]],
+                                                "new_second_hit_tanimoto": hit_scores[smiles],
+                                                "comparison_count": len(scored),
+                                            }
+                                        )
+                                    else:
+                                        self.report["fallback_hit_second_samples_omitted"] += 1
+                                selected[1] = row
+                                break
         blocks = tuple(
             self.catalog.blocks[sorted(self.catalog.by_smiles[smiles])[0]]
             for _score, _anchors, smiles in selected
         )
         if trace is not None:
             trace["pool_selected_blocks"] += len(blocks)
-        if complete and stereo_complete:
+        if complete and stereo_complete and hit_second_complete:
             self._nearest_cache[key] = blocks
         return blocks
 
-    def _stage(self, rule, guide, prefix, replace=None, budget=None, product_budget=None):
+    def _stage(
+        self,
+        rule,
+        guide,
+        prefix,
+        replace=None,
+        budget=None,
+        product_budget=None,
+        fallback_missing_slots=(),
+    ):
         options = []
         for slot, (target, role) in enumerate(zip(guide, rule.roles)):
             if replace is not None and replace[0] == slot:
@@ -1836,7 +1940,13 @@ class RouteFirstSearch:
                                 }
                             ],
                         }
-                        for block in self._nearest(target, role, rule_id=rule.id, role_slot=slot)
+                        for block in self._nearest(
+                            target,
+                            role,
+                            rule_id=rule.id,
+                            role_slot=slot,
+                            fallback_missing_role=slot in fallback_missing_slots,
+                        )
                     )
                 )
         states = []
@@ -2107,7 +2217,7 @@ class RouteFirstSearch:
         depth_one_product_budget = (
             self.limits.max_products if self.limits.max_steps == 1 else max(1, self.limits.max_products // 2)
         )
-        for rule, guide, _fallback, _keys, _kind, _quality in plans:
+        for rule, guide, fallback, _keys, _kind, quality in plans:
             if self._stop() or self.report["combinations"] >= depth_one_budget:
                 break
             states = self._stage(
@@ -2116,6 +2226,11 @@ class RouteFirstSearch:
                 "o",
                 budget=depth_one_budget,
                 product_budget=depth_one_product_budget,
+                fallback_missing_slots=(
+                    self._guide_missing_role_slots.get((rule.id, self.hit, guide, True), ())
+                    if fallback and quality == "explicit_fallback"
+                    else ()
+                ),
             )
             self._retain(states)
         if self.limits.max_steps == 2 and not self._stop():
@@ -2277,7 +2392,17 @@ class RouteFirstSearch:
                             slot_trace["inner_beam_states"] += len(inner)
                         if not inner:
                             continue
-                        states = self._stage(outer_rule, guide, "o", replace=(slot, inner))
+                        states = self._stage(
+                            outer_rule,
+                            guide,
+                            "o",
+                            replace=(slot, inner),
+                            fallback_missing_slots=(
+                                self._guide_missing_role_slots.get((outer_rule.id, self.hit, guide, True), ())
+                                if _fallback and _quality == "explicit_fallback"
+                                else ()
+                            ),
+                        )
                         if slot_trace is not None:
                             slot_trace["outer_stage_calls"] += 1
                             slot_trace["outer_stage_states"] += len(states)

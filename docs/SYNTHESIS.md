@@ -1,7 +1,7 @@
 # Synthesis-aware scaffold hopping
 
-The latest fixed 12-input development run completed with zero qualified
-products despite saved computational route support. See the
+The latest fixed route-first comparison supported four of the 12 development
+inputs after all-step forward checks, below the five-input baseline. See the
 [synthesis-route priority plan](SYNTHESIS_ROUTE_PLAN.md) for the baseline,
 bounded route-generation work, and checks planned before another large run.
 
@@ -206,7 +206,7 @@ product admission was observed. No model or 3D comparison was run because the
 fixed entry condition of more than five inputs was not met; P1 remains
 incomplete.
 
-The next untested revision reserves fingerprint work for product admission:
+The thirteenth revision reserves fingerprint work for product admission:
 `min(2 × max_products, max_fingerprint_calls // 2)` calls, leaving a separate
 generation ceiling. For two-step searches, the first-stage ceiling is the smaller of half the total
 and that generation ceiling; a one-step search uses the full generation ceiling. The initial hit fingerprint counts as generation
@@ -220,7 +220,38 @@ rejections. Ranked, admitted products still undergo the unchanged concrete
 forward replay and strict route audit. The total fingerprint cap, deadline,
 product and route caps, and all qualification gates remain unchanged. Separate
 generation, admission-ranking and admission-callback counters make budget use
-reviewable. This revision has not yet been run on the fixed panel.
+reviewable. Its fixed-panel development probe reached six of 12 inputs before
+model checks, with 52 distinct input/product pairs and 55 audited routes
+(20 one-step and 35 two-step). The unchanged actual forward and qualification
+comparison then supported four inputs, eight input/product pairs and nine
+routes. Three products on one input passed all qualification gates; the
+required improvement over the five-input baseline was not achieved.
+
+A bounded passive retrieval observation and paired forward control isolated
+one explicit fallback guide with a missing reactant role. Its generic `C`
+retrieval hint gave a selected first alcohol a small folded-fingerprint score
+from a bit collision and an uninformative zero-score second choice. A
+predeclared smallest-block replacement from the same role-compatible pool
+produced no new gate-passing product with the same two partners. A second
+predeclared replacement, ranked by fingerprint similarity to the original
+hit, produced two additional products that passed the original-hit gates and
+strict concrete route audit in the paired model-free control. That result is
+limited to one input and fixed partners; model support and panel coverage for
+this retrieval change have not been measured.
+
+The resulting narrow policy changes only the second catalog block for an
+explicit fallback slot proven to lack a role match. It retains the original
+first block, anchor/ordinary reservation, role-compatible visited pool and
+all route and qualification gates. Candidates use fingerprints already
+cached during guide ranking; at most 65,536 additional original-hit Tanimoto
+calculations are charged per search, with the existing 8,192-row query bound.
+The candidate ordering and stereo checks add CPU work even though they add no
+fingerprint or catalog-row calls; successful replacements retain at most 16
+bounded decision examples in the search report. Source stereo uses the existing
+bounded perception cache. Incomplete ranking,
+missing cached fingerprints, unknown stereo or deadline expiry keeps the
+original second block without caching an incomplete choice. Informative,
+approximate and implicit fallback guides keep their previous selection.
 
 ## Optional catalog byte binding
 
