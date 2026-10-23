@@ -1,0 +1,270 @@
+{
+  "baseline_runtime_commit": "c7a913ce43f2d31c7552125bc0d35b5ca19a6579",
+  "coverage": {
+    "baseline": {
+      "covered": 5,
+      "known_complete": 12,
+      "known_supported_input_product_pairs_sum": 69,
+      "unknown": 0
+    },
+    "route_first": {
+      "covered": 0,
+      "known_complete": 12,
+      "known_supported_input_product_pairs_sum": 0,
+      "unknown": 0
+    }
+  },
+  "decision": "not_adopted_route_coverage_decreased",
+  "feature_runtime_commit": "0454d8643bc03b061565439a4ad77649c114114d",
+  "findings": [
+    "All12 new runs terminated normally, no timeouts or execution errors.",
+    "Seven inputs generated no admissible routes, primarily due missing/ambiguous/unrepresentable original-hit stereo anchors.",
+    "Five inputs admitted three products each, but existing original-hit similarity, polar-capacity or property gates excluded all before forward evidence/3D scoring.",
+    "Fixed-radius anchors cannot represent some original-hit stereo; random bounded catalog reservoir returns weak precursor neighbors. These are development failures, not evidence that no synthesis route exists."
+  ],
+  "local_evidence_sha256": {
+    "benchmark-results/route-first-development-20261023/analysis-amendment-v3.json": "2dddeb9153c10faa0bad0de10a01e42eae7a76e7db51488085739c38efbaa9d1",
+    "benchmark-results/route-first-development-20261023/analysis-v3/per-query.csv": "d6207b8267ef19735863b3ba6d8b05130777d8787a0efe6c3c66cc51eee1bb83",
+    "benchmark-results/route-first-development-20261023/analysis-v3/result.json": "a9e2dadb69b4597c1260800e0d427d1dad4b46dd681e1b51a6b2333d980e6a0d",
+    "benchmark-results/route-first-development-20261023/protocol.json": "60174a39954edc1ee085807eac9576adb814b61088738bd19a79c578d104247c",
+    "benchmark-results/route-first-development-20261023/route_first/execution-status.json": "bbd2db44d4184020b4cd77b8671e0f5e64311e8c21617ed02be6d52717128d01",
+    "benchmark-results/route-first-development-20261023/validation-receipt.json": "b1fc285fd253544bfa2860e6aee0d8b9bbff0342d7f723d6cfe211c6ac651b1b"
+  },
+  "next_revision": "Bounded adaptive hit-anchor construction, precursor-targeted catalog indexing and existing cheap gates before design intake; thresholds/assets and numeric search/model/score caps retained, a new prospectively frozen development attempt required.",
+  "primary_metric": "Number of completed inputs with at least one exact changed-scaffold product whose complete concrete route passes atom/stereo audit and per-step forward support; unique input/product pairs and route counts are secondary.",
+  "rows": [
+    {
+      "downstream_rejections": {
+        "2d_threshold_rejected": 1,
+        "selective_capacity_rejected": 2
+      },
+      "downstream_route_records": 3,
+      "generated_distinct_products": 14,
+      "generated_route_records": 14,
+      "generation_fingerprint_calls": 5579,
+      "generation_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "generation_rejections": {
+        "ValueError: 3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 54
+      },
+      "qualified_products": 0,
+      "query_id": "CHEMBL4630839-query-1",
+      "scored_products": 0,
+      "status": "completed_zero_qualified",
+      "supported_exact_products": 0
+    },
+    {
+      "downstream_rejections": {},
+      "downstream_route_records": 0,
+      "generated_distinct_products": 0,
+      "generated_route_records": 0,
+      "generation_fingerprint_calls": 5983,
+      "generation_limits_reached": [
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "generation_rejections": {
+        "ValueError: Hit stereo anchor is missing or has ambiguous correspondence": 58
+      },
+      "qualified_products": 0,
+      "query_id": "CHEMBL4630839-query-2",
+      "scored_products": 0,
+      "status": "completed_zero_qualified",
+      "supported_exact_products": 0
+    },
+    {
+      "downstream_rejections": {},
+      "downstream_route_records": 0,
+      "generated_distinct_products": 0,
+      "generated_route_records": 0,
+      "generation_fingerprint_calls": 5597,
+      "generation_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "generation_rejections": {
+        "ValueError: Hit stereo anchor is inverted": 6,
+        "ValueError: Hit stereo anchor is missing or has ambiguous correspondence": 54
+      },
+      "qualified_products": 0,
+      "query_id": "CHEMBL4247-query-1",
+      "scored_products": 0,
+      "status": "completed_zero_qualified",
+      "supported_exact_products": 0
+    },
+    {
+      "downstream_rejections": {
+        "2d_threshold_rejected": 1,
+        "constraint_rejected": 2
+      },
+      "downstream_route_records": 3,
+      "generated_distinct_products": 19,
+      "generated_route_records": 19,
+      "generation_fingerprint_calls": 5163,
+      "generation_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "generation_rejections": {
+        "ValueError: 3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 47,
+        "ValueError: Chemical-family tautomer enumeration incomplete: MaxTransformsReached": 22
+      },
+      "qualified_products": 0,
+      "query_id": "CHEMBL4247-query-2",
+      "scored_products": 0,
+      "status": "completed_zero_qualified",
+      "supported_exact_products": 0
+    },
+    {
+      "downstream_rejections": {},
+      "downstream_route_records": 0,
+      "generated_distinct_products": 0,
+      "generated_route_records": 0,
+      "generation_fingerprint_calls": 2851,
+      "generation_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "generation_rejections": {
+        "ValueError: Hit stereo anchor is missing or has ambiguous correspondence": 36
+      },
+      "qualified_products": 0,
+      "query_id": "CHEMBL5163-query-1",
+      "scored_products": 0,
+      "status": "completed_zero_qualified",
+      "supported_exact_products": 0
+    },
+    {
+      "downstream_rejections": {},
+      "downstream_route_records": 0,
+      "generated_distinct_products": 0,
+      "generated_route_records": 0,
+      "generation_fingerprint_calls": 2957,
+      "generation_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "generation_rejections": {
+        "ValueError: Hit stereo anchor is missing or has ambiguous correspondence": 57
+      },
+      "qualified_products": 0,
+      "query_id": "CHEMBL5163-query-2",
+      "scored_products": 0,
+      "status": "completed_zero_qualified",
+      "supported_exact_products": 0
+    },
+    {
+      "downstream_rejections": {
+        "2d_threshold_rejected": 3
+      },
+      "downstream_route_records": 3,
+      "generated_distinct_products": 12,
+      "generated_route_records": 12,
+      "generation_fingerprint_calls": 5876,
+      "generation_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "generation_rejections": {
+        "ValueError: 3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 12
+      },
+      "qualified_products": 0,
+      "query_id": "CHEMBL3334418-query-1",
+      "scored_products": 0,
+      "status": "completed_zero_qualified",
+      "supported_exact_products": 0
+    },
+    {
+      "downstream_rejections": {
+        "2d_threshold_rejected": 1,
+        "selective_capacity_rejected": 2
+      },
+      "downstream_route_records": 3,
+      "generated_distinct_products": 22,
+      "generated_route_records": 22,
+      "generation_fingerprint_calls": 5886,
+      "generation_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "generation_rejections": {
+        "ValueError: 3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 2
+      },
+      "qualified_products": 0,
+      "query_id": "CHEMBL3334418-query-2",
+      "scored_products": 0,
+      "status": "completed_zero_qualified",
+      "supported_exact_products": 0
+    },
+    {
+      "downstream_rejections": {},
+      "downstream_route_records": 0,
+      "generated_distinct_products": 0,
+      "generated_route_records": 0,
+      "generation_fingerprint_calls": 3801,
+      "generation_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "generation_rejections": {
+        "ValueError: Hit stereo anchor lost defined tetrahedral geometry in local context": 36
+      },
+      "qualified_products": 0,
+      "query_id": "CHEMBL4869-query-1",
+      "scored_products": 0,
+      "status": "completed_zero_qualified",
+      "supported_exact_products": 0
+    },
+    {
+      "downstream_rejections": {},
+      "downstream_route_records": 0,
+      "generated_distinct_products": 0,
+      "generated_route_records": 0,
+      "generation_fingerprint_calls": 3735,
+      "generation_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "generation_rejections": {
+        "ValueError: Hit stereo anchor lost defined tetrahedral geometry in local context": 32
+      },
+      "qualified_products": 0,
+      "query_id": "CHEMBL4869-query-2",
+      "scored_products": 0,
+      "status": "completed_zero_qualified",
+      "supported_exact_products": 0
+    },
+    {
+      "downstream_rejections": {
+        "constraint_rejected": 1,
+        "selective_capacity_rejected": 2
+      },
+      "downstream_route_records": 3,
+      "generated_distinct_products": 36,
+      "generated_route_records": 40,
+      "generation_fingerprint_calls": 3685,
+      "generation_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "generation_rejections": {},
+      "qualified_products": 0,
+      "query_id": "CHEMBL3864-query-1",
+      "scored_products": 0,
+      "status": "completed_zero_qualified",
+      "supported_exact_products": 0
+    },
+    {
+      "downstream_rejections": {},
+      "downstream_route_records": 0,
+      "generated_distinct_products": 0,
+      "generated_route_records": 0,
+      "generation_fingerprint_calls": 4217,
+      "generation_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "generation_rejections": {
+        "ValueError: Hit stereo anchor is missing or has ambiguous correspondence": 36
+      },
+      "qualified_products": 0,
+      "query_id": "CHEMBL3864-query-2",
+      "scored_products": 0,
+      "status": "completed_zero_qualified",
+      "supported_exact_products": 0
+    }
+  ],
+  "schema": "route-first-development-attempt-v1",
+  "scope": "Reused public development panel; historical baseline, not randomized/concurrent timing comparison; saved computational support independently route/audit replayed and saved raw beam projection checked without tokenizer/model, not experiment/efficacy"
+}
