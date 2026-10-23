@@ -1,0 +1,587 @@
+{
+  "bindings": {
+    "asset_sha256": {
+      "catalog": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "manifest": {
+        "CHEMBL4869-query-1": "1669db70ff4d09c9a93d586d872d256d3482e10c6e729c7637f15a176eab262d",
+        "CHEMBL4869-query-2": "7c4ef94083ab953bb45c9651f3bb80d5d00cbff155849752ec2135655f0ede7b"
+      },
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39"
+    },
+    "frozen_plan": {
+      "path": "benchmark-results/route-first-development-20261023-v2/rule062-passive-two-input-v1/plan.json",
+      "sha256": "14bbb9e4c0214bf4f0742c7b3d9663598ce64cb358dbcbc7b684629c0ed50791"
+    },
+    "joint_helper": {
+      "path": "benchmark-results/route-first-development-20261023-v2/stereo-anchor-joint-ring-v1/joint_ring.py",
+      "sha256": "cbe65af91c352641754737891205815d8c8c4ccbb25f1df0fe864a1e28c0aa1f"
+    },
+    "observer_control": {
+      "path": "benchmark-results/route-first-development-20261023-v2/rule062-passive-two-input-v1/test_probe.py",
+      "sha256": "555667719e64ed5dc1dadc9806aeeb7ce2aeede720873e2fce2ab7d60e5b7682"
+    },
+    "probe": {
+      "path": "benchmark-results/route-first-development-20261023-v2/rule062-passive-two-input-v1/probe.py",
+      "sha256": "7ed1fe13037f34f1cde97cf8b404c09a72eb9d8a19c5ca76bb99c457dd89637b"
+    },
+    "raw_result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/rule062-passive-two-input-v1/result.json",
+      "sha256": "ec542167a51a6735b7acd1224ba5c94edd50e2917fc9e83d355a8928f2080dfe"
+    },
+    "reviewed_draft": {
+      "path": "benchmark-results/route-first-development-20261023-v2/rule062-passive-two-input-v1/plan-draft-reviewed.json",
+      "sha256": "6f3ffae41f0ce606281b0db37a4151f4efd99b18920c7835abf360e8f9f371ae"
+    },
+    "source_sha256": {
+      "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "70e3863a6fc80b582d6f21f3a895e8b3ca7cd34a8fa5af91fdbaa63660482791",
+      "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e"
+    },
+    "summarizer": {
+      "path": "benchmark-results/route-first-development-20261023-v2/rule062-passive-two-input-v1/summarize.py",
+      "sha256": "c81b48787d2cdd843a261a5ed9b49c70b46b40ceb800ec6a6d907a00520f8cb9"
+    },
+    "summary": {
+      "path": "benchmark-results/route-first-development-20261023-v2/rule062-passive-two-input-v1/summary.json",
+      "sha256": "9be60c0cccde5ef9b36fdcb10eac5b070a83af322fb29270e6d244c8dd0ff2c9"
+    },
+    "v17_result": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v17/result.json",
+      "sha256": "f86e0d441e8e9f9d759476febba4d6a92b8acd831a9dfda06a7df6366983f56e"
+    }
+  },
+  "conditional_inventory": {
+    "catalog_canonical_molecules": 238542,
+    "interpretation": "Complete inventory found no original-role-matching catalog molecule with a defined queried joint stereo ring class. Seven role-match records showed unspecified root stereo (one in role0, six in role1); these are not topology-absent. This does not prove route impossibility or absence of full anchor elsewhere.",
+    "joint_match_requests": 485,
+    "joint_returned_tuples": 48,
+    "joint_status_by_role": {
+      "0": {
+        "joint_ring_topology_absent": 307,
+        "joint_root_stereo_unspecified_observed": 1
+      },
+      "1": {
+        "joint_ring_topology_absent": 164,
+        "joint_root_stereo_unspecified_observed": 6
+      }
+    },
+    "original_role_matches": {
+      "0": 308,
+      "1": 170
+    },
+    "original_rule062_role_checks": 477084,
+    "status": "complete"
+  },
+  "interpretation": [
+    "Empty selected role denotes no block returned within that workitem's visited retrieval, not global role absence: catalog inventory finds 308 and 170 matches for the respective original roles.",
+    "q4869-1 generated 12 inner state instances (six distinct structures) from two guides, all rejected by the already-existing future outer-role compatibility check; its separate outer062 one-step call generated two states. q4869-2 generated no inner or outer062 states.",
+    "Selected leaves have no defined queried joint ring class; one selected q4869-1 role1 leaf has unspecified root stereo. This partial ring-class result does not establish original full stereo-anchor preservation.",
+    "These observations support no further rule062 rank or normalization tweak on present evidence. A future generic continuation-handle feasibility proof could avoid spending generation work when a required outer role cannot survive, but ambiguous provenance must remain eligible. Neither global role matches nor these local failures establish chemical impossibility or a P1 adoption gain."
+  ],
+  "limits": {
+    "catalog_loads": 1,
+    "conditional_inventory_joint_match_requests": 65536,
+    "conditional_inventory_joint_returned_tuples": 262144,
+    "conditional_inventory_original_rule_roles": 2,
+    "conditional_inventory_role_checks": 500000,
+    "conditional_inventory_seconds": 120,
+    "conditional_inventory_shared_joint_queries": 1,
+    "inputs": 2,
+    "nearest_returns_captured_per_input": 512,
+    "per_input_cooperative_seconds": 960,
+    "postgeneration_selected_joint_match_requests": 4096,
+    "postgeneration_selected_joint_returned_tuples": 262144,
+    "postgeneration_selected_structures": 1024,
+    "stage_state_instances_captured_per_input": 1024,
+    "workitems_captured_per_input": 128
+  },
+  "parity": "Exact saved v17 pending graph sequence, observed product set/rejection counts, and eligible routes/products for both fixed inputs.",
+  "rows": [
+    {
+      "gate_rejections": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 34
+      },
+      "id": "CHEMBL4869-query-1",
+      "inner_rule062_workitems": [
+        {
+          "guide": [
+            "N[NH2+]C[C@H]1CC[C@@H](COCC(=O)O)CC1",
+            "O=C(SCCO)C(Cl)C(=O)c1ccccc1"
+          ],
+          "guide_origin_classification": "unknown",
+          "inner_combinations": 4,
+          "inner_distinct_products": 6,
+          "inner_generated_instances": 6,
+          "inner_rule_id": "synllama-rule-062",
+          "inner_states": 6,
+          "outer_role_compatible_instances": 0,
+          "outer_role_rejected_instances": 6,
+          "outer_role_unassessed_instances": 0,
+          "outer_rule_id": "synllama-rule-036",
+          "outer_slot": 1,
+          "outer_stage_states": 0,
+          "plan_index": 2,
+          "selected_role_counts": {
+            "0": 2,
+            "1": 2
+          },
+          "selected_role_ids": {
+            "0": [
+              "structure-sha256:63e7609213e7b59213875a41798f5535950c06fa9a25dd44e1ce8199b0413a2a",
+              "structure-sha256:ecef36af7df4a548df224b01db7e6ca68f8ef039d27b3e7b212a7ac182d69065"
+            ],
+            "1": [
+              "structure-sha256:1a054b47ca9f85f9d53407c84edd2b5048078b129d33294caaf97fb3d49b2c44",
+              "structure-sha256:3250f112b3943279f77a0682fb917aa5686627272db6c3a1515f3d7223f4aeed"
+            ]
+          }
+        },
+        {
+          "guide": [
+            "[NH2+]NC[C@H]1CC[C@@H](COCC(=O)O)CC1",
+            "O=C(SCCO)C(Cl)C(=O)c1ccccc1"
+          ],
+          "guide_origin_classification": "unknown",
+          "inner_combinations": 4,
+          "inner_distinct_products": 6,
+          "inner_generated_instances": 6,
+          "inner_rule_id": "synllama-rule-062",
+          "inner_states": 6,
+          "outer_role_compatible_instances": 0,
+          "outer_role_rejected_instances": 6,
+          "outer_role_unassessed_instances": 0,
+          "outer_rule_id": "synllama-rule-036",
+          "outer_slot": 1,
+          "outer_stage_states": 0,
+          "plan_index": 2,
+          "selected_role_counts": {
+            "0": 2,
+            "1": 2
+          },
+          "selected_role_ids": {
+            "0": [
+              "structure-sha256:63e7609213e7b59213875a41798f5535950c06fa9a25dd44e1ce8199b0413a2a",
+              "structure-sha256:ecef36af7df4a548df224b01db7e6ca68f8ef039d27b3e7b212a7ac182d69065"
+            ],
+            "1": [
+              "structure-sha256:1a054b47ca9f85f9d53407c84edd2b5048078b129d33294caaf97fb3d49b2c44",
+              "structure-sha256:3250f112b3943279f77a0682fb917aa5686627272db6c3a1515f3d7223f4aeed"
+            ]
+          }
+        },
+        {
+          "guide": [
+            "N[NH2+]C[C@H]1CC[C@@H](CO)CC1",
+            "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1"
+          ],
+          "guide_origin_classification": "unknown",
+          "inner_combinations": 0,
+          "inner_distinct_products": 0,
+          "inner_generated_instances": 0,
+          "inner_rule_id": "synllama-rule-062",
+          "inner_states": 0,
+          "outer_role_compatible_instances": 0,
+          "outer_role_rejected_instances": 0,
+          "outer_role_unassessed_instances": 0,
+          "outer_rule_id": "synllama-rule-026",
+          "outer_slot": 0,
+          "outer_stage_states": 0,
+          "plan_index": 1,
+          "selected_role_counts": {
+            "0": 0,
+            "1": 1
+          },
+          "selected_role_ids": {
+            "0": [],
+            "1": [
+              "structure-sha256:50a989fad4297d2b5a84816db2b026f73fb9cf63062f6fb8d279b6555999dc0f"
+            ]
+          }
+        },
+        {
+          "guide": [
+            "[NH2+]NC[C@H]1CC[C@@H](CO)CC1",
+            "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1"
+          ],
+          "guide_origin_classification": "unknown",
+          "inner_combinations": 0,
+          "inner_distinct_products": 0,
+          "inner_generated_instances": 0,
+          "inner_rule_id": "synllama-rule-062",
+          "inner_states": 0,
+          "outer_role_compatible_instances": 0,
+          "outer_role_rejected_instances": 0,
+          "outer_role_unassessed_instances": 0,
+          "outer_rule_id": "synllama-rule-026",
+          "outer_slot": 0,
+          "outer_stage_states": 0,
+          "plan_index": 1,
+          "selected_role_counts": {
+            "0": 0,
+            "1": 1
+          },
+          "selected_role_ids": {
+            "0": [],
+            "1": [
+              "structure-sha256:50a989fad4297d2b5a84816db2b026f73fb9cf63062f6fb8d279b6555999dc0f"
+            ]
+          }
+        },
+        {
+          "guide": [
+            "N[NH2+]C[C@H]1CC[C@@H](CCl)CC1",
+            "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1"
+          ],
+          "guide_origin_classification": "single_source_local_intact_normalized_role",
+          "inner_combinations": 0,
+          "inner_distinct_products": 0,
+          "inner_generated_instances": 0,
+          "inner_rule_id": "synllama-rule-062",
+          "inner_states": 0,
+          "outer_role_compatible_instances": 0,
+          "outer_role_rejected_instances": 0,
+          "outer_role_unassessed_instances": 0,
+          "outer_rule_id": "synllama-rule-026",
+          "outer_slot": 1,
+          "outer_stage_states": 0,
+          "plan_index": 0,
+          "selected_role_counts": {
+            "0": 0,
+            "1": 1
+          },
+          "selected_role_ids": {
+            "0": [],
+            "1": [
+              "structure-sha256:50a989fad4297d2b5a84816db2b026f73fb9cf63062f6fb8d279b6555999dc0f"
+            ]
+          }
+        },
+        {
+          "guide": [
+            "[NH2+]NC[C@H]1CC[C@@H](CCl)CC1",
+            "O=C(SCCO)C(C(=O)c1ccccc1)c1ccccc1"
+          ],
+          "guide_origin_classification": "single_source_local_intact_normalized_role",
+          "inner_combinations": 0,
+          "inner_distinct_products": 0,
+          "inner_generated_instances": 0,
+          "inner_rule_id": "synllama-rule-062",
+          "inner_states": 0,
+          "outer_role_compatible_instances": 0,
+          "outer_role_rejected_instances": 0,
+          "outer_role_unassessed_instances": 0,
+          "outer_rule_id": "synllama-rule-026",
+          "outer_slot": 1,
+          "outer_stage_states": 0,
+          "plan_index": 0,
+          "selected_role_counts": {
+            "0": 0,
+            "1": 1
+          },
+          "selected_role_ids": {
+            "0": [],
+            "1": [
+              "structure-sha256:50a989fad4297d2b5a84816db2b026f73fb9cf63062f6fb8d279b6555999dc0f"
+            ]
+          }
+        }
+      ],
+      "observed_distinct_products": 34,
+      "outer_rule062_phase1": {
+        "generated_instances": 2,
+        "selected_role_ids": {
+          "0": [
+            "structure-sha256:63e7609213e7b59213875a41798f5535950c06fa9a25dd44e1ce8199b0413a2a",
+            "structure-sha256:ecef36af7df4a548df224b01db7e6ca68f8ef039d27b3e7b212a7ac182d69065"
+          ],
+          "1": [
+            "structure-sha256:50a989fad4297d2b5a84816db2b026f73fb9cf63062f6fb8d279b6555999dc0f"
+          ]
+        },
+        "states": 2
+      },
+      "pending_graphs": 38,
+      "pre_evidence_eligible_products": 0,
+      "role_selected": {
+        "0": {
+          "joint_status_counts_by_unique_smiles": {
+            "joint_ring_topology_absent": 2
+          },
+          "returned_block_instances": 4,
+          "unique_ids": [
+            "structure-sha256:63e7609213e7b59213875a41798f5535950c06fa9a25dd44e1ce8199b0413a2a",
+            "structure-sha256:ecef36af7df4a548df224b01db7e6ca68f8ef039d27b3e7b212a7ac182d69065"
+          ],
+          "unique_smiles": [
+            "CC(C)(C)OC(=O)N1CC(CNN)C1",
+            "CC(C)(C)OC(=O)N1CCC[C@H]1CNN"
+          ]
+        },
+        "1": {
+          "joint_status_counts_by_unique_smiles": {
+            "joint_ring_topology_absent": 2,
+            "joint_root_stereo_unspecified_observed": 1
+          },
+          "returned_block_instances": 8,
+          "unique_ids": [
+            "structure-sha256:1a054b47ca9f85f9d53407c84edd2b5048078b129d33294caaf97fb3d49b2c44",
+            "structure-sha256:3250f112b3943279f77a0682fb917aa5686627272db6c3a1515f3d7223f4aeed",
+            "structure-sha256:50a989fad4297d2b5a84816db2b026f73fb9cf63062f6fb8d279b6555999dc0f"
+          ],
+          "unique_smiles": [
+            "CC(=O)C(CN1C(=O)c2ccccc2C1=O)C(C)=O",
+            "CCOC(=O)C(=O)CC(=O)C1(c2ccccc2)CC1",
+            "COc1ccc(C(=O)CC2C(=O)CC(C)(C)CC2=O)cc1"
+          ]
+        }
+      }
+    },
+    {
+      "gate_rejections": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 38
+      },
+      "id": "CHEMBL4869-query-2",
+      "inner_rule062_workitems": [
+        {
+          "guide": [
+            "N[NH2+]C[C@H]1CC[C@@H](COCC(=O)O)CC1",
+            "CSC(=O)C(C(=O)Cl)c1cncc(F)c1"
+          ],
+          "guide_origin_classification": "unknown",
+          "inner_combinations": 0,
+          "inner_distinct_products": 0,
+          "inner_generated_instances": 0,
+          "inner_rule_id": "synllama-rule-062",
+          "inner_states": 0,
+          "outer_role_compatible_instances": 0,
+          "outer_role_rejected_instances": 0,
+          "outer_role_unassessed_instances": 0,
+          "outer_rule_id": "synllama-rule-036",
+          "outer_slot": 1,
+          "outer_stage_states": 0,
+          "plan_index": 2,
+          "selected_role_counts": {
+            "0": 2,
+            "1": 0
+          },
+          "selected_role_ids": {
+            "0": [
+              "structure-sha256:63e7609213e7b59213875a41798f5535950c06fa9a25dd44e1ce8199b0413a2a",
+              "structure-sha256:ecef36af7df4a548df224b01db7e6ca68f8ef039d27b3e7b212a7ac182d69065"
+            ],
+            "1": []
+          }
+        },
+        {
+          "guide": [
+            "[NH2+]NC[C@H]1CC[C@@H](COCC(=O)O)CC1",
+            "CSC(=O)C(C(=O)Cl)c1cncc(F)c1"
+          ],
+          "guide_origin_classification": "unknown",
+          "inner_combinations": 0,
+          "inner_distinct_products": 0,
+          "inner_generated_instances": 0,
+          "inner_rule_id": "synllama-rule-062",
+          "inner_states": 0,
+          "outer_role_compatible_instances": 0,
+          "outer_role_rejected_instances": 0,
+          "outer_role_unassessed_instances": 0,
+          "outer_rule_id": "synllama-rule-036",
+          "outer_slot": 1,
+          "outer_stage_states": 0,
+          "plan_index": 2,
+          "selected_role_counts": {
+            "0": 0,
+            "1": 0
+          },
+          "selected_role_ids": {
+            "0": [],
+            "1": []
+          }
+        },
+        {
+          "guide": [
+            "N[NH2+]C[C@H]1CC[C@@H](CO)CC1",
+            "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+          ],
+          "guide_origin_classification": "single_source_local_intact_normalized_role",
+          "inner_combinations": 0,
+          "inner_distinct_products": 0,
+          "inner_generated_instances": 0,
+          "inner_rule_id": "synllama-rule-062",
+          "inner_states": 0,
+          "outer_role_compatible_instances": 0,
+          "outer_role_rejected_instances": 0,
+          "outer_role_unassessed_instances": 0,
+          "outer_rule_id": "synllama-rule-026",
+          "outer_slot": 0,
+          "outer_stage_states": 0,
+          "plan_index": 0,
+          "selected_role_counts": {
+            "0": 0,
+            "1": 0
+          },
+          "selected_role_ids": {
+            "0": [],
+            "1": []
+          }
+        },
+        {
+          "guide": [
+            "[NH2+]NC[C@H]1CC[C@@H](CO)CC1",
+            "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+          ],
+          "guide_origin_classification": "single_source_local_intact_normalized_role",
+          "inner_combinations": 0,
+          "inner_distinct_products": 0,
+          "inner_generated_instances": 0,
+          "inner_rule_id": "synllama-rule-062",
+          "inner_states": 0,
+          "outer_role_compatible_instances": 0,
+          "outer_role_rejected_instances": 0,
+          "outer_role_unassessed_instances": 0,
+          "outer_rule_id": "synllama-rule-026",
+          "outer_slot": 0,
+          "outer_stage_states": 0,
+          "plan_index": 0,
+          "selected_role_counts": {
+            "0": 0,
+            "1": 0
+          },
+          "selected_role_ids": {
+            "0": [],
+            "1": []
+          }
+        },
+        {
+          "guide": [
+            "N[NH2+]C[C@H]1CC[C@@H](CCl)CC1",
+            "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+          ],
+          "guide_origin_classification": "single_source_local_intact_normalized_role",
+          "inner_combinations": 0,
+          "inner_distinct_products": 0,
+          "inner_generated_instances": 0,
+          "inner_rule_id": "synllama-rule-062",
+          "inner_states": 0,
+          "outer_role_compatible_instances": 0,
+          "outer_role_rejected_instances": 0,
+          "outer_role_unassessed_instances": 0,
+          "outer_rule_id": "synllama-rule-026",
+          "outer_slot": 1,
+          "outer_stage_states": 0,
+          "plan_index": 1,
+          "selected_role_counts": {
+            "0": 0,
+            "1": 0
+          },
+          "selected_role_ids": {
+            "0": [],
+            "1": []
+          }
+        },
+        {
+          "guide": [
+            "[NH2+]NC[C@H]1CC[C@@H](CCl)CC1",
+            "CSC(=O)C(C(=O)c1ccccc1)c1cncc(F)c1"
+          ],
+          "guide_origin_classification": "single_source_local_intact_normalized_role",
+          "inner_combinations": 0,
+          "inner_distinct_products": 0,
+          "inner_generated_instances": 0,
+          "inner_rule_id": "synllama-rule-062",
+          "inner_states": 0,
+          "outer_role_compatible_instances": 0,
+          "outer_role_rejected_instances": 0,
+          "outer_role_unassessed_instances": 0,
+          "outer_rule_id": "synllama-rule-026",
+          "outer_slot": 1,
+          "outer_stage_states": 0,
+          "plan_index": 1,
+          "selected_role_counts": {
+            "0": 0,
+            "1": 0
+          },
+          "selected_role_ids": {
+            "0": [],
+            "1": []
+          }
+        }
+      ],
+      "observed_distinct_products": 38,
+      "outer_rule062_phase1": {
+        "generated_instances": 0,
+        "selected_role_ids": {
+          "0": [],
+          "1": []
+        },
+        "states": 0
+      },
+      "pending_graphs": 42,
+      "pre_evidence_eligible_products": 0,
+      "role_selected": {
+        "0": {
+          "joint_status_counts_by_unique_smiles": {
+            "joint_ring_topology_absent": 2
+          },
+          "returned_block_instances": 2,
+          "unique_ids": [
+            "structure-sha256:63e7609213e7b59213875a41798f5535950c06fa9a25dd44e1ce8199b0413a2a",
+            "structure-sha256:ecef36af7df4a548df224b01db7e6ca68f8ef039d27b3e7b212a7ac182d69065"
+          ],
+          "unique_smiles": [
+            "CC(C)(C)OC(=O)N1CC(CNN)C1",
+            "CC(C)(C)OC(=O)N1CCC[C@H]1CNN"
+          ]
+        },
+        "1": {
+          "joint_status_counts_by_unique_smiles": {},
+          "returned_block_instances": 0,
+          "unique_ids": [],
+          "unique_smiles": []
+        }
+      }
+    }
+  ],
+  "runtime_commit": "7ba3aaa97f946ea52ac61c4ad08065de5b1ef1d8",
+  "schema": "route-first-rule062-passive-two-input-v1-portable",
+  "scope": "One exact v17 ON passive two-input replay, one shared Catalog+Rules load. Observer added no search-time chemistry, retrieval, fingerprint, model or 3D calls. Post-generation joint-class and conditional original-role inventory were bounded and separate.",
+  "status": "complete",
+  "summary": {
+    "inner_distinct_products_q1": 6,
+    "inner_distinct_products_q2": 0,
+    "inner_generated_state_instances": 12,
+    "inner_outer_role_compatible_instances": 0,
+    "inner_outer_role_rejected_instances": 12,
+    "inner_outer_stage_states": 0,
+    "inner_workitems_with_at_least_one_empty_selected_role": 10,
+    "inputs": 2,
+    "outer_rule062_phase1_state_instances_q1": 2,
+    "outer_rule062_phase1_state_instances_q2": 0,
+    "pre_evidence_eligible_products_both_inputs": 0,
+    "rule062_inner_workitems": 12
+  },
+  "validation": {
+    "astra_scoped_review": "PASS before execution",
+    "entry_exit_bindings_equal": true,
+    "no_new_forward_model_or_3d": true,
+    "observer_control": "1 passed",
+    "ruff_and_format": "PASS before execution"
+  },
+  "work": {
+    "conditional_inventory_trigger_reasons": [
+      "empty_selected_role",
+      "no_selected_leaf_with_defined_joint_class"
+    ],
+    "selected_joint_meter": {
+      "requests": 18,
+      "returned_tuples": 20,
+      "ring_visits": 92
+    }
+  }
+}
