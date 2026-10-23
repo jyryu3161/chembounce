@@ -632,7 +632,7 @@
     "route_audit_attempts": 0,
     "total_fingerprint_calls": 65536,
     "first_failure_counts": {},
-    "source_cause": "_admit() ranks pending products, then returns entirely if max_fingerprint_calls was recorded. Retrieval exhausted all 65536 calls, so final products were not assessed.",
+    "source_cause": "_admit() ranks pending products, then returns entirely if max_fingerprint_calls was recorded. The shared retrieval/ranking pool reached65536 calls before accept() was invoked. This run has no counter separating pre-admission retrieval calls from admission ranking calls.",
     "interpretation": "Unassessed because of shared fingerprint budget, not a demonstrated chemical or property failure.",
     "next_fix": "Reserve min(2*max_products, max_fingerprint_calls//2) inside existing total budget for admission. Use separate generation ceiling/label; tiny budgets evaluate an explicitly charged deterministic subset and retain eligible routes."
   },
