@@ -1,5 +1,11 @@
 # Qualified recommendations: implementation and evidence gates
 
+The completed current-develop 12-input development run returned no qualified
+products; saved records contain computationally supported routes but no 3D
+screening passes. The [synthesis-route priority plan](SYNTHESIS_ROUTE_PLAN.md)
+sets out the route-first implementation and evaluation work. This is a plan,
+not a change to the current qualification contract.
+
 The complete objective is to recommend final, route-regenerated molecules that
 remain similar to the **original input hit**, change its normalized scaffold,
 preserve configured anchors, and have concrete synthetic-route evidence. A

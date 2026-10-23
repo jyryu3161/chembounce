@@ -1,5 +1,10 @@
 # Synthesis-aware scaffold hopping
 
+The latest fixed 12-input development run completed with zero qualified
+products despite saved computational route support. See the
+[synthesis-route priority plan](SYNTHESIS_ROUTE_PLAN.md) for the baseline,
+bounded route-generation work, and checks planned before another large run.
+
 ## Optional catalog byte binding
 
 A configuration can pin both the catalog TSV and its import manifest:

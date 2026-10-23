@@ -1,0 +1,230 @@
+{
+  "allocation": "v7 inherits v5/inherit-v1; v6 is historical explicit opt-in",
+  "counting_notes": {
+    "producer_supported_first_route_step_counts": "Among 69 input/product pairs, first encountered supported route: 67 one-step, 2 two-step; alternatives not characterized.",
+    "route_support": "Conditional computational evidence only; not experimental synthesis feasibility.",
+    "scoring_attempt_records": "Saved workflow scored_products counter; not a global count of unique structures.",
+    "unassessed": "Budget-unassessed is unknown, not a chemistry failure."
+  },
+  "date": "2026-10-23",
+  "per_input": [
+    {
+      "execution_status": "completed_zero_qualified",
+      "predictor_budget_unassessed_route_records": 120,
+      "producer_supported_distinct_exact_products": 24,
+      "producer_supported_first_route_step_counts": {
+        "1": 24
+      },
+      "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+      "producer_supported_route_records": 62,
+      "qualified_products": 0,
+      "query_id": "CHEMBL4630839-query-1",
+      "returned_products": 0,
+      "route_records": 196,
+      "scoring_attempt_records": 12,
+      "screening_pass_records": 0,
+      "target_id": "CHEMBL4630839"
+    },
+    {
+      "execution_status": "completed_zero_qualified",
+      "predictor_budget_unassessed_route_records": 74,
+      "producer_supported_distinct_exact_products": 24,
+      "producer_supported_first_route_step_counts": {
+        "1": 24
+      },
+      "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+      "producer_supported_route_records": 168,
+      "qualified_products": 0,
+      "query_id": "CHEMBL4630839-query-2",
+      "returned_products": 0,
+      "route_records": 254,
+      "scoring_attempt_records": 12,
+      "screening_pass_records": 0,
+      "target_id": "CHEMBL4630839"
+    },
+    {
+      "execution_status": "completed_zero_qualified",
+      "predictor_budget_unassessed_route_records": 0,
+      "producer_supported_distinct_exact_products": 18,
+      "producer_supported_first_route_step_counts": {
+        "1": 18
+      },
+      "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+      "producer_supported_route_records": 64,
+      "qualified_products": 0,
+      "query_id": "CHEMBL4247-query-1",
+      "returned_products": 0,
+      "route_records": 82,
+      "scoring_attempt_records": 12,
+      "screening_pass_records": 0,
+      "target_id": "CHEMBL4247"
+    },
+    {
+      "execution_status": "completed_zero_qualified",
+      "predictor_budget_unassessed_route_records": 0,
+      "producer_supported_distinct_exact_products": 2,
+      "producer_supported_first_route_step_counts": {
+        "2": 2
+      },
+      "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+      "producer_supported_route_records": 8,
+      "qualified_products": 0,
+      "query_id": "CHEMBL4247-query-2",
+      "returned_products": 0,
+      "route_records": 64,
+      "scoring_attempt_records": 2,
+      "screening_pass_records": 0,
+      "target_id": "CHEMBL4247"
+    },
+    {
+      "execution_status": "completed_zero_qualified",
+      "predictor_budget_unassessed_route_records": 0,
+      "producer_supported_distinct_exact_products": 0,
+      "producer_supported_first_route_step_counts": {},
+      "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+      "producer_supported_route_records": 0,
+      "qualified_products": 0,
+      "query_id": "CHEMBL5163-query-1",
+      "returned_products": 0,
+      "route_records": 0,
+      "scoring_attempt_records": 0,
+      "screening_pass_records": 0,
+      "target_id": "CHEMBL5163"
+    },
+    {
+      "execution_status": "completed_zero_qualified",
+      "predictor_budget_unassessed_route_records": 0,
+      "producer_supported_distinct_exact_products": 0,
+      "producer_supported_first_route_step_counts": {},
+      "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+      "producer_supported_route_records": 0,
+      "qualified_products": 0,
+      "query_id": "CHEMBL5163-query-2",
+      "returned_products": 0,
+      "route_records": 0,
+      "scoring_attempt_records": 0,
+      "screening_pass_records": 0,
+      "target_id": "CHEMBL5163"
+    },
+    {
+      "execution_status": "completed_zero_qualified",
+      "predictor_budget_unassessed_route_records": 0,
+      "producer_supported_distinct_exact_products": 0,
+      "producer_supported_first_route_step_counts": {},
+      "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+      "producer_supported_route_records": 0,
+      "qualified_products": 0,
+      "query_id": "CHEMBL3334418-query-1",
+      "returned_products": 0,
+      "route_records": 24,
+      "scoring_attempt_records": 0,
+      "screening_pass_records": 0,
+      "target_id": "CHEMBL3334418"
+    },
+    {
+      "execution_status": "completed_zero_qualified",
+      "predictor_budget_unassessed_route_records": 0,
+      "producer_supported_distinct_exact_products": 1,
+      "producer_supported_first_route_step_counts": {
+        "1": 1
+      },
+      "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+      "producer_supported_route_records": 2,
+      "qualified_products": 0,
+      "query_id": "CHEMBL3334418-query-2",
+      "returned_products": 0,
+      "route_records": 26,
+      "scoring_attempt_records": 1,
+      "screening_pass_records": 0,
+      "target_id": "CHEMBL3334418"
+    },
+    {
+      "execution_status": "completed_zero_qualified",
+      "predictor_budget_unassessed_route_records": 0,
+      "producer_supported_distinct_exact_products": 0,
+      "producer_supported_first_route_step_counts": {},
+      "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+      "producer_supported_route_records": 0,
+      "qualified_products": 0,
+      "query_id": "CHEMBL4869-query-1",
+      "returned_products": 0,
+      "route_records": 6,
+      "scoring_attempt_records": 0,
+      "screening_pass_records": 0,
+      "target_id": "CHEMBL4869"
+    },
+    {
+      "execution_status": "completed_zero_qualified",
+      "predictor_budget_unassessed_route_records": 0,
+      "producer_supported_distinct_exact_products": 0,
+      "producer_supported_first_route_step_counts": {},
+      "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+      "producer_supported_route_records": 0,
+      "qualified_products": 0,
+      "query_id": "CHEMBL4869-query-2",
+      "returned_products": 0,
+      "route_records": 12,
+      "scoring_attempt_records": 0,
+      "screening_pass_records": 0,
+      "target_id": "CHEMBL4869"
+    },
+    {
+      "execution_status": "completed_zero_qualified",
+      "predictor_budget_unassessed_route_records": 0,
+      "producer_supported_distinct_exact_products": 0,
+      "producer_supported_first_route_step_counts": {},
+      "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+      "producer_supported_route_records": 0,
+      "qualified_products": 0,
+      "query_id": "CHEMBL3864-query-1",
+      "returned_products": 0,
+      "route_records": 0,
+      "scoring_attempt_records": 0,
+      "screening_pass_records": 0,
+      "target_id": "CHEMBL3864"
+    },
+    {
+      "execution_status": "completed_zero_qualified",
+      "predictor_budget_unassessed_route_records": 0,
+      "producer_supported_distinct_exact_products": 0,
+      "producer_supported_first_route_step_counts": {},
+      "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+      "producer_supported_route_records": 0,
+      "qualified_products": 0,
+      "query_id": "CHEMBL3864-query-2",
+      "returned_products": 0,
+      "route_records": 19,
+      "scoring_attempt_records": 0,
+      "screening_pass_records": 0,
+      "target_id": "CHEMBL3864"
+    }
+  ],
+  "profile": "qualified-selective-engineering-v7",
+  "raw_workspace_artifacts": "benchmark-results/qualified-development-20261023/{diverse-current-develop-plan-v1,diverse-current-develop-analysis-v1}/ (local, ignored by Git)",
+  "schema": "synthesis-route-development-baseline-v1",
+  "scope": "Fixed 12 reused public development queries across six targets; saved producer records only, not independent chemical validation or held-out performance. Counts may repeat a structure across route records; exact products are deduplicated within each input.",
+  "source_head": "c7a913ce43f2d31c7552125bc0d35b5ca19a6579",
+  "source_sha256": {
+    "diverse-current-develop-analysis-v1/result.json": "bd8f5254615935b33babe9c3030d254ced62876e86200eb749a1e77d6109b486",
+    "diverse-current-develop-analysis-v1/root-summary.json": "1fecd0c9d571b66184b9ac7261d3a456c3b72a5e58d0aaa992b61bd62d8da3fa",
+    "diverse-current-develop-analysis-v1/route-baseline.json": "f424b35ca1d148f6a81882233fe95ab437b091efb2f85babe401d163e20e09c6",
+    "diverse-current-develop-plan-v1/config.json": "e7263b08dd59e33870b83351a31cb58916a52aeccb440a081e559007c07e24d7",
+    "diverse-current-develop-plan-v1/panel.json": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+    "diverse-current-develop-plan-v1/plan.json": "7d6628fddb7837f1a92711cb66da08eaab1b29e0bf9854cf30ce06de9c97938e"
+  },
+  "totals": {
+    "completed_zero_qualified": 12,
+    "inputs": 12,
+    "inputs_with_producer_supported_route": 5,
+    "predictor_budget_unassessed_route_records": 194,
+    "producer_supported_input_exact_product_pairs": 69,
+    "producer_supported_products_matching_model_claimed_product_using_first_route": 0,
+    "producer_supported_route_records": 304,
+    "qualified_products": 0,
+    "returned_products": 0,
+    "route_records": 683,
+    "scoring_attempt_records": 39,
+    "screening_pass_records": 0,
+    "unspecified_stereochemistry_design_exclusions": 41
+  }
+}
