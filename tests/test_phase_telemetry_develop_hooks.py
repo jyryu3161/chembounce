@@ -350,6 +350,7 @@ def _inert_screening_and_finalization(tmp_path, failure_stage, deadline_mode, en
         evidence_outcomes=workflow.evidence_outcomes,
         score_records=[],
         refinement_records=[],
+        route_first_report=None,
     )
     unit = ast.Module(
         body=[

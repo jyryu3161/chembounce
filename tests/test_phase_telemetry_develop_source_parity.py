@@ -1,9 +1,10 @@
-"""Disabled telemetry parity against exact94b, independent of Git history.
+"""Disabled telemetry structure for reviewed current source, with exact94b history.
 
 Canonical AST retains every semantic field. Only empty type_params on the three
 Python3.12 declaration nodes are omitted, matching their absence on3.10/3.11.
-Nonempty type parameters and unknown fields remain compared. Digests were made
-from the exact recorded baseline bytes, not from transformed post-port source.
+Nonempty type parameters and unknown fields remain compared. Historical94b
+digests below are retained as attribution; current P1 digests bind the reviewed
+route-first feature source. No new scientific call is normalized away.
 """
 
 import ast
@@ -141,10 +142,32 @@ BASELINES = {
     },
 }
 
+# Approved feature source is a new semantic baseline for the two changed files.
+# The qualified adapter retains its exact94b disabled-telemetry AST pin; its
+# instrumented source bytes have always differed from that pre-telemetry pin.
+CURRENT_REVIEWED = {
+    "commit": "0454d8643bc03b061565439a4ad77649c114114d",
+    "scope": "Reviewed opt-in P1 route-first generation; not exact94b semantic parity",
+    "files": {
+        "chembounce.py": {
+            "source_sha256": "b1bc441565b248add217f2402c791538cbe31d193440acd781ab8569f7f2c14f",
+            "ast_sha256": "c9984d40f8eeed5250b15007b9a8992dffcbea8e3d3b14c8a5445fbf470cb872",
+        },
+        "chembounce_synthesis/workflow.py": {
+            "source_sha256": "0e8082aacede68db0898456d677065c0c05a40f64eaba933a37d040b44f41b2c",
+            "ast_sha256": "ce54ab6f45ac9f63923397112387e96f7de65308796093fff1ec511dcbe88da6",
+        },
+    },
+}
+
 
 @pytest.mark.parametrize("path,expected", BASELINES.items())
-def test_disabled_source_structure_preserved(path, expected):
-    assert structural_digest((ROOT / path).read_text()) == expected["ast_sha256"]
+def test_disabled_current_reviewed_source_structure_preserved(path, expected):
+    source = (ROOT / path).read_bytes()
+    if path in CURRENT_REVIEWED["files"]:
+        expected = CURRENT_REVIEWED["files"][path]
+        assert hashlib.sha256(source).hexdigest() == expected["source_sha256"]
+    assert structural_digest(source.decode()) == expected["ast_sha256"]
 
 
 def test_only_known_empty_version_fields_are_ignored():
