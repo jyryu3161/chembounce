@@ -1,0 +1,249 @@
+{
+  "schema": "route-first-v10-uncovered-input-diagnosis-v1",
+  "scope": "Saved results plus a single exact-ID catalog TSV read for one stereo case; no new candidate generation, forward model, 3D or qualification.",
+  "inputs": [
+    {
+      "id": "CHEMBL4630839-query-2",
+      "observed_distinct_products": 42,
+      "anchor_passed_distinct_products": 10,
+      "first_gate_failure_counts": {
+        "anchor_inverted": 6,
+        "anchor_missing_or_ambiguous": 26,
+        "hit_tanimoto": 2,
+        "polar_capacity": 2,
+        "property_mw": 6
+      },
+      "plan_count": 8,
+      "plans_with_new_catalog_role_checks": 4,
+      "plans_with_selected_inner_rules_but_no_new_catalog_role_checks": 0,
+      "plans_without_selected_inner_rules": 4
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "observed_distinct_products": 72,
+      "anchor_passed_distinct_products": 72,
+      "first_gate_failure_counts": {
+        "hit_tanimoto": 1,
+        "polar_capacity": 14,
+        "property_mw": 47,
+        "tautomer_enumeration_incomplete": 1,
+        "unspecified_stereochemistry": 9
+      },
+      "plan_count": 8,
+      "plans_with_new_catalog_role_checks": 4,
+      "plans_with_selected_inner_rules_but_no_new_catalog_role_checks": 0,
+      "plans_without_selected_inner_rules": 4
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "observed_distinct_products": 35,
+      "anchor_passed_distinct_products": 12,
+      "first_gate_failure_counts": {
+        "anchor_inverted": 14,
+        "anchor_missing_or_ambiguous": 9,
+        "hit_tanimoto": 1,
+        "polar_capacity": 6,
+        "unspecified_stereochemistry": 5
+      },
+      "plan_count": 8,
+      "plans_with_new_catalog_role_checks": 3,
+      "plans_with_selected_inner_rules_but_no_new_catalog_role_checks": 3,
+      "plans_without_selected_inner_rules": 2
+    },
+    {
+      "id": "CHEMBL5163-query-2",
+      "observed_distinct_products": 44,
+      "anchor_passed_distinct_products": 0,
+      "first_gate_failure_counts": {
+        "anchor_missing_or_ambiguous": 44
+      },
+      "plan_count": 7,
+      "plans_with_new_catalog_role_checks": 2,
+      "plans_with_selected_inner_rules_but_no_new_catalog_role_checks": 4,
+      "plans_without_selected_inner_rules": 1
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "observed_distinct_products": 36,
+      "anchor_passed_distinct_products": 0,
+      "first_gate_failure_counts": {
+        "anchor_missing_or_ambiguous": 36
+      },
+      "plan_count": 8,
+      "plans_with_new_catalog_role_checks": 3,
+      "plans_with_selected_inner_rules_but_no_new_catalog_role_checks": 0,
+      "plans_without_selected_inner_rules": 5
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "observed_distinct_products": 44,
+      "anchor_passed_distinct_products": 0,
+      "first_gate_failure_counts": {
+        "anchor_missing_or_ambiguous": 44
+      },
+      "plan_count": 8,
+      "plans_with_new_catalog_role_checks": 3,
+      "plans_with_selected_inner_rules_but_no_new_catalog_role_checks": 0,
+      "plans_without_selected_inner_rules": 5
+    },
+    {
+      "id": "CHEMBL3864-query-1",
+      "observed_distinct_products": 42,
+      "anchor_passed_distinct_products": 42,
+      "first_gate_failure_counts": {
+        "hit_tanimoto": 4,
+        "polar_capacity": 28,
+        "unspecified_stereochemistry": 10
+      },
+      "plan_count": 8,
+      "plans_with_new_catalog_role_checks": 3,
+      "plans_with_selected_inner_rules_but_no_new_catalog_role_checks": 1,
+      "plans_without_selected_inner_rules": 4
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "observed_distinct_products": 116,
+      "anchor_passed_distinct_products": 0,
+      "first_gate_failure_counts": {
+        "anchor_inverted": 24,
+        "anchor_missing_or_ambiguous": 92
+      },
+      "plan_count": 8,
+      "plans_with_new_catalog_role_checks": 5,
+      "plans_with_selected_inner_rules_but_no_new_catalog_role_checks": 0,
+      "plans_without_selected_inner_rules": 3
+    }
+  ],
+  "method": {
+    "gate_order": "Saved accept callback records the first thrown gate per observed distinct product. The categories group exact saved rejection strings; no gates were rerun.",
+    "nearest_path": "Only the first of up to five saved anchor-passed rejected products ranked by original-hit bit Tanimoto is quoted per input. Anchor-failed products have no saved nodes in this result.",
+    "plan_lookup": "New catalog role checks, not pool_queries or cached blocks, indicate fresh candidate screening; zero role checks does not prove no usable stock.",
+    "source_stereo": "Saved rejected-route leaf nodes contain building_block_id hashes without leaf SMILES or atom-level provenance."
+  },
+  "next_work_hypotheses": [
+    {
+      "priority": 1,
+      "proposal": "Bound a first catalog-query sweep per prepared outer plan (with unchanged global and per-query ceilings), then redistribute unused rows; retain exact accounting and cached-query semantics.",
+      "confirmed_basis": "Several v10 plans with selected inner rules received zero fresh role checks while the global catalog-row limit was reached.",
+      "hypothesis": "A fair initial row allocation may expose route candidates in later plans; saved data do not establish their stock availability or gate passage."
+    },
+    {
+      "priority": 2,
+      "proposal": "Save leaf SMILES/atom stereo provenance and gate outcomes for bounded rejected route graphs, then investigate generic retention of specified source stereo and avoidance of newly unspecified centers under unchanged gates.",
+      "confirmed_basis": "Four uncovered inputs have zero anchor-passed products, and saved building-block IDs alone cannot identify the source of an unspecified sulfur center in a representative rejected product.",
+      "hypothesis": "Better provenance may reveal a narrow search or reaction-center correction; no automatic stereo assignment is justified by current records."
+    }
+  ],
+  "representative_stereo_source": {
+    "schema": "route-first-v10-saved-stereo-origin-v1",
+    "status": "complete",
+    "scope": "One saved rejected route and two exact catalog IDs. One read-only TSV byte stream, no Catalog constructor/index, generation or model. RDKit applied only to three recorded SMILES.",
+    "source_inputs": {
+      "v10_result_path": "benchmark-results/route-first-development-20261023-v2/development-probe-v10/result.json",
+      "v10_result_sha256": "e8b08c694d013932284bd601cacef6b71d76d3bd0eecb540851e17db7ed4ee4b",
+      "prior_diagnosis_path": "benchmark-results/route-first-development-20261023-v2/v10-saved-diagnosis-v1/report.json",
+      "prior_diagnosis_sha256": "ed8f1ab85d6e8d37838ed66ff07130462c7056878e08fa50b3563b557fc45e02",
+      "config_path": "benchmark-results/route-first-development-20261023/route-first-config.json",
+      "config_sha256": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "catalog_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv",
+      "catalog_sha256_observed_in_single_stream": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "catalog_sha256_pinned": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "catalog_stream_data_rows": 238542,
+      "rdkit_version": "2025.09.6"
+    },
+    "saved_route": {
+      "input_id": "CHEMBL5163-query-1",
+      "first_gate_failure": "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly",
+      "product": "O=S(=O)(N=S(=O)(c1ccc(F)cc1)C(F)(F)F)N1CC[C@H](Oc2ccccn2)C1",
+      "rule_id": "synllama-rule-039",
+      "leaf_node_ids": [
+        "ob0",
+        "ob1"
+      ],
+      "node_count": 3
+    },
+    "leafs": {
+      "ob0": {
+        "id": "structure-sha256:1d19a83bc8ca3f4f7fd6498ad77e15b5e007244b4d662a7d745ec8f24a59b0e8",
+        "smiles": "O=S(=O)(Cl)N=S(=O)(c1ccc(F)cc1)C(F)(F)F",
+        "stereocenters": [
+          {
+            "atom_index": 5,
+            "element": "S",
+            "cip_or_unassigned": "?",
+            "neighbor_elements": [
+              "N",
+              "O",
+              "C",
+              "C"
+            ]
+          }
+        ]
+      },
+      "ob1": {
+        "id": "structure-sha256:8f64f9c4bca889f6aaadd3fe91fdacea7be8431816b8ea29505934afe5cb96d3",
+        "smiles": "c1ccc(O[C@H]2CCNC2)nc1",
+        "stereocenters": [
+          {
+            "atom_index": 5,
+            "element": "C",
+            "cip_or_unassigned": "S",
+            "neighbor_elements": [
+              "O",
+              "C",
+              "C"
+            ]
+          }
+        ]
+      }
+    },
+    "product_stereocenters": [
+      {
+        "atom_index": 4,
+        "element": "S",
+        "cip_or_unassigned": "?",
+        "neighbor_elements": [
+          "N",
+          "O",
+          "C",
+          "C"
+        ]
+      },
+      {
+        "atom_index": 20,
+        "element": "C",
+        "cip_or_unassigned": "S",
+        "neighbor_elements": [
+          "C",
+          "O",
+          "C"
+        ]
+      }
+    ],
+    "finding": {
+      "earliest_saved_structure_with_unspecified_sulfur": "ob0 catalog building block",
+      "ob0_unspecified_sulfur_present": true,
+      "ob1_unspecified_sulfur_present": false,
+      "product_unspecified_sulfur_present": true,
+      "assigned_carbon_center_in_ob1_and_product": true,
+      "interpretation": "The unassigned sulfur stereocenter already occurs in catalog leaf ob0, while leaf ob1 carries the assigned carbon stereocenter. The product also has an unassigned sulfur center. This is a source-level observation, not a proof of atom-by-atom transfer."
+    },
+    "limit": "Saved rejected-route nodes contain no atom-mapped forward witness or leaf-to-product atom correspondence. The report cannot formally assign the product sulfur atom to ob0 by an audited atom mapping; it only establishes that unspecified S is present before the reaction in ob0. No inference of catalog absence or synthetic impossibility is made."
+  },
+  "limitations": [
+    "First failure categories are not an independent assessment of every gate.",
+    "No anchor-passed products does not prove synthesis impossible.",
+    "The source-level unspecified sulfur observation lacks an audited leaf-to-product atom mapping.",
+    "Fair first-query quotas and stereo-aware selection remain untested proposals; frozen quality gates and work caps remain unchanged."
+  ],
+  "artifacts": [
+    {
+      "path": "benchmark-results/route-first-development-20261023-v2/v10-saved-diagnosis-v1/report.json",
+      "sha256": "ed8f1ab85d6e8d37838ed66ff07130462c7056878e08fa50b3563b557fc45e02"
+    },
+    {
+      "path": "benchmark-results/route-first-development-20261023-v2/v10-saved-stereo-origin-v1/report.json",
+      "sha256": "956e0ec7a4c55f048aa6caec0cdabeaf650b1f8a048a8dd8ee8a178d551aa160"
+    }
+  ]
+}

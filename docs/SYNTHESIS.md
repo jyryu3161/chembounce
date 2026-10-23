@@ -138,7 +138,11 @@ reverse, catalog, fingerprint, product, combination, deadline and qualification
 limits remain in force. Preparation
 can still consume reverse-normalization and rule-inspection budgets before
 execution, so this scheduler does not guarantee that every plan gets a full
-catalog query. This revision has not yet been run on the fixed panel.
+catalog query. The tenth development probe completed on the fixed panel with
+pre-evidence coverage of four of 12 inputs, 35 distinct input/product pairs
+and 40 eligible routes (16 one-step and 24 two-step). The fixed entry condition
+of more than five pre-evidence inputs remains unmet, so no model comparison
+was run and P1 remains incomplete.
 
 ## Optional catalog byte binding
 
