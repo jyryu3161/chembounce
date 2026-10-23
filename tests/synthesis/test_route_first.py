@@ -242,6 +242,131 @@ def test_global_retrieval_combination_and_deadline_caps(assets):
     assert capped["depth_counts"]["2"] >= 1
 
 
+def test_catalog_source_stereo_screen_fills_top_k_and_unknown_keeps_legacy_rank(tmp_path, monkeypatch):
+    from chembounce_synthesis import route_first
+    from chembounce_synthesis.catalog import Catalog
+
+    path = tmp_path / "stereo-catalog.tsv"
+    path.write_text(
+        "id\tsmiles\tsource\tsnapshot\n"
+        "bad\tCC(F)Br\ttest\t2026\n"
+        "specified\tC[C@H](F)Br\ttest\t2026\n"
+        "achiral\tCCBr\ttest\t2026\n"
+    )
+    catalog = Catalog(path)
+    settings = RouteFirstLimits(
+        **limits(
+            max_steps=1,
+            max_catalog_index_rows=10,
+            max_catalog_rows_per_query=20,
+            max_catalog_row_visits=200,
+        )
+    )
+
+    def search():
+        return RouteFirstSearch("CC(F)Br", catalog, SimpleNamespace(sha256="test"), settings)
+
+    screened = search()
+    assert [block.id for block in screened._nearest("CC(F)Br", "[C]", rule_id="r", role_slot=0)] == [
+        "specified",
+        "achiral",
+    ]
+    assert screened.report["catalog_stereo_exclusions"] == 1
+    assert screened.report["catalog_stereo_exclusion_samples"][0]["building_block_id"] == "bad"
+    assert screened.report["catalog_stereo_perceptions"] == 3
+    assert screened.report["catalog_stereo_atom_bond_charges"] <= (
+        route_first.MAX_CATALOG_STEREO_ATOM_BOND_CHARGES
+    )
+    assert len(screened._catalog_stereo_cache) <= route_first.MAX_CATALOG_STEREO_CACHE_ENTRIES
+    before = screened.report["catalog_stereo_perceptions"]
+    assert screened._nearest("CC(F)Br", "[C]", rule_id="different", role_slot=1)
+    assert screened.report["catalog_stereo_perceptions"] == before  # unchanged nearest key/cache
+
+    monkeypatch.setattr(route_first, "MAX_CATALOG_STEREO_PERCEPTIONS", 0)
+    capped = search()
+    assert [block.id for block in capped._nearest("CC(F)Br", "[C]")] == ["bad", "specified"]
+    assert capped.report["catalog_stereo_unknowns"]["perception_budget"] >= 1
+    assert capped._nearest_cache == {}  # no incomplete selection cached
+    monkeypatch.setattr(route_first, "MAX_CATALOG_STEREO_PERCEPTIONS", 2048)
+
+    monkeypatch.setattr(route_first, "MAX_CATALOG_STEREO_ATOM_BOND_CHARGES", 0)
+    size_capped = search()
+    assert [block.id for block in size_capped._nearest("CC(F)Br", "[C]")] == [
+        "bad",
+        "specified",
+    ]
+    assert size_capped.report["catalog_stereo_unknowns"]["atom_bond_budget"] >= 1
+    assert size_capped.report["catalog_stereo_perceptions"] == 0
+    assert size_capped.report["catalog_stereo_atom_bond_charges"] == 0
+    assert size_capped._nearest_cache == {}
+    monkeypatch.setattr(route_first, "MAX_CATALOG_STEREO_ATOM_BOND_CHARGES", 131072)
+
+    monkeypatch.setattr(route_first, "MAX_CATALOG_STEREO_CACHE_ENTRIES", 0)
+    cache_capped = search()
+    assert [block.id for block in cache_capped._nearest("CC(F)Br", "[C]")] == [
+        "bad",
+        "specified",
+    ]
+    assert cache_capped.report["catalog_stereo_unknowns"]["cache_budget"] >= 1
+    assert cache_capped.report["catalog_stereo_perceptions"] == 0
+    assert cache_capped._nearest_cache == {}
+    monkeypatch.setattr(route_first, "MAX_CATALOG_STEREO_CACHE_ENTRIES", 2048)
+
+    def failed_perception(_mol):
+        raise ValueError("synthetic perception failure")
+
+    monkeypatch.setattr(route_first, "stereo_state", failed_perception)
+    failed = search()
+    assert [block.id for block in failed._nearest("CC(F)Br", "[C]")] == ["bad", "specified"]
+    assert failed.report["catalog_stereo_unknowns"]["perception_failed"] >= 1
+    assert failed._nearest_cache == {}
+    assert failed.report["catalog_stereo_perceptions"] <= route_first.MAX_CATALOG_STEREO_PERCEPTIONS
+
+    expired = search()
+    expired.deadline = time.monotonic() - 1
+    assert expired._catalog_block_stereo_eligible("CC(F)Br") is None
+    assert expired.report["catalog_stereo_perceptions"] == 0
+
+    source_sulfur = "O=S(=O)(Cl)N=S(=O)(c1ccc(F)cc1)C(F)(F)F"
+    sulfur_catalog = SimpleNamespace(sha256="test", mols={source_sulfur: molecule(source_sulfur)})
+    sulfur = RouteFirstSearch(source_sulfur, sulfur_catalog, SimpleNamespace(sha256="test"), settings)
+    monkeypatch.undo()
+    assert sulfur._catalog_block_stereo_eligible(source_sulfur) is False
+
+
+def test_stereo_screen_preserves_one_anchor_one_ordinary_reservation(tmp_path):
+    from rdkit import Chem
+
+    from chembounce_synthesis.catalog import Catalog
+
+    path = tmp_path / "anchor-ordinary-stereo.tsv"
+    path.write_text(
+        "id\tsmiles\tsource\tsnapshot\n"
+        "a0\tCCBr\ttest\t2026\n"
+        "a1\tCCCBr\ttest\t2026\n"
+        "o0\tCC(F)Br\ttest\t2026\n"
+        "o1\tC[C@H](F)Br\ttest\t2026\n"
+    )
+    catalog = Catalog(path)
+    settings = RouteFirstLimits(
+        **limits(
+            max_steps=1,
+            max_catalog_index_rows=10,
+            max_catalog_rows_per_query=20,
+            max_catalog_row_visits=200,
+        )
+    )
+    search = RouteFirstSearch("CC(F)Br", catalog, SimpleNamespace(sha256="test"), settings)
+    search._index()
+    anchors = (canonical("CCBr"), canonical("CCCBr"))
+    search._anchor_queries = (Chem.MolFromSmarts("[C]"),)
+    search._anchor_postings = (anchors,)
+    search._anchor_scores = {smiles: index for index, smiles in enumerate(anchors)}
+    selected = search._nearest("CC(F)Br", "[C]")
+    assert [block.id for block in selected] == ["a0", "o1"]
+    assert search.report["catalog_stereo_exclusions"] == 1
+
+
 def test_reverse_guides_require_disjoint_complete_parent_atom_partition(tmp_path):
     from chembounce_synthesis.reactions import Rules
 
@@ -1080,7 +1205,8 @@ def test_unmapped_product_atom_and_unspecified_stereo_fail_strict_route_audit(tm
         limits(),
     )
     assert routes and all("@" not in item["verification"]["product"] for item in routes)
-    assert any("atom/stereo audit" in reason for reason in report["product_rejections"])
+    assert report["catalog_stereo_exclusions"] > 0
+    assert any(item["building_block_id"] == "alanine" for item in report["catalog_stereo_exclusion_samples"])
 
 
 def test_real_workflow_uses_generated_route_without_proposal_provider_or_native_hopping(

@@ -11,7 +11,7 @@ from rdkit import Chem, DataStructs, rdBase
 from rdkit.Chem import rdChemReactions
 
 from .common import FP, absolute_smiles, canonical, molecule, positive
-from .route_audit import audit_route, template_maps
+from .route_audit import audit_route, stereo_state, template_maps
 from .routes import verify_route
 
 VERSION = "catalog-rule-route-first-v2"
@@ -30,6 +30,10 @@ MAX_OUTER_CENTER_METADATA_CHECKS = 32768
 MAX_TOPOLOGY_MATCH_REQUESTS = 128
 MAX_TOPOLOGY_MATCHES = 65  # 64 plus a truncation sentinel.
 MAX_TOPOLOGY_SPEC_GRAPH_VISITS = 262144
+MAX_CATALOG_STEREO_PERCEPTIONS = 2048
+MAX_CATALOG_STEREO_ATOM_BOND_CHARGES = 131072
+MAX_CATALOG_STEREO_CACHE_ENTRIES = 2048
+MAX_CATALOG_STEREO_EXCLUSION_SAMPLES = 16
 
 
 def topology_rule_specification(reaction):
@@ -556,6 +560,19 @@ class RouteFirstSearch:
             "anchor_role_checks": 0,
             "anchor_role_compatible": 0,
             "catalog_row_visits": 0,
+            "catalog_stereo_limits": {
+                "perceptions": MAX_CATALOG_STEREO_PERCEPTIONS,
+                "atom_bond_charges": MAX_CATALOG_STEREO_ATOM_BOND_CHARGES,
+                "cache_entries": MAX_CATALOG_STEREO_CACHE_ENTRIES,
+                "exclusion_samples": MAX_CATALOG_STEREO_EXCLUSION_SAMPLES,
+            },
+            "catalog_stereo_perceptions": 0,
+            "catalog_stereo_atom_bond_charges": 0,
+            "catalog_stereo_cache_hits": 0,
+            "catalog_stereo_exclusions": 0,
+            "catalog_stereo_unknowns": {},
+            "catalog_stereo_exclusion_samples": [],
+            "catalog_stereo_exclusion_samples_truncated": 0,
             "catalog_bucket_rankings": 0,
             "fingerprint_calls": 1,
             "admission_fingerprint_calls": 0,
@@ -588,6 +605,7 @@ class RouteFirstSearch:
         self._fp_cache = {self.hit: self.hit_fp}
         self._catalog_index = None
         self._catalog_pools = {}
+        self._catalog_stereo_cache = {}
         self._anchor_queries = tuple(item[0] for item in hit_anchors.queries[:2]) if hit_anchors else ()
         self._anchor_postings = ()
         self._anchor_scores = {}
@@ -1269,7 +1287,43 @@ class RouteFirstSearch:
         self._guide_anchor_cache[target] = result
         return result
 
-    def _nearest(self, target, role):
+    def _catalog_block_stereo_eligible(self, smiles):
+        """A strict route requires every concrete source reactant to be specified."""
+        if smiles in self._catalog_stereo_cache:
+            self.report["catalog_stereo_cache_hits"] += 1
+            return self._catalog_stereo_cache[smiles]
+        if self._stop():
+            reason = "deadline"
+        elif self.report["catalog_stereo_perceptions"] >= MAX_CATALOG_STEREO_PERCEPTIONS:
+            self._stop("max_catalog_stereo_perceptions")
+            reason = "perception_budget"
+        elif len(self._catalog_stereo_cache) >= MAX_CATALOG_STEREO_CACHE_ENTRIES:
+            self._stop("max_catalog_stereo_cache_entries")
+            reason = "cache_budget"
+        else:
+            mol = self.catalog.mols[smiles]
+            cost = mol.GetNumAtoms() + mol.GetNumBonds()
+            if self.report["catalog_stereo_atom_bond_charges"] + cost > MAX_CATALOG_STEREO_ATOM_BOND_CHARGES:
+                self._stop("max_catalog_stereo_atom_bond_charges")
+                reason = "atom_bond_budget"
+            else:
+                self.report["catalog_stereo_perceptions"] += 1
+                self.report["catalog_stereo_atom_bond_charges"] += cost
+                try:
+                    eligible = stereo_state(mol)["fully_specified"]
+                except (ValueError, RuntimeError, AttributeError):
+                    reason = "perception_failed"
+                else:
+                    if self._stop():
+                        reason = "deadline"
+                    else:
+                        self._catalog_stereo_cache[smiles] = eligible
+                        return eligible
+        counts = self.report["catalog_stereo_unknowns"]
+        counts[reason] = counts.get(reason, 0) + 1
+        return None  # Unknown remains eligible at its legacy rank.
+
+    def _nearest(self, target, role, *, rule_id=None, role_slot=None):
         key = (target, role)
         trace = self._active_phase2_slot
         if trace is not None:
@@ -1367,18 +1421,64 @@ class RouteFirstSearch:
         anchored = sorted((row for row in ranked if row[1] < 0), key=lambda row: (row[1], row[0], row[2]))
         ordinary = sorted((row for row in ranked if row[1] == 0), key=lambda row: (row[0], row[2]))
         selected = []
+        stereo_complete = True
+
+        def eligible_row(row):
+            nonlocal stereo_complete
+            smiles = row[2]
+            eligible = self._catalog_block_stereo_eligible(smiles)
+            if eligible is False:
+                self.report["catalog_stereo_exclusions"] += 1
+                samples = self.report["catalog_stereo_exclusion_samples"]
+                if len(samples) < MAX_CATALOG_STEREO_EXCLUSION_SAMPLES:
+                    samples.append(
+                        {
+                            "building_block_id": sorted(self.catalog.by_smiles[smiles])[0],
+                            "smiles": smiles,
+                            "target": target,
+                            "rule_id": rule_id,
+                            "role_slot": role_slot,
+                            "selection_phase": self._phase,
+                            "reason": "strict_route_reactant_stereo_not_fully_specified",
+                        }
+                    )
+                else:
+                    self.report["catalog_stereo_exclusion_samples_truncated"] += 1
+                return False
+            if eligible is None:
+                stereo_complete = False
+            return True
+
+        def first_eligible(rows):
+            for index, row in enumerate(rows):
+                if eligible_row(row):
+                    return row, rows[index + 1 :]
+            return None, []
+
+        # Preserve the original one-anchor/one-ordinary reservation after
+        # screening. A rejected ordinary leader must not be replaced by a
+        # second anchor before the next ordinary candidate is considered.
+        anchored_tail, ordinary_tail = anchored, ordinary
         if anchored:
-            selected.append(anchored.pop(0))
+            first, anchored_tail = first_eligible(anchored)
+            if first is not None:
+                selected.append(first)
         if ordinary and len(selected) < self.limits.building_block_top_k:
-            selected.append(ordinary.pop(0))
-        selected.extend((anchored + ordinary)[: self.limits.building_block_top_k - len(selected)])
+            first, ordinary_tail = first_eligible(ordinary)
+            if first is not None:
+                selected.append(first)
+        for row in anchored_tail + ordinary_tail:
+            if len(selected) >= self.limits.building_block_top_k:
+                break
+            if eligible_row(row):
+                selected.append(row)
         blocks = tuple(
             self.catalog.blocks[sorted(self.catalog.by_smiles[smiles])[0]]
             for _score, _anchors, smiles in selected
         )
         if trace is not None:
             trace["pool_selected_blocks"] += len(blocks)
-        if complete:
+        if complete and stereo_complete:
             self._nearest_cache[key] = blocks
         return blocks
 
@@ -1400,7 +1500,7 @@ class RouteFirstSearch:
                                 }
                             ],
                         }
-                        for block in self._nearest(target, role)
+                        for block in self._nearest(target, role, rule_id=rule.id, role_slot=slot)
                     )
                 )
         states = []

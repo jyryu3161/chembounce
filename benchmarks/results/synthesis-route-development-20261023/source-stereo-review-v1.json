@@ -1,0 +1,67 @@
+{
+  "schema": "route-first-source-stereo-review-portable-v1",
+  "review": {
+    "schema": "route-first-focused-review-v1",
+    "verdict": "pass_for_bounded_strict_source_stereo_prefilter",
+    "scope": "Source-stereo predicate reuse, nearest selection/caching/bounds, focused tests, docs and unexecuted v11 harness delta; no actual catalog/model/probe execution.",
+    "source_sha256": {
+      "chembounce_synthesis/route_first.py": "bc5cc5ef47aba1bede5ec188667a006381d18554a4c0ef1d4145946296d02c2b",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "tests/synthesis/test_route_first.py": "c6ae33f441685b5a982a949e2f39f73eb272caf2098b3c3c0d15c56fc1d3f310",
+      "docs/SYNTHESIS.md": "ef6f9ba366b2d20aad9a6d90dca04bfd2cdb7f6ff08c6b5c61c8d15b4cfa82d8",
+      "benchmark-results/route-first-development-20261023-v2/development-probe-v11/probe.py": "1d578b134162caf7447e0d697d5b7732b262a773842c2e8167dd24266226a98f",
+      "benchmark-results/route-first-development-20261023-v2/strict-reactant-stereo-control-v1/probe.py": "23940912c82a4f5519ff60bf68f2e8f4b6834c979dfde1714aa5a5d65acef8ea",
+      "benchmark-results/route-first-development-20261023-v2/strict-reactant-stereo-control-v1/result.json": "badbc2909928509e91fe4de13e8ce4e60d5470264f10957114bbc853b691bdb7",
+      "benchmark-results/route-first-development-20261023-v2/stereo-prefilter-design-correction-v1/record.json": "d6cb80372424d83e4c0a1e6a2ca56eb647d4fdc6937ef632a1c1ba8be8ae6de7"
+    },
+    "blocking_findings": [],
+    "resolved_findings": [
+      {
+        "issue": "Filtering flattened anchored/ordinary priority could replace rejected ordinary leader with second anchored row, changing category reservation.",
+        "resolution": "Select first non-excluded anchored and ordinary rows independently, then preserve anchored+ordinary tail; adversarial regression verifies anchored0+ordinary1."
+      },
+      {
+        "issue": "Exclusion reason called all fully_specified failures unspecified even though predicate also covers unsupported stereo.",
+        "resolution": "Reason now strict_route_reactant_stereo_not_fully_specified."
+      }
+    ],
+    "reviewed_invariants": [
+      "audit_route requires every concrete reactant stereo_state fully_specified at every step, regardless of center fate; route_first requires strict_eligible. Reusing this necessary source-block predicate for inner and outer catalog retrieval preserves current eligibility policy.",
+      "Catalog.mols represents canonical source SMILES, reparsed on noncanonical input; this matches canonical building-block molecules evaluated by audit. No stereo assignment or molecular edits are introduced.",
+      "Only already visited role-compatible ranked candidates are perceived as needed to fill existing top_k. Original group ordering/reservations and unknown candidate rank preserved; no new catalog scans, role matches or reaction calls.",
+      "Global caps2048 perceptions,131072 atom+bond accounting units,2048 completed-result cache entries,16 exclusion samples. Failed perceptions are charged; budget/deadline/error returns unknown. These are work units, not a runtime bound.",
+      "Unknown decisions prevent nearest-result caching. Completed source eligibility cache and original target/role nearest key remain context-independent because the strict source predicate is rule-independent. Reverse cache/policy unchanged.",
+      "Fresh perceptions do not start after deadline and post-perception expiration yields unknown; pre-existing cache-hit deadline semantics remain unchanged.",
+      "v11 adds source-audit byte binding before/after, diagnostic scope/version and bounded stereo telemetry only. Existing gates/accounting and complete eligible/rejected graph retention unchanged."
+    ],
+    "independent_checks": [
+      {
+        "command": ".venv-research/bin/python -m pytest -q tests/synthesis/test_route_first.py tests/test_phase_telemetry_develop_hooks.py",
+        "result": "57 passed in12.41s on final runtime/test hashes; includes actual sulfur predicate, specified/achiral sources, anchor/ordinary reservation, forced perception/atom-bond/cache cap fallback, failure/deadline handling and existing genuine replay controls."
+      },
+      {
+        "command": "git diff --check",
+        "result": "passed"
+      },
+      {
+        "check": "Saved strict audit control hash binding",
+        "result": "Probe hash matches embedded before/after harness hashes; result source hash matches current route_audit.py fdf5ad3d. No molecular control rerun."
+      }
+    ],
+    "saved_control_assessment": "Two-row full audit control has unspecified CC(F)Br source fail strict eligibility and specified C[C@H](F)Br pass for the same CN product after center loss. This supports policy necessity, not chemical impossibility. Superseded conserved-center prototype/correction record preserved.",
+    "author_reported_checks": {
+      "route_tests": "33 passed",
+      "format": "Ruff check/format and diff-check passed",
+      "harness": "v11 import-only preflight passed; result absent"
+    },
+    "limitations": [
+      "No fresh efficacy evidence or catalog/model run.",
+      "Unknown fallback may still admit source blocks later rejected by audit; this preserves bounded legacy behavior.",
+      "Frozen P1 greater-than5/12 all-step-supported adoption criterion and final gates unchanged; P1 remains active."
+    ]
+  },
+  "artifact": {
+    "path": "benchmark-results/qualified-development-20261023/route-first-v2-source-stereo-review-v1/report.json",
+    "sha256": "4fb31a4967d590981b71e252038b89a0104fa5268c52fe89c4f33bf005b5b3dc"
+  }
+}

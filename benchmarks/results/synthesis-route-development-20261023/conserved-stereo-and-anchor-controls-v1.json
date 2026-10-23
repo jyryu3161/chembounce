@@ -1778,7 +1778,6 @@
     "source_sha256_after": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
     "rdkit_version": "2025.09.6"
   },
-  "planned_guard_scope": "Only final-product catalog retrieval. Do not exclude inner intermediates solely because they have an unspecified center. Every bounded role embedding must prove retained stereogenicity; unknown/truncated/budget cases retain original eligibility.",
   "artifacts": [
     {
       "path": "benchmark-results/route-first-development-20261023-v2/saved-guide-anchor-reachability-v1/result.json",
@@ -1792,5 +1791,7 @@
       "path": "benchmark-results/route-first-development-20261023-v2/conserved-stereo-control-v1/probe.py",
       "sha256": "c4b1a25db41dd29ece0bec36d1ea9a0a4523e7d0c076416a9f175296a382d47f"
     }
-  ]
+  ],
+  "superseded_product_only_guard_proposal": "Only final-product catalog retrieval. Do not exclude inner intermediates solely because they have an unspecified center. Every bounded role embedding must prove retained stereogenicity; unknown/truncated/budget cases retain original eligibility.",
+  "current_guard_scope": "Reuse the exact pre-existing strict route-audit requirement that every concrete reactant is fully specified. Apply a bounded source-level precheck to inner and outer catalog selection; disappearance of a source stereo center does not satisfy this existing gate. No claim that a source-rejected reaction is chemically impossible."
 }

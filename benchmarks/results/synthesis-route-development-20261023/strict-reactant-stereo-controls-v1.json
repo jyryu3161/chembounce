@@ -1,0 +1,96 @@
+{
+  "schema": "strict-reactant-stereo-control-v1",
+  "status": "complete",
+  "scope": "Two-row temporary synthetic catalog, one reaction, two full strict route audits; no actual catalog or model",
+  "reaction_smarts": "[CH3:1][C:2]([F:3])[Br:4].[N:5]>>[CH3:1][N:5]",
+  "unspecified_source": {
+    "source_smiles": "CC(F)Br",
+    "product": "CN",
+    "strict_eligible": false,
+    "source_fully_specified": false,
+    "source_unspecified_centers": [
+      {
+        "type": "Atom_Tetrahedral",
+        "index": 1,
+        "specified": "Unspecified",
+        "descriptor": "NoValue",
+        "controlling_atoms": [
+          0,
+          2,
+          3
+        ]
+      }
+    ],
+    "product_centers": [],
+    "lost_input_atoms": [
+      {
+        "reactant_slot": 0,
+        "reactant_atom_index": 1,
+        "element": "C",
+        "isotope": 0
+      },
+      {
+        "reactant_slot": 0,
+        "reactant_atom_index": 2,
+        "element": "F",
+        "isotope": 0
+      },
+      {
+        "reactant_slot": 0,
+        "reactant_atom_index": 3,
+        "element": "Br",
+        "isotope": 0
+      }
+    ],
+    "atom_origin_status": "complete",
+    "stereo_status": "unsupported",
+    "witness_sha256": "acb2186c54015354c77a246ae3d59558cfca7fd33fc041720c397d206f869a17"
+  },
+  "specified_source": {
+    "source_smiles": "C[C@H](F)Br",
+    "product": "CN",
+    "strict_eligible": true,
+    "source_fully_specified": true,
+    "source_unspecified_centers": [],
+    "product_centers": [],
+    "lost_input_atoms": [
+      {
+        "reactant_slot": 0,
+        "reactant_atom_index": 1,
+        "element": "C",
+        "isotope": 0
+      },
+      {
+        "reactant_slot": 0,
+        "reactant_atom_index": 2,
+        "element": "F",
+        "isotope": 0
+      },
+      {
+        "reactant_slot": 0,
+        "reactant_atom_index": 3,
+        "element": "Br",
+        "isotope": 0
+      }
+    ],
+    "atom_origin_status": "complete",
+    "stereo_status": "specified_correspondence",
+    "witness_sha256": "acb2186c54015354c77a246ae3d59558cfca7fd33fc041720c397d206f869a17"
+  },
+  "finding": "A source center may disappear from the principal product yet strict route audit still rejects an unspecified source reactant. The corresponding specified source passes.",
+  "source_sha256": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+  "source_sha256_after": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+  "harness_sha256": "23940912c82a4f5519ff60bf68f2e8f4b6834c979dfde1714aa5a5d65acef8ea",
+  "harness_sha256_after": "23940912c82a4f5519ff60bf68f2e8f4b6834c979dfde1714aa5a5d65acef8ea",
+  "artifacts": [
+    {
+      "path": "benchmark-results/route-first-development-20261023-v2/strict-reactant-stereo-control-v1/probe.py",
+      "sha256": "23940912c82a4f5519ff60bf68f2e8f4b6834c979dfde1714aa5a5d65acef8ea"
+    },
+    {
+      "path": "benchmark-results/route-first-development-20261023-v2/strict-reactant-stereo-control-v1/result.json",
+      "sha256": "badbc2909928509e91fe4de13e8ce4e60d5470264f10957114bbc853b691bdb7"
+    }
+  ],
+  "interpretation_limit": "This is a synthetic atom-accounting control for the existing strict policy, not an experimental reaction or a synthesis feasibility benchmark."
+}

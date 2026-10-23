@@ -144,6 +144,20 @@ and 40 eligible routes (16 one-step and 24 two-step). The fixed entry condition
 of more than five pre-evidence inputs remains unmet, so no model comparison
 was run and P1 remains incomplete.
 
+Strict route audit requires every concrete source reactant to have fully
+specified stereochemistry, even when its unresolved center disappears from
+the principal product. The next revision checks this necessary condition on
+already visited, role-compatible catalog blocks before choosing the nearest
+two blocks for any route step. A block proven to have unspecified stereo is
+skipped and the same ranked pool supplies the next option. Perception failure,
+deadline or budget exhaustion leaves the block at its original rank; no
+stereoisomer is assigned. At most 2,048 source-block stereo perceptions and
+131,072 charged atom/bond units are allowed per search, with at most 2,048
+cached completed results and 16 recorded exclusion examples. This adds no
+catalog scan, role match enumeration or reaction call and does not change the
+strict audit or other final gates. The revision has not been run on the fixed
+panel.
+
 ## Optional catalog byte binding
 
 A configuration can pin both the catalog TSV and its import manifest:
