@@ -1,0 +1,49 @@
+{
+  "schema": "continuation-second-preference-review-v1",
+  "date": "2026-10-24",
+  "status": "reviewed_experimental_default_off",
+  "base_commit": "1dbb4e4",
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "ac1b0da44c0aaee4a85f96a5e3a7ab9dd0d189c5bce25d2e979ea75c6b5fbccc",
+    "tests/synthesis/test_route_first.py": "9e1c3e5c35405b6ab2a6bf89c021d0f4a1b5b5388268df12b79289b8f9c0da12"
+  },
+  "policy": "Only a bridge-positive phase-two inner source slot may prefer an exact future-role matching, definite-stereo ordinary second block from the existing complete ranked pool. Keep first, anchor reservation, top2 and legacy base cache pair. Unknown/incomplete/budget/deadline retains legacy; no catalog pool replay for a new context.",
+  "activation": "RouteFirstSearch(prefer_continuation_second=True), default False. Experimental constructor control only; not yet wired into workflow configuration or adopted as default.",
+  "caps": {
+    "retained_ranked_rows_per_search": 65536,
+    "outer_role_checks_per_query": 8192,
+    "outer_role_checks_per_search": 65536,
+    "outer_role_queries": 16,
+    "selected_context_cache_entries": 128,
+    "source_stereo": "existing shared caps"
+  },
+  "validation": {
+    "route_first_tests": {
+      "passed": 54,
+      "runner": "route_first_p1_sol",
+      "seconds": 12.95
+    },
+    "phase_telemetry_tests": {
+      "passed": 19,
+      "runner": "root",
+      "seconds": 0.04
+    },
+    "ruff_check": "PASS",
+    "ruff_format_check": "PASS",
+    "git_diff_check": "PASS",
+    "scope": "Two focused test files, not full repository suite."
+  },
+  "review": {
+    "reviewer": "route_first_p1_astra",
+    "status": "PASS",
+    "scope": "Exact source/test hashes; source-slot activation, first/anchor, base/context cache separation, no repool, bounded precharged checks, definite stereo and unknown/deadline fallback."
+  },
+  "fixture_evidence": "An actual Rules.apply unit fixture shows the changed second can produce an outer-role-compatible intermediate while preserving first. It does not demonstrate development-panel efficacy.",
+  "next_gate": "Freeze full12 paired pre-evidence run: off must reproduce exact savedv14 56 input/product pairs and59 routes; on must report all gains/losses, original-hit anchor passes and unchanged gates/assets/caps before any actual model comparison.",
+  "actual_primary_unchanged": {
+    "supported_inputs": 4,
+    "inputs": 12,
+    "baseline_supported_inputs": 5,
+    "P1_complete": false
+  }
+}

@@ -313,6 +313,198 @@ def test_continuation_failed_snapshot_copy_is_charged_before_allocation(tmp_path
     assert not registry["by_guide"]
 
 
+def test_continuation_second_uses_same_ranked_pool_and_can_enable_outer_role(tmp_path, monkeypatch):
+    from chembounce_synthesis.catalog import BuildingBlock
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [{"id": "inner", "smarts": "[C:1][C:2].[O:3]>>[C:1][C:2][O:3]", "source": "test"}],
+            }
+        )
+    )
+    rules = Rules(path)
+    inner = rules.get("inner")
+    outer = SimpleNamespace(
+        id="outer", reaction=rdChemReactions.ReactionFromSmarts("[Cl:1][C:2].[N:3]>>[C:2][N:3]")
+    )
+    choices = ("CCC", "CCCC", "ClCCC", "O")
+    blocks = {item: BuildingBlock(item, item, "fixture", "2026-10-24") for item in choices}
+    catalog = SimpleNamespace(
+        sha256="test",
+        mols={item: molecule(item) for item in choices},
+        blocks=blocks,
+        by_smiles={item: {item} for item in choices},
+    )
+    search = RouteFirstSearch(
+        "ClCCO", catalog, rules, RouteFirstLimits(**limits()), prefer_continuation_second=True
+    )
+    search._phase = 2
+    guide = search._reverse(inner, "ClCCO", False)[0]
+    origin = search.continuation_guide_origin(inner, "ClCCO", False, guide, outer, 0)
+    assert origin["classification"] == "single_source_local_intact_normalized_role"
+    assert origin["source_slot"] == 0
+
+    phase_one = RouteFirstSearch(
+        "ClCCO", catalog, rules, RouteFirstLimits(**limits()), prefer_continuation_second=True
+    )
+    assert phase_one._reverse(inner, "ClCCO", False) == [guide]
+    assert phase_one._continuation_snapshots == 0
+    phase_one._phase = 2
+    assert phase_one._reverse(inner, "ClCCO", False) == [guide]
+    assert phase_one.continuation_guide_origin(inner, "ClCCO", False, guide, outer, 0)["reason"] == (
+        "raw_provenance_missing_or_cached_before_capture"
+    )
+
+    base_key = (guide[0], inner.roles[0], False)
+    legacy = (blocks["CCC"], blocks["CCCC"])
+    search._nearest_cache[base_key] = legacy
+    search._continuation_ranked[base_key] = (
+        ((-1.0, 0, "CCC"), (-0.8, 0, "CCCC"), (-0.7, 0, "ClCCC")),
+        True,
+    )
+    context = (outer, 0, 0, inner.id, "ClCCO", guide)
+    chosen = search._nearest(guide[0], inner.roles[0], continuation_context=context)
+    assert chosen[0] == legacy[0]
+    assert chosen[1] == blocks["ClCCC"]
+    assert search._nearest_cache[base_key] == legacy
+    assert search.report["continuation_preference"]["role_checks"] == 2
+    assert search.report["catalog_row_visits"] == 0
+
+    assert search.report["fingerprint_calls"] == 1
+
+    future_role = outer.reaction.GetReactants()[0]
+    old_products, _ = rules.apply(inner.id, (legacy[1].smiles, "O"), 16)
+    new_products, _ = rules.apply(inner.id, (chosen[1].smiles, "O"), 16)
+    assert old_products and not any(molecule(x).HasSubstructMatch(future_role) for x in old_products)
+    assert any(molecule(x).HasSubstructMatch(future_role) for x in new_products)
+
+    other = SimpleNamespace(
+        id="other", reaction=rdChemReactions.ReactionFromSmarts("[C:1].[N:2]>>[C:1][N:2]")
+    )
+    other_context = (other, 0, 0, inner.id, "ClCCO", guide)
+    assert search._nearest(guide[0], inner.roles[0], continuation_context=other_context) == legacy
+    assert search._nearest(guide[0], inner.roles[0], continuation_context=context) == chosen
+    assert search.report["catalog_row_visits"] == 0
+    search.deadline = time.monotonic() - 1
+    assert search._nearest(guide[0], inner.roles[0], continuation_context=context) == legacy
+    search.deadline = None
+
+    search._continuation_selected.clear()
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_SELECTED_CONTEXTS", 0)
+    assert search._nearest(guide[0], inner.roles[0], continuation_context=context) == legacy
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_SELECTED_CONTEXTS", 128)
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_ROLE_CHECKS_PER_QUERY", 1)
+    assert search._nearest(guide[0], inner.roles[0], continuation_context=context) == legacy
+    assert not search._continuation_selected
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_ROLE_CHECKS_PER_QUERY", 8192)
+    monkeypatch.setattr(
+        search,
+        "_catalog_block_stereo_eligible",
+        lambda smiles: None if smiles == "ClCCC" else True,
+    )
+    assert search._nearest(guide[0], inner.roles[0], continuation_context=context) == legacy
+    assert not search._continuation_selected
+
+    search.deadline = time.monotonic() - 1
+    assert search._nearest(guide[0], inner.roles[0], continuation_context=context) == legacy
+    search.deadline = None
+    search._continuation_ranked.clear()
+    assert search._nearest(guide[0], inner.roles[0], continuation_context=context) == legacy
+    assert search.report["catalog_row_visits"] == 0
+
+
+def test_optional_continuation_preference_preserves_strict_one_and_two_step_routes(assets):
+    catalog, rules = assets
+    search = RouteFirstSearch(
+        TWO_STEP_HIT,
+        catalog,
+        rules,
+        RouteFirstLimits(**limits()),
+        prefer_continuation_second=True,
+    )
+    routes, report = search.run()
+    assert routes
+    assert report["depth_counts"]["1"] > 0
+    assert report["depth_counts"]["2"] > 0
+    assert report["catalog_row_visits"] <= search.limits.max_catalog_row_visits
+    assert report["continuation_preference"]["ranked_rows_retained"] <= 65536
+    assert report["continuation_preference"]["role_checks"] <= 65536
+    for item in routes:
+        audit = audit_route(item["route"], catalog, rules, search.limits.reaction_product_limit)
+        assert audit["strict_eligible"]
+
+
+def test_continuation_rank_retention_is_phase_two_only_and_never_repools_for_context(tmp_path, monkeypatch):
+    from chembounce_synthesis.catalog import BuildingBlock
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [{"id": "r", "smarts": "[C:1][C:2].[O:3]>>[C:1][C:2][O:3]", "source": "test"}],
+            }
+        )
+    )
+    rules = Rules(path)
+    rows = ("CCC", "CCCC", "ClCCC")
+    catalog = SimpleNamespace(
+        sha256="test",
+        mols={s: molecule(s) for s in rows},
+        blocks={s: BuildingBlock(s, s, "fixture", "2026-10-24") for s in rows},
+        by_smiles={s: {s} for s in rows},
+    )
+    outer = SimpleNamespace(
+        id="outer", reaction=rdChemReactions.ReactionFromSmarts("[Cl:1][C:2].[N:3]>>[C:2][N:3]")
+    )
+    context = (outer, 0, 0, "r", "ClCCO", ("CCCl", "O"))
+    role = rules.get("r").roles[0]
+
+    def make_search(phase):
+        search = RouteFirstSearch(
+            "ClCCO", catalog, rules, RouteFirstLimits(**limits()), prefer_continuation_second=True
+        )
+        search._phase = phase
+        calls = []
+
+        def pool(*_args, **_kwargs):
+            calls.append(1)
+            return rows
+
+        monkeypatch.setattr(search, "_pool", pool)
+        return search, calls
+
+    first, calls = make_search(1)
+    old = first._nearest("CCCl", role, continuation_context=context)
+    assert calls == [1]
+    assert first.report["continuation_preference"]["ranked_rows_retained"] == 0
+    first._phase = 2
+    assert first._nearest("CCCl", role, continuation_context=context) == old
+    assert calls == [1]
+
+    with monkeypatch.context() as patched:
+        patched.setattr(route_first_module, "MAX_CONTINUATION_RANKED_ROWS", 1)
+        small, calls = make_search(2)
+        small._nearest("CCCl", role, continuation_context=context)
+        assert calls == [1]
+        assert small.report["continuation_preference"]["ranked_rows_retained"] == 0
+        assert small.report["continuation_preference"]["role_checks"] == 0
+
+    second, calls = make_search(2)
+    second._nearest("CCCl", role, continuation_context=context)
+    assert calls == [1]
+    assert 0 < second.report["continuation_preference"]["ranked_rows_retained"] <= len(rows)
+    before = second.report["catalog_row_visits"]
+    second._nearest("CCCl", role, continuation_context=(outer, 1, 0, "r", "ClCCO", ("CCCl", "O")))
+    assert calls == [1]
+    assert second.report["catalog_row_visits"] == before
+
+
 def limits(**overrides):
     return {
         "max_rule_inspections": 8,

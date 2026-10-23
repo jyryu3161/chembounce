@@ -53,6 +53,11 @@ MAX_CONTINUATION_RAW_SNAPSHOTS = 1024
 MAX_CONTINUATION_SNAPSHOT_UNITS = 262144
 MAX_CONTINUATION_ROLE_CONTEXTS = 128
 MAX_CONTINUATION_REGISTRIES = 512
+MAX_CONTINUATION_RANKED_ROWS = 65536
+MAX_CONTINUATION_ROLE_CHECKS_PER_QUERY = 8192
+MAX_CONTINUATION_ROLE_CHECKS_PER_SEARCH = 65536
+MAX_CONTINUATION_OUTER_ROLE_QUERIES = 16
+MAX_CONTINUATION_SELECTED_CONTEXTS = 128
 
 
 def _pool_raw_counts(mol, atoms=None):
@@ -782,6 +787,7 @@ class RouteFirstSearch:
         hit_anchors=None,
         *,
         diagnose_continuation=False,
+        prefer_continuation_second=False,
     ):
         self.hit = canonical(hit)
         self.hit_mol = molecule(self.hit)
@@ -953,12 +959,41 @@ class RouteFirstSearch:
         self._topology_assessment_cache = {}
         self._eligible_rules = None
         self._reverse_cache = {}
-        self._diagnose_continuation = diagnose_continuation
-        self._continuation_raw = {} if diagnose_continuation else None
-        self._continuation_context_cache = {} if diagnose_continuation else None
+        self._diagnose_continuation = diagnose_continuation or prefer_continuation_second
+        self._continuation_capture_all_phases = diagnose_continuation
+        self._prefer_continuation_second = prefer_continuation_second
+        self._continuation_raw = {} if self._diagnose_continuation else None
+        self._continuation_context_cache = {} if self._diagnose_continuation else None
         self._continuation_snapshots = 0
         self._continuation_snapshot_units = 0
         self._continuation_role_contexts = 0
+        self._continuation_ranked = {} if prefer_continuation_second else None
+        self._continuation_selected = {} if prefer_continuation_second else None
+        self._continuation_outer_roles = {} if prefer_continuation_second else None
+        if prefer_continuation_second:
+            self.report["continuation_preference"] = {
+                "ranked_rows_limit": MAX_CONTINUATION_RANKED_ROWS,
+                "role_checks_per_query_limit": MAX_CONTINUATION_ROLE_CHECKS_PER_QUERY,
+                "role_checks_per_search_limit": MAX_CONTINUATION_ROLE_CHECKS_PER_SEARCH,
+                "outer_role_queries_limit": MAX_CONTINUATION_OUTER_ROLE_QUERIES,
+                "selected_contexts_limit": MAX_CONTINUATION_SELECTED_CONTEXTS,
+                "ranked_rows_retained": 0,
+                "role_checks": 0,
+                "role_matches": 0,
+                "stereo_rejections": 0,
+                "stereo_unknowns": 0,
+                "outer_role_queries": 0,
+                "replacements": 0,
+                "legacy_reasons": {},
+                "samples": [],
+                "samples_omitted": 0,
+                "bridge_positive_work_items": 0,
+                "bridge_unknown_work_items": 0,
+                "bridge_unknown_reasons": {},
+                "bridge_snapshot_attempts": 0,
+                "bridge_structural_units": 0,
+                "bridge_role_contexts": 0,
+            }
         self._tagged_reverse_cache = {}
         self._nonring_unavailable_rules = set()
         self._guide_quality = {}
@@ -1851,7 +1886,9 @@ class RouteFirstSearch:
         nonring_query = False
         registry = (
             {"by_guide": {}, "incomplete": None, "raw_cap_saturated": False}
-            if self._diagnose_continuation and len(self._continuation_raw) < MAX_CONTINUATION_REGISTRIES
+            if self._diagnose_continuation
+            and (self._phase == 2 or self._continuation_capture_all_phases)
+            and len(self._continuation_raw) < MAX_CONTINUATION_REGISTRIES
             else None
         )
         if not fallback and not self._stop():
@@ -2133,7 +2170,124 @@ class RouteFirstSearch:
         counts[reason] = counts.get(reason, 0) + 1
         return None  # Unknown remains eligible at its legacy rank.
 
-    def _nearest(self, target, role, *, rule_id=None, role_slot=None, fallback_missing_role=False):
+    def _continuation_second(self, base_key, legacy, context):
+        """Prefer a role-matching ordinary second from the already ranked pool."""
+        if context is None or not self._prefer_continuation_second or self._phase != 2:
+            return legacy
+        outer_rule, outer_slot, source_slot, inner_rule_id, inner_target, inner_guide = context
+        key = (base_key, outer_rule.id, outer_slot, inner_rule_id, inner_target, inner_guide, source_slot)
+        report = self.report["continuation_preference"]
+
+        def old(reason):
+            counts = report["legacy_reasons"]
+            counts[reason] = counts.get(reason, 0) + 1
+            return legacy
+
+        if self.deadline is not None and time.monotonic() >= self.deadline:
+            return old("deadline")
+        if key in self._continuation_selected:
+            return self._continuation_selected[key]
+        if len(self._continuation_selected) >= MAX_CONTINUATION_SELECTED_CONTEXTS:
+            return old("selected_context_cache_budget")
+        stored = self._continuation_ranked.get(base_key)
+        if stored is None:
+            return old("complete_ranked_pool_unavailable")
+        ordinary, ordinary_second = stored
+        if self.limits.building_block_top_k != 2 or len(legacy) != 2 or not ordinary_second:
+            return old("no_ordinary_second")
+        role_key = (outer_rule.id, outer_slot)
+        query = self._continuation_outer_roles.get(role_key)
+        if query is None:
+            if len(self._continuation_outer_roles) >= MAX_CONTINUATION_OUTER_ROLE_QUERIES:
+                return old("outer_role_query_budget")
+            try:
+                query = outer_rule.reaction.GetReactants()[outer_slot]
+                if (
+                    query.GetNumAtoms() > MAX_CONTINUATION_ROLE_ATOMS
+                    or query.GetNumBonds() > MAX_CONTINUATION_ROLE_BONDS
+                ):
+                    return old("outer_role_query_size")
+            except (IndexError, AttributeError):
+                return old("outer_role_query_unavailable")
+            if self.deadline is not None and time.monotonic() >= self.deadline:
+                return old("deadline")
+            self._continuation_outer_roles[role_key] = query
+            report["outer_role_queries"] += 1
+        checked = 0
+        for row in ordinary:
+            smiles = row[2]
+            if smiles == legacy[0].smiles:
+                continue
+            if self.deadline is not None and time.monotonic() >= self.deadline:
+                return old("deadline")
+            if checked >= MAX_CONTINUATION_ROLE_CHECKS_PER_QUERY:
+                return old("role_check_query_budget")
+            if report["role_checks"] >= MAX_CONTINUATION_ROLE_CHECKS_PER_SEARCH:
+                return old("role_check_search_budget")
+            checked += 1
+            report["role_checks"] += 1
+            try:
+                if not self.catalog.mols[smiles].HasSubstructMatch(query, useChirality=True):
+                    continue
+            except (ValueError, RuntimeError, KeyError):
+                return old("outer_role_match_failed")
+            report["role_matches"] += 1
+            if smiles not in self._catalog_stereo_cache:
+                mol = self.catalog.mols[smiles]
+                cost = mol.GetNumAtoms() + mol.GetNumBonds()
+                if (
+                    self.report["catalog_stereo_perceptions"] >= MAX_CATALOG_STEREO_PERCEPTIONS
+                    or len(self._catalog_stereo_cache) >= MAX_CATALOG_STEREO_CACHE_ENTRIES
+                    or self.report["catalog_stereo_atom_bond_charges"] + cost
+                    > MAX_CATALOG_STEREO_ATOM_BOND_CHARGES
+                ):
+                    return old("stereo_budget")
+            eligible = self._catalog_block_stereo_eligible(smiles)
+            if eligible is None:
+                report["stereo_unknowns"] += 1
+                return old("stereo_unknown")
+            if not eligible:
+                report["stereo_rejections"] += 1
+                continue
+            if self.deadline is not None and time.monotonic() >= self.deadline:
+                return old("deadline")
+            replacement = self.catalog.blocks[sorted(self.catalog.by_smiles[smiles])[0]]
+            selected = (legacy[0], replacement)
+            if selected != legacy:
+                report["replacements"] += 1
+                if len(report["samples"]) < MAX_FALLBACK_HIT_SECOND_SAMPLES:
+                    report["samples"].append(
+                        {
+                            "outer_rule_id": outer_rule.id,
+                            "outer_slot": outer_slot,
+                            "inner_rule_id": inner_rule_id,
+                            "inner_target": inner_target,
+                            "source_slot": source_slot,
+                            "first": legacy[0].smiles,
+                            "old_second": legacy[1].smiles,
+                            "new_second": smiles,
+                            "role_checks": checked,
+                        }
+                    )
+                else:
+                    report["samples_omitted"] += 1
+            self._continuation_selected[key] = selected
+            return selected
+        if self.deadline is not None and time.monotonic() >= self.deadline:
+            return old("deadline")
+        self._continuation_selected[key] = legacy
+        return old("no_role_and_stereo_eligible_ordinary")
+
+    def _nearest(
+        self,
+        target,
+        role,
+        *,
+        rule_id=None,
+        role_slot=None,
+        fallback_missing_role=False,
+        continuation_context=None,
+    ):
         # This context changes only the second block. Keep its completed
         # selection separate from the ordinary nearest result for this query.
         key = (target, role, fallback_missing_role)
@@ -2144,7 +2298,7 @@ class RouteFirstSearch:
             if trace is not None:
                 trace["pool_cache_hits"] += 1
                 trace["pool_selected_blocks"] += len(self._nearest_cache[key])
-            return self._nearest_cache[key]
+            return self._continuation_second(key, self._nearest_cache[key], continuation_context)
         self.report["role_queries"] += 1
         query = Chem.MolFromSmarts(role)
         retrieval_target = self._retrieval_target(target)
@@ -2372,7 +2526,18 @@ class RouteFirstSearch:
             trace["pool_selected_blocks"] += len(blocks)
         if complete and stereo_complete and hit_second_complete:
             self._nearest_cache[key] = blocks
-        return blocks
+            if continuation_context is not None and self._prefer_continuation_second and self._phase == 2:
+                report = self.report["continuation_preference"]
+                if (
+                    len(ordinary) <= self.limits.max_catalog_rows_per_query
+                    and report["ranked_rows_retained"] + len(ordinary) <= MAX_CONTINUATION_RANKED_ROWS
+                ):
+                    self._continuation_ranked[key] = (
+                        tuple(ordinary),
+                        len(selected) >= 2 and selected[1][1] == 0,
+                    )
+                    report["ranked_rows_retained"] += len(ordinary)
+        return self._continuation_second(key, blocks, continuation_context)
 
     def _stage(
         self,
@@ -2383,6 +2548,7 @@ class RouteFirstSearch:
         budget=None,
         product_budget=None,
         fallback_missing_slots=(),
+        continuation_context=None,
     ):
         options = []
         for slot, (target, role) in enumerate(zip(guide, rule.roles)):
@@ -2407,6 +2573,11 @@ class RouteFirstSearch:
                             rule_id=rule.id,
                             role_slot=slot,
                             fallback_missing_role=slot in fallback_missing_slots,
+                            continuation_context=(
+                                continuation_context if continuation_context[2] == slot else None
+                            )
+                            if continuation_context is not None
+                            else None,
                         )
                     )
                 )
@@ -2833,7 +3004,31 @@ class RouteFirstSearch:
                             plan_trace["catalog_exhausted_attempts"] += 1
                     self._active_phase2_slot = slot_trace
                     try:
-                        inner = self._stage(inner_rule, inner_guide, "i")
+                        source_slot = None
+                        if self._prefer_continuation_second:
+                            origin = self.continuation_guide_origin(
+                                inner_rule,
+                                target,
+                                False,
+                                inner_guide,
+                                outer_rule,
+                                slot,
+                            )
+                            if origin["classification"] == "single_source_local_intact_normalized_role":
+                                source_slot = origin["source_slot"]
+                                self.report["continuation_preference"]["bridge_positive_work_items"] += 1
+                            else:
+                                report = self.report["continuation_preference"]
+                                report["bridge_unknown_work_items"] += 1
+                                reason = origin["reason"] or origin["classification"]
+                                counts = report["bridge_unknown_reasons"]
+                                counts[reason] = counts.get(reason, 0) + 1
+                        continuation = (
+                            (outer_rule, slot, source_slot, inner_rule.id, target, inner_guide)
+                            if source_slot is not None
+                            else None
+                        )
+                        inner = self._stage(inner_rule, inner_guide, "i", continuation_context=continuation)
                         if slot_trace is not None:
                             slot_trace["inner_stage_calls"] += 1
                             slot_trace["inner_stage_states"] += len(inner)
@@ -2884,6 +3079,11 @@ class RouteFirstSearch:
                         plan_trace["defer_reason"] = defer_reason
 
         self._admit()
+        if self._prefer_continuation_second:
+            report = self.report["continuation_preference"]
+            report["bridge_snapshot_attempts"] = self._continuation_snapshots
+            report["bridge_structural_units"] = self._continuation_snapshot_units
+            report["bridge_role_contexts"] = self._continuation_role_contexts
         self.report["total_fingerprint_calls"] = (
             self.report["fingerprint_calls"] + self.report["admission_fingerprint_calls"]
         )
