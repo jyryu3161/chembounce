@@ -1,0 +1,329 @@
+{
+  "schema": "continuation-role-origin-control-v1-receipt",
+  "date": "2026-10-24",
+  "status": "complete_raw_template_only",
+  "runtime_base_commit": "641669f",
+  "scope": "raw_template_outcomes_only_not_normalized_guide_or_catalog_leaf",
+  "artifacts": {
+    "benchmark-results/route-first-development-20261023-v2/continuation-role-origin-control-v1/plan-review-draft.json": "001589f31482cc7655da804f40ed40a86daf6f464823b912c469a652d2dda0c4",
+    "benchmark-results/route-first-development-20261023-v2/continuation-role-origin-control-v1/plan.json": "de8a1f23be0bdf48ca224518b990f2ae5337d75011ac6597d7e819d0057c2e29",
+    "benchmark-results/route-first-development-20261023-v2/continuation-role-origin-control-v1/probe.py": "84666acce881fc06463bcacb300a17a5c853a89a82265519d0f439113c631fb3",
+    "benchmark-results/route-first-development-20261023-v2/continuation-role-origin-control-v1/result.json": "7a99fd4f85ad598c52525d9dc954524a65ef1c3ac547ae37676f256099ce98a2",
+    "benchmark-results/route-first-development-20261023-v2/continuation-role-origin-control-v1/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "bound_inputs_and_sources": {
+    "v14_result": "4100f420a4d536ff2a4fff66f0ad01061257a16d941c98446e8fbb3437807c63",
+    "serial_planning_result": "dbb7ef62ed576766b35f711e6e57fa301a73cbce8c13b0e4961da2841315c290",
+    "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "chembounce_synthesis/route_first.py": "26db36e432d3240f1e7457bdef30f0d091f33cb5fd6e62d7e3692c917168f523",
+    "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+    "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b"
+  },
+  "fixed_inventory": {
+    "inputs": 12,
+    "outer_plans": 95,
+    "outer_slots": 190,
+    "selected_inner_rule_contexts": 247
+  },
+  "work": {
+    "reverse_calls": 247,
+    "raw_outcomes": 451,
+    "origin_visits": 47199,
+    "origin_visits_meaning": "Structural size/work units only; not exact CPU cost or substructure-search operations.",
+    "new_catalog_loads": 0,
+    "new_forward_model_calls": 0,
+    "new_3d_calls": 0
+  },
+  "observed_raw_outcome_classifications": {
+    "single_source_local_intact": 235,
+    "split_across_sources": 20,
+    "single_source_edited": 40,
+    "unknown": 156
+  },
+  "unknown_reasons": {
+    "ambiguous_role_embeddings": 56,
+    "role_not_in_parent": 100
+  },
+  "contexts_at_raw_outcome_cap": 34,
+  "contexts_without_raw_outcomes": 0,
+  "per_input": [
+    {
+      "input_id": "CHEMBL4630839-query-1",
+      "selected_inner_rule_contexts": 20,
+      "observed_raw_outcomes": 45,
+      "raw_outcome_classifications": {
+        "single_source_local_intact": 37,
+        "split_across_sources": 1,
+        "single_source_edited": 7
+      },
+      "unknown_reasons": {},
+      "contexts_with_any_observed_local_intact_embedding": 14,
+      "contexts_at_raw_outcome_cap": 6,
+      "contexts_without_raw_outcomes": 0,
+      "saved_v14_intermediate_instances": {
+        "inner_role_checks": 42,
+        "inner_role_compatible": 22,
+        "inner_role_rejected": 20
+      }
+    },
+    {
+      "input_id": "CHEMBL4630839-query-2",
+      "selected_inner_rule_contexts": 24,
+      "observed_raw_outcomes": 46,
+      "raw_outcome_classifications": {
+        "single_source_edited": 6,
+        "single_source_local_intact": 39,
+        "split_across_sources": 1
+      },
+      "unknown_reasons": {},
+      "contexts_with_any_observed_local_intact_embedding": 20,
+      "contexts_at_raw_outcome_cap": 3,
+      "contexts_without_raw_outcomes": 0,
+      "saved_v14_intermediate_instances": {
+        "inner_role_checks": 46,
+        "inner_role_compatible": 10,
+        "inner_role_rejected": 36
+      }
+    },
+    {
+      "input_id": "CHEMBL4247-query-1",
+      "selected_inner_rule_contexts": 21,
+      "observed_raw_outcomes": 43,
+      "raw_outcome_classifications": {
+        "single_source_edited": 5,
+        "single_source_local_intact": 37,
+        "split_across_sources": 1
+      },
+      "unknown_reasons": {},
+      "contexts_with_any_observed_local_intact_embedding": 17,
+      "contexts_at_raw_outcome_cap": 3,
+      "contexts_without_raw_outcomes": 0,
+      "saved_v14_intermediate_instances": {
+        "inner_role_checks": 36,
+        "inner_role_compatible": 25,
+        "inner_role_rejected": 11
+      }
+    },
+    {
+      "input_id": "CHEMBL4247-query-2",
+      "selected_inner_rule_contexts": 27,
+      "observed_raw_outcomes": 52,
+      "raw_outcome_classifications": {
+        "single_source_local_intact": 46,
+        "unknown": 6
+      },
+      "unknown_reasons": {
+        "ambiguous_role_embeddings": 6
+      },
+      "contexts_with_any_observed_local_intact_embedding": 24,
+      "contexts_at_raw_outcome_cap": 6,
+      "contexts_without_raw_outcomes": 0,
+      "saved_v14_intermediate_instances": {
+        "inner_role_checks": 66,
+        "inner_role_compatible": 24,
+        "inner_role_rejected": 42
+      }
+    },
+    {
+      "input_id": "CHEMBL5163-query-1",
+      "selected_inner_rule_contexts": 28,
+      "observed_raw_outcomes": 39,
+      "raw_outcome_classifications": {
+        "unknown": 35,
+        "split_across_sources": 4
+      },
+      "unknown_reasons": {
+        "role_not_in_parent": 35
+      },
+      "contexts_with_any_observed_local_intact_embedding": 0,
+      "contexts_at_raw_outcome_cap": 0,
+      "contexts_without_raw_outcomes": 0,
+      "saved_v14_intermediate_instances": {
+        "inner_role_checks": 90,
+        "inner_role_compatible": 4,
+        "inner_role_rejected": 86
+      }
+    },
+    {
+      "input_id": "CHEMBL5163-query-2",
+      "selected_inner_rule_contexts": 25,
+      "observed_raw_outcomes": 46,
+      "raw_outcome_classifications": {
+        "unknown": 46
+      },
+      "unknown_reasons": {
+        "role_not_in_parent": 28,
+        "ambiguous_role_embeddings": 18
+      },
+      "contexts_with_any_observed_local_intact_embedding": 0,
+      "contexts_at_raw_outcome_cap": 3,
+      "contexts_without_raw_outcomes": 0,
+      "saved_v14_intermediate_instances": {
+        "inner_role_checks": 90,
+        "inner_role_compatible": 6,
+        "inner_role_rejected": 84
+      }
+    },
+    {
+      "input_id": "CHEMBL3334418-query-1",
+      "selected_inner_rule_contexts": 12,
+      "observed_raw_outcomes": 16,
+      "raw_outcome_classifications": {
+        "unknown": 12,
+        "split_across_sources": 4
+      },
+      "unknown_reasons": {
+        "ambiguous_role_embeddings": 5,
+        "role_not_in_parent": 7
+      },
+      "contexts_with_any_observed_local_intact_embedding": 0,
+      "contexts_at_raw_outcome_cap": 0,
+      "contexts_without_raw_outcomes": 0,
+      "saved_v14_intermediate_instances": {
+        "inner_role_checks": 42,
+        "inner_role_compatible": 0,
+        "inner_role_rejected": 42
+      }
+    },
+    {
+      "input_id": "CHEMBL3334418-query-2",
+      "selected_inner_rule_contexts": 12,
+      "observed_raw_outcomes": 16,
+      "raw_outcome_classifications": {
+        "unknown": 12,
+        "split_across_sources": 4
+      },
+      "unknown_reasons": {
+        "role_not_in_parent": 12
+      },
+      "contexts_with_any_observed_local_intact_embedding": 0,
+      "contexts_at_raw_outcome_cap": 0,
+      "contexts_without_raw_outcomes": 0,
+      "saved_v14_intermediate_instances": {
+        "inner_role_checks": 38,
+        "inner_role_compatible": 0,
+        "inner_role_rejected": 38
+      }
+    },
+    {
+      "input_id": "CHEMBL4869-query-1",
+      "selected_inner_rule_contexts": 20,
+      "observed_raw_outcomes": 45,
+      "raw_outcome_classifications": {
+        "single_source_edited": 10,
+        "single_source_local_intact": 22,
+        "split_across_sources": 1,
+        "unknown": 12
+      },
+      "unknown_reasons": {
+        "ambiguous_role_embeddings": 12
+      },
+      "contexts_with_any_observed_local_intact_embedding": 11,
+      "contexts_at_raw_outcome_cap": 5,
+      "contexts_without_raw_outcomes": 0,
+      "saved_v14_intermediate_instances": {
+        "inner_role_checks": 44,
+        "inner_role_compatible": 0,
+        "inner_role_rejected": 44
+      }
+    },
+    {
+      "input_id": "CHEMBL4869-query-2",
+      "selected_inner_rule_contexts": 20,
+      "observed_raw_outcomes": 47,
+      "raw_outcome_classifications": {
+        "single_source_local_intact": 35,
+        "split_across_sources": 2,
+        "single_source_edited": 10
+      },
+      "unknown_reasons": {},
+      "contexts_with_any_observed_local_intact_embedding": 14,
+      "contexts_at_raw_outcome_cap": 6,
+      "contexts_without_raw_outcomes": 0,
+      "saved_v14_intermediate_instances": {
+        "inner_role_checks": 78,
+        "inner_role_compatible": 8,
+        "inner_role_rejected": 70
+      }
+    },
+    {
+      "input_id": "CHEMBL3864-query-1",
+      "selected_inner_rule_contexts": 10,
+      "observed_raw_outcomes": 12,
+      "raw_outcome_classifications": {
+        "unknown": 10,
+        "split_across_sources": 2
+      },
+      "unknown_reasons": {
+        "role_not_in_parent": 10
+      },
+      "contexts_with_any_observed_local_intact_embedding": 0,
+      "contexts_at_raw_outcome_cap": 0,
+      "contexts_without_raw_outcomes": 0,
+      "saved_v14_intermediate_instances": {
+        "inner_role_checks": 52,
+        "inner_role_compatible": 8,
+        "inner_role_rejected": 44
+      }
+    },
+    {
+      "input_id": "CHEMBL3864-query-2",
+      "selected_inner_rule_contexts": 28,
+      "observed_raw_outcomes": 44,
+      "raw_outcome_classifications": {
+        "single_source_local_intact": 19,
+        "unknown": 23,
+        "single_source_edited": 2
+      },
+      "unknown_reasons": {
+        "ambiguous_role_embeddings": 15,
+        "role_not_in_parent": 8
+      },
+      "contexts_with_any_observed_local_intact_embedding": 11,
+      "contexts_at_raw_outcome_cap": 2,
+      "contexts_without_raw_outcomes": 0,
+      "saved_v14_intermediate_instances": {
+        "inner_role_checks": 82,
+        "inner_role_compatible": 42,
+        "inner_role_rejected": 40
+      }
+    }
+  ],
+  "validation": {
+    "prepost_bindings": "passed",
+    "production_ast": "Existing AST identical to641669f after excluding newly added diagnostic function/constants.",
+    "route_first_focused_tests": {
+      "passed": 48,
+      "runner": "route_first_p1_sol",
+      "scope": "tests/synthesis/test_route_first.py; not full repository suite"
+    },
+    "ruff_check": "passed",
+    "ruff_format_check": "passed",
+    "test_source_sha256": "fadb49b7d4e44e5adc6bd23ffdeb962cb9cdac7a8d670f3f336ba0475c991520",
+    "review": {
+      "reviewer": "route_first_p1_astra",
+      "status": "PASS",
+      "scope": "Final source/test/draft plan/probe before execution"
+    },
+    "outcome_review": {
+      "reviewer": "route_first_p1_astra",
+      "status": "PASS",
+      "scope": "Executed result/frozen plan hashes, prepost bindings, all counts; no rerun. Raw-only interpretation and capped alternatives unknown confirmed."
+    }
+  },
+  "interpretation": [
+    "One locally intact observed embedding in one raw outcome does not prove full SMARTS predicate preservation or a necessary condition on every concrete catalog leaf.",
+    "Thirty-four contexts reached the four-outcome cap; exhaustive raw alternatives are unknown. These limited observations do not establish unique source-guide provenance.",
+    "Raw outcomes were not normalized, role-repaired or deduplicated into runtime guide tuples; provenance for those tuples and cached runtime reversals remains unknown.",
+    "Multiple raw outcomes and shared input/template contexts are dependent observations, not independent success trials.",
+    "All selected input contexts were included; no new products, final routes, forward-supported inputs, or physical synthesis outcomes were measured."
+  ],
+  "decision": "Proceed to design exact normalized-guide provenance capture in the existing reverse path, with bounded storage and no extra reverse call. Do not change retrieval selection based on this raw-only receipt.",
+  "actual_primary_unchanged": {
+    "supported_inputs": 4,
+    "inputs": 12,
+    "baseline_supported_inputs": 5,
+    "P1_complete": false
+  }
+}

@@ -7,6 +7,7 @@ from types import SimpleNamespace
 
 import pytest
 from rdkit import Chem
+from rdkit.Chem import rdChemReactions
 
 from chembounce_synthesis import route_first as route_first_module
 from chembounce_synthesis.route_audit import audit_route
@@ -17,6 +18,7 @@ from chembounce_synthesis.route_first import (
     RouteFirstLimits,
     RouteFirstSearch,
     check_hit_stereo_anchors,
+    continuation_role_origin,
     generate,
     normalize_reverse_hint,
     reverse_partition_issue,
@@ -29,6 +31,134 @@ from chembounce_synthesis.workflow import check_constraints, run
 
 HIT = "CC(=O)Nc1ccccc1"
 TWO_STEP_HIT = "CC(=O)NCC(=O)Nc1ccccc1"
+
+
+def test_continuation_origin_distinguishes_intact_split_and_edited_raw_sites():
+    parent = molecule("CCO")
+    reverse = rdChemReactions.ReactionFromSmarts("[C:1][C:2][O:3]>>[C:1][C:2].[O:3]")
+    reverse.Initialize()
+    outcome = reverse.RunReactants((parent,), maxProducts=4)[0]
+    assert reverse_partition_issue(outcome, parent.GetNumAtoms()) is None
+
+    intact = continuation_role_origin(parent, outcome, Chem.MolFromSmarts("[CH3]"))
+    assert intact["classification"] == "single_source_local_intact"
+    assert intact["source_slot"] == 0
+    assert intact["matched_parent_atoms"] == [0]
+    assert not intact["full_smarts_preservation_proven"]
+    assert not intact["concrete_leaf_requirement_proven"]
+
+    edited = continuation_role_origin(parent, outcome, Chem.MolFromSmarts("[CH2]"))
+    assert edited["classification"] == "single_source_edited"
+    assert edited["source_slot"] == 0
+    assert edited["bond_changes"] == [1]
+
+    split = continuation_role_origin(parent, outcome, Chem.MolFromSmarts("[CH2][OH]"))
+    assert split["classification"] == "split_across_sources"
+    assert split["owner_slots"] == [0, 1]
+    assert split["bond_changes"] == [1, 2]
+
+
+def test_continuation_origin_ambiguity_truncation_and_invalid_origin_stay_unknown():
+    parent = molecule("CCO")
+    reverse = rdChemReactions.ReactionFromSmarts("[C:1][C:2][O:3]>>[C:1][C:2].[O:3]")
+    reverse.Initialize()
+    outcome = reverse.RunReactants((parent,), maxProducts=4)[0]
+    assert continuation_role_origin(parent, outcome, Chem.MolFromSmarts("[C]"))["reason"] == (
+        "ambiguous_role_embeddings"
+    )
+    assert continuation_role_origin(parent, outcome, Chem.MolFromSmarts("[F]"))["reason"] == (
+        "role_not_in_parent"
+    )
+    assert (
+        continuation_role_origin(
+            parent, outcome, Chem.MolFromSmarts("[CH3]"), deadline_monotonic=time.monotonic() - 1
+        )["reason"]
+        == "deadline"
+    )
+
+    damaged = tuple(Chem.Mol(part) for part in outcome)
+    damaged[0].GetAtomWithIdx(0).ClearProp("react_atom_idx")
+    assert (
+        continuation_role_origin(parent, damaged, Chem.MolFromSmarts("[CH3]"))["reason"]
+        == "partition_incomplete_origin_metadata"
+    )
+
+    chain = molecule("C" * 65)
+    identity = rdChemReactions.ReactionFromSmarts("[C:1]>>[C:1]")
+    identity.Initialize()
+    # The bounded query sentinel is independent of reverse outcome length.
+    copied = Chem.Mol(chain)
+    for atom in copied.GetAtoms():
+        atom.SetIntProp("react_idx", 0)
+        atom.SetIntProp("react_atom_idx", atom.GetIdx())
+    report = continuation_role_origin(chain, (copied,), Chem.MolFromSmarts("[C]"))
+    assert report["reason"] == "role_match_truncated"
+    assert report["match_count"] == 65
+
+
+def test_continuation_origin_changes_recursive_stereo_and_bounds_are_conservative(monkeypatch):
+    parent = molecule("CO")
+
+    def sourced_copy(mol):
+        raw = Chem.Mol(mol)
+        for atom in raw.GetAtoms():
+            atom.SetIntProp("react_idx", 0)
+            atom.SetIntProp("react_atom_idx", atom.GetIdx())
+        return raw
+
+    role = Chem.MolFromSmarts("[C;$([C]-[O])]")
+    raw = sourced_copy(parent)
+    raw.GetAtomWithIdx(0).SetFormalCharge(1)
+    raw.GetAtomWithIdx(0).SetNumExplicitHs(1)
+    raw.GetAtomWithIdx(0).SetIsAromatic(True)
+    changed = continuation_role_origin(parent, (raw,), role)
+    assert changed["classification"] == "single_source_edited"
+    assert changed["atom_changes"] == [0]
+    assert not changed["full_smarts_preservation_proven"]
+
+    split = (Chem.MolFromSmiles("C"), Chem.MolFromSmiles("O"))
+    split[0].GetAtomWithIdx(0).SetIntProp("react_idx", 0)
+    split[0].GetAtomWithIdx(0).SetIntProp("react_atom_idx", 0)
+    split[1].GetAtomWithIdx(0).SetIntProp("react_idx", 0)
+    split[1].GetAtomWithIdx(0).SetIntProp("react_atom_idx", 1)
+    recursive = continuation_role_origin(parent, split, role)
+    assert recursive["classification"] == "single_source_edited"
+    assert recursive["bond_changes"] == [0]
+    assert not recursive["full_smarts_preservation_proven"]
+
+    symmetric = molecule("CC")
+    ambiguous = continuation_role_origin(symmetric, (sourced_copy(symmetric),), Chem.MolFromSmarts("[C][C]"))
+    assert ambiguous["reason"] == "ambiguous_role_embeddings"
+    assert ambiguous["match_count"] == 2
+
+    chiral = molecule("C[C@H](F)Cl")
+    chiral_role = Chem.MolFromSmarts("C[C@H](F)Cl")
+    stereo = continuation_role_origin(chiral, (sourced_copy(chiral),), chiral_role)
+    assert stereo["reason"] == "specified_stereo_mapping_unproven"
+
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_ROLE_ATOMS", 1)
+    assert continuation_role_origin(parent, (sourced_copy(parent),), role)["reason"] == ("parent_size_limit")
+    assert (
+        continuation_role_origin(molecule("C"), (sourced_copy(molecule("C")),), Chem.MolFromSmarts("[C][O]"))[
+            "reason"
+        ]
+        == "parent_size_limit"
+    )
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_ROLE_ATOMS", 256)
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_PRECURSORS", 1)
+    assert continuation_role_origin(parent, split, role)["reason"] == "precursor_size_limit"
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_PRECURSORS", 4)
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_ROLE_ATOMS", 1)
+    assert (
+        continuation_role_origin(molecule("C"), (sourced_copy(parent),), Chem.MolFromSmarts("[C]"))["reason"]
+        == "precursor_size_limit"
+    )
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_ROLE_ATOMS", 256)
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_ROLE_BONDS", 0)
+    assert continuation_role_origin(parent, (sourced_copy(parent),), role)["reason"] == ("parent_size_limit")
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_ROLE_BONDS", 512)
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_ORIGIN_VISITS", 1)
+    assert continuation_role_origin(parent, (sourced_copy(parent),), role)["reason"] == ("origin_visit_limit")
 
 
 def limits(**overrides):

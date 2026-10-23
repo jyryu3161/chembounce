@@ -44,6 +44,11 @@ MAX_POOL_GRAPH_VISITS = 262144
 MAX_ROLE_INDEX_MATCH_CHECKS = 500000
 MAX_FALLBACK_HIT_SECOND_TANIMOTOS = 65536
 MAX_FALLBACK_HIT_SECOND_SAMPLES = 16
+MAX_CONTINUATION_ROLE_MATCHES = 65  # 64 plus a truncation sentinel.
+MAX_CONTINUATION_ROLE_ATOMS = 256
+MAX_CONTINUATION_ROLE_BONDS = 512
+MAX_CONTINUATION_PRECURSORS = 4
+MAX_CONTINUATION_ORIGIN_VISITS = 8192
 
 
 def _pool_raw_counts(mol, atoms=None):
@@ -144,6 +149,168 @@ def reverse_partition_issue(outcome, target_atoms):
     if len(origins) != target_atoms:
         return "missing_parent_atoms"
     return None
+
+
+def continuation_role_origin(parent, outcome, role, *, deadline_monotonic=None):
+    """Describe an outer-role embedding in one raw inner reverse outcome.
+
+    This is diagnostic only. Local atom/bond identity is not proof that an
+    arbitrary SMARTS predicate, or a future concrete catalog leaf, preserves
+    the role. Call before reverse-hint normalization/SMILES serialization.
+    """
+    result = {
+        "classification": "unknown",
+        "reason": None,
+        "source_slot": None,
+        "match_count": None,
+        "match_limit": MAX_CONTINUATION_ROLE_MATCHES,
+        "origin_visits": 0,
+        "matched_parent_atoms": None,
+        "owner_slots": None,
+        "atom_changes": [],
+        "bond_changes": [],
+        "full_smarts_preservation_proven": False,
+        "concrete_leaf_requirement_proven": False,
+    }
+
+    def unknown(reason):
+        result["reason"] = reason
+        return result
+
+    if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
+        return unknown("deadline")
+    if (
+        parent.GetNumAtoms() > MAX_CONTINUATION_ROLE_ATOMS
+        or parent.GetNumBonds() > MAX_CONTINUATION_ROLE_BONDS
+        or role.GetNumAtoms() > MAX_CONTINUATION_ROLE_ATOMS
+        or role.GetNumBonds() > MAX_CONTINUATION_ROLE_BONDS
+    ):
+        return unknown("parent_size_limit")
+    if not outcome or len(outcome) > MAX_CONTINUATION_PRECURSORS:
+        return unknown("precursor_size_limit")
+    if any(
+        part.GetNumAtoms() > MAX_CONTINUATION_ROLE_ATOMS or part.GetNumBonds() > MAX_CONTINUATION_ROLE_BONDS
+        for part in outcome
+    ):
+        return unknown("precursor_size_limit")
+
+    def charge(amount=1):
+        if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
+            return False, "deadline"
+        if result["origin_visits"] + amount > MAX_CONTINUATION_ORIGIN_VISITS:
+            return False, "origin_visit_limit"
+        result["origin_visits"] += amount
+        return True, None
+
+    try:
+        ok, reason = charge(sum(part.GetNumAtoms() for part in outcome))
+        if not ok:
+            return unknown(reason)
+        issue = reverse_partition_issue(outcome, parent.GetNumAtoms())
+        if issue is not None:
+            return unknown(f"partition_{issue}")
+        ok, reason = charge(parent.GetNumAtoms() + parent.GetNumBonds() + role.GetNumAtoms())
+        if not ok:
+            return unknown(reason)
+        matches = parent.GetSubstructMatches(
+            role,
+            useChirality=True,
+            uniquify=False,
+            maxMatches=MAX_CONTINUATION_ROLE_MATCHES,
+        )
+        result["match_count"] = len(matches)
+        if len(matches) >= MAX_CONTINUATION_ROLE_MATCHES:
+            return unknown("role_match_truncated")
+        if not matches:
+            return unknown("role_not_in_parent")
+        if len(matches) != 1:
+            return unknown("ambiguous_role_embeddings")
+        match = matches[0]
+        result["matched_parent_atoms"] = list(match)
+        stereo_sensitive = any(
+            parent.GetAtomWithIdx(index).GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED
+            or any(
+                bond.GetStereo() != Chem.BondStereo.STEREONONE or bond.GetBondDir() != Chem.BondDir.NONE
+                for bond in parent.GetAtomWithIdx(index).GetBonds()
+            )
+            for index in match
+        )
+        owners = {}
+        for slot, precursor in enumerate(outcome):
+            ok, reason = charge(precursor.GetNumAtoms() + precursor.GetNumBonds())
+            if not ok:
+                return unknown(reason)
+            for atom in precursor.GetAtoms():
+                if atom.HasProp("react_atom_idx"):
+                    owners[atom.GetIntProp("react_atom_idx")] = (slot, atom.GetIdx())
+        slots = sorted({owners[index][0] for index in match})
+        result["owner_slots"] = slots
+        if len(slots) == 1:
+            result["source_slot"] = slots[0]
+
+        def atom_state(atom):
+            return (
+                atom.GetAtomicNum(),
+                atom.GetIsotope(),
+                atom.GetFormalCharge(),
+                atom.GetIsAromatic(),
+                atom.GetNumExplicitHs(),
+                atom.GetNoImplicit(),
+                int(atom.GetChiralTag()),
+                atom.GetNumRadicalElectrons(),
+            )
+
+        def incident(mol, atom, origin):
+            signatures = []
+            for bond in atom.GetBonds():
+                neighbor = bond.GetOtherAtom(atom)
+                other = origin(neighbor)
+                signatures.append(
+                    (
+                        other,
+                        str(bond.GetBondType()),
+                        bond.GetIsAromatic(),
+                        int(bond.GetStereo()),
+                        int(bond.GetBondDir()),
+                    )
+                )
+            return sorted(signatures, key=repr)
+
+        for index in match:
+            slot, raw_index = owners[index]
+            precursor = outcome[slot]
+            ok, reason = charge(
+                parent.GetAtomWithIdx(index).GetDegree() + precursor.GetAtomWithIdx(raw_index).GetDegree() + 1
+            )
+            if not ok:
+                return unknown(reason)
+            original = parent.GetAtomWithIdx(index)
+            raw = precursor.GetAtomWithIdx(raw_index)
+            if atom_state(original) != atom_state(raw):
+                result["atom_changes"].append(index)
+            before = incident(parent, original, lambda atom: atom.GetIdx())
+            after = incident(
+                precursor,
+                raw,
+                lambda atom: (
+                    atom.GetIntProp("react_atom_idx")
+                    if atom.HasProp("react_atom_idx") and atom.HasProp("react_idx")
+                    else None
+                ),
+            )
+            if before != after:
+                result["bond_changes"].append(index)
+        if stereo_sensitive:
+            return unknown("specified_stereo_mapping_unproven")
+        if len(slots) != 1:
+            result["classification"] = "split_across_sources"
+        elif result["atom_changes"] or result["bond_changes"]:
+            result["classification"] = "single_source_edited"
+        else:
+            result["classification"] = "single_source_local_intact"
+        return result
+    except (ValueError, RuntimeError, KeyError, AttributeError):
+        return unknown("origin_or_match_error")
 
 
 class ReverseHintError(ValueError):
