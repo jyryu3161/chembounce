@@ -6,7 +6,9 @@ import time
 from types import SimpleNamespace
 
 import pytest
+from rdkit import Chem
 
+from chembounce_synthesis import route_first as route_first_module
 from chembounce_synthesis.route_audit import audit_route
 from chembounce_synthesis.common import canonical, molecule
 from chembounce_synthesis.route_first import (
@@ -986,6 +988,176 @@ def test_feature_index_targets_guide_size_without_unbounded_per_query_scan(asset
     assert search.report["catalog_row_visits"] <= search.limits.max_catalog_row_visits
 
 
+def test_reaction_pool_selected_roles_are_frequency_ranked_and_map_free():
+    catalog = SimpleNamespace(sha256="synthetic")
+    rules = SimpleNamespace(sha256="synthetic")
+    search = RouteFirstSearch("Brc1ccccc1", catalog, rules, RouteFirstLimits(**limits()))
+    aryl = SimpleNamespace(roles=("[Cl,Br,I][c:1]", "[N;$(NC):2]"))
+    aliphatic = SimpleNamespace(roles=("[C@H:1](F)Br", "[N;$(NC):2]"))
+    plans = [(rule, (), False, (), "cut", "typed") for rule in (aryl, aliphatic, aryl)]
+    search._select_role_indexes(plans)
+    assert [row["occurrences"] for row in search.report["reaction_pool_selected_roles"]] == [3, 2]
+    assert search._selected_role_indexes == ("[N&$(NC)]", "[Cl,Br,I]c")
+    assert all(":1" not in role and ":2" not in role for role in search._selected_role_indexes)
+    chiral = route_first_module._normalized_role_smarts("[C@H:1](F)Br")
+    assert "@" in chiral and ":1" not in chiral
+    assert "$(NC)" in search._selected_role_indexes[0]
+
+
+def test_reaction_pool_midpoint_and_same_site_reuse_are_context_bound():
+    search = RouteFirstSearch(
+        "Brc1ccccc1",
+        SimpleNamespace(sha256="synthetic"),
+        SimpleNamespace(sha256="synthetic"),
+        RouteFirstLimits(**limits()),
+    )
+    roles = ("[Cl,Br,I]c", "[N;H2]c")
+    search._selected_role_indexes = roles
+    search._role_index_queries = {role: Chem.MolFromSmarts(role) for role in roles}
+    aryl_features, aryl_index, complete = search._pool_metadata("Brc1ccccc1", "Brc1ccccc1", "[#6][Br]")
+    assert complete and aryl_index == roles[0]
+    assert aryl_features == route_first_module._pool_bins((7, 1, 6, 1))
+    aliphatic_features, aliphatic_index, complete = search._pool_metadata("CCBr", "CCBr", "[#6][Br]")
+    assert complete and aliphatic_index is None
+    assert aliphatic_features == route_first_module._pool_bins((3, 1, 0, 0))
+    assert search.report["reaction_pool_index_choices"]["same_site"] == 1
+    assert search.report["reaction_pool_index_choices"]["legacy"] == 1
+    assert search.report["reaction_pool_caller_only_sites"] >= 1
+
+    # Retain some substituent size without changing the actual guide graph.
+    larger = "Clc1ccc(CC(=O)NCC)cc1"
+    midpoint, selected, complete = search._pool_metadata(larger, larger, "[Cl]c")
+    assert complete and selected == roles[0]
+    assert search._features(molecule(larger)) == (3, 1, 1, 1)
+    assert midpoint == (2, 1, 1, 1)
+
+
+def test_reaction_role_index_pool_is_complete_contextual_and_total_capped(monkeypatch):
+    values = tuple(map(canonical, ("Brc1ccccc1", "Clc1ccccc1", "Nc1ccccc1", "CC")))
+    catalog = SimpleNamespace(
+        sha256="synthetic",
+        mols={smiles: molecule(smiles) for smiles in values},
+    )
+    rules = SimpleNamespace(sha256="synthetic")
+    settings = RouteFirstLimits(**limits(max_catalog_rows_per_query=2))
+    aryl, amine = "[Cl,Br,I]c", "[N;H2]c"
+
+    def make_search():
+        search = RouteFirstSearch("Brc1ccccc1", catalog, rules, settings)
+        search._selected_role_indexes = (aryl, amine)
+        search._role_index_queries = {role: Chem.MolFromSmarts(role) for role in (aryl, amine)}
+        return search
+
+    search = make_search()
+    aryl_pool = search._pool("Brc1ccccc1", guide="Brc1ccccc1", role=aryl)
+    amine_pool = search._pool("Brc1ccccc1", guide="Brc1ccccc1", role=amine)
+    assert search.report["reaction_pool_role_index_complete"]
+    assert search.report["reaction_pool_role_index_checks"] == 2 * len(values)
+    assert len(aryl_pool) == len(amine_pool) == len(set(aryl_pool)) == 2
+    assert set(aryl_pool) == {canonical("Brc1ccccc1"), canonical("Clc1ccccc1")}
+    assert amine_pool[0] == canonical("Nc1ccccc1")
+    assert len(search._catalog_pools) == 2  # Same guide, distinct effective index context.
+    assert search.report["reaction_pool_indexed_rows_selected"] <= 4
+
+    monkeypatch.setattr(route_first_module, "MAX_ROLE_INDEX_MATCH_CHECKS", 1)
+    capped = make_search()
+    capped_pool = capped._pool("Brc1ccccc1", guide="Brc1ccccc1", role=aryl)
+    assert capped.report["reaction_pool_role_index_checks"] == 1
+    assert not capped.report["reaction_pool_role_index_complete"]
+    assert capped.report["reaction_pool_role_index_failure"] == "match_check_cap"
+    legacy = RouteFirstSearch("Brc1ccccc1", catalog, rules, settings)
+    assert capped_pool == legacy._pool("Brc1ccccc1")
+    assert capped.report["reaction_pool_index_disabled_incomplete"] == 1
+
+    monkeypatch.setattr(route_first_module, "MAX_ROLE_INDEX_MATCH_CHECKS", 500000)
+    failed = make_search()
+    failed._role_index_queries[aryl] = None
+    assert failed._pool("Brc1ccccc1", guide="Brc1ccccc1", role=aryl) == legacy._pool("Brc1ccccc1")
+    assert not failed.report["reaction_pool_role_index_complete"]
+    assert failed.report["reaction_pool_role_index_failure"] == "role_match_error"
+
+
+def test_reaction_pool_unknown_match_budget_and_expired_deadline_use_legacy(monkeypatch):
+    catalog = SimpleNamespace(
+        sha256="synthetic",
+        mols={"CCBr": molecule("CCBr")},
+        by_smiles={"CCBr": ["block"]},
+        blocks={"block": SimpleNamespace(id="block", smiles="CCBr")},
+    )
+    rules = SimpleNamespace(sha256="synthetic")
+    search = RouteFirstSearch("CCBr", catalog, rules, RouteFirstLimits(**limits()))
+    search._selected_role_indexes = ("[Cl,Br,I]c",)
+    search._role_index_queries = {"[Cl,Br,I]c": Chem.MolFromSmarts("[Cl,Br,I]c")}
+    monkeypatch.setattr(route_first_module, "MAX_POOL_SITE_MATCH_REQUESTS", 0)
+    full, selected, complete = search._pool_metadata("CCBr", "CCBr", "[#6][Br]")
+    assert full == search._features(molecule("CCBr")) and selected is None and not complete
+    assert search.report["reaction_pool_site_match_requests"] == 0
+    assert search.report["reaction_pool_metadata_unknowns"]["site_match_request_cap"] == 1
+    assert not search._pool_metadata_cache
+    assert [block.smiles for block in search._nearest("CCBr", "[#6][Br]")] == ["CCBr"]
+    assert not search._nearest_cache
+
+    larger = "Clc1ccc(CC(=O)NCC)cc1"
+    different = RouteFirstSearch(larger, catalog, rules, RouteFirstLimits(**limits()))
+    different._selected_role_indexes = ("[Cl,Br,I]c", "[N;H2]c")
+    different._role_index_queries = {
+        role: Chem.MolFromSmarts(role) for role in different._selected_role_indexes
+    }
+    features, index, complete = different._pool_metadata(larger, larger, "[Cl]c")
+    assert features == (3, 1, 1, 1) and index is None and not complete
+    assert not different._pool_metadata_cache
+
+    monkeypatch.setattr(route_first_module, "MAX_POOL_GRAPH_VISITS", 0)
+    graph_capped = RouteFirstSearch("CCBr", catalog, rules, RouteFirstLimits(**limits()))
+    assert graph_capped._pool("CCBr", guide="CCBr", role="[#6][Br]") == ("CCBr",)
+    assert graph_capped.report["reaction_pool_graph_visits"] == 0
+    assert not graph_capped._catalog_pools
+
+    expired = RouteFirstSearch(
+        "CCBr", catalog, rules, RouteFirstLimits(**limits()), deadline_monotonic=time.monotonic() - 1
+    )
+    expired._selected_role_indexes = search._selected_role_indexes
+    expired._role_index_queries = search._role_index_queries
+    assert expired._pool("CCBr", guide="CCBr", role="[#6][Br]") == ()
+    assert expired.report["reaction_pool_role_index_checks"] == 0
+
+
+def test_reaction_pool_truncated_site_match_does_not_cache_partial_metadata():
+    search = RouteFirstSearch(
+        "CC",
+        SimpleNamespace(sha256="synthetic"),
+        SimpleNamespace(sha256="synthetic"),
+        RouteFirstLimits(**limits()),
+    )
+    search._selected_role_indexes = ("[C]", "[N]")
+    search._role_index_queries = {role: Chem.MolFromSmarts(role) for role in search._selected_role_indexes}
+    long_chain = "C" * 70
+    features, index, complete = search._pool_metadata(long_chain, long_chain, "[#6]")
+    assert features == search._features(molecule(long_chain))
+    assert index is None and not complete
+    assert search.report["reaction_pool_metadata_unknowns"]["window_match_truncated"] == 1
+    assert search.report["reaction_pool_site_match_requests"] == 0
+    assert not search._pool_metadata_cache
+
+
+def test_reaction_pool_oversized_guide_skips_added_raw_count_work(monkeypatch):
+    search = RouteFirstSearch(
+        "CC",
+        SimpleNamespace(sha256="synthetic"),
+        SimpleNamespace(sha256="synthetic"),
+        RouteFirstLimits(**limits()),
+    )
+
+    def unexpected_raw_counts(*_args, **_kwargs):
+        raise AssertionError("Oversized guide must use legacy full-guide features")
+
+    monkeypatch.setattr(route_first_module, "_pool_raw_counts", unexpected_raw_counts)
+    features, index, complete = search._pool_metadata("CC", "C" * 257, "[C]")
+    assert features == search._features(molecule("CC")) and index is None and not complete
+    assert search.report["reaction_pool_metadata_unknowns"]["query_size_or_role_parse"] == 1
+    assert search.report["reaction_pool_graph_visits"] == 0
+
+
 def test_template_filter_and_inner_early_stop_preserve_full_scan_priority(tmp_path):
     from chembounce_synthesis.reactions import Rules
 
@@ -1093,7 +1265,7 @@ def test_exact_catalog_target_replaces_pool_row_within_query_cap(assets):
     search = RouteFirstSearch(
         HIT, catalog, rules, RouteFirstLimits(**limits(max_steps=1, max_catalog_rows_per_query=1))
     )
-    search._pool = lambda _target: ("CC(=O)O",)
+    search._pool = lambda _target, **_kwargs: ("CC(=O)O",)
     blocks = search._nearest("Nc1ccccc1", "[N;H1,H2]")
     assert [block.smiles for block in blocks] == ["Nc1ccccc1"]
     assert search.report["catalog_row_visits"] == 1
@@ -1119,7 +1291,7 @@ def test_stereo_anchor_posting_is_used_only_for_matching_guide_and_role():
         hit_anchors=HitStereoAnchors(hit),
     )
     search._index()
-    search._pool = lambda _target: (ordinary,)
+    search._pool = lambda _target, **_kwargs: (ordinary,)
     guide = canonical("C[C@H]1CCCN(C)C1")
     assert [block.smiles for block in search._nearest(guide, "[N;H1,H2]")] == [hit]
     assert search.report["anchor_index_matches"] == [1]

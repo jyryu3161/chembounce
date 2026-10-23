@@ -1,0 +1,75 @@
+{
+  "schema": "midpoint-retrieval-review-portable-v1",
+  "review_artifact": "benchmark-results/qualified-development-20261023/route-first-v2-midpoint-retrieval-review-v1/report.json",
+  "review_sha256": "b72d7bb884fc504ab5a1aa51b971749b95713a25858fbf0af34317f6ab11eccc",
+  "review": {
+    "schema": "route-first-focused-review-v1",
+    "verdict": "pass_for_fixed_midpoint_role_index_implementation",
+    "scope": "Targeted production retrieval/cache/bounds delta, miniasset controls, docs, unexecuted v12 harness, independent saved76-pair metadata parity; no actual catalog, generation probe or model run.",
+    "source_sha256": {
+      "chembounce_synthesis/route_first.py": "d394760001283cf6da829141e1afc047b617b1d99d46e8e6b21f15de39283c72",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+      "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+      "tests/synthesis/test_route_first.py": "53f45c3731e9918572b69502da9490c010efeb12ff28dab0565805fb3341c365",
+      "tests/test_phase_telemetry_develop_hooks.py": "008097bdf9f66b7c17ca025f715398300d50e477af0e0c9d1d64cd62eb4dc6c5",
+      "docs/SYNTHESIS.md": "ad00b8a4c692d9290ca91c49eaf6d6989067f52885a28cb8be89fbfb439f34b9",
+      "benchmark-results/route-first-development-20261023-v2/development-probe-v12/probe.py": "05336d0f7f0b442942058a4697f105dccb9e479575bb17750d17b71b07242691",
+      "benchmark-results/route-first-development-20261023-v2/reaction-pool-scale-prototype-v3/result.json": "7614c43a199e69ca424652a7e006f0b9b39806d3584fdcad33a3f9528735fff3"
+    },
+    "blocking_findings": [],
+    "resolved_findings": [
+      {
+        "issue": "Incomplete site assessment returned midpoint features despite legacy fallback contract; small test had equal full/midpoint vectors.",
+        "resolution": "Incomplete site cap/error/truncation returns full legacy features, no index and incomplete status; distinguishing larger-guide regression added."
+      },
+      {
+        "issue": "Metadata cache key omitted normalized target feeding full counts.",
+        "resolution": "Key includes target, original guide and caller role."
+      },
+      {
+        "issue": "New raw-count metadata preceded query size rejection.",
+        "resolution": "Full and original-guide size guards precede added raw-count work; legacy feature computation remains available for fallback."
+      }
+    ],
+    "reviewed_invariants": [
+      "Top two map-stripped roles are frequency-selected from fixed outer plans with deterministic SMARTS ties before indexing. Recursive/stereo constraints retained; no witness identity in policy.",
+      "One existing catalog pass builds role-matching/nonmatching bucket partitions with at most500000 additional HasSubstructMatch calls total. Any failure/incompleteness discards both role indexes; partially built arrays are never query-visible.",
+      "Complete role index ranks matching bucket rows first and fills remaining pool slots with disjoint ordinary rows under unchanged total max_catalog_rows_per_query. Actual caller-role checks, anchor postings/reservations, full-guide fingerprint logic and strict source stereo remain unchanged.",
+      "Window uses complete bounded matches, immediate neighbors, shared-atom ring closure and specified stereo controls, then one final neighbor step. Raw componentwise ceil midpoint precedes original bins; no subset molecule or stereoisomer is constructed.",
+      "Exact normalized role precedes fixed-order same-site reuse. Same-site means identical atom-index sets in complete lists, not entailment;65th match causes unknown.",
+      "Query pairs128/window requests128/site requests384,256atoms/512bonds,262144 graph work units; failed/incomplete metadata returns legacy and prevents new pool/nearest cache completion. Work units are explicit size-based accounting, not literal counts of every Python operation or a CPU-time guarantee.",
+      "Pool cache key includes target, effective feature vector and selected index; metadata cache includes target/guide/role. No reverse policy/cache changes or additional reaction calls.",
+      "Incomplete role index disables indexed subsets but independently complete midpoint metadata may remain in use. Incomplete metadata itself restores full legacy feature/index choice.",
+      "Existing global catalog-row/fingerprint/combination/product/deadline/admission gates retained; added role-index and metadata CPU work is explicit.",
+      "v12-v11 harness changes diagnostic identity/scope and all new reaction_pool fields plus pre-load existing-result overwrite guard. Same panel/config/gates/full graph retention and four source files bound before/after."
+    ],
+    "independent_checks": [
+      {
+        "command": ".venv-research/bin/python -m pytest -q tests/synthesis/test_route_first.py tests/test_phase_telemetry_develop_hooks.py",
+        "result": "63 passed in12.81s on final runtime/test hashes. Includes miniasset frequency/map preservation, context/index partition, partial index failure/cap fallback, distinct full-vs-midpoint fallback, query-size/budget/deadline/truncation and existing replay/anchor/stereo controls."
+      },
+      {
+        "check": "Independent saved-v3 metadata parity using production RouteFirstSearch with dummy catalog/rules, no asset loading",
+        "result": "76/76 complete midpoint feature vectors and exact-first same-site index choices equal saved query_rows. Shared search meter:76 query pairs,76 window requests,207 site requests,18457 graph work units; choices exact7/same_site8/legacy61. No pool/candidate fingerprint/forward/audit run."
+      },
+      {
+        "command": "git diff --check",
+        "result": "passed"
+      },
+      {
+        "check": "Final hashes and v12 harness diff",
+        "result": "Runtime/test bytes unchanged across independent verification; final harness05336d0f pinned. Existing result absent/no harness execution by reviewer."
+      }
+    ],
+    "author_reported_checks": {
+      "focused_tests": "58 reported by author; independent command/count above is recorded separately.",
+      "format": "Whole-repository Ruff check/format and diff-check reported passed."
+    },
+    "limitations": [
+      "Same-site indexing can exclude caller-valid candidates; full caller checks prevent false role acceptance but cannot restore excluded candidates. This remains a fixed retrieval heuristic.",
+      "76-pair parity establishes metadata implementation agreement only, not top2 selection, complete workitem execution, known-route recovery or new coverage.",
+      "No catalog/model run or broad full-suite claim. Frozen P1 greater-than5/12 all-step-supported criterion and strict final gates remain unchanged; goal active."
+    ]
+  }
+}

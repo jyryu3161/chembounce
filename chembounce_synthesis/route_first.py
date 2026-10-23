@@ -34,6 +34,59 @@ MAX_CATALOG_STEREO_PERCEPTIONS = 2048
 MAX_CATALOG_STEREO_ATOM_BOND_CHARGES = 131072
 MAX_CATALOG_STEREO_CACHE_ENTRIES = 2048
 MAX_CATALOG_STEREO_EXCLUSION_SAMPLES = 16
+MAX_POOL_QUERY_ROLE_PAIRS = 128
+MAX_POOL_WINDOW_MATCH_REQUESTS = 128
+MAX_POOL_SITE_MATCH_REQUESTS = 384
+MAX_POOL_MATCHES = 65
+MAX_POOL_QUERY_ATOMS = 256
+MAX_POOL_QUERY_BONDS = 512
+MAX_POOL_GRAPH_VISITS = 262144
+MAX_ROLE_INDEX_MATCH_CHECKS = 500000
+
+
+def _pool_raw_counts(mol, atoms=None):
+    if atoms is None:
+        atoms = set(range(mol.GetNumAtoms()))
+    return (
+        sum(mol.GetAtomWithIdx(i).GetAtomicNum() != 1 for i in atoms),
+        sum(mol.GetAtomWithIdx(i).GetAtomicNum() not in (1, 6) for i in atoms),
+        sum(mol.GetAtomWithIdx(i).GetIsAromatic() for i in atoms),
+        sum(set(ring) <= atoms for ring in mol.GetRingInfo().AtomRings()),
+    )
+
+
+def _pool_bins(counts):
+    return counts[0] // 4, counts[1] // 2, counts[2] // 4, min(counts[3], 8)
+
+
+def _normalized_role_smarts(role):
+    query = Chem.MolFromSmarts(role)
+    if query is None:
+        raise ValueError("Invalid catalog retrieval role SMARTS")
+    for atom in query.GetAtoms():
+        atom.SetAtomMapNum(0)
+    return Chem.MolToSmarts(query)
+
+
+def _pool_ring_systems(mol):
+    systems = []
+    for ring in (set(item) for item in mol.GetRingInfo().AtomRings()):
+        merging = [index for index, system in enumerate(systems) if system & ring]
+        for index in reversed(merging):
+            ring.update(systems.pop(index))
+        systems.append(ring)
+    changed = True
+    while changed:
+        changed = False
+        for first in range(len(systems)):
+            for second in range(first + 1, len(systems)):
+                if systems[first] & systems[second]:
+                    systems[first].update(systems.pop(second))
+                    changed = True
+                    break
+            if changed:
+                break
+    return systems
 
 
 def topology_rule_specification(reaction):
@@ -574,6 +627,37 @@ class RouteFirstSearch:
             "catalog_stereo_exclusion_samples": [],
             "catalog_stereo_exclusion_samples_truncated": 0,
             "catalog_bucket_rankings": 0,
+            "reaction_pool_limits": {
+                "query_role_pairs": MAX_POOL_QUERY_ROLE_PAIRS,
+                "window_match_requests": MAX_POOL_WINDOW_MATCH_REQUESTS,
+                "site_match_requests": MAX_POOL_SITE_MATCH_REQUESTS,
+                "matches_per_request": MAX_POOL_MATCHES - 1,
+                "query_atoms": MAX_POOL_QUERY_ATOMS,
+                "query_bonds": MAX_POOL_QUERY_BONDS,
+                "combined_graph_visits": MAX_POOL_GRAPH_VISITS,
+                "extra_catalog_role_match_checks": MAX_ROLE_INDEX_MATCH_CHECKS,
+                "total_pool_rows": self.limits.max_catalog_rows_per_query,
+            },
+            "reaction_pool_selected_roles": [],
+            "reaction_pool_role_index_checks": 0,
+            "reaction_pool_role_index_complete": False,
+            "reaction_pool_role_index_failure": None,
+            "reaction_pool_role_index_sizes": [],
+            "reaction_pool_window_match_requests": 0,
+            "reaction_pool_site_match_requests": 0,
+            "reaction_pool_graph_visits": 0,
+            "reaction_pool_query_pairs": 0,
+            "reaction_pool_metadata_cache_hits": 0,
+            "reaction_pool_metadata_unknowns": {},
+            "reaction_pool_index_choices": {"exact": 0, "same_site": 0, "legacy": 0},
+            "reaction_pool_index_applied": 0,
+            "reaction_pool_index_disabled_incomplete": 0,
+            "reaction_pool_caller_only_sites": 0,
+            "reaction_pool_index_only_sites": 0,
+            "reaction_pool_indexed_bucket_rankings": 0,
+            "reaction_pool_ordinary_bucket_rankings": 0,
+            "reaction_pool_indexed_rows_selected": 0,
+            "reaction_pool_ordinary_rows_selected": 0,
             "fingerprint_calls": 1,
             "admission_fingerprint_calls": 0,
             "role_queries": 0,
@@ -605,6 +689,12 @@ class RouteFirstSearch:
         self._fp_cache = {self.hit: self.hit_fp}
         self._catalog_index = None
         self._catalog_pools = {}
+        self._pool_last_complete = True
+        self._pool_metadata_cache = {}
+        self._selected_role_indexes = ()
+        self._role_index_queries = {}
+        self._role_index_buckets = {}
+        self._role_ordinary_buckets = {}
         self._catalog_stereo_cache = {}
         self._anchor_queries = tuple(item[0] for item in hit_anchors.queries[:2]) if hit_anchors else ()
         self._anchor_postings = ()
@@ -659,10 +749,168 @@ class RouteFirstSearch:
         rings = mol.GetRingInfo().NumRings()
         return (heavy // 4, hetero // 2, aromatic // 4, min(rings, 8))
 
+    def _pool_unknown(self, reason):
+        counts = self.report["reaction_pool_metadata_unknowns"]
+        counts[reason] = counts.get(reason, 0) + 1
+
+    def _pool_charge_graph(self, visits):
+        if self._stop() or self.report["reaction_pool_graph_visits"] + visits > MAX_POOL_GRAPH_VISITS:
+            return False
+        self.report["reaction_pool_graph_visits"] += visits
+        return True
+
+    def _pool_matches(self, mol, query, kind):
+        field = f"reaction_pool_{kind}_match_requests"
+        ceiling = MAX_POOL_WINDOW_MATCH_REQUESTS if kind == "window" else MAX_POOL_SITE_MATCH_REQUESTS
+        if self.report[field] >= ceiling:
+            return None, f"{kind}_match_request_cap"
+        if not self._pool_charge_graph(mol.GetNumAtoms() + mol.GetNumBonds()):
+            return None, "graph_visit_cap_or_deadline"
+        self.report[field] += 1
+        try:
+            matches = mol.GetSubstructMatches(
+                query, useChirality=True, uniquify=True, maxMatches=MAX_POOL_MATCHES
+            )
+        except (ValueError, RuntimeError, TypeError):
+            return None, f"{kind}_match_error"
+        if len(matches) >= MAX_POOL_MATCHES:
+            return None, f"{kind}_match_truncated"
+        if not self._pool_charge_graph(sum(map(len, matches))):
+            return None, "graph_visit_cap_or_deadline"
+        return matches, None
+
+    def _pool_window_counts(self, mol, role_query, full_counts):
+        matches, reason = self._pool_matches(mol, role_query, "window")
+        if reason or not matches:
+            return full_counts, reason or "no_role_match", reason is None
+        matched = {index for match in matches for index in match}
+        if not self._pool_charge_graph(mol.GetNumAtoms() + 3 * mol.GetNumBonds()):
+            return full_counts, "graph_visit_cap_or_deadline", False
+        stereo = {
+            atom.GetIdx() for atom in mol.GetAtoms() if atom.GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED
+        }
+        for bond in mol.GetBonds():
+            if bond.GetStereo() != Chem.BondStereo.STEREONONE or bond.GetBondDir() != Chem.BondDir.NONE:
+                stereo.update((bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()))
+                stereo.update(index for index in bond.GetStereoAtoms() if index >= 0)
+        stereo.update(
+            neighbor.GetIdx()
+            for index in tuple(stereo)
+            for neighbor in mol.GetAtomWithIdx(index).GetNeighbors()
+        )
+        core = set(matched)
+        for index in matched:
+            core.update(atom.GetIdx() for atom in mol.GetAtomWithIdx(index).GetNeighbors())
+        core.update(stereo)
+        rings = mol.GetRingInfo().AtomRings()
+        if not self._pool_charge_graph(sum(map(len, rings)) + len(core) + len(rings) ** 2):
+            return full_counts, "graph_visit_cap_or_deadline", False
+        systems = _pool_ring_systems(mol)
+        core.update(index for system in systems if system & core for index in system)
+        retained = set(core)
+        for index in core:
+            retained.update(atom.GetIdx() for atom in mol.GetAtomWithIdx(index).GetNeighbors())
+        if not self._pool_charge_graph(len(retained) + sum(map(len, rings))):
+            return full_counts, "graph_visit_cap_or_deadline", False
+        return _pool_raw_counts(mol, retained), None, True
+
+    def _pool_site_choice(self, mol, caller, normalized):
+        if normalized in self._selected_role_indexes:
+            return normalized, "exact", True
+        caller_matches, reason = self._pool_matches(mol, caller, "site")
+        if reason:
+            return None, reason, False
+        caller_sites = {frozenset(match) for match in caller_matches}
+        selected = None
+        index_sites = set()
+        for indexed_role in self._selected_role_indexes:
+            matches, reason = self._pool_matches(mol, self._role_index_queries[indexed_role], "site")
+            if reason:
+                return None, reason, False
+            sites = {frozenset(match) for match in matches}
+            index_sites.update(sites)
+            if selected is None and caller_sites & sites:
+                selected = indexed_role
+        self.report["reaction_pool_caller_only_sites"] += len(caller_sites - index_sites)
+        self.report["reaction_pool_index_only_sites"] += len(index_sites - caller_sites)
+        return selected, "same_site" if selected is not None else "legacy", True
+
+    def _pool_metadata(self, target, guide, role):
+        key = (target, guide, role)
+        if key in self._pool_metadata_cache:
+            self.report["reaction_pool_metadata_cache_hits"] += 1
+            return self._pool_metadata_cache[key]
+        full_mol = molecule(target)
+        full_features = self._features(full_mol)
+        if full_mol.GetNumAtoms() > MAX_POOL_QUERY_ATOMS or full_mol.GetNumBonds() > MAX_POOL_QUERY_BONDS:
+            self._pool_unknown("query_size_cap")
+            return full_features, None, False
+        if self.report["reaction_pool_query_pairs"] >= MAX_POOL_QUERY_ROLE_PAIRS:
+            self._pool_unknown("query_pair_cache_cap")
+            return full_features, None, False
+        self.report["reaction_pool_query_pairs"] += 1
+        try:
+            guide_mol = molecule(guide)
+            caller = Chem.MolFromSmarts(role)
+            normalized = _normalized_role_smarts(role)
+        except (ValueError, RuntimeError, TypeError):
+            self._pool_unknown("query_or_role_parse")
+            return full_features, None, False
+        if (
+            caller is None
+            or guide_mol.GetNumAtoms() > MAX_POOL_QUERY_ATOMS
+            or guide_mol.GetNumBonds() > MAX_POOL_QUERY_BONDS
+        ):
+            self._pool_unknown("query_size_or_role_parse")
+            return full_features, None, False
+        if not self._pool_charge_graph(
+            full_mol.GetNumAtoms()
+            + full_mol.GetNumBonds()
+            + sum(map(len, full_mol.GetRingInfo().AtomRings()))
+        ):
+            self._pool_unknown("graph_visit_cap_or_deadline")
+            return full_features, None, False
+        full_counts = _pool_raw_counts(full_mol)
+        local_counts, reason, window_complete = self._pool_window_counts(guide_mol, caller, full_counts)
+        if reason is not None:
+            self._pool_unknown(reason)
+        if not window_complete:
+            return full_features, None, False
+        midpoint = tuple((full + local + 1) // 2 for full, local in zip(full_counts, local_counts))
+        features = _pool_bins(midpoint)
+        selected, choice, site_complete = self._pool_site_choice(guide_mol, caller, normalized)
+        if not site_complete:
+            self._pool_unknown(choice)
+            return full_features, None, False
+        self.report["reaction_pool_index_choices"][choice] += 1
+        complete = window_complete and site_complete
+        outcome = features, selected if site_complete else None, complete
+        if complete:
+            self._pool_metadata_cache[key] = outcome
+        return outcome
+
+    def _select_role_indexes(self, plans):
+        counts = {}
+        for rule, _guide, _fallback, _keys, _kind, _quality in plans:
+            for role in rule.roles:
+                normalized = _normalized_role_smarts(role)
+                counts[normalized] = counts.get(normalized, 0) + 1
+        selected = tuple(
+            role for role, _count in sorted(counts.items(), key=lambda item: (-item[1], item[0]))[:2]
+        )
+        self._selected_role_indexes = selected
+        self._role_index_queries = {role: Chem.MolFromSmarts(role) for role in selected}
+        self.report["reaction_pool_selected_roles"] = [
+            {"normalized_smarts": role, "occurrences": counts[role]} for role in selected
+        ]
+
     def _index(self):
         if self._catalog_index is not None:
             return self._catalog_index
         buckets = {}
+        indexed = {role: {} for role in self._selected_role_indexes}
+        ordinary = {role: {} for role in self._selected_role_indexes}
+        role_index_complete = bool(self._selected_role_indexes)
         reserve = min(256, max(1, self.limits.max_catalog_rows_per_query // 4))
         postings = [[] for _ in self._anchor_queries]
         match_totals = [0 for _ in self._anchor_queries]
@@ -674,6 +922,27 @@ class RouteFirstSearch:
             key = self._features(mol)
             score = int.from_bytes(hashlib.sha256(smiles.encode()).digest()[:8], "big")
             buckets.setdefault(key, []).append((score, smiles))
+            if role_index_complete:
+                for role in self._selected_role_indexes:
+                    if self._stop():
+                        role_index_complete = False
+                        self.report["reaction_pool_role_index_failure"] = "deadline"
+                        break
+                    if self.report["reaction_pool_role_index_checks"] >= MAX_ROLE_INDEX_MATCH_CHECKS:
+                        role_index_complete = False
+                        self.report["reaction_pool_role_index_failure"] = "match_check_cap"
+                        break
+                    self.report["reaction_pool_role_index_checks"] += 1
+                    try:
+                        matches_role = mol.HasSubstructMatch(
+                            self._role_index_queries[role], useChirality=True
+                        )
+                    except (ValueError, RuntimeError, TypeError):
+                        role_index_complete = False
+                        self.report["reaction_pool_role_index_failure"] = "role_match_error"
+                        break
+                    group = indexed if matches_role else ordinary
+                    group[role].setdefault(key, []).append((score, smiles))
             for anchor_index, anchor in enumerate(self._anchor_queries):
                 if self.report["anchor_index_match_checks"] >= 500000:
                     self.report["anchor_index_incomplete"] = True
@@ -691,6 +960,22 @@ class RouteFirstSearch:
             self._stop("max_catalog_index_rows")
         for rows in buckets.values():
             rows.sort()
+        if role_index_complete and self.report["catalog_index_rows_scanned"] == len(self.catalog.mols):
+            for group in (indexed, ordinary):
+                for role_buckets in group.values():
+                    for rows in role_buckets.values():
+                        rows.sort()
+            self._role_index_buckets = indexed
+            self._role_ordinary_buckets = ordinary
+            self.report["reaction_pool_role_index_complete"] = True
+            self.report["reaction_pool_role_index_sizes"] = [
+                sum(map(len, indexed[role].values())) for role in self._selected_role_indexes
+            ]
+        else:
+            self._role_index_buckets = {}
+            self._role_ordinary_buckets = {}
+            if self._selected_role_indexes and self.report["reaction_pool_role_index_failure"] is None:
+                self.report["reaction_pool_role_index_failure"] = "incomplete_catalog_index"
         self._anchor_postings = tuple(
             tuple(smiles for _score, smiles in sorted(heap, reverse=True)) for heap in postings
         )
@@ -711,23 +996,30 @@ class RouteFirstSearch:
         self.report["catalog_index_buckets"] = len(buckets)
         return buckets
 
-    def _pool(self, target):
-        if target in self._catalog_pools:
-            return self._catalog_pools[target]
+    def _pool(self, target, *, guide=None, role=None):
         buckets = self._index()
         if self._stop():
+            self._pool_last_complete = False
             return ()
+        if guide is not None and role is not None:
+            features, indexed_role, metadata_complete = self._pool_metadata(target, guide, role)
+        else:
+            features, indexed_role, metadata_complete = self._features(molecule(target)), None, True
+        if not self.report["reaction_pool_role_index_complete"]:
+            if indexed_role is not None:
+                self.report["reaction_pool_index_disabled_incomplete"] += 1
+            indexed_role = None
+        elif indexed_role is not None:
+            self.report["reaction_pool_index_applied"] += 1
+        cache_key = (target, features, indexed_role)
+        self._pool_last_complete = metadata_complete
+        if cache_key in self._catalog_pools:
+            return self._catalog_pools[cache_key]
         phase_limit = (
             self.limits.max_catalog_row_visits // 2
             if self._phase == 1 and self.limits.max_steps == 2
             else self.limits.max_catalog_row_visits
         )
-        if self.report["catalog_row_visits"] + len(buckets) > phase_limit:
-            self._stop("max_catalog_row_visits")
-            return ()
-        self.report["catalog_row_visits"] += len(buckets)
-        self.report["catalog_bucket_rankings"] += len(buckets)
-        features = self._features(molecule(target))
 
         def distance(key):
             return (
@@ -739,13 +1031,38 @@ class RouteFirstSearch:
             )
 
         selected = []
-        for key in sorted(buckets, key=distance):
-            remaining = self.limits.max_catalog_rows_per_query - len(selected)
-            if remaining <= 0:
-                break
-            selected.extend(smiles for _, smiles in buckets[key][:remaining])
+
+        def take(group, label):
+            if self._stop() or self.report["catalog_row_visits"] + len(group) > phase_limit:
+                self._stop("max_catalog_row_visits")
+                return False
+            self.report["catalog_row_visits"] += len(group)
+            self.report["catalog_bucket_rankings"] += len(group)
+            self.report[f"reaction_pool_{label}_bucket_rankings"] += len(group)
+            before = len(selected)
+            for key in sorted(group, key=distance):
+                remaining = self.limits.max_catalog_rows_per_query - len(selected)
+                if remaining <= 0:
+                    break
+                selected.extend(smiles for _, smiles in group[key][:remaining])
+            self.report[f"reaction_pool_{label}_rows_selected"] += len(selected) - before
+            return True
+
+        if indexed_role is not None:
+            if not take(self._role_index_buckets[indexed_role], "indexed"):
+                self._pool_last_complete = False
+                return ()
+            if len(selected) < self.limits.max_catalog_rows_per_query and not take(
+                self._role_ordinary_buckets[indexed_role], "ordinary"
+            ):
+                self._pool_last_complete = False
+                return ()
+        elif not take(buckets, "ordinary"):
+            self._pool_last_complete = False
+            return ()
         pool = tuple(selected)
-        self._catalog_pools[target] = pool
+        if metadata_complete:
+            self._catalog_pools[cache_key] = pool
         return pool
 
     def _eligible_rule_ids(self):
@@ -1348,7 +1665,7 @@ class RouteFirstSearch:
         if fp is None:
             return ()
         ranked = []
-        pool = self._pool(retrieval_target)
+        pool = self._pool(retrieval_target, guide=target, role=role)
         if trace is not None:
             trace["pool_bucket_candidates"] += len(pool)
         active_anchors = self._guide_anchors(target)
@@ -1356,7 +1673,7 @@ class RouteFirstSearch:
         for index in active_anchors:
             for smiles in self._anchor_postings[index]:
                 anchor_strength[smiles] = anchor_strength.get(smiles, 0) + 1
-        complete = True
+        complete = self._pool_last_complete
         phase_limit = (
             self.limits.max_catalog_row_visits // 2
             if self._phase == 1 and self.limits.max_steps == 2
@@ -1737,6 +2054,7 @@ class RouteFirstSearch:
             }
             for rule, guide, fallback, keys, kind, quality in plans
         ]
+        self._select_role_indexes(plans)
         depth_one_product_budget = (
             self.limits.max_products if self.limits.max_steps == 1 else max(1, self.limits.max_products // 2)
         )

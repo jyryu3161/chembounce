@@ -163,6 +163,42 @@ decisions, including repeated blocks across queries. Unspecified-product
 first-failure records fell from 50 to 14, but this did not improve eligible
 coverage. No model or 3D comparison was run; P1 remains incomplete.
 
+The next untested route-first revision changes only bounded catalog retrieval.
+It selects the two most frequent exact reactant roles among the already chosen
+outer plans, with normalized SMARTS as the deterministic tie-break. Atom maps
+are removed from those role queries; recursive, stereo and other SMARTS
+conditions remain. The existing catalog index pass checks those two roles at
+most 500,000 additional times in total. If either index is incomplete or fails,
+retrieval uses the previous full-catalog pool. A matching-role subset is ranked
+first by the existing bucket distance and stable hash order, then ordinary rows
+fill any remaining places without duplication. The total pool stays at 8,192.
+
+For each reverse guide, a bounded role-matched atom window keeps the matched
+atoms and immediate neighbors, closes ring systems sharing atoms, preserves
+specified stereo centers and bond controls, then adds one final neighbor step.
+This atom set supplies only four coarse retrieval counts. The policy takes the
+componentwise arithmetic midpoint, rounded up, between those raw counts and
+the full normalized guide's counts before applying the existing bin sizes.
+The original full guide still supplies fingerprint ranking and reactant-role
+checks. An indexed role can also be reused for a different caller role only
+when complete bounded matches on the full guide have an identical atom-index
+set at a site; this is a retrieval heuristic, not proof that the roles entail
+each other. Exact role equality takes priority. Incomplete or failed metadata
+keeps the legacy retrieval choice. Limits are 128 guide/role pairs, 128 window
+and 384 site match requests, 64 matches plus a truncation sentinel per request,
+256 guide atoms, 512 bonds and 262,144 combined graph visits. These add work
+within the inherited deadline; catalog-row, fingerprint, reaction, product and
+route limits and all qualification gates are unchanged.
+
+Saved-metadata prototypes located the four catalog leaves from two previously
+supported routes outside the old pool for their needed queries. The fixed
+midpoint plus exact-first same-site calculation put all three leaves of one
+saved route inside at least one relevant capped query, including a guide reused
+from the first stage in a later inner stage. It did not run candidate fingerprint
+ranking, forward reactions or route audit, and does not establish that one
+work item selects those three leaves or recovers the route. The current code
+has not yet been evaluated on the fixed panel; P1 remains incomplete.
+
 ## Optional catalog byte binding
 
 A configuration can pin both the catalog TSV and its import manifest:
