@@ -94,6 +94,117 @@ def test_actual_one_and_two_step_routes_have_complete_forward_and_atom_stereo_re
         verify_route(forged, catalog, rules, 16)
 
 
+def test_phase_two_executes_typed_guides_one_per_outer_plan_before_later_guides(tmp_path, monkeypatch):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "round_robin_rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {"id": "outer-a", "smarts": "[C:1].[O:2]>>[C:1][O:2]", "source": "test"},
+                    {"id": "outer-b", "smarts": "[C:1].[N:2]>>[C:1][N:2]", "source": "test"},
+                    {"id": "inner-a", "smarts": "[C:1].[F:2]>>[C:1][F:2]", "source": "test"},
+                    {"id": "inner-b", "smarts": "[C:1].[Cl:2]>>[C:1][Cl:2]", "source": "test"},
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    settings = RouteFirstLimits(
+        **limits(max_catalog_row_visits=10, max_outer_guides=2, max_rules=2, fallback_rules=1)
+    )
+
+    def make_search():
+        search = RouteFirstSearch("CCO", SimpleNamespace(sha256="test"), rules, settings)
+        attempts = []
+
+        def select(target, maximum, fallback=0):
+            search.report["rule_inspections"] += 1
+            if search._phase == 1:
+                return [(rules.get("outer-a"), False), (rules.get("outer-b"), False)]
+            return [(rules.get("inner-a"), False), (rules.get("inner-b"), False)]
+
+        def reverse(rule, target, fallback, *, record_centers=False):
+            if search._phase == 1:
+                guide = ("CC", "O") if rule.id == "outer-a" else ("CCC", "N")
+                search._guide_quality[(rule.id, target, guide)] = "typed"
+                search._guide_centers[(rule.id, target, guide)] = (None,)
+                return [guide]
+            guides = [("C", "O"), ("C", "N")] if rule.id == "inner-a" else [("CC", "N")]
+            for guide in guides:
+                if guide == ("C", "N"):
+                    quality = "implicit_fallback"
+                elif rule.id == "inner-a":
+                    quality = "approximate"
+                else:
+                    quality = "typed"
+                search._guide_quality[(rule.id, target, guide)] = quality
+            return guides
+
+        def stage(rule, guide, prefix, **kwargs):
+            if prefix == "i" and search.report["catalog_row_visits"] < settings.max_catalog_row_visits:
+                search.report["catalog_row_visits"] += 5
+                attempts.append((rule.id, tuple(guide)))
+            return []
+
+        monkeypatch.setattr(search, "_select_rules", select)
+        monkeypatch.setattr(search, "_reverse", reverse)
+        monkeypatch.setattr(search, "_stage", stage)
+        monkeypatch.setattr(search, "_admit", lambda: None)
+        return search, attempts
+
+    search, attempts = make_search()
+    _, report = search.run()
+    assert attempts == [("inner-b", ("CC", "N")), ("inner-b", ("CC", "N"))]
+    assert report["catalog_row_visits"] == settings.max_catalog_row_visits
+    plans = report["phase2_plan_trace"]
+    assert [row["catalog_rows_execution"] for row in plans] == [5, 5]
+    assert [row["rule_inspections_preparation"] for row in plans] == [2, 2]
+    assert [row["typed_prepared"] for row in plans] == [2, 2]
+    assert [row["approximate_prepared"] for row in plans] == [2, 2]
+    assert [row["fallback_prepared"] for row in plans] == [2, 2]
+    assert all(row["typed_attempted"] >= 1 for row in plans)
+    assert all(row["fallback_attempted"] >= 1 for row in plans)
+    assert all(row["catalog_exhausted_attempts"] > 0 for row in plans)
+
+    expired, attempted = make_search()
+    original_stage = expired._stage
+
+    def expire_after_first(rule, guide, prefix, **kwargs):
+        result = original_stage(rule, guide, prefix, **kwargs)
+        if prefix == "i" and attempted:
+            expired.deadline = time.monotonic() - 1
+        return result
+
+    monkeypatch.setattr(expired, "_stage", expire_after_first)
+    _, expired_report = expired.run()
+    assert len(attempted) == 1
+    assert expired_report["catalog_row_visits"] <= settings.max_catalog_row_visits
+    assert any(
+        row["work_items_deferred"] and row["defer_reason"] == "deadline_monotonic"
+        for row in expired_report["phase2_plan_trace"]
+    )
+
+    preparation_expired, preparation_attempts = make_search()
+    original_reverse = preparation_expired._reverse
+
+    def expire_during_preparation(rule, target, fallback, *, record_centers=False):
+        guides = original_reverse(rule, target, fallback, record_centers=record_centers)
+        if preparation_expired._phase == 2:
+            preparation_expired.deadline = time.monotonic() - 1
+        return guides
+
+    monkeypatch.setattr(preparation_expired, "_reverse", expire_during_preparation)
+    _, preparation_report = preparation_expired.run()
+    first_plan = preparation_report["phase2_plan_trace"][0]
+    assert first_plan["prepared_work_items"] > 0
+    assert first_plan["preparation_limit_observed"] == "deadline_monotonic"
+    assert first_plan["work_items_deferred"] == first_plan["prepared_work_items"]
+    assert not preparation_attempts
+
+
 def test_product_anchor_and_stereo_are_not_invented_and_search_is_deterministic(assets):
     catalog, rules = assets
 

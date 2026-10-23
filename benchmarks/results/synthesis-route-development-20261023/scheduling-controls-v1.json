@@ -1,0 +1,65 @@
+{
+  "schema": "route-first-phase-two-scheduling-review-v1",
+  "scope": "Focused bounded scheduler code and regression checks; fixed-panel efficacy not yet tested.",
+  "review": {
+    "schema": "route-first-focused-review-v1",
+    "verdict": "pass_for_bounded_phase_two_scheduling_implementation",
+    "scope": "Scheduling source/test/docs delta and v10 versus v9 harness only; no catalog/model/probe execution, no broad pipeline re-audit.",
+    "source_sha256": {
+      "chembounce_synthesis/route_first.py": "7367b33bac8ad2a0faebe500126364ea1e710453b9c69c8ba456c236e94a0f9b",
+      "tests/synthesis/test_route_first.py": "0f10417f4616f79accc34375117536849a07ff613d5d7967a178639986c61161",
+      "docs/SYNTHESIS.md": "49a3f5130dec8e17489c74d4b4d0d0e4d39bb0dd14955bbb9d4517799f5b7ebb",
+      "benchmark-results/route-first-development-20261023-v2/development-probe-v10/probe.py": "6da8d499ac0fcecb78837b4ba86f2f6f73b9166d6a254cd0f8961ffcdb74e7cc"
+    },
+    "blocking_findings": [],
+    "resolved_findings": [
+      {
+        "issue": "Fallback guide execution incremented absent slot fallback_attempted counter, causing reachable KeyError for inner implicit fallback.",
+        "resolution": "Initialized slot counter; scheduler regression includes implicit fallback work items and verifies they are attempted."
+      },
+      {
+        "issue": "Preparation limit indication was suppressed after partial nonempty preparation.",
+        "resolution": "Report preparation_limit_observed independently of work count; partial-preparation deadline regression added. Sticky global limit observation explicitly does not assert missing work."
+      }
+    ],
+    "reviewed_invariants": [
+      "Selected inner-rule policy and original512 rule inspections remain unchanged; preparation retains original slot/rule/guide enumeration and calls existing cached reverse once per scheduled rule/target request without chemistry retries.",
+      "Stable typed-first sorting occurs across all prepared guides within each outer plan; ties preserve prior slot/rule/guide order, including approximate/fallback reachability.",
+      "Execution advances one prepared guide per outer plan per sweep; inner compatibility filter, rank/beam, outer stage and route admission remain unchanged.",
+      "Existing stage functions enforce catalog, fingerprint, combination, generated-product and replay/audit gates. No cap increase or new catalog lookup mechanism.",
+      "Deadline checked during preparation, at sweep and workitem boundaries and in existing stage paths. Prepared-but-unattempted items are counted as deferred; unenumerated future work is not counted.",
+      "Bounded plan trace separates preparation rule/normalization cost from actual catalog-row execution, records fallback attempts and exhausted-catalog attempts.",
+      "v10-v9 harness delta changes diagnostic_version/scope only; exact pre-evidence gates and complete eligible/rejected graph retention unchanged."
+    ],
+    "independent_checks": [
+      {
+        "command": ".venv-research/bin/python -m pytest -q tests/synthesis/test_route_first.py tests/test_phase_telemetry_develop_hooks.py",
+        "result": "55 passed in13.15s on final source/test hashes; includes genuine one/two-step audited replay, scheduler starvation-order fixture, fallback attempts and preparation/execution expiry controls."
+      },
+      {
+        "command": "git diff --check",
+        "result": "passed"
+      },
+      {
+        "check": "Final file hashes",
+        "result": "Runtime/tests unchanged between focused test run and receipt; docs and unexecuted v10 harness bound here."
+      }
+    ],
+    "author_reported_checks": {
+      "route_tests": "31 passed",
+      "format": "Ruff check and format check all passed",
+      "harness": "v10 import-only preflight passed; no catalog or model run"
+    },
+    "limitations": [
+      "This is guide-level ordering, not a guarantee of balanced catalog work: one guide can consume substantial shared budget.",
+      "Eager bounded preparation can still consume rule-inspection and reverse-normalization budgets before execution; preparation_limit_observed can inherit a prior global limit even when current plan uses cache hits.",
+      "V9 result remains3/12; this implementation has no fresh efficacy evidence. Frozen greater-than5/12 all-step-supported adoption criterion and all final gates remain unchanged; P1 stays active."
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "benchmark-results/qualified-development-20261023/route-first-v2-scheduling-review-v1/report.json",
+      "sha256": "d6bc44e45aea2fc2b89a5bf23a5b14314ba8dda992878742edd40c6fd2818446"
+    }
+  ]
+}

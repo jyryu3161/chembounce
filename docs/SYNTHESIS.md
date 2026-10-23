@@ -111,7 +111,10 @@ are untouched. Catalog-free original-hit controls found an already selected
 coupling rule with interaromatic raw cuts and a fourth-ranked coupling rule
 with typed interaromatic hints after this screen. They establish search-center
 reachability under the local bounds, not catalog availability or a complete
-supported route. The new policy has not yet been run on the fixed panel.
+supported route. The ninth v2 development probe using this policy reached
+three of 12 inputs before model and 3D checks, with 38 eligible products and
+routes (16 one-step and 22 two-step). It did not meet the fixed entry condition
+of more than five pre-evidence inputs, so no model comparison was run.
 Before the topology screen, a separate catalog-free check found that the
 needed inner coupling rule was outside the four-rule selection on those two
 guides. With the original reverse query and unchanged four-outcome cap, one
@@ -119,6 +122,23 @@ guide yielded no partition-valid outcome and the other only a peripheral
 methyl-bond cut. The revised local nonring query changes that bounded center
 enumeration, as shown above, without demonstrating recovery of the saved
 two-step route.
+
+The ninth probe also exposed shared-budget starvation in the two-step search.
+On one input, a central outer plan selected four inner rules, including the
+intended coupling rule. Those four rules generated nine guides in total, yet
+the slot's 18 catalog queries received no role checks
+after the preceding plan spent most available catalog-row visits. The next
+revision prepares only the already bounded inner rules and reverse guides,
+orders typed guides first within each outer plan, and executes one guide per
+plan per sweep. It records preparation and actual per-plan catalog work
+separately. A preparation limit flag records that a shared cap was observed;
+it does not claim a count of unenumerated guides. Deferred-item counts include
+only guides already prepared but not attempted. The original global rule,
+reverse, catalog, fingerprint, product, combination, deadline and qualification
+limits remain in force. Preparation
+can still consume reverse-normalization and rule-inspection budgets before
+execution, so this scheduler does not guarantee that every plan gets a full
+catalog query. This revision has not yet been run on the fixed panel.
 
 ## Optional catalog byte binding
 

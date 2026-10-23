@@ -1653,13 +1653,38 @@ class RouteFirstSearch:
             self._retain(states)
         if self.limits.max_steps == 2 and not self._stop():
             self._phase = 2
+            work_by_plan = []
+            plan_traces = []
             for plan_index, (outer_rule, guide, _fallback, _keys, _kind, _quality) in enumerate(plans):
                 plan_trace = None
                 if len(self.report["phase2_plan_trace"]) < 8:
-                    plan_trace = {"plan_index": plan_index, "rule_id": outer_rule.id, "slots": []}
+                    plan_trace = {
+                        "plan_index": plan_index,
+                        "rule_id": outer_rule.id,
+                        "slots": [],
+                        "prepared_work_items": 0,
+                        "typed_prepared": 0,
+                        "approximate_prepared": 0,
+                        "fallback_prepared": 0,
+                        "work_items_attempted": 0,
+                        "typed_attempted": 0,
+                        "approximate_attempted": 0,
+                        "fallback_attempted": 0,
+                        "work_items_deferred": 0,
+                        "defer_reason": None,
+                        "preparation_limit_observed": None,
+                        "rule_inspections_preparation": 0,
+                        "reverse_role_work_preparation": 0,
+                        "catalog_rows_execution": 0,
+                        "catalog_exhausted_attempts": 0,
+                    }
                     self.report["phase2_plan_trace"].append(plan_trace)
                 else:
                     self.report["phase2_plan_trace_truncated"] += 1
+                plan_traces.append(plan_trace)
+                work = []
+                work_by_plan.append(work)
+                before_reverse_role_work = self.report["reverse_role_work"]
                 for slot, target in enumerate(guide):
                     if self._stop() or self.report["combinations"] >= self.limits.max_combinations:
                         break
@@ -1682,50 +1707,128 @@ class RouteFirstSearch:
                             "pool_role_checks": 0,
                             "pool_role_compatible": 0,
                             "pool_selected_blocks": 0,
+                            "rule_inspections_preparation": 0,
+                            "prepared_work_items": 0,
+                            "work_items_attempted": 0,
+                            "typed_attempted": 0,
+                            "approximate_attempted": 0,
+                            "fallback_attempted": 0,
+                            "catalog_rows_execution": 0,
                         }
                         plan_trace["slots"].append(slot_trace)
+                    before_rules = self.report["rule_inspections"]
+                    inner_rules = self._select_rules(target, self.limits.max_inner_rules)
+                    inspections = self.report["rule_inspections"] - before_rules
+                    if plan_trace is not None:
+                        plan_trace["rule_inspections_preparation"] += inspections
+                        slot_trace["rule_inspections_preparation"] += inspections
+                        slot_trace["inner_rules_selected"] = [rule.id for rule, _ in inner_rules]
+                    for inner_rule, _ in inner_rules:
+                        if self._stop():
+                            break
+                        inner_guides = self._reverse(inner_rule, target, False)
+                        if slot_trace is not None:
+                            slot_trace["inner_reverse_guides"] += len(inner_guides)
+                        for inner_guide in inner_guides:
+                            quality = self._guide_quality[(inner_rule.id, target, inner_guide)]
+                            work.append((slot, target, inner_rule, inner_guide, quality, slot_trace))
+                            if plan_trace is not None:
+                                plan_trace["prepared_work_items"] += 1
+                                slot_trace["prepared_work_items"] += 1
+                                key = (
+                                    f"{quality}_prepared"
+                                    if quality in ("typed", "approximate")
+                                    else "fallback_prepared"
+                                )
+                                plan_trace[key] += 1
+                if plan_trace is not None:
+                    plan_trace["reverse_role_work_preparation"] = (
+                        self.report["reverse_role_work"] - before_reverse_role_work
+                    )
+                    if self._stop():
+                        plan_trace["preparation_limit_observed"] = "deadline_monotonic"
+                    elif self.report["combinations"] >= self.limits.max_combinations:
+                        plan_trace["preparation_limit_observed"] = "max_combinations"
+                    elif "max_rule_inspections" in self.report["limits_reached"]:
+                        plan_trace["preparation_limit_observed"] = "max_rule_inspections"
+                    elif "reverse_role_work_budget" in self.report["limits_reached"]:
+                        plan_trace["preparation_limit_observed"] = "reverse_role_work_budget"
+                # Python's stable sort preserves original slot/rule/guide
+                # order within a quality class. This does not add outcomes.
+                work.sort(key=lambda item: item[4] != "typed")
+
+            offsets = [0] * len(plans)
+            while any(offset < len(work) for offset, work in zip(offsets, work_by_plan)):
+                if self._stop():
+                    defer_reason = "deadline_monotonic"
+                    break
+                if self.report["combinations"] >= self.limits.max_combinations:
+                    defer_reason = "max_combinations"
+                    break
+                for plan_index, (outer_rule, guide, _fallback, _keys, _kind, _quality) in enumerate(plans):
+                    if offsets[plan_index] >= len(work_by_plan[plan_index]):
+                        continue
+                    if self._stop() or self.report["combinations"] >= self.limits.max_combinations:
+                        break
+                    slot, target, inner_rule, inner_guide, quality, slot_trace = work_by_plan[plan_index][
+                        offsets[plan_index]
+                    ]
+                    offsets[plan_index] += 1
+                    plan_trace = plan_traces[plan_index]
+                    before_rows = self.report["catalog_row_visits"]
+                    if plan_trace is not None:
+                        plan_trace["work_items_attempted"] += 1
+                        slot_trace["work_items_attempted"] += 1
+                        key = (
+                            f"{quality}_attempted"
+                            if quality in ("typed", "approximate")
+                            else "fallback_attempted"
+                        )
+                        plan_trace[key] += 1
+                        slot_trace[key] += 1
+                        if before_rows >= self.limits.max_catalog_row_visits:
+                            plan_trace["catalog_exhausted_attempts"] += 1
                     self._active_phase2_slot = slot_trace
                     try:
-                        inner_rules = self._select_rules(target, self.limits.max_inner_rules)
+                        inner = self._stage(inner_rule, inner_guide, "i")
                         if slot_trace is not None:
-                            slot_trace["inner_rules_selected"] = [rule.id for rule, _ in inner_rules]
-                        for inner_rule, _ in inner_rules:
-                            inner_guides = self._reverse(inner_rule, target, False)
-                            if slot_trace is not None:
-                                slot_trace["inner_reverse_guides"] += len(inner_guides)
-                            for inner_guide in inner_guides:
-                                inner = self._stage(inner_rule, inner_guide, "i")
-                                if slot_trace is not None:
-                                    slot_trace["inner_stage_calls"] += 1
-                                    slot_trace["inner_stage_states"] += len(inner)
-                                inner = self._compatible_inner(inner, outer_rule, slot)
-                                if slot_trace is not None:
-                                    slot_trace["inner_role_compatible_states"] += len(inner)
-                                if self._stop():
-                                    break
-                                inner = sorted(
-                                    inner,
-                                    key=lambda state: (
-                                        self._rank(state["product"], target),
-                                        state["product"],
-                                    ),
-                                )[: self.limits.beam_width]
-                                if slot_trace is not None:
-                                    slot_trace["inner_beam_states"] += len(inner)
-                                if not inner:
-                                    continue
-                                states = self._stage(outer_rule, guide, "o", replace=(slot, inner))
-                                if slot_trace is not None:
-                                    slot_trace["outer_stage_calls"] += 1
-                                    slot_trace["outer_stage_states"] += len(states)
-                                self._retain(states)
-                                if (
-                                    self._stop()
-                                    or self.report["combinations"] >= self.limits.max_combinations
-                                ):
-                                    break
+                            slot_trace["inner_stage_calls"] += 1
+                            slot_trace["inner_stage_states"] += len(inner)
+                        inner = self._compatible_inner(inner, outer_rule, slot)
+                        if slot_trace is not None:
+                            slot_trace["inner_role_compatible_states"] += len(inner)
+                        if self._stop():
+                            continue
+                        inner = sorted(
+                            inner,
+                            key=lambda state: (
+                                self._rank(state["product"], target),
+                                state["product"],
+                            ),
+                        )[: self.limits.beam_width]
+                        if slot_trace is not None:
+                            slot_trace["inner_beam_states"] += len(inner)
+                        if not inner:
+                            continue
+                        states = self._stage(outer_rule, guide, "o", replace=(slot, inner))
+                        if slot_trace is not None:
+                            slot_trace["outer_stage_calls"] += 1
+                            slot_trace["outer_stage_states"] += len(states)
+                        self._retain(states)
                     finally:
                         self._active_phase2_slot = None
+                        if plan_trace is not None:
+                            rows = self.report["catalog_row_visits"] - before_rows
+                            plan_trace["catalog_rows_execution"] += rows
+                            slot_trace["catalog_rows_execution"] += rows
+            else:
+                defer_reason = None
+            if defer_reason is not None:
+                for plan_index, work in enumerate(work_by_plan):
+                    plan_trace = plan_traces[plan_index]
+                    if plan_trace is not None and offsets[plan_index] < len(work):
+                        plan_trace["work_items_deferred"] = len(work) - offsets[plan_index]
+                        plan_trace["defer_reason"] = defer_reason
 
         self._admit()
         self.report["total_fingerprint_calls"] = (
