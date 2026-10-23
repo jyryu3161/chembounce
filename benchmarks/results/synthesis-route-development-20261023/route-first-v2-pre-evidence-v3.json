@@ -1,0 +1,575 @@
+{
+  "status": "complete",
+  "scope": "Development-only exact pre-evidence gates with bounded hit-anchor postings; no model, 3D, forward support or qualification",
+  "policy": "catalog-rule-route-first-v2",
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "48576f56fd145ae2a1185620b9ff6d1bddf78697e44b2dca59c535d4ac64d95c",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff"
+  },
+  "panel_sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+  "config_sha256": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+  "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+  "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+  "rows": [
+    {
+      "id": "CHEMBL4630839-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 25.397,
+      "pre_evidence_eligible_routes": 6,
+      "pre_evidence_eligible_distinct_products": 6,
+      "one_step_routes": 6,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": 0.4246575342465753,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 28,
+        "hit_tanimoto": 12,
+        "property: logp.upper_maximum:5.299500000000005>5": 1,
+        "property: logp.upper_maximum:5.832100000000006>5": 1
+      },
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 262144,
+        "catalog_bucket_rankings": 16560,
+        "total_fingerprint_calls": 8807,
+        "rule_inspections": 512,
+        "combinations": 460,
+        "products_generated": 192,
+        "route_audit_attempts": 6,
+        "anchor_index_queries": 0,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 0,
+        "anchor_index_matches": [],
+        "anchor_index_postings_retained": [],
+        "anchor_index_postings_truncated": [],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 0,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0
+      },
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL4630839-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 22.74,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 2,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 54,
+        "hit_tanimoto": 6,
+        "polar_reference_capacity_below_minimum": 4
+      },
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 262144,
+        "catalog_bucket_rankings": 18400,
+        "total_fingerprint_calls": 7512,
+        "rule_inspections": 512,
+        "combinations": 304,
+        "products_generated": 158,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 1,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 238542,
+        "anchor_index_matches": [
+          8
+        ],
+        "anchor_index_postings_retained": [
+          8
+        ],
+        "anchor_index_postings_truncated": [
+          false
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 25,
+        "anchor_posting_metadata_visits": 112,
+        "anchor_role_checks": 112,
+        "anchor_role_compatible": 22
+      },
+      "limits_reached": [
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ]
+    },
+    {
+      "id": "CHEMBL4247-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 20.679,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is inverted": 2,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 34,
+        "polar_reference_capacity_below_minimum": 3,
+        "property: mw.upper_maximum:611.7640000000005>500.0; logp.upper_maximum:6.329520000000006>5": 1
+      },
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 181016,
+        "catalog_bucket_rankings": 15640,
+        "total_fingerprint_calls": 4905,
+        "rule_inspections": 512,
+        "combinations": 116,
+        "products_generated": 68,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 1,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 238542,
+        "anchor_index_matches": [
+          412
+        ],
+        "anchor_index_postings_retained": [
+          256
+        ],
+        "anchor_index_postings_truncated": [
+          true
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 17,
+        "anchor_posting_metadata_visits": 1536,
+        "anchor_role_checks": 1536,
+        "anchor_role_compatible": 194
+      },
+      "limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL4247-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 19.858,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 16,
+        "polar_reference_capacity_below_minimum": 6,
+        "property: mw.upper_maximum:524.6470000000003>500.0": 1,
+        "property: mw.upper_maximum:552.7010000000002>500.0": 1,
+        "property: mw.upper_maximum:591.1120000000002>500.0; logp.upper_maximum:5.355300000000005>5": 1,
+        "property: mw.upper_maximum:593.7320000000002>500.0; logp.upper_maximum:5.0903000000000045>5": 1,
+        "property: mw.upper_maximum:650.2669999999998>500.0; logp.upper_maximum:6.424020000000006>5": 1,
+        "property: mw.upper_maximum:678.321>500.0; logp.upper_maximum:7.202620000000008>5": 1
+      },
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 124808,
+        "catalog_bucket_rankings": 10120,
+        "total_fingerprint_calls": 4491,
+        "rule_inspections": 512,
+        "combinations": 68,
+        "products_generated": 42,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 0,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 0,
+        "anchor_index_matches": [],
+        "anchor_index_postings_retained": [],
+        "anchor_index_postings_truncated": [],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 0,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0
+      },
+      "limits_reached": [
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL5163-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 22.143,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 1,
+        "Hit stereo anchor is inverted": 4,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 31,
+        "polar_reference_capacity_below_minimum": 3
+      },
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 221784,
+        "catalog_bucket_rankings": 18400,
+        "total_fingerprint_calls": 8359,
+        "rule_inspections": 512,
+        "combinations": 152,
+        "products_generated": 80,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 1,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 238542,
+        "anchor_index_matches": [
+          310
+        ],
+        "anchor_index_postings_retained": [
+          256
+        ],
+        "anchor_index_postings_truncated": [
+          true
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 20,
+        "anchor_posting_metadata_visits": 1536,
+        "anchor_role_checks": 1536,
+        "anchor_role_compatible": 409
+      },
+      "limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL5163-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 21.787,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 186
+      },
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 175800,
+        "catalog_bucket_rankings": 11960,
+        "total_fingerprint_calls": 6051,
+        "rule_inspections": 512,
+        "combinations": 280,
+        "products_generated": 298,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 2,
+        "anchor_index_queries_unindexed": 7,
+        "anchor_index_match_checks": 477084,
+        "anchor_index_matches": [
+          0,
+          0
+        ],
+        "anchor_index_postings_retained": [
+          0,
+          0
+        ],
+        "anchor_index_postings_truncated": [
+          false,
+          false
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 26,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0
+      },
+      "limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL3334418-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 20.689,
+      "pre_evidence_eligible_routes": 2,
+      "pre_evidence_eligible_distinct_products": 2,
+      "one_step_routes": 2,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": 0.37681159420289856,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 6,
+        "hit_tanimoto": 8,
+        "polar_reference_capacity_below_minimum": 12,
+        "property: mw.upper_maximum:537.6410000000002>500.0; logp.upper_maximum:6.068700000000005>5": 1,
+        "property: mw.upper_maximum:551.6680000000002>500.0; logp.upper_maximum:6.590200000000006>5": 1
+      },
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 101984,
+        "catalog_bucket_rankings": 3680,
+        "total_fingerprint_calls": 5573,
+        "rule_inspections": 455,
+        "combinations": 80,
+        "products_generated": 50,
+        "route_audit_attempts": 2,
+        "anchor_index_queries": 0,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 0,
+        "anchor_index_matches": [],
+        "anchor_index_postings_retained": [],
+        "anchor_index_postings_truncated": [],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 0,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0
+      },
+      "limits_reached": []
+    },
+    {
+      "id": "CHEMBL3334418-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 19.897,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 6,
+        "hit_tanimoto": 5,
+        "polar_reference_capacity_below_minimum": 17,
+        "property: mw.upper_maximum:504.5140000000001>500.0; logp.upper_maximum:5.4257000000000035>5": 1,
+        "property: mw.upper_maximum:505.5020000000001>500.0": 1
+      },
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 101984,
+        "catalog_bucket_rankings": 3680,
+        "total_fingerprint_calls": 5713,
+        "rule_inspections": 455,
+        "combinations": 80,
+        "products_generated": 50,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 0,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 0,
+        "anchor_index_matches": [],
+        "anchor_index_postings_retained": [],
+        "anchor_index_postings_truncated": [],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 0,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0
+      },
+      "limits_reached": []
+    },
+    {
+      "id": "CHEMBL4869-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 22.916,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 44
+      },
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 155110,
+        "catalog_bucket_rankings": 7360,
+        "total_fingerprint_calls": 8531,
+        "rule_inspections": 512,
+        "combinations": 296,
+        "products_generated": 180,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 2,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 477084,
+        "anchor_index_matches": [
+          42,
+          0
+        ],
+        "anchor_index_postings_retained": [
+          42,
+          0
+        ],
+        "anchor_index_postings_truncated": [
+          false,
+          false
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 18,
+        "anchor_posting_metadata_visits": 294,
+        "anchor_role_checks": 294,
+        "anchor_role_compatible": 126
+      },
+      "limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL4869-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 22.509,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 16
+      },
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 164180,
+        "catalog_bucket_rankings": 8280,
+        "total_fingerprint_calls": 8134,
+        "rule_inspections": 512,
+        "combinations": 168,
+        "products_generated": 88,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 2,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 477084,
+        "anchor_index_matches": [
+          0,
+          42
+        ],
+        "anchor_index_postings_retained": [
+          0,
+          42
+        ],
+        "anchor_index_postings_truncated": [
+          false,
+          false
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 24,
+        "anchor_posting_metadata_visits": 252,
+        "anchor_role_checks": 252,
+        "anchor_role_compatible": 111
+      },
+      "limits_reached": [
+        "max_rule_inspections"
+      ]
+    },
+    {
+      "id": "CHEMBL3864-query-1",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 19.115,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 6,
+        "hit_tanimoto": 6,
+        "polar_reference_capacity_below_minimum": 3,
+        "property: mw.upper_maximum:552.6310000000004>500.0; logp.upper_maximum:6.6529800000000066>5": 1,
+        "property: mw.upper_maximum:594.6720000000003>500.0; logp.upper_maximum:6.638380000000006>5": 1,
+        "property: mw.upper_maximum:606.7010000000004>500.0; logp.upper_maximum:5.272440000000004>5": 1
+      },
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 67376,
+        "catalog_bucket_rankings": 1840,
+        "total_fingerprint_calls": 5049,
+        "rule_inspections": 273,
+        "combinations": 52,
+        "products_generated": 38,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 0,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 0,
+        "anchor_index_matches": [],
+        "anchor_index_postings_retained": [],
+        "anchor_index_postings_truncated": [],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 0,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0
+      },
+      "limits_reached": []
+    },
+    {
+      "id": "CHEMBL3864-query-2",
+      "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+      "elapsed_generation_seconds": 20.476,
+      "pre_evidence_eligible_routes": 0,
+      "pre_evidence_eligible_distinct_products": 0,
+      "one_step_routes": 0,
+      "two_step_routes": 0,
+      "best_original_hit_bit_tanimoto": null,
+      "rejection_counts": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 20
+      },
+      "work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_buckets": 920,
+        "catalog_row_visits": 146624,
+        "catalog_bucket_rankings": 7360,
+        "total_fingerprint_calls": 4942,
+        "rule_inspections": 512,
+        "combinations": 44,
+        "products_generated": 30,
+        "route_audit_attempts": 0,
+        "anchor_index_queries": 2,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_index_match_checks": 477084,
+        "anchor_index_matches": [
+          0,
+          0
+        ],
+        "anchor_index_postings_retained": [
+          0,
+          0
+        ],
+        "anchor_index_postings_truncated": [
+          false,
+          false
+        ],
+        "anchor_index_incomplete": false,
+        "guide_anchor_checks": 16,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0
+      },
+      "limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections"
+      ]
+    }
+  ],
+  "pre_evidence_input_coverage": 2,
+  "schema": "route-first-pre-evidence-development-diagnostic-v1",
+  "source_commit": "826b2af90d75f5243851395250fe53e96224f356",
+  "primary_comparison_run": false,
+  "decision": "Pre-evidence eligible coverage remains2/12, below required primary>5/12. No forward/3D comparison executed.",
+  "evidence": {
+    "result_path": "benchmark-results/route-first-development-20261023-v2/development-probe-v3/result.json",
+    "result_sha256": "9e572e69f46eb2dda90f7839ec34042e15be106cfa03ec9b6df8cbbd35dac12e",
+    "script_sha256": "cc7b37b6415a3b8588309f51ea0b28109d4bde9f4f8f44f2ac56762928ca3819"
+  },
+  "excluded_diagnostic": {
+    "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v2/INVALID-HARNESS.json",
+    "reason": "Harness omitted compiled hit_anchors; no efficacy inference from this partial run."
+  }
+}
