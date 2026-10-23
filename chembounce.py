@@ -1091,6 +1091,13 @@ def main(argv=None):
     from chembounce_synthesis.options import has_synthesis_overrides
 
     synthesis_config = None
+    if options.route_first and (
+        options.synllama is not None or not options.recommend or not options.synthesis_config
+    ):
+        LOGGER.error(
+            "--route-first requires --recommend and --synthesis-config, without --synllama/--no-synllama"
+        )
+        return 2
     if options.recommend:
         from chembounce_synthesis.profiles import request_recommendations
 
@@ -1135,6 +1142,8 @@ def main(argv=None):
 
         try:
             synthesis_config = load_config(options.synthesis_config, options=options)
+            if options.route_first != ("route_first" in synthesis_config):
+                raise ValueError("--route-first must match an explicit route_first synthesis configuration")
             if options.synllama is True and synthesis_config["provider"].get("kind") != "synllama":
                 raise ValueError(
                     "--synllama requires provider.kind='synllama'; omit it to replay saved proposals"
@@ -1188,6 +1197,35 @@ def main(argv=None):
         except (ValueError, OSError, KeyError, TypeError, RuntimeError) as exc:
             LOGGER.error("Recommendation configuration: %s", exc)
             return 2
+    if options.route_first:
+        # The current strict property intersection above is identical to the
+        # native-hopping entrypoint; only the design supply changes.
+        from chembounce_synthesis.workflow import run
+
+        output = Path(options.output_dir)
+        if output.exists() and any(output.iterdir()):
+            LOGGER.error("Route-first output directory is not empty: %s", output)
+            return 2
+        output.mkdir(parents=True, exist_ok=True)
+        _json_write(
+            output / "run_manifest.json",
+            {
+                "schema_version": 1,
+                "input_smiles": options.input_smiles,
+                "design_supply": "route_first_catalog_rule_v1",
+                "native_hopping": "not_run",
+                "synthesis_config": synthesis_config,
+            },
+        )
+        try:
+            verified = run(options.input_smiles, (), synthesis_config, output / "synthesis")
+        except (ValueError, OSError, KeyError, TypeError, RuntimeError) as exc:
+            LOGGER.error("Route-first synthesis workflow: %s", exc)
+            return 2
+        print(
+            f"Qualified route-first recommendations: {len(verified)}; results: {output / 'synthesis/results.tsv'}"
+        )
+        return 0 if verified else 3
     design_supply = None
     overall_limit = options.overall_max_n
     if synthesis_config is not None:

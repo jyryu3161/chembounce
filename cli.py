@@ -180,6 +180,11 @@ def argument_parser():
         help="Run catalog/reaction verification and 3D ranking after hopping; JSON config",
     )
     parser.add_argument(
+        "--route-first",
+        action="store_true",
+        help="Opt into bounded catalog/rule route generation; skip native hopping and SynLlama, retain synthesis qualification",
+    )
+    parser.add_argument(
         "--synllama",
         action=argparse.BooleanOptionalAction,
         default=None,

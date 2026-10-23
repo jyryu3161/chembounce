@@ -5,6 +5,46 @@ products despite saved computational route support. See the
 [synthesis-route priority plan](SYNTHESIS_ROUTE_PLAN.md) for the baseline,
 bounded route-generation work, and checks planned before another large run.
 
+## Experimental route-first generation (explicit opt-in)
+
+The `catalog-rule-route-first-v1` option generates concrete one- and two-step
+catalog/rule routes before the existing recommendation intake. It does not run
+native scaffold hopping or SynLlama proposals. Use it only with `--recommend`
+and a synthesis configuration that declares `route_first`; omit `provider` and
+route `expansion`. For example, adapt the [strict configuration](../examples/synthesis/strict-recommendation-config.json)
+with local catalog, rules, and pinned forward-model assets, remove `provider`,
+and add:
+
+```json
+"route_first": {"version": "catalog-rule-route-first-v1", "max_steps": 2}
+```
+
+```bash
+python chembounce.py -i 'HIT_SMILES' -o NEW_RUN --recommend \
+  --route-first --synthesis-config route-first.json
+python -m chembounce_synthesis.cli --hit 'HIT_SMILES' --recommend \
+  --route-first --config route-first.json --output NEW_SYNTHESIS_RUN
+```
+
+The Python entry point is `recommend_routes(hit, config, output_dir)` from
+`chembounce_synthesis`. The policy has explicit global caps on rule scans,
+catalog row visits/fingerprints, combinations, products, verified routes,
+beam width, two-step depth and the inherited wall deadline. Reverse-template
+products are retrieval hints only; every retained route is forward replayed
+and audited, and its evidence and 3D gates remain separate. An exact generated
+product is its own design reference, so design-to-product similarity 1 is
+tautological; original-hit constraints remain the meaningful comparison.
+
+Specified hit tetrahedral and E/Z centers require a unique, stereo-matched
+local atom context in each generated product. The bounded comparison includes
+complete rings touching that context and may conservatively reject changed or
+ambiguous anchors, including some legitimate peripheral replacements. It does
+not infer a global hit/product atom mapping. `route_first_candidates.json`
+records reviewable generated routes and work counters; `results.json` contains
+only products that pass the existing final qualification. This material
+generation override is reported as `custom_unvalidated`; a development-panel
+comparison does not establish independent calibration or experimental synthesis.
+
 ## Optional catalog byte binding
 
 A configuration can pin both the catalog TSV and its import manifest:

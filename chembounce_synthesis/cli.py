@@ -18,6 +18,11 @@ def main(argv=None):
     source = parser.add_mutually_exclusive_group()
     source.add_argument("--design", action="append", help="Design SMILES; repeat for several designs")
     source.add_argument("--designs-tsv", help="ChemBounce overall_result.txt or TSV with a smiles column")
+    parser.add_argument(
+        "--route-first",
+        action="store_true",
+        help="Generate bounded catalog/rule routes without supplied designs or SynLlama",
+    )
     parser.add_argument("--config", help="Synthesis workflow JSON configuration")
     parser.add_argument(
         "--continue-from", help="Expand a previous run using its inputs, routes and saved model proposals"
@@ -47,6 +52,19 @@ def main(argv=None):
             from .workflow import preflight_recommendation
 
             config = preflight_recommendation(args.hit or inherited_hit, config)
+        if args.route_first:
+            if (
+                not args.recommend
+                or args.design
+                or args.designs_tsv
+                or args.continue_from
+                or "route_first" not in config
+            ):
+                raise ValueError(
+                    "--route-first requires --recommend, route_first config, and no design or continuation"
+                )
+        elif "route_first" in config:
+            raise ValueError("route_first config requires --route-first")
         designs = args.design
         if args.designs_tsv:
             stream = inputs.enter_context(open(args.designs_tsv, newline=""))
@@ -57,11 +75,11 @@ def main(argv=None):
             designs = (row[column] for row in reader)
             if selection_policy(config)["version"] == "legacy-capped-v1":
                 designs = list(designs)
-        if designs is None:
+        if designs is None and not args.route_first:
             designs = inherited_designs
-        if designs is None:
+        if designs is None and not args.route_first:
             raise ValueError("Provide --design/--designs-tsv or --continue-from")
-        rows = run(args.hit or inherited_hit, designs, config, args.output)
+        rows = run(args.hit or inherited_hit, () if args.route_first else designs, config, args.output)
     except (ValueError, OSError, KeyError, TypeError, RuntimeError) as exc:
         logging.error("%s", exc)
         return 2

@@ -47,6 +47,7 @@ from .reactions import Rules
 from .refinement import RefinementBudget, RefinementSettings, refine_candidate
 from .route_objective import RootProductObjective, search_policy
 from .routes import SearchLimits, expand_route, resolve_proposal, verify_route
+from .route_first import RouteFirstLimits, check_hit_stereo_anchors, generate as generate_route_first
 from .synllama import SavedProposals, SynLlama
 from . import selective_scoring, evidence_outcomes
 
@@ -201,6 +202,7 @@ def _config(config):
         "recommendation_profile",
         "similarity_constraints",
         "rejected_pose_diagnostics",
+        "route_first",
     }
     if set(config) - permitted:
         raise ValueError(f"Unknown synthesis configuration keys: {sorted(set(config) - permitted)}")
@@ -210,9 +212,23 @@ def _config(config):
         raise ValueError("Rejected-pose diagnostics require selective similarity constraints")
     if "catalog_binding" in config:
         validate_catalog_binding(config["catalog_binding"])
-    for required in ("catalog", "rules", "provider"):
+    for required in ("catalog", "rules") if "route_first" in config else ("catalog", "rules", "provider"):
         if required not in config:
             raise ValueError(f"Missing synthesis configuration: {required}")
+    if "route_first" in config:
+        if "provider" in config:
+            raise ValueError("route_first cannot be combined with a proposal provider")
+        if config.get("mode", "hop") != "hop":
+            raise ValueError("route_first requires hop mode")
+        if config.get("route_search_policy", "original-hit-v1") != "original-hit-v1":
+            raise ValueError("route_first requires original-hit-v1 search")
+        if config.get("carry_forward") or config.get("expansion", {}).get("rounds", 0):
+            raise ValueError("route_first cannot combine with continuation or route expansion")
+        if not isinstance(config["route_first"], dict):
+            raise ValueError("route_first must be an object")
+        if set(config["route_first"]) - set(RouteFirstLimits.__dataclass_fields__):
+            raise ValueError("Unknown route_first option")
+        RouteFirstLimits(**config["route_first"])
     for key in (
         "provider",
         "search",
@@ -348,10 +364,11 @@ def _resolve_paths(config, base):
     evidence_predictor = config.get("synthesis_evidence", {}).get("predictor")
     if evidence_predictor is not None:
         evidence_predictor["model_path"] = str((base / evidence_predictor["model_path"]).resolve())
-    provider = config["provider"] = dict(config["provider"])
-    for key in ("model_path", "prompt_path", "path"):
-        if provider.get(key):
-            provider[key] = str((base / provider[key]).resolve())
+    if "provider" in config:
+        provider = config["provider"] = dict(config["provider"])
+        for key in ("model_path", "prompt_path", "path"):
+            if provider.get(key):
+                provider[key] = str((base / provider[key]).resolve())
     return config
 
 
@@ -383,9 +400,12 @@ def preflight_recommendation(hit, config):
 
     for key in ("catalog", "rules"):
         path(config[key], key)
-    provider = config["provider"]
-    kind = provider.get("kind")
-    if kind == "saved":
+    provider = config.get("provider")
+    kind = provider.get("kind") if provider else None
+    if "route_first" in config:
+        if provider is not None:
+            raise ValueError("route_first cannot use a proposal provider")
+    elif kind == "saved":
         if set(provider) != {"kind", "path"}:
             raise ValueError("saved provider requires only kind and path")
         path(provider["path"], "provider.path")
@@ -427,6 +447,14 @@ def recommend(hit, designs, config, output_dir, *, deadline_monotonic=None):
     """
     config = preflight_recommendation(hit, config)
     return run(hit, designs, config, output_dir, deadline_monotonic=deadline_monotonic, scoring_mode="3d")
+
+
+def recommend_routes(hit, config, output_dir, *, deadline_monotonic=None):
+    """Run the current strict qualification contract with route-first intake."""
+    if "route_first" not in config:
+        raise ValueError("recommend_routes requires explicit route_first configuration")
+    config = preflight_recommendation(hit, config)
+    return run(hit, (), config, output_dir, deadline_monotonic=deadline_monotonic, scoring_mode="3d")
 
 
 def _provider(config):
@@ -1007,6 +1035,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
     rejected_diagnostics = None
     selected = []
     projected_designs = set()
+    route_first_catalog = route_first_rules = route_first_report = None
+    route_first_items = {}
     try:
         if deadline_monotonic is not None and (
             isinstance(deadline_monotonic, bool)
@@ -1066,6 +1096,54 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             hit_fp = FP.GetFingerprint(molecule(hit))
             design_policy = selection_policy(config)
             bounded_refill = design_policy["version"] == "bounded-refill-v1"
+            if config.get("core_smiles") and not molecule(hit).HasSubstructMatch(
+                molecule(config["core_smiles"]), useChirality=True
+            ):
+                raise ValueError("The original hit does not contain core_smiles")
+            if "route_first" in config:
+                if designs is not None and (not isinstance(designs, (tuple, list)) or len(designs)):
+                    raise ValueError("route_first does not accept externally supplied designs")
+                generation_settings = ConformerSettings(**config.get("conformers", {}))
+                _check_stereo(molecule(hit), generation_settings)
+                with phase_span(telemetry, "common.catalog"):
+                    route_first_catalog = (
+                        Catalog(config["catalog"], binding=config["catalog_binding"])
+                        if "catalog_binding" in config
+                        else Catalog(config["catalog"])
+                    )
+                with phase_span(telemetry, "common.rules"):
+                    route_first_rules = Rules(config["rules"])
+
+                def accept_generated(product):
+                    check_hit_stereo_anchors(hit, product)
+                    check_constraints(
+                        product,
+                        hit,
+                        product,
+                        "hop",
+                        config.get("core_smiles"),
+                        config.get("preserve_design_scaffold", False),
+                    )
+                    _check_stereo(molecule(product), generation_settings)
+                    if similarity is not None:
+                        selective_scoring.preflight_design(product)
+
+                generated, route_first_report = generate_route_first(
+                    hit,
+                    route_first_catalog,
+                    route_first_rules,
+                    config["route_first"],
+                    deadline_monotonic=deadline_monotonic,
+                    accept=accept_generated,
+                )
+                for item in generated:
+                    route_first_items.setdefault(item["verification"]["product"], []).append(item)
+                designs = list(route_first_items)
+                summary["route_first"] = {
+                    **route_first_report,
+                    "candidate_designs": len(designs),
+                    "product_as_design": "Exact regenerated product is its own 3D design reference; design_tanimoto=1 is tautological, original-hit constraints remain authoritative",
+                }
             raw_designs = designs
             if bounded_refill:
                 summary["designs_raw_supplied"] = sized_count(raw_designs)
@@ -1077,10 +1155,6 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 if len(designs) < len(all_designs):
                     summary["limits_reached"].append("max_designs")
                 summary["designs_supplied"], summary["designs_used"] = len(all_designs), len(designs)
-            if config.get("core_smiles") and not molecule(hit).HasSubstructMatch(
-                molecule(config["core_smiles"]), useChirality=True
-            ):
-                raise ValueError("The original hit does not contain core_smiles")
             limits = SearchLimits(**config.get("search", {}))
         settings = ConformerSettings(**config.get("conformers", {}))
         requested_refinement = RefinementSettings(**config.get("refinement", {}))
@@ -1323,25 +1397,33 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     }
                 )
         all_designs_rejected = not designs and (bounded_refill or bool(capped_designs))
-        catalog = rules = None
+        catalog, rules = route_first_catalog, route_first_rules
         if all_designs_rejected:
             summary["no_candidates_reason"] = (
-                "No eligible design was assessed within the configured intake limits; this does not establish that no qualifying chemistry exists"
+                "No route-first generated design passed bounded intake; this does not establish that no qualifying chemistry exists"
+                if route_first_report is not None
+                else "No eligible design was assessed within the configured intake limits; this does not establish that no qualifying chemistry exists"
                 if bounded_refill
                 else "All capped designs failed the configured 3D reference preflight"
             )
-            summary["assets_not_loaded"] = ["catalog", "rules", "provider", "synthesis_evidence"]
+            summary["assets_not_loaded"] = (
+                ["synthesis_evidence"]
+                if route_first_report is not None
+                else ["catalog", "rules", "provider", "synthesis_evidence"]
+            )
             if "pocket" in config:
                 summary["assets_not_loaded"].append("pocket")
         else:
-            with phase_span(telemetry, "common.catalog"):
-                catalog = (
-                    Catalog(config["catalog"], binding=config["catalog_binding"])
-                    if "catalog_binding" in config
-                    else Catalog(config["catalog"])
-                )
-            with phase_span(telemetry, "common.rules"):
-                rules = Rules(config["rules"])
+            if catalog is None:
+                with phase_span(telemetry, "common.catalog"):
+                    catalog = (
+                        Catalog(config["catalog"], binding=config["catalog_binding"])
+                        if "catalog_binding" in config
+                        else Catalog(config["catalog"])
+                    )
+            if rules is None:
+                with phase_span(telemetry, "common.rules"):
+                    rules = Rules(config["rules"])
             with phase_span(telemetry, "common.evidence_prepare") as telemetry_phase:
                 if deadline_reached():
                     evidence_evaluator = evaluator_from_config(
@@ -1403,6 +1485,17 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         manifest["catalog_sha256"] = catalog.sha256 if catalog is not None else None
         manifest["rules_sha256"] = rules.sha256 if rules is not None else None
         manifest["catalog_import"] = catalog.import_provenance if catalog is not None else None
+        if route_first_report is not None:
+            manifest["route_first"] = {
+                **route_first_report,
+                "source_sha256": {
+                    name: _SOURCE_HASHES[name]
+                    for name in ("route_first.py", "routes.py", "reactions.py", "catalog.py", "workflow.py")
+                },
+                "source_binding_scope": "Observed implementation and concrete asset hashes; opt-in custom development policy, not historical v7 generation provenance",
+                "selected_design_cap": config.get("max_designs", 20),
+                "reference_origin": "self_product_design",
+            }
         manifest["carry_forward"] = carry_sources
         manifest["effective_search"], manifest["effective_conformers"] = asdict(limits), asdict(settings)
         manifest["screening_allocation_policy"] = {
@@ -1457,7 +1550,11 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         manifest["pocket"] = pose_constraints.provenance if pose_constraints is not None else None
         if config.get("reference_sdf"):
             manifest["reference_sdf_sha256"] = digest(config["reference_sdf"])
-        provider = _provider(config["provider"]) if designs and not deadline_reached() else None
+        provider = (
+            _provider(config["provider"])
+            if "route_first" not in config and designs and not deadline_reached()
+            else None
+        )
         carried_only = {
             design
             for design in designs
@@ -1496,6 +1593,20 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
         write_json(
             out / "proposals.json", {"schema_version": 1, "provider": manifest["provider"], "proposals": []}
         )
+        if route_first_report is not None:
+            write_json(
+                out / "route_first_candidates.json",
+                {
+                    "schema_version": 1,
+                    "policy": manifest["route_first"],
+                    "candidates": [
+                        {"design": design, "routes": route_first_items[design]}
+                        for design in route_first_items
+                    ],
+                    "selected_designs": list(designs),
+                    "qualified_results_are_separate": True,
+                },
+            )
         from utils import _get_molecular_prop_extd_, determ_props
 
         product_properties = _ProductProperties(
@@ -1533,9 +1644,12 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
             return props
 
         with phase_span(telemetry, "common.route_search") as telemetry_phase:
-            for design, proposals in _design_batches(
-                designs, provider, deadline_monotonic, carried_only=carried_only
-            ):
+            batches = (
+                ((design, route_first_items[design]) for design in designs)
+                if route_first_report is not None
+                else _design_batches(designs, provider, deadline_monotonic, carried_only=carried_only)
+            )
+            for design, proposals in batches:
                 LOGGER.info("Projecting design %s onto catalog reaction space", design)
                 design_fp = FP.GetFingerprint(molecule(design))
                 if route_policy["version"] == "original-hit-v1" and design not in root_objectives:
@@ -1551,7 +1665,11 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                 expansion_cache = {}
                 # Carry evidence first, before the fresh search can consume the scoring budget.
                 for proposal in proposals:
-                    if proposal is None:
+                    if route_first_report is not None:
+                        projected_designs.add(design)
+                        proposal_id, projected = None, [proposal]
+                        candidates = list(projected)
+                    elif proposal is None:
                         proposal_id, projected = None, []
                         candidates = carried[design]
                     else:
@@ -1630,6 +1748,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                             **item,
                             "selection_status": "pending",
                         }
+                        if route_first_report is not None:
+                            record["generation_verification"] = record.pop("verification")
                         route_records.append(record)
                         if deadline_reached():
                             record.update(
@@ -2386,6 +2506,35 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     "synthesis_evidence" in record for record in route_records
                 )
             summary["forward_evidence_outcomes"] = evidence_outcomes.summarize(route_records)
+            if route_first_report is not None:
+                generated_records = [
+                    r
+                    for r in route_records
+                    if r.get("generation", {}).get("policy") == "catalog-rule-route-first-v1"
+                ]
+                supported = [
+                    r
+                    for r in generated_records
+                    if r.get("synthesis_evidence", {}).get("eligibility", {}).get("passed") is True
+                ]
+                summary["route_first_downstream"] = {
+                    "intake_route_records": len(generated_records),
+                    "generation_verified_route_records": sum(
+                        "generation_verification" in r for r in generated_records
+                    ),
+                    "workflow_reverified_route_records": sum("verification" in r for r in generated_records),
+                    "eligible_for_evidence_route_records": sum(
+                        r.get("eligible_for_evidence") is True for r in generated_records
+                    ),
+                    "producer_supported_route_records": len(supported),
+                    "producer_supported_distinct_exact_products": len(
+                        {r["verification"]["product"] for r in supported}
+                    ),
+                    "workflow_scoring_attempt_records": summary.get("scored_products", 0),
+                    "returned_products": len(selected),
+                    "qualified_products": summary.get("qualified_products", 0),
+                    "scope": "Saved producer route/evidence state; no independent chemical or experimental validation",
+                }
             summary["route_rejections"] = {
                 status: sum(r["selection_status"] == status for r in route_records)
                 for status in sorted({r["selection_status"] for r in route_records})

@@ -522,6 +522,12 @@ def profile_provenance(config):
         numerical_changes["reference_sdf"] = {"profile": None, "effective": config["reference_sdf"]}
     if config.get("pocket"):
         numerical_changes["pocket"] = {"profile": None, "effective": config["pocket"]}
+    if "route_first" in config:
+        numerical_changes["route_first"] = {
+            "profile": None,
+            "effective": config["route_first"],
+            "scope": "Explicit route-first generation override; historical profile generation has not been evaluated under this source",
+        }
     if name not in ENGINEERING_PROFILES and "similarity_constraints" in config:
         numerical_changes["similarity_constraints"] = {
             "profile": None,
@@ -619,6 +625,7 @@ def profile_provenance(config):
                 "property_thresholds",
                 "search",
                 "expansion",
+                "route_first",
                 "synthesis_evidence",
                 *(("similarity_constraints",) if engineering else ()),
             )
