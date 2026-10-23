@@ -1,0 +1,305 @@
+{
+  "schema": "reaction-pool-scale-prototype-portable-v3",
+  "status": "complete_implementation_prerequisite_only",
+  "scope": "Saved-leaf metadata comparison only; no catalog reread, role-filtered candidate retrieval, fingerprint, generation, forward replay, route audit or model",
+  "artifacts": {
+    "benchmark-results/route-first-development-20261023-v2/reaction-pool-scale-prototype-v3/probe.py": "3085bd1aef6779348d53ae32a7288c0148a5d04d8b2e881d0de11d33a61c7981",
+    "benchmark-results/route-first-development-20261023-v2/reaction-pool-scale-prototype-v3/result.json": "7614c43a199e69ca424652a7e006f0b9b39806d3584fdcad33a3f9528735fff3",
+    "benchmark-results/route-first-development-20261023-v2/reaction-pool-scale-prototype-v3/analysis.json": "81d5130b166f6d7a5a6d509745781190fadc4fb3f3ac4aafdda26838cf3da7e4"
+  },
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "bc5cc5ef47aba1bede5ec188667a006381d18554a4c0ef1d4145946296d02c2b",
+    "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b"
+  },
+  "source_unchanged_during_metadata_run": true,
+  "policy": {
+    "features": [
+      "full",
+      "local_v2",
+      "ceil_midpoint_raw_then_existing_bins"
+    ],
+    "index_choices": [
+      "none",
+      "exact",
+      "exact_first_same_site"
+    ],
+    "selected_index_roles_in_frozen_order": [
+      "[Cl,Br,I][c&$(c1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1)]",
+      "[N;$(NC)&!$(N=*)&!$([N&-])&!$(N#*)&!$([N&D3])&!$([N&D4])&!$(N[c,O])&!$(N[C,S]=[S,O,N]),H2&$(Nc1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1)]"
+    ],
+    "same_site_rule": "Full guide, caller and both indexes complete below 65 matches; at least one caller and index match must have exactly equal atom-index sets; exact normalized role precedes reuse; unknown uses legacy",
+    "pool_cap": 8192,
+    "max_query_role_pairs": 128,
+    "max_site_match_requests": 384,
+    "max_matches_sentinel": 65,
+    "max_query_atoms": 256,
+    "max_query_bonds": 512,
+    "max_graph_visits": 262144
+  },
+  "reproduction_checks": {
+    "full_features": 76,
+    "local_v2_features": 76,
+    "v2_rank_arms": 1216,
+    "observed_pool_membership": 160,
+    "observed_pool_membership_mismatches": 0
+  },
+  "meter": {
+    "window_match_requests": 76,
+    "window_graph_visits": 4362,
+    "site_match_requests": 207,
+    "graph_visits": 7758,
+    "combined_graph_visits": 12120
+  },
+  "same_site_choice_counts": {
+    "exact": 7,
+    "same_site": 8,
+    "legacy": 61
+  },
+  "arms": [
+    {
+      "arm": "full__none",
+      "saved_leaf_query_pairs_reached": 12,
+      "gains_vs_full_none": 0,
+      "losses_vs_full_none": 0,
+      "complete_known_leafsets_upper_bound": 0
+    },
+    {
+      "arm": "full__exact",
+      "saved_leaf_query_pairs_reached": 13,
+      "gains_vs_full_none": 1,
+      "losses_vs_full_none": 0,
+      "complete_known_leafsets_upper_bound": 0
+    },
+    {
+      "arm": "full__exact_first_same_site",
+      "saved_leaf_query_pairs_reached": 12,
+      "gains_vs_full_none": 2,
+      "losses_vs_full_none": 2,
+      "complete_known_leafsets_upper_bound": 0
+    },
+    {
+      "arm": "local_v2__none",
+      "saved_leaf_query_pairs_reached": 18,
+      "gains_vs_full_none": 10,
+      "losses_vs_full_none": 4,
+      "complete_known_leafsets_upper_bound": 0
+    },
+    {
+      "arm": "local_v2__exact",
+      "saved_leaf_query_pairs_reached": 19,
+      "gains_vs_full_none": 11,
+      "losses_vs_full_none": 4,
+      "complete_known_leafsets_upper_bound": 0
+    },
+    {
+      "arm": "local_v2__exact_first_same_site",
+      "saved_leaf_query_pairs_reached": 20,
+      "gains_vs_full_none": 12,
+      "losses_vs_full_none": 4,
+      "complete_known_leafsets_upper_bound": 0
+    },
+    {
+      "arm": "midpoint__none",
+      "saved_leaf_query_pairs_reached": 10,
+      "gains_vs_full_none": 0,
+      "losses_vs_full_none": 2,
+      "complete_known_leafsets_upper_bound": 0
+    },
+    {
+      "arm": "midpoint__exact",
+      "saved_leaf_query_pairs_reached": 12,
+      "gains_vs_full_none": 2,
+      "losses_vs_full_none": 2,
+      "complete_known_leafsets_upper_bound": 0
+    },
+    {
+      "arm": "midpoint__exact_first_same_site",
+      "saved_leaf_query_pairs_reached": 16,
+      "gains_vs_full_none": 6,
+      "losses_vs_full_none": 2,
+      "complete_known_leafsets_upper_bound": 1
+    }
+  ],
+  "selected_arm_details": {
+    "arm": "midpoint__exact_first_same_site",
+    "saved_leaf_query_pairs_reached": 16,
+    "gains_vs_full_none": 6,
+    "losses_vs_full_none": 2,
+    "route_leafset_metadata_upperbounds": [
+      {
+        "route_id": "route_000008",
+        "product": "COc1cc(CC(=O)O)ccc1Nc1ccc2ncc(-c3ccccc3N(C)C)n2n1",
+        "role_leaf_hits": [
+          {
+            "node": "b0",
+            "rule_id": "synllama-rule-036",
+            "role_slot": 0,
+            "catalog_id": "structure-sha256:54489d4bc382b9f092e2cbd64927a988e4ffd2eca9495c07fa8288224f252e94",
+            "smiles": "CN(C)c1ccccc1Br",
+            "reached_calls": [
+              {
+                "call_index": 4,
+                "phase": 1,
+                "cache_hit": false,
+                "rank": 6421
+              },
+              {
+                "call_index": 19,
+                "phase": 2,
+                "cache_hit": true,
+                "rank": 6421
+              },
+              {
+                "call_index": 34,
+                "phase": 2,
+                "cache_hit": true,
+                "rank": 6421
+              },
+              {
+                "call_index": 37,
+                "phase": 2,
+                "cache_hit": true,
+                "rank": 6421
+              }
+            ]
+          },
+          {
+            "node": "b2",
+            "rule_id": "synllama-rule-036",
+            "role_slot": 1,
+            "catalog_id": "structure-sha256:9eba082d36a1edde6e2f0578a8603a93e6d0eac2df5b89c15c901a1e2d5cdfa6",
+            "smiles": "Clc1ccc2ncc(Br)n2n1",
+            "reached_calls": []
+          },
+          {
+            "node": "b1",
+            "rule_id": "synllama-rule-042",
+            "role_slot": 1,
+            "catalog_id": "structure-sha256:66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a",
+            "smiles": "COc1cc(CC(=O)O)ccc1N",
+            "reached_calls": [
+              {
+                "call_index": 3,
+                "phase": 1,
+                "cache_hit": false,
+                "rank": 6208
+              },
+              {
+                "call_index": 21,
+                "phase": 2,
+                "cache_hit": true,
+                "rank": 6208
+              },
+              {
+                "call_index": 31,
+                "phase": 2,
+                "cache_hit": true,
+                "rank": 6208
+              }
+            ]
+          }
+        ],
+        "all_three_have_at_least_one_reached_query": false
+      },
+      {
+        "route_id": "route_000006",
+        "product": "COc1cc(CC(=O)O)ccc1Nc1nn2c(-c3ccccc3N(C)C)cnc2cc1C",
+        "role_leaf_hits": [
+          {
+            "node": "b0",
+            "rule_id": "synllama-rule-036",
+            "role_slot": 0,
+            "catalog_id": "structure-sha256:54489d4bc382b9f092e2cbd64927a988e4ffd2eca9495c07fa8288224f252e94",
+            "smiles": "CN(C)c1ccccc1Br",
+            "reached_calls": [
+              {
+                "call_index": 4,
+                "phase": 1,
+                "cache_hit": false,
+                "rank": 6421
+              },
+              {
+                "call_index": 19,
+                "phase": 2,
+                "cache_hit": true,
+                "rank": 6421
+              },
+              {
+                "call_index": 34,
+                "phase": 2,
+                "cache_hit": true,
+                "rank": 6421
+              },
+              {
+                "call_index": 37,
+                "phase": 2,
+                "cache_hit": true,
+                "rank": 6421
+              }
+            ]
+          },
+          {
+            "node": "b2",
+            "rule_id": "synllama-rule-036",
+            "role_slot": 1,
+            "catalog_id": "structure-sha256:de00325d7efc3cf47f15bb66432f5afe9e49043437e97b9abd14de3c7590237d",
+            "smiles": "Cc1cc2ncc(I)n2nc1Cl",
+            "reached_calls": [
+              {
+                "call_index": 20,
+                "phase": 2,
+                "cache_hit": false,
+                "rank": 3369
+              }
+            ]
+          },
+          {
+            "node": "b1",
+            "rule_id": "synllama-rule-042",
+            "role_slot": 1,
+            "catalog_id": "structure-sha256:66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a",
+            "smiles": "COc1cc(CC(=O)O)ccc1N",
+            "reached_calls": [
+              {
+                "call_index": 3,
+                "phase": 1,
+                "cache_hit": false,
+                "rank": 6208
+              },
+              {
+                "call_index": 21,
+                "phase": 2,
+                "cache_hit": true,
+                "rank": 6208
+              },
+              {
+                "call_index": 31,
+                "phase": 2,
+                "cache_hit": true,
+                "rank": 6208
+              }
+            ]
+          }
+        ],
+        "all_three_have_at_least_one_reached_query": true
+      }
+    ]
+  },
+  "decision": {
+    "implementation_authorized": true,
+    "production_adoption_proven": false,
+    "reason": "The fixed midpoint plus exact-first same-site heuristic is the only tested arm that places all three known route_000006 leaves into their needed role pools. It therefore warrants actual bounded retrieval/generation testing.",
+    "measurement_scope": "Gain/loss counts concern 76 saved query-role pairs times four known leaves in hypothetical capped pools, including nonreactive or exhausted original calls. They are not general candidate-quality or route metrics.",
+    "cache_reuse": "Original full-pool calls4 and3 are reused by phase2 calls19 and21 respectively; inner-call20 is computed in phase2. These observations still do not prove the changed policy selects or combines those exact leaves.",
+    "counterexample": "Matching the same atom set on an aryl-Br guide does not imply [#6][Br] and [c][Br] have equal candidate sets; the latter excludes alkyl-Br. Index reuse is a retrieval heuristic only.",
+    "next_validation": "Implement fixed policy with complete indexes, bounded metadata, role/context cache isolation, original FP/caller checks/anchors/stereo and all route gates; review and test before the next fixed 12-input generation probe.",
+    "claims_excluded": [
+      "selected top-k recovery",
+      "complete route recovery",
+      "forward-model support",
+      "equal CPU work",
+      "experimental synthesis feasibility"
+    ]
+  }
+}
