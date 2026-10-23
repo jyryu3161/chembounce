@@ -1,0 +1,567 @@
+{
+  "claims_not_yet_established": [
+    "primary changed-scaffold exact-route coverage above historical baseline five inputs",
+    "all-step forward model support for treatment routes",
+    "3D/qualification outcomes",
+    "completion or failure status of any live comparison child"
+  ],
+  "development_entry": {
+    "input_coverage": 6,
+    "interpretation": "Pre-evidence entry prerequisite only, not complete-route all-step-forward primary success.",
+    "portable_record": "benchmarks/results/synthesis-route-development-20261023/route-first-v2-pre-evidence-v13.json",
+    "portable_sha256": "01a6d923e664241925cfdc78a83fdccabab68347b6fd5813a5d8b5915b8069e2",
+    "total_inputs": 12
+  },
+  "frozen_protocol": {
+    "adoption_rule": "Primary count must exceed the paired baseline under the fixed declared caps; all unknown/timeout/error inputs reported explicitly, never imputed as zero. Final qualified results reported separately. No threshold relaxation.",
+    "analysis_script_sha256": "2301bb1c0f90e6a0faaa0eb9ad760d47b318be67579dcb02f48a9257b4bc099f",
+    "arms": {
+      "baseline": {
+        "config": "baseline-config.json",
+        "historical_binding": "historical-baseline-binding.json",
+        "historical_binding_sha256": "1648860adf3e5d58690d2d46b2cb4cfeda5b4546edc5e8d6ae33c8172798f0a5",
+        "historical_run": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1",
+        "original_source_manifest": "baseline-source.json",
+        "original_source_manifest_sha256": "ad7b773dd1c3468e80f9a9a52ecfd479691f6f050f4a31d34c2f76b14e79c116",
+        "source_commit": "aeb67c9102be41bf9bb016dd81fe105da19f276c",
+        "source_manifest": "baseline-source-aeb67c9-bundle.json",
+        "source_manifest_sha256": "6fbd40b809279008495438a0ddf5b4fb8e9b079592054876e84bc4c921c7f4dc"
+      },
+      "route_first": {
+        "config": "route-first-config.json",
+        "source_commit": "935ff0f0e128e2cb1e015fe4ccd1347e01c0a4cb",
+        "source_manifest": "route-first-source-935ff0f.json",
+        "source_manifest_sha256": "45d1075bc0575572b35f309fdd8b2ecedcc3ccc9f5a9d9446371b81e073d18e9"
+      }
+    },
+    "attempt": "route-first-v2",
+    "baseline_common_asset_check": "Current catalog/rules/model file bytes independently rehashed before treatment; match saved historical baseline predictor/catalog/rules provenance.",
+    "baseline_generation_limits": {
+      "expansion_building_block_top_k": 6,
+      "expansion_max_routes": 12,
+      "expansion_rounds": 1,
+      "native_exploration_fraction": 0.25,
+      "native_frag_max_n": 10,
+      "native_scaffold_top_n": 8,
+      "native_search_candidate_budget": 512,
+      "provider_max_new_tokens_per_sample": 1200,
+      "provider_samples_per_design": 2,
+      "search_beam_width": 6,
+      "search_building_block_top_k": 3,
+      "search_max_combinations_per_proposal": 256,
+      "search_max_steps": 12,
+      "search_reaction_product_limit": 64
+    },
+    "baseline_reuse": "Historical baseline12 from the same session, not rerun; recorded synthesis runtime hashes match frozen aeb67c9 archive, and whole commit delta contains documentation/baseline records only. Timing/load differences preclude fresh randomized timing claims.",
+    "common_gate_policy": "Main CLI strict property intersection (including default MW upper bound 500), current v7 original-hit bit Morgan/3D/pharmacophore/polar and full route integrity/forward support/qualification unchanged.",
+    "common_limits": {
+      "max_design_attempts": 12,
+      "max_designs": 3,
+      "max_forward_input_tokens": 12288,
+      "max_forward_output_tokens": 18432,
+      "max_predictor_calls": 24,
+      "max_results": 3,
+      "max_scored_products": 12,
+      "max_total_conformers": 144,
+      "refinement_top_n": 6
+    },
+    "execution_environment": {
+      "CUDA_VISIBLE_DEVICES": "assigned physical GPU 0/1/2/3",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1"
+    },
+    "execution_order": [
+      "route_first"
+    ],
+    "files_sha256": {
+      "analyze_comparison.py": "2301bb1c0f90e6a0faaa0eb9ad760d47b318be67579dcb02f48a9257b4bc099f",
+      "baseline-config.json": "e7263b08dd59e33870b83351a31cb58916a52aeccb440a081e559007c07e24d7",
+      "baseline-source-aeb67c9-bundle.json": "6fbd40b809279008495438a0ddf5b4fb8e9b079592054876e84bc4c921c7f4dc",
+      "baseline-source-aeb67c9.tar": "4900860c6de8071cf072cab71633482ce5b4e2c12989ced1dc923f9000db555c",
+      "baseline-source.json": "ad7b773dd1c3468e80f9a9a52ecfd479691f6f050f4a31d34c2f76b14e79c116",
+      "final-validation-environment.json": "0a7493b9480b60aca83691fb020c1a14358c17c916dd93abef5670a7f74a7381",
+      "final-validation.json": "aed70919be5ddd8916a4010cc4f05170db6c6d8cf4d9d5229443eb5c261b4fc2",
+      "historical-baseline-binding.json": "1648860adf3e5d58690d2d46b2cb4cfeda5b4546edc5e8d6ae33c8172798f0a5",
+      "panel.json": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "preexecution-review.json": "d05a4f0912e4bed8541f73f4fbacc0bab4e1f65d68a5521ed24d028a1dfe9817",
+      "protocol-draft.json": "a9bcd767cbbde1bba421cfea0bc89b30c9e0072873686ee3c0b791bea44469a8",
+      "route-first-config.json": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9",
+      "route-first-preparation-935ff0f.json": "804c8ffc47ce8b0c6953b18ca261615f289ea38c50e450f2ab4619944eab2c0f",
+      "route-first-source-935ff0f.json": "45d1075bc0575572b35f309fdd8b2ecedcc3ccc9f5a9d9446371b81e073d18e9",
+      "route-first-source-935ff0f.tar": "4ecf8681cc549153aca9f7b9dcf6be412f9eb6e3e58f91b5d74871a2f8f9203e",
+      "run_comparison.py": "f3cc08e5551b7752b8f575456180632beb6889185129d752835e1d7ddf21a85a"
+    },
+    "freeze_provenance": {
+      "draft_sha256": "a9bcd767cbbde1bba421cfea0bc89b30c9e0072873686ee3c0b791bea44469a8",
+      "execution": "Only route_first once; historical baseline reused; no retries; no scientific thresholds or caps changed at freeze",
+      "review": "preexecution-review.json",
+      "review_sha256": "d05a4f0912e4bed8541f73f4fbacc0bab4e1f65d68a5521ed24d028a1dfe9817",
+      "validation": "final-validation.json",
+      "validation_sha256": "aed70919be5ddd8916a4010cc4f05170db6c6d8cf4d9d5229443eb5c261b4fc2"
+    },
+    "frozen_utc": "2026-10-23T12:58:10.351422+00:00",
+    "generation_difference": "Baseline native designs plus SynLlama proposals and bounded catalog projection/expansion. Route-first actual catalog/rule products become self-product designs (Tanimoto1 to design is tautological); no native/SynLlama generation or route expansion. max_designs3 caps route-first distinct products entering downstream screening, while legacy three designs can project more exact products. Do not hide this asymmetry or raise caps after outcomes.",
+    "gpu_assignment": {
+      "CHEMBL3334418-query-1": 2,
+      "CHEMBL3334418-query-2": 3,
+      "CHEMBL3864-query-1": 2,
+      "CHEMBL3864-query-2": 3,
+      "CHEMBL4247-query-1": 2,
+      "CHEMBL4247-query-2": 3,
+      "CHEMBL4630839-query-1": 0,
+      "CHEMBL4630839-query-2": 1,
+      "CHEMBL4869-query-1": 0,
+      "CHEMBL4869-query-2": 1,
+      "CHEMBL5163-query-1": 0,
+      "CHEMBL5163-query-2": 1
+    },
+    "max_parallel_inputs": 4,
+    "no_retries": true,
+    "outputs": [
+      "complete run status and exit code",
+      "source/config/asset hashes",
+      "exact product and original-input similarity",
+      "complete route IDs and step depths",
+      "verification/audit/forward support by step",
+      "unknown/budget/deadline/execution/nonmatch reasons",
+      "unique supported input/product pairs",
+      "3D attempts/screening/refinement/qualified counts",
+      "work counters and resource/phase timing"
+    ],
+    "panel": "panel.json",
+    "panel_scope": "Same 12 public development inputs across six targets; reused development panel, not held-out; no experimental synthesis or activity claim.",
+    "per_query_wall_timeout_seconds": 960,
+    "preparation_environment": {
+      "asset_rehash_check": "route-first-preparation-935ff0f.json",
+      "full_suite": "completed_exit0_3603passed_76skipped_729.08s",
+      "status": "research_environment_runtime_versions_unchanged",
+      "test_only_environment_change": "pytest-cov 7.0.0 and coverage 7.13.4 installed with --no-deps; scientific packages unchanged",
+      "validation_environment_path": "benchmark-results/qualified-development-20261023/route-first-final-validation-v1/environment.json",
+      "validation_environment_sha256": "0a7493b9480b60aca83691fb020c1a14358c17c916dd93abef5670a7f74a7381"
+    },
+    "previous_attempt": {
+      "primary_coverage": {
+        "baseline": 5,
+        "route_first_v1": 0
+      },
+      "protocol_sha256": "60174a39954edc1ee085807eac9576adb814b61088738bd19a79c578d104247c",
+      "scope": "Same development panel reused after observed failed attempt; no independent/held-out claim.",
+      "source_commit": "0454d8643bc03b061565439a4ad77649c114114d"
+    },
+    "primary_metric": "Number of completed inputs with at least one exact changed-scaffold product whose complete concrete route passes atom/stereo audit and per-step forward support; unique input/product pairs and route counts are secondary.",
+    "refinement_seeds": [
+      42,
+      43,
+      44
+    ],
+    "rejected_development_variants": [
+      {
+        "decision": "Coverage regressed3\u21922; restoredv7 runtime. These additional feature-perception limits are not active in the retained implementation.",
+        "evidence": "benchmarks/results/synthesis-route-development-20261023/route-first-v2-pre-evidence-v8.json",
+        "limits": {
+          "accounting": "Cache success/failure signatures; charge all uncached perception attempts including failures; report requests/cache hits/ranking work separately. Additional bounded CPU work, not equal compute to previous diagnostics. Existing catalog/fingerprint/combination/product/route/model/wall limits unchanged.",
+          "decision_samples_per_search": 32,
+          "feature_perception_attempts_per_query": 8193,
+          "feature_perception_attempts_per_search": 65536,
+          "feature_semantics": "Existing similarity_constraints.feature_records and POLAR families; unweighted per-family count L1 distance, penalizing deficits and excess.",
+          "feature_signature_cache_entries": 65536,
+          "incomplete_scoring": "Use the exact prior selection on failed/unavailable feature signatures, work exhaustion or deadline; do not rank a partially evaluated prefix.",
+          "query_scope": "One normalized precursor guide and candidates from the already visited, role-compatible ranked pool; no added catalog scan.",
+          "reviewed_source_sha256": "644c84568386d443538e73c5a7e9374dcbc8b7579a1d4a778938ed096cf45235",
+          "selection": "Keep the exact previous first choice; choose the second by existing posting-backed known-anchor priority, polar distance, fingerprint similarity and SMILES. Preserve remaining original order without duplication.",
+          "status": "reviewed_runtime_pending_eligibility"
+        },
+        "revert_commit": "19110e4",
+        "source_commit": "6c4a5e7",
+        "variant": "polar_second_retrieval"
+      }
+    ],
+    "resource_accounting": "Wall clock includes per-child imports, asset/catalog/model loading, candidate generation, forward evidence, 3D and refinement. Preparation/source archival and offline analysis are outside the per-input cap and reported separately. Fixed physical GPU lanes preserve each paired input GPU type; route-first may leave assigned GPU idle because its forward predictor is CPU. No per-process memory cap is claimed. Baseline elapsed timings are descriptive prior-run values, not a fresh concurrent or randomized timing comparison. Current route-first reaction-local metadata/index checks and fingerprint admission ranking add bounded CPU work under the same per-input wall cap; per-arm compute is not equal.",
+    "route_first_additional_center_limits": {
+      "historical_status_pre_v13": "code_and_local_controls_passed_pending_combined_v9_catalog_diagnostic",
+      "included_in_current_source_commit": "935ff0f0e128e2cb1e015fe4ccd1347e01c0a4cb",
+      "outer_origin_atom_and_parent_bond_visits_per_search": 32768,
+      "phase2_plan_trace_records": 8,
+      "scope": "Only existing partition-valid outer reverse outcomes; preserve original-target crossing-bond signatures before normalization. No additional reverse enumeration, catalog or model work.",
+      "selection": "Prefer typed role-conforming guides and cover distinct known cut centers before alternate rules at the same center; retain approximate, unknown, unary and explicit fallback plans under distinct safe keys.",
+      "source_sha256": "ef9f43c9d309fb05e5b527851bf23e3012ce3b67b4d4fdccbb2ccfbc9bdaab65",
+      "status": "retained_in_reviewed_v13_source; development pre-evidence 6/12; actual comparison not run"
+    },
+    "route_first_additional_index_limits": {
+      "accounting": "Same bounded catalog-index row pass; report extra substructure checks explicitly. This is additional CPU work inside the unchanged wall/row/fingerprint limits, not equal CPU work to v1.",
+      "anchor_index_match_checks": 500000,
+      "guide_anchor_checks": 2048,
+      "hit_anchor_queries": 2,
+      "included_in_current_source_commit": "935ff0f0e128e2cb1e015fe4ccd1347e01c0a4cb",
+      "postings_per_anchor": 256
+    },
+    "route_first_additional_query_limits": {
+      "accounting": "Additional bounded normalization work inside the unchanged wall/catalog/fingerprint/combination/product/route/model limits; not equal CPU work to previous attempts. Freeze the reviewed runtime bytes and effective counters before execution.",
+      "included_in_current_source_commit": "935ff0f0e128e2cb1e015fe4ccd1347e01c0a4cb",
+      "policy": "Prefer fully position-corresponding typed hints; retain the existing safe approximate hint on typed failure or exhaustion; one tuple per raw outcome; explicit fallback separately labelled.",
+      "precursor_part_trials_per_raw_outcome": 16,
+      "precursor_part_trials_per_search": 1024,
+      "representative_order": [
+        "OH",
+        "F",
+        "Cl",
+        "Br",
+        "I",
+        "O-"
+      ],
+      "role_match_enumerations_per_trial": 1,
+      "role_match_truncation_sentinel": 65,
+      "trial_unit": "One precursor-part representative construction/role-validation attempt; no-placeholder part validation is also charged against both the per-outcome and per-search limits."
+    },
+    "route_first_additional_topology_limits": {
+      "classification_cache_entries": 128,
+      "enumeration_requests_per_search": 128,
+      "historical_status_pre_v13": "reviewed_production_runtime_pending_combined_v9_catalog_diagnostic",
+      "included_in_current_source_commit": "935ff0f0e128e2cb1e015fe4ccd1347e01c0a4cb",
+      "legacy_unknown": "Unknown/truncated/budget/unsupported does not prune eligibility. Cached statically proven single-cross bridge restriction is independent of per-target enumeration completion.",
+      "match_truncation_sentinel": 65,
+      "reverse_work": "One existing reverse call per rule-target, cumulative raw outcomes stay within original cap4; no protected retries or extra calls.",
+      "review_sha256": "49efbb474935f3f1326d887fd4332124282eef89628d6b29cdc6b45cded17ca1",
+      "scope": "Inner rule eligibility proof; local single-cross-edge query restriction also steers existing reverse enumeration.",
+      "shared_specification_and_graph_visits_per_search": 262144,
+      "source_sha256": "8c5979c0d73f0c72d28ab713f1156623232403bc442f222eb7f201c894aa5650",
+      "status": "retained_in_reviewed_v13_source; development pre-evidence 6/12; actual comparison not run"
+    },
+    "route_first_current_reviewed_source": {
+      "analyzer_sha256": "2301bb1c0f90e6a0faaa0eb9ad760d47b318be67579dcb02f48a9257b4bc099f",
+      "commit": "935ff0f0e128e2cb1e015fe4ccd1347e01c0a4cb",
+      "driver_sha256": "f3cc08e5551b7752b8f575456180632beb6889185129d752835e1d7ddf21a85a",
+      "preparation_check": "route-first-preparation-935ff0f.json",
+      "preparation_check_sha256": "804c8ffc47ce8b0c6953b18ca261615f289ea38c50e450f2ab4619944eab2c0f",
+      "reviewed_runtime_sha256": {
+        "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+        "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+        "chembounce_synthesis/route_first.py": "6d09272729586b5539e49c67d971bd43d7fc6dde9ab70f5f548e47bce0d342b9",
+        "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e"
+      },
+      "source_snapshot_manifest": "route-first-source-935ff0f.json",
+      "source_snapshot_manifest_sha256": "45d1075bc0575572b35f309fdd8b2ecedcc3ccc9f5a9d9446371b81e073d18e9",
+      "status": "frozen_for_single_actual_comparison_after_final_validation"
+    },
+    "route_first_fingerprint_admission_reserve": {
+      "accounting": "Same 65,536 total fingerprint limit and fixed products/routes/deadline; one callback fingerprint is a checked contract, not a sandbox for arbitrary callback CPU.",
+      "generation_ceiling_at_fixed_caps": 63488,
+      "max_fingerprint_calls": 65536,
+      "policy": "The initial hit is charged to generation. Generation cannot spend the reserved portion. Admission may use any globally remaining calls; select a deterministic bounded pending subset that can pay zero-or-one rank fingerprint and at most one callback fingerprint per product. Audit already eligible products after generation ceiling.",
+      "reserve_calls_at_fixed_caps": 2048,
+      "reserve_formula": "min(2 * max_products, max_fingerprint_calls // 2)",
+      "single_step_phase_one_ceiling_at_fixed_caps": 63488,
+      "source_sha256": "6d09272729586b5539e49c67d971bd43d7fc6dde9ab70f5f548e47bce0d342b9",
+      "status": "reviewed_current_v13_runtime_development_probe_complete",
+      "two_step_phase_one_ceiling_at_fixed_caps": 32768,
+      "work_fields": [
+        "hit_fingerprint_calls",
+        "generation_fingerprint_calls",
+        "admission_rank_fingerprint_calls",
+        "admission_fingerprint_calls",
+        "admission_pending_unique_products",
+        "admission_ranked_products",
+        "admission_attempted_products",
+        "admission_fp_unassessed_products",
+        "admission_callback_unattempted_products"
+      ]
+    },
+    "route_first_generation_limits": {
+      "beam_width": 12,
+      "building_block_top_k": 2,
+      "fallback_rules": 2,
+      "max_catalog_index_rows": 250000,
+      "max_catalog_row_visits": 262144,
+      "max_catalog_rows_per_query": 8192,
+      "max_combinations": 512,
+      "max_fingerprint_calls": 65536,
+      "max_inner_rules": 4,
+      "max_outer_guides": 8,
+      "max_products": 1024,
+      "max_reverse_outcomes": 4,
+      "max_routes": 64,
+      "max_rule_inspections": 512,
+      "max_rule_scans_per_target": 128,
+      "max_rules": 16,
+      "max_steps": 2,
+      "reaction_product_limit": 16,
+      "version": "catalog-rule-route-first-v2"
+    },
+    "route_first_phase_two_scheduling": {
+      "accounting": "Separate preparation rule inspections and reverse normalization from execution catalog rows, quality attempts and deferred work. Preparation and indivisible full catalog queries may still exhaust shared budgets; no complete fairness guarantee.",
+      "historical_status_pre_v13": "focused_review_passed_v10_pre_evidence4of12_model_entry_not_met",
+      "included_in_current_source_commit": "935ff0f0e128e2cb1e015fe4ccd1347e01c0a4cb",
+      "policy": "Prepare existing bounded inner rules and reverse guides, stable typed-first within each outer plan, execute one guide per outer plan per sweep. Rule-selection order remains unchanged.",
+      "source_sha256": "7367b33bac8ad2a0faebe500126364ea1e710453b9c69c8ba456c236e94a0f9b",
+      "status": "retained_in_reviewed_v13_source; development pre-evidence 6/12; actual comparison not run",
+      "v10_result_sha256": "e8b08c694d013932284bd601cacef6b71d76d3bd0eecb540851e17db7ed4ee4b",
+      "work_limits": "Existing 8 outer plans, 4 inner rules per target, raw4 per reverse call, 512 total rule inspections and all catalog/fingerprint/combination/product/deadline caps unchanged."
+    },
+    "route_first_pre_evidence_entry": {
+      "baseline_actual_primary_coverage": 5,
+      "current_source_commit": "935ff0f0e128e2cb1e015fe4ccd1347e01c0a4cb",
+      "eligible_input_product_pairs": 52,
+      "eligible_route_graphs": 55,
+      "fixed_panel_input_coverage": 6,
+      "fixed_panel_inputs": 12,
+      "interpretation": "Six of twelve inputs pass unchanged pre-evidence gates and strict route audit in the model-free diagnostic. This permits the fixed actual-comparison entry; it is not all-step forward support, 3D qualification, or primary success.",
+      "one_step_route_graphs": 20,
+      "status": "development_probe_complete_pre_evidence_only",
+      "two_step_route_graphs": 35,
+      "v13_analysis_sha256": "85ae1f56f099f1b6e1beb4935fe1ad5160d21781f7fb5ee3297c031ae5143955",
+      "v13_harness_sha256": "f9915a059025390cd500c4087cef15cdabdb5b347e9384a8e838ebd5a449ff2c",
+      "v13_result_sha256": "4a30109bead11a94abd2a687bdd2070e9816c7758f7a5d4841d65e3ab1bef40d"
+    },
+    "route_first_reaction_pool_limits": {
+      "accounting": "Additional bounded substructure matching and graph metadata CPU work in the same catalog index pass, within original wall/row/fingerprint limits; not equal CPU effort to the previous arm.",
+      "catalog_index_extra_role_match_checks": 500000,
+      "combined_graph_work_units": 262144,
+      "match_truncation_sentinel": 65,
+      "policy": "Fixed arithmetic midpoint of full and stereo-protected local raw feature counts, ceil then original bins. With complete metadata, use a complete exact normalized-role index or a complete identical-atom-set same-site hint index when applicable; otherwise use midpoint features with ordinary global buckets. An incomplete role index disables that indexed subset only and retains independently complete midpoint features. Incomplete, truncated, failed or budget-exhausted query metadata uses uncached legacy full-guide features with no index. Actual caller-role checks and full-guide fingerprints remain unchanged.",
+      "pool_total_rows": 8192,
+      "query_atoms": 256,
+      "query_bonds": 512,
+      "query_role_pairs": 128,
+      "site_match_requests": 384,
+      "source_sha256": "6d09272729586b5539e49c67d971bd43d7fc6dde9ab70f5f548e47bce0d342b9",
+      "status": "reviewed_current_v13_runtime",
+      "window_match_requests": 128
+    },
+    "route_first_source_stereo_precheck": {
+      "accounting": "Additional bounded stereo perception, not equal CPU work. No extra role matching, chemistry or catalog scan. Existing total caps unchanged.",
+      "audit_source_sha256": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "historical_status_pre_v13": "focused_review_passed_pending_v11_catalog_diagnostic",
+      "included_in_current_source_commit": "935ff0f0e128e2cb1e015fe4ccd1347e01c0a4cb",
+      "max_atom_plus_bond_charges": 131072,
+      "max_cache_entries": 2048,
+      "max_exclusion_samples": 16,
+      "max_perceptions": 2048,
+      "policy": "Reuse route_audit.stereo_state fully_specified as an existing necessary condition for every concrete source reactant. Check ranked already-visited candidates only until top_k is filled, preserving anchored/ordinary reservation.",
+      "review_sha256": "4fb31a4967d590981b71e252038b89a0104fa5268c52fe89c4f33bf005b5b3dc",
+      "source_sha256": "bc5cc5ef47aba1bede5ec188667a006381d18554a4c0ef1d4145946296d02c2b",
+      "status": "retained_in_reviewed_v13_source; development pre-evidence 6/12; actual comparison not run",
+      "unknown": "Perception failure, budget or deadline retains candidate at legacy rank; incomplete nearest selection not cached."
+    },
+    "run_script_sha256": "f3cc08e5551b7752b8f575456180632beb6889185129d752835e1d7ddf21a85a",
+    "schema": "route-first-paired-development-v1",
+    "seed": 42,
+    "shared_assets": {
+      "catalog": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv",
+      "catalog_binding": {
+        "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+        "manifest_sha256": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274"
+      },
+      "forward_predictor": {
+        "adapter_sha256": "aa770b6e499fb81ca88c53b2baff1db8203203bf57d699a09dddee499a13261f",
+        "base_adapter_sha256": "91532a70e9e250eb61c683e6e0adb2e09153f4fbf0f201a2768ffdc8524e57c9",
+        "declared_revision": "933114058cb2604dc1bf536dbebdfcefbe83d4fc",
+        "device": "cpu",
+        "do_sample": false,
+        "max_input_tokens": 512,
+        "max_new_tokens": 256,
+        "model_files_sha256": {
+          "README.md": "1a689168cf12a60fb49166cdc5245308f6ef18d28d8fec165295edf7404449c2",
+          "config.json": "a80eac6938e51ccabfc6a8b281497c6553626145e57b2268101f718fbaa034a2",
+          "generation_config.json": "aed028489d41ae6a673920da9d103f2f58a650c3fbc50bd880b35e30a481dba6",
+          "model.safetensors": "69c23ca364e63e0e2be22d114652aad9f3df4e161d43936eee0dc3ce74a87fb7",
+          "special_tokens_map.json": "0f385cf62b07c1b63aaa84d4c86a313c751df7039d958a7d7bd7e723d933bcd9",
+          "tokenizer.json": "511dfd8bb25c19cccae8d7d996c1ff0f1b5263207be4cdd275f23b75da8113b6",
+          "tokenizer_config.json": "ac38d16067df56f00dfa2c2e0d1546a6ff08aa37814662a6fc38dea66cd13d9d",
+          "trainer_state.json": "f89bde13ce68202577b7eddf752376632a40ce296e5c005da51e37bba6d195ac"
+        },
+        "model_path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/models/ReactionT5v2-forward",
+        "provider": "reactiont5v2_forward_local",
+        "runtime": {
+          "rdkit": "2025.9.6",
+          "safetensors": "0.6.2",
+          "tokenizers": "0.21.4",
+          "torch": "2.8.0",
+          "transformers": "4.51.3"
+        },
+        "top_k": 3
+      },
+      "rules": "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/rules.json",
+      "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39"
+    },
+    "source_hash_preverification": "Driver pre-child source hashing is separately timed outside 960s CLI wall cap. Model/catalog loading and constructor verification inside each CLI are included.",
+    "source_policy": "Read immutable baseline/feature snapshots, verify full runtime source hashes immediately before each child, isolate imports and prevent enclosing repository Git provenance from being mistaken for snapshot provenance. Never modify an executed arm or resume it implicitly.",
+    "status": "frozen_executable",
+    "timeout_termination_grace_seconds": [
+      5,
+      5
+    ]
+  },
+  "frozen_protocol_sha256": "bb46cc8fdb399b92a8efc7956e6dfaa7eddc23ef643428a5d416ffe4056fce9e",
+  "full_validation_files_sha256": {
+    "pytest-research-cov.log": "3b525df65aeb946b48e18ad1534b483bf47ebd489ec6b97a14de8d75b94def09",
+    "result.json": "aed70919be5ddd8916a4010cc4f05170db6c6d8cf4d9d5229443eb5c261b4fc2",
+    "ruff-and-skips-receipt.json": "dec13f855ee0a56057d15b93420bb7294702011862f9ad3fe0a14fd59efc24b6",
+    "ruff-check.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "ruff-format-check.log": "bc4c8ec6f1dc727876d981f727b6d3308157440b75422206a33a24532dc7ddc9"
+  },
+  "historical_baseline": {
+    "historical_binding_sha256": "1648860adf3e5d58690d2d46b2cb4cfeda5b4546edc5e8d6ae33c8172798f0a5",
+    "primary_coverage": 5,
+    "rerun": false,
+    "source_commit": "aeb67c9102be41bf9bb016dd81fe105da19f276c"
+  },
+  "immutable_preexecution_files_sha256": {
+    "analyze_comparison.py": "2301bb1c0f90e6a0faaa0eb9ad760d47b318be67579dcb02f48a9257b4bc099f",
+    "baseline-config.json": "e7263b08dd59e33870b83351a31cb58916a52aeccb440a081e559007c07e24d7",
+    "baseline-source-aeb67c9-bundle.json": "6fbd40b809279008495438a0ddf5b4fb8e9b079592054876e84bc4c921c7f4dc",
+    "check-only.log": "cdfe74ddf30ef363a682299d1d1ff48fd48e1d61a8a4c02658895ef2a3238919",
+    "final-validation-environment.json": "0a7493b9480b60aca83691fb020c1a14358c17c916dd93abef5670a7f74a7381",
+    "final-validation.json": "aed70919be5ddd8916a4010cc4f05170db6c6d8cf4d9d5229443eb5c261b4fc2",
+    "freeze-receipt.json": "b79e9756fcd00c631fc8dbb0bd34e28d9917f718750ed9ea13049b308b1fbc74",
+    "historical-baseline-binding.json": "1648860adf3e5d58690d2d46b2cb4cfeda5b4546edc5e8d6ae33c8172798f0a5",
+    "panel.json": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+    "preexecution-review.json": "d05a4f0912e4bed8541f73f4fbacc0bab4e1f65d68a5521ed24d028a1dfe9817",
+    "protocol-draft.json": "a9bcd767cbbde1bba421cfea0bc89b30c9e0072873686ee3c0b791bea44469a8",
+    "protocol.json": "bb46cc8fdb399b92a8efc7956e6dfaa7eddc23ef643428a5d416ffe4056fce9e",
+    "route-first-config.json": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9",
+    "route-first-preparation-935ff0f.json": "804c8ffc47ce8b0c6953b18ca261615f289ea38c50e450f2ab4619944eab2c0f",
+    "route-first-source-935ff0f.json": "45d1075bc0575572b35f309fdd8b2ecedcc3ccc9f5a9d9446371b81e073d18e9",
+    "run_comparison.py": "f3cc08e5551b7752b8f575456180632beb6889185129d752835e1d7ddf21a85a"
+  },
+  "parent_reported_execution": {
+    "check_only_exit_code": 0,
+    "comparison_state": "running_at_recording",
+    "result_status": "unknown_until_all_children_and_pinned_analysis_complete",
+    "session": 26088
+  },
+  "recorded_utc": "2026-10-23T12:59:42.458077+00:00",
+  "resource_and_cost_scope": {
+    "accounting": "Wall clock includes per-child imports, asset/catalog/model loading, candidate generation, forward evidence, 3D and refinement. Preparation/source archival and offline analysis are outside the per-input cap and reported separately. Fixed physical GPU lanes preserve each paired input GPU type; route-first may leave assigned GPU idle because its forward predictor is CPU. No per-process memory cap is claimed. Baseline elapsed timings are descriptive prior-run values, not a fresh concurrent or randomized timing comparison. Current route-first reaction-local metadata/index checks and fingerprint admission ranking add bounded CPU work under the same per-input wall cap; per-arm compute is not equal.",
+    "additional_fingerprint_reserve": {
+      "accounting": "Same 65,536 total fingerprint limit and fixed products/routes/deadline; one callback fingerprint is a checked contract, not a sandbox for arbitrary callback CPU.",
+      "generation_ceiling_at_fixed_caps": 63488,
+      "max_fingerprint_calls": 65536,
+      "policy": "The initial hit is charged to generation. Generation cannot spend the reserved portion. Admission may use any globally remaining calls; select a deterministic bounded pending subset that can pay zero-or-one rank fingerprint and at most one callback fingerprint per product. Audit already eligible products after generation ceiling.",
+      "reserve_calls_at_fixed_caps": 2048,
+      "reserve_formula": "min(2 * max_products, max_fingerprint_calls // 2)",
+      "single_step_phase_one_ceiling_at_fixed_caps": 63488,
+      "source_sha256": "6d09272729586b5539e49c67d971bd43d7fc6dde9ab70f5f548e47bce0d342b9",
+      "status": "reviewed_current_v13_runtime_development_probe_complete",
+      "two_step_phase_one_ceiling_at_fixed_caps": 32768,
+      "work_fields": [
+        "hit_fingerprint_calls",
+        "generation_fingerprint_calls",
+        "admission_rank_fingerprint_calls",
+        "admission_fingerprint_calls",
+        "admission_pending_unique_products",
+        "admission_ranked_products",
+        "admission_attempted_products",
+        "admission_fp_unassessed_products",
+        "admission_callback_unattempted_products"
+      ]
+    },
+    "additional_role_pool_limits": {
+      "accounting": "Additional bounded substructure matching and graph metadata CPU work in the same catalog index pass, within original wall/row/fingerprint limits; not equal CPU effort to the previous arm.",
+      "catalog_index_extra_role_match_checks": 500000,
+      "combined_graph_work_units": 262144,
+      "match_truncation_sentinel": 65,
+      "policy": "Fixed arithmetic midpoint of full and stereo-protected local raw feature counts, ceil then original bins. With complete metadata, use a complete exact normalized-role index or a complete identical-atom-set same-site hint index when applicable; otherwise use midpoint features with ordinary global buckets. An incomplete role index disables that indexed subset only and retains independently complete midpoint features. Incomplete, truncated, failed or budget-exhausted query metadata uses uncached legacy full-guide features with no index. Actual caller-role checks and full-guide fingerprints remain unchanged.",
+      "pool_total_rows": 8192,
+      "query_atoms": 256,
+      "query_bonds": 512,
+      "query_role_pairs": 128,
+      "site_match_requests": 384,
+      "source_sha256": "6d09272729586b5539e49c67d971bd43d7fc6dde9ab70f5f548e47bce0d342b9",
+      "status": "reviewed_current_v13_runtime",
+      "window_match_requests": 128
+    },
+    "generation_limits": {
+      "beam_width": 12,
+      "building_block_top_k": 2,
+      "fallback_rules": 2,
+      "max_catalog_index_rows": 250000,
+      "max_catalog_row_visits": 262144,
+      "max_catalog_rows_per_query": 8192,
+      "max_combinations": 512,
+      "max_fingerprint_calls": 65536,
+      "max_inner_rules": 4,
+      "max_outer_guides": 8,
+      "max_products": 1024,
+      "max_reverse_outcomes": 4,
+      "max_routes": 64,
+      "max_rule_inspections": 512,
+      "max_rule_scans_per_target": 128,
+      "max_rules": 16,
+      "max_steps": 2,
+      "reaction_product_limit": 16,
+      "version": "catalog-rule-route-first-v2"
+    },
+    "gpu_assignment": {
+      "CHEMBL3334418-query-1": 2,
+      "CHEMBL3334418-query-2": 3,
+      "CHEMBL3864-query-1": 2,
+      "CHEMBL3864-query-2": 3,
+      "CHEMBL4247-query-1": 2,
+      "CHEMBL4247-query-2": 3,
+      "CHEMBL4630839-query-1": 0,
+      "CHEMBL4630839-query-2": 1,
+      "CHEMBL4869-query-1": 0,
+      "CHEMBL4869-query-2": 1,
+      "CHEMBL5163-query-1": 0,
+      "CHEMBL5163-query-2": 1
+    },
+    "interpretation": "Additional bounded role/metadata CPU work and source preparation costs do not imply equal compute or randomized timing versus historical baseline.",
+    "no_retries": true,
+    "parallel_lanes": 4,
+    "per_query_wall_seconds": 960
+  },
+  "review_blocking_findings": [],
+  "review_verdict": "pass_for_corrected_draft_pending_freeze_and_full_validation",
+  "schema": "route-first-actual-comparison-v2-freeze-portable-v1",
+  "scope": "Frozen prospective actual comparison declaration and readiness evidence. Route-first arm running once; historical baseline reused. No treatment output, analysis or efficacy conclusion included.",
+  "status": "comparison_running_not_completed",
+  "validation_summary": {
+    "cli_help": {
+      "main_exit_code": 0,
+      "synthesis_exit_code": 0
+    },
+    "full_pytest": {
+      "command": "PYTHONPATH=. OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 CUDA_VISIBLE_DEVICES='' .venv-research/bin/python -m pytest --cov --cov-report=term-missing",
+      "exit_code": 0,
+      "passed": 3603,
+      "reported_statement_coverage_percent": 89,
+      "seconds": 729.08,
+      "session": 13539,
+      "skip_reasons": {
+        "Minimum-runtime capability assertion": 1,
+        "Optional locally installed Playwright": 1,
+        "Set CHEMBOUNCE_CREM_SOURCE to the exact b84003c official checkout in a dedicated CPU venv": 10,
+        "could not import 'oddt': No module named 'oddt'": 1,
+        "could not import 'pyarrow': No module named 'pyarrow'": 63
+      },
+      "skipped": 76
+    },
+    "limitations": [
+      "Local research environment, not full CI Python/dependency matrix",
+      "Optional skipped categories are not validated",
+      "No model comparison conclusion yet"
+    ],
+    "replay_unittest": {
+      "exit_code": 0,
+      "passed": 20
+    },
+    "ruff": [
+      {
+        "command": "ruff check .",
+        "exit_code": 0,
+        "log": "benchmark-results/qualified-development-20261023/route-first-final-validation-v1/ruff-check.log",
+        "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+        "result": "All checks passed!"
+      },
+      {
+        "command": "ruff format --check .",
+        "exit_code": 0,
+        "log": "benchmark-results/qualified-development-20261023/route-first-final-validation-v1/ruff-format-check.log",
+        "log_sha256": "bc4c8ec6f1dc727876d981f727b6d3308157440b75422206a33a24532dc7ddc9",
+        "result": "228 files already formatted"
+      }
+    ]
+  }
+}
