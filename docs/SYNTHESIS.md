@@ -86,8 +86,8 @@ search cap; unavailable metadata remains labelled unknown. No extra reverse
 outcomes or catalog rows are read for this decision. A catalog-free control
 retains both central typed aryl–amine disconnections that the prior plan order
 omitted on one development input. That control is a plan-selection result, not
-evidence that the catalog search or final gates produce a route. The revision
-has not yet been run on the fixed development panel.
+evidence that the catalog search or final gates produce a route. This revision was subsequently evaluated together with the topology screen
+in the ninth fixed-panel development probe described below.
 
 The next bounded revision screens inner rule matches by an explicit graph
 condition. For a supported two-reactant template, it removes all mapped
