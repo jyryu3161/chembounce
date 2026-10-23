@@ -1,0 +1,1626 @@
+{
+  "artifact_sha256": {
+    "plan": "d3eb744981d8dfe01371cb0b6b1348878592a52802c432f5c7b4825be5806d5a",
+    "result": "7a0bdf1fcba21efa320b31d671c47d987842a3ddfd5dc70e66a3b200541b0488",
+    "script": "55088d98476d0ce881da11355bfea763ce6a76ed41a52150a8e9c7fb1c9548e3"
+  },
+  "bound_input_sha256": {
+    "actual_routes:CHEMBL3334418-query-1": "9e7b96854edaeb302e3bbf35b2c4843e9f7fed48f2b7532dc449bf263a09b511",
+    "actual_routes:CHEMBL3334418-query-2": "8e320a322570e7e226759eccd7913f7d99ff71ed207f926b61cfdc481d14d29a",
+    "actual_routes:CHEMBL3864-query-1": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+    "actual_routes:CHEMBL3864-query-2": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+    "actual_routes:CHEMBL4247-query-1": "a2b7a0a6bf585dae4d04a4b5fb2cdd72d34573e283575a240178e7e345760492",
+    "actual_routes:CHEMBL4247-query-2": "6c44f0de211e3837b0fdbbb51d9c577d370205179a0eb0c58897a1a09331af91",
+    "actual_routes:CHEMBL4630839-query-1": "1ff0add0858c41471ba2ae46bfe0e7442402ff80e77e19a094c6055a7f0be280",
+    "actual_routes:CHEMBL4630839-query-2": "bbfbbb181db2ea2364a280c04b487cbd2a083c3e6ea1cde973354f112d909cc6",
+    "actual_routes:CHEMBL4869-query-1": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+    "actual_routes:CHEMBL4869-query-2": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+    "actual_routes:CHEMBL5163-query-1": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+    "actual_routes:CHEMBL5163-query-2": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+    "graph_helper": "8c8129895d4272256dd2110a29590ad1c89237044436ca016aef6edaac2c36db",
+    "nh_forward": "215e4a895988ae049c5283060663b00a7f5b7e81098f047e9f6d5dcc06896522",
+    "plan": "d3eb744981d8dfe01371cb0b6b1348878592a52802c432f5c7b4825be5806d5a",
+    "protocol": "bb46cc8fdb399b92a8efc7956e6dfaa7eddc23ef643428a5d416ffe4056fce9e",
+    "script": "55088d98476d0ce881da11355bfea763ce6a76ed41a52150a8e9c7fb1c9548e3",
+    "typed": "de6159f249e9d75f309d317f3d35e0815557532eeefaf011b2c2b309638807db",
+    "v14_forward": "0a19451fa4ede1c75a39670eac8618c901c9ca20b654d73a48b5e3ed3d475659",
+    "v20": "b391aa4a4cad33d62e28fa40e66dd663e4847bb49d20dfd3cfa84c4af8a7e918"
+  },
+  "inputs": [
+    {
+      "graphs": [
+        {
+          "graph_sha256": "4f1f97c2c9695536a59f8c682a9fade9f3ac0d489bf9406dda3a895ec105be31",
+          "product": "COc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+          "status": "all_steps_saved_supported",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4630839-query-1:route_000000",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "52f5d5fdd3d718d611f5fe92437ca1192c8365573f157c9c2b059fb8b9221c4a"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4630839-query-1:route_000000",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "62c142cbcc1dcbb8ef77af1726e8a45c17cf77bbf8cb33ada5c27118ab26481e"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "24a5b4eb90eccd6a600e081dac6b9070dcd30e495209a143f1c2550d185fdf14",
+          "product": "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+          "status": "all_steps_saved_supported",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4630839-query-1:route_000001",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "246471bf064fd85eef9602b2b7a96306a69ba22a33d1b1f82368335c259b1013"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4630839-query-1:route_000001",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "6318c17b8f26f46435ee2d1cc11e6ea01c43e7b6a91696f8ce6533973dc97c90"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "368ad9fd2fab8cfcb118d69cef18504ea610eaee5bc150dc3701abd30a55994c",
+          "product": "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1",
+          "status": "all_steps_saved_supported",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4630839-query-1:route_000002",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "b0948b55689830fa72812418b45b9170034913190bd4e5cff49e496a9c921bf2"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4630839-query-1:route_000002",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "2cad06567a2c99ce980ef22e8d557cf12e9b3cce79b7149f6a387750597e7055"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "213ad0bd03091b50b00bfc9a614577e90710086a87603cbd91a2a3da497afb98",
+          "product": "CSc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "38e727e5eedf00d2a3576518d1f39f966e67a7c65033c3f2ea4aed673281e0f2",
+          "product": "COc1cc(C(=O)NCC2CC2)nc(N(C)CCCc2ccccc2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4630839-query-1:route_000000",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "52f5d5fdd3d718d611f5fe92437ca1192c8365573f157c9c2b059fb8b9221c4a"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "bbeb42abd74d14e63437a19a2e9965c861fb0b4240ec671f5aafbc94bb499b39",
+          "product": "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCCc2ccccc2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4630839-query-1:route_000001",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "246471bf064fd85eef9602b2b7a96306a69ba22a33d1b1f82368335c259b1013"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "864ed3d3b80592896fc8b0f4257581a275ddc4251913ce7108258e7ad73b247f",
+          "product": "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCCc2ccccc2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4630839-query-1:route_000002",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "b0948b55689830fa72812418b45b9170034913190bd4e5cff49e496a9c921bf2"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "485fca893824a336e2df794554023c4c7bf189f6b910a38a4f6aa69f21fe8a51",
+          "product": "CSc1cc(C(=O)NCC2CCC2)nc(N(C)CCCc2ccccc2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "dd41c6ccc7dfdc8ad2d327850f55651f97672cad8db8417a7cd09e172a4dd567",
+          "product": "CN(CCc1ccccc1)c1ccc(C(=O)NCC2CC2)nn1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "c179a8c5ebb4f2e085757cfd9152876f49556176f93a5b8e323539178350b4fa",
+          "product": "CN(CCc1ccccc1)c1ccc(C(=O)NCC2CCC2)nn1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "56ff44bc5818bf7dc0b603498b433ad0ecc1e7c78cdb49d49da196d46c95632c",
+          "product": "CN(CCCc1ccccc1)c1ccc(C(=O)NCC2CC2)nn1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "10129ede6da3da47f50c1ac3b52ece670fbae087e4686056f7647a9318aa69ad",
+          "product": "CN(CCCc1ccccc1)c1ccc(C(=O)NCC2CCC2)nn1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "2e0cdfc1a06b071e0ec492bfed2e9e90061008dff37c80918961ca2303766897",
+          "product": "CN(C)c1cc(C(=O)NCC2CC2)nc2ccccc12",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "0b0018f07bfe15c30f7c5612fda6fbb614ee31ba25dc1f67eb5fdad78668b1da",
+          "product": "Cc1cc(C(=O)O)nc(N(C)CCc2ccccc2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-072"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "c06dd08b05a64d74c72cd22e656cff0a023c9cd6f3bd420edb7b0f11116d2f33",
+          "product": "O=C(NCC1CC1)c1nc(NCCc2ccccc2)ncc1N1CCCCCCCC1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "60d2823eb7465a97d859fe39a20b36a97d203bb50713fc6a267fc92391766b35",
+          "product": "CN(C)c1cc(C(=O)NCC2CCC2)nc2ccccc12",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "6b67f023499d85d5c1ca4e7a8c512001e1349b2fb5f499fff17121f625c937ab",
+          "product": "O=C(NCC1CCCC1)c1ccc(N2CCCCCCCC2)nn1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "0b4a75d2b3f08dd8c2b000d55b4312e34f53700eb4cc9844ef28322642e4fd5b",
+          "product": "O=C(NCC1CCCC1)c1ccc(N2CCCCCCCCCC2)nn1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "a8350fdc7ce46d3f75935f25aa715c0487f61a3b768cc777d080d618955b6650",
+          "product": "O=C(NCC1CCC1)c1nc(NCCc2ccccc2)ncc1N1CCCCCCCC1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "39f691c3c71b150b246ae5254cf32b11f67228a85cf518fb80273c0b745462ae",
+          "product": "CN1CCN(c2ccc(C(=O)NCC3CC3)nn2)CC1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "43e6b44054c69dfca05afa525a794e739078d4122b8fe843f9e9651d37a2d83f",
+          "product": "O=C(NCC1CC1)c1nc(N2CCCCC2)ncc1-c1ccccc1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-027"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "5b291bdd81df5cc033fc9b9e18c22751aaef9948d51c9766ac4339ac2c74b33f",
+          "product": "CCCCN(C)c1ncc(-c2ccccc2)c(C(=O)NCC2CC2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-027"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "712a008eec6685d3b1cfefab59ddf171e9a449451d5b71188a0158310483b9f5",
+          "product": "CN1CCN(c2ccc(C(=O)NCC3CCC3)nn2)CC1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "b634fa1db974729937692cae7c08b5f7d3a2206e118389494d943578450ce6ad",
+          "product": "Cn1cc(NCCc2ccccc2)c(C(=O)NCC2CC2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-072"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "24cdd5261cfe1b9d9c89bfec8046b16868f53c8a7d39038c63bac3e5cd261571",
+          "product": "CCCCN(C)c1ncc(-c2ccccc2)c(C(=O)NCC2CCC2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-027"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "205c667b66b6d8210bf2a3b9a127cad551e484fe00b65029983b1b02ad8a4207",
+          "product": "O=C(NCC1CCC1)c1nc(N2CCCCC2)ncc1-c1ccccc1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-027"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "009d93edd004c9027d68d807ed80e00957bbf665eeba9ca218926658b102549f",
+          "product": "Cc1cc(C(=O)O)nc(N(C)CCc2ccc(CC=O)cc2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-072"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "7640d09ab652178e9901999a40c02507eb941e9dd8ab120e028a7580482822a2",
+          "product": "Cc1ccc(-c2cnc(N3CCCCC3)nc2C(=O)NCC2CC2)cc1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-027"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "637e0f81210db157dcb619232ae4737e270a00cf321e456a0e547b0d751d1d51",
+          "product": "CCCCN(C)c1ncc(-c2ccc(C)cc2)c(C(=O)NCC2CC2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-027"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "8230e966a65a394178c59c14dea222042c425767b33beeb4a7bc45ecda5a20cf",
+          "product": "C#Cc1cccc(-c2cnc(N3CCCCC3)nc2C(=O)NCC2CC2)c1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-027"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "4f126593da9c9cd11b0cb3cd35d8c33e1d1e064ecab274b0115cc241ad594432",
+          "product": "COC(=O)Cc1cc(N2CCCCCCCC2)nc2ccccc12",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "369d644a5ff40a3a4ab7f3fd1335a752c7260c3e84cf5615a7b776b2f2b60c3d",
+          "product": "COC(=O)Cc1cc(N2CCCCCCCCCC2)nc2ccccc12",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "2d68c6feb8142ceb73d4e3ca803cbf3e8f42f5f07d8981beb51d27d8e343763f",
+          "product": "Cc1ccc(-c2cnc(N3CCCCC3)nc2C(=O)NCC2CCC2)cc1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-027"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "f5c5610341acf478328ab9204dad388d8998244abcca7fb0a1d7e8e4b30b3b7e",
+          "product": "CCCCN(C)c1ncc(-c2ccc(C)cc2)c(C(=O)NCC2CCC2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-027"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        }
+      ],
+      "input_id": "CHEMBL4630839-query-1",
+      "status_counts": {
+        "all_steps_saved_supported": 3,
+        "unknown_or_conflict": 31
+      }
+    },
+    {
+      "graphs": [
+        {
+          "graph_sha256": "c538f9275c07126ee68bfcac61f77db6342697746cfa62468fb13df1b4334670",
+          "product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6CC6)nn5)C4)cc3)nc12",
+          "status": "all_steps_saved_supported",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4630839-query-2:route_000000",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "ed24fad0018a4e10c2e0a4aa1f15e33bc59729e5c2868991a40d89bf7662665e"
+                },
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "typed_v2:actual_v2_supported_one_step_positive_control",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "ed24fad0018a4e10c2e0a4aa1f15e33bc59729e5c2868991a40d89bf7662665e"
+                },
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "v14_new:actual_v2_supported_one_step_positive_control",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "ed24fad0018a4e10c2e0a4aa1f15e33bc59729e5c2868991a40d89bf7662665e"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        }
+      ],
+      "input_id": "CHEMBL4630839-query-2",
+      "status_counts": {
+        "all_steps_saved_supported": 1
+      }
+    },
+    {
+      "graphs": [
+        {
+          "graph_sha256": "67888699e48ec30d7ddae382f3fd4c42055501652843ccb80d3879277d94e005",
+          "product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+          "status": "all_steps_saved_supported",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000000",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "9b36114ffc9ba4980c3888213919e75aa71fb7630c10285d750ab5609df5fb32"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000000",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "c097102f87c396afd598095acfa0b1ab38cb49c0f758c784b865b9e2f6a48f5f"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "status": "all_steps_saved_supported",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000002",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "527d9f33be56fe5ce98713a34b0e1a69feecae52c81520858755d720ae2d3ffd"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000002",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "3f27ddd55a60db807cb70294c1842cb0cdec72f54678bcd7269492d1fa5774aa"
+                },
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000003",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "d3d367d7175c7388f0d7beede8cf94592320b200d7034da27c92d7aaeb7260f7"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "50e1848a9af20738013eeb4eedd83358d6701921bc843203011a73f5e64304d0",
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "mismatched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000004",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "25f65fe1b19df2ee1e3ac0831fb827a2282b9bc1f5bd9af0eaecf77bbe3f7e01"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000004",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "c8b3f18e1919e57dec9955f87a84afc5c3cc4e8586c2cffaf3795fcf7fe9ae56"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "b0a95c717b367c3615d10062d43ab3bcb5a9f01071ab00d100ca3637a7caa69f",
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(C=O)c1OC",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "82cc9e1f7dd6a5f5dadf857be368c20bf83887e0de49a10d5a3cf40664d4023e",
+          "product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(CN)c3)C2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000000",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "9b36114ffc9ba4980c3888213919e75aa71fb7630c10285d750ab5609df5fb32"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-077"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "7de72d66b33ea12132e75db240d4a28ff7fb1d3c80ed936351c62b3783c93722",
+          "product": "COc1cc(Nc2nccc(Cl)n2)cc(N2CCC[C@H](CN3CCOCC3)C2)c1OC",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "mismatched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000004",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "25f65fe1b19df2ee1e3ac0831fb827a2282b9bc1f5bd9af0eaecf77bbe3f7e01"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "6bcc442dbec74b47433825dc90d0d4996d0af752e90a03b3db93a55eab041445",
+          "product": "COc1cc(Nc2ccnc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "5a730f3a3df5597633758060407451000911454ca2c61390c5a4d04ba55fe205",
+          "product": "COc1cc(Nc2ccnc(C)n2)cc(N2CCC[C@H](CN3CCOCC3)C2)c1OC",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "3cbf9cbb9ca08f7484ec54accfe18391ff9689023e81047ccb36046dfe4ee5ca",
+          "product": "COc1cc(Nc2ccnc(Cl)n2)cc(N2CCC[C@H](CN3CCOCC3)C2)c1OC",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "7c911ccd658ab09ea97bf58fe9613753eefb4691d12e3260fa44a3c73cda55aa",
+          "product": "COc1cc(Nc2ccnc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "34459edc5c5412fab62319ba45202405b10daa83b84255063d5275f4029b6a41",
+          "product": "CC(C)(C)OC(=O)Nc1nccc(NCc2cccc(CNC(=O)[C@H]3CCCNC3)c2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "1dd42d6994e2f6d5d30bd77e6b4d701b05dab24bc6776fb3e40e59a6993545db",
+          "product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+          "status": "all_steps_saved_supported",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000001",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "9728ba7d5a2d72e01eaf265786a46b7455187f2c9f28d58df2b17c29b3bc8e6c"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000001",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "42f71dfecb5b3285e02a5dfb45f95312071d8a5af1aeb1b2899388114f66e4d6"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "ff1da666ebbbb843c54273f35fca7873ae342111f13a5b115e950263ea0da7ec",
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "a736ce772b8a9aea14a403451a1941eaf3858a64553488b135803adf917acd48",
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "partially_evaluated",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000003",
+                  "status": "partial_or_unassessed",
+                  "step_binding_sha256": "3851516a13c42953885b145e5485d56327733ebeca67de8b6215febc5058e040"
+                }
+              ],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000002",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "3f27ddd55a60db807cb70294c1842cb0cdec72f54678bcd7269492d1fa5774aa"
+                },
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-1:route_000003",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "d3d367d7175c7388f0d7beede8cf94592320b200d7034da27c92d7aaeb7260f7"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "3820639a4ddb484e9cdded36c6e73b5b946cf3805bd28383292ad5047c0a82d0",
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(C=O)c1OC",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-042"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "a4da25cc361d0730dd91c43ad409dff38e27a89ea11e2f07b2963d53dd0136d1",
+          "product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(CN)c3)C2)n1",
+          "status": "unknown_or_conflict",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-077"
+            },
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        }
+      ],
+      "input_id": "CHEMBL4247-query-1",
+      "status_counts": {
+        "all_steps_saved_supported": 3,
+        "definitive_saved_mismatch": 2,
+        "unknown_or_conflict": 11
+      }
+    },
+    {
+      "graphs": [
+        {
+          "graph_sha256": "a0e584eba8504779abfa2c34df1d4ed2f4f9180236103284c1125679c9022519",
+          "product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "mismatched",
+                  "source": "actual_v2:CHEMBL4247-query-2:route_000000",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "aa1eedcbffd4fa37eb1da6e78f5a5ac71275949351c0d1533c22f3b9015cf009"
+                },
+                {
+                  "node_id": "ir",
+                  "prediction_status": "mismatched",
+                  "source": "typed_v2:old_workitem_1",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "aa1eedcbffd4fa37eb1da6e78f5a5ac71275949351c0d1533c22f3b9015cf009"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-036"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-2:route_000000",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "8deba1d998c1e504d80067deccd01a21bbb46924126ed856f00bf0ce36f8de86"
+                },
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "typed_v2:old_workitem_1",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "8deba1d998c1e504d80067deccd01a21bbb46924126ed856f00bf0ce36f8de86"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+          "product": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-2:route_000001",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "cd13dfc683147fbfa06d4826f249cc6499caec63b6a752e6dda7581c207484bc"
+                },
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-2:route_000002",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "cd13dfc683147fbfa06d4826f249cc6499caec63b6a752e6dda7581c207484bc"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-036"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "mismatched",
+                  "source": "actual_v2:CHEMBL4247-query-2:route_000001",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "aeda140d0a309e0ec17fc6a5698c840e47fefb77d4e50d732e3bbb65b9f67471"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc",
+          "product": "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-2:route_000001",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "cd13dfc683147fbfa06d4826f249cc6499caec63b6a752e6dda7581c207484bc"
+                },
+                {
+                  "node_id": "ir",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL4247-query-2:route_000002",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "cd13dfc683147fbfa06d4826f249cc6499caec63b6a752e6dda7581c207484bc"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-036"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "mismatched",
+                  "source": "actual_v2:CHEMBL4247-query-2:route_000002",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "a42cb168a0cb3c8211b23f4472e8f3312a0358a5357354e766daaabb877f31c9"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "9883b82f2c704b8ddb3966b89e1d53c202eed3177667bd0ee56f35cfeeb63dee",
+          "product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "ir",
+                  "prediction_status": "mismatched",
+                  "source": "typed_v2:old_workitem_0",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "10dbc449a7ca9c1b3db406615b541cb4fc6921512ed7d6cb744422a1ba51f0ce"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-036"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "typed_v2:old_workitem_0",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "fab724cc979ce3c79b111a27bcfacf76591472a83a3844a7bc44e7406fccf539"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "a02e804fab25a7104fcc341f6c543134d6ae54acd1c5ff5496acdab1a3f8400f",
+          "product": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-036"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "mismatched",
+                  "source": "actual_v2:CHEMBL4247-query-2:route_000001",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "aeda140d0a309e0ec17fc6a5698c840e47fefb77d4e50d732e3bbb65b9f67471"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "9621aebe7b43dc2f8d2e0fe8e2ae6f09d4c61293dabc1445506912bcce91af09",
+          "product": "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [],
+              "decision": "unassessed_or_partial",
+              "node_id": "ir",
+              "rule_id": "synllama-rule-036"
+            },
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "mismatched",
+                  "source": "actual_v2:CHEMBL4247-query-2:route_000002",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "a42cb168a0cb3c8211b23f4472e8f3312a0358a5357354e766daaabb877f31c9"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        }
+      ],
+      "input_id": "CHEMBL4247-query-2",
+      "status_counts": {
+        "definitive_saved_mismatch": 6
+      }
+    },
+    {
+      "graphs": [],
+      "input_id": "CHEMBL5163-query-1",
+      "status_counts": {}
+    },
+    {
+      "graphs": [],
+      "input_id": "CHEMBL5163-query-2",
+      "status_counts": {}
+    },
+    {
+      "graphs": [
+        {
+          "graph_sha256": "c8d8e070990d966a7d739bd04940156723d248696f9daebddb0038203da6882f",
+          "product": "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(OCC1CCCCC1)c2O",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "mismatched",
+                  "source": "v14_new:v14_new_route_0",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "4e211b1418a7a346d1595328210a7bf13506ac27ef7633770a7c78e7d1a74ab8"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "or",
+              "rule_id": "synllama-rule-026"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "ff78263b9f0897da1c3f53553e721c765734cad289ef1b8277d614a1cf6947a3",
+          "product": "CNc1ccc(Nc2ccc(S(=O)(=O)NC3CCCCC3)cc2)c2c1C(=O)c1ccccc1C2=O",
+          "status": "all_steps_saved_supported",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "mapped_nh_fixed_route",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "93bceb350aa6c5b9f885802b29973349aeb28519669601580dcc87f92424bdd9"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "dd662255a3d132ac485cb1899feccfaa114eb9344e91910daaa34f08a861fc9a",
+          "product": "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(O)c2OCC1CCCCC1",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "mismatched",
+                  "source": "v14_new:v14_new_route_1",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "54065ec00b4afa92a11913ff7a50d196ceab30a042f597c127e35c2808f3a6ba"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "or",
+              "rule_id": "synllama-rule-026"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "5cb18ca6397b10d76fa581d52ad18fb955850ff5d5e29a5f6324ebf26431fd68",
+          "product": "C[C@H](CC1CCCCC1)Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "mismatched",
+                  "source": "v14_new:v14_new_route_2",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "5d61266dcd0c73d7af22f1c1e932cb0d3e70fe6501344a30340a6cf52fdab908"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "or",
+              "rule_id": "synllama-rule-030"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "55603a0e2332970e0095bcc7b6098647bf18b59cb08747ddd7013dece621deb3",
+          "product": "C[C@H](CC1CCCCC1)Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "mismatched",
+                  "source": "v14_new:v14_new_route_3",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "557de6a7838b5902a91e91f390394527a208993a6b8b8c76d6ce43c8b6ac1041"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "or",
+              "rule_id": "synllama-rule-030"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "ed4151280cbd08c77b6b3eb878c23900ff76aa03eaa04bd511095ef00b5cb6d9",
+          "product": "C=C[C@@H]1CCC[C@H]1Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "mismatched",
+                  "source": "actual_v2:CHEMBL3334418-query-1:route_000000",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "41a2460a4b7ca4b3740759530d891a632ac16078906d1da8ee5740b57fb79f32"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "or",
+              "rule_id": "synllama-rule-030"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "ebed361a88413baf60bbb215aacf6956fc4619987d6667dd7552f6a12760ba85",
+          "product": "C=C[C@@H]1CCC[C@H]1Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+          "status": "definitive_saved_mismatch",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "mismatched",
+                  "source": "actual_v2:CHEMBL3334418-query-1:route_000001",
+                  "status": "complete_valid_top3_nonmatch",
+                  "step_binding_sha256": "13ae1698c551e96a7d4a31db28a168e63a577e10bcba244e627b31e472cd4cf7"
+                }
+              ],
+              "decision": "saved_complete_nonmatch",
+              "node_id": "or",
+              "rule_id": "synllama-rule-030"
+            }
+          ]
+        }
+      ],
+      "input_id": "CHEMBL3334418-query-1",
+      "status_counts": {
+        "all_steps_saved_supported": 1,
+        "definitive_saved_mismatch": 6
+      }
+    },
+    {
+      "graphs": [
+        {
+          "graph_sha256": "40fd767ca6348495290b3af78cdfd4d7955fdfc00499528b92ba548882d6496a",
+          "product": "CNc1ccc(NC(C)(C)c2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+          "status": "all_steps_saved_supported",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL3334418-query-2:route_000000",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "b5f60bc0d52db0e7606074c3bf2955626ea16bedf2546cb0272a2f9125265a69"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        },
+        {
+          "graph_sha256": "e4b9f9a9a95ef9479d397883642774a7f301539e5de3c4d42bca78a02ab1dd30",
+          "product": "CNc1ccc(Nc2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+          "status": "all_steps_saved_supported",
+          "steps": [
+            {
+              "archived_observations": [
+                {
+                  "node_id": "or",
+                  "prediction_status": "matched",
+                  "source": "actual_v2:CHEMBL3334418-query-2:route_000001",
+                  "status": "complete_exact_match",
+                  "step_binding_sha256": "c230f01e28bf886ae4c9fc92ce437691d445b3a96e809b7970821277e4967d02"
+                }
+              ],
+              "decision": "saved_complete_match",
+              "node_id": "or",
+              "rule_id": "synllama-rule-042"
+            }
+          ]
+        }
+      ],
+      "input_id": "CHEMBL3334418-query-2",
+      "status_counts": {
+        "all_steps_saved_supported": 2
+      }
+    },
+    {
+      "graphs": [],
+      "input_id": "CHEMBL4869-query-1",
+      "status_counts": {}
+    },
+    {
+      "graphs": [],
+      "input_id": "CHEMBL4869-query-2",
+      "status_counts": {}
+    },
+    {
+      "graphs": [],
+      "input_id": "CHEMBL3864-query-1",
+      "status_counts": {}
+    },
+    {
+      "graphs": [],
+      "input_id": "CHEMBL3864-query-2",
+      "status_counts": {}
+    }
+  ],
+  "model_provenance_sha256": "ca08a0d8f63780b4f35272cf527f38836fae1e3b0c5916cf554167364c1ec2a9",
+  "schema": "v20-saved-step-support-reconciliation-portable-v1",
+  "scope": {
+    "graphs": 66,
+    "inputs": 12,
+    "max_steps": 132,
+    "sources": "Archived actual-v2 raw steps plus fixed v14, typed-guide-v2 and mapped-NH forward controls; no new chemistry, tokenizer, model, catalog, or generation calls."
+  },
+  "status": "complete_saved_json_only",
+  "summary": {
+    "actual_primary_coverage_unchanged": 4,
+    "baseline_primary_coverage": 5,
+    "coarse_prior_v20_full_graph_unknown_bound": 6,
+    "graph_status_counts": {
+      "all_steps_saved_supported": 10,
+      "definitive_saved_mismatch": 14,
+      "unknown_or_conflict": 42
+    },
+    "interpretation": "Complete valid archived top3 nonmatch excludes only an exact saved request; partial, missing, conflict, or unseen requests remain unknown. No actual primary revision, sibling route promotion, or prospective model validation.",
+    "q4247_query2": {
+      "definitive_saved_mismatch": 6
+    },
+    "reconciled_finite_cohort_upper_bound_inputs": 5,
+    "unkeyed_archived_observations": []
+  }
+}

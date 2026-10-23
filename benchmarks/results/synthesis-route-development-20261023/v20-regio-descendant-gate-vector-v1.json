@@ -1,0 +1,202 @@
+{
+  "artifacts": {
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/v20-regio-descendant-gate-vector-v1/plan.json",
+      "sha256": "ac5cd91f5873c0f7691e352ffefeda5d9bd8923d453c5cc1f739140d9f3a135b"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/v20-regio-descendant-gate-vector-v1/probe.py",
+      "sha256": "8c74648bbb8d5d11a9ef2af086878f27750d4a90baf89e7d57cc36e447955c1a"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/v20-regio-descendant-gate-vector-v1/result.json",
+      "sha256": "72d3db08c9c8f75ee3a943e26b91b14d9ef3b56ea425e02aeac7f0bb59eb1feb"
+    }
+  },
+  "bindings": {
+    "input_sha256": {
+      "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "prior_probe": "9afb85c25339d333d9e89b6a8ce01b824caf3275495b2dbfc23c5cab62234f30",
+      "saved_step_reconciliation": "7a0bdf1fcba21efa320b31d671c47d987842a3ddfd5dc70e66a3b200541b0488",
+      "typed_forward_control": "de6159f249e9d75f309d317f3d35e0815557532eeefaf011b2c2b309638807db",
+      "v20": "b391aa4a4cad33d62e28fa40e66dd663e4847bb49d20dfd3cfa84c4af8a7e918"
+    },
+    "rdkit_version": "2025.09.6",
+    "source_sha256": {
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "chembounce_synthesis/route_first.py": "a4976fe90f3ba31dc4aea6b2081d54ab1b9b7e98083d127b47ed29164ada8177",
+      "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "chembounce_synthesis/workflow.py": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9",
+      "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+    }
+  },
+  "interpretation": "Both fixed products have complete gate vectors: anchor, scaffold/core, specified stereo, typed preflight, properties and polar pass; original bit-Morgan hit Tanimoto fails at 0.326923 and 0.308411 versus 0.35. Polar assessment can report missing feature families while still passing its configured decision. Neither product is newly eligible or a supported full route. Actual primary remains4/12.",
+  "results": [
+    {
+      "gate_vector": {
+        "anchor": {
+          "minimum": null,
+          "missing_feature_families": null,
+          "reason": null,
+          "score": null,
+          "status": "passed"
+        },
+        "hit_bit_tanimoto": {
+          "minimum": 0.35,
+          "missing_feature_families": null,
+          "reason": null,
+          "score": 0.3269230769230769,
+          "status": "failed"
+        },
+        "polar_capacity": {
+          "minimum": null,
+          "missing_feature_families": {
+            "Donor": 1,
+            "PosIonizable": 1
+          },
+          "reason": null,
+          "score": null,
+          "status": "passed"
+        },
+        "properties": {
+          "minimum": null,
+          "missing_feature_families": null,
+          "reason": null,
+          "score": null,
+          "status": "passed"
+        },
+        "scaffold_and_core": {
+          "minimum": null,
+          "missing_feature_families": null,
+          "reason": null,
+          "score": null,
+          "status": "passed"
+        },
+        "specified_stereo": {
+          "minimum": null,
+          "missing_feature_families": null,
+          "reason": null,
+          "score": null,
+          "status": "passed"
+        },
+        "typed_preflight": {
+          "minimum": null,
+          "missing_feature_families": null,
+          "reason": null,
+          "score": null,
+          "status": "passed"
+        }
+      },
+      "graph_sha256": "34d7add6626cd3586a966c207f7b05d1c471ffaaaf7f84657fafef7088b04db8",
+      "product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12",
+      "status": "complete_vector"
+    },
+    {
+      "gate_vector": {
+        "anchor": {
+          "minimum": null,
+          "missing_feature_families": null,
+          "reason": null,
+          "score": null,
+          "status": "passed"
+        },
+        "hit_bit_tanimoto": {
+          "minimum": 0.35,
+          "missing_feature_families": null,
+          "reason": null,
+          "score": 0.308411214953271,
+          "status": "failed"
+        },
+        "polar_capacity": {
+          "minimum": null,
+          "missing_feature_families": {
+            "Donor": 1,
+            "PosIonizable": 1
+          },
+          "reason": null,
+          "score": null,
+          "status": "passed"
+        },
+        "properties": {
+          "minimum": null,
+          "missing_feature_families": null,
+          "reason": null,
+          "score": null,
+          "status": "passed"
+        },
+        "scaffold_and_core": {
+          "minimum": null,
+          "missing_feature_families": null,
+          "reason": null,
+          "score": null,
+          "status": "passed"
+        },
+        "specified_stereo": {
+          "minimum": null,
+          "missing_feature_families": null,
+          "reason": null,
+          "score": null,
+          "status": "passed"
+        },
+        "typed_preflight": {
+          "minimum": null,
+          "missing_feature_families": null,
+          "reason": null,
+          "score": null,
+          "status": "passed"
+        }
+      },
+      "graph_sha256": "d2a3ce54ec831d0d0bff2551068d9395f9aad534ac90f77b5f2738581d84dc1e",
+      "product": "COc1cc(CC(=O)O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12",
+      "status": "complete_vector"
+    }
+  ],
+  "schema": "v20-regio-descendant-gate-vector-portable-v1",
+  "scope": {
+    "fixed_graphs": [
+      {
+        "graph_sha256": "34d7add6626cd3586a966c207f7b05d1c471ffaaaf7f84657fafef7088b04db8",
+        "index": 18,
+        "product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12"
+      },
+      {
+        "graph_sha256": "d2a3ce54ec831d0d0bff2551068d9395f9aad534ac90f77b5f2738581d84dc1e",
+        "index": 19,
+        "product": "COc1cc(CC(=O)O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12"
+      }
+    ],
+    "input_id": "CHEMBL4247-query-2",
+    "no_new_catalog_reaction_generation_model_or_3d": true,
+    "no_threshold_change": true,
+    "selection": "Known-outcome-selected pending graph indices18/19 from terminal v20. Same saved inner regio product occurs at complete rank2 in older typed-guide control, which does not transfer outer/full-route model support."
+  },
+  "status": "complete_fixed_two_saved_products",
+  "work": {
+    "component_attempts": {
+      "anchor": 2,
+      "polar_capacity": 2,
+      "properties": 2,
+      "scaffold_and_core": 2,
+      "specified_stereo": 2,
+      "typed_preflight": 2
+    },
+    "hit_fingerprint_attempts": 1,
+    "polar": {
+      "cache_hits": 0,
+      "capacity_rejections": 0,
+      "deadline_events": 0,
+      "evaluations": 2,
+      "evictions": 0,
+      "preflight_failures": 0,
+      "requests": 2
+    },
+    "product_fingerprint_attempts": 2,
+    "product_parse_attempts": 2,
+    "setup_attempts": 1
+  }
+}

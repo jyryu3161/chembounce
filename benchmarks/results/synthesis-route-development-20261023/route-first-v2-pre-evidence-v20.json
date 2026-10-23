@@ -1,0 +1,257 @@
+{
+  "artifacts": {
+    "analysis-plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v20/analysis-plan.json",
+      "sha256": "be25827b1929df17276c46538df82ded1a3ad38bab6e45e73153c837a21e5f1b"
+    },
+    "analysis.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v20/analysis.json",
+      "sha256": "e92f153a70f00cce9bd319039a03cea31a6931517bee4e8a1bbd38bcd7efc211"
+    },
+    "analyze.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v20/analyze.py",
+      "sha256": "1ee30d3106ab934a73747e4a95ae25419bed9bb4aa92d7dd25a411ffce4cf958"
+    },
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v20/plan.json",
+      "sha256": "dad86321bdf89e50acfbbcc28cd0c5f98b2da7c58ef0bc22db4f4bf8c8c4c1af"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v20/probe.py",
+      "sha256": "845c56715a983eb13d037b5a471937526f22b9fdca82328cf8630877450e32c3"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v20/result.json",
+      "sha256": "b391aa4a4cad33d62e28fa40e66dd663e4847bb49d20dfd3cfa84c4af8a7e918"
+    }
+  },
+  "assets_sha256": {
+    "catalog": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+    "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+    "manifests": {
+      "CHEMBL3334418-query-1": "6b12dae1b5d50308a4f785ba393de1eba27ed2756923fafa59fc20571d0fe812",
+      "CHEMBL3334418-query-2": "c8d906d4231bf602ec241be4ec7ff946b25b2cdfb133eb44f1f49eb262a5b911",
+      "CHEMBL3864-query-1": "4a968e55ab7c40947beee7db5cdcee24b35e04253feb1faf379007d12eaf525b",
+      "CHEMBL3864-query-2": "b038c40adf103153dd78182be09cb9c2ee3258e05a5eff7dc8837ebabeb04fc0",
+      "CHEMBL4247-query-1": "500fda8ed7a5dbc447fe8b9aa1f6ea85c97ac8d389eebf089b919360aa6371cb",
+      "CHEMBL4247-query-2": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "CHEMBL4630839-query-1": "4550b2df1b553049fb94a78835fec0544cca3980c044823ad0e9cbc51f521739",
+      "CHEMBL4630839-query-2": "b8d631a17140f78af64e6ce4f188c5b64aa1f74d5cc6b8acaaaed07f440a10cc",
+      "CHEMBL4869-query-1": "1669db70ff4d09c9a93d586d872d256d3482e10c6e729c7637f15a176eab262d",
+      "CHEMBL4869-query-2": "7c4ef94083ab953bb45c9651f3bb80d5d00cbff155849752ec2135655f0ede7b",
+      "CHEMBL5163-query-1": "cf83f89e9df2e11ccc259628a9f7b59aee066c2f64e4a01a2eda829922926baf",
+      "CHEMBL5163-query-2": "53066839233b041e4d65b62284a722b995a9ab08c65692cb83ae8f479f335145"
+    },
+    "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+    "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39"
+  },
+  "comparison": {
+    "changed_input": "CHEMBL3334418-query-1",
+    "conditional_optimistic_possible_inputs": 6,
+    "eligible_input_product_pairs": {
+      "v17": 58,
+      "v20": 59
+    },
+    "eligible_route_graphs": {
+      "v17": 65,
+      "v20": 66
+    },
+    "gained_graph_sha256": "ff78263b9f0897da1c3f53553e721c765734cad289ef1b8277d614a1cf6947a3",
+    "gained_product": "CNc1ccc(Nc2ccc(S(=O)(=O)NC3CCCCC3)cc2)c2c1C(=O)c1ccccc1C2=O",
+    "gross_graph_gain": 1,
+    "gross_graph_loss": 0,
+    "gross_product_gain": 1,
+    "gross_product_loss": 0,
+    "historical_qualified_exact_graphs_retained": 3,
+    "nh_route_prospective_first_three": [
+      "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(OCC1CCCCC1)c2O",
+      "CNc1ccc(Nc2ccc(S(=O)(=O)NC3CCCCC3)cc2)c2c1C(=O)c1ccccc1C2=O",
+      "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(O)c2OCC1CCCCC1"
+    ],
+    "pre_evidence_covered_inputs": {
+      "v17": 6,
+      "v20": 6
+    },
+    "route_depths": {
+      "v17": {
+        "one": 24,
+        "two": 41
+      },
+      "v20": {
+        "one": 25,
+        "two": 41
+      }
+    },
+    "saved_all_step_matched_inputs": 5
+  },
+  "execution": {
+    "added_work_caps": {
+      "continuation_ranked_rows_retained_per_search": 65536,
+      "mapped_nh_proof_contexts_per_search": 128,
+      "mapped_nh_proof_match_requests_per_search": 512,
+      "mapped_nh_proof_structural_units_per_search": 32768,
+      "mapped_nh_ranked_rows_retained_per_search": 32768,
+      "mapped_nh_raw_registries_per_search": 512,
+      "mapped_nh_raw_snapshot_attempts_per_search": 1024,
+      "mapped_nh_raw_snapshot_structural_units_per_search": 262144,
+      "mapped_nh_selected_contexts_per_search": 128,
+      "no_extra_reverse_catalog_scan_fingerprint_or_forward_calls": "NH selection itself adds no reverse, catalog scan, fingerprint, forward or model calls; probe observational fingerprints are separately counted outside search cap.",
+      "role_checks_per_context": 8192,
+      "role_matches_per_request": 64,
+      "shared_continuation_and_nh_role_checks_per_search": 65536,
+      "shared_source_stereo_atom_bond_units": 131072,
+      "shared_source_stereo_perceptions": 2048
+    },
+    "caps": {
+      "arms": 1,
+      "building_block_top_k": 2,
+      "catalog_index_rows": 250000,
+      "catalog_loads": 1,
+      "catalog_row_visits_per_arm": 262144,
+      "combinations_per_arm": 512,
+      "fingerprint_calls_per_arm": 65536,
+      "inputs": 12,
+      "per_input_per_arm_cooperative_seconds": 960,
+      "products_per_arm": 1024,
+      "reverse_outcomes_per_call": 4,
+      "route_audits_per_arm": 64,
+      "rows_per_query": 8192,
+      "rule_inspections_per_arm": 512,
+      "stereo_atom_bond_units_per_arm": 131072,
+      "stereo_perceptions_per_arm": 2048
+    },
+    "catalog_loads": 1,
+    "conformers_generated": 0,
+    "fixed_inputs": 12,
+    "models_called": 0,
+    "per_input_cooperative_seconds": 960,
+    "policy": {
+      "correct_typed_prefix_size": false,
+      "overlay_scope": "Only route_first version and two explicit opt-in booleans are added to archived effective configs; original scientific gates and caps unchanged. Frozen v17 results never seed generation.",
+      "prefer_continuation_second": true,
+      "prefer_mapped_nh_second": true,
+      "preserve_typed_prefix": false,
+      "version": "catalog-rule-route-first-v2"
+    },
+    "retries": 0
+  },
+  "interpretation": {
+    "actual_primary_coverage_before_new_actual_comparison": 4,
+    "adoption": "No actual protocol result yet; this pre-evidence result does not establish P1 >5/12.",
+    "historical_baseline_primary_coverage": 5,
+    "one_route_development_forward_support": "Exact semantic route association to previously executed fixed one-route control, not fresh v20 model inference or sibling promotion.",
+    "optimistic_bound": "Six is only a coarse full-graph-unknown bound. It has not reconciled identical saved step requests across graph IDs and is not proof of actual-comparison entry or primary coverage; saved complete mismatches can lower it.",
+    "qualification": "Three historical exact qualified route graphs are retained; they were not rescored in v20."
+  },
+  "schema": "route-first-v2-pre-evidence-v20-portable-v1",
+  "source_commit": "ca94646f8749382d670b14dd55959880f675bab6",
+  "source_sha256": {
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+    "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+    "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+    "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+    "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+    "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+    "chembounce_synthesis/route_first.py": "a4976fe90f3ba31dc4aea6b2081d54ab1b9b7e98083d127b47ed29164ada8177",
+    "chembounce_synthesis/route_first_nh.py": "0905979e52cc5eaa3ff97cb0c9f7a549865c54ec1424307100dfa2c2a5be5bf5",
+    "chembounce_synthesis/routes.py": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+    "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+    "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+    "chembounce_synthesis/workflow.py": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9",
+    "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+  },
+  "status": "development_pre_evidence_complete_no_actual_rerun",
+  "work": {
+    "diagnostic_fingerprints_outside_search_cap": {
+      "accept_observation": 617,
+      "best_eligible": 59,
+      "hit_reference": 12
+    },
+    "generation_seconds_excluding_catalog": {
+      "median": 44.966,
+      "sum": 557.726
+    },
+    "v17_search_sum": {
+      "catalog_index_rows_scanned": 2862504,
+      "catalog_row_visits": 2918240,
+      "catalog_stereo_atom_bond_charges": 18831,
+      "catalog_stereo_perceptions": 689,
+      "combinations": 1212,
+      "fallback_hit_second_tanimotos": 5321,
+      "products_generated": 1378,
+      "reaction_pool_graph_visits": 101720,
+      "reaction_pool_query_pairs": 529,
+      "reaction_pool_role_index_checks": 5725008,
+      "reaction_pool_site_match_requests": 1326,
+      "reaction_pool_window_match_requests": 529,
+      "reverse_role_work": 2171,
+      "route_audit_attempts": 65,
+      "rule_inspections": 6144,
+      "topology_match_requests": 349,
+      "topology_spec_graph_visits": 215504,
+      "total_fingerprint_calls": 486906
+    },
+    "v20_bridge_sum": {
+      "bridge_positive_work_items": 90,
+      "bridge_role_contexts": 369,
+      "bridge_snapshot_attempts": 334,
+      "bridge_structural_units": 66021,
+      "bridge_unknown_work_items": 279
+    },
+    "v20_continuation_sum": {
+      "bridge_positive_work_items": 90,
+      "bridge_role_contexts": 369,
+      "bridge_snapshot_attempts": 334,
+      "bridge_structural_units": 66021,
+      "bridge_unknown_work_items": 279,
+      "outer_role_queries": 15,
+      "ranked_rows_retained": 102227,
+      "replacements": 19,
+      "role_checks": 422,
+      "role_matches": 41,
+      "samples_omitted": 0,
+      "stereo_rejections": 12,
+      "stereo_unknowns": 0
+    },
+    "v20_limits_reached_input_counts": {
+      "depth_one_fingerprint_budget": 6,
+      "generation_fingerprint_budget": 1,
+      "max_catalog_row_visits": 10,
+      "max_outer_guides": 11,
+      "max_rule_inspections": 12
+    },
+    "v20_mapped_nh_raw_registries_sum": 174,
+    "v20_mapped_nh_sum": {
+      "proof_contexts": 68,
+      "proof_match_requests": 68,
+      "proof_structural_units": 15080,
+      "ranked_rows_retained": 21224,
+      "raw_snapshot_attempts": 256,
+      "raw_snapshot_structural_units": 36796,
+      "replacements": 4,
+      "role_checks": 17
+    },
+    "v20_search_sum": {
+      "catalog_index_rows_scanned": 2862504,
+      "catalog_row_visits": 2918240,
+      "catalog_stereo_atom_bond_charges": 18898,
+      "catalog_stereo_perceptions": 691,
+      "combinations": 1212,
+      "fallback_hit_second_tanimotos": 5321,
+      "products_generated": 1378,
+      "reaction_pool_graph_visits": 101720,
+      "reaction_pool_query_pairs": 529,
+      "reaction_pool_role_index_checks": 5725008,
+      "reaction_pool_site_match_requests": 1326,
+      "reaction_pool_window_match_requests": 529,
+      "reverse_role_work": 2171,
+      "route_audit_attempts": 66,
+      "rule_inspections": 6144,
+      "topology_match_requests": 349,
+      "topology_spec_graph_visits": 215504,
+      "total_fingerprint_calls": 486907
+    }
+  }
+}
