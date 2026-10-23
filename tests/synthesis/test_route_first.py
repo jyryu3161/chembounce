@@ -161,6 +161,158 @@ def test_continuation_origin_changes_recursive_stereo_and_bounds_are_conservativ
     assert continuation_role_origin(parent, (sourced_copy(parent),), role)["reason"] == ("origin_visit_limit")
 
 
+def test_opt_in_continuation_bridge_preserves_reverse_guides_and_cache(tmp_path, monkeypatch):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "continuation_rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [
+                    {
+                        "id": "inner",
+                        "smarts": "[N:1][C:2][C:3].[O:4]>>[N:1][C:2][C:3][O:4]",
+                        "source": "test",
+                    }
+                ],
+            }
+        )
+    )
+    rules = Rules(path)
+    catalog = SimpleNamespace(sha256="test")
+    settings = RouteFirstLimits(**limits())
+    legacy = RouteFirstSearch("NCCO", catalog, rules, settings)
+    observed = RouteFirstSearch("NCCO", catalog, rules, settings, diagnose_continuation=True)
+    inner = rules.get("inner")
+    old_guides = legacy._reverse(inner, "NCCO", False)
+    new_guides = observed._reverse(inner, "NCCO", False)
+    assert old_guides == new_guides == [("CCN", "O")]
+    assert legacy.report == observed.report
+    assert legacy._reverse_cache == observed._reverse_cache
+    assert legacy._guide_quality == observed._guide_quality
+    assert legacy._guide_centers == observed._guide_centers
+    assert observed._continuation_snapshots == 1
+    assert legacy._reverse(inner, "NCCO", False, record_centers=True) == observed._reverse(
+        inner, "NCCO", False, record_centers=True
+    )
+    assert legacy._guide_centers == observed._guide_centers
+    assert legacy.report == observed.report
+
+    outer = SimpleNamespace(
+        id="outer", reaction=rdChemReactions.ReactionFromSmarts("[N:1].[C:2]>>[N:1][C:2]")
+    )
+    guide = new_guides[0]
+    positive = observed.continuation_guide_origin(inner, "NCCO", False, guide, outer, 0)
+    assert positive["classification"] == "single_source_local_intact_normalized_role"
+    assert positive["source_slot"] == 0
+    assert positive["full_role_on_normalized_guide_same_site"]
+    assert not positive["concrete_leaf_requirement_proven"]
+    count = observed._continuation_role_contexts
+    assert observed.continuation_guide_origin(inner, "NCCO", False, guide, outer, 0) == positive
+    assert observed._continuation_role_contexts == count
+
+    registry = observed._continuation_raw[(inner.id, "NCCO", False)]
+    registry["raw_cap_saturated"] = True
+    observed._continuation_context_cache.clear()
+    assert observed.continuation_guide_origin(inner, "NCCO", False, guide, outer, 0)["reason"] == (
+        "raw_outcome_cap_saturated"
+    )
+    attempts = observed.report["reverse_attempts"]
+    observed._continuation_raw.clear()
+    assert observed._reverse(inner, "NCCO", False) == new_guides
+    assert observed.report["reverse_attempts"] == attempts
+    assert observed.continuation_guide_origin(inner, "NCCO", False, guide, outer, 0)["reason"] == (
+        "raw_provenance_missing_or_cached_before_capture"
+    )
+
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_ROLE_CONTEXTS", 0)
+    fresh = RouteFirstSearch("NCCO", catalog, rules, settings, diagnose_continuation=True)
+    fresh._reverse(inner, "NCCO", False)
+    assert fresh.continuation_guide_origin(inner, "NCCO", False, guide, outer, 0)["reason"] == (
+        "role_context_budget"
+    )
+
+
+def test_continuation_bridge_ambiguous_normalized_site_and_snapshot_budget(tmp_path, monkeypatch):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [{"id": "inner", "smarts": "[C:1][C:2].[O:3]>>[C:1][C:2][O:3]", "source": "test"}],
+            }
+        )
+    )
+    rules = Rules(path)
+    inner = rules.get("inner")
+    outer = SimpleNamespace(
+        id="outer", reaction=rdChemReactions.ReactionFromSmarts("[CH3:1].[N:2]>>[C:1][N:2]")
+    )
+
+    def search():
+        return RouteFirstSearch(
+            "CCO",
+            SimpleNamespace(sha256="test"),
+            rules,
+            RouteFirstLimits(**limits()),
+            diagnose_continuation=True,
+        )
+
+    observed = search()
+    guide = observed._reverse(inner, "CCO", False)[0]
+    assert observed.continuation_guide_origin(inner, "CCO", False, guide, outer, 0)["reason"] == (
+        "normalized_role_embedding_ambiguous_or_absent"
+    )
+    monkeypatch.setattr(route_first_module, "MAX_CONTINUATION_RAW_SNAPSHOTS", 0)
+    saturated = search()
+    assert saturated._reverse(inner, "CCO", False) == [guide]
+    assert saturated.continuation_guide_origin(inner, "CCO", False, guide, outer, 0)["reason"] == (
+        "snapshot_budget"
+    )
+
+    raw = Chem.MolFromSmiles("CO")
+    clean = Chem.Mol(raw)
+    for mol in (raw, clean):
+        for atom in mol.GetAtoms():
+            atom.SetIntProp("react_idx", 0)
+            atom.SetIntProp("react_atom_idx", atom.GetIdx())
+    clean.GetAtomWithIdx(0).SetNumRadicalElectrons(1)
+    assert not route_first_module._normalized_origin_site_unchanged(raw, clean, [0])
+
+
+def test_continuation_failed_snapshot_copy_is_charged_before_allocation(tmp_path, monkeypatch):
+    from chembounce_synthesis.reactions import Rules
+
+    path = tmp_path / "rules.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "rules": [{"id": "r", "smarts": "[C:1].[O:2]>>[C:1][O:2]", "source": "test"}],
+            }
+        )
+    )
+    search = RouteFirstSearch(
+        "CO",
+        SimpleNamespace(sha256="test"),
+        Rules(path),
+        RouteFirstLimits(**limits()),
+        diagnose_continuation=True,
+    )
+    registry = {"by_guide": {}, "incomplete": None, "raw_cap_saturated": False}
+    parts = (molecule("C"), molecule("O"))
+    with monkeypatch.context() as patched:
+        patched.setattr(route_first_module.Chem, "Mol", lambda _: (_ for _ in ()).throw(RuntimeError("copy")))
+        search._capture_continuation_raw(registry, ("C", "O"), parts, parts)
+    assert registry["incomplete"] == "snapshot_copy_failed"
+    assert search._continuation_snapshots == 1
+    assert search._continuation_snapshot_units > 0
+    assert not registry["by_guide"]
+
+
 def limits(**overrides):
     return {
         "max_rule_inspections": 8,

@@ -49,6 +49,10 @@ MAX_CONTINUATION_ROLE_ATOMS = 256
 MAX_CONTINUATION_ROLE_BONDS = 512
 MAX_CONTINUATION_PRECURSORS = 4
 MAX_CONTINUATION_ORIGIN_VISITS = 8192
+MAX_CONTINUATION_RAW_SNAPSHOTS = 1024
+MAX_CONTINUATION_SNAPSHOT_UNITS = 262144
+MAX_CONTINUATION_ROLE_CONTEXTS = 128
+MAX_CONTINUATION_REGISTRIES = 512
 
 
 def _pool_raw_counts(mol, atoms=None):
@@ -151,7 +155,7 @@ def reverse_partition_issue(outcome, target_atoms):
     return None
 
 
-def continuation_role_origin(parent, outcome, role, *, deadline_monotonic=None):
+def continuation_role_origin(parent, outcome, role, *, deadline_monotonic=None, max_origin_visits=None):
     """Describe an outer-role embedding in one raw inner reverse outcome.
 
     This is diagnostic only. Local atom/bond identity is not proof that an
@@ -197,7 +201,12 @@ def continuation_role_origin(parent, outcome, role, *, deadline_monotonic=None):
     def charge(amount=1):
         if deadline_monotonic is not None and time.monotonic() >= deadline_monotonic:
             return False, "deadline"
-        if result["origin_visits"] + amount > MAX_CONTINUATION_ORIGIN_VISITS:
+        ceiling = (
+            MAX_CONTINUATION_ORIGIN_VISITS
+            if max_origin_visits is None
+            else min(MAX_CONTINUATION_ORIGIN_VISITS, max_origin_visits)
+        )
+        if result["origin_visits"] + amount > ceiling:
             return False, "origin_visit_limit"
         result["origin_visits"] += amount
         return True, None
@@ -313,6 +322,53 @@ def continuation_role_origin(parent, outcome, role, *, deadline_monotonic=None):
         return unknown("origin_or_match_error")
 
 
+def _normalized_origin_site_unchanged(raw, clean, target_indices):
+    """Require the same target-derived local site through hint normalization."""
+
+    def origin(atom):
+        if atom.HasProp("react_atom_idx") and atom.HasProp("react_idx"):
+            return atom.GetIntProp("react_idx"), atom.GetIntProp("react_atom_idx")
+        return None
+
+    def state(atom):
+        return (
+            atom.GetAtomicNum(),
+            atom.GetIsotope(),
+            atom.GetFormalCharge(),
+            atom.GetIsAromatic(),
+            atom.GetNumExplicitHs(),
+            atom.GetNoImplicit(),
+            int(atom.GetChiralTag()),
+            atom.GetNumRadicalElectrons(),
+        )
+
+    def around(atom):
+        return sorted(
+            [
+                (
+                    origin(neighbor := bond.GetOtherAtom(atom)),
+                    state(neighbor),
+                    str(bond.GetBondType()),
+                    bond.GetIsAromatic(),
+                    int(bond.GetStereo()),
+                    int(bond.GetBondDir()),
+                )
+                for bond in atom.GetBonds()
+            ],
+            key=repr,
+        )
+
+    for target_index in target_indices:
+        key = (0, target_index)
+        before = [atom for atom in raw.GetAtoms() if origin(atom) == key]
+        after = [atom for atom in clean.GetAtoms() if origin(atom) == key]
+        if len(before) != 1 or len(after) != 1:
+            return False
+        if state(before[0]) != state(after[0]) or around(before[0]) != around(after[0]):
+            return False
+    return True
+
+
 class ReverseHintError(ValueError):
     def __init__(self, reason):
         self.reason = reason
@@ -373,7 +429,7 @@ def _sanitize_reverse_hint(clean, parent, rule):
     return resets
 
 
-def normalize_reverse_hint(raw, parent, rule):
+def normalize_reverse_hint(raw, parent, rule, *, capture_clean=None):
     """Make a copied reverse outcome usable for retrieval, never route evidence."""
     editable = Chem.RWMol(Chem.Mol(raw))
     edits = {"removed_originless_terminal_dummy": 0, "reset_template_n_hydrogens": 0}
@@ -404,6 +460,12 @@ def normalize_reverse_hint(raw, parent, rule):
         smiles = canonical(absolute_smiles(clean, isomericSmiles=True))
     except (ValueError, RuntimeError) as exc:
         raise ReverseHintError("hint_serialization_failed") from exc
+    if capture_clean is not None:
+        try:
+            capture_clean(clean, smiles)
+        except Exception:
+            # Diagnostics cannot change which retrieval hint is accepted.
+            pass
     return smiles, edits
 
 
@@ -453,7 +515,9 @@ def reverse_role_issue(clean, role, tags, slot):
     return None
 
 
-def typed_reverse_hint(raw, parent, rule, tags, slot, representative=None, count_match=None):
+def typed_reverse_hint(
+    raw, parent, rule, tags, slot, representative=None, count_match=None, capture_clean=None
+):
     """One role-conforming retrieval query from a raw copied precursor."""
     editable = Chem.RWMol(Chem.Mol(raw))
     dummies = [atom for atom in editable.GetAtoms() if atom.GetAtomicNum() == 0]
@@ -519,6 +583,11 @@ def typed_reverse_hint(raw, parent, rule, tags, slot, representative=None, count
         smiles = canonical(absolute_smiles(clean, isomericSmiles=True))
     except (ValueError, RuntimeError) as exc:
         raise ReverseHintError("hint_serialization_failed") from exc
+    if capture_clean is not None:
+        try:
+            capture_clean(clean, smiles)
+        except Exception:
+            pass
     return smiles, resets
 
 
@@ -702,7 +771,18 @@ class RouteFirstLimits:
 
 
 class RouteFirstSearch:
-    def __init__(self, hit, catalog, rules, limits, deadline_monotonic=None, accept=None, hit_anchors=None):
+    def __init__(
+        self,
+        hit,
+        catalog,
+        rules,
+        limits,
+        deadline_monotonic=None,
+        accept=None,
+        hit_anchors=None,
+        *,
+        diagnose_continuation=False,
+    ):
         self.hit = canonical(hit)
         self.hit_mol = molecule(self.hit)
         self.hit_fp = FP.GetFingerprint(self.hit_mol)
@@ -873,6 +953,12 @@ class RouteFirstSearch:
         self._topology_assessment_cache = {}
         self._eligible_rules = None
         self._reverse_cache = {}
+        self._diagnose_continuation = diagnose_continuation
+        self._continuation_raw = {} if diagnose_continuation else None
+        self._continuation_context_cache = {} if diagnose_continuation else None
+        self._continuation_snapshots = 0
+        self._continuation_snapshot_units = 0
+        self._continuation_role_contexts = 0
         self._tagged_reverse_cache = {}
         self._nonring_unavailable_rules = set()
         self._guide_quality = {}
@@ -1513,7 +1599,7 @@ class RouteFirstSearch:
                 cuts.append((min(first, second), max(first, second)))
         return tuple(sorted(cuts))
 
-    def _typed_reverse_outcome(self, outcome, parent, rule, tags):
+    def _typed_reverse_outcome(self, outcome, parent, rule, tags, *, capture_parts=None):
         parts, resets, instantiated, trials = [], 0, 0, 0
         for slot, raw in enumerate(outcome):
             if self._stop():
@@ -1522,6 +1608,7 @@ class RouteFirstSearch:
             if dummies:
                 selected = None
                 for representative in REVERSE_ROLE_REPRESENTATIVES:
+                    captured = []
                     if trials >= MAX_REVERSE_ROLE_TRIALS_PER_OUTCOME:
                         self._role_rejection("outcome_trial_budget")
                         break
@@ -1538,6 +1625,11 @@ class RouteFirstSearch:
                             slot,
                             representative,
                             count_match=self._count_role_match,
+                            **(
+                                {"capture_clean": lambda mol, smiles: captured.append((mol, smiles))}
+                                if capture_parts is not None
+                                else {}
+                            ),
                         )
                     except ReverseHintError as exc:
                         self._role_rejection(exc.reason)
@@ -1551,6 +1643,7 @@ class RouteFirstSearch:
                 part, reset_count = selected
                 instantiated += 1
             else:
+                captured = []
                 if trials >= MAX_REVERSE_ROLE_TRIALS_PER_OUTCOME:
                     self._role_rejection("outcome_trial_budget")
                     return None
@@ -1566,6 +1659,11 @@ class RouteFirstSearch:
                         tags,
                         slot,
                         count_match=self._count_role_match,
+                        **(
+                            {"capture_clean": lambda mol, smiles: captured.append((mol, smiles))}
+                            if capture_parts is not None
+                            else {}
+                        ),
                     )
                 except ReverseHintError as exc:
                     self._role_rejection(exc.reason)
@@ -1574,11 +1672,166 @@ class RouteFirstSearch:
                     self._role_rejection("typed_query_failed")
                     return None
             parts.append(part)
+            if capture_parts is not None:
+                capture_parts.append(
+                    captured[0][0] if len(captured) == 1 and captured[0][1] == part else None
+                )
             resets += reset_count
         return tuple(parts), {
             "typed_originless_placeholder_instantiated": instantiated,
             "typed_reset_template_n_hydrogens": resets,
         }
+
+    def _capture_continuation_raw(self, registry, guide, outcome, clean_parts):
+        """Attach one emitted guide to its exact raw alternative; never affect it."""
+        if not self._diagnose_continuation:
+            return
+        if len(clean_parts) != len(outcome) or any(part is None for part in clean_parts):
+            registry["incomplete"] = "normalized_molecule_unavailable"
+            return
+        if len(outcome) > MAX_CONTINUATION_PRECURSORS:
+            registry["incomplete"] = "snapshot_precursor_count_limit"
+            return
+        parts = tuple(outcome) + tuple(clean_parts)
+        if any(
+            part.GetNumAtoms() > MAX_CONTINUATION_ROLE_ATOMS
+            or part.GetNumBonds() > MAX_CONTINUATION_ROLE_BONDS
+            for part in parts
+        ):
+            registry["incomplete"] = "snapshot_part_size_limit"
+            return
+        units = sum(part.GetNumAtoms() + part.GetNumBonds() for part in parts)
+        if self._continuation_snapshots >= MAX_CONTINUATION_RAW_SNAPSHOTS or (
+            self._continuation_snapshot_units + units > MAX_CONTINUATION_SNAPSHOT_UNITS
+        ):
+            registry["incomplete"] = "snapshot_budget"
+            return
+        # Reserve attempted copy work before any allocation. Failed partial
+        # copies still consume the diagnostic budget and cannot be retried free.
+        self._continuation_snapshots += 1
+        self._continuation_snapshot_units += units
+        try:
+            captured = (
+                tuple(Chem.Mol(part) for part in outcome),
+                tuple(Chem.Mol(part) for part in clean_parts),
+            )
+        except Exception:
+            registry["incomplete"] = "snapshot_copy_failed"
+            return
+        registry["by_guide"].setdefault(guide, []).append(captured)
+
+    def continuation_guide_origin(self, rule, target, fallback, guide, outer_rule, outer_slot):
+        """Opt-in exact-guide observation; unknown never affects source selection."""
+        result = {
+            "classification": "unknown",
+            "reason": None,
+            "source_slot": None,
+            "raw_alternatives": 0,
+            "full_role_on_normalized_guide_same_site": False,
+            "concrete_leaf_requirement_proven": False,
+        }
+
+        def unknown(reason):
+            result["reason"] = reason
+            return result
+
+        if not self._diagnose_continuation:
+            return unknown("diagnostic_disabled")
+        if self.deadline is not None and time.monotonic() >= self.deadline:
+            return unknown("deadline")
+        cache_key = (rule.id, target, fallback)
+        context_key = (cache_key, guide, outer_rule.id, outer_slot)
+        if context_key in self._continuation_context_cache:
+            return dict(self._continuation_context_cache[context_key])
+        if self._continuation_role_contexts >= MAX_CONTINUATION_ROLE_CONTEXTS:
+            return unknown("role_context_budget")
+        self._continuation_role_contexts += 1
+        registry = self._continuation_raw.get(cache_key)
+        if registry is None:
+            return unknown("raw_provenance_missing_or_cached_before_capture")
+        if registry["incomplete"] is not None:
+            return unknown(registry["incomplete"])
+        if registry["raw_cap_saturated"]:
+            return unknown("raw_outcome_cap_saturated")
+        alternatives = registry["by_guide"].get(guide, ())
+        result["raw_alternatives"] = len(alternatives)
+        if not alternatives:
+            return unknown("guide_has_no_raw_provenance")
+        try:
+            parent = molecule(target)
+            role = outer_rule.reaction.GetReactants()[outer_slot]
+            owners = set()
+            for raw, clean in alternatives:
+                remaining = MAX_CONTINUATION_SNAPSHOT_UNITS - self._continuation_snapshot_units
+                if remaining <= 0:
+                    return unknown("structural_work_budget")
+                origin = continuation_role_origin(
+                    parent,
+                    raw,
+                    role,
+                    deadline_monotonic=self.deadline,
+                    max_origin_visits=remaining,
+                )
+                self._continuation_snapshot_units += origin["origin_visits"]
+                if origin["classification"] != "single_source_local_intact":
+                    return unknown(f"raw_{origin['classification']}_{origin['reason'] or 'observed'}")
+                slot = origin["source_slot"]
+                if slot is None or slot >= len(clean):
+                    return unknown("source_slot_missing")
+                normalized = clean[slot]
+                if normalized.GetNumAtoms() > MAX_CONTINUATION_ROLE_ATOMS:
+                    return unknown("normalized_part_size_limit")
+                normalized_units = (
+                    (normalized.GetNumAtoms() + raw[slot].GetNumAtoms())
+                    * (len(origin["matched_parent_atoms"]) + 1)
+                    + normalized.GetNumBonds()
+                    + raw[slot].GetNumBonds()
+                    + role.GetNumAtoms()
+                    + role.GetNumBonds()
+                )
+                if self._continuation_snapshot_units + normalized_units > MAX_CONTINUATION_SNAPSHOT_UNITS:
+                    return unknown("structural_work_budget")
+                self._continuation_snapshot_units += normalized_units
+                positions = []
+                for target_index in origin["matched_parent_atoms"]:
+                    found = [
+                        atom.GetIdx()
+                        for atom in normalized.GetAtoms()
+                        if atom.HasProp("react_atom_idx")
+                        and atom.HasProp("react_idx")
+                        and atom.GetIntProp("react_atom_idx") == target_index
+                        and atom.GetIntProp("react_idx") == 0
+                    ]
+                    if len(found) != 1:
+                        return unknown("normalized_origin_missing_or_ambiguous")
+                    positions.append(found[0])
+                if self.deadline is not None and time.monotonic() >= self.deadline:
+                    return unknown("deadline")
+                matches = normalized.GetSubstructMatches(
+                    role, useChirality=True, uniquify=False, maxMatches=MAX_CONTINUATION_ROLE_MATCHES
+                )
+                if len(matches) >= MAX_CONTINUATION_ROLE_MATCHES:
+                    return unknown("normalized_role_match_truncated")
+                if len(matches) != 1:
+                    return unknown("normalized_role_embedding_ambiguous_or_absent")
+                if tuple(positions) != matches[0]:
+                    return unknown("normalized_same_site_role_mismatch")
+                if not _normalized_origin_site_unchanged(
+                    raw[slot], normalized, origin["matched_parent_atoms"]
+                ):
+                    return unknown("normalization_edited_role_site")
+                owners.add(slot)
+            if len(owners) != 1:
+                return unknown("raw_alternative_owner_conflict")
+            if self.deadline is not None and time.monotonic() >= self.deadline:
+                return unknown("deadline")
+            result["classification"] = "single_source_local_intact_normalized_role"
+            result["source_slot"] = owners.pop()
+            result["full_role_on_normalized_guide_same_site"] = True
+            self._continuation_context_cache[context_key] = dict(result)
+            return result
+        except (ValueError, RuntimeError, AttributeError, IndexError, KeyError):
+            return unknown("role_or_origin_check_failed")
 
     def _reverse(self, rule, target, fallback, *, record_centers=False):
         key = (rule.id, target, fallback)
@@ -1596,6 +1849,11 @@ class RouteFirstSearch:
         raw_seen = False
         reverse_failed = False
         nonring_query = False
+        registry = (
+            {"by_guide": {}, "incomplete": None, "raw_cap_saturated": False}
+            if self._diagnose_continuation and len(self._continuation_raw) < MAX_CONTINUATION_REGISTRIES
+            else None
+        )
         if not fallback and not self._stop():
             self.report["reverse_attempts"] += 1
             try:
@@ -1650,8 +1908,12 @@ class RouteFirstSearch:
                 if nonring_query and not outcomes:
                     self.report["reverse_nonring_empty"] += 1
                 raw_seen = bool(outcomes)
+                if registry is not None:
+                    registry["raw_cap_saturated"] = len(outcomes) >= self.limits.max_reverse_outcomes
                 for outcome in outcomes:
                     if self._stop():
+                        if registry is not None:
+                            registry["incomplete"] = "reverse_interrupted"
                         break
                     if len(outcome) != len(rule.roles):
                         self._role_rejection("wrong_precursor_count")
@@ -1663,21 +1925,42 @@ class RouteFirstSearch:
                         counts[issue] = counts.get(issue, 0) + 1
                         continue
                     cut_bonds = self._reverse_cut_bonds(outcome, parent) if record_centers else None
-                    typed = self._typed_reverse_outcome(outcome, parent, rule, tags)
+                    clean_parts = [] if registry is not None else None
+                    typed = self._typed_reverse_outcome(
+                        outcome, parent, rule, tags, capture_parts=clean_parts
+                    )
                     if self._stop():
+                        if registry is not None:
+                            registry["incomplete"] = "reverse_interrupted"
                         break
                     if typed is not None:
                         guide, changes = typed
                         quality = "typed"
                     else:
+                        if clean_parts is not None:
+                            clean_parts.clear()
                         # A reverse guide is a search hint. Keep the old safe
                         # approximation when exact role reconstruction fails.
                         # This never bypasses the parent-origin partition check.
                         try:
                             parts, changes = [], {}
                             for mol in outcome:
-                                part, edits = normalize_reverse_hint(mol, parent, rule)
+                                captured = []
+                                part, edits = normalize_reverse_hint(
+                                    mol,
+                                    parent,
+                                    rule,
+                                    capture_clean=(lambda clean, smiles: captured.append((clean, smiles)))
+                                    if clean_parts is not None
+                                    else None,
+                                )
                                 parts.append(part)
+                                if clean_parts is not None:
+                                    clean_parts.append(
+                                        captured[0][0]
+                                        if len(captured) == 1 and captured[0][1] == part
+                                        else None
+                                    )
                                 for label, count in edits.items():
                                     changes[label] = changes.get(label, 0) + count
                             guide = tuple(parts)
@@ -1691,6 +1974,11 @@ class RouteFirstSearch:
                             self.report["reverse_failures"] += 1
                             continue
                     guides.append(guide)
+                    if registry is not None:
+                        try:
+                            self._capture_continuation_raw(registry, guide, outcome, clean_parts)
+                        except Exception:
+                            registry["incomplete"] = "snapshot_unexpected_error"
                     if record_centers:
                         centers.setdefault(guide, set()).add(cut_bonds)
                     if quality == "typed" or guide not in qualities:
@@ -1702,6 +1990,8 @@ class RouteFirstSearch:
             except (ValueError, RuntimeError, AttributeError):
                 reverse_failed = True
                 self.report["reverse_failures"] += 1
+                if registry is not None:
+                    registry["incomplete"] = "reverse_failed"
         if (
             not guides
             and not fallback
@@ -1733,6 +2023,8 @@ class RouteFirstSearch:
                 )
             if record_centers:
                 centers = {guides[0]: {None}}
+            if registry is not None:
+                registry["incomplete"] = "fallback_has_no_raw_origin"
         guides = sorted(set(guides))[: self.limits.max_reverse_outcomes]
         self.report["reverse_outcomes"] += len(guides)
         for guide in guides:
@@ -1744,6 +2036,8 @@ class RouteFirstSearch:
                 )
             self.report["reverse_hint_quality_counts"][quality] += 1
         self._reverse_cache[key] = guides
+        if registry is not None:
+            self._continuation_raw[key] = registry
         return guides
 
     def _retrieval_target(self, target):
