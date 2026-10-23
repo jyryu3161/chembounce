@@ -1,0 +1,549 @@
+{
+  "artifacts": {
+    "execution.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-same-partner-control-v1/execution.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-same-partner-control-v1/plan.json",
+      "sha256": "fa5cf7323b106455505cadf8de746b86848bf80be1ad2a781cff66da649862a2"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-same-partner-control-v1/probe.py",
+      "sha256": "22edb55082d15c691e086b8e6a5d169fd8ef184a0b8cdbb43e9fa452c7039825"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-same-partner-control-v1/result.json",
+      "sha256": "0325c06f96a399f15985d2108847781d8922fa4689bef918f9ef67a24c1ceb12"
+    },
+    "source-lookup.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-same-partner-control-v1/source-lookup.json",
+      "sha256": "e3c97a4a92f945ad5ab0532cbc8b8efac6edf577b20f3099c814399dc9ce87b3"
+    }
+  },
+  "execution": {
+    "retries": 0,
+    "session_id": 68287,
+    "terminal_exit_code": 0
+  },
+  "interpretation": {
+    "adaptivity": "This is an outcome-informed development control selected after the earlier full-source findings. Ring topology matching does not establish preservation of oxidation state, hydrogen counts or basicity, nor the cause of the similarity deficit.",
+    "closed_variant": "This fixed ring-pruning/source variant is not adopted. No next witness, different pruning depth or ring subset. No production generation change.",
+    "cost_scope": "One preparatory exact-string TSV pass238542 rows through an equivalent-content alias is separate from one runtime Catalog load with the fixed P1 lineage manifest5543fdf7. Three Rules.apply cache misses produced3 retained products with no truncation. Hit/admission fingerprints4 plus separate diagnostic fingerprints3. Polar requests6/evaluations3/cachehits3. These diagnostic costs are not a new fixed-panel comparison.",
+    "new_product": "One product from the one frozen original-rank1043 source. Original-hit bit Tanimoto0.23423423423423423 fails unchanged0.35. Polar upper-bound recall8/10=.8 passes; anchor, scaffold/core, specified stereo, typed preflight and properties pass; no unassessed gate component.",
+    "old_controls": "Both fixed pending18/19 source combinations reproduced their exact products, original admission failures and independent original-gate vectors before the new source was applied.",
+    "support_scope": "The new product failed before full route verification/audit, so both are unperformed. No model/3D/qualification calls; no full-route support or synthetic-feasibility claim. P1 actual primary remains4/12, existing v20 saved-evidence upper bound5/12."
+  },
+  "protocol": {
+    "asset_lookup": "One prior read-only exact-SMILES TSV stream used the .chembounce-data-synthesis alias and found one ID in238542 rows. Runtime uses the effective configured qualified-development fixed P1 catalog path/manifest (same TSV SHA, stronger lineage), with entry/exit byte hashes and one bound Catalog load.",
+    "bound_sha256": {
+      "audit_source": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+      "catalog_source": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+      "catalog_tsv": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "config": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9",
+      "conformer_source": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "fixed2_gate_result": "72d3db08c9c8f75ee3a943e26b91b14d9ef3b56ea425e02aeac7f0bb59eb1feb",
+      "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "polar_source": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "probe": "22edb55082d15c691e086b8e6a5d169fd8ef184a0b8cdbb43e9fa452c7039825",
+      "reactions_source": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "ring_core_plan": "a023eda20d60010f7974941d6acbc9317c2e191b5e561fb9c857149bc765bc29",
+      "ring_core_result": "3a7858bcc8ad7236039d3c3d9cfe9ecf45e005f4ee4cffcf362bc62bde0a0ecd",
+      "route_first_source": "a4976fe90f3ba31dc4aea6b2081d54ab1b9b7e98083d127b47ed29164ada8177",
+      "routes_source": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+      "rules_asset": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "selective_scoring_source": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "similarity_constraints_source": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "source_lookup": "e3c97a4a92f945ad5ab0532cbc8b8efac6edf577b20f3099c814399dc9ce87b3",
+      "utils_source": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3",
+      "v20_result": "b391aa4a4cad33d62e28fa40e66dd663e4847bb49d20dfd3cfa84c4af8a7e918",
+      "workflow_source": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9"
+    },
+    "caps": {
+      "deadline_seconds": 960,
+      "fingerprint_calls": 49,
+      "gate_product_instances": 48,
+      "generation_calls": 3,
+      "generation_product_limit": 16,
+      "generation_raw_tuple_sentinel_per_call": 17,
+      "independent_atoms_per_molecule": 256,
+      "independent_bonds_per_molecule": 512,
+      "independent_fingerprints": 48,
+      "independent_vectors": 48,
+      "retained_product_instances": 48,
+      "strict_audits": 16,
+      "strict_product_limit": 64,
+      "total_polar_requests": 96
+    },
+    "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "comparison": "Saved pending18/19 products and their fixed2 gate reasons/scores are controls only. Require both before the new generation. Every generated product receives the unchanged sequential admission gate AND a separate independently assessed original-gate component vector in the same frozen pass; independent diagnostic FP/polar costs have separate caps. Strict verify/audit only after sequential gate pass. No second source, condition, permutation, retry, rank walk, or forward model. A new pre-evidence/audited route is not actual-comparison qualification.",
+    "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+    "fixed_new_source_id": "structure-sha256:fb8aad37512f5c7fcd669dbc298d1be113231e487f2cb3d9aa4e77191539f7f1",
+    "fixed_new_source_rank_record": {
+      "anchor_strength": 0,
+      "guide_similarity": 0.20754716981132076,
+      "joint_attachment_site_counts": {
+        "distinct_core_attachment_sites": 1,
+        "distinct_role_sites": 1,
+        "extra_nonjoint_role_sites": 0,
+        "joint_sites": 1,
+        "status": "present"
+      },
+      "original_group": "ordinary",
+      "original_group_rank": 1043,
+      "original_row_index": 3101,
+      "smiles": "Nc1ccc(C2CC(=O)NC(=O)C2)cc1"
+    },
+    "fixed_new_source_smiles": "Nc1ccc(C2CC(=O)NC(=O)C2)cc1",
+    "input_id": "CHEMBL4247-query-2",
+    "old_pending_graph_sha256": [
+      "34d7add6626cd3586a966c207f7b05d1c471ffaaaf7f84657fafef7088b04db8",
+      "d2a3ce54ec831d0d0bff2551068d9395f9aad534ac90f77b5f2738581d84dc1e"
+    ],
+    "old_pending_indices": [
+      18,
+      19
+    ],
+    "outer_rule_id": "synllama-rule-042",
+    "paths": {
+      "audit_source": "chembounce_synthesis/route_audit.py",
+      "catalog_manifest": "benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv.manifest.json",
+      "catalog_source": "chembounce_synthesis/catalog.py",
+      "catalog_tsv": "benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv",
+      "common_source": "chembounce_synthesis/common.py",
+      "config": "benchmark-results/route-first-development-20261023-v2/route-first-config.json",
+      "conformer_source": "chembounce_synthesis/conformers.py",
+      "fixed2_gate_result": "benchmark-results/route-first-development-20261023-v2/v20-regio-descendant-gate-vector-v1/result.json",
+      "manifest": "benchmark-results/route-first-development-20261023/route_first/runs/CHEMBL4247-query-2/synthesis/manifest.json",
+      "panel": "benchmark-results/route-first-development-20261023-v2/panel.json",
+      "polar_source": "chembounce_synthesis/polar_capacity.py",
+      "reactions_source": "chembounce_synthesis/reactions.py",
+      "ring_core_plan": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-feasibility-v1/plan.json",
+      "ring_core_result": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-feasibility-v1/result.json",
+      "route_first_source": "chembounce_synthesis/route_first.py",
+      "routes_source": "chembounce_synthesis/routes.py",
+      "rules_asset": ".chembounce-data-synthesis/rules.json",
+      "selective_scoring_source": "chembounce_synthesis/selective_scoring.py",
+      "similarity_constraints_source": "chembounce_synthesis/similarity_constraints.py",
+      "source_lookup": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-same-partner-control-v1/source-lookup.json",
+      "utils_source": "utils.py",
+      "v20_result": "benchmark-results/route-first-development-20261023-v2/development-probe-v20/result.json",
+      "workflow_source": "chembounce_synthesis/workflow.py"
+    },
+    "purpose": "One prespecified historical-pool first definite ring-core source, same fixed inner product and ordered original outer reactants; old two controls must reproduce before new source is evaluated.",
+    "rdkit_version": "2025.09.6",
+    "review": "root_and_astra_pass_before_execution",
+    "reviewed_draft_sha256": "663a739de91376382c5324d2fdf9ec4a8761d2046e1c19efdd3cc221199cff36",
+    "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "schema": "spectator-ring-core-same-partner-control-plan-v1",
+    "scope": {
+      "catalog_loads_at_most": 1,
+      "catalog_source_selection_calls": 0,
+      "fixed_new_outer_sources": 1,
+      "inner_generation_calls": 0,
+      "model_calls": 0,
+      "new_source_chosen_before_products": true,
+      "old_outer_sources": 2,
+      "outer_generation_calls_at_most": 3,
+      "prior_v20_pending_graphs_are_unverified": true,
+      "shared_inner_product_count": 1,
+      "three_dimensional_generation_calls": 0
+    },
+    "source_commit": "65361bd685f53a1c2c21a68f9d053a5765776694",
+    "status": "frozen_preexecution"
+  },
+  "result": {
+    "catalog_binding": {
+      "lookup_alias_path": ".chembounce-data-synthesis/catalog.tsv",
+      "lookup_and_runtime_tsv_sha256_equal": true,
+      "runtime_configured_tsv_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv",
+      "runtime_manifest_sha256": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274"
+    },
+    "entry_sha256": {
+      "audit_source": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+      "catalog_source": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+      "catalog_tsv": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "config": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9",
+      "conformer_source": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "fixed2_gate_result": "72d3db08c9c8f75ee3a943e26b91b14d9ef3b56ea425e02aeac7f0bb59eb1feb",
+      "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "polar_source": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "probe": "22edb55082d15c691e086b8e6a5d169fd8ef184a0b8cdbb43e9fa452c7039825",
+      "reactions_source": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "ring_core_plan": "a023eda20d60010f7974941d6acbc9317c2e191b5e561fb9c857149bc765bc29",
+      "ring_core_result": "3a7858bcc8ad7236039d3c3d9cfe9ecf45e005f4ee4cffcf362bc62bde0a0ecd",
+      "route_first_source": "a4976fe90f3ba31dc4aea6b2081d54ab1b9b7e98083d127b47ed29164ada8177",
+      "routes_source": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+      "rules_asset": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "selective_scoring_source": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "similarity_constraints_source": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "source_lookup": "e3c97a4a92f945ad5ab0532cbc8b8efac6edf577b20f3099c814399dc9ce87b3",
+      "utils_source": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3",
+      "v20_result": "b391aa4a4cad33d62e28fa40e66dd663e4847bb49d20dfd3cfa84c4af8a7e918",
+      "workflow_source": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9"
+    },
+    "error": null,
+    "exit_sha256": {
+      "audit_source": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+      "catalog_source": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+      "catalog_tsv": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "config": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9",
+      "conformer_source": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "fixed2_gate_result": "72d3db08c9c8f75ee3a943e26b91b14d9ef3b56ea425e02aeac7f0bb59eb1feb",
+      "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "polar_source": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "probe": "22edb55082d15c691e086b8e6a5d169fd8ef184a0b8cdbb43e9fa452c7039825",
+      "reactions_source": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "ring_core_plan": "a023eda20d60010f7974941d6acbc9317c2e191b5e561fb9c857149bc765bc29",
+      "ring_core_result": "3a7858bcc8ad7236039d3c3d9cfe9ecf45e005f4ee4cffcf362bc62bde0a0ecd",
+      "route_first_source": "a4976fe90f3ba31dc4aea6b2081d54ab1b9b7e98083d127b47ed29164ada8177",
+      "routes_source": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+      "rules_asset": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "selective_scoring_source": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "similarity_constraints_source": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "source_lookup": "e3c97a4a92f945ad5ab0532cbc8b8efac6edf577b20f3099c814399dc9ce87b3",
+      "utils_source": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3",
+      "v20_result": "b391aa4a4cad33d62e28fa40e66dd663e4847bb49d20dfd3cfa84c4af8a7e918",
+      "workflow_source": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9"
+    },
+    "new_source": {
+      "candidates": [
+        {
+          "audit": null,
+          "independent_vector": {
+            "status": "complete_vector",
+            "vector": {
+              "anchor": {
+                "status": "passed",
+                "value": null
+              },
+              "hit_bit_tanimoto": {
+                "margin": -0.11576576576576575,
+                "minimum": 0.35,
+                "score": 0.23423423423423423,
+                "status": "failed"
+              },
+              "polar_capacity": {
+                "authoritative_gate_blocked": false,
+                "missing_feature_families": {
+                  "Donor": 1,
+                  "PosIonizable": 1
+                },
+                "status": "passed",
+                "value": {
+                  "candidate_counts": {
+                    "Acceptor": 6,
+                    "Donor": 2
+                  },
+                  "constraint_policy_sha256": "7042c736df62f4bc7a116a37dbae698a9860dc85aa4a5f7aac2c78fbc6b2b4da",
+                  "denominator": 10,
+                  "eligible": true,
+                  "minimum_polar_reference_recall": 0.75,
+                  "numerator": 8,
+                  "product": "Cc1cnn2c(Nc3ccc(C4CC(=O)NC(=O)C4)cc3)cc(-c3ccccc3S(C)(=O)=O)nc12",
+                  "reason": null,
+                  "recall_upper_bound": 0.8,
+                  "reference_counts": {
+                    "Acceptor": 6,
+                    "Donor": 3,
+                    "PosIonizable": 1
+                  },
+                  "status": "possible"
+                }
+              },
+              "properties": {
+                "reasons": [],
+                "status": "passed"
+              },
+              "scaffold_and_core": {
+                "status": "passed",
+                "value": null
+              },
+              "specified_stereo": {
+                "status": "passed",
+                "value": 0
+              },
+              "typed_preflight": {
+                "status": "passed",
+                "value": null
+              }
+            }
+          },
+          "pre_evidence_gate": {
+            "fingerprint_calls": 1,
+            "hit_bit_tanimoto": 0.23423423423423423,
+            "passed": false,
+            "reason": "hit_tanimoto"
+          },
+          "product": "Cc1cnn2c(Nc3ccc(C4CC(=O)NC(=O)C4)cc3)cc(-c3ccccc3S(C)(=O)=O)nc12",
+          "verification": null
+        }
+      ],
+      "ordered_reactants": [
+        "Cc1cnn2c(Cl)cc(-c3ccccc3S(C)(=O)=O)nc12",
+        "Nc1ccc(C2CC(=O)NC(=O)C2)cc1"
+      ],
+      "products": [
+        "Cc1cnn2c(Nc3ccc(C4CC(=O)NC(=O)C4)cc3)cc(-c3ccccc3S(C)(=O)=O)nc12"
+      ],
+      "source_id": "structure-sha256:fb8aad37512f5c7fcd669dbc298d1be113231e487f2cb3d9aa4e77191539f7f1",
+      "source_smiles": "Nc1ccc(C2CC(=O)NC(=O)C2)cc1",
+      "truncated": false
+    },
+    "old_controls": [
+      {
+        "gates": [
+          {
+            "fingerprint_calls": 1,
+            "hit_bit_tanimoto": 0.3269230769230769,
+            "independent_vector": {
+              "status": "complete_vector",
+              "vector": {
+                "anchor": {
+                  "status": "passed",
+                  "value": null
+                },
+                "hit_bit_tanimoto": {
+                  "margin": -0.02307692307692305,
+                  "minimum": 0.35,
+                  "score": 0.3269230769230769,
+                  "status": "failed"
+                },
+                "polar_capacity": {
+                  "authoritative_gate_blocked": false,
+                  "missing_feature_families": {
+                    "Donor": 1,
+                    "PosIonizable": 1
+                  },
+                  "status": "passed",
+                  "value": {
+                    "candidate_counts": {
+                      "Acceptor": 6,
+                      "Donor": 2
+                    },
+                    "constraint_policy_sha256": "7042c736df62f4bc7a116a37dbae698a9860dc85aa4a5f7aac2c78fbc6b2b4da",
+                    "denominator": 10,
+                    "eligible": true,
+                    "minimum_polar_reference_recall": 0.75,
+                    "numerator": 8,
+                    "product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12",
+                    "reason": null,
+                    "recall_upper_bound": 0.8,
+                    "reference_counts": {
+                      "Acceptor": 6,
+                      "Donor": 3,
+                      "PosIonizable": 1
+                    },
+                    "status": "possible"
+                  }
+                },
+                "properties": {
+                  "reasons": [],
+                  "status": "passed"
+                },
+                "scaffold_and_core": {
+                  "status": "passed",
+                  "value": null
+                },
+                "specified_stereo": {
+                  "status": "passed",
+                  "value": 0
+                },
+                "typed_preflight": {
+                  "status": "passed",
+                  "value": null
+                }
+              }
+            },
+            "passed": false,
+            "product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12",
+            "reason": "hit_tanimoto"
+          }
+        ],
+        "ordered_reactants": [
+          "Cc1cnn2c(Cl)cc(-c3ccccc3S(C)(=O)=O)nc12",
+          "COc1cc(C(N)=O)ccc1N"
+        ],
+        "partner_id": "structure-sha256:67abce1083b75e3ceb756aafcbdfec8e5dbc5b87970f3f7908565c742f4dc8d5",
+        "pending_index": 18,
+        "products": [
+          "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12"
+        ],
+        "truncated": false
+      },
+      {
+        "gates": [
+          {
+            "fingerprint_calls": 1,
+            "hit_bit_tanimoto": 0.308411214953271,
+            "independent_vector": {
+              "status": "complete_vector",
+              "vector": {
+                "anchor": {
+                  "status": "passed",
+                  "value": null
+                },
+                "hit_bit_tanimoto": {
+                  "margin": -0.04158878504672897,
+                  "minimum": 0.35,
+                  "score": 0.308411214953271,
+                  "status": "failed"
+                },
+                "polar_capacity": {
+                  "authoritative_gate_blocked": false,
+                  "missing_feature_families": {
+                    "Donor": 1,
+                    "PosIonizable": 1
+                  },
+                  "status": "passed",
+                  "value": {
+                    "candidate_counts": {
+                      "Acceptor": 7,
+                      "Donor": 2,
+                      "NegIonizable": 1
+                    },
+                    "constraint_policy_sha256": "7042c736df62f4bc7a116a37dbae698a9860dc85aa4a5f7aac2c78fbc6b2b4da",
+                    "denominator": 10,
+                    "eligible": true,
+                    "minimum_polar_reference_recall": 0.75,
+                    "numerator": 8,
+                    "product": "COc1cc(CC(=O)O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12",
+                    "reason": null,
+                    "recall_upper_bound": 0.8,
+                    "reference_counts": {
+                      "Acceptor": 6,
+                      "Donor": 3,
+                      "PosIonizable": 1
+                    },
+                    "status": "possible"
+                  }
+                },
+                "properties": {
+                  "reasons": [],
+                  "status": "passed"
+                },
+                "scaffold_and_core": {
+                  "status": "passed",
+                  "value": null
+                },
+                "specified_stereo": {
+                  "status": "passed",
+                  "value": 0
+                },
+                "typed_preflight": {
+                  "status": "passed",
+                  "value": null
+                }
+              }
+            },
+            "passed": false,
+            "product": "COc1cc(CC(=O)O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12",
+            "reason": "hit_tanimoto"
+          }
+        ],
+        "ordered_reactants": [
+          "Cc1cnn2c(Cl)cc(-c3ccccc3S(C)(=O)=O)nc12",
+          "COc1cc(CC(=O)O)ccc1N"
+        ],
+        "partner_id": "structure-sha256:66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a",
+        "pending_index": 19,
+        "products": [
+          "COc1cc(CC(=O)O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12"
+        ],
+        "truncated": false
+      }
+    ],
+    "old_product_parity": true,
+    "plan_sha256_at_entry": "fa5cf7323b106455505cadf8de746b86848bf80be1ad2a781cff66da649862a2",
+    "plan_sha256_at_exit": "fa5cf7323b106455505cadf8de746b86848bf80be1ad2a781cff66da649862a2",
+    "preparatory_tsv_lookup": {
+      "canonical_rows_scanned": 238542,
+      "catalog_tsv_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "exact_matches": [
+        "structure-sha256:fb8aad37512f5c7fcd669dbc298d1be113231e487f2cb3d9aa4e77191539f7f1"
+      ],
+      "lookup_tsv_path": ".chembounce-data-synthesis/catalog.tsv",
+      "method": "single read-only byte stream of fixed catalog TSV; exact SMILES column equality; no Catalog instance or chemistry",
+      "query_smiles": "Nc1ccc(C2CC(=O)NC(=O)C2)cc1",
+      "runtime_configured_tsv_path": "benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv",
+      "schema": "fixed-source-tsv-lookup-v1"
+    },
+    "schema": "spectator-ring-core-same-partner-control-v1",
+    "scope": {
+      "catalog_loads_at_most": 1,
+      "catalog_source_selection_calls": 0,
+      "fixed_new_outer_sources": 1,
+      "inner_generation_calls": 0,
+      "model_calls": 0,
+      "new_source_chosen_before_products": true,
+      "old_outer_sources": 2,
+      "outer_generation_calls_at_most": 3,
+      "prior_v20_pending_graphs_are_unverified": true,
+      "shared_inner_product_count": 1,
+      "three_dimensional_generation_calls": 0
+    },
+    "status": "complete",
+    "work": {
+      "audit_apply_attempts": 0,
+      "audit_apply_cache_misses": 0,
+      "audit_route_attempts": 0,
+      "catalog_load_attempts": 1,
+      "configured_constraints_attempts": 1,
+      "gate_anchor_checks": 3,
+      "gate_attempts": 3,
+      "gate_fingerprint_calls": 3,
+      "gate_polar_checks": 3,
+      "gate_property_checks": 3,
+      "gate_scaffold_checks": 3,
+      "gate_stereo_checks": 3,
+      "gate_typed_preflights": 3,
+      "generation_apply_attempts": 3,
+      "generation_apply_cache_misses": 3,
+      "generation_retained_product_instances": 3,
+      "generation_truncated_calls": 0,
+      "hit_fingerprint_calls": 1,
+      "independent_component_attempts": {
+        "anchor": 3,
+        "polar_capacity": 3,
+        "properties": 3,
+        "scaffold_and_core": 3,
+        "specified_stereo": 3,
+        "typed_preflight": 3
+      },
+      "independent_fingerprint_attempts": 3,
+      "independent_parse_attempts": 3,
+      "independent_vector_attempts": 3,
+      "polar_counts": {
+        "cache_hits": 3,
+        "capacity_rejections": 0,
+        "deadline_events": 0,
+        "evaluations": 3,
+        "evictions": 0,
+        "preflight_failures": 0,
+        "requests": 6
+      },
+      "preparatory_tsv_rows_read_prior": 238542,
+      "rules_load_attempts": 1,
+      "verification_apply_attempts": 0,
+      "verification_apply_cache_misses": 0,
+      "verify_route_attempts": 0
+    }
+  },
+  "review": {
+    "before_execution": "root_and_astra_pass",
+    "outcome": "astra_verified_old_control_parity_new_gate_vector_bindings_and_costs",
+    "ruff_and_compile": "passed"
+  },
+  "schema": "spectator-ring-core-same-partner-portable-v1",
+  "source_commit": "65361bd685f53a1c2c21a68f9d053a5765776694",
+  "status": "development_control_complete_variant_closed_similarity_failure"
+}

@@ -1,0 +1,266 @@
+{
+  "artifacts": {
+    "core.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-feasibility-v1/core.py",
+      "sha256": "dd4b752f340e12162dbca43a36d3ed02807cd49385fd56e60387f9ff7eafc783"
+    },
+    "execution.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-feasibility-v1/execution.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-feasibility-v1/plan.json",
+      "sha256": "a023eda20d60010f7974941d6acbc9317c2e191b5e561fb9c857149bc765bc29"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-feasibility-v1/probe.py",
+      "sha256": "49e8a5541b5e4680116d4454ec3cef482170aa10234a1187e45b9c90fead759f"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-feasibility-v1/result.json",
+      "sha256": "3a7858bcc8ad7236039d3c3d9cfe9ecf45e005f4ee4cffcf362bc62bde0a0ecd"
+    },
+    "test_core.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-feasibility-v1/test_core.py",
+      "sha256": "e70c0fd37a4e12106496282c1a3f3601afbc4bd71d1664b6910f45ebbdd83df5"
+    }
+  },
+  "execution": {
+    "live_session": null,
+    "retries": 0,
+    "terminal_exit_code": 0
+  },
+  "interpretation": {
+    "adaptivity": "Hypothesis was designed after v1/v2 full-source results. This is development evidence, not independent validation or causal proof of the similarity deficit.",
+    "chemical_limits": "Imide dicarbonyl ring differs from input piperidine chemistry. Exocyclic carbonyls are allowed by this projection; oxidation state, ring H counts, basicity and full source chemistry are not proven retained.",
+    "claim_limits": "Historical presence only; no current-v20 pool identity, Catalog load, reverse/forward generation, whole-route audit, gate/model/3D run or qualified candidate. Primary remains4/12.",
+    "fixed_witness": "First definitely certified source in original ordinary rank order: rank1043, archived traversal row3101, Nc1ccc(C2CC(=O)NC(=O)C2)cc1. Earlier174 unknown rows remain unknown; this is not proof of the earliest chemically possible match.",
+    "next_control": "Exactly this one source and same fixed existing inner partner, with both old outer-source controls. All generated products face unchanged original gates. If no new product passes, close this variant; no next witness, changed pruning or ring subsets.",
+    "retained_scope": "Fixed projection retains13 of19 source query atoms including all12 cycle atoms and attachment. Candidate satisfies retained ring atom/bond predicates and one joint reaction attachment."
+  },
+  "protocol": {
+    "bound_sha256": {
+      "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "helper": "dd4b752f340e12162dbca43a36d3ed02807cd49385fd56e60387f9ff7eafc783",
+      "historical_observation": "f21deb7dce8bdf9c0b1c21b318ad4e9084ffaf98edc8304b203439b2180936d0",
+      "probe": "49e8a5541b5e4680116d4454ec3cef482170aa10234a1187e45b9c90fead759f",
+      "route_audit_source": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "synthetic_tests": "e70c0fd37a4e12106496282c1a3f3601afbc4bd71d1664b6910f45ebbdd83df5",
+      "v1_result": "d668e77b1c635cad18aa4465297b382da2ac62809e57e70286d73d4887f14a86",
+      "v2_result": "5f01132b1162bf5091ecdc03982a6e9dc126372a1bc9daaa81496456df50bb28"
+    },
+    "caps": {
+      "atoms_per_candidate": 256,
+      "atoms_per_query": 256,
+      "bonds_per_candidate": 512,
+      "bonds_per_query": 512,
+      "candidate_structural_units": 8388608,
+      "deadline_seconds": 300,
+      "matches_per_request_sentinel": 65,
+      "projection_structural_units": 131072,
+      "rows_total": 8192,
+      "stereo_perceptions": 8192,
+      "substructure_match_requests": 16384
+    },
+    "cost_semantics": "Projection and candidate structural units are atom+bond size charges, not literal CPU visits. Two 65-sentinel match requests and one strict reactant stereo perception are reserved per visited row before matching. No external Catalog/index work occurs.",
+    "input_id": "CHEMBL4247-query-2",
+    "interpretation": "A positive means one historical visited ordinary row has the projected core and original role at exactly one joint attachment site; extra nonjoint role sites are recorded. It does not prove forward spectator survival, polar/Tanimoto gates, evidence support, current v20 pool identity, or route recovery. If no positive and any unknown row, historical pool remains unknown; no production ranking change.",
+    "original_order": "Archived ranked_rows are retrieval traversal order, not rank order. Assert all rows ordinary with unique group_rank1..8192 and saved selected two at ranks1/2. Scan by (group_rank,canonical SMILES), record original row index and group_rank. Stop at first definitely present; earlier unknowns stay unknown and no rank choice is made.",
+    "outer_cached_call_index": 21,
+    "outer_first_call_index": 3,
+    "paths": {
+      "common_source": "chembounce_synthesis/common.py",
+      "helper": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-feasibility-v1/core.py",
+      "historical_observation": "benchmark-results/route-first-development-20261023-v2/actual-v2-retrieval-observation-v1/result.json",
+      "route_audit_source": "chembounce_synthesis/route_audit.py",
+      "synthetic_tests": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-feasibility-v1/test_core.py",
+      "v1_result": "benchmark-results/route-first-development-20261023-v2/spectator-retention-feasibility-v1/result.json",
+      "v2_result": "benchmark-results/route-first-development-20261023-v2/spectator-retention-feasibility-v2/result.json"
+    },
+    "projection_policy": {
+      "algorithm": "protect attachment; repeatedly delete all current degree<=1 nonattachment query vertices until stable",
+      "allows": "only deleted acyclic terminal decoration to vary",
+      "retains": "all original cycle vertices, all cyclic bonds, and connectors among cycles and attachment",
+      "source": "v1 proven outer fragment SMARTS and attachment index only",
+      "unknown": "invalid/disconnected/no-cycle query, any specified query stereo, lost retained query atom/bond predicate, cap, or ambiguous joint root"
+    },
+    "purpose": "One explicit adaptive hypothesis: deterministic source-query leaf pruning preserves the proven attachment and cyclic core/linkers while allowing terminal acyclic decoration variation.",
+    "rdkit_version": "2025.09.6",
+    "review": "root_and_astra_pass_before_execution",
+    "reviewed_draft_sha256": "ded9063b9c718cf49b098ee19963d035d2fcb98d8cd04dde8f5b131ba6fd5914",
+    "schema": "spectator-ring-core-feasibility-plan-v1",
+    "scope": {
+      "catalog_loads": 0,
+      "gate_calls": 0,
+      "generation_calls": 0,
+      "historical_ranked_rows": 8192,
+      "inner_context_replayed_or_scanned": false,
+      "known_outcome_selected_hypothesis": true,
+      "model_calls": 0,
+      "one_historical_complete_outer_context": true,
+      "rank_score_or_policy_changed": false,
+      "reverse_calls": 0,
+      "v20_pool_identity_claim": false
+    },
+    "status": "frozen_preexecution"
+  },
+  "result": {
+    "entry_sha256": {
+      "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "helper": "dd4b752f340e12162dbca43a36d3ed02807cd49385fd56e60387f9ff7eafc783",
+      "historical_observation": "f21deb7dce8bdf9c0b1c21b318ad4e9084ffaf98edc8304b203439b2180936d0",
+      "probe": "49e8a5541b5e4680116d4454ec3cef482170aa10234a1187e45b9c90fead759f",
+      "route_audit_source": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "synthetic_tests": "e70c0fd37a4e12106496282c1a3f3601afbc4bd71d1664b6910f45ebbdd83df5",
+      "v1_result": "d668e77b1c635cad18aa4465297b382da2ac62809e57e70286d73d4887f14a86",
+      "v2_result": "5f01132b1162bf5091ecdc03982a6e9dc126372a1bc9daaa81496456df50bb28"
+    },
+    "error": null,
+    "exit_sha256": {
+      "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "helper": "dd4b752f340e12162dbca43a36d3ed02807cd49385fd56e60387f9ff7eafc783",
+      "historical_observation": "f21deb7dce8bdf9c0b1c21b318ad4e9084ffaf98edc8304b203439b2180936d0",
+      "probe": "49e8a5541b5e4680116d4454ec3cef482170aa10234a1187e45b9c90fead759f",
+      "route_audit_source": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "synthetic_tests": "e70c0fd37a4e12106496282c1a3f3601afbc4bd71d1664b6910f45ebbdd83df5",
+      "v1_result": "d668e77b1c635cad18aa4465297b382da2ac62809e57e70286d73d4887f14a86",
+      "v2_result": "5f01132b1162bf5091ecdc03982a6e9dc126372a1bc9daaa81496456df50bb28"
+    },
+    "first_definite_present": {
+      "anchor_strength": 0,
+      "guide_similarity": 0.20754716981132076,
+      "joint_attachment_site_counts": {
+        "distinct_core_attachment_sites": 1,
+        "distinct_role_sites": 1,
+        "extra_nonjoint_role_sites": 0,
+        "joint_sites": 1,
+        "status": "present"
+      },
+      "original_group": "ordinary",
+      "original_group_rank": 1043,
+      "original_row_index": 3101,
+      "smiles": "Nc1ccc(C2CC(=O)NC(=O)C2)cc1"
+    },
+    "historical_pool_decision": "present",
+    "plan_sha256_at_entry": "a023eda20d60010f7974941d6acbc9317c2e191b5e561fb9c857149bc765bc29",
+    "plan_sha256_at_exit": "a023eda20d60010f7974941d6acbc9317c2e191b5e561fb9c857149bc765bc29",
+    "projection": {
+      "core_attachment_index": 12,
+      "core_smarts": "[#6]1:[#6]:[#6](-[#6]2-[#6]-[#6]-[#7]-[#6]-[#6]-2):[#6]:[#6]:[#6]:1-[#7]",
+      "full_attachment_index": 18,
+      "full_fragment_smarts": "[#6]-[#8]-[#6]1:[#6]:[#6](-[#6]2-[#6]-[#6]-[#7](-[#6]-[#6](-[#7])=[#8])-[#6]-[#6]-2):[#6]:[#6]:[#6]:1-[#7]",
+      "original_atoms": 19,
+      "original_ring_atoms": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "reason": null,
+      "retained_atoms": 13,
+      "retained_original_indices": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "status": "projected_query"
+    },
+    "row_outcomes": {
+      "absent": 868,
+      "present": 1,
+      "unknown": 174
+    },
+    "rows_assessed": 1043,
+    "schema": "spectator-ring-core-feasibility-v1",
+    "scope": {
+      "catalog_loads": 0,
+      "gate_calls": 0,
+      "generation_calls": 0,
+      "historical_ranked_rows": 8192,
+      "inner_context_replayed_or_scanned": false,
+      "known_outcome_selected_hypothesis": true,
+      "model_calls": 0,
+      "one_historical_complete_outer_context": true,
+      "rank_score_or_policy_changed": false,
+      "reverse_calls": 0,
+      "v20_pool_identity_claim": false
+    },
+    "status": "complete",
+    "unknown_examples": [
+      {
+        "group_rank": 36,
+        "original_row_index": 5678,
+        "smiles": "COc1ccc(C(N)CC(N)=O)cc1Br"
+      },
+      {
+        "group_rank": 56,
+        "original_row_index": 2209,
+        "smiles": "COc1ccccc1N1CCC(N)C1=O"
+      },
+      {
+        "group_rank": 63,
+        "original_row_index": 6594,
+        "smiles": "COc1ccc(C(N)C(=O)O)cc1OC"
+      },
+      {
+        "group_rank": 93,
+        "original_row_index": 1124,
+        "smiles": "Nc1ccc(CN2CCC(O)C2)cc1F"
+      },
+      {
+        "group_rank": 103,
+        "original_row_index": 6110,
+        "smiles": "COc1ccc(C(O)CN)cc1OC"
+      },
+      {
+        "group_rank": 106,
+        "original_row_index": 2699,
+        "smiles": "COc1cc(C2CNCCO2)ccc1F"
+      },
+      {
+        "group_rank": 108,
+        "original_row_index": 6504,
+        "smiles": "COC(=O)C(N)c1ccc(Br)cc1OC"
+      },
+      {
+        "group_rank": 133,
+        "original_row_index": 2792,
+        "smiles": "COc1cc(C2CCNC2)cc(F)c1F"
+      }
+    ],
+    "work": {
+      "candidate_rows_attempted": 1043,
+      "candidate_structural_units_reserved": 28596,
+      "projection_structural_units": 128,
+      "stereo_perceptions_reserved": 1043,
+      "substructure_match_requests_reserved": 2086
+    }
+  },
+  "review": {
+    "before_execution": "root_and_astra_pass",
+    "outcome": "astra_verified_counts_bindings_and_topology_only_scope",
+    "ruff_and_compile": "passed",
+    "synthetic_tests_passed": 4
+  },
+  "schema": "spectator-ring-core-feasibility-portable-v1",
+  "source_commit": "65361bd",
+  "status": "adaptive_development_presence_control_complete"
+}
