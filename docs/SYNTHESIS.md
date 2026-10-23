@@ -146,17 +146,22 @@ was run and P1 remains incomplete.
 
 Strict route audit requires every concrete source reactant to have fully
 specified stereochemistry, even when its unresolved center disappears from
-the principal product. The next revision checks this necessary condition on
+the principal product. The source stereo precheck applies this necessary condition to
 already visited, role-compatible catalog blocks before choosing the nearest
-two blocks for any route step. A block proven to have unspecified stereo is
+two blocks for any route step. A block proven to fail that source-stereo requirement is
 skipped and the same ranked pool supplies the next option. Perception failure,
 deadline or budget exhaustion leaves the block at its original rank; no
 stereoisomer is assigned. At most 2,048 source-block stereo perceptions and
 131,072 charged atom/bond units are allowed per search, with at most 2,048
 cached completed results and 16 recorded exclusion examples. This adds no
 catalog scan, role match enumeration or reaction call and does not change the
-strict audit or other final gates. The revision has not been run on the fixed
-panel.
+strict audit or other final gates. The eleventh fixed-panel development probe
+completed with the same four eligible inputs, 35 exact input/product pairs
+and 40 routes as the tenth probe; the eligible product identities were
+unchanged. Across the 12 inputs, 672 stereo perceptions produced 183 exclusion
+decisions, including repeated blocks across queries. Unspecified-product
+first-failure records fell from 50 to 14, but this did not improve eligible
+coverage. No model or 3D comparison was run; P1 remains incomplete.
 
 ## Optional catalog byte binding
 
