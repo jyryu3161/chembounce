@@ -320,9 +320,17 @@ Generic atomic-number queries or unproven OR branches cannot justify cleanup.
 On 24 archived problematic precursors, the actual normalizer recovered all
 12 approximate guide pairs. No complete typed pair passed the original roles;
 the patch does not override those mismatches or change the fixed forward rules.
-Focused route/telemetry tests passed (77), with independent code review. These
-are retrieval-hint results; the next step is the fixed 12-input supply comparison,
-before claiming additional supported routes or qualification.
+Focused route/telemetry tests passed (77), with independent code review.
+The subsequent [fixed v17 supply comparison](../benchmarks/results/synthesis-route-development-20261023/route-first-v2-pre-evidence-v17.json)
+completed all 12 inputs and retained exactly the same 58 input/product pairs,
+65 route graphs and three historical qualified graphs as v16 ON, with no gains
+or losses. The correction was used 64 times, but did not increase eligible
+supply. The conditional optimistic support bound remained five inputs, so no
+new model or 3D run followed and the actual primary result remains four.
+Retain this as a verified retrieval-hint bug fix, not a P1 coverage success.
+The next diagnostic attributes selected sources and intermediate outcomes to
+individual affected work items; existing aggregate traces cannot identify a
+specific missing source role. Final gates and budgets remain unchanged.
 
 ## Optional catalog byte binding
 

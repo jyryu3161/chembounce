@@ -1,0 +1,2303 @@
+{
+  "schema": "route-first-v2-pre-evidence-v17-portable",
+  "status": "complete",
+  "runtime_commit": "88cde5bde7b811c61f728d3ba9e923f0d7b0024b",
+  "scope": "One fixed12-input current-runtime ON panel versus immutable saved v16 ON, retaining continuation preference and identical configs/assets/gates/caps. No old-arm rerun, model or 3D call.",
+  "summary": {
+    "historical_three_qualified_exact_graphs_retained": 3,
+    "v16_on": {
+      "bridge_work_sums": {
+        "bridge_positive_work_items": 84,
+        "bridge_role_contexts": 357,
+        "bridge_snapshot_attempts": 322,
+        "bridge_structural_units": 62119,
+        "bridge_unknown_work_items": 273
+      },
+      "covered_inputs": 6,
+      "first_gate_failure_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 6,
+        "Chemical-family tautomer enumeration incomplete: MaxTransformsReached": 2,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 346,
+        "hit_tanimoto": 52,
+        "polar_reference_capacity_below_minimum": 131,
+        "property: logp.upper_maximum:5.2118000000000055>5": 1,
+        "property: logp.upper_maximum:5.254800000000005>5": 1,
+        "property: logp.upper_maximum:5.2756200000000035>5": 2,
+        "property: logp.upper_maximum:5.2943200000000035>5": 1,
+        "property: logp.upper_maximum:5.294320000000004>5": 1,
+        "property: logp.upper_maximum:5.511220000000003>5": 1,
+        "property: logp.upper_maximum:5.511220000000004>5": 1,
+        "property: logp.upper_maximum:5.601900000000006>5": 1,
+        "property: logp.upper_maximum:5.665720000000004>5": 2,
+        "property: logp.upper_maximum:5.684420000000004>5": 1,
+        "property: logp.upper_maximum:5.684420000000005>5": 1,
+        "property: mw.upper_maximum:511.6380000000003>500.0; logp.upper_maximum:5.063700000000005>5": 1,
+        "property: mw.upper_maximum:518.0210000000002>500.0": 2,
+        "property: mw.upper_maximum:525.6130000000002>500.0": 1,
+        "property: mw.upper_maximum:529.6370000000003>500.0": 1,
+        "property: mw.upper_maximum:531.6530000000004>500.0": 1,
+        "property: mw.upper_maximum:539.6400000000001>500.0": 1,
+        "property: mw.upper_maximum:579.7050000000002>500.0": 1,
+        "property: mw.upper_maximum:593.7320000000002>500.0": 1
+      },
+      "generation_seconds_median_excluding_catalog": 44.927,
+      "generation_seconds_sum_excluding_catalog": 555.341,
+      "input_product_pairs": 58,
+      "limits_reached_input_counts": {
+        "depth_one_fingerprint_budget": 6,
+        "generation_fingerprint_budget": 1,
+        "max_catalog_row_visits": 10,
+        "max_outer_guides": 11,
+        "max_rule_inspections": 12
+      },
+      "one_step_routes": 24,
+      "preference_work_sums": {
+        "bridge_positive_work_items": 84,
+        "bridge_role_contexts": 357,
+        "bridge_snapshot_attempts": 322,
+        "bridge_structural_units": 62119,
+        "bridge_unknown_work_items": 273,
+        "outer_role_queries": 15,
+        "ranked_rows_retained": 102247,
+        "replacements": 19,
+        "role_checks": 422,
+        "role_matches": 41,
+        "samples_omitted": 0,
+        "stereo_rejections": 12,
+        "stereo_unknowns": 0
+      },
+      "routes": 65,
+      "search_work_sums": {
+        "catalog_index_rows_scanned": 2862504,
+        "catalog_row_visits": 2918240,
+        "catalog_stereo_atom_bond_charges": 18999,
+        "catalog_stereo_perceptions": 694,
+        "combinations": 1212,
+        "fallback_hit_second_tanimotos": 5321,
+        "products_generated": 1374,
+        "reaction_pool_graph_visits": 100046,
+        "reaction_pool_query_pairs": 515,
+        "reaction_pool_role_index_checks": 5725008,
+        "reaction_pool_site_match_requests": 1284,
+        "reaction_pool_window_match_requests": 515,
+        "reverse_role_work": 2163,
+        "route_audit_attempts": 65,
+        "rule_inspections": 6144,
+        "topology_match_requests": 349,
+        "topology_spec_graph_visits": 215504,
+        "total_fingerprint_calls": 483154
+      },
+      "two_step_routes": 41
+    },
+    "v17_on": {
+      "bridge_work_sums": {
+        "bridge_positive_work_items": 90,
+        "bridge_role_contexts": 369,
+        "bridge_snapshot_attempts": 334,
+        "bridge_structural_units": 66021,
+        "bridge_unknown_work_items": 279
+      },
+      "covered_inputs": 6,
+      "first_gate_failure_counts": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 6,
+        "Chemical-family tautomer enumeration incomplete: MaxTransformsReached": 2,
+        "Hit stereo anchor is missing or has ambiguous correspondence": 346,
+        "hit_tanimoto": 52,
+        "polar_reference_capacity_below_minimum": 131,
+        "property: logp.upper_maximum:5.2118000000000055>5": 1,
+        "property: logp.upper_maximum:5.254800000000005>5": 1,
+        "property: logp.upper_maximum:5.2756200000000035>5": 2,
+        "property: logp.upper_maximum:5.2943200000000035>5": 1,
+        "property: logp.upper_maximum:5.294320000000004>5": 1,
+        "property: logp.upper_maximum:5.511220000000003>5": 1,
+        "property: logp.upper_maximum:5.511220000000004>5": 1,
+        "property: logp.upper_maximum:5.601900000000006>5": 1,
+        "property: logp.upper_maximum:5.665720000000004>5": 2,
+        "property: logp.upper_maximum:5.684420000000004>5": 1,
+        "property: logp.upper_maximum:5.684420000000005>5": 1,
+        "property: mw.upper_maximum:511.6380000000003>500.0; logp.upper_maximum:5.063700000000005>5": 1,
+        "property: mw.upper_maximum:518.0210000000002>500.0": 2,
+        "property: mw.upper_maximum:525.6130000000002>500.0": 1,
+        "property: mw.upper_maximum:529.6370000000003>500.0": 1,
+        "property: mw.upper_maximum:531.6530000000004>500.0": 1,
+        "property: mw.upper_maximum:539.6400000000001>500.0": 1,
+        "property: mw.upper_maximum:579.7050000000002>500.0": 1,
+        "property: mw.upper_maximum:593.7320000000002>500.0": 1
+      },
+      "generation_seconds_median_excluding_catalog": 45.275,
+      "generation_seconds_sum_excluding_catalog": 560.412,
+      "input_product_pairs": 58,
+      "limits_reached_input_counts": {
+        "depth_one_fingerprint_budget": 6,
+        "generation_fingerprint_budget": 1,
+        "max_catalog_row_visits": 10,
+        "max_outer_guides": 11,
+        "max_rule_inspections": 12
+      },
+      "one_step_routes": 24,
+      "preference_work_sums": {
+        "bridge_positive_work_items": 90,
+        "bridge_role_contexts": 369,
+        "bridge_snapshot_attempts": 334,
+        "bridge_structural_units": 66021,
+        "bridge_unknown_work_items": 279,
+        "outer_role_queries": 15,
+        "ranked_rows_retained": 102227,
+        "replacements": 19,
+        "role_checks": 422,
+        "role_matches": 41,
+        "samples_omitted": 0,
+        "stereo_rejections": 12,
+        "stereo_unknowns": 0
+      },
+      "routes": 65,
+      "search_work_sums": {
+        "catalog_index_rows_scanned": 2862504,
+        "catalog_row_visits": 2918240,
+        "catalog_stereo_atom_bond_charges": 18831,
+        "catalog_stereo_perceptions": 689,
+        "combinations": 1212,
+        "fallback_hit_second_tanimotos": 5321,
+        "products_generated": 1378,
+        "reaction_pool_graph_visits": 101720,
+        "reaction_pool_query_pairs": 529,
+        "reaction_pool_role_index_checks": 5725008,
+        "reaction_pool_site_match_requests": 1326,
+        "reaction_pool_window_match_requests": 529,
+        "reverse_role_work": 2171,
+        "route_audit_attempts": 65,
+        "rule_inspections": 6144,
+        "topology_match_requests": 349,
+        "topology_spec_graph_visits": 215504,
+        "total_fingerprint_calls": 486906
+      },
+      "two_step_routes": 41
+    },
+    "v17_on_conditional_optimistic_possible_inputs": 5,
+    "v17_on_saved_exact_all_step_matched_inputs": 4
+  },
+  "inputs": [
+    {
+      "conditional_optimistic_possible_input": true,
+      "gained_products": [],
+      "gained_route_graph_sha256": [],
+      "historical_three_qualified_exact_graphs_retained": [
+        "24a5b4eb90eccd6a600e081dac6b9070dcd30e495209a143f1c2550d185fdf14",
+        "368ad9fd2fab8cfcb118d69cef18504ea610eaee5bc150dc3701abd30a55994c",
+        "4f1f97c2c9695536a59f8c682a9fade9f3ac0d489bf9406dda3a895ec105be31"
+      ],
+      "id": "CHEMBL4630839-query-1",
+      "known_saved_all_step_matched_graphs": 3,
+      "lost_products": [],
+      "lost_route_graph_sha256": [],
+      "saved_exact_graph_forward_status_counts": {
+        "no_saved_exact_graph_step_association": 2,
+        "saved_all_steps_matched": 3,
+        "saved_unassessed_or_mixed": 29
+      },
+      "saved_forward_associations": [
+        {
+          "product": "COc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+          "route_graph_sha256": "4f1f97c2c9695536a59f8c682a9fade9f3ac0d489bf9406dda3a895ec105be31",
+          "saved_forward_status": "saved_all_steps_matched"
+        },
+        {
+          "product": "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+          "route_graph_sha256": "24a5b4eb90eccd6a600e081dac6b9070dcd30e495209a143f1c2550d185fdf14",
+          "saved_forward_status": "saved_all_steps_matched"
+        },
+        {
+          "product": "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1",
+          "route_graph_sha256": "368ad9fd2fab8cfcb118d69cef18504ea610eaee5bc150dc3701abd30a55994c",
+          "saved_forward_status": "saved_all_steps_matched"
+        },
+        {
+          "product": "CSc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1",
+          "route_graph_sha256": "213ad0bd03091b50b00bfc9a614577e90710086a87603cbd91a2a3da497afb98",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "COc1cc(C(=O)NCC2CC2)nc(N(C)CCCc2ccccc2)n1",
+          "route_graph_sha256": "38e727e5eedf00d2a3576518d1f39f966e67a7c65033c3f2ea4aed673281e0f2",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCCc2ccccc2)n1",
+          "route_graph_sha256": "bbeb42abd74d14e63437a19a2e9965c861fb0b4240ec671f5aafbc94bb499b39",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCCc2ccccc2)n1",
+          "route_graph_sha256": "864ed3d3b80592896fc8b0f4257581a275ddc4251913ce7108258e7ad73b247f",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CSc1cc(C(=O)NCC2CCC2)nc(N(C)CCCc2ccccc2)n1",
+          "route_graph_sha256": "485fca893824a336e2df794554023c4c7bf189f6b910a38a4f6aa69f21fe8a51",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CN(CCc1ccccc1)c1ccc(C(=O)NCC2CC2)nn1",
+          "route_graph_sha256": "dd41c6ccc7dfdc8ad2d327850f55651f97672cad8db8417a7cd09e172a4dd567",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CN(CCc1ccccc1)c1ccc(C(=O)NCC2CCC2)nn1",
+          "route_graph_sha256": "c179a8c5ebb4f2e085757cfd9152876f49556176f93a5b8e323539178350b4fa",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CN(CCCc1ccccc1)c1ccc(C(=O)NCC2CC2)nn1",
+          "route_graph_sha256": "56ff44bc5818bf7dc0b603498b433ad0ecc1e7c78cdb49d49da196d46c95632c",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CN(CCCc1ccccc1)c1ccc(C(=O)NCC2CCC2)nn1",
+          "route_graph_sha256": "10129ede6da3da47f50c1ac3b52ece670fbae087e4686056f7647a9318aa69ad",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CN(C)c1cc(C(=O)NCC2CC2)nc2ccccc12",
+          "route_graph_sha256": "2e0cdfc1a06b071e0ec492bfed2e9e90061008dff37c80918961ca2303766897",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "Cc1cc(C(=O)O)nc(N(C)CCc2ccccc2)n1",
+          "route_graph_sha256": "0b0018f07bfe15c30f7c5612fda6fbb614ee31ba25dc1f67eb5fdad78668b1da",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "O=C(NCC1CC1)c1nc(NCCc2ccccc2)ncc1N1CCCCCCCC1",
+          "route_graph_sha256": "c06dd08b05a64d74c72cd22e656cff0a023c9cd6f3bd420edb7b0f11116d2f33",
+          "saved_forward_status": "no_saved_exact_graph_step_association"
+        },
+        {
+          "product": "CN(C)c1cc(C(=O)NCC2CCC2)nc2ccccc12",
+          "route_graph_sha256": "60d2823eb7465a97d859fe39a20b36a97d203bb50713fc6a267fc92391766b35",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "O=C(NCC1CCCC1)c1ccc(N2CCCCCCCC2)nn1",
+          "route_graph_sha256": "6b67f023499d85d5c1ca4e7a8c512001e1349b2fb5f499fff17121f625c937ab",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "O=C(NCC1CCCC1)c1ccc(N2CCCCCCCCCC2)nn1",
+          "route_graph_sha256": "0b4a75d2b3f08dd8c2b000d55b4312e34f53700eb4cc9844ef28322642e4fd5b",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "O=C(NCC1CCC1)c1nc(NCCc2ccccc2)ncc1N1CCCCCCCC1",
+          "route_graph_sha256": "a8350fdc7ce46d3f75935f25aa715c0487f61a3b768cc777d080d618955b6650",
+          "saved_forward_status": "no_saved_exact_graph_step_association"
+        },
+        {
+          "product": "CN1CCN(c2ccc(C(=O)NCC3CC3)nn2)CC1",
+          "route_graph_sha256": "39f691c3c71b150b246ae5254cf32b11f67228a85cf518fb80273c0b745462ae",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "O=C(NCC1CC1)c1nc(N2CCCCC2)ncc1-c1ccccc1",
+          "route_graph_sha256": "43e6b44054c69dfca05afa525a794e739078d4122b8fe843f9e9651d37a2d83f",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CCCCN(C)c1ncc(-c2ccccc2)c(C(=O)NCC2CC2)n1",
+          "route_graph_sha256": "5b291bdd81df5cc033fc9b9e18c22751aaef9948d51c9766ac4339ac2c74b33f",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CN1CCN(c2ccc(C(=O)NCC3CCC3)nn2)CC1",
+          "route_graph_sha256": "712a008eec6685d3b1cfefab59ddf171e9a449451d5b71188a0158310483b9f5",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "Cn1cc(NCCc2ccccc2)c(C(=O)NCC2CC2)n1",
+          "route_graph_sha256": "b634fa1db974729937692cae7c08b5f7d3a2206e118389494d943578450ce6ad",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CCCCN(C)c1ncc(-c2ccccc2)c(C(=O)NCC2CCC2)n1",
+          "route_graph_sha256": "24cdd5261cfe1b9d9c89bfec8046b16868f53c8a7d39038c63bac3e5cd261571",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "O=C(NCC1CCC1)c1nc(N2CCCCC2)ncc1-c1ccccc1",
+          "route_graph_sha256": "205c667b66b6d8210bf2a3b9a127cad551e484fe00b65029983b1b02ad8a4207",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "Cc1cc(C(=O)O)nc(N(C)CCc2ccc(CC=O)cc2)n1",
+          "route_graph_sha256": "009d93edd004c9027d68d807ed80e00957bbf665eeba9ca218926658b102549f",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "Cc1ccc(-c2cnc(N3CCCCC3)nc2C(=O)NCC2CC2)cc1",
+          "route_graph_sha256": "7640d09ab652178e9901999a40c02507eb941e9dd8ab120e028a7580482822a2",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CCCCN(C)c1ncc(-c2ccc(C)cc2)c(C(=O)NCC2CC2)n1",
+          "route_graph_sha256": "637e0f81210db157dcb619232ae4737e270a00cf321e456a0e547b0d751d1d51",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "C#Cc1cccc(-c2cnc(N3CCCCC3)nc2C(=O)NCC2CC2)c1",
+          "route_graph_sha256": "8230e966a65a394178c59c14dea222042c425767b33beeb4a7bc45ecda5a20cf",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "COC(=O)Cc1cc(N2CCCCCCCC2)nc2ccccc12",
+          "route_graph_sha256": "4f126593da9c9cd11b0cb3cd35d8c33e1d1e064ecab274b0115cc241ad594432",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "COC(=O)Cc1cc(N2CCCCCCCCCC2)nc2ccccc12",
+          "route_graph_sha256": "369d644a5ff40a3a4ab7f3fd1335a752c7260c3e84cf5615a7b776b2f2b60c3d",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "Cc1ccc(-c2cnc(N3CCCCC3)nc2C(=O)NCC2CCC2)cc1",
+          "route_graph_sha256": "2d68c6feb8142ceb73d4e3ca803cbf3e8f42f5f07d8981beb51d27d8e343763f",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CCCCN(C)c1ncc(-c2ccc(C)cc2)c(C(=O)NCC2CCC2)n1",
+          "route_graph_sha256": "f5c5610341acf478328ab9204dad388d8998244abcca7fb0a1d7e8e4b30b3b7e",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        }
+      ],
+      "unchanged_products": [
+        "C#Cc1cccc(-c2cnc(N3CCCCC3)nc2C(=O)NCC2CC2)c1",
+        "CCCCN(C)c1ncc(-c2ccc(C)cc2)c(C(=O)NCC2CC2)n1",
+        "CCCCN(C)c1ncc(-c2ccc(C)cc2)c(C(=O)NCC2CCC2)n1",
+        "CCCCN(C)c1ncc(-c2ccccc2)c(C(=O)NCC2CC2)n1",
+        "CCCCN(C)c1ncc(-c2ccccc2)c(C(=O)NCC2CCC2)n1",
+        "CN(C)c1cc(C(=O)NCC2CC2)nc2ccccc12",
+        "CN(C)c1cc(C(=O)NCC2CCC2)nc2ccccc12",
+        "CN(CCCc1ccccc1)c1ccc(C(=O)NCC2CC2)nn1",
+        "CN(CCCc1ccccc1)c1ccc(C(=O)NCC2CCC2)nn1",
+        "CN(CCc1ccccc1)c1ccc(C(=O)NCC2CC2)nn1",
+        "CN(CCc1ccccc1)c1ccc(C(=O)NCC2CCC2)nn1",
+        "CN1CCN(c2ccc(C(=O)NCC3CC3)nn2)CC1",
+        "CN1CCN(c2ccc(C(=O)NCC3CCC3)nn2)CC1",
+        "COC(=O)Cc1cc(N2CCCCCCCC2)nc2ccccc12",
+        "COC(=O)Cc1cc(N2CCCCCCCCCC2)nc2ccccc12",
+        "COc1cc(C(=O)NCC2CC2)nc(N(C)CCCc2ccccc2)n1",
+        "COc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+        "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCCc2ccccc2)n1",
+        "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1",
+        "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCCc2ccccc2)n1",
+        "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+        "CSc1cc(C(=O)NCC2CCC2)nc(N(C)CCCc2ccccc2)n1",
+        "CSc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1",
+        "Cc1cc(C(=O)O)nc(N(C)CCc2ccc(CC=O)cc2)n1",
+        "Cc1cc(C(=O)O)nc(N(C)CCc2ccccc2)n1",
+        "Cc1ccc(-c2cnc(N3CCCCC3)nc2C(=O)NCC2CC2)cc1",
+        "Cc1ccc(-c2cnc(N3CCCCC3)nc2C(=O)NCC2CCC2)cc1",
+        "Cn1cc(NCCc2ccccc2)c(C(=O)NCC2CC2)n1",
+        "O=C(NCC1CC1)c1nc(N2CCCCC2)ncc1-c1ccccc1",
+        "O=C(NCC1CC1)c1nc(NCCc2ccccc2)ncc1N1CCCCCCCC1",
+        "O=C(NCC1CCC1)c1nc(N2CCCCC2)ncc1-c1ccccc1",
+        "O=C(NCC1CCC1)c1nc(NCCc2ccccc2)ncc1N1CCCCCCCC1",
+        "O=C(NCC1CCCC1)c1ccc(N2CCCCCCCC2)nn1",
+        "O=C(NCC1CCCC1)c1ccc(N2CCCCCCCCCC2)nn1"
+      ],
+      "unchanged_route_graph_sha256": [
+        "009d93edd004c9027d68d807ed80e00957bbf665eeba9ca218926658b102549f",
+        "0b0018f07bfe15c30f7c5612fda6fbb614ee31ba25dc1f67eb5fdad78668b1da",
+        "0b4a75d2b3f08dd8c2b000d55b4312e34f53700eb4cc9844ef28322642e4fd5b",
+        "10129ede6da3da47f50c1ac3b52ece670fbae087e4686056f7647a9318aa69ad",
+        "205c667b66b6d8210bf2a3b9a127cad551e484fe00b65029983b1b02ad8a4207",
+        "213ad0bd03091b50b00bfc9a614577e90710086a87603cbd91a2a3da497afb98",
+        "24a5b4eb90eccd6a600e081dac6b9070dcd30e495209a143f1c2550d185fdf14",
+        "24cdd5261cfe1b9d9c89bfec8046b16868f53c8a7d39038c63bac3e5cd261571",
+        "2d68c6feb8142ceb73d4e3ca803cbf3e8f42f5f07d8981beb51d27d8e343763f",
+        "2e0cdfc1a06b071e0ec492bfed2e9e90061008dff37c80918961ca2303766897",
+        "368ad9fd2fab8cfcb118d69cef18504ea610eaee5bc150dc3701abd30a55994c",
+        "369d644a5ff40a3a4ab7f3fd1335a752c7260c3e84cf5615a7b776b2f2b60c3d",
+        "38e727e5eedf00d2a3576518d1f39f966e67a7c65033c3f2ea4aed673281e0f2",
+        "39f691c3c71b150b246ae5254cf32b11f67228a85cf518fb80273c0b745462ae",
+        "43e6b44054c69dfca05afa525a794e739078d4122b8fe843f9e9651d37a2d83f",
+        "485fca893824a336e2df794554023c4c7bf189f6b910a38a4f6aa69f21fe8a51",
+        "4f126593da9c9cd11b0cb3cd35d8c33e1d1e064ecab274b0115cc241ad594432",
+        "4f1f97c2c9695536a59f8c682a9fade9f3ac0d489bf9406dda3a895ec105be31",
+        "56ff44bc5818bf7dc0b603498b433ad0ecc1e7c78cdb49d49da196d46c95632c",
+        "5b291bdd81df5cc033fc9b9e18c22751aaef9948d51c9766ac4339ac2c74b33f",
+        "60d2823eb7465a97d859fe39a20b36a97d203bb50713fc6a267fc92391766b35",
+        "637e0f81210db157dcb619232ae4737e270a00cf321e456a0e547b0d751d1d51",
+        "6b67f023499d85d5c1ca4e7a8c512001e1349b2fb5f499fff17121f625c937ab",
+        "712a008eec6685d3b1cfefab59ddf171e9a449451d5b71188a0158310483b9f5",
+        "7640d09ab652178e9901999a40c02507eb941e9dd8ab120e028a7580482822a2",
+        "8230e966a65a394178c59c14dea222042c425767b33beeb4a7bc45ecda5a20cf",
+        "864ed3d3b80592896fc8b0f4257581a275ddc4251913ce7108258e7ad73b247f",
+        "a8350fdc7ce46d3f75935f25aa715c0487f61a3b768cc777d080d618955b6650",
+        "b634fa1db974729937692cae7c08b5f7d3a2206e118389494d943578450ce6ad",
+        "bbeb42abd74d14e63437a19a2e9965c861fb0b4240ec671f5aafbc94bb499b39",
+        "c06dd08b05a64d74c72cd22e656cff0a023c9cd6f3bd420edb7b0f11116d2f33",
+        "c179a8c5ebb4f2e085757cfd9152876f49556176f93a5b8e323539178350b4fa",
+        "dd41c6ccc7dfdc8ad2d327850f55651f97672cad8db8417a7cd09e172a4dd567",
+        "f5c5610341acf478328ab9204dad388d8998244abcca7fb0a1d7e8e4b30b3b7e"
+      ],
+      "v16_on_anchor_passed_distinct_products": 58,
+      "v16_on_first_gate_failures": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 2,
+        "hit_tanimoto": 9,
+        "polar_reference_capacity_below_minimum": 2,
+        "property: logp.upper_maximum:5.2118000000000055>5": 1,
+        "property: logp.upper_maximum:5.254800000000005>5": 1,
+        "property: logp.upper_maximum:5.2756200000000035>5": 2,
+        "property: logp.upper_maximum:5.2943200000000035>5": 1,
+        "property: logp.upper_maximum:5.294320000000004>5": 1,
+        "property: logp.upper_maximum:5.601900000000006>5": 1,
+        "property: logp.upper_maximum:5.665720000000004>5": 2,
+        "property: logp.upper_maximum:5.684420000000004>5": 1,
+        "property: logp.upper_maximum:5.684420000000005>5": 1
+      },
+      "v16_on_limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v16_on_products": 34,
+      "v16_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1445,
+        "catalog_stereo_perceptions": 54,
+        "combinations": 112,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 114,
+        "reaction_pool_graph_visits": 9693,
+        "reaction_pool_query_pairs": 65,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 180,
+        "reaction_pool_window_match_requests": 65,
+        "reverse_role_work": 205,
+        "route_audit_attempts": 34,
+        "rule_inspections": 512,
+        "topology_match_requests": 26,
+        "topology_spec_graph_visits": 2452,
+        "total_fingerprint_calls": 37433
+      },
+      "v17_on_anchor_passed_distinct_products": 58,
+      "v17_on_first_gate_failures": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 2,
+        "hit_tanimoto": 9,
+        "polar_reference_capacity_below_minimum": 2,
+        "property: logp.upper_maximum:5.2118000000000055>5": 1,
+        "property: logp.upper_maximum:5.254800000000005>5": 1,
+        "property: logp.upper_maximum:5.2756200000000035>5": 2,
+        "property: logp.upper_maximum:5.2943200000000035>5": 1,
+        "property: logp.upper_maximum:5.294320000000004>5": 1,
+        "property: logp.upper_maximum:5.601900000000006>5": 1,
+        "property: logp.upper_maximum:5.665720000000004>5": 2,
+        "property: logp.upper_maximum:5.684420000000004>5": 1,
+        "property: logp.upper_maximum:5.684420000000005>5": 1
+      },
+      "v17_on_limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v17_on_products": 34,
+      "v17_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1445,
+        "catalog_stereo_perceptions": 54,
+        "combinations": 112,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 114,
+        "reaction_pool_graph_visits": 9693,
+        "reaction_pool_query_pairs": 65,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 180,
+        "reaction_pool_window_match_requests": 65,
+        "reverse_role_work": 205,
+        "route_audit_attempts": 34,
+        "rule_inspections": 512,
+        "topology_match_requests": 26,
+        "topology_spec_graph_visits": 2452,
+        "total_fingerprint_calls": 37433
+      },
+      "v17_preference_work": {
+        "bridge_positive_work_items": 9,
+        "bridge_role_contexts": 40,
+        "bridge_snapshot_attempts": 40,
+        "bridge_structural_units": 6105,
+        "bridge_unknown_reasons": {
+          "normalized_role_embedding_ambiguous_or_absent": 2,
+          "raw_outcome_cap_saturated": 22,
+          "raw_single_source_edited_observed": 7
+        },
+        "bridge_unknown_work_items": 31,
+        "legacy_reasons": {
+          "complete_ranked_pool_unavailable": 7
+        },
+        "outer_role_queries": 1,
+        "outer_role_queries_limit": 16,
+        "ranked_rows_limit": 65536,
+        "ranked_rows_retained": 4864,
+        "replacements": 1,
+        "role_checks": 3,
+        "role_checks_per_query_limit": 8192,
+        "role_checks_per_search_limit": 65536,
+        "role_matches": 2,
+        "samples": [
+          {
+            "first": "CN(C)c1cc(C(=O)O)nc2ccccc12",
+            "inner_rule_id": "synllama-rule-077",
+            "inner_target": "CN(CCc1ccccc1)c1nc(Cl)cc(C(=O)NCC2CC2)n1",
+            "new_second": "O=C(O)c1nc(NCCc2ccccc2)ncc1Cl",
+            "old_second": "Cc1sc(CCc2ccccc2)nc1C(=O)O",
+            "outer_rule_id": "synllama-rule-042",
+            "outer_slot": 0,
+            "role_checks": 2,
+            "source_slot": 0
+          }
+        ],
+        "samples_omitted": 0,
+        "selected_contexts_limit": 128,
+        "stereo_rejections": 0,
+        "stereo_unknowns": 0
+      }
+    },
+    {
+      "conditional_optimistic_possible_input": true,
+      "gained_products": [],
+      "gained_route_graph_sha256": [],
+      "historical_three_qualified_exact_graphs_retained": [],
+      "id": "CHEMBL4630839-query-2",
+      "known_saved_all_step_matched_graphs": 1,
+      "lost_products": [],
+      "lost_route_graph_sha256": [],
+      "saved_exact_graph_forward_status_counts": {
+        "saved_all_steps_matched": 1
+      },
+      "saved_forward_associations": [
+        {
+          "product": "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6CC6)nn5)C4)cc3)nc12",
+          "route_graph_sha256": "c538f9275c07126ee68bfcac61f77db6342697746cfa62468fb13df1b4334670",
+          "saved_forward_status": "saved_all_steps_matched"
+        }
+      ],
+      "unchanged_products": [
+        "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6CC6)nn5)C4)cc3)nc12"
+      ],
+      "unchanged_route_graph_sha256": [
+        "c538f9275c07126ee68bfcac61f77db6342697746cfa62468fb13df1b4334670"
+      ],
+      "v16_on_anchor_passed_distinct_products": 9,
+      "v16_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 45,
+        "hit_tanimoto": 2,
+        "property: mw.upper_maximum:518.0210000000002>500.0": 2,
+        "property: mw.upper_maximum:525.6130000000002>500.0": 1,
+        "property: mw.upper_maximum:539.6400000000001>500.0": 1,
+        "property: mw.upper_maximum:579.7050000000002>500.0": 1,
+        "property: mw.upper_maximum:593.7320000000002>500.0": 1
+      },
+      "v16_on_limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v16_on_products": 1,
+      "v16_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1741,
+        "catalog_stereo_perceptions": 59,
+        "combinations": 92,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 108,
+        "reaction_pool_graph_visits": 8344,
+        "reaction_pool_query_pairs": 47,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 123,
+        "reaction_pool_window_match_requests": 47,
+        "reverse_role_work": 206,
+        "route_audit_attempts": 1,
+        "rule_inspections": 512,
+        "topology_match_requests": 38,
+        "topology_spec_graph_visits": 8063,
+        "total_fingerprint_calls": 49028
+      },
+      "v17_on_anchor_passed_distinct_products": 9,
+      "v17_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 45,
+        "hit_tanimoto": 2,
+        "property: mw.upper_maximum:518.0210000000002>500.0": 2,
+        "property: mw.upper_maximum:525.6130000000002>500.0": 1,
+        "property: mw.upper_maximum:539.6400000000001>500.0": 1,
+        "property: mw.upper_maximum:579.7050000000002>500.0": 1,
+        "property: mw.upper_maximum:593.7320000000002>500.0": 1
+      },
+      "v17_on_limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v17_on_products": 1,
+      "v17_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1741,
+        "catalog_stereo_perceptions": 59,
+        "combinations": 92,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 108,
+        "reaction_pool_graph_visits": 8344,
+        "reaction_pool_query_pairs": 47,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 123,
+        "reaction_pool_window_match_requests": 47,
+        "reverse_role_work": 206,
+        "route_audit_attempts": 1,
+        "rule_inspections": 512,
+        "topology_match_requests": 38,
+        "topology_spec_graph_visits": 8063,
+        "total_fingerprint_calls": 49028
+      },
+      "v17_preference_work": {
+        "bridge_positive_work_items": 12,
+        "bridge_role_contexts": 29,
+        "bridge_snapshot_attempts": 27,
+        "bridge_structural_units": 5783,
+        "bridge_unknown_reasons": {
+          "normalized_role_embedding_ambiguous_or_absent": 2,
+          "raw_outcome_cap_saturated": 11,
+          "raw_single_source_edited_observed": 4
+        },
+        "bridge_unknown_work_items": 17,
+        "legacy_reasons": {
+          "complete_ranked_pool_unavailable": 2,
+          "no_ordinary_second": 2
+        },
+        "outer_role_queries": 4,
+        "outer_role_queries_limit": 16,
+        "ranked_rows_limit": 65536,
+        "ranked_rows_retained": 21215,
+        "replacements": 4,
+        "role_checks": 75,
+        "role_checks_per_query_limit": 8192,
+        "role_checks_per_search_limit": 65536,
+        "role_matches": 6,
+        "samples": [
+          {
+            "first": "CC(C)(C)OC(=O)N1C[C@@H](C(=O)O)C[C@@H](c2ccccc2)C1",
+            "inner_rule_id": "synllama-rule-077",
+            "inner_target": "O=C(NCC1CC1)c1cc(Cl)nc(N2CCC[C@@H](c3ccccc3)C2)n1",
+            "new_second": "O=C(O)c1nc(C2CC2)n(-c2ccccc2Cl)n1",
+            "old_second": "Cc1cc(C(=O)O)nc(C2CN(C(=O)OC(C)(C)C)C2)n1",
+            "outer_rule_id": "synllama-rule-042",
+            "outer_slot": 0,
+            "role_checks": 4,
+            "source_slot": 0
+          },
+          {
+            "first": "O=C(O)c1cc(N2CCOCC2)ncn1",
+            "inner_rule_id": "synllama-rule-077",
+            "inner_target": "O=C(NCC1CC1)c1cc(N2CCOCC2)nc(Cl)n1",
+            "new_second": "COc1cc(C(=O)O)nc(Cl)n1",
+            "old_second": "O=C(O)c1cnc(N2CCOCC2)cn1",
+            "outer_rule_id": "synllama-rule-042",
+            "outer_slot": 0,
+            "role_checks": 5,
+            "source_slot": 0
+          },
+          {
+            "first": "BrC=C1CNC1",
+            "inner_rule_id": "synllama-rule-073",
+            "inner_target": "c1ccc([C@@H]2CCCNC2)cc1",
+            "new_second": "NC/C=C/Br",
+            "old_second": "BrC=C1CCC1",
+            "outer_rule_id": "synllama-rule-045",
+            "outer_slot": 1,
+            "role_checks": 32,
+            "source_slot": 0
+          },
+          {
+            "first": "BrC=C1CNC1",
+            "inner_rule_id": "synllama-rule-073",
+            "inner_target": "c1ccc([C@@H]2CCCNC2)cc1",
+            "new_second": "NC/C=C/Br",
+            "old_second": "BrC=C1CCC1",
+            "outer_rule_id": "synllama-rule-042",
+            "outer_slot": 1,
+            "role_checks": 32,
+            "source_slot": 0
+          }
+        ],
+        "samples_omitted": 0,
+        "selected_contexts_limit": 128,
+        "stereo_rejections": 0,
+        "stereo_unknowns": 0
+      }
+    },
+    {
+      "conditional_optimistic_possible_input": true,
+      "gained_products": [],
+      "gained_route_graph_sha256": [],
+      "historical_three_qualified_exact_graphs_retained": [],
+      "id": "CHEMBL4247-query-1",
+      "known_saved_all_step_matched_graphs": 3,
+      "lost_products": [],
+      "lost_route_graph_sha256": [],
+      "saved_exact_graph_forward_status_counts": {
+        "no_saved_exact_graph_step_association": 2,
+        "saved_all_steps_matched": 3,
+        "saved_mismatched": 1,
+        "saved_partially_evaluated": 1,
+        "saved_unassessed_or_mixed": 9
+      },
+      "saved_forward_associations": [
+        {
+          "product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+          "route_graph_sha256": "67888699e48ec30d7ddae382f3fd4c42055501652843ccb80d3879277d94e005",
+          "saved_forward_status": "saved_all_steps_matched"
+        },
+        {
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "route_graph_sha256": "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+          "saved_forward_status": "saved_all_steps_matched"
+        },
+        {
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+          "route_graph_sha256": "50e1848a9af20738013eeb4eedd83358d6701921bc843203011a73f5e64304d0",
+          "saved_forward_status": "saved_mismatched"
+        },
+        {
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(C=O)c1OC",
+          "route_graph_sha256": "b0a95c717b367c3615d10062d43ab3bcb5a9f01071ab00d100ca3637a7caa69f",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(CN)c3)C2)n1",
+          "route_graph_sha256": "82cc9e1f7dd6a5f5dadf857be368c20bf83887e0de49a10d5a3cf40664d4023e",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "COc1cc(Nc2nccc(Cl)n2)cc(N2CCC[C@H](CN3CCOCC3)C2)c1OC",
+          "route_graph_sha256": "7de72d66b33ea12132e75db240d4a28ff7fb1d3c80ed936351c62b3783c93722",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "COc1cc(Nc2ccnc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "route_graph_sha256": "6bcc442dbec74b47433825dc90d0d4996d0af752e90a03b3db93a55eab041445",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "COc1cc(Nc2ccnc(C)n2)cc(N2CCC[C@H](CN3CCOCC3)C2)c1OC",
+          "route_graph_sha256": "5a730f3a3df5597633758060407451000911454ca2c61390c5a4d04ba55fe205",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "COc1cc(Nc2ccnc(Cl)n2)cc(N2CCC[C@H](CN3CCOCC3)C2)c1OC",
+          "route_graph_sha256": "3cbf9cbb9ca08f7484ec54accfe18391ff9689023e81047ccb36046dfe4ee5ca",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "COc1cc(Nc2ccnc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+          "route_graph_sha256": "7c911ccd658ab09ea97bf58fe9613753eefb4691d12e3260fa44a3c73cda55aa",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CC(C)(C)OC(=O)Nc1nccc(NCc2cccc(CNC(=O)[C@H]3CCCNC3)c2)n1",
+          "route_graph_sha256": "34459edc5c5412fab62319ba45202405b10daa83b84255063d5275f4029b6a41",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+          "route_graph_sha256": "1dd42d6994e2f6d5d30bd77e6b4d701b05dab24bc6776fb3e40e59a6993545db",
+          "saved_forward_status": "saved_all_steps_matched"
+        },
+        {
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "route_graph_sha256": "ff1da666ebbbb843c54273f35fca7873ae342111f13a5b115e950263ea0da7ec",
+          "saved_forward_status": "no_saved_exact_graph_step_association"
+        },
+        {
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "route_graph_sha256": "a736ce772b8a9aea14a403451a1941eaf3858a64553488b135803adf917acd48",
+          "saved_forward_status": "saved_partially_evaluated"
+        },
+        {
+          "product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(C=O)c1OC",
+          "route_graph_sha256": "3820639a4ddb484e9cdded36c6e73b5b946cf3805bd28383292ad5047c0a82d0",
+          "saved_forward_status": "no_saved_exact_graph_step_association"
+        },
+        {
+          "product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(CN)c3)C2)n1",
+          "route_graph_sha256": "a4da25cc361d0730dd91c43ad409dff38e27a89ea11e2f07b2963d53dd0136d1",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        }
+      ],
+      "unchanged_products": [
+        "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(CN)c3)C2)n1",
+        "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+        "CC(C)(C)OC(=O)Nc1nccc(NCc2cccc(CNC(=O)[C@H]3CCCNC3)c2)n1",
+        "COc1cc(Nc2ccnc(C)n2)cc(N2CCC[C@H](CN3CCOCC3)C2)c1OC",
+        "COc1cc(Nc2ccnc(Cl)n2)cc(N2CCC[C@H](CN3CCOCC3)C2)c1OC",
+        "COc1cc(Nc2ccnc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+        "COc1cc(Nc2ccnc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+        "COc1cc(Nc2nccc(Cl)n2)cc(N2CCC[C@H](CN3CCOCC3)C2)c1OC",
+        "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(C=O)c1OC",
+        "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+        "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC"
+      ],
+      "unchanged_route_graph_sha256": [
+        "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+        "1dd42d6994e2f6d5d30bd77e6b4d701b05dab24bc6776fb3e40e59a6993545db",
+        "34459edc5c5412fab62319ba45202405b10daa83b84255063d5275f4029b6a41",
+        "3820639a4ddb484e9cdded36c6e73b5b946cf3805bd28383292ad5047c0a82d0",
+        "3cbf9cbb9ca08f7484ec54accfe18391ff9689023e81047ccb36046dfe4ee5ca",
+        "50e1848a9af20738013eeb4eedd83358d6701921bc843203011a73f5e64304d0",
+        "5a730f3a3df5597633758060407451000911454ca2c61390c5a4d04ba55fe205",
+        "67888699e48ec30d7ddae382f3fd4c42055501652843ccb80d3879277d94e005",
+        "6bcc442dbec74b47433825dc90d0d4996d0af752e90a03b3db93a55eab041445",
+        "7c911ccd658ab09ea97bf58fe9613753eefb4691d12e3260fa44a3c73cda55aa",
+        "7de72d66b33ea12132e75db240d4a28ff7fb1d3c80ed936351c62b3783c93722",
+        "82cc9e1f7dd6a5f5dadf857be368c20bf83887e0de49a10d5a3cf40664d4023e",
+        "a4da25cc361d0730dd91c43ad409dff38e27a89ea11e2f07b2963d53dd0136d1",
+        "a736ce772b8a9aea14a403451a1941eaf3858a64553488b135803adf917acd48",
+        "b0a95c717b367c3615d10062d43ab3bcb5a9f01071ab00d100ca3637a7caa69f",
+        "ff1da666ebbbb843c54273f35fca7873ae342111f13a5b115e950263ea0da7ec"
+      ],
+      "v16_on_anchor_passed_distinct_products": 30,
+      "v16_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 44,
+        "hit_tanimoto": 3,
+        "polar_reference_capacity_below_minimum": 13,
+        "property: mw.upper_maximum:511.6380000000003>500.0; logp.upper_maximum:5.063700000000005>5": 1,
+        "property: mw.upper_maximum:529.6370000000003>500.0": 1,
+        "property: mw.upper_maximum:531.6530000000004>500.0": 1
+      },
+      "v16_on_limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "generation_fingerprint_budget"
+      ],
+      "v16_on_products": 11,
+      "v16_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 152877,
+        "catalog_stereo_atom_bond_charges": 1629,
+        "catalog_stereo_perceptions": 60,
+        "combinations": 96,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 116,
+        "reaction_pool_graph_visits": 3267,
+        "reaction_pool_query_pairs": 17,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 24,
+        "reaction_pool_window_match_requests": 17,
+        "reverse_role_work": 264,
+        "route_audit_attempts": 16,
+        "rule_inspections": 512,
+        "topology_match_requests": 42,
+        "topology_spec_graph_visits": 21484,
+        "total_fingerprint_calls": 63575
+      },
+      "v17_on_anchor_passed_distinct_products": 30,
+      "v17_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 44,
+        "hit_tanimoto": 3,
+        "polar_reference_capacity_below_minimum": 13,
+        "property: mw.upper_maximum:511.6380000000003>500.0; logp.upper_maximum:5.063700000000005>5": 1,
+        "property: mw.upper_maximum:529.6370000000003>500.0": 1,
+        "property: mw.upper_maximum:531.6530000000004>500.0": 1
+      },
+      "v17_on_limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "generation_fingerprint_budget"
+      ],
+      "v17_on_products": 11,
+      "v17_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 152877,
+        "catalog_stereo_atom_bond_charges": 1629,
+        "catalog_stereo_perceptions": 60,
+        "combinations": 96,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 116,
+        "reaction_pool_graph_visits": 3267,
+        "reaction_pool_query_pairs": 17,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 24,
+        "reaction_pool_window_match_requests": 17,
+        "reverse_role_work": 264,
+        "route_audit_attempts": 16,
+        "rule_inspections": 512,
+        "topology_match_requests": 42,
+        "topology_spec_graph_visits": 21484,
+        "total_fingerprint_calls": 63575
+      },
+      "v17_preference_work": {
+        "bridge_positive_work_items": 19,
+        "bridge_role_contexts": 34,
+        "bridge_snapshot_attempts": 37,
+        "bridge_structural_units": 8999,
+        "bridge_unknown_reasons": {
+          "normalized_role_embedding_ambiguous_or_absent": 3,
+          "raw_outcome_cap_saturated": 8,
+          "raw_single_source_edited_observed": 4
+        },
+        "bridge_unknown_work_items": 15,
+        "legacy_reasons": {
+          "complete_ranked_pool_unavailable": 1
+        },
+        "outer_role_queries": 3,
+        "outer_role_queries_limit": 16,
+        "ranked_rows_limit": 65536,
+        "ranked_rows_retained": 26990,
+        "replacements": 5,
+        "role_checks": 95,
+        "role_checks_per_query_limit": 8192,
+        "role_checks_per_search_limit": 65536,
+        "role_matches": 17,
+        "samples": [
+          {
+            "first": "O=C(O)[C@H]1CCCNC1",
+            "inner_rule_id": "synllama-rule-042",
+            "inner_target": "COc1cc(Nc2nccc(N3CCC[C@H](C(=O)O)C3)n2)cc(OC)c1OC",
+            "new_second": "NC1CCN(c2cc(C(=O)O)ccn2)CC1",
+            "old_second": "CO[C@H]1CN(c2ccnc(N)n2)C[C@H]1N",
+            "outer_rule_id": "synllama-rule-077",
+            "outer_slot": 0,
+            "role_checks": 14,
+            "source_slot": 1
+          },
+          {
+            "first": "Cc1ccccc1C(=O)N1CCC[C@H](C(=O)O)C1",
+            "inner_rule_id": "synllama-rule-077",
+            "inner_target": "Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+            "new_second": "Nc1ccc(N2CCCC2)cc1C(=O)O",
+            "old_second": "O=C(O)C1CCN(c2ccncn2)CC1",
+            "outer_rule_id": "synllama-rule-042",
+            "outer_slot": 1,
+            "role_checks": 71,
+            "source_slot": 0
+          },
+          {
+            "first": "Nc1nccc(Cl)n1",
+            "inner_rule_id": "synllama-rule-042",
+            "inner_target": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "new_second": "Nc1nccc(Br)n1",
+            "old_second": "Nc1ccnc(N)n1",
+            "outer_rule_id": "synllama-rule-042",
+            "outer_slot": 0,
+            "role_checks": 3,
+            "source_slot": 1
+          },
+          {
+            "first": "NCc1nccc(Cl)n1",
+            "inner_rule_id": "synllama-rule-045",
+            "inner_target": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "new_second": "NCc1cc(Cl)nc(N)n1",
+            "old_second": "NCc1ccnc(N)n1",
+            "outer_rule_id": "synllama-rule-042",
+            "outer_slot": 0,
+            "role_checks": 2,
+            "source_slot": 1
+          },
+          {
+            "first": "NCc1nccc(Cl)n1",
+            "inner_rule_id": "synllama-rule-046",
+            "inner_target": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "new_second": "NCc1cc(Cl)nc(N)n1",
+            "old_second": "NCc1ccnc(N)n1",
+            "outer_rule_id": "synllama-rule-042",
+            "outer_slot": 0,
+            "role_checks": 2,
+            "source_slot": 1
+          }
+        ],
+        "samples_omitted": 0,
+        "selected_contexts_limit": 128,
+        "stereo_rejections": 10,
+        "stereo_unknowns": 0
+      }
+    },
+    {
+      "conditional_optimistic_possible_input": true,
+      "gained_products": [],
+      "gained_route_graph_sha256": [],
+      "historical_three_qualified_exact_graphs_retained": [],
+      "id": "CHEMBL4247-query-2",
+      "known_saved_all_step_matched_graphs": 0,
+      "lost_products": [],
+      "lost_route_graph_sha256": [],
+      "saved_exact_graph_forward_status_counts": {
+        "no_saved_exact_graph_step_association": 2,
+        "saved_mismatched": 3,
+        "saved_unassessed_or_mixed": 1
+      },
+      "saved_forward_associations": [
+        {
+          "product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+          "route_graph_sha256": "a0e584eba8504779abfa2c34df1d4ed2f4f9180236103284c1125679c9022519",
+          "saved_forward_status": "saved_mismatched"
+        },
+        {
+          "product": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "route_graph_sha256": "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+          "saved_forward_status": "saved_mismatched"
+        },
+        {
+          "product": "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "route_graph_sha256": "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc",
+          "saved_forward_status": "saved_mismatched"
+        },
+        {
+          "product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+          "route_graph_sha256": "9883b82f2c704b8ddb3966b89e1d53c202eed3177667bd0ee56f35cfeeb63dee",
+          "saved_forward_status": "saved_unassessed_or_mixed"
+        },
+        {
+          "product": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "route_graph_sha256": "a02e804fab25a7104fcc341f6c543134d6ae54acd1c5ff5496acdab1a3f8400f",
+          "saved_forward_status": "no_saved_exact_graph_step_association"
+        },
+        {
+          "product": "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "route_graph_sha256": "9621aebe7b43dc2f8d2e0fe8e2ae6f09d4c61293dabc1445506912bcce91af09",
+          "saved_forward_status": "no_saved_exact_graph_step_association"
+        }
+      ],
+      "unchanged_products": [
+        "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+        "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+        "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+        "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12"
+      ],
+      "unchanged_route_graph_sha256": [
+        "9621aebe7b43dc2f8d2e0fe8e2ae6f09d4c61293dabc1445506912bcce91af09",
+        "9883b82f2c704b8ddb3966b89e1d53c202eed3177667bd0ee56f35cfeeb63dee",
+        "a02e804fab25a7104fcc341f6c543134d6ae54acd1c5ff5496acdab1a3f8400f",
+        "a0e584eba8504779abfa2c34df1d4ed2f4f9180236103284c1125679c9022519",
+        "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+        "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc"
+      ],
+      "v16_on_anchor_passed_distinct_products": 60,
+      "v16_on_first_gate_failures": {
+        "Chemical-family tautomer enumeration incomplete: MaxTransformsReached": 2,
+        "hit_tanimoto": 17,
+        "polar_reference_capacity_below_minimum": 35,
+        "property: logp.upper_maximum:5.511220000000003>5": 1,
+        "property: logp.upper_maximum:5.511220000000004>5": 1
+      },
+      "v16_on_limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v16_on_products": 4,
+      "v16_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1477,
+        "catalog_stereo_perceptions": 57,
+        "combinations": 124,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 128,
+        "reaction_pool_graph_visits": 16333,
+        "reaction_pool_query_pairs": 71,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 195,
+        "reaction_pool_window_match_requests": 71,
+        "reverse_role_work": 271,
+        "route_audit_attempts": 6,
+        "rule_inspections": 512,
+        "topology_match_requests": 33,
+        "topology_spec_graph_visits": 11068,
+        "total_fingerprint_calls": 48895
+      },
+      "v17_on_anchor_passed_distinct_products": 60,
+      "v17_on_first_gate_failures": {
+        "Chemical-family tautomer enumeration incomplete: MaxTransformsReached": 2,
+        "hit_tanimoto": 17,
+        "polar_reference_capacity_below_minimum": 35,
+        "property: logp.upper_maximum:5.511220000000003>5": 1,
+        "property: logp.upper_maximum:5.511220000000004>5": 1
+      },
+      "v17_on_limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v17_on_products": 4,
+      "v17_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1477,
+        "catalog_stereo_perceptions": 57,
+        "combinations": 124,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 128,
+        "reaction_pool_graph_visits": 16333,
+        "reaction_pool_query_pairs": 71,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 195,
+        "reaction_pool_window_match_requests": 71,
+        "reverse_role_work": 271,
+        "route_audit_attempts": 6,
+        "rule_inspections": 512,
+        "topology_match_requests": 33,
+        "topology_spec_graph_visits": 11068,
+        "total_fingerprint_calls": 48895
+      },
+      "v17_preference_work": {
+        "bridge_positive_work_items": 22,
+        "bridge_role_contexts": 49,
+        "bridge_snapshot_attempts": 49,
+        "bridge_structural_units": 11212,
+        "bridge_unknown_reasons": {
+          "normalized_role_embedding_ambiguous_or_absent": 1,
+          "raw_outcome_cap_saturated": 24,
+          "raw_unknown_ambiguous_role_embeddings": 2
+        },
+        "bridge_unknown_work_items": 27,
+        "legacy_reasons": {
+          "complete_ranked_pool_unavailable": 16,
+          "no_role_and_stereo_eligible_ordinary": 1
+        },
+        "outer_role_queries": 3,
+        "outer_role_queries_limit": 16,
+        "ranked_rows_limit": 65536,
+        "ranked_rows_retained": 14791,
+        "replacements": 2,
+        "role_checks": 23,
+        "role_checks_per_query_limit": 8192,
+        "role_checks_per_search_limit": 65536,
+        "role_matches": 5,
+        "samples": [
+          {
+            "first": "Cc1cc2nc(N)cc(Cl)n2n1",
+            "inner_rule_id": "synllama-rule-036",
+            "inner_target": "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12",
+            "new_second": "Cc1cc2c(N)ncc(I)n2n1",
+            "old_second": "Cc1cnn2c(Cl)cc(Cl)nc12",
+            "outer_rule_id": "synllama-rule-042",
+            "outer_slot": 1,
+            "role_checks": 4,
+            "source_slot": 1
+          },
+          {
+            "first": "CS(=O)(=O)Nc1ccccc1Br",
+            "inner_rule_id": "synllama-rule-031",
+            "inner_target": "CN(c1ccccc1Br)S(C)(=O)=O",
+            "new_second": "CS(=O)(=O)NCc1ccccc1Br",
+            "old_second": "CS(=O)(=O)Nc1ccccc1C#N",
+            "outer_rule_id": "synllama-rule-036",
+            "outer_slot": 0,
+            "role_checks": 5,
+            "source_slot": 1
+          }
+        ],
+        "samples_omitted": 0,
+        "selected_contexts_limit": 128,
+        "stereo_rejections": 0,
+        "stereo_unknowns": 0
+      }
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products": [],
+      "gained_route_graph_sha256": [],
+      "historical_three_qualified_exact_graphs_retained": [],
+      "id": "CHEMBL5163-query-1",
+      "known_saved_all_step_matched_graphs": 0,
+      "lost_products": [],
+      "lost_route_graph_sha256": [],
+      "saved_exact_graph_forward_status_counts": {},
+      "saved_forward_associations": [],
+      "unchanged_products": [],
+      "unchanged_route_graph_sha256": [],
+      "v16_on_anchor_passed_distinct_products": 12,
+      "v16_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 15,
+        "hit_tanimoto": 3,
+        "polar_reference_capacity_below_minimum": 9
+      },
+      "v16_on_limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v16_on_products": 0,
+      "v16_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1355,
+        "catalog_stereo_perceptions": 50,
+        "combinations": 122,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 122,
+        "reaction_pool_graph_visits": 6841,
+        "reaction_pool_query_pairs": 35,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 84,
+        "reaction_pool_window_match_requests": 35,
+        "reverse_role_work": 139,
+        "route_audit_attempts": 0,
+        "rule_inspections": 512,
+        "topology_match_requests": 35,
+        "topology_spec_graph_visits": 23865,
+        "total_fingerprint_calls": 35168
+      },
+      "v17_on_anchor_passed_distinct_products": 12,
+      "v17_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 15,
+        "hit_tanimoto": 3,
+        "polar_reference_capacity_below_minimum": 9
+      },
+      "v17_on_limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v17_on_products": 0,
+      "v17_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1355,
+        "catalog_stereo_perceptions": 50,
+        "combinations": 122,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 122,
+        "reaction_pool_graph_visits": 6841,
+        "reaction_pool_query_pairs": 35,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 84,
+        "reaction_pool_window_match_requests": 35,
+        "reverse_role_work": 139,
+        "route_audit_attempts": 0,
+        "rule_inspections": 512,
+        "topology_match_requests": 35,
+        "topology_spec_graph_visits": 23865,
+        "total_fingerprint_calls": 35168
+      },
+      "v17_preference_work": {
+        "bridge_positive_work_items": 0,
+        "bridge_role_contexts": 38,
+        "bridge_snapshot_attempts": 21,
+        "bridge_structural_units": 5755,
+        "bridge_unknown_reasons": {
+          "raw_split_across_sources_observed": 4,
+          "raw_unknown_role_not_in_parent": 34
+        },
+        "bridge_unknown_work_items": 38,
+        "legacy_reasons": {},
+        "outer_role_queries": 0,
+        "outer_role_queries_limit": 16,
+        "ranked_rows_limit": 65536,
+        "ranked_rows_retained": 0,
+        "replacements": 0,
+        "role_checks": 0,
+        "role_checks_per_query_limit": 8192,
+        "role_checks_per_search_limit": 65536,
+        "role_matches": 0,
+        "samples": [],
+        "samples_omitted": 0,
+        "selected_contexts_limit": 128,
+        "stereo_rejections": 0,
+        "stereo_unknowns": 0
+      }
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products": [],
+      "gained_route_graph_sha256": [],
+      "historical_three_qualified_exact_graphs_retained": [],
+      "id": "CHEMBL5163-query-2",
+      "known_saved_all_step_matched_graphs": 0,
+      "lost_products": [],
+      "lost_route_graph_sha256": [],
+      "saved_exact_graph_forward_status_counts": {},
+      "saved_forward_associations": [],
+      "unchanged_products": [],
+      "unchanged_route_graph_sha256": [],
+      "v16_on_anchor_passed_distinct_products": 0,
+      "v16_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 36
+      },
+      "v16_on_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "v16_on_products": 0,
+      "v16_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 181340,
+        "catalog_stereo_atom_bond_charges": 1374,
+        "catalog_stereo_perceptions": 52,
+        "combinations": 76,
+        "fallback_hit_second_tanimotos": 911,
+        "products_generated": 126,
+        "reaction_pool_graph_visits": 4089,
+        "reaction_pool_query_pairs": 20,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 42,
+        "reaction_pool_window_match_requests": 20,
+        "reverse_role_work": 50,
+        "route_audit_attempts": 0,
+        "rule_inspections": 512,
+        "topology_match_requests": 21,
+        "topology_spec_graph_visits": 13712,
+        "total_fingerprint_calls": 24794
+      },
+      "v17_on_anchor_passed_distinct_products": 0,
+      "v17_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 36
+      },
+      "v17_on_limits_reached": [
+        "max_rule_inspections"
+      ],
+      "v17_on_products": 0,
+      "v17_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 181340,
+        "catalog_stereo_atom_bond_charges": 1374,
+        "catalog_stereo_perceptions": 52,
+        "combinations": 76,
+        "fallback_hit_second_tanimotos": 911,
+        "products_generated": 126,
+        "reaction_pool_graph_visits": 4089,
+        "reaction_pool_query_pairs": 20,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 42,
+        "reaction_pool_window_match_requests": 20,
+        "reverse_role_work": 50,
+        "route_audit_attempts": 0,
+        "rule_inspections": 512,
+        "topology_match_requests": 21,
+        "topology_spec_graph_visits": 13712,
+        "total_fingerprint_calls": 24794
+      },
+      "v17_preference_work": {
+        "bridge_positive_work_items": 0,
+        "bridge_role_contexts": 21,
+        "bridge_snapshot_attempts": 10,
+        "bridge_structural_units": 1324,
+        "bridge_unknown_reasons": {
+          "raw_outcome_cap_saturated": 5,
+          "raw_provenance_missing_or_cached_before_capture": 9,
+          "raw_unknown_role_not_in_parent": 7
+        },
+        "bridge_unknown_work_items": 21,
+        "legacy_reasons": {},
+        "outer_role_queries": 0,
+        "outer_role_queries_limit": 16,
+        "ranked_rows_limit": 65536,
+        "ranked_rows_retained": 0,
+        "replacements": 0,
+        "role_checks": 0,
+        "role_checks_per_query_limit": 8192,
+        "role_checks_per_search_limit": 65536,
+        "role_matches": 0,
+        "samples": [],
+        "samples_omitted": 0,
+        "selected_contexts_limit": 128,
+        "stereo_rejections": 0,
+        "stereo_unknowns": 0
+      }
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products": [],
+      "gained_route_graph_sha256": [],
+      "historical_three_qualified_exact_graphs_retained": [],
+      "id": "CHEMBL3334418-query-1",
+      "known_saved_all_step_matched_graphs": 0,
+      "lost_products": [],
+      "lost_route_graph_sha256": [],
+      "saved_exact_graph_forward_status_counts": {
+        "saved_mismatched": 6
+      },
+      "saved_forward_associations": [
+        {
+          "product": "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(OCC1CCCCC1)c2O",
+          "route_graph_sha256": "c8d8e070990d966a7d739bd04940156723d248696f9daebddb0038203da6882f",
+          "saved_forward_status": "saved_mismatched"
+        },
+        {
+          "product": "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(O)c2OCC1CCCCC1",
+          "route_graph_sha256": "dd662255a3d132ac485cb1899feccfaa114eb9344e91910daaa34f08a861fc9a",
+          "saved_forward_status": "saved_mismatched"
+        },
+        {
+          "product": "C[C@H](CC1CCCCC1)Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O",
+          "route_graph_sha256": "5cb18ca6397b10d76fa581d52ad18fb955850ff5d5e29a5f6324ebf26431fd68",
+          "saved_forward_status": "saved_mismatched"
+        },
+        {
+          "product": "C[C@H](CC1CCCCC1)Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+          "route_graph_sha256": "55603a0e2332970e0095bcc7b6098647bf18b59cb08747ddd7013dece621deb3",
+          "saved_forward_status": "saved_mismatched"
+        },
+        {
+          "product": "C=C[C@@H]1CCC[C@H]1Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O",
+          "route_graph_sha256": "ed4151280cbd08c77b6b3eb878c23900ff76aa03eaa04bd511095ef00b5cb6d9",
+          "saved_forward_status": "saved_mismatched"
+        },
+        {
+          "product": "C=C[C@@H]1CCC[C@H]1Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+          "route_graph_sha256": "ebed361a88413baf60bbb215aacf6956fc4619987d6667dd7552f6a12760ba85",
+          "saved_forward_status": "saved_mismatched"
+        }
+      ],
+      "unchanged_products": [
+        "C=C[C@@H]1CCC[C@H]1Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+        "C=C[C@@H]1CCC[C@H]1Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O",
+        "C[C@H](CC1CCCCC1)Oc1c(O)c(S(=O)(=O)[O-])cc2c1C(=O)c1ccccc1C2=O",
+        "C[C@H](CC1CCCCC1)Oc1c(S(=O)(=O)[O-])cc2c(c1O)C(=O)c1ccccc1C2=O",
+        "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(O)c2OCC1CCCCC1",
+        "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(OCC1CCCCC1)c2O"
+      ],
+      "unchanged_route_graph_sha256": [
+        "55603a0e2332970e0095bcc7b6098647bf18b59cb08747ddd7013dece621deb3",
+        "5cb18ca6397b10d76fa581d52ad18fb955850ff5d5e29a5f6324ebf26431fd68",
+        "c8d8e070990d966a7d739bd04940156723d248696f9daebddb0038203da6882f",
+        "dd662255a3d132ac485cb1899feccfaa114eb9344e91910daaa34f08a861fc9a",
+        "ebed361a88413baf60bbb215aacf6956fc4619987d6667dd7552f6a12760ba85",
+        "ed4151280cbd08c77b6b3eb878c23900ff76aa03eaa04bd511095ef00b5cb6d9"
+      ],
+      "v16_on_anchor_passed_distinct_products": 34,
+      "v16_on_first_gate_failures": {
+        "hit_tanimoto": 2,
+        "polar_reference_capacity_below_minimum": 26
+      },
+      "v16_on_limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "v16_on_products": 6,
+      "v16_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1658,
+        "catalog_stereo_perceptions": 65,
+        "combinations": 68,
+        "fallback_hit_second_tanimotos": 2205,
+        "products_generated": 76,
+        "reaction_pool_graph_visits": 6870,
+        "reaction_pool_query_pairs": 36,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 81,
+        "reaction_pool_window_match_requests": 36,
+        "reverse_role_work": 136,
+        "route_audit_attempts": 6,
+        "rule_inspections": 512,
+        "topology_match_requests": 28,
+        "topology_spec_graph_visits": 48849,
+        "total_fingerprint_calls": 34966
+      },
+      "v17_on_anchor_passed_distinct_products": 34,
+      "v17_on_first_gate_failures": {
+        "hit_tanimoto": 2,
+        "polar_reference_capacity_below_minimum": 26
+      },
+      "v17_on_limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "v17_on_products": 6,
+      "v17_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1658,
+        "catalog_stereo_perceptions": 65,
+        "combinations": 68,
+        "fallback_hit_second_tanimotos": 2205,
+        "products_generated": 76,
+        "reaction_pool_graph_visits": 6870,
+        "reaction_pool_query_pairs": 36,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 81,
+        "reaction_pool_window_match_requests": 36,
+        "reverse_role_work": 136,
+        "route_audit_attempts": 6,
+        "rule_inspections": 512,
+        "topology_match_requests": 28,
+        "topology_spec_graph_visits": 48849,
+        "total_fingerprint_calls": 34966
+      },
+      "v17_preference_work": {
+        "bridge_positive_work_items": 0,
+        "bridge_role_contexts": 15,
+        "bridge_snapshot_attempts": 16,
+        "bridge_structural_units": 2729,
+        "bridge_unknown_reasons": {
+          "raw_split_across_sources_observed": 4,
+          "raw_unknown_ambiguous_role_embeddings": 4,
+          "raw_unknown_role_not_in_parent": 7
+        },
+        "bridge_unknown_work_items": 15,
+        "legacy_reasons": {},
+        "outer_role_queries": 0,
+        "outer_role_queries_limit": 16,
+        "ranked_rows_limit": 65536,
+        "ranked_rows_retained": 0,
+        "replacements": 0,
+        "role_checks": 0,
+        "role_checks_per_query_limit": 8192,
+        "role_checks_per_search_limit": 65536,
+        "role_matches": 0,
+        "samples": [],
+        "samples_omitted": 0,
+        "selected_contexts_limit": 128,
+        "stereo_rejections": 0,
+        "stereo_unknowns": 0
+      }
+    },
+    {
+      "conditional_optimistic_possible_input": true,
+      "gained_products": [],
+      "gained_route_graph_sha256": [],
+      "historical_three_qualified_exact_graphs_retained": [],
+      "id": "CHEMBL3334418-query-2",
+      "known_saved_all_step_matched_graphs": 2,
+      "lost_products": [],
+      "lost_route_graph_sha256": [],
+      "saved_exact_graph_forward_status_counts": {
+        "saved_all_steps_matched": 2
+      },
+      "saved_forward_associations": [
+        {
+          "product": "CNc1ccc(NC(C)(C)c2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+          "route_graph_sha256": "40fd767ca6348495290b3af78cdfd4d7955fdfc00499528b92ba548882d6496a",
+          "saved_forward_status": "saved_all_steps_matched"
+        },
+        {
+          "product": "CNc1ccc(Nc2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+          "route_graph_sha256": "e4b9f9a9a95ef9479d397883642774a7f301539e5de3c4d42bca78a02ab1dd30",
+          "saved_forward_status": "saved_all_steps_matched"
+        }
+      ],
+      "unchanged_products": [
+        "CNc1ccc(NC(C)(C)c2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+        "CNc1ccc(Nc2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O"
+      ],
+      "unchanged_route_graph_sha256": [
+        "40fd767ca6348495290b3af78cdfd4d7955fdfc00499528b92ba548882d6496a",
+        "e4b9f9a9a95ef9479d397883642774a7f301539e5de3c4d42bca78a02ab1dd30"
+      ],
+      "v16_on_anchor_passed_distinct_products": 34,
+      "v16_on_first_gate_failures": {
+        "hit_tanimoto": 12,
+        "polar_reference_capacity_below_minimum": 20
+      },
+      "v16_on_limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v16_on_products": 2,
+      "v16_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1400,
+        "catalog_stereo_perceptions": 58,
+        "combinations": 68,
+        "fallback_hit_second_tanimotos": 2205,
+        "products_generated": 72,
+        "reaction_pool_graph_visits": 4785,
+        "reaction_pool_query_pairs": 34,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 84,
+        "reaction_pool_window_match_requests": 34,
+        "reverse_role_work": 136,
+        "route_audit_attempts": 2,
+        "rule_inspections": 512,
+        "topology_match_requests": 25,
+        "topology_spec_graph_visits": 46597,
+        "total_fingerprint_calls": 37718
+      },
+      "v17_on_anchor_passed_distinct_products": 34,
+      "v17_on_first_gate_failures": {
+        "hit_tanimoto": 12,
+        "polar_reference_capacity_below_minimum": 20
+      },
+      "v17_on_limits_reached": [
+        "max_outer_guides",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v17_on_products": 2,
+      "v17_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1400,
+        "catalog_stereo_perceptions": 58,
+        "combinations": 68,
+        "fallback_hit_second_tanimotos": 2205,
+        "products_generated": 72,
+        "reaction_pool_graph_visits": 4785,
+        "reaction_pool_query_pairs": 34,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 84,
+        "reaction_pool_window_match_requests": 34,
+        "reverse_role_work": 136,
+        "route_audit_attempts": 2,
+        "rule_inspections": 512,
+        "topology_match_requests": 25,
+        "topology_spec_graph_visits": 46597,
+        "total_fingerprint_calls": 37718
+      },
+      "v17_preference_work": {
+        "bridge_positive_work_items": 0,
+        "bridge_role_contexts": 15,
+        "bridge_snapshot_attempts": 16,
+        "bridge_structural_units": 2575,
+        "bridge_unknown_reasons": {
+          "raw_split_across_sources_observed": 4,
+          "raw_unknown_role_not_in_parent": 11
+        },
+        "bridge_unknown_work_items": 15,
+        "legacy_reasons": {},
+        "outer_role_queries": 0,
+        "outer_role_queries_limit": 16,
+        "ranked_rows_limit": 65536,
+        "ranked_rows_retained": 0,
+        "replacements": 0,
+        "role_checks": 0,
+        "role_checks_per_query_limit": 8192,
+        "role_checks_per_search_limit": 65536,
+        "role_matches": 0,
+        "samples": [],
+        "samples_omitted": 0,
+        "selected_contexts_limit": 128,
+        "stereo_rejections": 0,
+        "stereo_unknowns": 0
+      }
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products": [],
+      "gained_route_graph_sha256": [],
+      "historical_three_qualified_exact_graphs_retained": [],
+      "id": "CHEMBL4869-query-1",
+      "known_saved_all_step_matched_graphs": 0,
+      "lost_products": [],
+      "lost_route_graph_sha256": [],
+      "saved_exact_graph_forward_status_counts": {},
+      "saved_forward_associations": [],
+      "unchanged_products": [],
+      "unchanged_route_graph_sha256": [],
+      "v16_on_anchor_passed_distinct_products": 0,
+      "v16_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 34
+      },
+      "v16_on_limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "v16_on_products": 0,
+      "v16_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1980,
+        "catalog_stereo_perceptions": 58,
+        "combinations": 82,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 84,
+        "reaction_pool_graph_visits": 14929,
+        "reaction_pool_query_pairs": 57,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 147,
+        "reaction_pool_window_match_requests": 57,
+        "reverse_role_work": 222,
+        "route_audit_attempts": 0,
+        "rule_inspections": 512,
+        "topology_match_requests": 28,
+        "topology_spec_graph_visits": 8790,
+        "total_fingerprint_calls": 35054
+      },
+      "v17_on_anchor_passed_distinct_products": 0,
+      "v17_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 34
+      },
+      "v17_on_limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "v17_on_products": 0,
+      "v17_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 2080,
+        "catalog_stereo_perceptions": 59,
+        "combinations": 84,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 90,
+        "reaction_pool_graph_visits": 15794,
+        "reaction_pool_query_pairs": 64,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 168,
+        "reaction_pool_window_match_requests": 64,
+        "reverse_role_work": 226,
+        "route_audit_attempts": 0,
+        "rule_inspections": 512,
+        "topology_match_requests": 28,
+        "topology_spec_graph_visits": 8790,
+        "total_fingerprint_calls": 39477
+      },
+      "v17_preference_work": {
+        "bridge_positive_work_items": 8,
+        "bridge_role_contexts": 42,
+        "bridge_snapshot_attempts": 42,
+        "bridge_structural_units": 7622,
+        "bridge_unknown_reasons": {
+          "raw_outcome_cap_saturated": 19,
+          "raw_single_source_edited_observed": 10,
+          "raw_split_across_sources_observed": 1,
+          "raw_unknown_ambiguous_role_embeddings": 4
+        },
+        "bridge_unknown_work_items": 34,
+        "legacy_reasons": {
+          "complete_ranked_pool_unavailable": 5
+        },
+        "outer_role_queries": 1,
+        "outer_role_queries_limit": 16,
+        "ranked_rows_limit": 65536,
+        "ranked_rows_retained": 8485,
+        "replacements": 2,
+        "role_checks": 33,
+        "role_checks_per_query_limit": 8192,
+        "role_checks_per_search_limit": 65536,
+        "role_matches": 3,
+        "samples": [
+          {
+            "first": "O=C(OCc1ccccc1)N1CCC(CCCl)CC1",
+            "inner_rule_id": "synllama-rule-026",
+            "inner_target": "O=C(O)COC[C@H]1CC[C@@H](Cn2nc(-c3ccccc3)c(Cl)c2SCCO)CC1",
+            "new_second": "ClCCCN1CCN(c2ccccc2Cl)CC1",
+            "old_second": "O=C(OCc1ccccc1)N1CCC[C@H]1CCl",
+            "outer_rule_id": "synllama-rule-036",
+            "outer_slot": 1,
+            "role_checks": 29,
+            "source_slot": 1
+          },
+          {
+            "first": "O=C(O)[C@H]1CC[C@@H](CO)CC1",
+            "inner_rule_id": "synllama-rule-026",
+            "inner_target": "O=C(O)COC[C@H]1CC[C@@H](Cn2nc(-c3ccccc3)c(Cl)c2SCCO)CC1",
+            "new_second": "OCc1cn(-c2ccccc2)nc1-c1ccc(Cl)cc1",
+            "old_second": "O=C(OCc1ccccc1)N1CCC(CO)CC1",
+            "outer_rule_id": "synllama-rule-036",
+            "outer_slot": 1,
+            "role_checks": 4,
+            "source_slot": 0
+          }
+        ],
+        "samples_omitted": 0,
+        "selected_contexts_limit": 128,
+        "stereo_rejections": 1,
+        "stereo_unknowns": 0
+      }
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products": [],
+      "gained_route_graph_sha256": [],
+      "historical_three_qualified_exact_graphs_retained": [],
+      "id": "CHEMBL4869-query-2",
+      "known_saved_all_step_matched_graphs": 0,
+      "lost_products": [],
+      "lost_route_graph_sha256": [],
+      "saved_exact_graph_forward_status_counts": {},
+      "saved_forward_associations": [],
+      "unchanged_products": [],
+      "unchanged_route_graph_sha256": [],
+      "v16_on_anchor_passed_distinct_products": 0,
+      "v16_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 38
+      },
+      "v16_on_limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v16_on_products": 0,
+      "v16_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1881,
+        "catalog_stereo_perceptions": 58,
+        "combinations": 102,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 120,
+        "reaction_pool_graph_visits": 14293,
+        "reaction_pool_query_pairs": 65,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 165,
+        "reaction_pool_window_match_requests": 65,
+        "reverse_role_work": 279,
+        "route_audit_attempts": 0,
+        "rule_inspections": 512,
+        "topology_match_requests": 29,
+        "topology_spec_graph_visits": 10422,
+        "total_fingerprint_calls": 43863
+      },
+      "v17_on_anchor_passed_distinct_products": 0,
+      "v17_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 38
+      },
+      "v17_on_limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v17_on_products": 0,
+      "v17_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1613,
+        "catalog_stereo_perceptions": 52,
+        "combinations": 100,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 118,
+        "reaction_pool_graph_visits": 15102,
+        "reaction_pool_query_pairs": 72,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 186,
+        "reaction_pool_window_match_requests": 72,
+        "reverse_role_work": 283,
+        "route_audit_attempts": 0,
+        "rule_inspections": 512,
+        "topology_match_requests": 29,
+        "topology_spec_graph_visits": 10422,
+        "total_fingerprint_calls": 43192
+      },
+      "v17_preference_work": {
+        "bridge_positive_work_items": 9,
+        "bridge_role_contexts": 44,
+        "bridge_snapshot_attempts": 44,
+        "bridge_structural_units": 7570,
+        "bridge_unknown_reasons": {
+          "raw_outcome_cap_saturated": 23,
+          "raw_single_source_edited_observed": 10,
+          "raw_split_across_sources_observed": 2
+        },
+        "bridge_unknown_work_items": 35,
+        "legacy_reasons": {
+          "complete_ranked_pool_unavailable": 4
+        },
+        "outer_role_queries": 1,
+        "outer_role_queries_limit": 16,
+        "ranked_rows_limit": 65536,
+        "ranked_rows_retained": 8485,
+        "replacements": 2,
+        "role_checks": 15,
+        "role_checks_per_query_limit": 8192,
+        "role_checks_per_search_limit": 65536,
+        "role_matches": 3,
+        "samples": [
+          {
+            "first": "O=C(O)[C@H]1CC[C@@H](CO)CC1",
+            "inner_rule_id": "synllama-rule-026",
+            "inner_target": "CSc1c(-c2cncc(F)c2)c(Cl)nn1C[C@H]1CC[C@@H](COCC(=O)O)CC1",
+            "new_second": "Nc1cc(Cl)ccc1N1CCC(CO)CC1",
+            "old_second": "OCC1CCN(c2cnccn2)CC1",
+            "outer_rule_id": "synllama-rule-036",
+            "outer_slot": 1,
+            "role_checks": 6,
+            "source_slot": 0
+          },
+          {
+            "first": "O=C(CCl)N(Cc1ccc(F)cc1)C1CCCCC1",
+            "inner_rule_id": "synllama-rule-026",
+            "inner_target": "CSc1c(-c2cncc(F)c2)c(Cl)nn1C[C@H]1CC[C@@H](COCC(=O)O)CC1",
+            "new_second": "O=C(CCl)N1CCc2cc(Cl)c(Cl)cc2C1",
+            "old_second": "O=C(CCl)N(Cc1ccccc1F)C1CC1",
+            "outer_rule_id": "synllama-rule-036",
+            "outer_slot": 1,
+            "role_checks": 9,
+            "source_slot": 1
+          }
+        ],
+        "samples_omitted": 0,
+        "selected_contexts_limit": 128,
+        "stereo_rejections": 1,
+        "stereo_unknowns": 0
+      }
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products": [],
+      "gained_route_graph_sha256": [],
+      "historical_three_qualified_exact_graphs_retained": [],
+      "id": "CHEMBL3864-query-1",
+      "known_saved_all_step_matched_graphs": 0,
+      "lost_products": [],
+      "lost_route_graph_sha256": [],
+      "saved_exact_graph_forward_status_counts": {},
+      "saved_forward_associations": [],
+      "unchanged_products": [],
+      "unchanged_route_graph_sha256": [],
+      "v16_on_anchor_passed_distinct_products": 34,
+      "v16_on_first_gate_failures": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 4,
+        "hit_tanimoto": 4,
+        "polar_reference_capacity_below_minimum": 26
+      },
+      "v16_on_limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "v16_on_products": 0,
+      "v16_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 224727,
+        "catalog_stereo_atom_bond_charges": 873,
+        "catalog_stereo_perceptions": 45,
+        "combinations": 84,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 90,
+        "reaction_pool_graph_visits": 2513,
+        "reaction_pool_query_pairs": 26,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 60,
+        "reaction_pool_window_match_requests": 26,
+        "reverse_role_work": 74,
+        "route_audit_attempts": 0,
+        "rule_inspections": 512,
+        "topology_match_requests": 12,
+        "topology_spec_graph_visits": 11917,
+        "total_fingerprint_calls": 31602
+      },
+      "v17_on_anchor_passed_distinct_products": 34,
+      "v17_on_first_gate_failures": {
+        "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 4,
+        "hit_tanimoto": 4,
+        "polar_reference_capacity_below_minimum": 26
+      },
+      "v17_on_limits_reached": [
+        "max_outer_guides",
+        "max_catalog_row_visits",
+        "max_rule_inspections"
+      ],
+      "v17_on_products": 0,
+      "v17_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 224727,
+        "catalog_stereo_atom_bond_charges": 873,
+        "catalog_stereo_perceptions": 45,
+        "combinations": 84,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 90,
+        "reaction_pool_graph_visits": 2513,
+        "reaction_pool_query_pairs": 26,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 60,
+        "reaction_pool_window_match_requests": 26,
+        "reverse_role_work": 74,
+        "route_audit_attempts": 0,
+        "rule_inspections": 512,
+        "topology_match_requests": 12,
+        "topology_spec_graph_visits": 11917,
+        "total_fingerprint_calls": 31602
+      },
+      "v17_preference_work": {
+        "bridge_positive_work_items": 0,
+        "bridge_role_contexts": 12,
+        "bridge_snapshot_attempts": 8,
+        "bridge_structural_units": 921,
+        "bridge_unknown_reasons": {
+          "raw_split_across_sources_observed": 2,
+          "raw_unknown_role_not_in_parent": 10
+        },
+        "bridge_unknown_work_items": 12,
+        "legacy_reasons": {},
+        "outer_role_queries": 0,
+        "outer_role_queries_limit": 16,
+        "ranked_rows_limit": 65536,
+        "ranked_rows_retained": 0,
+        "replacements": 0,
+        "role_checks": 0,
+        "role_checks_per_query_limit": 8192,
+        "role_checks_per_search_limit": 65536,
+        "role_matches": 0,
+        "samples": [],
+        "samples_omitted": 0,
+        "selected_contexts_limit": 128,
+        "stereo_rejections": 0,
+        "stereo_unknowns": 0
+      }
+    },
+    {
+      "conditional_optimistic_possible_input": false,
+      "gained_products": [],
+      "gained_route_graph_sha256": [],
+      "historical_three_qualified_exact_graphs_retained": [],
+      "id": "CHEMBL3864-query-2",
+      "known_saved_all_step_matched_graphs": 0,
+      "lost_products": [],
+      "lost_route_graph_sha256": [],
+      "saved_exact_graph_forward_status_counts": {},
+      "saved_forward_associations": [],
+      "unchanged_products": [],
+      "unchanged_route_graph_sha256": [],
+      "v16_on_anchor_passed_distinct_products": 0,
+      "v16_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 134
+      },
+      "v16_on_limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v16_on_products": 0,
+      "v16_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 2186,
+        "catalog_stereo_perceptions": 78,
+        "combinations": 186,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 218,
+        "reaction_pool_graph_visits": 8089,
+        "reaction_pool_query_pairs": 42,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 99,
+        "reaction_pool_window_match_requests": 42,
+        "reverse_role_work": 181,
+        "route_audit_attempts": 0,
+        "rule_inspections": 512,
+        "topology_match_requests": 32,
+        "topology_spec_graph_visits": 8285,
+        "total_fingerprint_calls": 41058
+      },
+      "v17_on_anchor_passed_distinct_products": 0,
+      "v17_on_first_gate_failures": {
+        "Hit stereo anchor is missing or has ambiguous correspondence": 134
+      },
+      "v17_on_limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "v17_on_products": 0,
+      "v17_on_work": {
+        "catalog_index_rows_scanned": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 2186,
+        "catalog_stereo_perceptions": 78,
+        "combinations": 186,
+        "fallback_hit_second_tanimotos": 0,
+        "products_generated": 218,
+        "reaction_pool_graph_visits": 8089,
+        "reaction_pool_query_pairs": 42,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_site_match_requests": 99,
+        "reaction_pool_window_match_requests": 42,
+        "reverse_role_work": 181,
+        "route_audit_attempts": 0,
+        "rule_inspections": 512,
+        "topology_match_requests": 32,
+        "topology_spec_graph_visits": 8285,
+        "total_fingerprint_calls": 41058
+      },
+      "v17_preference_work": {
+        "bridge_positive_work_items": 11,
+        "bridge_role_contexts": 30,
+        "bridge_snapshot_attempts": 24,
+        "bridge_structural_units": 5426,
+        "bridge_unknown_reasons": {
+          "normalization_edited_role_site": 1,
+          "raw_outcome_cap_saturated": 7,
+          "raw_unknown_ambiguous_role_embeddings": 9,
+          "raw_unknown_role_not_in_parent": 2
+        },
+        "bridge_unknown_work_items": 19,
+        "legacy_reasons": {
+          "complete_ranked_pool_unavailable": 6
+        },
+        "outer_role_queries": 2,
+        "outer_role_queries_limit": 16,
+        "ranked_rows_limit": 65536,
+        "ranked_rows_retained": 17397,
+        "replacements": 3,
+        "role_checks": 178,
+        "role_checks_per_query_limit": 8192,
+        "role_checks_per_search_limit": 65536,
+        "role_matches": 5,
+        "samples": [
+          {
+            "first": "Cc1nc2cccc(B3OC(C)(C)C(C)(C)O3)c2c(=O)n1C",
+            "inner_rule_id": "synllama-rule-027",
+            "inner_target": "C[C@@H]1OCC2(CCN(c3nc4[nH]nc(Br)c4c(=O)n3C)CC2)[C@@H]1N",
+            "new_second": "CC1(C)OB(c2cncc(Br)c2C2OCCO2)OC1(C)C",
+            "old_second": "CC(C)(C)OC(=O)N1CCC(c2ncc(B3OC(C)(C)C(C)(C)O3)cn2)CC1",
+            "outer_rule_id": "synllama-rule-036",
+            "outer_slot": 0,
+            "role_checks": 138,
+            "source_slot": 0
+          },
+          {
+            "first": "Cn1nc([C@@H]2C[C@@H](CN)[C@@H](O)C2)n(C)c1=O",
+            "inner_rule_id": "synllama-rule-029",
+            "inner_target": "C[C@@H]1OCC2(CCN(c3nc4[nH]nc(Br)c4c(=O)n3C)CC2)[C@@H]1N",
+            "new_second": "Nc1ccc(NC(=O)CN2CCC(O)CC2)c(Br)c1",
+            "old_second": "CN1N=C(C(=O)N2CCC(O)CC2)CCC1=O",
+            "outer_rule_id": "synllama-rule-036",
+            "outer_slot": 0,
+            "role_checks": 19,
+            "source_slot": 0
+          },
+          {
+            "first": "Cn1nc([C@@H]2C[C@@H](CN)[C@@H](O)C2)n(C)c1=O",
+            "inner_rule_id": "synllama-rule-031",
+            "inner_target": "C[C@@H]1OCC2(CCN(c3nc4[nH]nc(Br)c4c(=O)n3C)CC2)[C@@H]1N",
+            "new_second": "Nc1ccc(NC(=O)CN2CCC(O)CC2)c(Br)c1",
+            "old_second": "CN1N=C(C(=O)N2CCC(O)CC2)CCC1=O",
+            "outer_rule_id": "synllama-rule-036",
+            "outer_slot": 0,
+            "role_checks": 19,
+            "source_slot": 0
+          }
+        ],
+        "samples_omitted": 0,
+        "selected_contexts_limit": 128,
+        "stereo_rejections": 0,
+        "stereo_unknowns": 0
+      }
+    }
+  ],
+  "aromatic_query_flag_corrections_by_input": {
+    "CHEMBL4630839-query-1": {},
+    "CHEMBL4630839-query-2": {},
+    "CHEMBL4247-query-1": {},
+    "CHEMBL4247-query-2": {},
+    "CHEMBL5163-query-1": {},
+    "CHEMBL5163-query-2": {},
+    "CHEMBL3334418-query-1": {},
+    "CHEMBL3334418-query-2": {},
+    "CHEMBL4869-query-1": {
+      "reset_product_aromatic_query_flags": 32
+    },
+    "CHEMBL4869-query-2": {
+      "reset_product_aromatic_query_flags": 32
+    },
+    "CHEMBL3864-query-1": {},
+    "CHEMBL3864-query-2": {}
+  },
+  "new_atomic_flag_corrections_total": 64,
+  "baseline_runtime_sha256": "ac1b0da44c0aaee4a85f96a5e3a7ab9dd0d189c5bce25d2e979ea75c6b5fbccc",
+  "source_sha256": {
+    "chembounce_synthesis/route_first.py": "70e3863a6fc80b582d6f21f3a895e8b3ca7cd34a8fa5af91fdbaa63660482791",
+    "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+    "chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+    "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329"
+  },
+  "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+  "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+  "validation": {
+    "all12_inputs_terminal": true,
+    "terminal_exit_code": 0,
+    "analysis_exit_code": 0,
+    "all_config_manifest_preflights_before_catalog": true,
+    "all_saved_cap_checks_passed": true,
+    "source_harness_plan_before_after_unchanged": true,
+    "astra_harness_analyzer_outcome_review": "PASS",
+    "exact_product_pairs_retained": 58,
+    "exact_route_graphs_retained": 65,
+    "product_pairs_gained": 0,
+    "product_pairs_lost": 0,
+    "route_graphs_gained": 0,
+    "route_graphs_lost": 0,
+    "historical_qualified_products_and_graphs_retained": 3
+  },
+  "work_interpretation": {
+    "new_model_calls": 0,
+    "new_three_dimensional_calls": 0,
+    "generation_seconds_excluding_shared_catalog": 560.412,
+    "historical_v16_on_generation_seconds": 555.341,
+    "timing": "Separate historical/current observations; no causal speed claim.",
+    "fingerprints": "The65536 per-search search-accounted cap is unchanged; inherited diagnostic fingerprint work is additional and count-dependent."
+  },
+  "decision": {
+    "p1_complete": false,
+    "primary_actual_supported_inputs": 4,
+    "primary_actual_baseline_supported_inputs": 5,
+    "denominator": 12,
+    "pre_evidence_inputs": 6,
+    "conditional_optimistic_supported_input_bound": 5,
+    "run_full_model_or_3d_comparison": false,
+    "retain_generic_hint_repair": true,
+    "retain_reason": "A copy-only normalization defect is corrected, with focused tests and exact candidate/route preservation; no eligible-supply gain on this panel.",
+    "develop_merge": false,
+    "next_step": "Trace the two affected inputs passively by rule062 work item: selected source IDs/role slots, actual inner products and outer-role outcomes; observe joint ring class after generation and assert exact v17 products/graphs. If a selected role is empty, a bounded role-plus-joint-class catalog inventory can distinguish source absence from retrieval loss. No ranking change based on aggregate traces."
+  },
+  "limitations": [
+    "Phase2 traces aggregate inner rules and cannot identify individual rule062 leaves/intermediates or prove source absence.",
+    "The optimistic bound is conditional on unchanged pinned saved forward inference; it is not a new measured5/12 or chemical impossibility proof.",
+    "The three historical qualified candidates are preserved, not newly scored or qualified.",
+    "This is a reused development panel, not held-out validation."
+  ],
+  "artifacts_sha256": {
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v17/probe.py": "88c3a7449f92254e3654291bafd2a4502869026df6316c342f12aad7c077d610",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v17/plan-draft.json": "fec7946fcb414508523f30dbe979eff4c73a518c4dfa7df681a6a2bc89ffd466",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v17/plan.json": "9d9ceab1a65c094a31ce261d1586570d3d8fccd1b7a0191d157df0ad8f1bc92d",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v17/result.json": "f86e0d441e8e9f9d759476febba4d6a92b8acd831a9dfda06a7df6366983f56e",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v17/analyze.py": "4d334748e31d45f66c6558e338ed84d0323e18c186697e07f89cd474e43b3061",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v17/analysis-plan-draft.json": "53c7579b7506db7d062a88f7d1f65518bdea5c5f661d8a938389a42c5534fa23",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v17/analysis-plan-preexecution.json": "ac9e71d98417eaa6a421314cc477d681d31ae57c39f5ea5d7e15b844daab4682",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v17/analysis-plan.json": "6fe77de5052f71ea226451ff3852a06e6ee66119c4de541ffc04d3525ac4fe4c",
+    "benchmark-results/route-first-development-20261023-v2/development-probe-v17/analysis.json": "d0ca18f6685bcdac92a6a8d696bb9fb423cb04a086fb5c19d20e2f16e8c1d8e7"
+  },
+  "analysis_entry_bindings": {
+    "analysis_plan": "6fe77de5052f71ea226451ff3852a06e6ee66119c4de541ffc04d3525ac4fe4c",
+    "analyzer": "4d334748e31d45f66c6558e338ed84d0323e18c186697e07f89cd474e43b3061",
+    "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+    "manifest/CHEMBL3334418-query-1": "6b12dae1b5d50308a4f785ba393de1eba27ed2756923fafa59fc20571d0fe812",
+    "manifest/CHEMBL3334418-query-2": "c8d906d4231bf602ec241be4ec7ff946b25b2cdfb133eb44f1f49eb262a5b911",
+    "manifest/CHEMBL3864-query-1": "4a968e55ab7c40947beee7db5cdcee24b35e04253feb1faf379007d12eaf525b",
+    "manifest/CHEMBL3864-query-2": "b038c40adf103153dd78182be09cb9c2ee3258e05a5eff7dc8837ebabeb04fc0",
+    "manifest/CHEMBL4247-query-1": "500fda8ed7a5dbc447fe8b9aa1f6ea85c97ac8d389eebf089b919360aa6371cb",
+    "manifest/CHEMBL4247-query-2": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+    "manifest/CHEMBL4630839-query-1": "4550b2df1b553049fb94a78835fec0544cca3980c044823ad0e9cbc51f521739",
+    "manifest/CHEMBL4630839-query-2": "b8d631a17140f78af64e6ce4f188c5b64aa1f74d5cc6b8acaaaed07f440a10cc",
+    "manifest/CHEMBL4869-query-1": "1669db70ff4d09c9a93d586d872d256d3482e10c6e729c7637f15a176eab262d",
+    "manifest/CHEMBL4869-query-2": "7c4ef94083ab953bb45c9651f3bb80d5d00cbff155849752ec2135655f0ede7b",
+    "manifest/CHEMBL5163-query-1": "cf83f89e9df2e11ccc259628a9f7b59aee066c2f64e4a01a2eda829922926baf",
+    "manifest/CHEMBL5163-query-2": "53066839233b041e4d65b62284a722b995a9ab08c65692cb83ae8f479f335145",
+    "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+    "probe": "88c3a7449f92254e3654291bafd2a4502869026df6316c342f12aad7c077d610",
+    "probe_plan": "9d9ceab1a65c094a31ce261d1586570d3d8fccd1b7a0191d157df0ad8f1bc92d",
+    "qualified_decisions": "2c4a82e7b026a677e19459571e8f118d114c7b3af528900fd11b43c2964ebb6d",
+    "qualified_routes": "1ff0add0858c41471ba2ae46bfe0e7442402ff80e77e19a094c6055a7f0be280",
+    "saved_forward": "35ccdaa4779cb3925b370cb454a5aacbc9b4a80cdac72e5e08f0da030bf29395",
+    "source/chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+    "source/chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+    "source/chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+    "source/chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+    "source/chembounce_synthesis/route_first.py": "70e3863a6fc80b582d6f21f3a895e8b3ca7cd34a8fa5af91fdbaa63660482791",
+    "source/chembounce_synthesis/workflow.py": "bed15cb634abc67e9c9bfa8ddf578b8e26076d8308e1d74c19eb3d68d929df1e",
+    "v14_result": "4100f420a4d536ff2a4fff66f0ad01061257a16d941c98446e8fbb3437807c63",
+    "v16_analyzer": "8c8129895d4272256dd2110a29590ad1c89237044436ca016aef6edaac2c36db",
+    "v16_result": "1ab2c75a19d4b94f47ef4bb6aa3af9a148a6dc901ff3e97d2b3decab6afe7ad2",
+    "v17_result": "f86e0d441e8e9f9d759476febba4d6a92b8acd831a9dfda06a7df6366983f56e"
+  }
+}
