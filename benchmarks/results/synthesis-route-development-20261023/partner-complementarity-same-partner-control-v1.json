@@ -1,0 +1,534 @@
+{
+  "artifacts": {
+    "execution.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/partner-complementarity-same-partner-control-v1/execution.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/partner-complementarity-same-partner-control-v1/plan.json",
+      "sha256": "64ac90a2eb2840f78d187d0fe338c586657eb502a1d0f0c4414ce697785c1283"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/partner-complementarity-same-partner-control-v1/probe.py",
+      "sha256": "110dd56841771fe114373cb38547459e7fdd47cf600f87456c6b6439feeaac1d"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/partner-complementarity-same-partner-control-v1/result.json",
+      "sha256": "ec63e5246ed60df3a02a7fb0f510def7c3c39c899725c55137694f1f4c9e6345"
+    },
+    "source-lookup.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/partner-complementarity-same-partner-control-v1/source-lookup.json",
+      "sha256": "c30137810d68d869f71ed5355e31cb1563652f7c243daa4fcc5fc26e4f5e8912"
+    }
+  },
+  "execution": {
+    "retries": 0,
+    "session_id": 89466,
+    "terminal_exit_code": 0
+  },
+  "interpretation": {
+    "controls": "Both old fixed controls are inherited from the bound closed prior result after exact graph/ordered-reactant/asset checks, not freshly generated or gated.",
+    "costs": "Prior exact-string TSV lookup238542 rows is disclosed separately. Runtime Rules load1, generation apply1/cache miss1, retained product1, hitFP1+admissionFP1 and independent diagnosticFP1, polar requests2/evaluations1/cachehit1. Catalog loads0; verify/audit0; model/3D0. Source-selection costs remain in the separate selection receipt.",
+    "fixed_scope": "One source fixed before chemistry at original ordinary rank30 in the historical complete8192-row pool, one existing v20 inner partner. No claim of current production pool parity or held-out generalization.",
+    "product": "One retained exact product, no truncation. Only original-hit bit Tanimoto fails:0.3113207547169811<0.35. Polar capacity upper-bound recall9/10=.9; anchors, scaffold/core, specified stereo, typed preflight and properties pass; no unassessed gate component.",
+    "support": "Gate failure prevented strict full-route replay/audit and actual forward/3D evaluation. No new supported route or qualified candidate. Actual P1 remains4/12 versus baseline5/12; v20 conditional support upper bound remains5/12. Production policy unchanged; P1 incomplete.",
+    "surrogate": "Improved reactant-fingerprint union score did not produce an eligible final product. This surrogate is not an actual product score or lower bound. The single fixed variant is closed; no next source, score formula, or weight adjustment."
+  },
+  "protocol": {
+    "bound_sha256": {
+      "audit_source": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+      "catalog_source": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+      "catalog_tsv": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "closed_old_control_plan": "fa5cf7323b106455505cadf8de746b86848bf80be1ad2a781cff66da649862a2",
+      "closed_old_control_result": "0325c06f96a399f15985d2108847781d8922fa4689bef918f9ef67a24c1ceb12",
+      "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "config": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9",
+      "conformer_source": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "fixed_selection_plan": "4ad8e28350ff76615aa7d3bd7c9d16f5108a71c94acfb6fd23fddaf86ba1ebde",
+      "fixed_selection_result": "373351ba8c303106e42efcedee310072b52cc123be1b811530e255e24e2786e3",
+      "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "polar_source": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "probe": "110dd56841771fe114373cb38547459e7fdd47cf600f87456c6b6439feeaac1d",
+      "reactions_source": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "reviewed_gate_helpers": "22edb55082d15c691e086b8e6a5d169fd8ef184a0b8cdbb43e9fa452c7039825",
+      "route_first_source": "a4976fe90f3ba31dc4aea6b2081d54ab1b9b7e98083d127b47ed29164ada8177",
+      "routes_source": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+      "rules_asset": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "selective_scoring_source": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "similarity_constraints_source": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "source_lookup": "c30137810d68d869f71ed5355e31cb1563652f7c243daa4fcc5fc26e4f5e8912",
+      "utils_source": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3",
+      "v20_result": "b391aa4a4cad33d62e28fa40e66dd663e4847bb49d20dfd3cfa84c4af8a7e918",
+      "workflow_source": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9"
+    },
+    "caps": {
+      "deadline_seconds": 960,
+      "fingerprint_calls": 17,
+      "gate_product_instances": 16,
+      "generation_calls": 1,
+      "generation_product_limit": 16,
+      "generation_raw_tuple_sentinel_per_call": 17,
+      "independent_atoms_per_molecule": 256,
+      "independent_bonds_per_molecule": 512,
+      "independent_fingerprints": 16,
+      "independent_vectors": 16,
+      "retained_product_instances": 16,
+      "strict_audits": 16,
+      "strict_product_limit": 64,
+      "total_polar_requests": 32
+    },
+    "decision": "One source only. If no gate-passing product, close this variant; no second witness, score adjustment, rank walk, model, or 3D. A passing gate permits only unchanged strict verify/audit64 and remains pre-evidence.",
+    "effective_config_sha256": "452f7a048f037da81e77890d15a2d14ca24cd5564190a478af7b02a8e7ceeefe",
+    "fixed_inner_product": "Cc1cnn2c(Cl)cc(-c3ccccc3S(C)(=O)=O)nc12",
+    "fixed_new_source_id": "structure-sha256:9c132071740ae3af8b9b88fa8077b537bf56e587d36d2345c5fce8bb3d56563b",
+    "fixed_new_source_original_group_rank": 30,
+    "fixed_new_source_smiles": "COc1cc(N)ccc1NC(N)=O",
+    "fixed_new_source_union_tanimoto": 0.29906542056074764,
+    "input_id": "CHEMBL4247-query-2",
+    "old_first_smiles": "COc1cc(C(N)=O)ccc1N",
+    "old_pending_graph_sha256": [
+      "34d7add6626cd3586a966c207f7b05d1c471ffaaaf7f84657fafef7088b04db8",
+      "d2a3ce54ec831d0d0bff2551068d9395f9aad534ac90f77b5f2738581d84dc1e"
+    ],
+    "old_pending_indices": [
+      18,
+      19
+    ],
+    "old_source_smiles": [
+      "COc1cc(C(N)=O)ccc1N",
+      "COc1cc(CC(=O)O)ccc1N"
+    ],
+    "outer_rule_id": "synllama-rule-042",
+    "paths": {
+      "audit_source": "chembounce_synthesis/route_audit.py",
+      "catalog_manifest": "benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv.manifest.json",
+      "catalog_source": "chembounce_synthesis/catalog.py",
+      "catalog_tsv": "benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv",
+      "closed_old_control_plan": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-same-partner-control-v1/plan.json",
+      "closed_old_control_result": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-same-partner-control-v1/result.json",
+      "common_source": "chembounce_synthesis/common.py",
+      "config": "benchmark-results/route-first-development-20261023-v2/route-first-config.json",
+      "conformer_source": "chembounce_synthesis/conformers.py",
+      "fixed_selection_plan": "benchmark-results/route-first-development-20261023-v2/partner-complementarity-control-v1/plan.json",
+      "fixed_selection_result": "benchmark-results/route-first-development-20261023-v2/partner-complementarity-control-v1/result.json",
+      "manifest": "benchmark-results/route-first-development-20261023/route_first/runs/CHEMBL4247-query-2/synthesis/manifest.json",
+      "panel": "benchmark-results/route-first-development-20261023-v2/panel.json",
+      "polar_source": "chembounce_synthesis/polar_capacity.py",
+      "probe": "benchmark-results/route-first-development-20261023-v2/partner-complementarity-same-partner-control-v1/probe.py",
+      "reactions_source": "chembounce_synthesis/reactions.py",
+      "reviewed_gate_helpers": "benchmark-results/route-first-development-20261023-v2/spectator-ring-core-same-partner-control-v1/probe.py",
+      "route_first_source": "chembounce_synthesis/route_first.py",
+      "routes_source": "chembounce_synthesis/routes.py",
+      "rules_asset": ".chembounce-data-synthesis/rules.json",
+      "selective_scoring_source": "chembounce_synthesis/selective_scoring.py",
+      "similarity_constraints_source": "chembounce_synthesis/similarity_constraints.py",
+      "source_lookup": "benchmark-results/route-first-development-20261023-v2/partner-complementarity-same-partner-control-v1/source-lookup.json",
+      "utils_source": "utils.py",
+      "v20_result": "benchmark-results/route-first-development-20261023-v2/development-probe-v20/result.json",
+      "workflow_source": "chembounce_synthesis/workflow.py"
+    },
+    "purpose": "Test exactly one source fixed before chemistry by Tanimoto(H,I|C) in a historical complete pool. The old two controls are archived parity only. This is development evidence, not actual-panel or model support.",
+    "rdkit_version": "2025.09.6",
+    "review": "root_and_astra_pass_before_execution",
+    "reviewed_draft_sha256": "3da6866851e73f12e70e71d4f489b30128f7325805aa0a5a6f50c8725027d585",
+    "schema": "partner-complementarity-same-partner-control-draft-v1",
+    "scope": {
+      "archived_old_controls_only_no_old_generation": true,
+      "catalog_constructor_only_if_new_product_passes_all_original_gates": true,
+      "independent_original_gate_vector_for_every_new_product": true,
+      "known_outcome_selected_development_control": true,
+      "no_forward_model": true,
+      "no_three_dimensional_generation": true,
+      "one_new_source_fixed_by_completed_selection": true,
+      "one_rules_generation_call_max": true,
+      "source_lookup_tsv_rows_read_prior": 238542
+    },
+    "status": "frozen_preexecution"
+  },
+  "result": {
+    "elapsed_seconds": 0.7243457464501262,
+    "entry_sha256": {
+      "audit_source": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+      "catalog_source": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+      "catalog_tsv": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "closed_old_control_plan": "fa5cf7323b106455505cadf8de746b86848bf80be1ad2a781cff66da649862a2",
+      "closed_old_control_result": "0325c06f96a399f15985d2108847781d8922fa4689bef918f9ef67a24c1ceb12",
+      "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "config": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9",
+      "conformer_source": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "fixed_selection_plan": "4ad8e28350ff76615aa7d3bd7c9d16f5108a71c94acfb6fd23fddaf86ba1ebde",
+      "fixed_selection_result": "373351ba8c303106e42efcedee310072b52cc123be1b811530e255e24e2786e3",
+      "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "polar_source": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "probe": "110dd56841771fe114373cb38547459e7fdd47cf600f87456c6b6439feeaac1d",
+      "reactions_source": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "reviewed_gate_helpers": "22edb55082d15c691e086b8e6a5d169fd8ef184a0b8cdbb43e9fa452c7039825",
+      "route_first_source": "a4976fe90f3ba31dc4aea6b2081d54ab1b9b7e98083d127b47ed29164ada8177",
+      "routes_source": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+      "rules_asset": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "selective_scoring_source": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "similarity_constraints_source": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "source_lookup": "c30137810d68d869f71ed5355e31cb1563652f7c243daa4fcc5fc26e4f5e8912",
+      "utils_source": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3",
+      "v20_result": "b391aa4a4cad33d62e28fa40e66dd663e4847bb49d20dfd3cfa84c4af8a7e918",
+      "workflow_source": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9"
+    },
+    "error": null,
+    "exit_sha256": {
+      "audit_source": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+      "catalog_source": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+      "catalog_tsv": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "closed_old_control_plan": "fa5cf7323b106455505cadf8de746b86848bf80be1ad2a781cff66da649862a2",
+      "closed_old_control_result": "0325c06f96a399f15985d2108847781d8922fa4689bef918f9ef67a24c1ceb12",
+      "common_source": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "config": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9",
+      "conformer_source": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "fixed_selection_plan": "4ad8e28350ff76615aa7d3bd7c9d16f5108a71c94acfb6fd23fddaf86ba1ebde",
+      "fixed_selection_result": "373351ba8c303106e42efcedee310072b52cc123be1b811530e255e24e2786e3",
+      "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "polar_source": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "probe": "110dd56841771fe114373cb38547459e7fdd47cf600f87456c6b6439feeaac1d",
+      "reactions_source": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "reviewed_gate_helpers": "22edb55082d15c691e086b8e6a5d169fd8ef184a0b8cdbb43e9fa452c7039825",
+      "route_first_source": "a4976fe90f3ba31dc4aea6b2081d54ab1b9b7e98083d127b47ed29164ada8177",
+      "routes_source": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+      "rules_asset": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "selective_scoring_source": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "similarity_constraints_source": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "source_lookup": "c30137810d68d869f71ed5355e31cb1563652f7c243daa4fcc5fc26e4f5e8912",
+      "utils_source": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3",
+      "v20_result": "b391aa4a4cad33d62e28fa40e66dd663e4847bb49d20dfd3cfa84c4af8a7e918",
+      "workflow_source": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9"
+    },
+    "new_source": {
+      "candidates": [
+        {
+          "audit": null,
+          "independent_vector": {
+            "status": "complete_vector",
+            "vector": {
+              "anchor": {
+                "status": "passed",
+                "value": null
+              },
+              "hit_bit_tanimoto": {
+                "margin": -0.03867924528301886,
+                "minimum": 0.35,
+                "score": 0.3113207547169811,
+                "status": "failed"
+              },
+              "polar_capacity": {
+                "authoritative_gate_blocked": false,
+                "missing_feature_families": {
+                  "PosIonizable": 1
+                },
+                "status": "passed",
+                "value": {
+                  "candidate_counts": {
+                    "Acceptor": 6,
+                    "Donor": 3
+                  },
+                  "constraint_policy_sha256": "7042c736df62f4bc7a116a37dbae698a9860dc85aa4a5f7aac2c78fbc6b2b4da",
+                  "denominator": 10,
+                  "eligible": true,
+                  "minimum_polar_reference_recall": 0.75,
+                  "numerator": 9,
+                  "product": "COc1cc(Nc2cc(-c3ccccc3S(C)(=O)=O)nc3c(C)cnn23)ccc1NC(N)=O",
+                  "reason": null,
+                  "recall_upper_bound": 0.9,
+                  "reference_counts": {
+                    "Acceptor": 6,
+                    "Donor": 3,
+                    "PosIonizable": 1
+                  },
+                  "status": "possible"
+                }
+              },
+              "properties": {
+                "reasons": [],
+                "status": "passed"
+              },
+              "scaffold_and_core": {
+                "status": "passed",
+                "value": null
+              },
+              "specified_stereo": {
+                "status": "passed",
+                "value": 0
+              },
+              "typed_preflight": {
+                "status": "passed",
+                "value": null
+              }
+            }
+          },
+          "pre_evidence_gate": {
+            "fingerprint_calls": 1,
+            "hit_bit_tanimoto": 0.3113207547169811,
+            "passed": false,
+            "reason": "hit_tanimoto"
+          },
+          "product": "COc1cc(Nc2cc(-c3ccccc3S(C)(=O)=O)nc3c(C)cnn23)ccc1NC(N)=O",
+          "verification": null
+        }
+      ],
+      "ordered_reactants": [
+        "Cc1cnn2c(Cl)cc(-c3ccccc3S(C)(=O)=O)nc12",
+        "COc1cc(N)ccc1NC(N)=O"
+      ],
+      "products": [
+        "COc1cc(Nc2cc(-c3ccccc3S(C)(=O)=O)nc3c(C)cnn23)ccc1NC(N)=O"
+      ],
+      "source_id": "structure-sha256:9c132071740ae3af8b9b88fa8077b537bf56e587d36d2345c5fce8bb3d56563b",
+      "source_smiles": "COc1cc(N)ccc1NC(N)=O",
+      "truncated": false
+    },
+    "old_controls_reused": [
+      {
+        "gates": [
+          {
+            "fingerprint_calls": 1,
+            "hit_bit_tanimoto": 0.3269230769230769,
+            "independent_vector": {
+              "status": "complete_vector",
+              "vector": {
+                "anchor": {
+                  "status": "passed",
+                  "value": null
+                },
+                "hit_bit_tanimoto": {
+                  "margin": -0.02307692307692305,
+                  "minimum": 0.35,
+                  "score": 0.3269230769230769,
+                  "status": "failed"
+                },
+                "polar_capacity": {
+                  "authoritative_gate_blocked": false,
+                  "missing_feature_families": {
+                    "Donor": 1,
+                    "PosIonizable": 1
+                  },
+                  "status": "passed",
+                  "value": {
+                    "candidate_counts": {
+                      "Acceptor": 6,
+                      "Donor": 2
+                    },
+                    "constraint_policy_sha256": "7042c736df62f4bc7a116a37dbae698a9860dc85aa4a5f7aac2c78fbc6b2b4da",
+                    "denominator": 10,
+                    "eligible": true,
+                    "minimum_polar_reference_recall": 0.75,
+                    "numerator": 8,
+                    "product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12",
+                    "reason": null,
+                    "recall_upper_bound": 0.8,
+                    "reference_counts": {
+                      "Acceptor": 6,
+                      "Donor": 3,
+                      "PosIonizable": 1
+                    },
+                    "status": "possible"
+                  }
+                },
+                "properties": {
+                  "reasons": [],
+                  "status": "passed"
+                },
+                "scaffold_and_core": {
+                  "status": "passed",
+                  "value": null
+                },
+                "specified_stereo": {
+                  "status": "passed",
+                  "value": 0
+                },
+                "typed_preflight": {
+                  "status": "passed",
+                  "value": null
+                }
+              }
+            },
+            "passed": false,
+            "product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12",
+            "reason": "hit_tanimoto"
+          }
+        ],
+        "ordered_reactants": [
+          "Cc1cnn2c(Cl)cc(-c3ccccc3S(C)(=O)=O)nc12",
+          "COc1cc(C(N)=O)ccc1N"
+        ],
+        "pending_index": 18,
+        "products": [
+          "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12"
+        ],
+        "truncated": false
+      },
+      {
+        "gates": [
+          {
+            "fingerprint_calls": 1,
+            "hit_bit_tanimoto": 0.308411214953271,
+            "independent_vector": {
+              "status": "complete_vector",
+              "vector": {
+                "anchor": {
+                  "status": "passed",
+                  "value": null
+                },
+                "hit_bit_tanimoto": {
+                  "margin": -0.04158878504672897,
+                  "minimum": 0.35,
+                  "score": 0.308411214953271,
+                  "status": "failed"
+                },
+                "polar_capacity": {
+                  "authoritative_gate_blocked": false,
+                  "missing_feature_families": {
+                    "Donor": 1,
+                    "PosIonizable": 1
+                  },
+                  "status": "passed",
+                  "value": {
+                    "candidate_counts": {
+                      "Acceptor": 7,
+                      "Donor": 2,
+                      "NegIonizable": 1
+                    },
+                    "constraint_policy_sha256": "7042c736df62f4bc7a116a37dbae698a9860dc85aa4a5f7aac2c78fbc6b2b4da",
+                    "denominator": 10,
+                    "eligible": true,
+                    "minimum_polar_reference_recall": 0.75,
+                    "numerator": 8,
+                    "product": "COc1cc(CC(=O)O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12",
+                    "reason": null,
+                    "recall_upper_bound": 0.8,
+                    "reference_counts": {
+                      "Acceptor": 6,
+                      "Donor": 3,
+                      "PosIonizable": 1
+                    },
+                    "status": "possible"
+                  }
+                },
+                "properties": {
+                  "reasons": [],
+                  "status": "passed"
+                },
+                "scaffold_and_core": {
+                  "status": "passed",
+                  "value": null
+                },
+                "specified_stereo": {
+                  "status": "passed",
+                  "value": 0
+                },
+                "typed_preflight": {
+                  "status": "passed",
+                  "value": null
+                }
+              }
+            },
+            "passed": false,
+            "product": "COc1cc(CC(=O)O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12",
+            "reason": "hit_tanimoto"
+          }
+        ],
+        "ordered_reactants": [
+          "Cc1cnn2c(Cl)cc(-c3ccccc3S(C)(=O)=O)nc12",
+          "COc1cc(CC(=O)O)ccc1N"
+        ],
+        "pending_index": 19,
+        "products": [
+          "COc1cc(CC(=O)O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)nc2c(C)cnn12"
+        ],
+        "truncated": false
+      }
+    ],
+    "plan_sha256_at_entry": "64ac90a2eb2840f78d187d0fe338c586657eb502a1d0f0c4414ce697785c1283",
+    "plan_sha256_at_exit": "64ac90a2eb2840f78d187d0fe338c586657eb502a1d0f0c4414ce697785c1283",
+    "preparatory_tsv_lookup": {
+      "canonical_rows_scanned": 238542,
+      "catalog_tsv_path": "benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv",
+      "catalog_tsv_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "exact_matches": [
+        "structure-sha256:9c132071740ae3af8b9b88fa8077b537bf56e587d36d2345c5fce8bb3d56563b"
+      ],
+      "method": "one read-only exact-SMILES TSV stream; no Catalog constructor or chemistry",
+      "query_smiles": "COc1cc(N)ccc1NC(N)=O",
+      "schema": "fixed-source-tsv-lookup-v1"
+    },
+    "schema": "partner-complementarity-same-partner-control-v1",
+    "selection": {
+      "chosen_group_rank": 30,
+      "chosen_second": "COc1cc(N)ccc1NC(N)=O",
+      "chosen_union_tanimoto": 0.29906542056074764,
+      "first": "COc1cc(C(N)=O)ccc1N",
+      "old_second": "COc1cc(CC(=O)O)ccc1N",
+      "old_second_union_tanimoto": 0.25,
+      "reason": null,
+      "source_eligibility_checks": 1,
+      "source_fp_attempts": 8191,
+      "status": "replacement",
+      "union_tanimotos": 8191
+    },
+    "status": "complete",
+    "work": {
+      "audit_apply_attempts": 0,
+      "audit_apply_cache_misses": 0,
+      "audit_route_attempts": 0,
+      "catalog_load_attempts": 0,
+      "configured_constraints_attempts": 1,
+      "gate_anchor_checks": 1,
+      "gate_attempts": 1,
+      "gate_fingerprint_calls": 1,
+      "gate_polar_checks": 1,
+      "gate_property_checks": 1,
+      "gate_scaffold_checks": 1,
+      "gate_stereo_checks": 1,
+      "gate_typed_preflights": 1,
+      "generation_apply_attempts": 1,
+      "generation_apply_cache_misses": 1,
+      "generation_retained_product_instances": 1,
+      "generation_truncated_calls": 0,
+      "hit_fingerprint_attempts": 1,
+      "independent_component_attempts": {
+        "anchor": 1,
+        "polar_capacity": 1,
+        "properties": 1,
+        "scaffold_and_core": 1,
+        "specified_stereo": 1,
+        "typed_preflight": 1
+      },
+      "independent_fingerprint_attempts": 1,
+      "independent_parse_attempts": 1,
+      "independent_vector_attempts": 1,
+      "polar_counts": {
+        "cache_hits": 1,
+        "capacity_rejections": 0,
+        "deadline_events": 0,
+        "evaluations": 1,
+        "evictions": 0,
+        "preflight_failures": 0,
+        "requests": 2
+      },
+      "prior_tsv_rows_read": 238542,
+      "rules_load_attempts": 1,
+      "verification_apply_attempts": 0,
+      "verification_apply_cache_misses": 0,
+      "verify_route_attempts": 0
+    }
+  },
+  "review": {
+    "outcome": "root and Astra PASS: complete result, unchanged26bindings, one generated product and full independent gate vector, inherited old controls correctly labeled reused",
+    "preexecution": "root and Astra PASS on draft3da6866851e73f12e70e71d4f489b30128f7325805aa0a5a6f50c8725027d585 before freeze"
+  },
+  "schema": "partner-complementarity-same-partner-control-receipt-v1",
+  "source_commit": "55ca91378488dc84aa2deed86711c2e947eaa145",
+  "status": "adaptive_development_control_complete_variant_closed"
+}
