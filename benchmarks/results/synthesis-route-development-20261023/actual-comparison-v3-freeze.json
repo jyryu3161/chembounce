@@ -1,0 +1,324 @@
+{
+  "artifacts": {
+    "analyze_comparison.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/analyze_comparison.py",
+      "sha256": "77486422de93f8494156b6cc1b577128a71d9d43fe9373812ad1aa53007bc041"
+    },
+    "freeze-preflight.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/freeze-preflight.json",
+      "sha256": "c99af98269ca156fd4ac2d7e386d11f91b4a32c2304197c88d4b489815277c03"
+    },
+    "panel.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/panel.json",
+      "sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5"
+    },
+    "preexecution-review.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/preexecution-review.json",
+      "sha256": "4e0e257dda239e433ebd087b3e7e839aadfe2f4b4199924a080c0a78c9fa52e4"
+    },
+    "protocol.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/protocol.json",
+      "sha256": "c496e87d5d97f56acdd9a9a480765fbca99354c92696962f206192ba2c869f27"
+    },
+    "route-first-config.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/route-first-config.json",
+      "sha256": "c69dab942e51e8b3f5003eb55aba1f6cc5466c77dd5d98cdeb2e347437bc8c1d"
+    },
+    "run_comparison.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/run_comparison.py",
+      "sha256": "7f22ecca6584e0443b82f21e387f15ff0ebbf05b4dfa63fbabf7b966575d0623"
+    },
+    "test_integrity.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/test_integrity.py",
+      "sha256": "17773a4138b404a7ea522750ee77d85e4e4c7ba1680d6aa213f1e5973c012d85"
+    }
+  },
+  "entry_basis": "v23 exact graph/first-three retained saved support on6 inputs, historical4input support+3qualified graphs andNHpositive retained; not current primary success.",
+  "execution_policy": "One fresh fixed12 treatment run; original bound baseline reused; no scientific retry or post-outcome source/gate/cap change. All terminal/error/unstarted records retained.",
+  "p1_before_run": {
+    "baseline_supported_inputs": 5,
+    "complete": false,
+    "latest_actual_supported_inputs": 4,
+    "panel_inputs": 12,
+    "required_supported_inputs": 6
+  },
+  "preexecution_review": {
+    "analyzer_sha256": "77486422de93f8494156b6cc1b577128a71d9d43fe9373812ad1aa53007bc041",
+    "checks": "Exact source/config/model/asset/historical artifact bindings; validated six-input prospective support and historical retention; original common budgets and primary/qualification separation; failure-preserving execution and analysis",
+    "entry_analysis_sha256": "10a2e2fd692b4e68b401b7f192e1a4f4f7cb3bfa1fcec1ffd1fc6856c6eda0cb",
+    "execution_authorization": "One fixed12 treatment run under existing user task; historical baseline reused, no retries or candidate/gate/cap tuning",
+    "full_suite_validation_sha256": "9bd53e19082bc57672797ee8510df81ec0c37ff9cb8e49cf3cded5bdabaf0645",
+    "protocol_binding_scheme": "Canonical sorted compact protocol JSON excluding only status/frozen_utc and the entry_evidence preexecution_review/reviewed_protocol_sha256 self-references",
+    "protocol_sha256": "13e5f357297feae9384771a4c1d9056bdaf8e86dbb8dc52a93328c3be13a12f9",
+    "reviewed_draft_file_sha256": "9f6b056a1bba6cd1d30c4ff4203dc601bd26cf5227b496d780e6b1f299927b42",
+    "reviewers": [
+      "root",
+      "Astra"
+    ],
+    "runner_sha256": "7f22ecca6584e0443b82f21e387f15ff0ebbf05b4dfa63fbabf7b966575d0623",
+    "schema": "route-first-actual-v3-preexecution-review-v1",
+    "source_commit": "9989230e6b2a4ad6a7d1c7eb08fe4c331075b264",
+    "status": "approved",
+    "v23_result_sha256": "4d9a15671044fc943ebeb8496e6502c3d9954a8409379182026a0ddfa8e89d7f",
+    "validation": "2 static integrity tests, runner/analyzer check-only and Ruff passed; production full suite3686passed76skipped19subtests0failures"
+  },
+  "preflight": {
+    "model_calls": 0,
+    "protocol_review_digest": "13e5f357297feae9384771a4c1d9056bdaf8e86dbb8dc52a93328c3be13a12f9",
+    "protocol_sha256": "c496e87d5d97f56acdd9a9a480765fbca99354c92696962f206192ba2c869f27",
+    "queries": 12,
+    "review_sha256": "4e0e257dda239e433ebd087b3e7e839aadfe2f4b4199924a080c0a78c9fa52e4",
+    "status": "passed_read_only",
+    "three_d_calls": 0
+  },
+  "protocol": {
+    "adoption_rule": "Primary count must exceed the paired baseline under the fixed declared caps; all unknown/timeout/error inputs reported explicitly, never imputed as zero. Final qualified results reported separately. No threshold relaxation.",
+    "analysis_script_sha256": "77486422de93f8494156b6cc1b577128a71d9d43fe9373812ad1aa53007bc041",
+    "arms": {
+      "baseline": {
+        "config": "baseline-config.json",
+        "historical_binding": "historical-baseline-binding.json",
+        "historical_binding_sha256": "1648860adf3e5d58690d2d46b2cb4cfeda5b4546edc5e8d6ae33c8172798f0a5",
+        "historical_run": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261023/diverse-current-develop-plan-v1",
+        "original_source_manifest": "baseline-source.json",
+        "original_source_manifest_sha256": "ad7b773dd1c3468e80f9a9a52ecfd479691f6f050f4a31d34c2f76b14e79c116",
+        "source_commit": "aeb67c9102be41bf9bb016dd81fe105da19f276c",
+        "source_manifest": "baseline-source-aeb67c9-bundle.json",
+        "source_manifest_sha256": "6fbd40b809279008495438a0ddf5b4fb8e9b079592054876e84bc4c921c7f4dc"
+      },
+      "route_first": {
+        "config": "route-first-config.json",
+        "source_commit": "9989230e6b2a4ad6a7d1c7eb08fe4c331075b264",
+        "source_manifest": "treatment-source-9989230.json",
+        "source_manifest_sha256": "d1495ee5bc06e1724ef61285c32685ffbe12bc526b08de583d6e510898a92817"
+      }
+    },
+    "attempt": "route-first-v3",
+    "baseline_reuse": "Reuse historical baseline 5/12 with original source, configuration, execution-status, and artifact bindings; no baseline inference or regeneration.",
+    "common_gate_policy": "Main CLI strict property intersection (including default MW upper bound 500), current v7 original-hit bit Morgan/3D/pharmacophore/polar and full route integrity/forward support/qualification unchanged.",
+    "common_limits": {
+      "max_design_attempts": 12,
+      "max_designs": 3,
+      "max_forward_input_tokens": 12288,
+      "max_forward_output_tokens": 18432,
+      "max_predictor_calls": 24,
+      "max_results": 3,
+      "max_scored_products": 12,
+      "max_total_conformers": 144,
+      "refinement_top_n": 6
+    },
+    "comparison_scope": "Fresh fixed twelve-input treatment versus the exact archived five-input baseline. The v23 model-free gate and suite receipts must be terminal, bound, and reviewed before this protocol can be frozen. No development control result is a treatment verdict.",
+    "entry_evidence": {
+      "full_suite_passed": true,
+      "full_suite_status": {
+        "path": "/data2/home/jyryu/chembounce/benchmarks/results/synthesis-route-development-20261023/marked-policy-port-validation-v1.json",
+        "sha256": "9bd53e19082bc57672797ee8510df81ec0c37ff9cb8e49cf3cded5bdabaf0645"
+      },
+      "preexecution_review": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/preexecution-review.json",
+        "sha256": "4e0e257dda239e433ebd087b3e7e839aadfe2f4b4199924a080c0a78c9fa52e4"
+      },
+      "reviewed_protocol_sha256": "13e5f357297feae9384771a4c1d9056bdaf8e86dbb8dc52a93328c3be13a12f9",
+      "v23_analysis": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/development-probe-v23/entry-analysis.json",
+        "sha256": "10a2e2fd692b4e68b401b7f192e1a4f4f7cb3bfa1fcec1ffd1fc6856c6eda0cb"
+      },
+      "v23_result": {
+        "path": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/development-probe-v23/result.json",
+        "sha256": "4d9a15671044fc943ebeb8496e6502c3d9954a8409379182026a0ddfa8e89d7f"
+      }
+    },
+    "execution_environment": {
+      "CUDA_VISIBLE_DEVICES": "assigned physical GPU 0/1/2/3",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1"
+    },
+    "execution_order": [
+      "route_first"
+    ],
+    "expected_effective_config": {
+      "path": "expected-effective-config.json",
+      "provenance": "Original R2 twelve run manifest.config objects were exactly equal; only the five declared booleans were overlaid before this fresh treatment.",
+      "sha256": "fa9b247f52b7111541a70203669c9e25013290016e8a5d0722a9f84d369642de"
+    },
+    "files_sha256": {
+      "analyze_comparison.py": "77486422de93f8494156b6cc1b577128a71d9d43fe9373812ad1aa53007bc041",
+      "baseline-config.json": "e7263b08dd59e33870b83351a31cb58916a52aeccb440a081e559007c07e24d7",
+      "baseline-source-aeb67c9-bundle.json": "6fbd40b809279008495438a0ddf5b4fb8e9b079592054876e84bc4c921c7f4dc",
+      "expected-effective-config.json": "fa9b247f52b7111541a70203669c9e25013290016e8a5d0722a9f84d369642de",
+      "historical-baseline-binding.json": "1648860adf3e5d58690d2d46b2cb4cfeda5b4546edc5e8d6ae33c8172798f0a5",
+      "panel.json": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "route-first-config.json": "c69dab942e51e8b3f5003eb55aba1f6cc5466c77dd5d98cdeb2e347437bc8c1d",
+      "run_comparison.py": "7f22ecca6584e0443b82f21e387f15ff0ebbf05b4dfa63fbabf7b966575d0623",
+      "test_integrity.py": "17773a4138b404a7ea522750ee77d85e4e4c7ba1680d6aa213f1e5973c012d85",
+      "treatment-source-9989230.json": "d1495ee5bc06e1724ef61285c32685ffbe12bc526b08de583d6e510898a92817",
+      "treatment-source-9989230.tar": "50d9ba7b1b7f61a1fd38538c354a9375642e9c99a30e226ad91f650179b6bc8a"
+    },
+    "freeze_provenance": {
+      "review": null,
+      "review_sha256": null,
+      "status": "draft_no_authorization_to_execute"
+    },
+    "frozen_utc": "2026-10-24T03:52:11.343680+00:00",
+    "generation_difference": "Historical native/provider baseline remains saved. Treatment runs fixed route-first with only five explicitly enabled, reviewed retrieval/efficiency flags; all thresholds, route widths, model settings and 3D settings remain identical to R2.",
+    "gpu_assignment": {
+      "CHEMBL3334418-query-1": 2,
+      "CHEMBL3334418-query-2": 3,
+      "CHEMBL3864-query-1": 2,
+      "CHEMBL3864-query-2": 3,
+      "CHEMBL4247-query-1": 2,
+      "CHEMBL4247-query-2": 3,
+      "CHEMBL4630839-query-1": 0,
+      "CHEMBL4630839-query-2": 1,
+      "CHEMBL4869-query-1": 0,
+      "CHEMBL4869-query-2": 1,
+      "CHEMBL5163-query-1": 0,
+      "CHEMBL5163-query-2": 1
+    },
+    "historical_analysis": {
+      "meaning": "Previously analyzed baseline artifact SHA inventory, rechecked before fresh execution and after analysis.",
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/analysis-v3/result.json",
+      "sha256": "3f563b42a4d6c536ff129eb9b917016cec413176807bd7a290a4474db2538303"
+    },
+    "max_parallel_inputs": 4,
+    "no_retries": true,
+    "outputs": [
+      "complete run status and exit code",
+      "source/config/asset hashes",
+      "exact product and original-input similarity",
+      "complete route IDs and step depths",
+      "verification/audit/forward support by step",
+      "unknown/budget/deadline/execution/nonmatch reasons",
+      "unique supported input/product pairs",
+      "3D attempts/screening/refinement/qualified counts",
+      "work counters and resource/phase timing"
+    ],
+    "panel": "panel.json",
+    "panel_scope": "Same 12 public development inputs across six targets; reused development panel, not held-out; no experimental synthesis or activity claim.",
+    "per_query_wall_timeout_seconds": 960,
+    "preparation_environment": {
+      "19_subtests_passed": true,
+      "3686_passed": true,
+      "76_skipped": true,
+      "receipt": {
+        "path": "/data2/home/jyryu/chembounce/benchmarks/results/synthesis-route-development-20261023/marked-policy-port-validation-v1.json",
+        "sha256": "9bd53e19082bc57672797ee8510df81ec0c37ff9cb8e49cf3cded5bdabaf0645"
+      },
+      "runtime_source_commit": "9989230e6b2a4ad6a7d1c7eb08fe4c331075b264",
+      "status": "whole_repository_suite_terminal_pass"
+    },
+    "primary_metric": "Number of completed inputs with at least one exact changed-scaffold product whose complete concrete route passes atom/stereo audit and per-step forward support; unique input/product pairs and route counts are secondary.",
+    "refinement_seeds": [
+      42,
+      43,
+      44
+    ],
+    "resource_accounting": "Each fresh treatment input has the same wall clock, route generation, forward, 3D and refinement caps. Baseline is an earlier saved run, so timing is descriptive, not paired concurrent speed evidence. All errors/timeouts/partials retain unknown status and raw evidence; no retries.",
+    "route_first_generation_limits": {
+      "beam_width": 12,
+      "building_block_top_k": 2,
+      "fallback_rules": 2,
+      "max_catalog_index_rows": 250000,
+      "max_catalog_row_visits": 262144,
+      "max_catalog_rows_per_query": 8192,
+      "max_combinations": 512,
+      "max_fingerprint_calls": 65536,
+      "max_inner_rules": 4,
+      "max_outer_guides": 8,
+      "max_products": 1024,
+      "max_reverse_outcomes": 4,
+      "max_routes": 64,
+      "max_rule_inspections": 512,
+      "max_rule_scans_per_target": 128,
+      "max_rules": 16,
+      "max_steps": 2,
+      "reaction_product_limit": 16,
+      "version": "catalog-rule-route-first-v2"
+    },
+    "route_first_pre_evidence_entry": {
+      "no_primary_claim": true,
+      "status": "pending_v23_terminal_support_and_full_suite"
+    },
+    "route_first_source_manifest_names": [
+      "route_first.py",
+      "route_first_nh.py",
+      "route_first_marker.py",
+      "route_first_marker_second.py",
+      "routes.py",
+      "reactions.py",
+      "catalog.py",
+      "workflow.py"
+    ],
+    "run_script_sha256": "7f22ecca6584e0443b82f21e387f15ff0ebbf05b4dfa63fbabf7b966575d0623",
+    "schema": "route-first-paired-development-v1",
+    "seed": 42,
+    "shared_assets": {
+      "catalog": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv",
+      "catalog_binding": {
+        "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+        "manifest_sha256": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274"
+      },
+      "forward_predictor": {
+        "adapter_sha256": "aa770b6e499fb81ca88c53b2baff1db8203203bf57d699a09dddee499a13261f",
+        "base_adapter_sha256": "91532a70e9e250eb61c683e6e0adb2e09153f4fbf0f201a2768ffdc8524e57c9",
+        "declared_revision": "933114058cb2604dc1bf536dbebdfcefbe83d4fc",
+        "device": "cpu",
+        "do_sample": false,
+        "max_input_tokens": 512,
+        "max_new_tokens": 256,
+        "model_files_sha256": {
+          "README.md": "1a689168cf12a60fb49166cdc5245308f6ef18d28d8fec165295edf7404449c2",
+          "config.json": "a80eac6938e51ccabfc6a8b281497c6553626145e57b2268101f718fbaa034a2",
+          "generation_config.json": "aed028489d41ae6a673920da9d103f2f58a650c3fbc50bd880b35e30a481dba6",
+          "model.safetensors": "69c23ca364e63e0e2be22d114652aad9f3df4e161d43936eee0dc3ce74a87fb7",
+          "special_tokens_map.json": "0f385cf62b07c1b63aaa84d4c86a313c751df7039d958a7d7bd7e723d933bcd9",
+          "tokenizer.json": "511dfd8bb25c19cccae8d7d996c1ff0f1b5263207be4cdd275f23b75da8113b6",
+          "tokenizer_config.json": "ac38d16067df56f00dfa2c2e0d1546a6ff08aa37814662a6fc38dea66cd13d9d",
+          "trainer_state.json": "f89bde13ce68202577b7eddf752376632a40ce296e5c005da51e37bba6d195ac"
+        },
+        "model_path": "/data2/home/jyryu/chembounce/benchmark-results/research-validation/models/ReactionT5v2-forward",
+        "provider": "reactiont5v2_forward_local",
+        "runtime": {
+          "rdkit": "2025.9.6",
+          "safetensors": "0.6.2",
+          "tokenizers": "0.21.4",
+          "torch": "2.8.0",
+          "transformers": "4.51.3"
+        },
+        "top_k": 3
+      },
+      "rules": "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/rules.json",
+      "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39"
+    },
+    "source_hash_preverification": "Driver pre-child source hashing is separately timed outside 960s CLI wall cap. Model/catalog loading and constructor verification inside each CLI are included.",
+    "source_policy": "Historical baseline is reused by exact bound saved artifacts. Only the new 9989230 treatment source snapshot is executed, exactly once per fixed input; no worktree import or source mutation.",
+    "status": "frozen_executable",
+    "timeout_termination_grace_seconds": [
+      5,
+      5
+    ],
+    "treatment_config_parent": {
+      "path": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route-first-config.json",
+      "sha256": "66e4349bca1ea6399f6d90aeb62fad90dd6a52bca82723c5116f2d218827d2c9"
+    },
+    "treatment_policy_overlay": {
+      "prefer_continuation_second": true,
+      "prefer_mapped_nh_second": true,
+      "prefer_marked_continuation_second": true,
+      "share_identical_catalog_pools": true,
+      "skip_empty_stage_retrieval": true
+    },
+    "treatment_source_snapshot": {
+      "archive": "treatment-source-9989230.tar",
+      "commit": "9989230e6b2a4ad6a7d1c7eb08fe4c331075b264",
+      "inside_bundle": true,
+      "manifest": "treatment-source-9989230.json"
+    }
+  },
+  "reporting": "Terminal outcome and independent analysis must be recorded separately; this freeze is not a result.",
+  "schema": "route-first-actual-comparison-v3-freeze-v1",
+  "source_commit": "9989230e6b2a4ad6a7d1c7eb08fe4c331075b264",
+  "status": "frozen_before_outcome"
+}
