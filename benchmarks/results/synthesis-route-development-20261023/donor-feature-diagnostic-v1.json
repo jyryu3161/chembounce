@@ -1,0 +1,4728 @@
+{
+  "artifacts": {
+    "original/donor.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/donor-feature-diagnostic-v1/donor.py",
+      "sha256": "fab2aa06f32e91ef78091959f8ebd1b080ebbaeffed62f0bea56255988b8c642"
+    },
+    "original/execution.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/donor-feature-diagnostic-v1/execution.log",
+      "sha256": "3343638d098b3464f861a21d90d40dffdc4e2471b0130db5e681d395c91aebec"
+    },
+    "original/plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/donor-feature-diagnostic-v1/plan.json",
+      "sha256": "fd3873b126ab39b3b9070980e2df6b14ea60b16f345604ee26951c4426bece97"
+    },
+    "original/probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/donor-feature-diagnostic-v1/probe.py",
+      "sha256": "35e7b46232e0f1f72790e8a6db0a3bbcdbd739529653793d6f448380bda552a0"
+    },
+    "original/result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/donor-feature-diagnostic-v1/result.json",
+      "sha256": "52e5d8085b472b91092e9c10c82e0344a8acd9ab84bd45404fb344dacf4c021d"
+    },
+    "original/test_donor.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/donor-feature-diagnostic-v1/test_donor.py",
+      "sha256": "eb468c979c8a972d406726134ca2535530912ec4bde0cabccc11656c987e61c3"
+    },
+    "recovery/execution.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/donor-feature-diagnostic-recovery-v1/execution.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "recovery/plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/donor-feature-diagnostic-recovery-v1/plan.json",
+      "sha256": "734c54542bb72a86af28fe4da097bb0f528edfd4665cc67dd145fb503637f0ea"
+    },
+    "recovery/recover.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/donor-feature-diagnostic-recovery-v1/recover.py",
+      "sha256": "1fe56ce05274902e7a0d2cbf2853222fba83b4b722d473eb6747ba7ee47734ea"
+    },
+    "recovery/result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/donor-feature-diagnostic-recovery-v1/result.json",
+      "sha256": "f47f62b094241912ab1b79dae2bcf2c0ac2c81a153636d8a3fea0d18f7782ba5"
+    },
+    "recovery/summary.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/donor-feature-diagnostic-recovery-v1/summary.py",
+      "sha256": "3bb9cbbe5ce24dafd779e85af5e0f44a3851f301bfc8c7306f491093207f5532"
+    },
+    "recovery/test_recovery.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/donor-feature-diagnostic-recovery-v1/test_recovery.py",
+      "sha256": "4aae44feb9eab023cb0caad2309fb377d610232fffa928e630d100f618a2e62f"
+    }
+  },
+  "date": "2026-10-24",
+  "execution": {
+    "additional_3d_calls": 0,
+    "additional_catalog_loads": 0,
+    "additional_model_calls": 0,
+    "additional_reaction_generation": 0,
+    "binding_limitation": "Recovery-time before/after hashes match original entry pins; this does not establish the missing original exit-time integrity check.",
+    "original_artifacts_preserved": true,
+    "original_exit_binding_verified": false,
+    "original_exit_code": 1,
+    "original_failure": "Feature observation overwrote the source hash map; finalizer tried to hash a file named status before persisting summary/exit hashes.",
+    "original_scientific_attempts": 1,
+    "original_status": "assessing",
+    "recovery_attempts": 1,
+    "recovery_entry_exit_binding_equal": true,
+    "recovery_exit_code": 0,
+    "recovery_kind": "JSON-only; no repeated molecular calculations"
+  },
+  "interpretation": {
+    "chemical_scope": "Same-molecule donor atoms and possible reaction endpoints only. No cross-molecule atom correspondence, donor additivity, predicted product retention, selectivity or physical synthesis claim.",
+    "closed_hypothesis": "Do not require source donor count >= typed-guide donor count as a general selection filter.",
+    "conditional_R2_policy": "The narrower structural-signal conjunction remains unvalidated. It authorizes no source walk or policy adoption.",
+    "duplicate_units": "Counts describe saved records and leaf comparisons, not independent reactions or experimental replicates.",
+    "finding": "Selected rank5 source has donor0 versus nominal guide2; original sources ranks1-4 each have donor1. Two supported step records have donor2 versus guide3, contradicting a categorical source donor-retention requirement.",
+    "route_scope": "No new product, complete supported route, qualification, or change to the production policy."
+  },
+  "p1": {
+    "baseline_supported_inputs": 5,
+    "complete": false,
+    "current_cohort_saved_step_conditional_upper_bound": 5,
+    "develop_merge": false,
+    "development_panel_inputs": 12,
+    "latest_actual_supported_inputs": 4,
+    "required_supported_inputs": 6
+  },
+  "protocol": {
+    "bound_sha256": {
+      "donor_helper": "fab2aa06f32e91ef78091959f8ebd1b080ebbaeffed62f0bea56255988b8c642",
+      "endpoint_helper": "e241f7ab4ddfbcc9f7dbda83683600757d19a14c33fb5ff5640f12f31f3ddbef",
+      "feature_factory_definition": "87ab54bd717af50a78a710d23e7737a2cafc96e5293bf6257ecdda86b6da3f65",
+      "guide_relative_result": "e1b68f298b8bcda3d6fda95a5a8927c769cc53df691d0df46a3ea7eaa49c673d",
+      "probe": "35e7b46232e0f1f72790e8a6db0a3bbcdbd739529653793d6f448380bda552a0",
+      "r2_plan": "bfa54f3b8a15a6eb599654345ff58bd34c6eb9c5fa955437703383f5239451a0",
+      "r2_result": "c9bcb5f84a528f885a9fe52b46af9de13801408ecfeb39c0cd2ecf57b2cf5878",
+      "r3_plan": "7fe1874558d5e1c541a9c88fdc2a1296b6d9fe7ab25235ed89e8d71d9d82a719",
+      "r3_result": "9f8c171c0f18d9ecd095f54634c46e72e3c82f7cd9e44d64a0da9e2ecc63a942",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "same_partner_plan": "5392ce824213af1d46d63a9309bc708e1232bef0ad109533cd68bae808e2dfa4",
+      "same_partner_result": "f51c474b46f893b9c621aad1ebebfb060effa59c9608abbfbd80f5e4f6625922",
+      "tests": "eb468c979c8a972d406726134ca2535530912ec4bde0cabccc11656c987e61c3",
+      "v21_result": "acb6a56b1260a5f4ce4c760f28d6af4869537c5e80619cfd225f9a88b15518fa"
+    },
+    "caps": {
+      "atom_bond_units": 196608,
+      "atoms_per_molecule": 256,
+      "bonds_per_molecule": 512,
+      "deadline_seconds": 60,
+      "endpoint_match_requests": 128,
+      "endpoint_structural_units": 65536,
+      "feature_perceptions": 256,
+      "unique_parses": 256
+    },
+    "endpoint_policy": "Existing endpoint.domain on the SAME parsed source or guide molecule. Complete role mappings use chirality and uniquify=False with 65 sentinel; unsupported or ambiguous yields unknown. Partition donor atom ids against set of possible mapped endpoints without cross-molecule atom lineage.",
+    "feature_policy": "Exact current similarity_constraints.feature_records using bound RDKit BaseFeatures.fdef; no conformer and no donor count additivity assumption.",
+    "fixed_scope_counts": {
+      "R3_source_rows": 5,
+      "already_generated_products": 3,
+      "catalog_leaf_comparisons": 19,
+      "matched_R2_step_records": 13
+    },
+    "fixed_scope_sha256": "fcecf45e274b4d5d891d29ee619ff30366fb5bf9761966ffea6ae70e6d88b006",
+    "interpretation": "All13 matched controls inspected independently for source donor count below nominal typed guide count. Separately report conjunction with archived R2 structural signal; conditional clean controls do not validate donor retention independently. Rank5 premise failure, unreliable guide/unknown, or matched-control violation closes a categorical donor-retention requirement. Positive descriptive association does not justify a pool scan or selection policy.",
+    "preexecution_review": {
+      "astra": "PASS exact supplied hashes; no scientific matching by reviewer",
+      "root": "PASS code/scope review",
+      "tests": "3 focused controls passed before freeze"
+    },
+    "purpose": "Descriptive same-molecule donor feature counts and atom-indexed possible-endpoint overlap on fixed saved q4247 controls; no source selection, Catalog, Rules.apply, model, 3D, or product generation.",
+    "rdkit_version": "2025.09.6",
+    "reviewed_draft_sha256": "632b86eb807b867f5dd1c852149e29fc4097516633b4b9c6896677bd5bf71759",
+    "rules_path": "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/rules.json",
+    "runtime_commit": "f9d8e35a2bcfeba537f637e4b15c700f7a552c01",
+    "schema": "donor-feature-diagnostic-v1",
+    "source_sha256": {
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd"
+    },
+    "status": "frozen_preexecution",
+    "supported_projection_sha256": "31004012462aa31aae1570fc2ffc5a0a6b322212175a9a8a4082604f66390795",
+    "work_accounting": "Unique parse and feature-perception attempts are prepaid; atoms+bonds charged once per successfully parsed uncached molecule before feature perception. Endpoint helper separately charges template/query structural units and complete match requests. These counters are bounded structural accounting, not total CPU time or additive chemistry work; cooperative deadline includes file binding and Rules import."
+  },
+  "recovery_result": {
+    "entry_sha256": {
+      "endpoint_helper": "e241f7ab4ddfbcc9f7dbda83683600757d19a14c33fb5ff5640f12f31f3ddbef",
+      "feature_factory_definition": "87ab54bd717af50a78a710d23e7737a2cafc96e5293bf6257ecdda86b6da3f65",
+      "guide_relative_result": "e1b68f298b8bcda3d6fda95a5a8927c769cc53df691d0df46a3ea7eaa49c673d",
+      "original_helper": "fab2aa06f32e91ef78091959f8ebd1b080ebbaeffed62f0bea56255988b8c642",
+      "original_log": "3343638d098b3464f861a21d90d40dffdc4e2471b0130db5e681d395c91aebec",
+      "original_plan": "fd3873b126ab39b3b9070980e2df6b14ea60b16f345604ee26951c4426bece97",
+      "original_probe": "35e7b46232e0f1f72790e8a6db0a3bbcdbd739529653793d6f448380bda552a0",
+      "original_result": "52e5d8085b472b91092e9c10c82e0344a8acd9ab84bd45404fb344dacf4c021d",
+      "original_tests": "eb468c979c8a972d406726134ca2535530912ec4bde0cabccc11656c987e61c3",
+      "r2_plan": "bfa54f3b8a15a6eb599654345ff58bd34c6eb9c5fa955437703383f5239451a0",
+      "r2_result": "c9bcb5f84a528f885a9fe52b46af9de13801408ecfeb39c0cd2ecf57b2cf5878",
+      "r3_plan": "7fe1874558d5e1c541a9c88fdc2a1296b6d9fe7ab25235ed89e8d71d9d82a719",
+      "r3_result": "9f8c171c0f18d9ecd095f54634c46e72e3c82f7cd9e44d64a0da9e2ecc63a942",
+      "recovery_probe": "1fe56ce05274902e7a0d2cbf2853222fba83b4b722d473eb6747ba7ee47734ea",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "same_partner_plan": "5392ce824213af1d46d63a9309bc708e1232bef0ad109533cd68bae808e2dfa4",
+      "same_partner_result": "f51c474b46f893b9c621aad1ebebfb060effa59c9608abbfbd80f5e4f6625922",
+      "summary_helper": "3bb9cbbe5ce24dafd779e85af5e0f44a3851f301bfc8c7306f491093207f5532",
+      "tests": "4aae44feb9eab023cb0caad2309fb377d610232fffa928e630d100f618a2e62f",
+      "v21_result": "acb6a56b1260a5f4ce4c760f28d6af4869537c5e80619cfd225f9a88b15518fa"
+    },
+    "exit_sha256": {
+      "endpoint_helper": "e241f7ab4ddfbcc9f7dbda83683600757d19a14c33fb5ff5640f12f31f3ddbef",
+      "feature_factory_definition": "87ab54bd717af50a78a710d23e7737a2cafc96e5293bf6257ecdda86b6da3f65",
+      "guide_relative_result": "e1b68f298b8bcda3d6fda95a5a8927c769cc53df691d0df46a3ea7eaa49c673d",
+      "original_helper": "fab2aa06f32e91ef78091959f8ebd1b080ebbaeffed62f0bea56255988b8c642",
+      "original_log": "3343638d098b3464f861a21d90d40dffdc4e2471b0130db5e681d395c91aebec",
+      "original_plan": "fd3873b126ab39b3b9070980e2df6b14ea60b16f345604ee26951c4426bece97",
+      "original_probe": "35e7b46232e0f1f72790e8a6db0a3bbcdbd739529653793d6f448380bda552a0",
+      "original_result": "52e5d8085b472b91092e9c10c82e0344a8acd9ab84bd45404fb344dacf4c021d",
+      "original_tests": "eb468c979c8a972d406726134ca2535530912ec4bde0cabccc11656c987e61c3",
+      "r2_plan": "bfa54f3b8a15a6eb599654345ff58bd34c6eb9c5fa955437703383f5239451a0",
+      "r2_result": "c9bcb5f84a528f885a9fe52b46af9de13801408ecfeb39c0cd2ecf57b2cf5878",
+      "r3_plan": "7fe1874558d5e1c541a9c88fdc2a1296b6d9fe7ab25235ed89e8d71d9d82a719",
+      "r3_result": "9f8c171c0f18d9ecd095f54634c46e72e3c82f7cd9e44d64a0da9e2ecc63a942",
+      "recovery_probe": "1fe56ce05274902e7a0d2cbf2853222fba83b4b722d473eb6747ba7ee47734ea",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "same_partner_plan": "5392ce824213af1d46d63a9309bc708e1232bef0ad109533cd68bae808e2dfa4",
+      "same_partner_result": "f51c474b46f893b9c621aad1ebebfb060effa59c9608abbfbd80f5e4f6625922",
+      "summary_helper": "3bb9cbbe5ce24dafd779e85af5e0f44a3851f301bfc8c7306f491093207f5532",
+      "tests": "4aae44feb9eab023cb0caad2309fb377d610232fffa928e630d100f618a2e62f",
+      "v21_result": "acb6a56b1260a5f4ce4c760f28d6af4869537c5e80619cfd225f9a88b15518fa"
+    },
+    "original_process": {
+      "exit_code": 1,
+      "finalization": "failed_on_shadowed_source_variable_before_summary_and_exit_hashes",
+      "original_log_sha256": "3343638d098b3464f861a21d90d40dffdc4e2471b0130db5e681d395c91aebec",
+      "original_result_sha256": "52e5d8085b472b91092e9c10c82e0344a8acd9ab84bd45404fb344dacf4c021d",
+      "saved_checkpoint_status": "assessing"
+    },
+    "plan_sha256_entry": "734c54542bb72a86af28fe4da097bb0f528edfd4665cc67dd145fb503637f0ea",
+    "plan_sha256_exit": "734c54542bb72a86af28fe4da097bb0f528edfd4665cc67dd145fb503637f0ea",
+    "schema": "donor-feature-diagnostic-recovery-v1",
+    "source_sha256_entry": {
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd"
+    },
+    "source_sha256_exit": {
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd"
+    },
+    "status": "complete_json_only_recovery",
+    "summary": {
+      "fixed_source_donor_differences": [
+        {
+          "donor_difference": {
+            "guide_count": 2,
+            "source_count": 1,
+            "source_has_fewer": true,
+            "source_minus_guide": -1,
+            "status": "assessed"
+          },
+          "group_rank": 1,
+          "smiles": "COc1cc(CC(=O)O)ccc1Cl"
+        },
+        {
+          "donor_difference": {
+            "guide_count": 2,
+            "source_count": 1,
+            "source_has_fewer": true,
+            "source_minus_guide": -1,
+            "status": "assessed"
+          },
+          "group_rank": 2,
+          "smiles": "COc1cc(C(=O)O)ccc1Cl"
+        },
+        {
+          "donor_difference": {
+            "guide_count": 2,
+            "source_count": 1,
+            "source_has_fewer": true,
+            "source_minus_guide": -1,
+            "status": "assessed"
+          },
+          "group_rank": 3,
+          "smiles": "COc1cc(CCC(=O)O)ccc1Cl"
+        },
+        {
+          "donor_difference": {
+            "guide_count": 2,
+            "source_count": 1,
+            "source_has_fewer": true,
+            "source_minus_guide": -1,
+            "status": "assessed"
+          },
+          "group_rank": 4,
+          "smiles": "COc1cc(C2(C(=O)O)CC2)ccc1Cl"
+        },
+        {
+          "donor_difference": {
+            "guide_count": 2,
+            "source_count": 0,
+            "source_has_fewer": true,
+            "source_minus_guide": -2,
+            "status": "assessed"
+          },
+          "group_rank": 5,
+          "smiles": "CCOC(=O)Cc1ccc(Cl)c(OC)c1"
+        }
+      ],
+      "limits": "Saved same-molecule feature records only; donor differences do not establish cross-molecule atom lineage, reaction selectivity, product retention, or route support. Original scientific process exited1 before final receipt, so this JSON recovery cannot establish its exit-time binding.",
+      "old_rank1_rank2_R2_signal": {
+        "1": "flagged_descriptor_8",
+        "2": "flagged_descriptor_9"
+      },
+      "premise_status": "categorical_donor_retention_falsified_by_supported_controls",
+      "rank5_source_has_fewer_donors_than_guide": true,
+      "saved_observation_inventory": {
+        "catalog_leaf_comparisons": 19,
+        "endpoint_requests": 44,
+        "fixed_products": 3,
+        "fixed_sources": 5,
+        "supported_records": 13,
+        "unique_feature_molecules": 34
+      },
+      "supported_conjunction_with_archived_R2_signal": [
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 0,
+          "slot": 0,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 0,
+          "slot": 1,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 1,
+          "slot": 1,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 2,
+          "slot": 0,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 2,
+          "slot": 1,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 3,
+          "slot": 0,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 4,
+          "slot": 1,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 5,
+          "slot": 0,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 5,
+          "slot": 1,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 6,
+          "slot": 1,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 7,
+          "slot": 0,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 7,
+          "slot": 1,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 8,
+          "slot": 1,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 9,
+          "slot": 1,
+          "source_has_fewer": true
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 10,
+          "slot": 1,
+          "source_has_fewer": true
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 11,
+          "slot": 0,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 11,
+          "slot": 1,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 12,
+          "slot": 0,
+          "source_has_fewer": false
+        },
+        {
+          "R2_signal": "clean_unflagged",
+          "record_index": 12,
+          "slot": 1,
+          "source_has_fewer": false
+        }
+      ],
+      "supported_source_donor_loss_count": 2,
+      "supported_standalone_source_donor_losses": [
+        {
+          "guide_count": 3,
+          "guide_smiles": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N",
+          "input_id": "CHEMBL4247-query-2",
+          "node_id": "or",
+          "original_R2_row_index": 10,
+          "record_index": 9,
+          "route_graph_sha256": "9883b82f2c704b8ddb3966b89e1d53c202eed3177667bd0ee56f35cfeeb63dee",
+          "slot": 1,
+          "source_count": 2,
+          "source_smiles": "COc1cc(C(N)=O)ccc1N"
+        },
+        {
+          "guide_count": 3,
+          "guide_smiles": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N",
+          "input_id": "CHEMBL4247-query-2",
+          "node_id": "or",
+          "original_R2_row_index": 11,
+          "record_index": 10,
+          "route_graph_sha256": "a0e584eba8504779abfa2c34df1d4ed2f4f9180236103284c1125679c9022519",
+          "slot": 1,
+          "source_count": 2,
+          "source_smiles": "COc1cc(C(N)=O)ccc1N"
+        }
+      ],
+      "work_verified": {
+        "atoms_and_bonds_charged": 1370,
+        "cache_hits": 97,
+        "endpoint_match_requests": 44,
+        "endpoint_parse_attempts": 0,
+        "endpoint_template_structural_units": 444,
+        "feature_perception_attempts": 34,
+        "feature_records_returned": 299,
+        "rules_load_attempts": 1,
+        "unique_parse_attempts": 34
+      }
+    }
+  },
+  "saved_observations": {
+    "feature_molecules": {
+      "C1CNC[C@@H](CN2CCOCC2)C1": {
+        "all_feature_count": 6,
+        "atom_count": 13,
+        "bond_count": 14,
+        "donor_atom_sets": [
+          [
+            2
+          ],
+          [
+            6
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "909e9463e57acd1eea4097e2991780a7516ee6ed9dbcf51b95cc173dfd40e9bf",
+        "smiles": "C1CNC[C@@H](CN2CCOCC2)C1",
+        "status": "assessed"
+      },
+      "CC(C)(C)OC(=O)Nc1nccc(Cl)n1": {
+        "all_feature_count": 7,
+        "atom_count": 15,
+        "bond_count": 15,
+        "donor_atom_sets": [
+          [
+            7
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "501a5eef8437bfe3c3e6711b2961544b5ce33cda2a61b994cb8b8b29c590c1fe",
+        "smiles": "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+        "status": "assessed"
+      },
+      "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1": {
+        "all_feature_count": 13,
+        "atom_count": 36,
+        "bond_count": 39,
+        "donor_atom_sets": [
+          [
+            7
+          ],
+          [
+            20
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "f7c3213a9c72da10313df5d1a085f73b8f95d44030a100239f1563d140ab51d3",
+        "smiles": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+        "status": "assessed"
+      },
+      "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)O)C2)n1": {
+        "all_feature_count": 12,
+        "atom_count": 23,
+        "bond_count": 24,
+        "donor_atom_sets": [
+          [
+            7
+          ],
+          [
+            20
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "15421fe8480dfb233de033eaa8faa2a0f3ae34758551b01b3f7e020d265077c6",
+        "smiles": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)O)C2)n1",
+        "status": "assessed"
+      },
+      "CCOC(=O)Cc1ccc(Cl)c(OC)c1": {
+        "all_feature_count": 6,
+        "atom_count": 15,
+        "bond_count": 15,
+        "donor_atom_sets": [],
+        "donor_count": 0,
+        "indexed_topology_sha256": "76bf31f970d5c3bf3706b2c5b7135e31f0c9d7a6a05a9cebfe3364987f267882",
+        "smiles": "CCOC(=O)Cc1ccc(Cl)c(OC)c1",
+        "status": "assessed"
+      },
+      "CCOC(=O)Cc1ccc(Nc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)c(OC)c1": {
+        "all_feature_count": 15,
+        "atom_count": 35,
+        "bond_count": 38,
+        "donor_atom_sets": [
+          [
+            10
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "7c6eb3706f8a63f835af4b50b04fcd1c3df619f6cb18f5f9608bf7bee512591d",
+        "smiles": "CCOC(=O)Cc1ccc(Nc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)c(OC)c1",
+        "status": "assessed"
+      },
+      "CN(c1ccccc1Cl)S(C)(=O)=O": {
+        "all_feature_count": 4,
+        "atom_count": 13,
+        "bond_count": 13,
+        "donor_atom_sets": [],
+        "donor_count": 0,
+        "indexed_topology_sha256": "f2a585d691c8103fcf2c34e9f320e3a5f0c9a5774041976d13cb7f1184745318",
+        "smiles": "CN(c1ccccc1Cl)S(C)(=O)=O",
+        "status": "assessed"
+      },
+      "COc1cc(Br)cc(OC)c1OC": {
+        "all_feature_count": 5,
+        "atom_count": 13,
+        "bond_count": 13,
+        "donor_atom_sets": [],
+        "donor_count": 0,
+        "indexed_topology_sha256": "c4e7d44627b62dd43889b863312203ac00871a68bbac0cee1bb7ef0a133996ee",
+        "smiles": "COc1cc(Br)cc(OC)c1OC",
+        "status": "assessed"
+      },
+      "COc1cc(C(=O)O)ccc1Cl": {
+        "all_feature_count": 7,
+        "atom_count": 12,
+        "bond_count": 12,
+        "donor_atom_sets": [
+          [
+            7
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "a613c8a4c7ebe1e6dd29de5825a73b12560cce200f9eb096f14e95ab33735ec3",
+        "smiles": "COc1cc(C(=O)O)ccc1Cl",
+        "status": "assessed"
+      },
+      "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12": {
+        "all_feature_count": 16,
+        "atom_count": 32,
+        "bond_count": 35,
+        "donor_atom_sets": [
+          [
+            7
+          ],
+          [
+            11
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "3f24592e0675c28874318a98c98c8abe389425a3965b9629cc0924fef4a56e72",
+        "smiles": "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+        "status": "assessed"
+      },
+      "COc1cc(C(N)=O)ccc1N": {
+        "all_feature_count": 6,
+        "atom_count": 12,
+        "bond_count": 12,
+        "donor_atom_sets": [
+          [
+            6
+          ],
+          [
+            11
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "6440e64beef68c30836664072dcdc00e48d27e890ff1d5fc683b2535ad59c2c9",
+        "smiles": "COc1cc(C(N)=O)ccc1N",
+        "status": "assessed"
+      },
+      "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1": {
+        "all_feature_count": 15,
+        "atom_count": 32,
+        "bond_count": 35,
+        "donor_atom_sets": [
+          [
+            6
+          ],
+          [
+            11
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "875e515f093c3e6d8850a03f006b555e497abb7b23ed95112d7eb26f2b8e902e",
+        "smiles": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+        "status": "assessed"
+      },
+      "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1": {
+        "all_feature_count": 15,
+        "atom_count": 33,
+        "bond_count": 36,
+        "donor_atom_sets": [
+          [
+            6
+          ],
+          [
+            11
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "9a993d59fafd714967ee84819f4b7c7d1ca3f969d968de33dba53588021290d7",
+        "smiles": "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+        "status": "assessed"
+      },
+      "COc1cc(C2(C(=O)O)CC2)ccc1Cl": {
+        "all_feature_count": 8,
+        "atom_count": 15,
+        "bond_count": 16,
+        "donor_atom_sets": [
+          [
+            8
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "2716956b907e8385a8e4f355fa677e4fac2962c9e1cb2cbd4602200948ad0156",
+        "smiles": "COc1cc(C2(C(=O)O)CC2)ccc1Cl",
+        "status": "assessed"
+      },
+      "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl": {
+        "all_feature_count": 8,
+        "atom_count": 19,
+        "bond_count": 20,
+        "donor_atom_sets": [
+          [
+            8
+          ],
+          [
+            11
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "32f48379e4f8bebd80677e79f58b6ca5b06f866cb30d096148afdd101584960e",
+        "smiles": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+        "status": "assessed"
+      },
+      "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N": {
+        "all_feature_count": 9,
+        "atom_count": 19,
+        "bond_count": 20,
+        "donor_atom_sets": [
+          [
+            8
+          ],
+          [
+            11
+          ],
+          [
+            18
+          ]
+        ],
+        "donor_count": 3,
+        "indexed_topology_sha256": "e66f0323b3dadf7140e06ba221542e7679da9406f078d397bd064b65491deefd",
+        "smiles": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N",
+        "status": "assessed"
+      },
+      "COc1cc(CC(=O)O)ccc1Cl": {
+        "all_feature_count": 8,
+        "atom_count": 13,
+        "bond_count": 13,
+        "donor_atom_sets": [
+          [
+            8
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "a21986ab3207ea39dab390c6d53b0990d42b90bcda9cd7dbf56748acffb5d3dd",
+        "smiles": "COc1cc(CC(=O)O)ccc1Cl",
+        "status": "assessed"
+      },
+      "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12": {
+        "all_feature_count": 17,
+        "atom_count": 33,
+        "bond_count": 36,
+        "donor_atom_sets": [
+          [
+            8
+          ],
+          [
+            12
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "edabf8508ef510fbe0c3aca16597f89718c4455b7d906df0f668c1e05087695f",
+        "smiles": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+        "status": "assessed"
+      },
+      "COc1cc(CCC(=O)O)ccc1Cl": {
+        "all_feature_count": 9,
+        "atom_count": 14,
+        "bond_count": 14,
+        "donor_atom_sets": [
+          [
+            9
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "2d47ca3aab8e46201bc1950f0f3b95499fbf92b6b4788d3cc40ad603c571108f",
+        "smiles": "COc1cc(CCC(=O)O)ccc1Cl",
+        "status": "assessed"
+      },
+      "COc1cc(Cl)cc(OC)c1OC": {
+        "all_feature_count": 5,
+        "atom_count": 13,
+        "bond_count": 13,
+        "donor_atom_sets": [],
+        "donor_count": 0,
+        "indexed_topology_sha256": "d39123df9b6be8fb9e3d2054bd24eb9a72c8e8131fd496e602832977e727fdfe",
+        "smiles": "COc1cc(Cl)cc(OC)c1OC",
+        "status": "assessed"
+      },
+      "COc1cc(Nc2nccc(Cl)n2)cc(Cl)c1OC": {
+        "all_feature_count": 8,
+        "atom_count": 19,
+        "bond_count": 20,
+        "donor_atom_sets": [
+          [
+            5
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "48e26e0128eb78aeaa4638c1340beff4108a8905bc04f7b01c602f575c98c015",
+        "smiles": "COc1cc(Nc2nccc(Cl)n2)cc(Cl)c1OC",
+        "status": "assessed"
+      },
+      "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC": {
+        "all_feature_count": 9,
+        "atom_count": 20,
+        "bond_count": 21,
+        "donor_atom_sets": [
+          [
+            5
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "dd8718c702765e8a7642c359b1efcffb714cfdf144d388bb2dad90507c3ee2c5",
+        "smiles": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+        "status": "assessed"
+      },
+      "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC": {
+        "all_feature_count": 12,
+        "atom_count": 31,
+        "bond_count": 34,
+        "donor_atom_sets": [
+          [
+            5
+          ],
+          [
+            17
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "3b2c8701d2b6361a034b7d76967e7418e94c2f42a534c427a8c210a306e5880d",
+        "smiles": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+        "status": "assessed"
+      },
+      "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC": {
+        "all_feature_count": 13,
+        "atom_count": 32,
+        "bond_count": 35,
+        "donor_atom_sets": [
+          [
+            5
+          ],
+          [
+            17
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "1e4eb7212091b28b43deaa08df93be59201834a8d4a3fba2f6fc3700dc902078",
+        "smiles": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+        "status": "assessed"
+      },
+      "CS(=O)(=O)c1ccccc1Cl": {
+        "all_feature_count": 4,
+        "atom_count": 11,
+        "bond_count": 11,
+        "donor_atom_sets": [],
+        "donor_count": 0,
+        "indexed_topology_sha256": "34a81a7bc8b118c462f997b78ca23f55c2a8d40fb4e279444877fa938d651ad0",
+        "smiles": "CS(=O)(=O)c1ccccc1Cl",
+        "status": "assessed"
+      },
+      "Cc1cc(Br)n2nc(N)ncc12": {
+        "all_feature_count": 6,
+        "atom_count": 12,
+        "bond_count": 13,
+        "donor_atom_sets": [
+          [
+            8
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "58e3ccac42f9ea54df2e4601a9871a79818e9e36f5982f1bc73b7fb241f2de93",
+        "smiles": "Cc1cc(Br)n2nc(N)ncc12",
+        "status": "assessed"
+      },
+      "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1": {
+        "all_feature_count": 9,
+        "atom_count": 21,
+        "bond_count": 23,
+        "donor_atom_sets": [
+          [
+            5
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "1dd21a6562b48902d5c61035cd2271862fda8030704450e51740f0d4384316b9",
+        "smiles": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+        "status": "assessed"
+      },
+      "Cc1cc2c(N)ncc(I)n2n1": {
+        "all_feature_count": 5,
+        "atom_count": 12,
+        "bond_count": 13,
+        "donor_atom_sets": [
+          [
+            5
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "cd86a3a01e78f45933fa94b2be766e94f896e3bfc6694be6abd75ac3c527ccd7",
+        "smiles": "Cc1cc2c(N)ncc(I)n2n1",
+        "status": "assessed"
+      },
+      "Cc1ccc(-c2ccccc2S(C)(=O)=O)c2nc(Cl)ncc12": {
+        "all_feature_count": 9,
+        "atom_count": 22,
+        "bond_count": 24,
+        "donor_atom_sets": [],
+        "donor_count": 0,
+        "indexed_topology_sha256": "be1a3f8566ffcef5d910b2e0941d952e80f8eb78ebd77a2771d6c6e5dc403956",
+        "smiles": "Cc1ccc(-c2ccccc2S(C)(=O)=O)c2nc(Cl)ncc12",
+        "status": "assessed"
+      },
+      "Cc1cnn2c(-c3ccccc3S(C)(=O)=O)cc(Cl)nc12": {
+        "all_feature_count": 9,
+        "atom_count": 21,
+        "bond_count": 23,
+        "donor_atom_sets": [],
+        "donor_count": 0,
+        "indexed_topology_sha256": "cc5bd43a579ec10f9685fe92f68d02a4a2b3f41aec4146b6fa36ccb685bfbcd6",
+        "smiles": "Cc1cnn2c(-c3ccccc3S(C)(=O)=O)cc(Cl)nc12",
+        "status": "assessed"
+      },
+      "NCc1cccc(N2CCOCC2)c1": {
+        "all_feature_count": 5,
+        "atom_count": 14,
+        "bond_count": 15,
+        "donor_atom_sets": [
+          [
+            0
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "6b0b17b0947d1d8b25e9d8ca9e4b0cf2721b4cb4681eb2490b6c1f6b300c9fbd",
+        "smiles": "NCc1cccc(N2CCOCC2)c1",
+        "status": "assessed"
+      },
+      "Nc1nccc(Cl)n1": {
+        "all_feature_count": 4,
+        "atom_count": 8,
+        "bond_count": 8,
+        "donor_atom_sets": [
+          [
+            0
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "e3516cab57b63205465ffe5dc61de88cf9f8065185329e8d820f0b35bb3f2092",
+        "smiles": "Nc1nccc(Cl)n1",
+        "status": "assessed"
+      },
+      "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1": {
+        "all_feature_count": 8,
+        "atom_count": 22,
+        "bond_count": 24,
+        "donor_atom_sets": [
+          [
+            2
+          ],
+          [
+            20
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "cbaa326270b235530e89cf51bc9a63bc980f9d10f6e2b50db6ff8b1f541e41cb",
+        "smiles": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+        "status": "assessed"
+      },
+      "O=C(O)[C@H]1CCCNC1": {
+        "all_feature_count": 7,
+        "atom_count": 9,
+        "bond_count": 9,
+        "donor_atom_sets": [
+          [
+            2
+          ],
+          [
+            7
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "58e90e4e3a098207394cb6292c4afb669c0fdff8096a82c55a712a5e30b9e564",
+        "smiles": "O=C(O)[C@H]1CCCNC1",
+        "status": "assessed"
+      }
+    },
+    "fixed_R3_case": {
+      "actual_partner_donors": {
+        "all_feature_count": 9,
+        "atom_count": 21,
+        "bond_count": 23,
+        "donor_atom_sets": [
+          [
+            5
+          ]
+        ],
+        "donor_count": 1,
+        "indexed_topology_sha256": "1dd21a6562b48902d5c61035cd2271862fda8030704450e51740f0d4384316b9",
+        "smiles": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+        "status": "assessed"
+      },
+      "guide_donors": {
+        "all_feature_count": 8,
+        "atom_count": 19,
+        "bond_count": 20,
+        "donor_atom_sets": [
+          [
+            8
+          ],
+          [
+            11
+          ]
+        ],
+        "donor_count": 2,
+        "indexed_topology_sha256": "32f48379e4f8bebd80677e79f58b6ca5b06f866cb30d096148afdd101584960e",
+        "smiles": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+        "status": "assessed"
+      },
+      "guide_endpoint": {
+        "domain": {
+          "concrete_endpoint_elements": {
+            "17": "C"
+          },
+          "concrete_endpoint_indices": [
+            17
+          ],
+          "full_role_mapping_tuples": [
+            [
+              18,
+              17
+            ]
+          ],
+          "map_number": 1,
+          "matches_observed": 1,
+          "role_atom_index": 1,
+          "role_slot": 0,
+          "status": "assessed"
+        },
+        "donor_site_partition": {
+          "donors": [
+            {
+              "atom_ids": [
+                8
+              ],
+              "overlapping_indices": [],
+              "relation": "disjoint_from_all_possible_endpoints"
+            },
+            {
+              "atom_ids": [
+                11
+              ],
+              "overlapping_indices": [],
+              "relation": "disjoint_from_all_possible_endpoints"
+            }
+          ],
+          "possible_endpoint_indices": [
+            17
+          ],
+          "status": "assessed"
+        }
+      },
+      "product_observations": [
+        {
+          "donors": {
+            "all_feature_count": 17,
+            "atom_count": 33,
+            "bond_count": 36,
+            "donor_atom_sets": [
+              [
+                8
+              ],
+              [
+                12
+              ]
+            ],
+            "donor_count": 2,
+            "indexed_topology_sha256": "edabf8508ef510fbe0c3aca16597f89718c4455b7d906df0f668c1e05087695f",
+            "smiles": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+            "status": "assessed"
+          },
+          "product_index": 0,
+          "smiles": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12"
+        },
+        {
+          "donors": {
+            "all_feature_count": 16,
+            "atom_count": 32,
+            "bond_count": 35,
+            "donor_atom_sets": [
+              [
+                7
+              ],
+              [
+                11
+              ]
+            ],
+            "donor_count": 2,
+            "indexed_topology_sha256": "3f24592e0675c28874318a98c98c8abe389425a3965b9629cc0924fef4a56e72",
+            "smiles": "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+            "status": "assessed"
+          },
+          "product_index": 1,
+          "smiles": "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12"
+        },
+        {
+          "donors": {
+            "all_feature_count": 15,
+            "atom_count": 35,
+            "bond_count": 38,
+            "donor_atom_sets": [
+              [
+                10
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "7c6eb3706f8a63f835af4b50b04fcd1c3df619f6cb18f5f9608bf7bee512591d",
+            "smiles": "CCOC(=O)Cc1ccc(Nc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)c(OC)c1",
+            "status": "assessed"
+          },
+          "product_index": 2,
+          "smiles": "CCOC(=O)Cc1ccc(Nc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)c(OC)c1"
+        }
+      ],
+      "scope": {
+        "R3_old_graph_associations": [
+          {
+            "contributor": [
+              {
+                "apply_id": 93,
+                "guide": [
+                  "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+                  "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+                ],
+                "guide_quality": "typed",
+                "source_evidence": [
+                  {
+                    "building_block_id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+                    "kind": "catalog_leaf",
+                    "nearest_call_id": 42,
+                    "node_id": "ob0",
+                    "slot": 0
+                  },
+                  {
+                    "kind": "replaced_intermediate",
+                    "node_id": "ir",
+                    "slot": 1
+                  }
+                ],
+                "source_slot_kind": [
+                  "catalog_leaf",
+                  "replaced_intermediate"
+                ],
+                "stage_id": 26
+              }
+            ],
+            "disjoint_alternative_rule": "synllama-rule-077",
+            "graph": "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+            "guide": [
+              "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+              "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+            ],
+            "guide_quality": "typed",
+            "node_id": "or",
+            "old_source": "COc1cc(CC(=O)O)ccc1Cl",
+            "old_source_id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+            "partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+            "rule_id": "synllama-rule-042",
+            "source_slot": 0
+          },
+          {
+            "contributor": [
+              {
+                "apply_id": 97,
+                "guide": [
+                  "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+                  "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+                ],
+                "guide_quality": "typed",
+                "source_evidence": [
+                  {
+                    "building_block_id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+                    "kind": "catalog_leaf",
+                    "nearest_call_id": 42,
+                    "node_id": "ob0",
+                    "slot": 0
+                  },
+                  {
+                    "kind": "replaced_intermediate",
+                    "node_id": "ir",
+                    "slot": 1
+                  }
+                ],
+                "source_slot_kind": [
+                  "catalog_leaf",
+                  "replaced_intermediate"
+                ],
+                "stage_id": 26
+              }
+            ],
+            "disjoint_alternative_rule": "synllama-rule-077",
+            "graph": "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc",
+            "guide": [
+              "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+              "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+            ],
+            "guide_quality": "typed",
+            "node_id": "or",
+            "old_source": "COc1cc(C(=O)O)ccc1Cl",
+            "old_source_id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+            "partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+            "rule_id": "synllama-rule-042",
+            "source_slot": 0
+          }
+        ],
+        "already_generated_products": [
+          "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "CCOC(=O)Cc1ccc(Nc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)c(OC)c1"
+        ],
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+        ],
+        "leaf_slot": 0,
+        "partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+        "rule_id": "synllama-rule-042",
+        "sources": [
+          {
+            "group_rank": 1,
+            "id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+            "smiles": "COc1cc(CC(=O)O)ccc1Cl"
+          },
+          {
+            "R3_screen_status": "known_ineligible",
+            "group_rank": 2,
+            "id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+            "smiles": "COc1cc(C(=O)O)ccc1Cl"
+          },
+          {
+            "R3_screen_status": "known_ineligible",
+            "group_rank": 3,
+            "id": null,
+            "smiles": "COc1cc(CCC(=O)O)ccc1Cl"
+          },
+          {
+            "R3_screen_status": "known_ineligible",
+            "group_rank": 4,
+            "id": null,
+            "smiles": "COc1cc(C2(C(=O)O)CC2)ccc1Cl"
+          },
+          {
+            "R3_screen_status": "qualifies",
+            "group_rank": 5,
+            "id": "structure-sha256:3d4e5913015e997e924d19282b67bb59fdb07d40a35a3f6a268e1cc7874c7c30",
+            "smiles": "CCOC(=O)Cc1ccc(Cl)c(OC)c1"
+          }
+        ]
+      },
+      "source_observations": [
+        {
+          "donor_difference": {
+            "guide_count": 2,
+            "source_count": 1,
+            "source_has_fewer": true,
+            "source_minus_guide": -1,
+            "status": "assessed"
+          },
+          "group_rank": 1,
+          "id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+          "smiles": "COc1cc(CC(=O)O)ccc1Cl",
+          "source_donors": {
+            "all_feature_count": 8,
+            "atom_count": 13,
+            "bond_count": 13,
+            "donor_atom_sets": [
+              [
+                8
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "a21986ab3207ea39dab390c6d53b0990d42b90bcda9cd7dbf56748acffb5d3dd",
+            "smiles": "COc1cc(CC(=O)O)ccc1Cl",
+            "status": "assessed"
+          },
+          "source_endpoint": {
+            "domain": {
+              "concrete_endpoint_elements": {
+                "11": "C"
+              },
+              "concrete_endpoint_indices": [
+                11
+              ],
+              "full_role_mapping_tuples": [
+                [
+                  12,
+                  11
+                ]
+              ],
+              "map_number": 1,
+              "matches_observed": 1,
+              "role_atom_index": 1,
+              "role_slot": 0,
+              "status": "assessed"
+            },
+            "donor_site_partition": {
+              "donors": [
+                {
+                  "atom_ids": [
+                    8
+                  ],
+                  "overlapping_indices": [],
+                  "relation": "disjoint_from_all_possible_endpoints"
+                }
+              ],
+              "possible_endpoint_indices": [
+                11
+              ],
+              "status": "assessed"
+            }
+          }
+        },
+        {
+          "R3_screen_status": "known_ineligible",
+          "donor_difference": {
+            "guide_count": 2,
+            "source_count": 1,
+            "source_has_fewer": true,
+            "source_minus_guide": -1,
+            "status": "assessed"
+          },
+          "group_rank": 2,
+          "id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+          "smiles": "COc1cc(C(=O)O)ccc1Cl",
+          "source_donors": {
+            "all_feature_count": 7,
+            "atom_count": 12,
+            "bond_count": 12,
+            "donor_atom_sets": [
+              [
+                7
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "a613c8a4c7ebe1e6dd29de5825a73b12560cce200f9eb096f14e95ab33735ec3",
+            "smiles": "COc1cc(C(=O)O)ccc1Cl",
+            "status": "assessed"
+          },
+          "source_endpoint": {
+            "domain": {
+              "concrete_endpoint_elements": {
+                "10": "C"
+              },
+              "concrete_endpoint_indices": [
+                10
+              ],
+              "full_role_mapping_tuples": [
+                [
+                  11,
+                  10
+                ]
+              ],
+              "map_number": 1,
+              "matches_observed": 1,
+              "role_atom_index": 1,
+              "role_slot": 0,
+              "status": "assessed"
+            },
+            "donor_site_partition": {
+              "donors": [
+                {
+                  "atom_ids": [
+                    7
+                  ],
+                  "overlapping_indices": [],
+                  "relation": "disjoint_from_all_possible_endpoints"
+                }
+              ],
+              "possible_endpoint_indices": [
+                10
+              ],
+              "status": "assessed"
+            }
+          }
+        },
+        {
+          "R3_screen_status": "known_ineligible",
+          "donor_difference": {
+            "guide_count": 2,
+            "source_count": 1,
+            "source_has_fewer": true,
+            "source_minus_guide": -1,
+            "status": "assessed"
+          },
+          "group_rank": 3,
+          "id": null,
+          "smiles": "COc1cc(CCC(=O)O)ccc1Cl",
+          "source_donors": {
+            "all_feature_count": 9,
+            "atom_count": 14,
+            "bond_count": 14,
+            "donor_atom_sets": [
+              [
+                9
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "2d47ca3aab8e46201bc1950f0f3b95499fbf92b6b4788d3cc40ad603c571108f",
+            "smiles": "COc1cc(CCC(=O)O)ccc1Cl",
+            "status": "assessed"
+          },
+          "source_endpoint": {
+            "domain": {
+              "concrete_endpoint_elements": {
+                "12": "C"
+              },
+              "concrete_endpoint_indices": [
+                12
+              ],
+              "full_role_mapping_tuples": [
+                [
+                  13,
+                  12
+                ]
+              ],
+              "map_number": 1,
+              "matches_observed": 1,
+              "role_atom_index": 1,
+              "role_slot": 0,
+              "status": "assessed"
+            },
+            "donor_site_partition": {
+              "donors": [
+                {
+                  "atom_ids": [
+                    9
+                  ],
+                  "overlapping_indices": [],
+                  "relation": "disjoint_from_all_possible_endpoints"
+                }
+              ],
+              "possible_endpoint_indices": [
+                12
+              ],
+              "status": "assessed"
+            }
+          }
+        },
+        {
+          "R3_screen_status": "known_ineligible",
+          "donor_difference": {
+            "guide_count": 2,
+            "source_count": 1,
+            "source_has_fewer": true,
+            "source_minus_guide": -1,
+            "status": "assessed"
+          },
+          "group_rank": 4,
+          "id": null,
+          "smiles": "COc1cc(C2(C(=O)O)CC2)ccc1Cl",
+          "source_donors": {
+            "all_feature_count": 8,
+            "atom_count": 15,
+            "bond_count": 16,
+            "donor_atom_sets": [
+              [
+                8
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "2716956b907e8385a8e4f355fa677e4fac2962c9e1cb2cbd4602200948ad0156",
+            "smiles": "COc1cc(C2(C(=O)O)CC2)ccc1Cl",
+            "status": "assessed"
+          },
+          "source_endpoint": {
+            "domain": {
+              "concrete_endpoint_elements": {
+                "13": "C"
+              },
+              "concrete_endpoint_indices": [
+                13
+              ],
+              "full_role_mapping_tuples": [
+                [
+                  14,
+                  13
+                ]
+              ],
+              "map_number": 1,
+              "matches_observed": 1,
+              "role_atom_index": 1,
+              "role_slot": 0,
+              "status": "assessed"
+            },
+            "donor_site_partition": {
+              "donors": [
+                {
+                  "atom_ids": [
+                    8
+                  ],
+                  "overlapping_indices": [],
+                  "relation": "disjoint_from_all_possible_endpoints"
+                }
+              ],
+              "possible_endpoint_indices": [
+                13
+              ],
+              "status": "assessed"
+            }
+          }
+        },
+        {
+          "R3_screen_status": "qualifies",
+          "donor_difference": {
+            "guide_count": 2,
+            "source_count": 0,
+            "source_has_fewer": true,
+            "source_minus_guide": -2,
+            "status": "assessed"
+          },
+          "group_rank": 5,
+          "id": "structure-sha256:3d4e5913015e997e924d19282b67bb59fdb07d40a35a3f6a268e1cc7874c7c30",
+          "smiles": "CCOC(=O)Cc1ccc(Cl)c(OC)c1",
+          "source_donors": {
+            "all_feature_count": 6,
+            "atom_count": 15,
+            "bond_count": 15,
+            "donor_atom_sets": [],
+            "donor_count": 0,
+            "indexed_topology_sha256": "76bf31f970d5c3bf3706b2c5b7135e31f0c9d7a6a05a9cebfe3364987f267882",
+            "smiles": "CCOC(=O)Cc1ccc(Cl)c(OC)c1",
+            "status": "assessed"
+          },
+          "source_endpoint": {
+            "domain": {
+              "concrete_endpoint_elements": {
+                "9": "C"
+              },
+              "concrete_endpoint_indices": [
+                9
+              ],
+              "full_role_mapping_tuples": [
+                [
+                  10,
+                  9
+                ]
+              ],
+              "map_number": 1,
+              "matches_observed": 1,
+              "role_atom_index": 1,
+              "role_slot": 0,
+              "status": "assessed"
+            },
+            "donor_site_partition": {
+              "donors": [],
+              "possible_endpoint_indices": [
+                9
+              ],
+              "status": "assessed"
+            }
+          }
+        }
+      ]
+    },
+    "supported_records": [
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 0,
+              "source_count": 0,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 5,
+              "atom_count": 13,
+              "bond_count": 13,
+              "donor_atom_sets": [],
+              "donor_count": 0,
+              "indexed_topology_sha256": "d39123df9b6be8fb9e3d2054bd24eb9a72c8e8131fd496e602832977e727fdfe",
+              "smiles": "COc1cc(Cl)cc(OC)c1OC",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "4": "C"
+                },
+                "concrete_endpoint_indices": [
+                  4
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    5,
+                    4
+                  ]
+                ],
+                "map_number": 1,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [],
+                "possible_endpoint_indices": [
+                  4
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "COc1cc(Cl)cc(OC)c1OC",
+            "same_step_actual_partner": "Nc1nccc(Cl)n1",
+            "slot": 0,
+            "source_donors": {
+              "all_feature_count": 5,
+              "atom_count": 13,
+              "bond_count": 13,
+              "donor_atom_sets": [],
+              "donor_count": 0,
+              "indexed_topology_sha256": "c4e7d44627b62dd43889b863312203ac00871a68bbac0cee1bb7ef0a133996ee",
+              "smiles": "COc1cc(Br)cc(OC)c1OC",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "4": "C"
+                },
+                "concrete_endpoint_indices": [
+                  4
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    5,
+                    4
+                  ]
+                ],
+                "map_number": 1,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [],
+                "possible_endpoint_indices": [
+                  4
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:1bdf498e468a2f72b360455662fd60a36de28a3cee7511046af695b12dbe5401"
+            ],
+            "source_smiles": "COc1cc(Br)cc(OC)c1OC"
+          },
+          {
+            "donor_difference": {
+              "guide_count": 1,
+              "source_count": 1,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 4,
+              "atom_count": 8,
+              "bond_count": 8,
+              "donor_atom_sets": [
+                [
+                  0
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "e3516cab57b63205465ffe5dc61de88cf9f8065185329e8d820f0b35bb3f2092",
+              "smiles": "Nc1nccc(Cl)n1",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "0": "N"
+                },
+                "concrete_endpoint_indices": [
+                  0
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    0
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      0
+                    ],
+                    "overlapping_indices": [
+                      0
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  0
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "Nc1nccc(Cl)n1",
+            "same_step_actual_partner": "COc1cc(Br)cc(OC)c1OC",
+            "slot": 1,
+            "source_donors": {
+              "all_feature_count": 4,
+              "atom_count": 8,
+              "bond_count": 8,
+              "donor_atom_sets": [
+                [
+                  0
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "e3516cab57b63205465ffe5dc61de88cf9f8065185329e8d820f0b35bb3f2092",
+              "smiles": "Nc1nccc(Cl)n1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "0": "N"
+                },
+                "concrete_endpoint_indices": [
+                  0
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    0
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      0
+                    ],
+                    "overlapping_indices": [
+                      0
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  0
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:3f28b7f6082cb3313bfb21df8521e00ba0ad2655cf40d5c26e17e66470119829"
+            ],
+            "source_smiles": "Nc1nccc(Cl)n1"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 9,
+          "atom_count": 20,
+          "bond_count": 21,
+          "donor_atom_sets": [
+            [
+              5
+            ]
+          ],
+          "donor_count": 1,
+          "indexed_topology_sha256": "dd8718c702765e8a7642c359b1efcffb714cfdf144d388bb2dad90507c3ee2c5",
+          "smiles": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 0,
+        "record": {
+          "expected_product": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+          "input_id": "CHEMBL4247-query-1",
+          "node_id": "ir",
+          "ordered_reactants": [
+            "COc1cc(Br)cc(OC)c1OC",
+            "Nc1nccc(Cl)n1"
+          ],
+          "route_graph_sha256": "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+          "rule_id": "synllama-rule-042",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 0,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 5,
+            "atom_count": 13,
+            "bond_count": 13,
+            "donor_atom_sets": [],
+            "donor_count": 0,
+            "indexed_topology_sha256": "c4e7d44627b62dd43889b863312203ac00871a68bbac0cee1bb7ef0a133996ee",
+            "smiles": "COc1cc(Br)cc(OC)c1OC",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 4,
+            "atom_count": 8,
+            "bond_count": 8,
+            "donor_atom_sets": [
+              [
+                0
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "e3516cab57b63205465ffe5dc61de88cf9f8065185329e8d820f0b35bb3f2092",
+            "smiles": "Nc1nccc(Cl)n1",
+            "status": "assessed"
+          }
+        ]
+      },
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 2,
+              "source_count": 2,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 8,
+              "atom_count": 22,
+              "bond_count": 24,
+              "donor_atom_sets": [
+                [
+                  2
+                ],
+                [
+                  20
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "cbaa326270b235530e89cf51bc9a63bc980f9d10f6e2b50db6ff8b1f541e41cb",
+              "smiles": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "20": "N"
+                },
+                "concrete_endpoint_indices": [
+                  20
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    20
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      2
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      20
+                    ],
+                    "overlapping_indices": [
+                      20
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  20
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+            "same_step_actual_partner": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "slot": 1,
+            "source_donors": {
+              "all_feature_count": 6,
+              "atom_count": 13,
+              "bond_count": 14,
+              "donor_atom_sets": [
+                [
+                  2
+                ],
+                [
+                  6
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "909e9463e57acd1eea4097e2991780a7516ee6ed9dbcf51b95cc173dfd40e9bf",
+              "smiles": "C1CNC[C@@H](CN2CCOCC2)C1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "2": "N"
+                },
+                "concrete_endpoint_indices": [
+                  2
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    2
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      2
+                    ],
+                    "overlapping_indices": [
+                      2
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  },
+                  {
+                    "atom_ids": [
+                      6
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  2
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:96410f58ae8753de914a518d618f670ab7c83e6d9ca265e281101259da48aa5e"
+            ],
+            "source_smiles": "C1CNC[C@@H](CN2CCOCC2)C1"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 13,
+          "atom_count": 32,
+          "bond_count": 35,
+          "donor_atom_sets": [
+            [
+              5
+            ],
+            [
+              17
+            ]
+          ],
+          "donor_count": 2,
+          "indexed_topology_sha256": "1e4eb7212091b28b43deaa08df93be59201834a8d4a3fba2f6fc3700dc902078",
+          "smiles": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 1,
+        "record": {
+          "expected_product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "input_id": "CHEMBL4247-query-1",
+          "node_id": "or",
+          "ordered_reactants": [
+            "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "C1CNC[C@@H](CN2CCOCC2)C1"
+          ],
+          "route_graph_sha256": "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+          "rule_id": "synllama-rule-042",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 1,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 9,
+            "atom_count": 20,
+            "bond_count": 21,
+            "donor_atom_sets": [
+              [
+                5
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "dd8718c702765e8a7642c359b1efcffb714cfdf144d388bb2dad90507c3ee2c5",
+            "smiles": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 6,
+            "atom_count": 13,
+            "bond_count": 14,
+            "donor_atom_sets": [
+              [
+                2
+              ],
+              [
+                6
+              ]
+            ],
+            "donor_count": 2,
+            "indexed_topology_sha256": "909e9463e57acd1eea4097e2991780a7516ee6ed9dbcf51b95cc173dfd40e9bf",
+            "smiles": "C1CNC[C@@H](CN2CCOCC2)C1",
+            "status": "assessed"
+          }
+        ]
+      },
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 2,
+              "source_count": 2,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 7,
+              "atom_count": 9,
+              "bond_count": 9,
+              "donor_atom_sets": [
+                [
+                  2
+                ],
+                [
+                  7
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "58e90e4e3a098207394cb6292c4afb669c0fdff8096a82c55a712a5e30b9e564",
+              "smiles": "O=C(O)[C@H]1CCCNC1",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "1": "C"
+                },
+                "concrete_endpoint_indices": [
+                  1
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    2,
+                    1,
+                    0
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      2
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      7
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  1
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "O=C(O)[C@H]1CCCNC1",
+            "same_step_actual_partner": "NCc1cccc(N2CCOCC2)c1",
+            "slot": 0,
+            "source_donors": {
+              "all_feature_count": 7,
+              "atom_count": 9,
+              "bond_count": 9,
+              "donor_atom_sets": [
+                [
+                  2
+                ],
+                [
+                  7
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "58e90e4e3a098207394cb6292c4afb669c0fdff8096a82c55a712a5e30b9e564",
+              "smiles": "O=C(O)[C@H]1CCCNC1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "1": "C"
+                },
+                "concrete_endpoint_indices": [
+                  1
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    2,
+                    1,
+                    0
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      2
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      7
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  1
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:85614ed4b1dd82752bbaaab0109610e2a831525fc4b355d747b72bd28f012ff1"
+            ],
+            "source_smiles": "O=C(O)[C@H]1CCCNC1"
+          },
+          {
+            "donor_difference": {
+              "guide_count": 1,
+              "source_count": 1,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 5,
+              "atom_count": 14,
+              "bond_count": 15,
+              "donor_atom_sets": [
+                [
+                  0
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "6b0b17b0947d1d8b25e9d8ca9e4b0cf2721b4cb4681eb2490b6c1f6b300c9fbd",
+              "smiles": "NCc1cccc(N2CCOCC2)c1",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "0": "N"
+                },
+                "concrete_endpoint_indices": [
+                  0
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    0
+                  ]
+                ],
+                "map_number": 6,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      0
+                    ],
+                    "overlapping_indices": [
+                      0
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  0
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "NCc1cccc(N2CCOCC2)c1",
+            "same_step_actual_partner": "O=C(O)[C@H]1CCCNC1",
+            "slot": 1,
+            "source_donors": {
+              "all_feature_count": 5,
+              "atom_count": 14,
+              "bond_count": 15,
+              "donor_atom_sets": [
+                [
+                  0
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "6b0b17b0947d1d8b25e9d8ca9e4b0cf2721b4cb4681eb2490b6c1f6b300c9fbd",
+              "smiles": "NCc1cccc(N2CCOCC2)c1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "0": "N"
+                },
+                "concrete_endpoint_indices": [
+                  0
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    0
+                  ]
+                ],
+                "map_number": 6,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      0
+                    ],
+                    "overlapping_indices": [
+                      0
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  0
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:85e59a2f2fd8044258a146f038f1b7001ab5dca910f6c011c226010a5dce3750"
+            ],
+            "source_smiles": "NCc1cccc(N2CCOCC2)c1"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 8,
+          "atom_count": 22,
+          "bond_count": 24,
+          "donor_atom_sets": [
+            [
+              2
+            ],
+            [
+              20
+            ]
+          ],
+          "donor_count": 2,
+          "indexed_topology_sha256": "cbaa326270b235530e89cf51bc9a63bc980f9d10f6e2b50db6ff8b1f541e41cb",
+          "smiles": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 2,
+        "record": {
+          "expected_product": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+          "input_id": "CHEMBL4247-query-1",
+          "node_id": "ir",
+          "ordered_reactants": [
+            "O=C(O)[C@H]1CCCNC1",
+            "NCc1cccc(N2CCOCC2)c1"
+          ],
+          "route_graph_sha256": "1dd42d6994e2f6d5d30bd77e6b4d701b05dab24bc6776fb3e40e59a6993545db",
+          "rule_id": "synllama-rule-077",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 2,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 7,
+            "atom_count": 9,
+            "bond_count": 9,
+            "donor_atom_sets": [
+              [
+                2
+              ],
+              [
+                7
+              ]
+            ],
+            "donor_count": 2,
+            "indexed_topology_sha256": "58e90e4e3a098207394cb6292c4afb669c0fdff8096a82c55a712a5e30b9e564",
+            "smiles": "O=C(O)[C@H]1CCCNC1",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 5,
+            "atom_count": 14,
+            "bond_count": 15,
+            "donor_atom_sets": [
+              [
+                0
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "6b0b17b0947d1d8b25e9d8ca9e4b0cf2721b4cb4681eb2490b6c1f6b300c9fbd",
+            "smiles": "NCc1cccc(N2CCOCC2)c1",
+            "status": "assessed"
+          }
+        ]
+      },
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 1,
+              "source_count": 1,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 9,
+              "atom_count": 20,
+              "bond_count": 21,
+              "donor_atom_sets": [
+                [
+                  5
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "dd8718c702765e8a7642c359b1efcffb714cfdf144d388bb2dad90507c3ee2c5",
+              "smiles": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "10": "C"
+                },
+                "concrete_endpoint_indices": [
+                  10
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    11,
+                    10
+                  ]
+                ],
+                "map_number": 1,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      5
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  10
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "same_step_actual_partner": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+            "slot": 0,
+            "source_donors": {
+              "all_feature_count": 7,
+              "atom_count": 15,
+              "bond_count": 15,
+              "donor_atom_sets": [
+                [
+                  7
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "501a5eef8437bfe3c3e6711b2961544b5ce33cda2a61b994cb8b8b29c590c1fe",
+              "smiles": "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "12": "C"
+                },
+                "concrete_endpoint_indices": [
+                  12
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    13,
+                    12
+                  ]
+                ],
+                "map_number": 1,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      7
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  12
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:227a1955a2d47e4e80ec4e7a2674883d47be56fa73ba787c143e4854228bbaa3"
+            ],
+            "source_smiles": "CC(C)(C)OC(=O)Nc1nccc(Cl)n1"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 13,
+          "atom_count": 36,
+          "bond_count": 39,
+          "donor_atom_sets": [
+            [
+              7
+            ],
+            [
+              20
+            ]
+          ],
+          "donor_count": 2,
+          "indexed_topology_sha256": "f7c3213a9c72da10313df5d1a085f73b8f95d44030a100239f1563d140ab51d3",
+          "smiles": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 3,
+        "record": {
+          "expected_product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+          "input_id": "CHEMBL4247-query-1",
+          "node_id": "or",
+          "ordered_reactants": [
+            "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+            "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1"
+          ],
+          "route_graph_sha256": "1dd42d6994e2f6d5d30bd77e6b4d701b05dab24bc6776fb3e40e59a6993545db",
+          "rule_id": "synllama-rule-042",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 3,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 7,
+            "atom_count": 15,
+            "bond_count": 15,
+            "donor_atom_sets": [
+              [
+                7
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "501a5eef8437bfe3c3e6711b2961544b5ce33cda2a61b994cb8b8b29c590c1fe",
+            "smiles": "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 8,
+            "atom_count": 22,
+            "bond_count": 24,
+            "donor_atom_sets": [
+              [
+                2
+              ],
+              [
+                20
+              ]
+            ],
+            "donor_count": 2,
+            "indexed_topology_sha256": "cbaa326270b235530e89cf51bc9a63bc980f9d10f6e2b50db6ff8b1f541e41cb",
+            "smiles": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+            "status": "assessed"
+          }
+        ]
+      },
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 2,
+              "source_count": 2,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 8,
+              "atom_count": 22,
+              "bond_count": 24,
+              "donor_atom_sets": [
+                [
+                  2
+                ],
+                [
+                  20
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "cbaa326270b235530e89cf51bc9a63bc980f9d10f6e2b50db6ff8b1f541e41cb",
+              "smiles": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "20": "N"
+                },
+                "concrete_endpoint_indices": [
+                  20
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    20
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      2
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      20
+                    ],
+                    "overlapping_indices": [
+                      20
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  20
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+            "same_step_actual_partner": "COc1cc(Nc2nccc(Cl)n2)cc(Cl)c1OC",
+            "slot": 1,
+            "source_donors": {
+              "all_feature_count": 6,
+              "atom_count": 13,
+              "bond_count": 14,
+              "donor_atom_sets": [
+                [
+                  2
+                ],
+                [
+                  6
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "909e9463e57acd1eea4097e2991780a7516ee6ed9dbcf51b95cc173dfd40e9bf",
+              "smiles": "C1CNC[C@@H](CN2CCOCC2)C1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "2": "N"
+                },
+                "concrete_endpoint_indices": [
+                  2
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    2
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      2
+                    ],
+                    "overlapping_indices": [
+                      2
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  },
+                  {
+                    "atom_ids": [
+                      6
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  2
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:96410f58ae8753de914a518d618f670ab7c83e6d9ca265e281101259da48aa5e"
+            ],
+            "source_smiles": "C1CNC[C@@H](CN2CCOCC2)C1"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 12,
+          "atom_count": 31,
+          "bond_count": 34,
+          "donor_atom_sets": [
+            [
+              5
+            ],
+            [
+              17
+            ]
+          ],
+          "donor_count": 2,
+          "indexed_topology_sha256": "3b2c8701d2b6361a034b7d76967e7418e94c2f42a534c427a8c210a306e5880d",
+          "smiles": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 5,
+        "record": {
+          "expected_product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+          "input_id": "CHEMBL4247-query-1",
+          "node_id": "or",
+          "ordered_reactants": [
+            "COc1cc(Nc2nccc(Cl)n2)cc(Cl)c1OC",
+            "C1CNC[C@@H](CN2CCOCC2)C1"
+          ],
+          "route_graph_sha256": "50e1848a9af20738013eeb4eedd83358d6701921bc843203011a73f5e64304d0",
+          "rule_id": "synllama-rule-042",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 4,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 8,
+            "atom_count": 19,
+            "bond_count": 20,
+            "donor_atom_sets": [
+              [
+                5
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "48e26e0128eb78aeaa4638c1340beff4108a8905bc04f7b01c602f575c98c015",
+            "smiles": "COc1cc(Nc2nccc(Cl)n2)cc(Cl)c1OC",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 6,
+            "atom_count": 13,
+            "bond_count": 14,
+            "donor_atom_sets": [
+              [
+                2
+              ],
+              [
+                6
+              ]
+            ],
+            "donor_count": 2,
+            "indexed_topology_sha256": "909e9463e57acd1eea4097e2991780a7516ee6ed9dbcf51b95cc173dfd40e9bf",
+            "smiles": "C1CNC[C@@H](CN2CCOCC2)C1",
+            "status": "assessed"
+          }
+        ]
+      },
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 1,
+              "source_count": 1,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 9,
+              "atom_count": 20,
+              "bond_count": 21,
+              "donor_atom_sets": [
+                [
+                  5
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "dd8718c702765e8a7642c359b1efcffb714cfdf144d388bb2dad90507c3ee2c5",
+              "smiles": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "10": "C"
+                },
+                "concrete_endpoint_indices": [
+                  10
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    11,
+                    10
+                  ]
+                ],
+                "map_number": 1,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      5
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  10
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "same_step_actual_partner": "O=C(O)[C@H]1CCCNC1",
+            "slot": 0,
+            "source_donors": {
+              "all_feature_count": 7,
+              "atom_count": 15,
+              "bond_count": 15,
+              "donor_atom_sets": [
+                [
+                  7
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "501a5eef8437bfe3c3e6711b2961544b5ce33cda2a61b994cb8b8b29c590c1fe",
+              "smiles": "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "12": "C"
+                },
+                "concrete_endpoint_indices": [
+                  12
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    13,
+                    12
+                  ]
+                ],
+                "map_number": 1,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      7
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  12
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:227a1955a2d47e4e80ec4e7a2674883d47be56fa73ba787c143e4854228bbaa3"
+            ],
+            "source_smiles": "CC(C)(C)OC(=O)Nc1nccc(Cl)n1"
+          },
+          {
+            "donor_difference": {
+              "guide_count": 2,
+              "source_count": 2,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 7,
+              "atom_count": 9,
+              "bond_count": 9,
+              "donor_atom_sets": [
+                [
+                  2
+                ],
+                [
+                  7
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "58e90e4e3a098207394cb6292c4afb669c0fdff8096a82c55a712a5e30b9e564",
+              "smiles": "O=C(O)[C@H]1CCCNC1",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "7": "N"
+                },
+                "concrete_endpoint_indices": [
+                  7
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    7
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      2
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      7
+                    ],
+                    "overlapping_indices": [
+                      7
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  7
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "O=C(O)[C@H]1CCCNC1",
+            "same_step_actual_partner": "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+            "slot": 1,
+            "source_donors": {
+              "all_feature_count": 7,
+              "atom_count": 9,
+              "bond_count": 9,
+              "donor_atom_sets": [
+                [
+                  2
+                ],
+                [
+                  7
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "58e90e4e3a098207394cb6292c4afb669c0fdff8096a82c55a712a5e30b9e564",
+              "smiles": "O=C(O)[C@H]1CCCNC1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "7": "N"
+                },
+                "concrete_endpoint_indices": [
+                  7
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    7
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      2
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      7
+                    ],
+                    "overlapping_indices": [
+                      7
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  7
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:85614ed4b1dd82752bbaaab0109610e2a831525fc4b355d747b72bd28f012ff1"
+            ],
+            "source_smiles": "O=C(O)[C@H]1CCCNC1"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 12,
+          "atom_count": 23,
+          "bond_count": 24,
+          "donor_atom_sets": [
+            [
+              7
+            ],
+            [
+              20
+            ]
+          ],
+          "donor_count": 2,
+          "indexed_topology_sha256": "15421fe8480dfb233de033eaa8faa2a0f3ae34758551b01b3f7e020d265077c6",
+          "smiles": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)O)C2)n1",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 6,
+        "record": {
+          "expected_product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)O)C2)n1",
+          "input_id": "CHEMBL4247-query-1",
+          "node_id": "ir",
+          "ordered_reactants": [
+            "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+            "O=C(O)[C@H]1CCCNC1"
+          ],
+          "route_graph_sha256": "67888699e48ec30d7ddae382f3fd4c42055501652843ccb80d3879277d94e005",
+          "rule_id": "synllama-rule-042",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 5,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 7,
+            "atom_count": 15,
+            "bond_count": 15,
+            "donor_atom_sets": [
+              [
+                7
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "501a5eef8437bfe3c3e6711b2961544b5ce33cda2a61b994cb8b8b29c590c1fe",
+            "smiles": "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 7,
+            "atom_count": 9,
+            "bond_count": 9,
+            "donor_atom_sets": [
+              [
+                2
+              ],
+              [
+                7
+              ]
+            ],
+            "donor_count": 2,
+            "indexed_topology_sha256": "58e90e4e3a098207394cb6292c4afb669c0fdff8096a82c55a712a5e30b9e564",
+            "smiles": "O=C(O)[C@H]1CCCNC1",
+            "status": "assessed"
+          }
+        ]
+      },
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 1,
+              "source_count": 1,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 5,
+              "atom_count": 14,
+              "bond_count": 15,
+              "donor_atom_sets": [
+                [
+                  0
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "6b0b17b0947d1d8b25e9d8ca9e4b0cf2721b4cb4681eb2490b6c1f6b300c9fbd",
+              "smiles": "NCc1cccc(N2CCOCC2)c1",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "0": "N"
+                },
+                "concrete_endpoint_indices": [
+                  0
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    0
+                  ]
+                ],
+                "map_number": 6,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      0
+                    ],
+                    "overlapping_indices": [
+                      0
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  0
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "NCc1cccc(N2CCOCC2)c1",
+            "same_step_actual_partner": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)O)C2)n1",
+            "slot": 1,
+            "source_donors": {
+              "all_feature_count": 5,
+              "atom_count": 14,
+              "bond_count": 15,
+              "donor_atom_sets": [
+                [
+                  0
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "6b0b17b0947d1d8b25e9d8ca9e4b0cf2721b4cb4681eb2490b6c1f6b300c9fbd",
+              "smiles": "NCc1cccc(N2CCOCC2)c1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "0": "N"
+                },
+                "concrete_endpoint_indices": [
+                  0
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    0
+                  ]
+                ],
+                "map_number": 6,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      0
+                    ],
+                    "overlapping_indices": [
+                      0
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  0
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:85e59a2f2fd8044258a146f038f1b7001ab5dca910f6c011c226010a5dce3750"
+            ],
+            "source_smiles": "NCc1cccc(N2CCOCC2)c1"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 13,
+          "atom_count": 36,
+          "bond_count": 39,
+          "donor_atom_sets": [
+            [
+              7
+            ],
+            [
+              20
+            ]
+          ],
+          "donor_count": 2,
+          "indexed_topology_sha256": "f7c3213a9c72da10313df5d1a085f73b8f95d44030a100239f1563d140ab51d3",
+          "smiles": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 7,
+        "record": {
+          "expected_product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+          "input_id": "CHEMBL4247-query-1",
+          "node_id": "or",
+          "ordered_reactants": [
+            "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)O)C2)n1",
+            "NCc1cccc(N2CCOCC2)c1"
+          ],
+          "route_graph_sha256": "67888699e48ec30d7ddae382f3fd4c42055501652843ccb80d3879277d94e005",
+          "rule_id": "synllama-rule-077",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 6,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 12,
+            "atom_count": 23,
+            "bond_count": 24,
+            "donor_atom_sets": [
+              [
+                7
+              ],
+              [
+                20
+              ]
+            ],
+            "donor_count": 2,
+            "indexed_topology_sha256": "15421fe8480dfb233de033eaa8faa2a0f3ae34758551b01b3f7e020d265077c6",
+            "smiles": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)O)C2)n1",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 5,
+            "atom_count": 14,
+            "bond_count": 15,
+            "donor_atom_sets": [
+              [
+                0
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "6b0b17b0947d1d8b25e9d8ca9e4b0cf2721b4cb4681eb2490b6c1f6b300c9fbd",
+            "smiles": "NCc1cccc(N2CCOCC2)c1",
+            "status": "assessed"
+          }
+        ]
+      },
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 1,
+              "source_count": 1,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 9,
+              "atom_count": 20,
+              "bond_count": 21,
+              "donor_atom_sets": [
+                [
+                  5
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "dd8718c702765e8a7642c359b1efcffb714cfdf144d388bb2dad90507c3ee2c5",
+              "smiles": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "10": "C"
+                },
+                "concrete_endpoint_indices": [
+                  10
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    11,
+                    10
+                  ]
+                ],
+                "map_number": 1,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      5
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  10
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "same_step_actual_partner": "O=C(O)[C@H]1CCCNC1",
+            "slot": 0,
+            "source_donors": {
+              "all_feature_count": 7,
+              "atom_count": 15,
+              "bond_count": 15,
+              "donor_atom_sets": [
+                [
+                  7
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "501a5eef8437bfe3c3e6711b2961544b5ce33cda2a61b994cb8b8b29c590c1fe",
+              "smiles": "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "12": "C"
+                },
+                "concrete_endpoint_indices": [
+                  12
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    13,
+                    12
+                  ]
+                ],
+                "map_number": 1,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      7
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  12
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:227a1955a2d47e4e80ec4e7a2674883d47be56fa73ba787c143e4854228bbaa3"
+            ],
+            "source_smiles": "CC(C)(C)OC(=O)Nc1nccc(Cl)n1"
+          },
+          {
+            "donor_difference": {
+              "guide_count": 2,
+              "source_count": 2,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 7,
+              "atom_count": 9,
+              "bond_count": 9,
+              "donor_atom_sets": [
+                [
+                  2
+                ],
+                [
+                  7
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "58e90e4e3a098207394cb6292c4afb669c0fdff8096a82c55a712a5e30b9e564",
+              "smiles": "O=C(O)[C@H]1CCCNC1",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "7": "N"
+                },
+                "concrete_endpoint_indices": [
+                  7
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    7
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      2
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      7
+                    ],
+                    "overlapping_indices": [
+                      7
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  7
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "O=C(O)[C@H]1CCCNC1",
+            "same_step_actual_partner": "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+            "slot": 1,
+            "source_donors": {
+              "all_feature_count": 7,
+              "atom_count": 9,
+              "bond_count": 9,
+              "donor_atom_sets": [
+                [
+                  2
+                ],
+                [
+                  7
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "58e90e4e3a098207394cb6292c4afb669c0fdff8096a82c55a712a5e30b9e564",
+              "smiles": "O=C(O)[C@H]1CCCNC1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "7": "N"
+                },
+                "concrete_endpoint_indices": [
+                  7
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    7
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      2
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      7
+                    ],
+                    "overlapping_indices": [
+                      7
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  7
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:85614ed4b1dd82752bbaaab0109610e2a831525fc4b355d747b72bd28f012ff1"
+            ],
+            "source_smiles": "O=C(O)[C@H]1CCCNC1"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 12,
+          "atom_count": 23,
+          "bond_count": 24,
+          "donor_atom_sets": [
+            [
+              7
+            ],
+            [
+              20
+            ]
+          ],
+          "donor_count": 2,
+          "indexed_topology_sha256": "15421fe8480dfb233de033eaa8faa2a0f3ae34758551b01b3f7e020d265077c6",
+          "smiles": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)O)C2)n1",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 8,
+        "record": {
+          "expected_product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)O)C2)n1",
+          "input_id": "CHEMBL4247-query-1",
+          "node_id": "ir",
+          "ordered_reactants": [
+            "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+            "O=C(O)[C@H]1CCCNC1"
+          ],
+          "route_graph_sha256": "82cc9e1f7dd6a5f5dadf857be368c20bf83887e0de49a10d5a3cf40664d4023e",
+          "rule_id": "synllama-rule-042",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 7,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 7,
+            "atom_count": 15,
+            "bond_count": 15,
+            "donor_atom_sets": [
+              [
+                7
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "501a5eef8437bfe3c3e6711b2961544b5ce33cda2a61b994cb8b8b29c590c1fe",
+            "smiles": "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 7,
+            "atom_count": 9,
+            "bond_count": 9,
+            "donor_atom_sets": [
+              [
+                2
+              ],
+              [
+                7
+              ]
+            ],
+            "donor_count": 2,
+            "indexed_topology_sha256": "58e90e4e3a098207394cb6292c4afb669c0fdff8096a82c55a712a5e30b9e564",
+            "smiles": "O=C(O)[C@H]1CCCNC1",
+            "status": "assessed"
+          }
+        ]
+      },
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 2,
+              "source_count": 2,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 8,
+              "atom_count": 22,
+              "bond_count": 24,
+              "donor_atom_sets": [
+                [
+                  2
+                ],
+                [
+                  20
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "cbaa326270b235530e89cf51bc9a63bc980f9d10f6e2b50db6ff8b1f541e41cb",
+              "smiles": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "20": "N"
+                },
+                "concrete_endpoint_indices": [
+                  20
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    20
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      2
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      20
+                    ],
+                    "overlapping_indices": [
+                      20
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  20
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1",
+            "same_step_actual_partner": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "slot": 1,
+            "source_donors": {
+              "all_feature_count": 6,
+              "atom_count": 13,
+              "bond_count": 14,
+              "donor_atom_sets": [
+                [
+                  2
+                ],
+                [
+                  6
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "909e9463e57acd1eea4097e2991780a7516ee6ed9dbcf51b95cc173dfd40e9bf",
+              "smiles": "C1CNC[C@@H](CN2CCOCC2)C1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "2": "N"
+                },
+                "concrete_endpoint_indices": [
+                  2
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    2
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      2
+                    ],
+                    "overlapping_indices": [
+                      2
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  },
+                  {
+                    "atom_ids": [
+                      6
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  2
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:96410f58ae8753de914a518d618f670ab7c83e6d9ca265e281101259da48aa5e"
+            ],
+            "source_smiles": "C1CNC[C@@H](CN2CCOCC2)C1"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 13,
+          "atom_count": 32,
+          "bond_count": 35,
+          "donor_atom_sets": [
+            [
+              5
+            ],
+            [
+              17
+            ]
+          ],
+          "donor_count": 2,
+          "indexed_topology_sha256": "1e4eb7212091b28b43deaa08df93be59201834a8d4a3fba2f6fc3700dc902078",
+          "smiles": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 9,
+        "record": {
+          "expected_product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "input_id": "CHEMBL4247-query-1",
+          "node_id": "or",
+          "ordered_reactants": [
+            "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "C1CNC[C@@H](CN2CCOCC2)C1"
+          ],
+          "route_graph_sha256": "a736ce772b8a9aea14a403451a1941eaf3858a64553488b135803adf917acd48",
+          "rule_id": "synllama-rule-042",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 8,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 9,
+            "atom_count": 20,
+            "bond_count": 21,
+            "donor_atom_sets": [
+              [
+                5
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "dd8718c702765e8a7642c359b1efcffb714cfdf144d388bb2dad90507c3ee2c5",
+            "smiles": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 6,
+            "atom_count": 13,
+            "bond_count": 14,
+            "donor_atom_sets": [
+              [
+                2
+              ],
+              [
+                6
+              ]
+            ],
+            "donor_count": 2,
+            "indexed_topology_sha256": "909e9463e57acd1eea4097e2991780a7516ee6ed9dbcf51b95cc173dfd40e9bf",
+            "smiles": "C1CNC[C@@H](CN2CCOCC2)C1",
+            "status": "assessed"
+          }
+        ]
+      },
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 3,
+              "source_count": 2,
+              "source_has_fewer": true,
+              "source_minus_guide": -1,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 9,
+              "atom_count": 19,
+              "bond_count": 20,
+              "donor_atom_sets": [
+                [
+                  8
+                ],
+                [
+                  11
+                ],
+                [
+                  18
+                ]
+              ],
+              "donor_count": 3,
+              "indexed_topology_sha256": "e66f0323b3dadf7140e06ba221542e7679da9406f078d397bd064b65491deefd",
+              "smiles": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "18": "N"
+                },
+                "concrete_endpoint_indices": [
+                  18
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    18
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      8
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      11
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      18
+                    ],
+                    "overlapping_indices": [
+                      18
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  18
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N",
+            "same_step_actual_partner": "Cc1cnn2c(-c3ccccc3S(C)(=O)=O)cc(Cl)nc12",
+            "slot": 1,
+            "source_donors": {
+              "all_feature_count": 6,
+              "atom_count": 12,
+              "bond_count": 12,
+              "donor_atom_sets": [
+                [
+                  6
+                ],
+                [
+                  11
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "6440e64beef68c30836664072dcdc00e48d27e890ff1d5fc683b2535ad59c2c9",
+              "smiles": "COc1cc(C(N)=O)ccc1N",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "11": "N"
+                },
+                "concrete_endpoint_indices": [
+                  11
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    11
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      6
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      11
+                    ],
+                    "overlapping_indices": [
+                      11
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  11
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:67abce1083b75e3ceb756aafcbdfec8e5dbc5b87970f3f7908565c742f4dc8d5"
+            ],
+            "source_smiles": "COc1cc(C(N)=O)ccc1N"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 15,
+          "atom_count": 32,
+          "bond_count": 35,
+          "donor_atom_sets": [
+            [
+              6
+            ],
+            [
+              11
+            ]
+          ],
+          "donor_count": 2,
+          "indexed_topology_sha256": "875e515f093c3e6d8850a03f006b555e497abb7b23ed95112d7eb26f2b8e902e",
+          "smiles": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 10,
+        "record": {
+          "expected_product": "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1",
+          "input_id": "CHEMBL4247-query-2",
+          "node_id": "or",
+          "ordered_reactants": [
+            "Cc1cnn2c(-c3ccccc3S(C)(=O)=O)cc(Cl)nc12",
+            "COc1cc(C(N)=O)ccc1N"
+          ],
+          "route_graph_sha256": "9883b82f2c704b8ddb3966b89e1d53c202eed3177667bd0ee56f35cfeeb63dee",
+          "rule_id": "synllama-rule-042",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 9,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 9,
+            "atom_count": 21,
+            "bond_count": 23,
+            "donor_atom_sets": [],
+            "donor_count": 0,
+            "indexed_topology_sha256": "cc5bd43a579ec10f9685fe92f68d02a4a2b3f41aec4146b6fa36ccb685bfbcd6",
+            "smiles": "Cc1cnn2c(-c3ccccc3S(C)(=O)=O)cc(Cl)nc12",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 6,
+            "atom_count": 12,
+            "bond_count": 12,
+            "donor_atom_sets": [
+              [
+                6
+              ],
+              [
+                11
+              ]
+            ],
+            "donor_count": 2,
+            "indexed_topology_sha256": "6440e64beef68c30836664072dcdc00e48d27e890ff1d5fc683b2535ad59c2c9",
+            "smiles": "COc1cc(C(N)=O)ccc1N",
+            "status": "assessed"
+          }
+        ]
+      },
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 3,
+              "source_count": 2,
+              "source_has_fewer": true,
+              "source_minus_guide": -1,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 9,
+              "atom_count": 19,
+              "bond_count": 20,
+              "donor_atom_sets": [
+                [
+                  8
+                ],
+                [
+                  11
+                ],
+                [
+                  18
+                ]
+              ],
+              "donor_count": 3,
+              "indexed_topology_sha256": "e66f0323b3dadf7140e06ba221542e7679da9406f078d397bd064b65491deefd",
+              "smiles": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "18": "N"
+                },
+                "concrete_endpoint_indices": [
+                  18
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    18
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      8
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      11
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      18
+                    ],
+                    "overlapping_indices": [
+                      18
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  18
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N",
+            "same_step_actual_partner": "Cc1ccc(-c2ccccc2S(C)(=O)=O)c2nc(Cl)ncc12",
+            "slot": 1,
+            "source_donors": {
+              "all_feature_count": 6,
+              "atom_count": 12,
+              "bond_count": 12,
+              "donor_atom_sets": [
+                [
+                  6
+                ],
+                [
+                  11
+                ]
+              ],
+              "donor_count": 2,
+              "indexed_topology_sha256": "6440e64beef68c30836664072dcdc00e48d27e890ff1d5fc683b2535ad59c2c9",
+              "smiles": "COc1cc(C(N)=O)ccc1N",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "11": "N"
+                },
+                "concrete_endpoint_indices": [
+                  11
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    11
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      6
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  },
+                  {
+                    "atom_ids": [
+                      11
+                    ],
+                    "overlapping_indices": [
+                      11
+                    ],
+                    "relation": "intersects_every_possible_endpoint"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  11
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:67abce1083b75e3ceb756aafcbdfec8e5dbc5b87970f3f7908565c742f4dc8d5"
+            ],
+            "source_smiles": "COc1cc(C(N)=O)ccc1N"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 15,
+          "atom_count": 33,
+          "bond_count": 36,
+          "donor_atom_sets": [
+            [
+              6
+            ],
+            [
+              11
+            ]
+          ],
+          "donor_count": 2,
+          "indexed_topology_sha256": "9a993d59fafd714967ee84819f4b7c7d1ca3f969d968de33dba53588021290d7",
+          "smiles": "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 11,
+        "record": {
+          "expected_product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+          "input_id": "CHEMBL4247-query-2",
+          "node_id": "or",
+          "ordered_reactants": [
+            "Cc1ccc(-c2ccccc2S(C)(=O)=O)c2nc(Cl)ncc12",
+            "COc1cc(C(N)=O)ccc1N"
+          ],
+          "route_graph_sha256": "a0e584eba8504779abfa2c34df1d4ed2f4f9180236103284c1125679c9022519",
+          "rule_id": "synllama-rule-042",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 10,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 9,
+            "atom_count": 22,
+            "bond_count": 24,
+            "donor_atom_sets": [],
+            "donor_count": 0,
+            "indexed_topology_sha256": "be1a3f8566ffcef5d910b2e0941d952e80f8eb78ebd77a2771d6c6e5dc403956",
+            "smiles": "Cc1ccc(-c2ccccc2S(C)(=O)=O)c2nc(Cl)ncc12",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 6,
+            "atom_count": 12,
+            "bond_count": 12,
+            "donor_atom_sets": [
+              [
+                6
+              ],
+              [
+                11
+              ]
+            ],
+            "donor_count": 2,
+            "indexed_topology_sha256": "6440e64beef68c30836664072dcdc00e48d27e890ff1d5fc683b2535ad59c2c9",
+            "smiles": "COc1cc(C(N)=O)ccc1N",
+            "status": "assessed"
+          }
+        ]
+      },
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 1,
+              "source_count": 1,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 6,
+              "atom_count": 12,
+              "bond_count": 13,
+              "donor_atom_sets": [
+                [
+                  8
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "58e3ccac42f9ea54df2e4601a9871a79818e9e36f5982f1bc73b7fb241f2de93",
+              "smiles": "Cc1cc(Br)n2nc(N)ncc12",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "3": "C"
+                },
+                "concrete_endpoint_indices": [
+                  3
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    3,
+                    4
+                  ]
+                ],
+                "map_number": 1,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      8
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  3
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "Cc1cc(Br)n2nc(N)ncc12",
+            "same_step_actual_partner": "CS(=O)(=O)c1ccccc1Cl",
+            "slot": 0,
+            "source_donors": {
+              "all_feature_count": 5,
+              "atom_count": 12,
+              "bond_count": 13,
+              "donor_atom_sets": [
+                [
+                  5
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "cd86a3a01e78f45933fa94b2be766e94f896e3bfc6694be6abd75ac3c527ccd7",
+              "smiles": "Cc1cc2c(N)ncc(I)n2n1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "8": "C"
+                },
+                "concrete_endpoint_indices": [
+                  8
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    8,
+                    9
+                  ]
+                ],
+                "map_number": 1,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      5
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  8
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:316e80d38513733768c3561eb630f2593faf7ba89b540e4d844c0d4c813c2e12"
+            ],
+            "source_smiles": "Cc1cc2c(N)ncc(I)n2n1"
+          },
+          {
+            "donor_difference": {
+              "guide_count": 0,
+              "source_count": 0,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 4,
+              "atom_count": 13,
+              "bond_count": 13,
+              "donor_atom_sets": [],
+              "donor_count": 0,
+              "indexed_topology_sha256": "f2a585d691c8103fcf2c34e9f320e3a5f0c9a5774041976d13cb7f1184745318",
+              "smiles": "CN(c1ccccc1Cl)S(C)(=O)=O",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "7": "C"
+                },
+                "concrete_endpoint_indices": [
+                  7
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    8,
+                    7
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [],
+                "possible_endpoint_indices": [
+                  7
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "CN(c1ccccc1Cl)S(C)(=O)=O",
+            "same_step_actual_partner": "Cc1cc2c(N)ncc(I)n2n1",
+            "slot": 1,
+            "source_donors": {
+              "all_feature_count": 4,
+              "atom_count": 11,
+              "bond_count": 11,
+              "donor_atom_sets": [],
+              "donor_count": 0,
+              "indexed_topology_sha256": "34a81a7bc8b118c462f997b78ca23f55c2a8d40fb4e279444877fa938d651ad0",
+              "smiles": "CS(=O)(=O)c1ccccc1Cl",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "9": "C"
+                },
+                "concrete_endpoint_indices": [
+                  9
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    10,
+                    9
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [],
+                "possible_endpoint_indices": [
+                  9
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:e27f3dd1ad7b0f8b038cd547937293eda206710bfb4cf179453f4ea05245ac93"
+            ],
+            "source_smiles": "CS(=O)(=O)c1ccccc1Cl"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 9,
+          "atom_count": 21,
+          "bond_count": 23,
+          "donor_atom_sets": [
+            [
+              5
+            ]
+          ],
+          "donor_count": 1,
+          "indexed_topology_sha256": "1dd21a6562b48902d5c61035cd2271862fda8030704450e51740f0d4384316b9",
+          "smiles": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 12,
+        "record": {
+          "expected_product": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+          "input_id": "CHEMBL4247-query-2",
+          "node_id": "ir",
+          "ordered_reactants": [
+            "Cc1cc2c(N)ncc(I)n2n1",
+            "CS(=O)(=O)c1ccccc1Cl"
+          ],
+          "route_graph_sha256": "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+          "rule_id": "synllama-rule-036",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 11,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 5,
+            "atom_count": 12,
+            "bond_count": 13,
+            "donor_atom_sets": [
+              [
+                5
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "cd86a3a01e78f45933fa94b2be766e94f896e3bfc6694be6abd75ac3c527ccd7",
+            "smiles": "Cc1cc2c(N)ncc(I)n2n1",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 4,
+            "atom_count": 11,
+            "bond_count": 11,
+            "donor_atom_sets": [],
+            "donor_count": 0,
+            "indexed_topology_sha256": "34a81a7bc8b118c462f997b78ca23f55c2a8d40fb4e279444877fa938d651ad0",
+            "smiles": "CS(=O)(=O)c1ccccc1Cl",
+            "status": "assessed"
+          }
+        ]
+      },
+      {
+        "catalog_leaf_slots": [
+          {
+            "donor_difference": {
+              "guide_count": 1,
+              "source_count": 1,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 6,
+              "atom_count": 12,
+              "bond_count": 13,
+              "donor_atom_sets": [
+                [
+                  8
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "58e3ccac42f9ea54df2e4601a9871a79818e9e36f5982f1bc73b7fb241f2de93",
+              "smiles": "Cc1cc(Br)n2nc(N)ncc12",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "3": "C"
+                },
+                "concrete_endpoint_indices": [
+                  3
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    3,
+                    4
+                  ]
+                ],
+                "map_number": 1,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      8
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  3
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "Cc1cc(Br)n2nc(N)ncc12",
+            "same_step_actual_partner": "CS(=O)(=O)c1ccccc1Cl",
+            "slot": 0,
+            "source_donors": {
+              "all_feature_count": 5,
+              "atom_count": 12,
+              "bond_count": 13,
+              "donor_atom_sets": [
+                [
+                  5
+                ]
+              ],
+              "donor_count": 1,
+              "indexed_topology_sha256": "cd86a3a01e78f45933fa94b2be766e94f896e3bfc6694be6abd75ac3c527ccd7",
+              "smiles": "Cc1cc2c(N)ncc(I)n2n1",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "8": "C"
+                },
+                "concrete_endpoint_indices": [
+                  8
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    8,
+                    9
+                  ]
+                ],
+                "map_number": 1,
+                "matches_observed": 1,
+                "role_atom_index": 0,
+                "role_slot": 0,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [
+                  {
+                    "atom_ids": [
+                      5
+                    ],
+                    "overlapping_indices": [],
+                    "relation": "disjoint_from_all_possible_endpoints"
+                  }
+                ],
+                "possible_endpoint_indices": [
+                  8
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:316e80d38513733768c3561eb630f2593faf7ba89b540e4d844c0d4c813c2e12"
+            ],
+            "source_smiles": "Cc1cc2c(N)ncc(I)n2n1"
+          },
+          {
+            "donor_difference": {
+              "guide_count": 0,
+              "source_count": 0,
+              "source_has_fewer": false,
+              "source_minus_guide": 0,
+              "status": "assessed"
+            },
+            "guide_donors": {
+              "all_feature_count": 4,
+              "atom_count": 13,
+              "bond_count": 13,
+              "donor_atom_sets": [],
+              "donor_count": 0,
+              "indexed_topology_sha256": "f2a585d691c8103fcf2c34e9f320e3a5f0c9a5774041976d13cb7f1184745318",
+              "smiles": "CN(c1ccccc1Cl)S(C)(=O)=O",
+              "status": "assessed"
+            },
+            "guide_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "7": "C"
+                },
+                "concrete_endpoint_indices": [
+                  7
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    8,
+                    7
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [],
+                "possible_endpoint_indices": [
+                  7
+                ],
+                "status": "assessed"
+              }
+            },
+            "guide_smiles": "CN(c1ccccc1Cl)S(C)(=O)=O",
+            "same_step_actual_partner": "Cc1cc2c(N)ncc(I)n2n1",
+            "slot": 1,
+            "source_donors": {
+              "all_feature_count": 4,
+              "atom_count": 11,
+              "bond_count": 11,
+              "donor_atom_sets": [],
+              "donor_count": 0,
+              "indexed_topology_sha256": "34a81a7bc8b118c462f997b78ca23f55c2a8d40fb4e279444877fa938d651ad0",
+              "smiles": "CS(=O)(=O)c1ccccc1Cl",
+              "status": "assessed"
+            },
+            "source_endpoint": {
+              "domain": {
+                "concrete_endpoint_elements": {
+                  "9": "C"
+                },
+                "concrete_endpoint_indices": [
+                  9
+                ],
+                "full_role_mapping_tuples": [
+                  [
+                    10,
+                    9
+                  ]
+                ],
+                "map_number": 2,
+                "matches_observed": 1,
+                "role_atom_index": 1,
+                "role_slot": 1,
+                "status": "assessed"
+              },
+              "donor_site_partition": {
+                "donors": [],
+                "possible_endpoint_indices": [
+                  9
+                ],
+                "status": "assessed"
+              }
+            },
+            "source_ids_from_all_contributors": [
+              "structure-sha256:e27f3dd1ad7b0f8b038cd547937293eda206710bfb4cf179453f4ea05245ac93"
+            ],
+            "source_smiles": "CS(=O)(=O)c1ccccc1Cl"
+          }
+        ],
+        "expected_product_donors": {
+          "all_feature_count": 9,
+          "atom_count": 21,
+          "bond_count": 23,
+          "donor_atom_sets": [
+            [
+              5
+            ]
+          ],
+          "donor_count": 1,
+          "indexed_topology_sha256": "1dd21a6562b48902d5c61035cd2271862fda8030704450e51740f0d4384316b9",
+          "smiles": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+          "status": "assessed"
+        },
+        "original_R2_row_index": 14,
+        "record": {
+          "expected_product": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+          "input_id": "CHEMBL4247-query-2",
+          "node_id": "ir",
+          "ordered_reactants": [
+            "Cc1cc2c(N)ncc(I)n2n1",
+            "CS(=O)(=O)c1ccccc1Cl"
+          ],
+          "route_graph_sha256": "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc",
+          "rule_id": "synllama-rule-036",
+          "saved_forward_status": "matched"
+        },
+        "record_index": 12,
+        "same_step_actual_partner_donors": [
+          {
+            "all_feature_count": 5,
+            "atom_count": 12,
+            "bond_count": 13,
+            "donor_atom_sets": [
+              [
+                5
+              ]
+            ],
+            "donor_count": 1,
+            "indexed_topology_sha256": "cd86a3a01e78f45933fa94b2be766e94f896e3bfc6694be6abd75ac3c527ccd7",
+            "smiles": "Cc1cc2c(N)ncc(I)n2n1",
+            "status": "assessed"
+          },
+          {
+            "all_feature_count": 4,
+            "atom_count": 11,
+            "bond_count": 11,
+            "donor_atom_sets": [],
+            "donor_count": 0,
+            "indexed_topology_sha256": "34a81a7bc8b118c462f997b78ca23f55c2a8d40fb4e279444877fa938d651ad0",
+            "smiles": "CS(=O)(=O)c1ccccc1Cl",
+            "status": "assessed"
+          }
+        ]
+      }
+    ],
+    "work": {
+      "atoms_and_bonds_charged": 1370,
+      "cache_hits": 97,
+      "endpoint_match_requests": 44,
+      "endpoint_parse_attempts": 0,
+      "endpoint_template_structural_units": 444,
+      "feature_perception_attempts": 34,
+      "feature_records_returned": 299,
+      "rules_load_attempts": 1,
+      "unique_parse_attempts": 34
+    }
+  },
+  "schema": "donor-feature-diagnostic-v1-portable-receipt",
+  "source_commit": "f9d8e35a2bcfeba537f637e4b15c700f7a552c01",
+  "status": "descriptive_observations_recovered_after_failed_finalization",
+  "validation": {
+    "astra_outcome_review": "PASS exact hashes, inventory and recovered scope; original exit failure preserved",
+    "full_repository_test_run": false,
+    "original_focused_tests_passed": 3,
+    "preexecution_reviews": "root and Astra PASS; original prereview missed finalizer shadowing",
+    "recovery_pure_json_tests_passed": 3,
+    "root_outcome_review": "PASS with original failed exit and missing exit-time binding preserved",
+    "ruff_and_compile": "pass before each freeze",
+    "tests_run_by": "coding agent"
+  }
+}
