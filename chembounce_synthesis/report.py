@@ -19,6 +19,7 @@ from urllib.parse import quote
 
 from . import review_display as display
 from . import evidence_outcomes
+from . import report_routes
 
 JSON_FILES = (
     "manifest.json",
@@ -1073,10 +1074,20 @@ def _assemble(docs, inventory, issues):
         view["visual_issues"].append("Unadvertised display artifact ignored")
     for candidate, visual in zip(view["candidates"], visuals):
         candidate["visuals"] = copy.deepcopy(visual)
+    selected_ids = [row.get("route_id") for row in raw_rows if isinstance(row, dict)] if isinstance(raw_rows, list) else []
+    view["unselected_routes"] = report_routes.build(
+        _mapping(docs.get("routes.json")).get("routes"), selected_ids
+    )
     view["policy"] = _mapping(view["policy"])
     view["artifact_consistency"] = (
         "consistent_recorded_bundle"
         if not view["issues"] and not any(c["issues"] for c in view["candidates"])
+        else "incomplete_or_inconsistent"
+    )
+    view["unselected_artifact_consistency"] = (
+        "consistent_displayed_records"
+        if not view["unselected_routes"].get("issue")
+        and not any(route.get("issues") for route in view["unselected_routes"]["routes"])
         else "incomplete_or_inconsistent"
     )
     return view
@@ -1275,6 +1286,62 @@ def _route_html(route):
     return "".join(parts)
 
 
+def _unselected_html(review):
+    parts = [
+        "<h2>Other evaluated and unselected routes</h2>",
+        "<p>Saved route records for review only. Exact record joins do not establish route eligibility, experimental synthesis or current stock. Missing and partial evidence remains unassessed. Raw prompt strings are compared with saved reactants and reagents; tokenizer IDs are not revalidated.</p>",
+        _fields({k: review.get(k, UNKNOWN) for k in ("total", "displayed", "omitted")}),
+    ]
+    if review.get("issue"):
+        parts.append(f"<p class='notice'>{_escape(review['issue'])}</p>")
+    if not review.get("routes"):
+        parts.append("<p>No other saved route records to display.</p>")
+    for index, route in enumerate(review.get("routes", []), 1):
+        parts.append(f"<details><summary>Unselected route {index}: {_escape(route.get('route_id'))}</summary>")
+        parts.append(
+            _fields(
+                {
+                    k: route.get(k, UNKNOWN)
+                    for k in (
+                        "route_id", "selection_status", "reason", "product", "identity_status",
+                        "evidence_status", "forward_review_status", "route_binding_sha256",
+                    )
+                }
+            )
+        )
+        for issue in route.get("issues", []):
+            parts.append(f"<p class='notice'>{_escape(issue)}</p>")
+        parts.append("<h4>Recorded structural comparison / decision</h4>")
+        parts.append(_fields(route.get("recorded_comparison", {})))
+        for source in route.get("sources", []):
+            parts.append("<h4>Catalog source</h4>" + _fields(source))
+        for intermediate in route.get("intermediates", []):
+            parts.append("<h4>Recorded intermediate</h4>" + _fields(intermediate))
+        for step in route.get("steps", []):
+            parts.append(f"<h4>Step {_escape(step.get('node_id'))}</h4>")
+            parts.append(
+                _fields(
+                    {
+                        k: step.get(k, UNKNOWN)
+                        for k in (
+                            "rule_id", "reactants", "expected_product", "step_binding_sha256",
+                            "rule_replay", "audit_status", "prediction_status", "forward_status",
+                            "reason_code", "reason", "context", "observations", "atom_sources",
+                        )
+                    }
+                )
+            )
+            parts.append("<h5>Raw forward hypotheses (saved)</h5>")
+            hypotheses = step.get("hypotheses", [])
+            parts.extend(_fields(hypothesis) for hypothesis in hypotheses)
+            if not hypotheses:
+                parts.append("<p>Raw forward hypotheses unavailable or incomplete.</p>")
+        if route.get("predictor_provenance") is not None:
+            parts.append(_details("Recorded predictor provenance", _fields(route["predictor_provenance"])))
+        parts.append("</details>")
+    return "".join(parts)
+
+
 def _visual_html(visual, index):
     if visual.get("status") != "available":
         return (
@@ -1349,7 +1416,10 @@ def render_html(view, *, artifact_links=None):
         _table(
             [
                 ("Run status", summary.get("status", UNKNOWN)),
-                ("Artifact consistency", view["artifact_consistency"]),
+                ("Original hit — exact SMILES", view["manifest"].get("hit", UNKNOWN)),
+                ("Selected recommendation artifact consistency", view["artifact_consistency"]),
+                ("Unselected route artifact consistency (displayed records only)",
+                 view.get("unselected_artifact_consistency", UNKNOWN)),
                 ("Profile", profile.get("name", UNKNOWN)),
                 ("Profile status", profile.get("status", UNKNOWN)),
                 ("Original-hit Tanimoto floor", minimum.get("hit_tanimoto", UNKNOWN)),
@@ -1494,6 +1564,7 @@ def render_html(view, *, artifact_links=None):
         parts.append(
             "<h2>No selected candidates</h2><p>This is not proof that no suitable molecule exists. Only recorded run diagnostics are shown.</p>"
         )
+    parts.append(_unselected_html(view.get("unselected_routes", {})))
     parts += [
         "<h2>Recorded diagnostics</h2><p>route_rejections counts route records, not unique molecules. Product, family and proposal counts retain their recorded names. Missing or unevaluated work is not a chemical failure.</p>",
         _fields(
@@ -1600,8 +1671,16 @@ def main(argv=None):
         view = write_report(args.run_dir, args.output)
     except (OSError, ValueError) as exc:
         parser.exit(2, f"Report not written: {exc}\n")
-    print(f"Artifact consistency: {view['artifact_consistency']}; no scientific revalidation")
-    return 0 if view["artifact_consistency"] == "consistent_recorded_bundle" else 3
+    print(
+        f"Selected recommendation artifact consistency: {view['artifact_consistency']}; "
+        f"unselected route artifact consistency (displayed records only): "
+        f"{view['unselected_artifact_consistency']}; "
+        "no scientific revalidation"
+    )
+    return 0 if (
+        view["artifact_consistency"] == "consistent_recorded_bundle"
+        and view["unselected_artifact_consistency"] == "consistent_displayed_records"
+    ) else 3
 
 
 if __name__ == "__main__":

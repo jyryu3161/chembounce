@@ -1,0 +1,854 @@
+{
+  "baseline_report_commit": "5462ab8",
+  "execution": {
+    "chemistry_calls": 0,
+    "model_calls": 0,
+    "rdkit_or_torch_imported": false,
+    "three_d_calls": 0
+  },
+  "p1": {
+    "baseline_supported_inputs": 5,
+    "complete": false,
+    "latest_actual_supported_inputs": 4,
+    "required_supported_inputs": 6
+  },
+  "per_input": [
+    {
+      "displayed": 2,
+      "displayed_steps": 2,
+      "html": {
+        "bytes": 135091,
+        "path": "benchmark-results/route-first-development-20261023-v2/unselected-route-report-control-v1/CHEMBL3334418-query-1.html",
+        "sha256": "fd5b81371d3945f8c3197177738941692242bf6a849221d800af1bd743a6ad1c"
+      },
+      "input_artifacts": {
+        "manifest.json": {
+          "bytes": 115742,
+          "sha256": "547ecde51ed5b22f2caf5363505ac4a1a85cfc70fc6969d6670c8539c021a605"
+        },
+        "poses_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "poses_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "qualification.json": {
+          "bytes": 24695,
+          "sha256": "35932808f12d63235b4690f5665de25a4cbeb482c296b076dab7fab39fe7965d"
+        },
+        "references_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "references_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "refinement.json": {
+          "bytes": 46,
+          "sha256": "7ba15ba3b2b170c6a5cbb805294193112090387d9b5d45fd0065f36b46511248"
+        },
+        "results.json": {
+          "bytes": 22673,
+          "sha256": "9fd7d8bbc34265ff1dfa1c1ff8225002a3303e68efe4e776eaac4049ffa88c22"
+        },
+        "results.tsv": {
+          "bytes": 785,
+          "sha256": "aba6df650381a77580ee662f98ddaa592663e7ce6ef870d8844382a13b7ef4ed"
+        },
+        "routes.json": {
+          "bytes": 228924,
+          "sha256": "9e7b96854edaeb302e3bbf35b2c4843e9f7fed48f2b7532dc449bf263a09b511"
+        },
+        "scores.json": {
+          "bytes": 42,
+          "sha256": "347cde0a976be775b763ff0311e9ef3a254f14931a80bda060b8d8927183aca3"
+        },
+        "summary.json": {
+          "bytes": 75955,
+          "sha256": "5226aa51b033949a6eb2c71f7018a8a32055b7a5993748996ef84eea61cf9cbb"
+        }
+      },
+      "input_id": "CHEMBL3334418-query-1",
+      "omitted": 0,
+      "review_issues": 0,
+      "selected_candidates": 0,
+      "selected_candidates_unchanged": true,
+      "selected_consistency_unchanged": true,
+      "source_run": "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL3334418-query-1/synthesis",
+      "total_unselected": 2
+    },
+    {
+      "displayed": 2,
+      "displayed_steps": 2,
+      "html": {
+        "bytes": 133700,
+        "path": "benchmark-results/route-first-development-20261023-v2/unselected-route-report-control-v1/CHEMBL3334418-query-2.html",
+        "sha256": "832c329df2cd7d9a8c96c84b3bce524ad92a60c463ede4b21dd979b5a3c42309"
+      },
+      "input_artifacts": {
+        "manifest.json": {
+          "bytes": 115761,
+          "sha256": "5f697f0409b55bcbb047c24173367dea29fcdced0d0c8bb67dceb31bddf12929"
+        },
+        "poses_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "poses_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "qualification.json": {
+          "bytes": 24546,
+          "sha256": "25114d9cf0ebbd7bfbdaeba1b888e44f50960263218502d3dc069f1bb16db5af"
+        },
+        "references_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "references_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "refinement.json": {
+          "bytes": 46,
+          "sha256": "7ba15ba3b2b170c6a5cbb805294193112090387d9b5d45fd0065f36b46511248"
+        },
+        "results.json": {
+          "bytes": 22676,
+          "sha256": "3460b3a4ab23fc577da253a481c9b28234e82879f10096c6100ebfac37ffd1d2"
+        },
+        "results.tsv": {
+          "bytes": 785,
+          "sha256": "aba6df650381a77580ee662f98ddaa592663e7ce6ef870d8844382a13b7ef4ed"
+        },
+        "routes.json": {
+          "bytes": 208975,
+          "sha256": "8e320a322570e7e226759eccd7913f7d99ff71ed207f926b61cfdc481d14d29a"
+        },
+        "scores.json": {
+          "bytes": 42,
+          "sha256": "347cde0a976be775b763ff0311e9ef3a254f14931a80bda060b8d8927183aca3"
+        },
+        "summary.json": {
+          "bytes": 76447,
+          "sha256": "4ae4d48f0e89f6f63b2916c5a87160f7868f2e70c3a2bef16f2313eaf26f6ed5"
+        }
+      },
+      "input_id": "CHEMBL3334418-query-2",
+      "omitted": 0,
+      "review_issues": 0,
+      "selected_candidates": 0,
+      "selected_candidates_unchanged": true,
+      "selected_consistency_unchanged": true,
+      "source_run": "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL3334418-query-2/synthesis",
+      "total_unselected": 2
+    },
+    {
+      "displayed": 0,
+      "displayed_steps": 0,
+      "html": {
+        "bytes": 103546,
+        "path": "benchmark-results/route-first-development-20261023-v2/unselected-route-report-control-v1/CHEMBL3864-query-1.html",
+        "sha256": "912487f1f2c63af7d6daa79f27ab80c4605ab2bba8a6773848d946107ba95518"
+      },
+      "input_artifacts": {
+        "manifest.json": {
+          "bytes": 108422,
+          "sha256": "8f8d29a17a000b8e1a35491d18d6d4c142aa917fe0b03882d379c3b6192399bb"
+        },
+        "poses_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "poses_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "qualification.json": {
+          "bytes": 22677,
+          "sha256": "a1d85fb06aef6a8012b4aba11b30df953ad1eb608089a55265e500236c5a0c3c"
+        },
+        "references_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "references_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "refinement.json": {
+          "bytes": 46,
+          "sha256": "7ba15ba3b2b170c6a5cbb805294193112090387d9b5d45fd0065f36b46511248"
+        },
+        "results.json": {
+          "bytes": 22647,
+          "sha256": "e53d66378791337ab9691c6af65c42d8a8a55e21ed864c3ece873c0186afe4b6"
+        },
+        "results.tsv": {
+          "bytes": 785,
+          "sha256": "aba6df650381a77580ee662f98ddaa592663e7ce6ef870d8844382a13b7ef4ed"
+        },
+        "routes.json": {
+          "bytes": 42,
+          "sha256": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4"
+        },
+        "scores.json": {
+          "bytes": 42,
+          "sha256": "347cde0a976be775b763ff0311e9ef3a254f14931a80bda060b8d8927183aca3"
+        },
+        "summary.json": {
+          "bytes": 73050,
+          "sha256": "3a0a8c3a5683930132b5b176fd8a4aa448e7115203e076bc9897ca2ae4a57bb6"
+        }
+      },
+      "input_id": "CHEMBL3864-query-1",
+      "omitted": 0,
+      "review_issues": 0,
+      "selected_candidates": 0,
+      "selected_candidates_unchanged": true,
+      "selected_consistency_unchanged": true,
+      "source_run": "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL3864-query-1/synthesis",
+      "total_unselected": 0
+    },
+    {
+      "displayed": 0,
+      "displayed_steps": 0,
+      "html": {
+        "bytes": 89689,
+        "path": "benchmark-results/route-first-development-20261023-v2/unselected-route-report-control-v1/CHEMBL3864-query-2.html",
+        "sha256": "feb3cd9658d2b99ad52a216df8367b8c2b325f3241da5aa9a068e93ee77ab798"
+      },
+      "input_artifacts": {
+        "manifest.json": {
+          "bytes": 114853,
+          "sha256": "92483080f25841a234797eca97ae096bdf9ae9d3e63a93f99ce3e6be8c7ad5b7"
+        },
+        "poses_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "poses_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "qualification.json": {
+          "bytes": 22710,
+          "sha256": "753cdee60c33fe4b699a794f96147b97fd837fe90a79c592ce6edf40bfd6c335"
+        },
+        "references_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "references_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "refinement.json": {
+          "bytes": 46,
+          "sha256": "7ba15ba3b2b170c6a5cbb805294193112090387d9b5d45fd0065f36b46511248"
+        },
+        "results.json": {
+          "bytes": 22680,
+          "sha256": "66e854806d40a16731a070690c0cd777494b684c29d091b10afacc2f0f277021"
+        },
+        "results.tsv": {
+          "bytes": 785,
+          "sha256": "aba6df650381a77580ee662f98ddaa592663e7ce6ef870d8844382a13b7ef4ed"
+        },
+        "routes.json": {
+          "bytes": 42,
+          "sha256": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4"
+        },
+        "scores.json": {
+          "bytes": 42,
+          "sha256": "347cde0a976be775b763ff0311e9ef3a254f14931a80bda060b8d8927183aca3"
+        },
+        "summary.json": {
+          "bytes": 59737,
+          "sha256": "274cc2b770e2cc2d414009a31324503a8a5b3b6fb3d86e464a8b7eba5ea141dc"
+        }
+      },
+      "input_id": "CHEMBL3864-query-2",
+      "omitted": 0,
+      "review_issues": 0,
+      "selected_candidates": 0,
+      "selected_candidates_unchanged": true,
+      "selected_consistency_unchanged": true,
+      "source_run": "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL3864-query-2/synthesis",
+      "total_unselected": 0
+    },
+    {
+      "displayed": 5,
+      "displayed_steps": 10,
+      "html": {
+        "bytes": 204642,
+        "path": "benchmark-results/route-first-development-20261023-v2/unselected-route-report-control-v1/CHEMBL4247-query-1.html",
+        "sha256": "6d6fc6f3237cd492627fc2387d164d2be8431d943fc6151ff3dcbc1bf09f9dc7"
+      },
+      "input_artifacts": {
+        "manifest.json": {
+          "bytes": 122899,
+          "sha256": "59d43c7cd8c09fd61f40216dc5c73a447245ce1a86c11f57b1c3d0b6d485379e"
+        },
+        "poses_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "poses_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "qualification.json": {
+          "bytes": 28525,
+          "sha256": "e01d501b6e082571646b66f29f8d30232b666f0078bc8f17842504c642296c1a"
+        },
+        "references_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "references_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "refinement.json": {
+          "bytes": 46,
+          "sha256": "7ba15ba3b2b170c6a5cbb805294193112090387d9b5d45fd0065f36b46511248"
+        },
+        "results.json": {
+          "bytes": 22681,
+          "sha256": "3cdea6e775405dcf6e2025733ce444fb3583e8ac7f9d7b13ea929db9e2e91312"
+        },
+        "results.tsv": {
+          "bytes": 785,
+          "sha256": "aba6df650381a77580ee662f98ddaa592663e7ce6ef870d8844382a13b7ef4ed"
+        },
+        "routes.json": {
+          "bytes": 844464,
+          "sha256": "a2b7a0a6bf585dae4d04a4b5fb2cdd72d34573e283575a240178e7e345760492"
+        },
+        "scores.json": {
+          "bytes": 42,
+          "sha256": "347cde0a976be775b763ff0311e9ef3a254f14931a80bda060b8d8927183aca3"
+        },
+        "summary.json": {
+          "bytes": 80889,
+          "sha256": "43a144da91e3c57b67cbfde98b9698aa7caa8dd1cc3dcecbcfd0caea94c4bb60"
+        }
+      },
+      "input_id": "CHEMBL4247-query-1",
+      "omitted": 0,
+      "review_issues": 0,
+      "selected_candidates": 0,
+      "selected_candidates_unchanged": true,
+      "selected_consistency_unchanged": true,
+      "source_run": "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4247-query-1/synthesis",
+      "total_unselected": 5
+    },
+    {
+      "displayed": 3,
+      "displayed_steps": 6,
+      "html": {
+        "bytes": 176095,
+        "path": "benchmark-results/route-first-development-20261023-v2/unselected-route-report-control-v1/CHEMBL4247-query-2.html",
+        "sha256": "bb719eba40c97a5cbb3ef4f7830a38678774ad78658a6a30b171fc4d06c4e289"
+      },
+      "input_artifacts": {
+        "manifest.json": {
+          "bytes": 117232,
+          "sha256": "11782a7ba3951c6a99f08b9b685a621bd71f1826b59d9cb52b7d596aaf2065ac"
+        },
+        "poses_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "poses_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "qualification.json": {
+          "bytes": 26304,
+          "sha256": "d3aefd6d82cedab5d0ec44355a396eeb06b32cb914fcc23fb6bba9824d22c239"
+        },
+        "references_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "references_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "refinement.json": {
+          "bytes": 46,
+          "sha256": "7ba15ba3b2b170c6a5cbb805294193112090387d9b5d45fd0065f36b46511248"
+        },
+        "results.json": {
+          "bytes": 22684,
+          "sha256": "56a6a305746d5dc1e602e626d1d795396e5aaa922d756e3e15ff9b37ac0e43c1"
+        },
+        "results.tsv": {
+          "bytes": 785,
+          "sha256": "aba6df650381a77580ee662f98ddaa592663e7ce6ef870d8844382a13b7ef4ed"
+        },
+        "routes.json": {
+          "bytes": 473649,
+          "sha256": "6c44f0de211e3837b0fdbbb51d9c577d370205179a0eb0c58897a1a09331af91"
+        },
+        "scores.json": {
+          "bytes": 42,
+          "sha256": "347cde0a976be775b763ff0311e9ef3a254f14931a80bda060b8d8927183aca3"
+        },
+        "summary.json": {
+          "bytes": 89249,
+          "sha256": "7044933ddb92c9f04d2d8dbf73f3a63e5554d01d3d5fc4a693ef1e0f1595974c"
+        }
+      },
+      "input_id": "CHEMBL4247-query-2",
+      "omitted": 0,
+      "review_issues": 0,
+      "selected_candidates": 0,
+      "selected_candidates_unchanged": true,
+      "selected_consistency_unchanged": true,
+      "source_run": "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4247-query-2/synthesis",
+      "total_unselected": 3
+    },
+    {
+      "displayed": 0,
+      "displayed_steps": 0,
+      "html": {
+        "bytes": 565481,
+        "path": "benchmark-results/route-first-development-20261023-v2/unselected-route-report-control-v1/CHEMBL4630839-query-1.html",
+        "sha256": "a321df4e95554854180cc0d0df16df057560782bbacde2c975b942ee04fda9bf"
+      },
+      "input_artifacts": {
+        "manifest.json": {
+          "bytes": 117680,
+          "sha256": "e5462b9044a9df26cacc82e3788656c2124510e6c1ba96e0a5a3ceb6a97da149"
+        },
+        "poses_design.sdf": {
+          "bytes": 11613,
+          "sha256": "8abab3b8230543936d2c8a38af5878186150dda120bc91128bacd75ed79a751a"
+        },
+        "poses_hit.sdf": {
+          "bytes": 11719,
+          "sha256": "64b55fb111962a2ae8f7e1b669be839d6d24fec9257b2787796649081fab5de5"
+        },
+        "qualification.json": {
+          "bytes": 27187,
+          "sha256": "2c4a82e7b026a677e19459571e8f118d114c7b3af528900fd11b43c2964ebb6d"
+        },
+        "references_design.sdf": {
+          "bytes": 9554,
+          "sha256": "195130dd0eb6bc0cead7a980c63f252d4d4a3504966925f348ad41c0c9a94c8e"
+        },
+        "references_hit.sdf": {
+          "bytes": 10248,
+          "sha256": "0ae1462673e208e5a23342d2970d80db00c96961cd57088ee922b68438f07404"
+        },
+        "refinement.json": {
+          "bytes": 1181284,
+          "sha256": "cd682f046927e999599863351cd134da4fca73d4374ad91bc0e88debc5623373"
+        },
+        "results.json": {
+          "bytes": 34091,
+          "sha256": "0c2644257a0b839c8d87a9bd19c2191f07cdc244bcab2bdadd9acc3dfa1184ee"
+        },
+        "results.tsv": {
+          "bytes": 3970,
+          "sha256": "827d7cf5bba584a53df616b7acc9001888a3eafdaba35c13ba6625e53f96fe75"
+        },
+        "review_visuals.json": {
+          "bytes": 283465,
+          "sha256": "da7f9382fe479461567f56640bd212073264538b3643476fd113dfc4a0d6351d"
+        },
+        "routes.json": {
+          "bytes": 392530,
+          "sha256": "1ff0add0858c41471ba2ae46bfe0e7442402ff80e77e19a094c6055a7f0be280"
+        },
+        "scores.json": {
+          "bytes": 350458,
+          "sha256": "7899c06d77d02d69774b862bc731dfd259856fb9d1784351333be98c5915f076"
+        },
+        "summary.json": {
+          "bytes": 86203,
+          "sha256": "9682895c6757fd1d2e46c3626f8c781e801f46fc67633f71ad5b69a4463540d2"
+        }
+      },
+      "input_id": "CHEMBL4630839-query-1",
+      "omitted": 0,
+      "review_issues": 0,
+      "selected_candidates": 3,
+      "selected_candidates_unchanged": true,
+      "selected_consistency_unchanged": true,
+      "source_run": "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4630839-query-1/synthesis",
+      "total_unselected": 0
+    },
+    {
+      "displayed": 1,
+      "displayed_steps": 1,
+      "html": {
+        "bytes": 108131,
+        "path": "benchmark-results/route-first-development-20261023-v2/unselected-route-report-control-v1/CHEMBL4630839-query-2.html",
+        "sha256": "0344108c4ffeb766480184a6ce9b54d394e9d2a540c7d5a32de7aed4f8afefc3"
+      },
+      "input_artifacts": {
+        "manifest.json": {
+          "bytes": 120694,
+          "sha256": "fbbd3b344b5a277554cfe0be0d41d1c833abdd03d2d5ae00e6825a2580f2a801"
+        },
+        "poses_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "poses_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "qualification.json": {
+          "bytes": 23619,
+          "sha256": "ec6f30534181a3828497ef8dd273e4ec8d92779323a3ff8f8f629c7f6558d06c"
+        },
+        "references_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "references_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "refinement.json": {
+          "bytes": 46,
+          "sha256": "7ba15ba3b2b170c6a5cbb805294193112090387d9b5d45fd0065f36b46511248"
+        },
+        "results.json": {
+          "bytes": 22668,
+          "sha256": "2152467dcd5f49c883a0e55f3d3359b12639e48f4aacd7746f26ac5582386307"
+        },
+        "results.tsv": {
+          "bytes": 785,
+          "sha256": "aba6df650381a77580ee662f98ddaa592663e7ce6ef870d8844382a13b7ef4ed"
+        },
+        "routes.json": {
+          "bytes": 123848,
+          "sha256": "bbfbbb181db2ea2364a280c04b487cbd2a083c3e6ea1cde973354f112d909cc6"
+        },
+        "scores.json": {
+          "bytes": 42,
+          "sha256": "347cde0a976be775b763ff0311e9ef3a254f14931a80bda060b8d8927183aca3"
+        },
+        "summary.json": {
+          "bytes": 64474,
+          "sha256": "fe8294ab684db528363810aa381906fabc7d07c7b5febae0ee1f08bb0e49321e"
+        }
+      },
+      "input_id": "CHEMBL4630839-query-2",
+      "omitted": 0,
+      "review_issues": 0,
+      "selected_candidates": 0,
+      "selected_candidates_unchanged": true,
+      "selected_consistency_unchanged": true,
+      "source_run": "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4630839-query-2/synthesis",
+      "total_unselected": 1
+    },
+    {
+      "displayed": 0,
+      "displayed_steps": 0,
+      "html": {
+        "bytes": 90084,
+        "path": "benchmark-results/route-first-development-20261023-v2/unselected-route-report-control-v1/CHEMBL4869-query-1.html",
+        "sha256": "8ed517212d518ceb2a6ff9066570af0ad2bb30917595a5b1c03991f44e46b613"
+      },
+      "input_artifacts": {
+        "manifest.json": {
+          "bytes": 115185,
+          "sha256": "d54d85aeac14191f8553ad40a994969d934238623cf58519113e0b0d48d951d9"
+        },
+        "poses_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "poses_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "qualification.json": {
+          "bytes": 22705,
+          "sha256": "5442a08220fec81aae279875bebc264899b6690d960c3b0debc72deeae945073"
+        },
+        "references_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "references_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "refinement.json": {
+          "bytes": 46,
+          "sha256": "7ba15ba3b2b170c6a5cbb805294193112090387d9b5d45fd0065f36b46511248"
+        },
+        "results.json": {
+          "bytes": 22675,
+          "sha256": "7b017760ac4925fd510128901bbf698f8a3e920b7f96e229a1bde7a66c0d1d2b"
+        },
+        "results.tsv": {
+          "bytes": 785,
+          "sha256": "aba6df650381a77580ee662f98ddaa592663e7ce6ef870d8844382a13b7ef4ed"
+        },
+        "routes.json": {
+          "bytes": 42,
+          "sha256": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4"
+        },
+        "scores.json": {
+          "bytes": 42,
+          "sha256": "347cde0a976be775b763ff0311e9ef3a254f14931a80bda060b8d8927183aca3"
+        },
+        "summary.json": {
+          "bytes": 60074,
+          "sha256": "792dced6df5700c82c1c5204de1a3b5b5e80a7be9472087b036022072428082e"
+        }
+      },
+      "input_id": "CHEMBL4869-query-1",
+      "omitted": 0,
+      "review_issues": 0,
+      "selected_candidates": 0,
+      "selected_candidates_unchanged": true,
+      "selected_consistency_unchanged": true,
+      "source_run": "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4869-query-1/synthesis",
+      "total_unselected": 0
+    },
+    {
+      "displayed": 0,
+      "displayed_steps": 0,
+      "html": {
+        "bytes": 87573,
+        "path": "benchmark-results/route-first-development-20261023-v2/unselected-route-report-control-v1/CHEMBL4869-query-2.html",
+        "sha256": "b364d4c346b460602750f67c80bff49c4703412201c9546e3f4c07f02fe499cc"
+      },
+      "input_artifacts": {
+        "manifest.json": {
+          "bytes": 112749,
+          "sha256": "c3732930979768e0d146b14987b281c9082b4d09d606b5906b268d3001d2da9c"
+        },
+        "poses_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "poses_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "qualification.json": {
+          "bytes": 22706,
+          "sha256": "1cbbc3cb7e3be421c42660b70ae4889ff8d3108e1502e79c4674ed53c16a3cfb"
+        },
+        "references_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "references_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "refinement.json": {
+          "bytes": 46,
+          "sha256": "7ba15ba3b2b170c6a5cbb805294193112090387d9b5d45fd0065f36b46511248"
+        },
+        "results.json": {
+          "bytes": 22676,
+          "sha256": "aea512ab52dd0abe91b54ca77eb9fd00a830e34ea97585fb9814a6fdddad8ea6"
+        },
+        "results.tsv": {
+          "bytes": 785,
+          "sha256": "aba6df650381a77580ee662f98ddaa592663e7ce6ef870d8844382a13b7ef4ed"
+        },
+        "routes.json": {
+          "bytes": 42,
+          "sha256": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4"
+        },
+        "scores.json": {
+          "bytes": 42,
+          "sha256": "347cde0a976be775b763ff0311e9ef3a254f14931a80bda060b8d8927183aca3"
+        },
+        "summary.json": {
+          "bytes": 57639,
+          "sha256": "d73ebc9e5bf56f8b5e3ec4245bdf4eb39f25de7a316c116fbcd9016da530b601"
+        }
+      },
+      "input_id": "CHEMBL4869-query-2",
+      "omitted": 0,
+      "review_issues": 0,
+      "selected_candidates": 0,
+      "selected_candidates_unchanged": true,
+      "selected_consistency_unchanged": true,
+      "source_run": "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4869-query-2/synthesis",
+      "total_unselected": 0
+    },
+    {
+      "displayed": 0,
+      "displayed_steps": 0,
+      "html": {
+        "bytes": 94882,
+        "path": "benchmark-results/route-first-development-20261023-v2/unselected-route-report-control-v1/CHEMBL5163-query-1.html",
+        "sha256": "44487145e843ef089c1cbe70b6b3ca8eaac2b6c2251c6a630e934e492005224b"
+      },
+      "input_artifacts": {
+        "manifest.json": {
+          "bytes": 112294,
+          "sha256": "7e0bd79ceb040a449f260452289434770a7fdb4c8626ce506ee9ccf8856ed8a4"
+        },
+        "poses_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "poses_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "qualification.json": {
+          "bytes": 22712,
+          "sha256": "d275adcee8c130fbc4ca6a35544bf285798ec2ba526d84e6f2934e23c4deec1a"
+        },
+        "references_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "references_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "refinement.json": {
+          "bytes": 46,
+          "sha256": "7ba15ba3b2b170c6a5cbb805294193112090387d9b5d45fd0065f36b46511248"
+        },
+        "results.json": {
+          "bytes": 22682,
+          "sha256": "cc850c1ab3ff8c05c49503a99b0c22cf2d89b28d4956db7328cc14731e24d6f7"
+        },
+        "results.tsv": {
+          "bytes": 785,
+          "sha256": "aba6df650381a77580ee662f98ddaa592663e7ce6ef870d8844382a13b7ef4ed"
+        },
+        "routes.json": {
+          "bytes": 42,
+          "sha256": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4"
+        },
+        "scores.json": {
+          "bytes": 42,
+          "sha256": "347cde0a976be775b763ff0311e9ef3a254f14931a80bda060b8d8927183aca3"
+        },
+        "summary.json": {
+          "bytes": 64918,
+          "sha256": "ef164fceaf25d864a4c24ec3cf5b8f4e2bbc28455abd2ce03b626c9c61b9e668"
+        }
+      },
+      "input_id": "CHEMBL5163-query-1",
+      "omitted": 0,
+      "review_issues": 0,
+      "selected_candidates": 0,
+      "selected_candidates_unchanged": true,
+      "selected_consistency_unchanged": true,
+      "source_run": "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL5163-query-1/synthesis",
+      "total_unselected": 0
+    },
+    {
+      "displayed": 0,
+      "displayed_steps": 0,
+      "html": {
+        "bytes": 87100,
+        "path": "benchmark-results/route-first-development-20261023-v2/unselected-route-report-control-v1/CHEMBL5163-query-2.html",
+        "sha256": "7083933663e5f0e4aa49cdde23bec7169a944eb1481c35aa1bc46dc44fb6ab06"
+      },
+      "input_artifacts": {
+        "manifest.json": {
+          "bytes": 112016,
+          "sha256": "a2904996b4fc6e0bf015110084f5587568114d6eac9d102234278b9278333a3d"
+        },
+        "poses_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "poses_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "qualification.json": {
+          "bytes": 22723,
+          "sha256": "abe9beeec76e81c2aabca33981c190163f0ee3f88d8baf398691857afc5cf236"
+        },
+        "references_design.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "references_hit.sdf": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "refinement.json": {
+          "bytes": 46,
+          "sha256": "7ba15ba3b2b170c6a5cbb805294193112090387d9b5d45fd0065f36b46511248"
+        },
+        "results.json": {
+          "bytes": 22693,
+          "sha256": "e8223d73f1c7dcbcdc512c3735cd7a46c3806e9bac97de70394863245bcc5f08"
+        },
+        "results.tsv": {
+          "bytes": 785,
+          "sha256": "aba6df650381a77580ee662f98ddaa592663e7ce6ef870d8844382a13b7ef4ed"
+        },
+        "routes.json": {
+          "bytes": 42,
+          "sha256": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4"
+        },
+        "scores.json": {
+          "bytes": 42,
+          "sha256": "347cde0a976be775b763ff0311e9ef3a254f14931a80bda060b8d8927183aca3"
+        },
+        "summary.json": {
+          "bytes": 56888,
+          "sha256": "ce4cc71903047ba300faea8fb1aec2a7ac94f5db4ba9d9a3097839f1fd9f5243"
+        }
+      },
+      "input_id": "CHEMBL5163-query-2",
+      "omitted": 0,
+      "review_issues": 0,
+      "selected_candidates": 0,
+      "selected_candidates_unchanged": true,
+      "selected_consistency_unchanged": true,
+      "source_run": "benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL5163-query-2/synthesis",
+      "total_unselected": 0
+    }
+  ],
+  "schema": "unselected-route-report-control-v1",
+  "scope": "Saved records and byte correspondence only, not scientific route revalidation; existing recommendations unchanged. All 13 saved nonprimary routes fit display cap16/input in this panel.",
+  "source_sha256": {
+    "chembounce_synthesis/report.py": "b515ad23fd6c69c6dbc4698515a9cbbbe5ea5428200c6713b148886de9037639",
+    "chembounce_synthesis/report_routes.py": "0e58636b6a740bc194f75b06cb2e0c19d0640ca2d7fd05c85b35c6a1909eac8f",
+    "docs/SYNTHESIS.md": "06607fcbcfae0b5698b6265a4ebf036fad1b4c9758ac7950565d34e0f3b64eba",
+    "tests/synthesis/test_report_unselected.py": "5c2219d163281ef2748492ba35420519d4036d33480fb3c34630de87d105a984"
+  },
+  "source_unchanged_during_render": true,
+  "status": "complete_saved_artifact_only",
+  "summary": {
+    "displayed_steps": 21,
+    "displayed_unselected_routes": 13,
+    "forward_review_status_counts": {
+      "all_recorded_exact_matches": 6,
+      "contains_recorded_nonmatch": 6,
+      "incomplete_or_unknown": 1
+    },
+    "inputs": 12,
+    "review_issues": 0,
+    "selected_candidates": 3,
+    "selected_candidates_unchanged_for_all_inputs": true
+  },
+  "validation": {
+    "command": ".venv/bin/python -m pytest tests/synthesis/test_report.py tests/synthesis/test_report_unselected.py tests/synthesis/test_evidence_outcomes.py -q",
+    "independent_review": "Astra PASS",
+    "passed": 408,
+    "ruff": "passed"
+  }
+}

@@ -1885,6 +1885,28 @@ reports without display evidence remain script-free. Conditions, activity,
 experimental feasibility, supplier SKU and current stock remain unverified
 unless separate evidence explicitly records them.
 
+The same offline report also shows up to **16 unselected route records** in saved
+`routes.json` order, including runs with no selected candidate. It displays the
+total, displayed, and omitted counts without repeating selected primary routes.
+The header retains the exact original hit even when no candidate was selected.
+Each unselected route shows its recorded design, 2D similarity values, polar
+recall **upper bound** (not measured recall), and qualification reason when saved.
+For each displayed route it joins saved graph nodes, ordered reactants, rule and
+product identities, catalog records and origins, concrete audit bindings, and
+stepwise forward records. Expected products and retained raw hypotheses are
+shown separately, with recorded context and predictor provenance when present.
+Graph identity consistency, route eligibility, and forward support are separate
+labels. Missing, malformed, partial, budget-limited, or failed evidence remains
+unassessed; a rejected or unselected route is never promoted into a recommendation.
+The original `artifact_consistency` API field remains scoped to selected
+recommendations; the header labels that scope and separately reports unselected
+route artifact consistency for the displayed records only; omitted records are not
+checked by this bounded view. This preserves the selected recommendation contract
+while exposing missing or contradictory unselected records. The view reads saved
+artifacts only and makes no new chemistry, model, or 3D calls.
+The CLI prints both scopes and exits with code 3 if either is inconsistent;
+selected candidates and their recommendation statuses are not altered.
+
 ### Optional rejected-pose diagnostics (source-review candidate)
 
 Set `"rejected_pose_diagnostics": true` in a selective synthesis configuration to
