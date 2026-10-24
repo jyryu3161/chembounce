@@ -1,0 +1,759 @@
+{
+  "adoption": {
+    "default_profile_changed": false,
+    "final_qualified_results_increase": 0,
+    "observed_supported_inputs": 6,
+    "p1_primary_criterion_met": true,
+    "previous_four_supported_inputs_retained": true,
+    "previous_supported_products_lost": 0,
+    "required_supported_inputs": 6,
+    "route_first_and_marked_policy_remain_explicit_opt_in": true,
+    "unknown_inputs": 0
+  },
+  "artifacts": {
+    "analysis-progress.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/analysis-progress.json",
+      "sha256": "37456d8c426b373fa466b45c7b73589b73cbdfb431986873a197756b2162f487"
+    },
+    "analysis-v3/per-query.csv": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/analysis-v3/per-query.csv",
+      "sha256": "19731cad4353a55105f8d5c01fb0e9cc469b4617995b3a68a0e97dce034e68b4"
+    },
+    "analysis-v3/result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/analysis-v3/result.json",
+      "sha256": "f573188db0f4b042777f3adcd6b9e7264566a11ee5a02cc19aab8144cb30db93"
+    },
+    "analysis-v3/summary-ko.md": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/analysis-v3/summary-ko.md",
+      "sha256": "4f1d51bef9d422b4786730a8310ccefafd27a3b97fb18611c7bda260a3b5c125"
+    },
+    "analysis.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/analysis.log",
+      "sha256": "b10b2d670af98295a2fb1669e8d43f977d3fc89dfce094525b489d8270745d80"
+    },
+    "analyze_comparison.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/analyze_comparison.py",
+      "sha256": "77486422de93f8494156b6cc1b577128a71d9d43fe9373812ad1aa53007bc041"
+    },
+    "freeze-preflight.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/freeze-preflight.json",
+      "sha256": "c99af98269ca156fd4ac2d7e386d11f91b4a32c2304197c88d4b489815277c03"
+    },
+    "preexecution-review.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/preexecution-review.json",
+      "sha256": "4e0e257dda239e433ebd087b3e7e839aadfe2f4b4199924a080c0a78c9fa52e4"
+    },
+    "protocol.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/protocol.json",
+      "sha256": "c496e87d5d97f56acdd9a9a480765fbca99354c92696962f206192ba2c869f27"
+    },
+    "route-first-config.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/route-first-config.json",
+      "sha256": "c69dab942e51e8b3f5003eb55aba1f6cc5466c77dd5d98cdeb2e347437bc8c1d"
+    },
+    "route_first/execution-status.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/route_first/execution-status.json",
+      "sha256": "f1f76c5d285765e6a4bf6792715944bacb9f4538d88e9670cd86069449c78fd9"
+    },
+    "run.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/run.log",
+      "sha256": "bca0d64f3e2b1ec26faa061970bd333684322c289ca8bd4837ff8ee1649f2757"
+    },
+    "run_comparison.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/run_comparison.py",
+      "sha256": "7f22ecca6584e0443b82f21e387f15ff0ebbf05b4dfa63fbabf7b966575d0623"
+    },
+    "test_integrity.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/actual-comparison-v3/test_integrity.py",
+      "sha256": "17773a4138b404a7ea522750ee77d85e4e4c7ba1680d6aa213f1e5973c012d85"
+    }
+  },
+  "baseline_totals": {
+    "elapsed_input_seconds_sum_including_loading": 3333.9410451343283,
+    "model_usage": {
+      "cache_hits": 281,
+      "input_tokens": 3156,
+      "output_tokens": 9275,
+      "predictor_calls": 85
+    },
+    "qualified_results": 0,
+    "scored_products": 39,
+    "supported_input_product_pairs": 69,
+    "supported_inputs": 5,
+    "supported_route_records": 304,
+    "unknown_inputs": 0
+  },
+  "date": "2026-10-24",
+  "limits": [
+    "No verified reaction conditions, selectivity, supplier SKU/current stock, physical synthesis or biological activity established.",
+    "All3 qualified products remain on CHEMBL4630839-query-1; six supported inputs do not mean six qualified inputs.",
+    "Three newly supported products on q4247-query-2 and q3334418-query-1 fail bounded joint3D shape/pharmacophore/polar preservation; gates not relaxed.",
+    "Historical baseline reuse and different candidate supply preclude a fresh randomized timing or speedup claim.",
+    "Cumulative development controls and this fresh30-model-request run are separate costs."
+  ],
+  "new_supported_but_not_qualified": [
+    {
+      "all_pair_rejection_reasons": [
+        "hit_pharmacophore_below_minimum",
+        "hit_shape_below_minimum",
+        "polar_reference_recall_below_minimum"
+      ],
+      "all_steps_forward_supported": true,
+      "hit_pairs_attempted": 10,
+      "hit_pairs_completed": 10,
+      "hit_pairs_feasible": 0,
+      "hit_tanimoto": 0.38,
+      "input_id": "CHEMBL4247-query-2",
+      "interpretation": "All bounded observed pairs failed joint pose constraints; not an impossibility proof or physical synthesis failure. No screening/refinement candidate admitted.",
+      "per_metric_maximum_not_necessarily_same_pose": {
+        "pharmacophore": 0.24884111670879766,
+        "polar_recall": 0.3061645141535701,
+        "shape": 0.6203274660010389
+      },
+      "polar_capacity_upper_bound": 0.8,
+      "product": "COc1cc(C(N)=O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+      "qualification": {
+        "calibration": {
+          "artifact_sha256": "b5cc6c5d2e46ede87bb4b6f6333d52bd1c6432623c2d2b8c96bada39f983eb27",
+          "name": "qualified-selective-engineering-v7",
+          "status": "custom_unvalidated"
+        },
+        "forward_outcome": {
+          "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+          "status": "supported",
+          "step_outcomes": [
+            {
+              "cause_code": "exact_full_product_match",
+              "node_id": "ir",
+              "prediction_status": "matched",
+              "reason": null,
+              "status": "supported"
+            },
+            {
+              "cause_code": "exact_full_product_match",
+              "node_id": "or",
+              "prediction_status": "matched",
+              "reason": null,
+              "status": "supported"
+            }
+          ],
+          "version": "forward-evidence-outcomes-v1"
+        },
+        "policy_version": "qualified-v1",
+        "qualified": false,
+        "reasons": [
+          "no_jointly_feasible_hit_pose"
+        ],
+        "route_id": "route_000000",
+        "status": "not_qualified"
+      },
+      "route_id": "route_000000",
+      "selection_status": "3d_failed"
+    },
+    {
+      "all_pair_rejection_reasons": [
+        "hit_pharmacophore_below_minimum",
+        "hit_shape_below_minimum",
+        "polar_reference_recall_below_minimum"
+      ],
+      "all_steps_forward_supported": true,
+      "hit_pairs_attempted": 4,
+      "hit_pairs_completed": 4,
+      "hit_pairs_feasible": 0,
+      "hit_tanimoto": 0.3592233009708738,
+      "input_id": "CHEMBL4247-query-2",
+      "interpretation": "All bounded observed pairs failed joint pose constraints; not an impossibility proof or physical synthesis failure. No screening/refinement candidate admitted.",
+      "per_metric_maximum_not_necessarily_same_pose": {
+        "pharmacophore": 0.25087727214942634,
+        "polar_recall": 0.2012993237825746,
+        "shape": 0.6611577034785208
+      },
+      "polar_capacity_upper_bound": 0.8,
+      "product": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+      "qualification": {
+        "calibration": {
+          "artifact_sha256": "b5cc6c5d2e46ede87bb4b6f6333d52bd1c6432623c2d2b8c96bada39f983eb27",
+          "name": "qualified-selective-engineering-v7",
+          "status": "custom_unvalidated"
+        },
+        "forward_outcome": {
+          "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+          "status": "supported",
+          "step_outcomes": [
+            {
+              "cause_code": "exact_full_product_match",
+              "node_id": "ir",
+              "prediction_status": "matched",
+              "reason": null,
+              "status": "supported"
+            },
+            {
+              "cause_code": "exact_full_product_match",
+              "node_id": "or",
+              "prediction_status": "matched",
+              "reason": null,
+              "status": "supported"
+            }
+          ],
+          "version": "forward-evidence-outcomes-v1"
+        },
+        "policy_version": "qualified-v1",
+        "qualified": false,
+        "reasons": [
+          "no_jointly_feasible_hit_pose"
+        ],
+        "route_id": "route_000002",
+        "status": "not_qualified"
+      },
+      "route_id": "route_000002",
+      "selection_status": "3d_failed"
+    },
+    {
+      "all_pair_rejection_reasons": [
+        "hit_pharmacophore_below_minimum",
+        "hit_shape_below_minimum",
+        "polar_reference_recall_below_minimum"
+      ],
+      "all_steps_forward_supported": true,
+      "hit_pairs_attempted": 5,
+      "hit_pairs_completed": 5,
+      "hit_pairs_feasible": 0,
+      "hit_tanimoto": 0.421875,
+      "input_id": "CHEMBL3334418-query-1",
+      "interpretation": "All bounded observed pairs failed joint pose constraints; not an impossibility proof or physical synthesis failure. No screening/refinement candidate admitted.",
+      "per_metric_maximum_not_necessarily_same_pose": {
+        "pharmacophore": 0.16063633162453061,
+        "polar_recall": 0.24088572977674827,
+        "shape": 0.5578871104447979
+      },
+      "polar_capacity_upper_bound": 0.7777777777777778,
+      "product": "CNc1ccc(Nc2ccc(S(=O)(=O)NC3CCCCC3)cc2)c2c1C(=O)c1ccccc1C2=O",
+      "qualification": {
+        "calibration": {
+          "artifact_sha256": "b5cc6c5d2e46ede87bb4b6f6333d52bd1c6432623c2d2b8c96bada39f983eb27",
+          "name": "qualified-selective-engineering-v7",
+          "status": "custom_unvalidated"
+        },
+        "forward_outcome": {
+          "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+          "status": "supported",
+          "step_outcomes": [
+            {
+              "cause_code": "exact_full_product_match",
+              "node_id": "or",
+              "prediction_status": "matched",
+              "reason": null,
+              "status": "supported"
+            }
+          ],
+          "version": "forward-evidence-outcomes-v1"
+        },
+        "policy_version": "qualified-v1",
+        "qualified": false,
+        "reasons": [
+          "no_jointly_feasible_hit_pose"
+        ],
+        "route_id": "route_000001",
+        "status": "not_qualified"
+      },
+      "route_id": "route_000001",
+      "selection_status": "3d_failed"
+    }
+  ],
+  "per_input": [
+    {
+      "actual_primary_covered": true,
+      "baseline_primary_covered": true,
+      "elapsed_seconds_including_loading": 276.4122826671228,
+      "evidence_usage": {
+        "cache_hits": 0,
+        "input_tokens": 208,
+        "output_tokens": 568,
+        "predictor_calls": 6
+      },
+      "execution_status": "qualified_nonempty",
+      "forward_outcomes": {
+        "counting_scope": "Repeated route/step records, not unique products or predictor calls; mixed routes retain every step outcome",
+        "route_record_outcomes": {
+          "supported": 3
+        },
+        "route_records_with_evidence": 3,
+        "route_records_without_evidence": 0,
+        "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+        "step_record_causes": {
+          "exact_full_product_match": 6
+        },
+        "step_record_outcomes": {
+          "supported": 6
+        },
+        "step_records": 6,
+        "version": "forward-evidence-outcomes-v1"
+      },
+      "hit_tanimoto_summary": {
+        "max": 0.6935483870967742,
+        "median": 0.6935483870967742,
+        "min": 0.671875,
+        "n": 3
+      },
+      "input_id": "CHEMBL4630839-query-1",
+      "previous_route_first_primary_covered": true,
+      "qualified_results": 3,
+      "scored_products": 3,
+      "supported_exact_products": [
+        "COc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+        "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1",
+        "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1"
+      ],
+      "supported_input_product_pairs": 3,
+      "supported_products_lost_from_v2": [],
+      "supported_route_records": 3
+    },
+    {
+      "actual_primary_covered": true,
+      "baseline_primary_covered": true,
+      "elapsed_seconds_including_loading": 219.85716898273677,
+      "evidence_usage": {
+        "cache_hits": 0,
+        "input_tokens": 61,
+        "output_tokens": 177,
+        "predictor_calls": 1
+      },
+      "execution_status": "completed_zero_qualified",
+      "forward_outcomes": {
+        "counting_scope": "Repeated route/step records, not unique products or predictor calls; mixed routes retain every step outcome",
+        "route_record_outcomes": {
+          "supported": 1
+        },
+        "route_records_with_evidence": 1,
+        "route_records_without_evidence": 0,
+        "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+        "step_record_causes": {
+          "exact_full_product_match": 1
+        },
+        "step_record_outcomes": {
+          "supported": 1
+        },
+        "step_records": 1,
+        "version": "forward-evidence-outcomes-v1"
+      },
+      "hit_tanimoto_summary": {
+        "max": 0.4367816091954023,
+        "median": 0.4367816091954023,
+        "min": 0.4367816091954023,
+        "n": 1
+      },
+      "input_id": "CHEMBL4630839-query-2",
+      "previous_route_first_primary_covered": true,
+      "qualified_results": 0,
+      "scored_products": 1,
+      "supported_exact_products": [
+        "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6CC6)nn5)C4)cc3)nc12"
+      ],
+      "supported_input_product_pairs": 1,
+      "supported_products_lost_from_v2": [],
+      "supported_route_records": 1
+    },
+    {
+      "actual_primary_covered": true,
+      "baseline_primary_covered": true,
+      "elapsed_seconds_including_loading": 259.06175609026104,
+      "evidence_usage": {
+        "cache_hits": 1,
+        "input_tokens": 473,
+        "output_tokens": 1421,
+        "predictor_calls": 11
+      },
+      "execution_status": "completed_zero_qualified",
+      "forward_outcomes": {
+        "counting_scope": "Repeated route/step records, not unique products or predictor calls; mixed routes retain every step outcome",
+        "route_record_outcomes": {
+          "mixed": 2,
+          "supported": 4
+        },
+        "route_records_with_evidence": 6,
+        "route_records_without_evidence": 0,
+        "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+        "step_record_causes": {
+          "completed_top_three_nonmatch": 1,
+          "exact_full_product_match": 10,
+          "incomplete_or_invalid_hypotheses": 1
+        },
+        "step_record_outcomes": {
+          "completed_nonmatch": 1,
+          "incomplete_prediction": 1,
+          "supported": 10
+        },
+        "step_records": 12,
+        "version": "forward-evidence-outcomes-v1"
+      },
+      "hit_tanimoto_summary": {
+        "max": 0.7023809523809523,
+        "median": 0.6536596119929453,
+        "min": 0.6049382716049383,
+        "n": 2
+      },
+      "input_id": "CHEMBL4247-query-1",
+      "previous_route_first_primary_covered": true,
+      "qualified_results": 0,
+      "scored_products": 2,
+      "supported_exact_products": [
+        "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+        "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC"
+      ],
+      "supported_input_product_pairs": 2,
+      "supported_products_lost_from_v2": [],
+      "supported_route_records": 4
+    },
+    {
+      "actual_primary_covered": true,
+      "baseline_primary_covered": true,
+      "elapsed_seconds_including_loading": 248.03014124929905,
+      "evidence_usage": {
+        "cache_hits": 2,
+        "input_tokens": 381,
+        "output_tokens": 1005,
+        "predictor_calls": 8
+      },
+      "execution_status": "completed_zero_qualified",
+      "forward_outcomes": {
+        "counting_scope": "Repeated route/step records, not unique products or predictor calls; mixed routes retain every step outcome",
+        "route_record_outcomes": {
+          "mixed": 3,
+          "supported": 2
+        },
+        "route_records_with_evidence": 5,
+        "route_records_without_evidence": 0,
+        "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+        "step_record_causes": {
+          "completed_top_three_nonmatch": 3,
+          "exact_full_product_match": 7
+        },
+        "step_record_outcomes": {
+          "completed_nonmatch": 3,
+          "supported": 7
+        },
+        "step_records": 10,
+        "version": "forward-evidence-outcomes-v1"
+      },
+      "hit_tanimoto_summary": {
+        "max": 0.38,
+        "median": 0.36961165048543687,
+        "min": 0.3592233009708738,
+        "n": 2
+      },
+      "input_id": "CHEMBL4247-query-2",
+      "previous_route_first_primary_covered": false,
+      "qualified_results": 0,
+      "scored_products": 2,
+      "supported_exact_products": [
+        "COc1cc(C(N)=O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+        "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12"
+      ],
+      "supported_input_product_pairs": 2,
+      "supported_products_lost_from_v2": [],
+      "supported_route_records": 2
+    },
+    {
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "elapsed_seconds_including_loading": 189.88858188781887,
+      "evidence_usage": null,
+      "execution_status": "completed_zero_qualified",
+      "forward_outcomes": {
+        "counting_scope": "Repeated route/step records, not unique products or predictor calls; mixed routes retain every step outcome",
+        "route_record_outcomes": {},
+        "route_records_with_evidence": 0,
+        "route_records_without_evidence": 0,
+        "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+        "step_record_causes": {},
+        "step_record_outcomes": {},
+        "step_records": 0,
+        "version": "forward-evidence-outcomes-v1"
+      },
+      "hit_tanimoto_summary": null,
+      "input_id": "CHEMBL5163-query-1",
+      "previous_route_first_primary_covered": false,
+      "qualified_results": 0,
+      "scored_products": 0,
+      "supported_exact_products": [],
+      "supported_input_product_pairs": 0,
+      "supported_products_lost_from_v2": [],
+      "supported_route_records": 0
+    },
+    {
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "elapsed_seconds_including_loading": 179.84841482061893,
+      "evidence_usage": null,
+      "execution_status": "completed_zero_qualified",
+      "forward_outcomes": {
+        "counting_scope": "Repeated route/step records, not unique products or predictor calls; mixed routes retain every step outcome",
+        "route_record_outcomes": {},
+        "route_records_with_evidence": 0,
+        "route_records_without_evidence": 0,
+        "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+        "step_record_causes": {},
+        "step_record_outcomes": {},
+        "step_records": 0,
+        "version": "forward-evidence-outcomes-v1"
+      },
+      "hit_tanimoto_summary": null,
+      "input_id": "CHEMBL5163-query-2",
+      "previous_route_first_primary_covered": false,
+      "qualified_results": 0,
+      "scored_products": 0,
+      "supported_exact_products": [],
+      "supported_input_product_pairs": 0,
+      "supported_products_lost_from_v2": [],
+      "supported_route_records": 0
+    },
+    {
+      "actual_primary_covered": true,
+      "baseline_primary_covered": false,
+      "elapsed_seconds_including_loading": 213.0065007628873,
+      "evidence_usage": {
+        "cache_hits": 1,
+        "input_tokens": 106,
+        "output_tokens": 301,
+        "predictor_calls": 2
+      },
+      "execution_status": "completed_zero_qualified",
+      "forward_outcomes": {
+        "counting_scope": "Repeated route/step records, not unique products or predictor calls; mixed routes retain every step outcome",
+        "route_record_outcomes": {
+          "completed_nonmatch": 2,
+          "supported": 1
+        },
+        "route_records_with_evidence": 3,
+        "route_records_without_evidence": 0,
+        "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+        "step_record_causes": {
+          "completed_top_three_nonmatch": 2,
+          "exact_full_product_match": 1
+        },
+        "step_record_outcomes": {
+          "completed_nonmatch": 2,
+          "supported": 1
+        },
+        "step_records": 3,
+        "version": "forward-evidence-outcomes-v1"
+      },
+      "hit_tanimoto_summary": {
+        "max": 0.421875,
+        "median": 0.421875,
+        "min": 0.421875,
+        "n": 1
+      },
+      "input_id": "CHEMBL3334418-query-1",
+      "previous_route_first_primary_covered": false,
+      "qualified_results": 0,
+      "scored_products": 1,
+      "supported_exact_products": [
+        "CNc1ccc(Nc2ccc(S(=O)(=O)NC3CCCCC3)cc2)c2c1C(=O)c1ccccc1C2=O"
+      ],
+      "supported_input_product_pairs": 1,
+      "supported_products_lost_from_v2": [],
+      "supported_route_records": 1
+    },
+    {
+      "actual_primary_covered": true,
+      "baseline_primary_covered": true,
+      "elapsed_seconds_including_loading": 210.2450745915994,
+      "evidence_usage": {
+        "cache_hits": 0,
+        "input_tokens": 105,
+        "output_tokens": 272,
+        "predictor_calls": 2
+      },
+      "execution_status": "completed_zero_qualified",
+      "forward_outcomes": {
+        "counting_scope": "Repeated route/step records, not unique products or predictor calls; mixed routes retain every step outcome",
+        "route_record_outcomes": {
+          "supported": 2
+        },
+        "route_records_with_evidence": 2,
+        "route_records_without_evidence": 0,
+        "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+        "step_record_causes": {
+          "exact_full_product_match": 2
+        },
+        "step_record_outcomes": {
+          "supported": 2
+        },
+        "step_records": 2,
+        "version": "forward-evidence-outcomes-v1"
+      },
+      "hit_tanimoto_summary": {
+        "max": 0.3939393939393939,
+        "median": 0.37950937950937946,
+        "min": 0.36507936507936506,
+        "n": 2
+      },
+      "input_id": "CHEMBL3334418-query-2",
+      "previous_route_first_primary_covered": true,
+      "qualified_results": 0,
+      "scored_products": 2,
+      "supported_exact_products": [
+        "CNc1ccc(NC(C)(C)c2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+        "CNc1ccc(Nc2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O"
+      ],
+      "supported_input_product_pairs": 2,
+      "supported_products_lost_from_v2": [],
+      "supported_route_records": 2
+    },
+    {
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "elapsed_seconds_including_loading": 200.07731736637652,
+      "evidence_usage": null,
+      "execution_status": "completed_zero_qualified",
+      "forward_outcomes": {
+        "counting_scope": "Repeated route/step records, not unique products or predictor calls; mixed routes retain every step outcome",
+        "route_record_outcomes": {},
+        "route_records_with_evidence": 0,
+        "route_records_without_evidence": 0,
+        "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+        "step_record_causes": {},
+        "step_record_outcomes": {},
+        "step_records": 0,
+        "version": "forward-evidence-outcomes-v1"
+      },
+      "hit_tanimoto_summary": null,
+      "input_id": "CHEMBL4869-query-1",
+      "previous_route_first_primary_covered": false,
+      "qualified_results": 0,
+      "scored_products": 0,
+      "supported_exact_products": [],
+      "supported_input_product_pairs": 0,
+      "supported_products_lost_from_v2": [],
+      "supported_route_records": 0
+    },
+    {
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "elapsed_seconds_including_loading": 197.25882369745523,
+      "evidence_usage": null,
+      "execution_status": "completed_zero_qualified",
+      "forward_outcomes": {
+        "counting_scope": "Repeated route/step records, not unique products or predictor calls; mixed routes retain every step outcome",
+        "route_record_outcomes": {},
+        "route_records_with_evidence": 0,
+        "route_records_without_evidence": 0,
+        "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+        "step_record_causes": {},
+        "step_record_outcomes": {},
+        "step_records": 0,
+        "version": "forward-evidence-outcomes-v1"
+      },
+      "hit_tanimoto_summary": null,
+      "input_id": "CHEMBL4869-query-2",
+      "previous_route_first_primary_covered": false,
+      "qualified_results": 0,
+      "scored_products": 0,
+      "supported_exact_products": [],
+      "supported_input_product_pairs": 0,
+      "supported_products_lost_from_v2": [],
+      "supported_route_records": 0
+    },
+    {
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "elapsed_seconds_including_loading": 186.63318883348256,
+      "evidence_usage": null,
+      "execution_status": "completed_zero_qualified",
+      "forward_outcomes": {
+        "counting_scope": "Repeated route/step records, not unique products or predictor calls; mixed routes retain every step outcome",
+        "route_record_outcomes": {},
+        "route_records_with_evidence": 0,
+        "route_records_without_evidence": 0,
+        "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+        "step_record_causes": {},
+        "step_record_outcomes": {},
+        "step_records": 0,
+        "version": "forward-evidence-outcomes-v1"
+      },
+      "hit_tanimoto_summary": null,
+      "input_id": "CHEMBL3864-query-1",
+      "previous_route_first_primary_covered": false,
+      "qualified_results": 0,
+      "scored_products": 0,
+      "supported_exact_products": [],
+      "supported_input_product_pairs": 0,
+      "supported_products_lost_from_v2": [],
+      "supported_route_records": 0
+    },
+    {
+      "actual_primary_covered": false,
+      "baseline_primary_covered": false,
+      "elapsed_seconds_including_loading": 193.8537658955902,
+      "evidence_usage": null,
+      "execution_status": "completed_zero_qualified",
+      "forward_outcomes": {
+        "counting_scope": "Repeated route/step records, not unique products or predictor calls; mixed routes retain every step outcome",
+        "route_record_outcomes": {},
+        "route_records_with_evidence": 0,
+        "route_records_without_evidence": 0,
+        "scope": "Bounded computational support only; neither physical synthesis failure nor experimental validation",
+        "step_record_causes": {},
+        "step_record_outcomes": {},
+        "step_records": 0,
+        "version": "forward-evidence-outcomes-v1"
+      },
+      "hit_tanimoto_summary": null,
+      "input_id": "CHEMBL3864-query-2",
+      "previous_route_first_primary_covered": false,
+      "qualified_results": 0,
+      "scored_products": 0,
+      "supported_exact_products": [],
+      "supported_input_product_pairs": 0,
+      "supported_products_lost_from_v2": [],
+      "supported_route_records": 0
+    }
+  ],
+  "previous_route_first_totals": {
+    "qualified_results": 3,
+    "supported_input_product_pairs": 8,
+    "supported_inputs": 4,
+    "supported_route_records": 9
+  },
+  "route_first_totals": {
+    "elapsed_input_seconds_sum_including_loading": 2574.1730168452486,
+    "model_usage": {
+      "cache_hits": 4,
+      "input_tokens": 1334,
+      "output_tokens": 3744,
+      "predictor_calls": 30
+    },
+    "qualified_results": 3,
+    "scored_products": 11,
+    "supported_input_product_pairs": 11,
+    "supported_inputs": 6,
+    "supported_route_records": 13,
+    "unknown_inputs": 0
+  },
+  "schema": "route-first-actual-comparison-v3-portable-v1",
+  "scope": "Single fresh fixed12 treatment of combined retained continuation/NH/empty-stage/pool-sharing/marked-source policies; original frozen native baseline reused. Development panel, not independent validation.",
+  "source_commit": "9989230e6b2a4ad6a7d1c7eb08fe4c331075b264",
+  "status": "complete_independently_reviewed",
+  "validation": {
+    "analysis_bound_files": 309,
+    "analysis_entry_exit_hashes_equal": true,
+    "execution_attempts": 1,
+    "execution_errors": 0,
+    "execution_exit_code": 0,
+    "full_suite": {
+      "failed": 0,
+      "passed": 3686,
+      "skipped": 76,
+      "subtests_passed": 19
+    },
+    "independent_outcome_review": "Root and Astra PASS. All309 analysis inputs rehashed;334 supported step records across both arms checked against exact raw predictions, pinned model provenance, route bindings and budgets. No science rerun.",
+    "max_input_elapsed_seconds": 276.4122826671228,
+    "normal_terminal_inputs": 12,
+    "not_started": 0,
+    "pinned_analyzer_attempts": 1,
+    "pinned_analyzer_exit_code": 0,
+    "source_software_receipt": "benchmarks/results/synthesis-route-development-20261023/marked-policy-port-validation-v1.json",
+    "timeouts": 0
+  }
+}

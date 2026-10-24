@@ -1,7 +1,10 @@
 # Synthesis-aware scaffold hopping
 
-The latest fixed route-first comparison supported four of the 12 development
-inputs after all-step forward checks, below the five-input baseline. See the
+The latest [fixed route-first comparison](../benchmarks/results/synthesis-route-development-20261023/actual-comparison-v3.json)
+supported six of the 12 development inputs after complete route and all-step
+forward checks, versus five for the baseline. The P1 development criterion is
+met; qualified results remain three on one input. Newly supported products
+still fail joint 3D preservation. See the
 [synthesis-route priority plan](SYNTHESIS_ROUTE_PLAN.md) for the baseline,
 bounded route-generation work, and checks planned before another large run.
 
@@ -16,8 +19,20 @@ with local catalog, rules, and pinned forward-model assets, remove `provider`,
 and add:
 
 ```json
-"route_first": {"version": "catalog-rule-route-first-v2", "max_steps": 2}
+"route_first": {
+  "version": "catalog-rule-route-first-v2",
+  "max_steps": 2,
+  "prefer_continuation_second": true,
+  "prefer_mapped_nh_second": true,
+  "skip_empty_stage_retrieval": true,
+  "share_identical_catalog_pools": true,
+  "prefer_marked_continuation_second": true
+}
 ```
+
+This explicitly enables the source-selection combination used in v3; each
+optional selection flag defaults to false. The exact development-panel assets
+and budgets are bound in the [frozen protocol](../benchmarks/results/synthesis-route-development-20261023/actual-comparison-v3-freeze.json).
 
 ```bash
 python chembounce.py -i 'HIT_SMILES' -o NEW_RUN --recommend \
@@ -57,8 +72,10 @@ the incoming pair. Extra fingerprints and role matches consume the existing
 shared caps. This score does not establish the reacting site or selectivity.
 In a [single development-input control](../benchmarks/results/synthesis-route-development-20261023/marked-continuation-forward-support-control-v1.json),
 two of three newly gained routes had exact all-step forward support, while the
-third had an inner-step mismatch. Full-panel retention, 3D qualification and
-independent validation remain required; the latest actual coverage stays 4/12.
+third had an inner-step mismatch. The subsequent fixed-panel generation and actual model/3D comparison retained
+previous successes and reached 6/12 supported inputs. Qualified results remain
+three; verified reaction conditions, physical synthesis and independent
+validation remain outstanding.
 
 Specified hit tetrahedral and E/Z centers compile unique, self-matching local
 anchors from the original hit before any product is considered. The radius
@@ -284,8 +301,8 @@ one input. A separate five-route forward control evaluated all four new routes
 and an archived supported positive under the pinned model. The positive
 reproduced its exact match and raw prediction, while all four new route products
 were mismatched by the fixed top-three model output. This developmental control
-does not revise the completed primary comparison. The primary route-first result remains four
-supported inputs against the five-input baseline, so P1 remains incomplete.
+does not revise the completed primary comparison. At that revision, the primary route-first result was four
+supported inputs against the five-input baseline, so P1 remained incomplete at that revision.
 
 An experimental fifteenth probe tested a different allocation of the same
 512 phase-two rule inspections: larger unique precursor targets were selected
@@ -310,7 +327,7 @@ sets to 58 pairs and 65 routes, including all three historically qualified
 products and graphs. No additional input acquired a candidate. Under the
 unchanged saved forward evidence, even the optimistic supported-input bound
 is only five, so the policy has not met P1 or entered the workflow configuration.
-The actual primary result remains four supported inputs. This probe made no
+At that revision, the actual primary result was four supported inputs. This probe made no
 forward-model or 3D calls; its gains are pre-evidence supply gains only.
 
 A [saved-graph stereo-anchor diagnostic](../benchmarks/results/synthesis-route-development-20261023/stereo-anchor-stage-diagnostic-v1.json)
@@ -350,7 +367,7 @@ completed all 12 inputs and retained exactly the same 58 input/product pairs,
 65 route graphs and three historical qualified graphs as v16 ON, with no gains
 or losses. The correction was used 64 times, but did not increase eligible
 supply. The conditional optimistic support bound remained five inputs, so no
-new model or 3D run followed and the actual primary result remains four.
+new model or 3D run followed that probe, and the actual primary result was then four.
 Retain this as a verified retrieval-hint bug fix, not a P1 coverage success.
 The next diagnostic attributes selected sources and intermediate outcomes to
 individual affected work items; existing aggregate traces cannot identify a
