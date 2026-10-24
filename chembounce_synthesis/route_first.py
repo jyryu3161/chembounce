@@ -913,11 +913,17 @@ class RouteFirstLimits:
     prefer_continuation_second: bool = False
     prefer_mapped_nh_second: bool = False
     skip_empty_stage_retrieval: bool = False
+    share_identical_catalog_pools: bool = False
 
     def __post_init__(self):
         if self.version != VERSION:
             raise ValueError(f"route_first.version must be {VERSION}")
-        for name in ("prefer_continuation_second", "prefer_mapped_nh_second", "skip_empty_stage_retrieval"):
+        for name in (
+            "prefer_continuation_second",
+            "prefer_mapped_nh_second",
+            "skip_empty_stage_retrieval",
+            "share_identical_catalog_pools",
+        ):
             if type(getattr(self, name)) is not bool:
                 raise ValueError(f"route_first.{name} must be a boolean")
         for key, value in asdict(self).items():
@@ -926,6 +932,7 @@ class RouteFirstLimits:
                 "prefer_continuation_second",
                 "prefer_mapped_nh_second",
                 "skip_empty_stage_retrieval",
+                "share_identical_catalog_pools",
             ):
                 positive(value, f"route_first.{key}")
         if self.max_steps not in (1, 2):
@@ -1117,6 +1124,8 @@ class RouteFirstSearch:
             },
             "context_role_checks_total": 0,
             "catalog_bucket_rankings": 0,
+            "shared_catalog_pool_hits": 0,
+            "shared_catalog_bucket_rankings_avoided": 0,
             "reaction_pool_limits": {
                 "query_role_pairs": MAX_POOL_QUERY_ROLE_PAIRS,
                 "window_match_requests": MAX_POOL_WINDOW_MATCH_REQUESTS,
@@ -1242,6 +1251,8 @@ class RouteFirstSearch:
         self._fp_cache = {self.hit: self.hit_fp}
         self._catalog_index = None
         self._catalog_pools = {}
+        self._catalog_pool_ranking_charges = {}
+        self._catalog_pool_seen_targets = {}
         self._pool_last_complete = True
         self._pool_metadata_cache = {}
         self._selected_role_indexes = ()
@@ -1567,9 +1578,21 @@ class RouteFirstSearch:
             indexed_role = None
         elif indexed_role is not None:
             self.report["reaction_pool_index_applied"] += 1
-        cache_key = (target, features, indexed_role)
+        shared = self.limits.share_identical_catalog_pools
+        cache_key = (features, indexed_role) if shared else (target, features, indexed_role)
         self._pool_last_complete = metadata_complete
-        if cache_key in self._catalog_pools:
+        # A completed pool certifies its bucket ordering, not a different caller's
+        # incomplete metadata.  The deadline may also expire during metadata work.
+        if shared and self._stop():
+            self._pool_last_complete = False
+            return ()
+        if (metadata_complete or not shared) and cache_key in self._catalog_pools:
+            if shared and target not in self._catalog_pool_seen_targets[cache_key]:
+                self.report["shared_catalog_pool_hits"] += 1
+                self.report["shared_catalog_bucket_rankings_avoided"] += (
+                    self._catalog_pool_ranking_charges[cache_key]
+                )
+                self._catalog_pool_seen_targets[cache_key].add(target)
             return self._catalog_pools[cache_key]
         phase_limit = (
             self.limits.max_catalog_row_visits // 2
@@ -1587,13 +1610,16 @@ class RouteFirstSearch:
             )
 
         selected = []
+        bucket_ranking_charges = 0
 
         def take(group, label):
+            nonlocal bucket_ranking_charges
             if self._stop() or self.report["catalog_row_visits"] + len(group) > phase_limit:
                 self._stop("max_catalog_row_visits")
                 return False
             self.report["catalog_row_visits"] += len(group)
             self.report["catalog_bucket_rankings"] += len(group)
+            bucket_ranking_charges += len(group)
             self.report[f"reaction_pool_{label}_bucket_rankings"] += len(group)
             before = len(selected)
             for key in sorted(group, key=distance):
@@ -1616,9 +1642,15 @@ class RouteFirstSearch:
         elif not take(buckets, "ordinary"):
             self._pool_last_complete = False
             return ()
+        if shared and self._stop():
+            self._pool_last_complete = False
+            return ()
         pool = tuple(selected)
         if metadata_complete:
             self._catalog_pools[cache_key] = pool
+            if shared:
+                self._catalog_pool_ranking_charges[cache_key] = bucket_ranking_charges
+                self._catalog_pool_seen_targets[cache_key] = {target}
         return pool
 
     def _eligible_rule_ids(self):

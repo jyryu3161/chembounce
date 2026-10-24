@@ -2735,6 +2735,185 @@ def test_feature_index_targets_guide_size_without_unbounded_per_query_scan(asset
     assert search.report["catalog_row_visits"] <= search.limits.max_catalog_row_visits
 
 
+def test_complete_identical_catalog_pools_share_across_targets_without_sharing_nearest(monkeypatch):
+    names = tuple(map(canonical, ("CCBr", "CCCBr", "CCCCBr")))
+    catalog = SimpleNamespace(
+        sha256="synthetic",
+        mols={name: molecule(name) for name in names},
+        by_smiles={name: {name} for name in names},
+        blocks={name: SimpleNamespace(id=name, smiles=name) for name in names},
+    )
+    rules = SimpleNamespace(sha256="synthetic")
+
+    def search(shared):
+        result = RouteFirstSearch(
+            "CCBr",
+            catalog,
+            rules,
+            RouteFirstLimits(**limits(max_steps=1, share_identical_catalog_pools=shared)),
+        )
+        monkeypatch.setattr(result, "_pool_metadata", lambda *_args: ((1, 0, 0, 0), None, True))
+        return result
+
+    off, on = search(False), search(True)
+    targets = names[:2]
+    for result in (off, on):
+        first = result._pool(targets[0], guide=targets[0], role="[C][Br]")
+        second = result._pool(targets[1], guide=targets[1], role="[C][Br]")
+        assert first == second
+    assert on.report["shared_catalog_pool_hits"] == 1
+    assert on.report["shared_catalog_bucket_rankings_avoided"] == off.report[
+        "catalog_bucket_rankings"
+    ] // 2
+    assert on.report["catalog_bucket_rankings"] * 2 == off.report["catalog_bucket_rankings"]
+    assert on.report["catalog_row_visits"] * 2 == off.report["catalog_row_visits"]
+    assert len(off._catalog_pools) == 2 and len(on._catalog_pools) == 1
+    before_repeated_target = dict(on.report)
+    on._pool(targets[1], guide=targets[1], role="[C][Br]")
+    assert on.report["shared_catalog_pool_hits"] == before_repeated_target[
+        "shared_catalog_pool_hits"
+    ]
+    assert on.report["shared_catalog_bucket_rankings_avoided"] == before_repeated_target[
+        "shared_catalog_bucket_rankings_avoided"
+    ]
+
+    # Sharing a bucket order does not share the per-target exact-row insertion
+    # or the per-target nearest selection and its charged candidate-row visits.
+    first_selected = on._nearest(targets[0], "[C][Br]")
+    after_first = on.report["catalog_row_visits"]
+    second_selected = on._nearest(targets[1], "[C][Br]")
+    assert first_selected == off._nearest(targets[0], "[C][Br]")
+    assert second_selected == off._nearest(targets[1], "[C][Br]")
+    assert on.report["catalog_row_visits"] > after_first
+    assert len(on._nearest_cache) == 2
+
+    incomplete = search(True)
+    incomplete._pool(targets[0], guide=targets[0], role="[C][Br]")
+    monkeypatch.setattr(incomplete, "_catalog_block_stereo_eligible", lambda _smiles: None)
+    incomplete._nearest(targets[1], "[C][Br]")
+    first_charges = incomplete.report["catalog_row_visits"]
+    assert (targets[1], "[C][Br]", False) not in incomplete._nearest_cache
+    incomplete._nearest(targets[1], "[C][Br]")
+    assert incomplete.report["catalog_row_visits"] > first_charges
+    assert incomplete.report["shared_catalog_pool_hits"] == 1
+
+
+def test_shared_catalog_pool_requires_complete_metadata_and_completed_bucket_take(monkeypatch):
+    names = tuple(map(canonical, ("CCBr", "CCCBr")))
+    catalog = SimpleNamespace(sha256="synthetic", mols={name: molecule(name) for name in names})
+    search = RouteFirstSearch(
+        "CCBr",
+        catalog,
+        SimpleNamespace(sha256="synthetic"),
+        RouteFirstLimits(**limits(max_steps=1, share_identical_catalog_pools=True)),
+    )
+    feature = (1, 0, 0, 0)
+    monkeypatch.setattr(search, "_pool_metadata", lambda *_args: (feature, None, True))
+    assert search._pool(names[0], guide=names[0], role="[C][Br]")
+    visits = search.report["catalog_row_visits"]
+    monkeypatch.setattr(search, "_pool_metadata", lambda *_args: (feature, None, False))
+    assert search._pool(names[1], guide=names[1], role="[C][Br]")
+    assert search.report["catalog_row_visits"] > visits
+    assert search.report["shared_catalog_pool_hits"] == 0
+    assert not search._pool_last_complete
+    assert len(search._catalog_pools) == 1
+
+    search.deadline = time.monotonic() - 1
+    assert search._pool(names[1], guide=names[1], role="[C][Br]") == ()
+    assert search.report["shared_catalog_pool_hits"] == 0
+
+
+def test_shared_catalog_pool_distinguishes_features_and_effective_role_index(monkeypatch):
+    names = tuple(map(canonical, ("CCBr", "CCCBr", "CCN")))
+    catalog = SimpleNamespace(sha256="synthetic", mols={name: molecule(name) for name in names})
+    search = RouteFirstSearch(
+        "CCBr",
+        catalog,
+        SimpleNamespace(sha256="synthetic"),
+        RouteFirstLimits(**limits(max_steps=1, share_identical_catalog_pools=True)),
+    )
+    role = "[C][Br]"
+    search._selected_role_indexes = (role,)
+    search._role_index_queries = {role: Chem.MolFromSmarts(role)}
+    data = iter((((1, 0, 0, 0), role, True), ((2, 0, 0, 0), role, True), ((1, 0, 0, 0), None, True)))
+    monkeypatch.setattr(search, "_pool_metadata", lambda *_args: next(data))
+    for name in names:
+        search._pool(name, guide=name, role=role)
+    assert len(search._catalog_pools) == 3
+    assert search.report["shared_catalog_pool_hits"] == 0
+
+
+def test_shared_catalog_pool_does_not_cache_failed_bucket_take(monkeypatch):
+    names = tuple(map(canonical, ("CCBr", "CCN")))
+    catalog = SimpleNamespace(sha256="synthetic", mols={name: molecule(name) for name in names})
+    search = RouteFirstSearch(
+        "CCBr",
+        catalog,
+        SimpleNamespace(sha256="synthetic"),
+        RouteFirstLimits(
+            **limits(max_steps=1, max_catalog_row_visits=1, share_identical_catalog_pools=True)
+        ),
+    )
+    role = "[C][Br]"
+    search._selected_role_indexes = (role,)
+    search._role_index_queries = {role: Chem.MolFromSmarts(role)}
+    monkeypatch.setattr(search, "_pool_metadata", lambda *_args: ((1, 0, 0, 0), role, True))
+    assert search._pool(names[0], guide=names[0], role="[C][Br]") == ()
+    assert not search._pool_last_complete
+    assert not search._catalog_pools
+    assert search.report["reaction_pool_indexed_rows_selected"] == 1
+    assert search.report["reaction_pool_ordinary_rows_selected"] == 0
+    assert search.report["shared_catalog_pool_hits"] == 0
+
+
+def test_shared_catalog_pool_rechecks_deadline_after_metadata_and_bucket_sort(monkeypatch):
+    names = tuple(map(canonical, ("CCBr", "CCCBr")))
+    catalog = SimpleNamespace(sha256="synthetic", mols={name: molecule(name) for name in names})
+    search = RouteFirstSearch(
+        "CCBr",
+        catalog,
+        SimpleNamespace(sha256="synthetic"),
+        RouteFirstLimits(**limits(max_steps=1, share_identical_catalog_pools=True)),
+    )
+    features = (1, 0, 0, 0)
+    monkeypatch.setattr(search, "_pool_metadata", lambda *_args: (features, None, True))
+    assert search._pool(names[0], guide=names[0], role="[C][Br]")
+
+    def expire_in_metadata(*_args):
+        search.deadline = time.monotonic() - 1
+        return features, None, True
+
+    monkeypatch.setattr(search, "_pool_metadata", expire_in_metadata)
+    assert search._pool(names[1], guide=names[1], role="[C][Br]") == ()
+    assert not search._pool_last_complete
+    assert search.report["shared_catalog_pool_hits"] == 0
+
+    # A deadline reached during the sort cannot publish a complete shared pool.
+    fresh = RouteFirstSearch(
+        "CCBr",
+        catalog,
+        SimpleNamespace(sha256="synthetic"),
+        RouteFirstLimits(**limits(max_steps=1, share_identical_catalog_pools=True)),
+    )
+    monkeypatch.setattr(fresh, "_pool_metadata", lambda *_args: (features, None, True))
+    original_stop = fresh._stop
+
+    def stop_after_take(*args, **kwargs):
+        if fresh.report["catalog_bucket_rankings"]:
+            fresh.deadline = time.monotonic() - 1
+        return original_stop(*args, **kwargs)
+
+    monkeypatch.setattr(fresh, "_stop", stop_after_take)
+    assert fresh._pool(names[0], guide=names[0], role="[C][Br]") == ()
+    assert not fresh._catalog_pools
+
+
+def test_shared_catalog_pool_flag_is_strict_and_off_by_default():
+    assert RouteFirstLimits(**limits()).share_identical_catalog_pools is False
+    with pytest.raises(ValueError, match="share_identical_catalog_pools must be a boolean"):
+        RouteFirstLimits(**limits(share_identical_catalog_pools=1))
+
+
 def test_reaction_pool_selected_roles_are_frequency_ranked_and_map_free():
     catalog = SimpleNamespace(sha256="synthetic")
     rules = SimpleNamespace(sha256="synthetic")

@@ -52,6 +52,8 @@ P1의 성능 목표를 유지하면서, **단계별 검토 기능과 합성 근�
 
 ## P1의 다음 변경을 결정하는 기준
 
+**동일 원료 목록 재사용 — 구현·국소 검증 완료, 전체 비교 전:** `route_first.share_identical_catalog_pools`를 기본 비활성 옵션으로 추가했다. 완전히 계산된 특성 구간·유효 반응 역할이 같은 목록의 정렬 결과만 공유하며, 원 입력별 지문·anchor·반응 역할·입체 판정과 실제 후보 행 방문은 계속 각각 수행한다. 불완전한 metadata, 일부만 선택된 목록, 처리 도중 만료된 시간은 공유 근거로 사용하지 않는다. 반복 대상의 비용 절감을 중복 집계하지 않는 검사를 포함해 관련 테스트 101개와 독립 검토를 통과했다. 고정 12입력 v22 생성 대조에서 기존 v21의 59생성물·66경로 및 최초 후보 순서의 손실과 새로운 경로를 함께 확인한다. 동일 카탈로그·규칙·top-2·모든 관문과 작업 상한을 유지하며, 후보나 모델 성능 개선은 아직 확인되지 않았다.
+
 최근 [반응 부위 대조](../benchmarks/results/synthesis-route-development-20261023/endpoint-locus-r2-control-v1.json)는 두 개발 입력의 지지 13기록을 배제하지 않고 목표 불일치 2기록을 구분했지만, 다른 불일치 1기록은 구분하지 못했다. [현재 pool의 고정 원료 선택](../benchmarks/results/synthesis-route-development-20261023/current-pool-source-feasibility-v1.json) 후 [동일 상대와의 생성 대조](../benchmarks/results/synthesis-route-development-20261023/current-pool-same-partner-control-v1.json)에서 새 생성물은 Tanimoto **0.349057 < 0.35**, 극성 보존 상한 **0.70 < 0.75**로 탈락했다. 이 선택 변형은 종료했다.
 
 **donor 진단·기록 복구 완료:** [고정 관측 기록](../benchmarks/results/synthesis-route-development-20261023/donor-feature-diagnostic-v1.json)에서 고정 대안 원료는 donor 0개, guide는 2개였다. 그러나 지지 단계 기록 2건도 원료 2개·guide 3개로 줄어 일반적인 donor 보존 필수 조건에 반례가 있었다. 더 좁은 반응 부위 조건과의 결합은 검증되지 않았다. 구조 34개의 특징 관측과 부위 매칭 44회를 수행한 뒤 마지막 해시 기록의 변수명 충돌로 원래 실행은 종료 코드 1이 됐다. 별도 JSON 전용 복구가 종료 코드 0으로 완료됐고 저장 관측의 완전성과 복구 전후 바인딩을 확인했다. 원래 실행의 종료 시점 검증 누락은 그대로 남긴다. 화학 계산·모델·3D 재실행, 새 원료 검색·생성, P1 지표 변경은 없었다.

@@ -36,6 +36,17 @@ and audited, and its evidence and 3D gates remain separate. An exact generated
 product is its own design reference, so design-to-product similarity 1 is
 tautological; original-hit constraints remain the meaningful comparison.
 
+The optional `route_first.share_identical_catalog_pools` boolean defaults to
+`false`. When enabled, a completed catalog bucket pool can be reused by later
+queries with the same bounded feature bins and effective role index. Each query
+still performs its own target-specific source ranking, anchor checks, role and
+stereo screening, and charged candidate-row visits. Incomplete pool metadata,
+unfinished bucket selection, and expired deadlines cannot certify a shared
+pool. The route report counts cross-target pool hits and avoided bucket
+rankings separately; these counts do not measure total CPU savings. This
+experimental allocation change can alter which later queries fit the shared
+work budget, so route gains and losses require a fixed-panel comparison.
+
 Specified hit tetrahedral and E/Z centers compile unique, self-matching local
 anchors from the original hit before any product is considered. The radius
 grows only within fixed atom/match bounds until source stereo is representable;
