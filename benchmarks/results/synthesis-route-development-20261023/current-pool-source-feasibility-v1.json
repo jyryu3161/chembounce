@@ -1,0 +1,717 @@
+{
+  "affected_context": {
+    "events": [
+      {
+        "contributor": [
+          {
+            "apply_id": 93,
+            "guide": [
+              "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+              "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+            ],
+            "guide_quality": "typed",
+            "source_evidence": [
+              {
+                "building_block_id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+                "kind": "catalog_leaf",
+                "nearest_call_id": 42,
+                "node_id": "ob0",
+                "slot": 0
+              },
+              {
+                "kind": "replaced_intermediate",
+                "node_id": "ir",
+                "slot": 1
+              }
+            ],
+            "source_slot_kind": [
+              "catalog_leaf",
+              "replaced_intermediate"
+            ],
+            "stage_id": 26
+          }
+        ],
+        "disjoint_alternative_rule": "synllama-rule-077",
+        "graph": "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+        ],
+        "guide_quality": "typed",
+        "node_id": "or",
+        "old_source": "COc1cc(CC(=O)O)ccc1Cl",
+        "old_source_id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+        "partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+        "rule_id": "synllama-rule-042",
+        "source_slot": 0
+      },
+      {
+        "contributor": [
+          {
+            "apply_id": 97,
+            "guide": [
+              "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+              "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+            ],
+            "guide_quality": "typed",
+            "source_evidence": [
+              {
+                "building_block_id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+                "kind": "catalog_leaf",
+                "nearest_call_id": 42,
+                "node_id": "ob0",
+                "slot": 0
+              },
+              {
+                "kind": "replaced_intermediate",
+                "node_id": "ir",
+                "slot": 1
+              }
+            ],
+            "source_slot_kind": [
+              "catalog_leaf",
+              "replaced_intermediate"
+            ],
+            "stage_id": 26
+          }
+        ],
+        "disjoint_alternative_rule": "synllama-rule-077",
+        "graph": "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc",
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+        ],
+        "guide_quality": "typed",
+        "node_id": "or",
+        "old_source": "COc1cc(C(=O)O)ccc1Cl",
+        "old_source_id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+        "partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+        "rule_id": "synllama-rule-042",
+        "source_slot": 0
+      }
+    ],
+    "guide": [
+      "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+      "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+    ],
+    "nearest_call_id": 42,
+    "old_selected": [
+      {
+        "id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+        "smiles": "COc1cc(CC(=O)O)ccc1Cl"
+      },
+      {
+        "id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+        "smiles": "COc1cc(C(=O)O)ccc1Cl"
+      }
+    ],
+    "partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+    "rule_id": "synllama-rule-042",
+    "source_slot": 0,
+    "stage_id": 26
+  },
+  "artifacts": {
+    "capture.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-source-feasibility-v1/capture.py",
+      "sha256": "1afa07b9492cf3955e8c2ff292fd4f849d7cf68aa6602012d72db5993264e817"
+    },
+    "execution.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-source-feasibility-v1/execution.log",
+      "sha256": "32917e4997612e25488e413d505dc414c2e1b8d609462e6f476a142134bfdfbf"
+    },
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-source-feasibility-v1/plan.json",
+      "sha256": "7fe1874558d5e1c541a9c88fdc2a1296b6d9fe7ab25235ed89e8d71d9d82a719"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-source-feasibility-v1/probe.py",
+      "sha256": "4a391e8c6a0f9e908f0c348df4d75eca74aea487496e3d4b051e10e1dcf29ed5"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-source-feasibility-v1/result.json",
+      "sha256": "9f8c171c0f18d9ecd095f54634c46e72e3c82f7cd9e44d64a0da9e2ecc63a942"
+    },
+    "screen.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-source-feasibility-v1/screen.py",
+      "sha256": "1db3a34426d4124b22b8dbadf1e05041fe3386c6a424b4d41ecfa5dac566264b"
+    },
+    "test_control.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-source-feasibility-v1/test_control.py",
+      "sha256": "82b3b6a726844d6cc049ec56c2c66221262ba115f525b3b0a4acd60f84ec127c"
+    }
+  },
+  "capture_summary": {
+    "affected_first_five_ordinary_rows": [
+      {
+        "anchor_strength": 0,
+        "group": "ordinary",
+        "group_rank": 1,
+        "guide_tanimoto": 0.4,
+        "smiles": "COc1cc(CC(=O)O)ccc1Cl"
+      },
+      {
+        "anchor_strength": 0,
+        "group": "ordinary",
+        "group_rank": 2,
+        "guide_tanimoto": 0.3958333333333333,
+        "smiles": "COc1cc(C(=O)O)ccc1Cl"
+      },
+      {
+        "anchor_strength": 0,
+        "group": "ordinary",
+        "group_rank": 3,
+        "guide_tanimoto": 0.38461538461538464,
+        "smiles": "COc1cc(CCC(=O)O)ccc1Cl"
+      },
+      {
+        "anchor_strength": 0,
+        "group": "ordinary",
+        "group_rank": 4,
+        "guide_tanimoto": 0.37735849056603776,
+        "smiles": "COc1cc(C2(C(=O)O)CC2)ccc1Cl"
+      },
+      {
+        "anchor_strength": 0,
+        "group": "ordinary",
+        "group_rank": 5,
+        "guide_tanimoto": 0.37037037037037035,
+        "smiles": "CCOC(=O)Cc1ccc(Cl)c(OC)c1"
+      }
+    ],
+    "affected_invocation": [
+      {
+        "cache_installed_at_return": false,
+        "hit_second_complete": null,
+        "invocation_index": 42,
+        "key": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "[Cl,Br,I][c&$(c1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):1]",
+          false
+        ],
+        "nearest_call_id": 42,
+        "pool_complete": null,
+        "ranked_count": null,
+        "ranking_status": "cache_or_early_return",
+        "role_slot": 0,
+        "rule_id": "synllama-rule-042",
+        "runtime_cache_hit": true,
+        "selected": [
+          {
+            "id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+            "smiles": "COc1cc(CC(=O)O)ccc1Cl"
+          },
+          {
+            "id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+            "smiles": "COc1cc(C(=O)O)ccc1Cl"
+          }
+        ],
+        "stage_id": 26,
+        "stereo_complete": null
+      }
+    ],
+    "affected_pool_rows": 8192,
+    "contexts": 28,
+    "first_complete_invocation": 0,
+    "invocations": 92,
+    "invocations_omitted": 0,
+    "producer_invocation": 0,
+    "ranked_rows_captured": 89329
+  },
+  "date": "2026-10-24",
+  "entry_sha256": {
+    "capture": "1afa07b9492cf3955e8c2ff292fd4f849d7cf68aa6602012d72db5993264e817",
+    "catalog": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+    "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+    "endpoint_helper": "e241f7ab4ddfbcc9f7dbda83683600757d19a14c33fb5ff5640f12f31f3ddbef",
+    "guide_probe": "0f948d5fceb08bd632a016446392eb8a48dc0dab1851b30f62b831a7d875e7cf",
+    "guide_result": "e1b68f298b8bcda3d6fda95a5a8927c769cc53df691d0df46a3ea7eaa49c673d",
+    "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+    "pair_helper": "a5f3e9d81b13eb610208c61412801a8f3e0a166695811bbbb99192f18750b751",
+    "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+    "plan": "7fe1874558d5e1c541a9c88fdc2a1296b6d9fe7ab25235ed89e8d71d9d82a719",
+    "probe": "4a391e8c6a0f9e908f0c348df4d75eca74aea487496e3d4b051e10e1dcf29ed5",
+    "r2_result": "c9bcb5f84a528f885a9fe52b46af9de13801408ecfeb39c0cd2ecf57b2cf5878",
+    "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "screen": "1db3a34426d4124b22b8dbadf1e05041fe3386c6a424b4d41ecfa5dac566264b",
+    "tests": "82b3b6a726844d6cc049ec56c2c66221262ba115f525b3b0a4acd60f84ec127c",
+    "v21_result": "acb6a56b1260a5f4ce4c760f28d6af4869537c5e80619cfd225f9a88b15518fa"
+  },
+  "execution": {
+    "catalog_loads": 1,
+    "exit_code": 0,
+    "generation_replays": 1,
+    "model_calls": 0,
+    "new_pair_generation_calls": 0,
+    "retries": 0,
+    "rule_loads": 1,
+    "runs": 1,
+    "session_id": 79179,
+    "three_dimensional_calls": 0
+  },
+  "exit_sha256": {
+    "capture": "1afa07b9492cf3955e8c2ff292fd4f849d7cf68aa6602012d72db5993264e817",
+    "catalog": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+    "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+    "endpoint_helper": "e241f7ab4ddfbcc9f7dbda83683600757d19a14c33fb5ff5640f12f31f3ddbef",
+    "guide_probe": "0f948d5fceb08bd632a016446392eb8a48dc0dab1851b30f62b831a7d875e7cf",
+    "guide_result": "e1b68f298b8bcda3d6fda95a5a8927c769cc53df691d0df46a3ea7eaa49c673d",
+    "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+    "pair_helper": "a5f3e9d81b13eb610208c61412801a8f3e0a166695811bbbb99192f18750b751",
+    "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+    "plan": "7fe1874558d5e1c541a9c88fdc2a1296b6d9fe7ab25235ed89e8d71d9d82a719",
+    "probe": "4a391e8c6a0f9e908f0c348df4d75eca74aea487496e3d4b051e10e1dcf29ed5",
+    "r2_result": "c9bcb5f84a528f885a9fe52b46af9de13801408ecfeb39c0cd2ecf57b2cf5878",
+    "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "screen": "1db3a34426d4124b22b8dbadf1e05041fe3386c6a424b4d41ecfa5dac566264b",
+    "tests": "82b3b6a726844d6cc049ec56c2c66221262ba115f525b3b0a4acd60f84ec127c",
+    "v21_result": "acb6a56b1260a5f4ce4c760f28d6af4869537c5e80619cfd225f9a88b15518fa"
+  },
+  "limits": [
+    "One development input and one fixed guide/partner context.",
+    "Availability and the structural predicate do not establish selective chemistry or synthetic feasibility.",
+    "No new product was generated from the selected source in this control.",
+    "Remaining production budgets, contextual cache behavior and generic policy effectiveness remain unproven.",
+    "Original first source remains reserved; original second and ranks3/4 were ineligible under the predeclared predicate. Selection was frozen before product evaluation.",
+    "Full current ranked rows, graph/step traces and work reports remain in the bound raw result."
+  ],
+  "next_control": "Use only the frozen source and exact existing intermediate. Reuse R3 old products/graphs, freshly check their gates, then one new ordered-pair Rules.apply capped16; all returned products get original gates, eligible full routes get strict audit64. No alternate-source retry.",
+  "p1": {
+    "acceptance_minimum_supported_inputs": 6,
+    "baseline_supported_inputs": 5,
+    "inputs": 12,
+    "latest_full_actual_supported_inputs": 4,
+    "status": "incomplete",
+    "v21_saved_step_conditional_possible_inputs": 5
+  },
+  "preexecution_fixes": "Required own complete capture or actual earlier cache producer; multiple complete computations remain unknown. Original second is prechecked once and kept if it qualifies. Capped stereo counters and early work receipts were corrected before execution. No failed scientific run.",
+  "protocol": {
+    "bound_sha256": {
+      "capture": "1afa07b9492cf3955e8c2ff292fd4f849d7cf68aa6602012d72db5993264e817",
+      "catalog": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+      "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "endpoint_helper": "e241f7ab4ddfbcc9f7dbda83683600757d19a14c33fb5ff5640f12f31f3ddbef",
+      "guide_probe": "0f948d5fceb08bd632a016446392eb8a48dc0dab1851b30f62b831a7d875e7cf",
+      "guide_result": "e1b68f298b8bcda3d6fda95a5a8927c769cc53df691d0df46a3ea7eaa49c673d",
+      "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "pair_helper": "a5f3e9d81b13eb610208c61412801a8f3e0a166695811bbbb99192f18750b751",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "probe": "4a391e8c6a0f9e908f0c348df4d75eca74aea487496e3d4b051e10e1dcf29ed5",
+      "r2_result": "c9bcb5f84a528f885a9fe52b46af9de13801408ecfeb39c0cd2ecf57b2cf5878",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "screen": "1db3a34426d4124b22b8dbadf1e05041fe3386c6a424b4d41ecfa5dac566264b",
+      "tests": "82b3b6a726844d6cc049ec56c2c66221262ba115f525b3b0a4acd60f84ec127c",
+      "v21_result": "acb6a56b1260a5f4ce4c760f28d6af4869537c5e80619cfd225f9a88b15518fa"
+    },
+    "capture_caps": {
+      "max_contexts": 128,
+      "max_nearest_invocations": 2048,
+      "max_ranked_rows_total": 262144,
+      "max_rows_per_query": 8192
+    },
+    "catalog_manifest_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv.manifest.json",
+    "catalog_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv",
+    "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "fixed_context": "All R2 flagged mismatched catalog-leaf events (exactly two full graphs) are derived before screening. Both must agree on original stage guide, source slot, actual intermediate partner and nearest invocation. Preserve both graph associations and original two selected blocks. Do not select only one successful-looking source or change the partner.",
+    "limits_and_claims": "Generation replay uses exact v21 limits 512 rules, 8192 rows/query, 262144 row visits, 65536 search FP, top2, 512 combinations, 1024 products, audit64, 960s/input. Passive capture has separate memory caps and no chemistry. Offline screening has separately charged source views, Boolean/endpoint matches and stereo perceptions; it does not prove remaining production budgets or cache eligibility. Archived R2 is outcome-selected development evidence, not independent validation.",
+    "pool_provenance": "At each underlying _nearest return record full runtime (target,role,fallback_missing_role) key, invocation and selected blocks. Retain a complete original ranked list once per exact computed key; a later full computation never retroactively certifies an earlier partial. The affected invocation must own its complete captured computation or be an actual cache hit bound to an EARLIER complete computation that installed the cache entry (including hit_second_complete). Any repeated full computation of the same key makes saved lineage unknown. No repool, cache-key truncation, old partial snapshot substitution or historical v13 rows.",
+    "purpose": "One current-v21 q4247q2 passive replay with exact parity, then fixed-typed-guide/partner source feasibility in the already visited complete ordinary pool. Source choice is frozen before any later generation/gates/model and does not adopt a production policy.",
+    "rdkit_version": "2025.09.6",
+    "review": "root_and_astra_pass_before_execution",
+    "reviewed_draft_sha256": "1bc8885d069d1f5df0551bdb25293c40bfe33bb082c8e012cb7111e7b9e17d56",
+    "rules_path": "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/rules.json",
+    "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "runtime_commit": "7c0ae2806d791db65800c8f5f5aa1010b2fb605c",
+    "schema": "current-pool-source-feasibility-v1",
+    "screen_caps": {
+      "boolean_match_requests": 65536,
+      "boolean_parse_attempts": 256,
+      "candidate_assessments": 8192,
+      "deadline_seconds": 180,
+      "endpoint_match_requests": 2048,
+      "endpoint_parse_attempts": 256,
+      "endpoint_structural_units": 262144,
+      "max_atoms": 256,
+      "max_bonds": 512,
+      "source_atom_bond_units": 262144,
+      "stereo_atom_bond_units": 131072,
+      "stereo_perceptions": 2048
+    },
+    "source_policy": "Only if original second is ordinary, preserve original first/category/top2. Assess the already selected second once first; if it definitively qualifies report no-op, even if an earlier ordinary row might qualify. Otherwise screen original ordinary group rank excluding first, memoizing that charged old-second assessment. Candidate source must pass original role existential with chirality, fully specified stereo, and complete strict binary inventory against the one fixed typed guide plus same actual partner. A candidate qualifies only if every newly enabled alternative has identical unique endpoint domain in every applicable actual orientation; disjoint is known ineligible, overlap/unknown remains unknown and is skipped. First definitive qualifier freezes one source; global budget/deadline exhaustion is inconclusive. No post-product source walk.",
+    "source_sha256": {
+      "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+      "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26",
+      "chembounce_synthesis/route_first_nh.py": "0905979e52cc5eaa3ff97cb0c9f7a549865c54ec1424307100dfa2c2a5be5bf5",
+      "chembounce_synthesis/routes.py": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+      "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "chembounce_synthesis/workflow.py": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9",
+      "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+    },
+    "status": "frozen_preexecution",
+    "stop_rules": "If exact replay/order/work parity or fixed context binding fails, stop before source screening. Missing complete current ranked pool, category change, or cap/deadline is inconclusive. A first qualifier equal to old second is a no-op. A distinct qualifier is only a frozen source for a separately reviewed same-partner generation/gate control. No model/3D here.",
+    "strict_binary_inventory_count": 61
+  },
+  "replay": {
+    "diagnostic_fingerprints": {
+      "accept_observation": 60,
+      "best_eligible": 4,
+      "hit_reference": 1
+    },
+    "distinct_products": 4,
+    "parity": "exact_v21_products_full_graphs_order_pending_work_rejections_and_prior_stage_nearest_apply_trace",
+    "raw_snapshot_counts": {
+      "continuation_role_contexts": 49,
+      "continuation_snapshot_units": 11212,
+      "continuation_snapshots": 49,
+      "mapped_nh_raw_registries": 16
+    },
+    "scalar_report": {
+      "admission_attempted_products": 60,
+      "admission_callback_unattempted_products": 0,
+      "admission_fingerprint_calls": 21,
+      "admission_fingerprint_reserve": 2048,
+      "admission_fp_unassessed_products": 0,
+      "admission_pending_unique_products": 60,
+      "admission_rank_fingerprint_calls": 60,
+      "admission_rank_selection_policy": "cached fingerprint first, then canonical SMILES; reserve one possible callback fingerprint plus zero or one new rank fingerprint per selected product",
+      "admission_ranked_products": 60,
+      "admission_reserved_cost_units": 120,
+      "anchor_index_incomplete": false,
+      "anchor_index_match_checks": 0,
+      "anchor_index_queries": 0,
+      "anchor_index_queries_unindexed": 0,
+      "anchor_posting_metadata_visits": 0,
+      "anchor_role_checks": 0,
+      "anchor_role_compatible": 0,
+      "catalog_bucket_rankings": 19806,
+      "catalog_index_buckets": 920,
+      "catalog_index_hashes": 238542,
+      "catalog_index_rows_scanned": 238542,
+      "catalog_index_size": 238542,
+      "catalog_row_visits": 262144,
+      "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "catalog_stereo_atom_bond_charges": 1477,
+      "catalog_stereo_cache_hits": 9,
+      "catalog_stereo_exclusion_samples_truncated": 0,
+      "catalog_stereo_exclusions": 2,
+      "catalog_stereo_perceptions": 57,
+      "combinations": 124,
+      "context_role_checks_total": 23,
+      "depth_one_fingerprint_ceiling": 32768,
+      "distinct_exact_products": 4,
+      "empty_replacement_stage_short_circuits": 0,
+      "empty_stage_short_circuits": 40,
+      "empty_stage_unvisited_role_queries": 30,
+      "evidence_scope": "Reverse results only guide retrieval. Forward rule replay and later route audit/evidence are authoritative.",
+      "fallback_hit_second_limit": 65536,
+      "fallback_hit_second_queries": 0,
+      "fallback_hit_second_replacements": 0,
+      "fallback_hit_second_sample_limit": 16,
+      "fallback_hit_second_samples_omitted": 0,
+      "fallback_hit_second_tanimotos": 0,
+      "fingerprint_calls": 48860,
+      "generation_fingerprint_calls": 48799,
+      "generation_fingerprint_ceiling": 63488,
+      "guide_anchor_checks": 0,
+      "hit_fingerprint_calls": 1,
+      "inner_role_checks": 64,
+      "inner_role_compatible": 28,
+      "inner_role_rejected": 36,
+      "outer_center_metadata_check_limit": 32768,
+      "outer_center_metadata_checks": 2977,
+      "outer_center_metadata_incomplete": 0,
+      "outer_distinct_cut_centers": 12,
+      "outer_plan_candidates": 32,
+      "phase2_plan_trace_truncated": 0,
+      "products_generated": 128,
+      "reaction_pool_caller_only_sites": 21,
+      "reaction_pool_graph_visits": 13593,
+      "reaction_pool_index_applied": 12,
+      "reaction_pool_index_disabled_incomplete": 0,
+      "reaction_pool_index_only_sites": 24,
+      "reaction_pool_indexed_bucket_rankings": 3246,
+      "reaction_pool_indexed_rows_selected": 81920,
+      "reaction_pool_metadata_cache_hits": 8,
+      "reaction_pool_ordinary_bucket_rankings": 16560,
+      "reaction_pool_ordinary_rows_selected": 147456,
+      "reaction_pool_query_pairs": 56,
+      "reaction_pool_role_index_checks": 477084,
+      "reaction_pool_role_index_complete": true,
+      "reaction_pool_role_index_failure": null,
+      "reaction_pool_site_match_requests": 153,
+      "reaction_pool_window_match_requests": 56,
+      "representative_origin_checks": 0,
+      "representative_origin_guide_entries": 0,
+      "representative_origin_known_guides": 0,
+      "representative_origin_score_corrections": 0,
+      "representative_origin_structural_units": 0,
+      "retrieval_guides_normalized": 17,
+      "retrieval_guides_unusable": 0,
+      "retrieval_scope": "One bounded catalog feature index; each guide ranks charged bucket metadata and scans at most the nearest 8192 catalog rows; exact target ID is additionally considered",
+      "reverse_attempts": 43,
+      "reverse_failures": 5,
+      "reverse_fallbacks": 0,
+      "reverse_local_template_compiles": 16,
+      "reverse_nonring_compile_failures": 0,
+      "reverse_nonring_empty": 1,
+      "reverse_nonring_query_calls": 42,
+      "reverse_nonring_query_compiles": 15,
+      "reverse_outcomes": 81,
+      "reverse_partition_checks": 88,
+      "reverse_role_match_checks": 266,
+      "reverse_role_trials": 271,
+      "reverse_role_work": 271,
+      "role_queries": 70,
+      "route_audit_attempts": 6,
+      "routes_verified": 6,
+      "rule_inspections": 512,
+      "rule_template_checks": 91,
+      "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "selection_policy": "Product-template hit match first; bounded reverse precursor guides; explicit hit-role fallback",
+      "topology_assessment_cache_hits": 0,
+      "topology_match_requests": 33,
+      "topology_pruned_rules": 6,
+      "topology_spec_graph_visits": 11068,
+      "topology_static_cache_hits": 60,
+      "topology_static_checks": 16,
+      "total_fingerprint_calls": 48881,
+      "version": "catalog-rule-route-first-v2"
+    },
+    "verified_routes": 6
+  },
+  "schema": "current-pool-source-feasibility-v1-portable-receipt",
+  "selection": {
+    "first_reserved": {
+      "id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+      "smiles": "COc1cc(CC(=O)O)ccc1Cl"
+    },
+    "fixed_guide": [
+      "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+      "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+    ],
+    "fixed_partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+    "no_selection_change": false,
+    "old_graph_associations": [
+      {
+        "contributor": [
+          {
+            "apply_id": 93,
+            "guide": [
+              "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+              "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+            ],
+            "guide_quality": "typed",
+            "source_evidence": [
+              {
+                "building_block_id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+                "kind": "catalog_leaf",
+                "nearest_call_id": 42,
+                "node_id": "ob0",
+                "slot": 0
+              },
+              {
+                "kind": "replaced_intermediate",
+                "node_id": "ir",
+                "slot": 1
+              }
+            ],
+            "source_slot_kind": [
+              "catalog_leaf",
+              "replaced_intermediate"
+            ],
+            "stage_id": 26
+          }
+        ],
+        "disjoint_alternative_rule": "synllama-rule-077",
+        "graph": "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+        ],
+        "guide_quality": "typed",
+        "node_id": "or",
+        "old_source": "COc1cc(CC(=O)O)ccc1Cl",
+        "old_source_id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+        "partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+        "rule_id": "synllama-rule-042",
+        "source_slot": 0
+      },
+      {
+        "contributor": [
+          {
+            "apply_id": 97,
+            "guide": [
+              "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+              "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+            ],
+            "guide_quality": "typed",
+            "source_evidence": [
+              {
+                "building_block_id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+                "kind": "catalog_leaf",
+                "nearest_call_id": 42,
+                "node_id": "ob0",
+                "slot": 0
+              },
+              {
+                "kind": "replaced_intermediate",
+                "node_id": "ir",
+                "slot": 1
+              }
+            ],
+            "source_slot_kind": [
+              "catalog_leaf",
+              "replaced_intermediate"
+            ],
+            "stage_id": 26
+          }
+        ],
+        "disjoint_alternative_rule": "synllama-rule-077",
+        "graph": "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc",
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+        ],
+        "guide_quality": "typed",
+        "node_id": "or",
+        "old_source": "COc1cc(C(=O)O)ccc1Cl",
+        "old_source_id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+        "partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+        "rule_id": "synllama-rule-042",
+        "source_slot": 0
+      }
+    ],
+    "old_second": {
+      "id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+      "smiles": "COc1cc(C(=O)O)ccc1Cl"
+    },
+    "old_second_group_rank": 2,
+    "old_second_precheck": {
+      "charged_once": true,
+      "detail": {
+        "ambiguous": [],
+        "disjoint_new_rules": [
+          "synllama-rule-077"
+        ]
+      },
+      "status": "known_ineligible"
+    },
+    "production_cache_and_remaining_budget_reachability": "unproven_offline_screen",
+    "runtime_nearest_key": [
+      "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+      "[Cl,Br,I][c&$(c1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):1]",
+      false
+    ],
+    "screened_candidates": [
+      {
+        "detail": {
+          "ambiguous": [],
+          "disjoint_new_rules": [
+            "synllama-rule-077"
+          ]
+        },
+        "group_rank": 2,
+        "smiles": "COc1cc(C(=O)O)ccc1Cl",
+        "status": "known_ineligible"
+      },
+      {
+        "detail": {
+          "ambiguous": [],
+          "disjoint_new_rules": [
+            "synllama-rule-077"
+          ]
+        },
+        "group_rank": 3,
+        "smiles": "COc1cc(CCC(=O)O)ccc1Cl",
+        "status": "known_ineligible"
+      },
+      {
+        "detail": {
+          "ambiguous": [],
+          "disjoint_new_rules": [
+            "synllama-rule-077"
+          ]
+        },
+        "group_rank": 4,
+        "smiles": "COc1cc(C2(C(=O)O)CC2)ccc1Cl",
+        "status": "known_ineligible"
+      },
+      {
+        "detail": "complete_inventory_no_disjoint_or_ambiguous_new_rule",
+        "group_rank": 5,
+        "smiles": "CCOC(=O)Cc1ccc(Cl)c(OC)c1",
+        "status": "qualifies"
+      }
+    ],
+    "selected_source": {
+      "group_rank": 5,
+      "id": "structure-sha256:3d4e5913015e997e924d19282b67bb59fdb07d40a35a3f6a268e1cc7874c7c30",
+      "smiles": "CCOC(=O)Cc1ccc(Cl)c(OC)c1"
+    },
+    "status": "first_definite_qualifier",
+    "work": {
+      "boolean_match_requests": 975,
+      "boolean_parse_attempts": 2,
+      "candidate_attempts": 4,
+      "endpoint_match_requests": 6,
+      "endpoint_parse_attempts": 0,
+      "endpoint_structural_units": 78,
+      "source_atom_bond_units": 113,
+      "source_views": 4,
+      "stereo_atom_bond_units": 113,
+      "stereo_perceptions": 4
+    }
+  },
+  "source_commit": "7c0ae2806d791db65800c8f5f5aa1010b2fb605c",
+  "source_sha256_after": {
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+    "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+    "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+    "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+    "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+    "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+    "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26",
+    "chembounce_synthesis/route_first_nh.py": "0905979e52cc5eaa3ff97cb0c9f7a549865c54ec1424307100dfa2c2a5be5bf5",
+    "chembounce_synthesis/routes.py": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+    "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+    "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+    "chembounce_synthesis/workflow.py": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9",
+    "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+  },
+  "source_sha256_before": {
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+    "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+    "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+    "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+    "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+    "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+    "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26",
+    "chembounce_synthesis/route_first_nh.py": "0905979e52cc5eaa3ff97cb0c9f7a549865c54ec1424307100dfa2c2a5be5bf5",
+    "chembounce_synthesis/routes.py": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+    "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+    "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+    "chembounce_synthesis/workflow.py": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9",
+    "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+  },
+  "status": "current_pool_fixed_source_found_not_product_or_route_support",
+  "validation": {
+    "compile": "pass_before_final_capture_only_fix",
+    "not_a_full_repository_test_run": true,
+    "review_after_execution": "root_and_astra_pass",
+    "review_before_execution": "root_and_astra_pass",
+    "ruff": "pass",
+    "synthetic_and_json_preflight_tests_passed": 6,
+    "tests_run_by": "coding_agent_before_freeze"
+  }
+}
