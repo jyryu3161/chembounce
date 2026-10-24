@@ -1,0 +1,1268 @@
+{
+  "analysis": {
+    "binding_integrity": true,
+    "bound_files": {
+      "actual_v2_analysis": "benchmark-results/route-first-development-20261023-v2/analysis-v3/result.json",
+      "actual_v2_receipt": "benchmarks/results/synthesis-route-development-20261023/actual-comparison-v2.json",
+      "actual_v2_routes:CHEMBL3334418-query-1": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL3334418-query-1/synthesis/routes.json",
+      "actual_v2_routes:CHEMBL3334418-query-2": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL3334418-query-2/synthesis/routes.json",
+      "actual_v2_routes:CHEMBL3864-query-1": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL3864-query-1/synthesis/routes.json",
+      "actual_v2_routes:CHEMBL3864-query-2": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL3864-query-2/synthesis/routes.json",
+      "actual_v2_routes:CHEMBL4247-query-1": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4247-query-1/synthesis/routes.json",
+      "actual_v2_routes:CHEMBL4247-query-2": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4247-query-2/synthesis/routes.json",
+      "actual_v2_routes:CHEMBL4630839-query-1": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4630839-query-1/synthesis/routes.json",
+      "actual_v2_routes:CHEMBL4630839-query-2": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4630839-query-2/synthesis/routes.json",
+      "actual_v2_routes:CHEMBL4869-query-1": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4869-query-1/synthesis/routes.json",
+      "actual_v2_routes:CHEMBL4869-query-2": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL4869-query-2/synthesis/routes.json",
+      "actual_v2_routes:CHEMBL5163-query-1": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL5163-query-1/synthesis/routes.json",
+      "actual_v2_routes:CHEMBL5163-query-2": "/data2/home/jyryu/chembounce/benchmark-results/route-first-development-20261023-v2/route_first/runs/CHEMBL5163-query-2/synthesis/routes.json",
+      "full_validation": "benchmarks/results/synthesis-route-development-20261023/marked-policy-port-validation-v1.json",
+      "mapped_nh_forward": "benchmark-results/route-first-development-20261023-v2/mapped-nh-forward-support-control-v1/result.json",
+      "marked_forward": "benchmark-results/route-first-development-20261023-v2/marked-continuation-forward-support-control-v1/result.json",
+      "marked_prototype": "benchmark-results/route-first-development-20261023-v2/marked-continuation-second-control-v1/result.json",
+      "reconciliation": "benchmark-results/route-first-development-20261023-v2/v20-saved-step-support-reconciliation-v1/result.json",
+      "v22_result": "benchmark-results/route-first-development-20261023-v2/development-probe-v22/result.json",
+      "v23_plan": "benchmark-results/route-first-development-20261023-v2/development-probe-v23/plan.json",
+      "v23_probe": "benchmark-results/route-first-development-20261023-v2/development-probe-v23/probe.py",
+      "v23_result": "benchmark-results/route-first-development-20261023-v2/development-probe-v23/result.json"
+    },
+    "bound_sha256_after": {
+      "actual_v2_analysis": "3f563b42a4d6c536ff129eb9b917016cec413176807bd7a290a4474db2538303",
+      "actual_v2_receipt": "2cb848e63da912b11e565c588e5b396e9d025ce94a8328fd5e3d22ea7434b468",
+      "actual_v2_routes:CHEMBL3334418-query-1": "9e7b96854edaeb302e3bbf35b2c4843e9f7fed48f2b7532dc449bf263a09b511",
+      "actual_v2_routes:CHEMBL3334418-query-2": "8e320a322570e7e226759eccd7913f7d99ff71ed207f926b61cfdc481d14d29a",
+      "actual_v2_routes:CHEMBL3864-query-1": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "actual_v2_routes:CHEMBL3864-query-2": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "actual_v2_routes:CHEMBL4247-query-1": "a2b7a0a6bf585dae4d04a4b5fb2cdd72d34573e283575a240178e7e345760492",
+      "actual_v2_routes:CHEMBL4247-query-2": "6c44f0de211e3837b0fdbbb51d9c577d370205179a0eb0c58897a1a09331af91",
+      "actual_v2_routes:CHEMBL4630839-query-1": "1ff0add0858c41471ba2ae46bfe0e7442402ff80e77e19a094c6055a7f0be280",
+      "actual_v2_routes:CHEMBL4630839-query-2": "bbfbbb181db2ea2364a280c04b487cbd2a083c3e6ea1cde973354f112d909cc6",
+      "actual_v2_routes:CHEMBL4869-query-1": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "actual_v2_routes:CHEMBL4869-query-2": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "actual_v2_routes:CHEMBL5163-query-1": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "actual_v2_routes:CHEMBL5163-query-2": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "full_validation": "9bd53e19082bc57672797ee8510df81ec0c37ff9cb8e49cf3cded5bdabaf0645",
+      "mapped_nh_forward": "215e4a895988ae049c5283060663b00a7f5b7e81098f047e9f6d5dcc06896522",
+      "marked_forward": "f2534b8386c540b24230b5329e2d45da28a6b744c41fdcf6836629798ca5a8a5",
+      "marked_prototype": "fd23417e6a8006c22a3fac43fca7d7acccea09c044ba60fc7150cf17bd93e3a1",
+      "reconciliation": "7a0bdf1fcba21efa320b31d671c47d987842a3ddfd5dc70e66a3b200541b0488",
+      "v22_result": "6ccd2860d577a7aa10ff15be7a8ea8f5266a108fee29efa54bcfd5eb1ad7a33a",
+      "v23_plan": "6ff4cdc52a615af98ea2fe1b8f31556ccab8a7cfa8dce64423a9211c3161499f",
+      "v23_probe": "32d9a7d09d25c0a5be37de94ab65e8ac9aba8637cde502d20c4e74e4dd1e8cb2",
+      "v23_result": "4d9a15671044fc943ebeb8496e6502c3d9954a8409379182026a0ddfa8e89d7f"
+    },
+    "bound_sha256_before": {
+      "actual_v2_analysis": "3f563b42a4d6c536ff129eb9b917016cec413176807bd7a290a4474db2538303",
+      "actual_v2_receipt": "2cb848e63da912b11e565c588e5b396e9d025ce94a8328fd5e3d22ea7434b468",
+      "actual_v2_routes:CHEMBL3334418-query-1": "9e7b96854edaeb302e3bbf35b2c4843e9f7fed48f2b7532dc449bf263a09b511",
+      "actual_v2_routes:CHEMBL3334418-query-2": "8e320a322570e7e226759eccd7913f7d99ff71ed207f926b61cfdc481d14d29a",
+      "actual_v2_routes:CHEMBL3864-query-1": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "actual_v2_routes:CHEMBL3864-query-2": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "actual_v2_routes:CHEMBL4247-query-1": "a2b7a0a6bf585dae4d04a4b5fb2cdd72d34573e283575a240178e7e345760492",
+      "actual_v2_routes:CHEMBL4247-query-2": "6c44f0de211e3837b0fdbbb51d9c577d370205179a0eb0c58897a1a09331af91",
+      "actual_v2_routes:CHEMBL4630839-query-1": "1ff0add0858c41471ba2ae46bfe0e7442402ff80e77e19a094c6055a7f0be280",
+      "actual_v2_routes:CHEMBL4630839-query-2": "bbfbbb181db2ea2364a280c04b487cbd2a083c3e6ea1cde973354f112d909cc6",
+      "actual_v2_routes:CHEMBL4869-query-1": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "actual_v2_routes:CHEMBL4869-query-2": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "actual_v2_routes:CHEMBL5163-query-1": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "actual_v2_routes:CHEMBL5163-query-2": "711b3bde3287264a4a1e90eb2ccb362848032973213137c3903009d6d70b3df4",
+      "full_validation": "9bd53e19082bc57672797ee8510df81ec0c37ff9cb8e49cf3cded5bdabaf0645",
+      "mapped_nh_forward": "215e4a895988ae049c5283060663b00a7f5b7e81098f047e9f6d5dcc06896522",
+      "marked_forward": "f2534b8386c540b24230b5329e2d45da28a6b744c41fdcf6836629798ca5a8a5",
+      "marked_prototype": "fd23417e6a8006c22a3fac43fca7d7acccea09c044ba60fc7150cf17bd93e3a1",
+      "reconciliation": "7a0bdf1fcba21efa320b31d671c47d987842a3ddfd5dc70e66a3b200541b0488",
+      "v22_result": "6ccd2860d577a7aa10ff15be7a8ea8f5266a108fee29efa54bcfd5eb1ad7a33a",
+      "v23_plan": "6ff4cdc52a615af98ea2fe1b8f31556ccab8a7cfa8dce64423a9211c3161499f",
+      "v23_probe": "32d9a7d09d25c0a5be37de94ab65e8ac9aba8637cde502d20c4e74e4dd1e8cb2",
+      "v23_result": "4d9a15671044fc943ebeb8496e6502c3d9954a8409379182026a0ddfa8e89d7f"
+    },
+    "comparisons": [
+      {
+        "id": "CHEMBL4630839-query-1",
+        "products_gained": [],
+        "products_lost": [],
+        "route_graphs_gained": [],
+        "route_graphs_lost": [],
+        "v22_on_anchor_passed_distinct_products": 58,
+        "v22_on_first_failure_counts": {
+          "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 2,
+          "hit_tanimoto": 9,
+          "polar_reference_capacity_below_minimum": 2,
+          "property: logp.upper_maximum:5.2118000000000055>5": 1,
+          "property: logp.upper_maximum:5.254800000000005>5": 1,
+          "property: logp.upper_maximum:5.2756200000000035>5": 2,
+          "property: logp.upper_maximum:5.2943200000000035>5": 1,
+          "property: logp.upper_maximum:5.294320000000004>5": 1,
+          "property: logp.upper_maximum:5.601900000000006>5": 1,
+          "property: logp.upper_maximum:5.665720000000004>5": 2,
+          "property: logp.upper_maximum:5.684420000000004>5": 1,
+          "property: logp.upper_maximum:5.684420000000005>5": 1
+        },
+        "v22_on_products": 34,
+        "v22_on_prospective_first_three": [
+          "COc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+          "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+          "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1"
+        ],
+        "v23_on_anchor_passed_distinct_products": 58,
+        "v23_on_first_failure_counts": {
+          "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 2,
+          "hit_tanimoto": 9,
+          "polar_reference_capacity_below_minimum": 2,
+          "property: logp.upper_maximum:5.2118000000000055>5": 1,
+          "property: logp.upper_maximum:5.254800000000005>5": 1,
+          "property: logp.upper_maximum:5.2756200000000035>5": 2,
+          "property: logp.upper_maximum:5.2943200000000035>5": 1,
+          "property: logp.upper_maximum:5.294320000000004>5": 1,
+          "property: logp.upper_maximum:5.601900000000006>5": 1,
+          "property: logp.upper_maximum:5.665720000000004>5": 2,
+          "property: logp.upper_maximum:5.684420000000004>5": 1,
+          "property: logp.upper_maximum:5.684420000000005>5": 1
+        },
+        "v23_on_products": 34,
+        "v23_on_prospective_first_three": [
+          "COc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+          "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+          "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1"
+        ]
+      },
+      {
+        "id": "CHEMBL4630839-query-2",
+        "products_gained": [],
+        "products_lost": [],
+        "route_graphs_gained": [],
+        "route_graphs_lost": [],
+        "v22_on_anchor_passed_distinct_products": 10,
+        "v22_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 50,
+          "hit_tanimoto": 2,
+          "property: mw.upper_maximum:518.0210000000002>500.0": 2,
+          "property: mw.upper_maximum:525.6130000000002>500.0": 1,
+          "property: mw.upper_maximum:539.6400000000001>500.0": 1,
+          "property: mw.upper_maximum:550.6630000000002>500.0": 1,
+          "property: mw.upper_maximum:579.7050000000002>500.0": 1,
+          "property: mw.upper_maximum:593.7320000000002>500.0": 1
+        },
+        "v22_on_products": 1,
+        "v22_on_prospective_first_three": [
+          "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6CC6)nn5)C4)cc3)nc12"
+        ],
+        "v23_on_anchor_passed_distinct_products": 10,
+        "v23_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 50,
+          "hit_tanimoto": 2,
+          "property: mw.upper_maximum:518.0210000000002>500.0": 2,
+          "property: mw.upper_maximum:525.6130000000002>500.0": 1,
+          "property: mw.upper_maximum:539.6400000000001>500.0": 1,
+          "property: mw.upper_maximum:550.6630000000002>500.0": 1,
+          "property: mw.upper_maximum:579.7050000000002>500.0": 1,
+          "property: mw.upper_maximum:593.7320000000002>500.0": 1
+        },
+        "v23_on_products": 1,
+        "v23_on_prospective_first_three": [
+          "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6CC6)nn5)C4)cc3)nc12"
+        ]
+      },
+      {
+        "id": "CHEMBL4247-query-1",
+        "products_gained": [],
+        "products_lost": [],
+        "route_graphs_gained": [],
+        "route_graphs_lost": [],
+        "v22_on_anchor_passed_distinct_products": 30,
+        "v22_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 44,
+          "hit_tanimoto": 3,
+          "polar_reference_capacity_below_minimum": 13,
+          "property: mw.upper_maximum:511.6380000000003>500.0; logp.upper_maximum:5.063700000000005>5": 1,
+          "property: mw.upper_maximum:529.6370000000003>500.0": 1,
+          "property: mw.upper_maximum:531.6530000000004>500.0": 1
+        },
+        "v22_on_products": 11,
+        "v22_on_prospective_first_three": [
+          "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+          "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC"
+        ],
+        "v23_on_anchor_passed_distinct_products": 30,
+        "v23_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 44,
+          "hit_tanimoto": 3,
+          "polar_reference_capacity_below_minimum": 13,
+          "property: mw.upper_maximum:511.6380000000003>500.0; logp.upper_maximum:5.063700000000005>5": 1,
+          "property: mw.upper_maximum:529.6370000000003>500.0": 1,
+          "property: mw.upper_maximum:531.6530000000004>500.0": 1
+        },
+        "v23_on_products": 11,
+        "v23_on_prospective_first_three": [
+          "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+          "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC"
+        ]
+      },
+      {
+        "id": "CHEMBL4247-query-2",
+        "products_gained": [
+          "COc1cc(C(N)=O)ccc1Nc1cnc(-c2ccccc2S(C)(=O)=O)c2cc(C)nn12",
+          "COc1cc(C(N)=O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12"
+        ],
+        "products_lost": [
+          "COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1"
+        ],
+        "route_graphs_gained": [
+          "{\"nodes\": [{\"building_block_id\": \"structure-sha256:e646a475dcf77c33f2457b60197e020aa8bab7baa076a8c2d602078d9521b792\", \"id\": \"ib0\"}, {\"building_block_id\": \"structure-sha256:b7d5bfcb2b9a67983a1ec3dd1b17e741abd9dbd4c511c5e0207f0be644b4bdf5\", \"id\": \"ib1\"}, {\"id\": \"ir\", \"product\": \"Cc1cc2c(-c3ccccc3S(C)(=O)=O)ncc(I)n2n1\", \"reactants\": [\"ib0\", \"ib1\"], \"rule_id\": \"synllama-rule-036\"}, {\"building_block_id\": \"structure-sha256:67abce1083b75e3ceb756aafcbdfec8e5dbc5b87970f3f7908565c742f4dc8d5\", \"id\": \"ob1\"}, {\"id\": \"or\", \"product\": \"COc1cc(C(N)=O)ccc1Nc1cnc(-c2ccccc2S(C)(=O)=O)c2cc(C)nn12\", \"reactants\": [\"ir\", \"ob1\"], \"rule_id\": \"synllama-rule-042\"}], \"root\": \"or\", \"schema_version\": 1}",
+          "{\"nodes\": [{\"building_block_id\": \"structure-sha256:e646a475dcf77c33f2457b60197e020aa8bab7baa076a8c2d602078d9521b792\", \"id\": \"ib0\"}, {\"building_block_id\": \"structure-sha256:b7d5bfcb2b9a67983a1ec3dd1b17e741abd9dbd4c511c5e0207f0be644b4bdf5\", \"id\": \"ib1\"}, {\"id\": \"ir\", \"product\": \"Cc1cc2c(Cl)ncc(-c3ccccc3S(C)(=O)=O)n2n1\", \"reactants\": [\"ib0\", \"ib1\"], \"rule_id\": \"synllama-rule-036\"}, {\"building_block_id\": \"structure-sha256:66720d4a43443277d7c7adf082e6eb10ccf957f9bc3d10d3466ad5135beb419a\", \"id\": \"ob1\"}, {\"id\": \"or\", \"product\": \"COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12\", \"reactants\": [\"ir\", \"ob1\"], \"rule_id\": \"synllama-rule-042\"}], \"root\": \"or\", \"schema_version\": 1}",
+          "{\"nodes\": [{\"building_block_id\": \"structure-sha256:e646a475dcf77c33f2457b60197e020aa8bab7baa076a8c2d602078d9521b792\", \"id\": \"ib0\"}, {\"building_block_id\": \"structure-sha256:b7d5bfcb2b9a67983a1ec3dd1b17e741abd9dbd4c511c5e0207f0be644b4bdf5\", \"id\": \"ib1\"}, {\"id\": \"ir\", \"product\": \"Cc1cc2c(Cl)ncc(-c3ccccc3S(C)(=O)=O)n2n1\", \"reactants\": [\"ib0\", \"ib1\"], \"rule_id\": \"synllama-rule-036\"}, {\"building_block_id\": \"structure-sha256:67abce1083b75e3ceb756aafcbdfec8e5dbc5b87970f3f7908565c742f4dc8d5\", \"id\": \"ob1\"}, {\"id\": \"or\", \"product\": \"COc1cc(C(N)=O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12\", \"reactants\": [\"ir\", \"ob1\"], \"rule_id\": \"synllama-rule-042\"}], \"root\": \"or\", \"schema_version\": 1}"
+        ],
+        "route_graphs_lost": [
+          "{\"nodes\": [{\"building_block_id\": \"structure-sha256:e646a475dcf77c33f2457b60197e020aa8bab7baa076a8c2d602078d9521b792\", \"id\": \"ib0\"}, {\"building_block_id\": \"structure-sha256:26c15eb6aa221d34abbcdda7cc3e79a995fda8cd223c59305aebf182995775f4\", \"id\": \"ib1\"}, {\"id\": \"ir\", \"product\": \"Cc1cnn2c(-c3ccccc3S(C)(=O)=O)cc(Cl)nc12\", \"reactants\": [\"ib0\", \"ib1\"], \"rule_id\": \"synllama-rule-036\"}, {\"building_block_id\": \"structure-sha256:67abce1083b75e3ceb756aafcbdfec8e5dbc5b87970f3f7908565c742f4dc8d5\", \"id\": \"ob1\"}, {\"id\": \"or\", \"product\": \"COc1cc(C(N)=O)ccc1Nc1cc(-c2ccccc2S(C)(=O)=O)n2ncc(C)c2n1\", \"reactants\": [\"ir\", \"ob1\"], \"rule_id\": \"synllama-rule-042\"}], \"root\": \"or\", \"schema_version\": 1}"
+        ],
+        "v22_on_anchor_passed_distinct_products": 60,
+        "v22_on_first_failure_counts": {
+          "Chemical-family tautomer enumeration incomplete: MaxTransformsReached": 2,
+          "hit_tanimoto": 17,
+          "polar_reference_capacity_below_minimum": 35,
+          "property: logp.upper_maximum:5.511220000000003>5": 1,
+          "property: logp.upper_maximum:5.511220000000004>5": 1
+        },
+        "v22_on_products": 4,
+        "v22_on_prospective_first_three": [
+          "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+          "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12"
+        ],
+        "v23_on_anchor_passed_distinct_products": 58,
+        "v23_on_first_failure_counts": {
+          "Chemical-family tautomer enumeration incomplete: MaxTransformsReached": 2,
+          "hit_tanimoto": 15,
+          "polar_reference_capacity_below_minimum": 34,
+          "property: logp.upper_maximum:5.511220000000003>5": 1,
+          "property: logp.upper_maximum:5.511220000000004>5": 1
+        },
+        "v23_on_products": 5,
+        "v23_on_prospective_first_three": [
+          "COc1cc(C(N)=O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+          "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12"
+        ]
+      },
+      {
+        "id": "CHEMBL5163-query-1",
+        "products_gained": [],
+        "products_lost": [],
+        "route_graphs_gained": [],
+        "route_graphs_lost": [],
+        "v22_on_anchor_passed_distinct_products": 12,
+        "v22_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 15,
+          "hit_tanimoto": 3,
+          "polar_reference_capacity_below_minimum": 9
+        },
+        "v22_on_products": 0,
+        "v22_on_prospective_first_three": [],
+        "v23_on_anchor_passed_distinct_products": 12,
+        "v23_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 15,
+          "hit_tanimoto": 3,
+          "polar_reference_capacity_below_minimum": 9
+        },
+        "v23_on_products": 0,
+        "v23_on_prospective_first_three": []
+      },
+      {
+        "id": "CHEMBL5163-query-2",
+        "products_gained": [],
+        "products_lost": [],
+        "route_graphs_gained": [],
+        "route_graphs_lost": [],
+        "v22_on_anchor_passed_distinct_products": 0,
+        "v22_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 36
+        },
+        "v22_on_products": 0,
+        "v22_on_prospective_first_three": [],
+        "v23_on_anchor_passed_distinct_products": 0,
+        "v23_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 36
+        },
+        "v23_on_products": 0,
+        "v23_on_prospective_first_three": []
+      },
+      {
+        "id": "CHEMBL3334418-query-1",
+        "products_gained": [],
+        "products_lost": [],
+        "route_graphs_gained": [],
+        "route_graphs_lost": [],
+        "v22_on_anchor_passed_distinct_products": 36,
+        "v22_on_first_failure_counts": {
+          "hit_tanimoto": 2,
+          "polar_reference_capacity_below_minimum": 27
+        },
+        "v22_on_products": 7,
+        "v22_on_prospective_first_three": [
+          "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(OCC1CCCCC1)c2O",
+          "CNc1ccc(Nc2ccc(S(=O)(=O)NC3CCCCC3)cc2)c2c1C(=O)c1ccccc1C2=O",
+          "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(O)c2OCC1CCCCC1"
+        ],
+        "v23_on_anchor_passed_distinct_products": 36,
+        "v23_on_first_failure_counts": {
+          "hit_tanimoto": 2,
+          "polar_reference_capacity_below_minimum": 27
+        },
+        "v23_on_products": 7,
+        "v23_on_prospective_first_three": [
+          "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(OCC1CCCCC1)c2O",
+          "CNc1ccc(Nc2ccc(S(=O)(=O)NC3CCCCC3)cc2)c2c1C(=O)c1ccccc1C2=O",
+          "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(O)c2OCC1CCCCC1"
+        ]
+      },
+      {
+        "id": "CHEMBL3334418-query-2",
+        "products_gained": [],
+        "products_lost": [],
+        "route_graphs_gained": [],
+        "route_graphs_lost": [],
+        "v22_on_anchor_passed_distinct_products": 34,
+        "v22_on_first_failure_counts": {
+          "hit_tanimoto": 12,
+          "polar_reference_capacity_below_minimum": 20
+        },
+        "v22_on_products": 2,
+        "v22_on_prospective_first_three": [
+          "CNc1ccc(NC(C)(C)c2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+          "CNc1ccc(Nc2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O"
+        ],
+        "v23_on_anchor_passed_distinct_products": 34,
+        "v23_on_first_failure_counts": {
+          "hit_tanimoto": 12,
+          "polar_reference_capacity_below_minimum": 20
+        },
+        "v23_on_products": 2,
+        "v23_on_prospective_first_three": [
+          "CNc1ccc(NC(C)(C)c2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+          "CNc1ccc(Nc2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O"
+        ]
+      },
+      {
+        "id": "CHEMBL4869-query-1",
+        "products_gained": [],
+        "products_lost": [],
+        "route_graphs_gained": [],
+        "route_graphs_lost": [],
+        "v22_on_anchor_passed_distinct_products": 0,
+        "v22_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 34
+        },
+        "v22_on_products": 0,
+        "v22_on_prospective_first_three": [],
+        "v23_on_anchor_passed_distinct_products": 0,
+        "v23_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 34
+        },
+        "v23_on_products": 0,
+        "v23_on_prospective_first_three": []
+      },
+      {
+        "id": "CHEMBL4869-query-2",
+        "products_gained": [],
+        "products_lost": [],
+        "route_graphs_gained": [],
+        "route_graphs_lost": [],
+        "v22_on_anchor_passed_distinct_products": 0,
+        "v22_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 38
+        },
+        "v22_on_products": 0,
+        "v22_on_prospective_first_three": [],
+        "v23_on_anchor_passed_distinct_products": 0,
+        "v23_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 38
+        },
+        "v23_on_products": 0,
+        "v23_on_prospective_first_three": []
+      },
+      {
+        "id": "CHEMBL3864-query-1",
+        "products_gained": [],
+        "products_lost": [],
+        "route_graphs_gained": [],
+        "route_graphs_lost": [],
+        "v22_on_anchor_passed_distinct_products": 37,
+        "v22_on_first_failure_counts": {
+          "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 7,
+          "hit_tanimoto": 4,
+          "polar_reference_capacity_below_minimum": 26
+        },
+        "v22_on_products": 0,
+        "v22_on_prospective_first_three": [],
+        "v23_on_anchor_passed_distinct_products": 37,
+        "v23_on_first_failure_counts": {
+          "3D scoring requires specified stereochemistry; enumerate stereoisomers explicitly": 7,
+          "hit_tanimoto": 4,
+          "polar_reference_capacity_below_minimum": 26
+        },
+        "v23_on_products": 0,
+        "v23_on_prospective_first_three": []
+      },
+      {
+        "id": "CHEMBL3864-query-2",
+        "products_gained": [],
+        "products_lost": [],
+        "route_graphs_gained": [],
+        "route_graphs_lost": [],
+        "v22_on_anchor_passed_distinct_products": 0,
+        "v22_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 138
+        },
+        "v22_on_products": 0,
+        "v22_on_prospective_first_three": [],
+        "v23_on_anchor_passed_distinct_products": 0,
+        "v23_on_first_failure_counts": {
+          "Hit stereo anchor is missing or has ambiguous correspondence": 148
+        },
+        "v23_on_products": 0,
+        "v23_on_prospective_first_three": []
+      }
+    ],
+    "entry_assessment": {
+      "actual_primary_supported_inputs": 4,
+      "historical_actual_supported_inputs": [
+        "CHEMBL4630839-query-1",
+        "CHEMBL4630839-query-2",
+        "CHEMBL4247-query-1",
+        "CHEMBL3334418-query-2"
+      ],
+      "historical_actual_supported_inputs_retained": [
+        "CHEMBL4630839-query-1",
+        "CHEMBL4630839-query-2",
+        "CHEMBL4247-query-1",
+        "CHEMBL3334418-query-2"
+      ],
+      "historical_qualified_graphs_retained": 3,
+      "historical_qualified_graphs_total": 3,
+      "historical_supported_retained": true,
+      "mapped_nh_supported_graph_retained": true,
+      "marked_prototype_q2_graphs_identical": true,
+      "marked_supported_graphs_retained": 2,
+      "permit_fresh_actual_comparison": true,
+      "prospective_supported_inputs": 6
+    },
+    "generation_seconds_excluding_catalog_load": {
+      "interpretation": "Single observations; v23 partly overlapped full-suite tests. No timing or speed claim.",
+      "v22": 558.862,
+      "v23": 557.833
+    },
+    "limits": "Saved evidence and exact graph retention do not establish that a fresh full pipeline will retain support within actual time/model/3D budgets. Current actual coverage remains4/12 until terminal reviewed full comparison.",
+    "per_input": [
+      {
+        "exact_graphs": 34,
+        "historical_qualified_graphs_lost": [],
+        "historical_qualified_graphs_retained": [
+          "24a5b4eb90eccd6a600e081dac6b9070dcd30e495209a143f1c2550d185fdf14",
+          "368ad9fd2fab8cfcb118d69cef18504ea610eaee5bc150dc3701abd30a55994c",
+          "4f1f97c2c9695536a59f8c682a9fade9f3ac0d489bf9406dda3a895ec105be31"
+        ],
+        "historical_supported_graphs_lost": [],
+        "historical_supported_graphs_retained": [
+          "24a5b4eb90eccd6a600e081dac6b9070dcd30e495209a143f1c2550d185fdf14",
+          "368ad9fd2fab8cfcb118d69cef18504ea610eaee5bc150dc3701abd30a55994c",
+          "4f1f97c2c9695536a59f8c682a9fade9f3ac0d489bf9406dda3a895ec105be31"
+        ],
+        "input_id": "CHEMBL4630839-query-1",
+        "products": 34,
+        "prospective_first_three": [
+          "COc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+          "CSc1cc(C(=O)NCC2CC2)nc(N(C)CCc2ccccc2)n1",
+          "COc1cc(C(=O)NCC2CCC2)nc(N(C)CCc2ccccc2)n1"
+        ],
+        "prospective_saved_support_available": true,
+        "saved_supported_graphs_present": [
+          "24a5b4eb90eccd6a600e081dac6b9070dcd30e495209a143f1c2550d185fdf14",
+          "368ad9fd2fab8cfcb118d69cef18504ea610eaee5bc150dc3701abd30a55994c",
+          "4f1f97c2c9695536a59f8c682a9fade9f3ac0d489bf9406dda3a895ec105be31"
+        ],
+        "saved_supported_graphs_within_first_three": [
+          "24a5b4eb90eccd6a600e081dac6b9070dcd30e495209a143f1c2550d185fdf14",
+          "368ad9fd2fab8cfcb118d69cef18504ea610eaee5bc150dc3701abd30a55994c",
+          "4f1f97c2c9695536a59f8c682a9fade9f3ac0d489bf9406dda3a895ec105be31"
+        ]
+      },
+      {
+        "exact_graphs": 1,
+        "historical_qualified_graphs_lost": [],
+        "historical_qualified_graphs_retained": [],
+        "historical_supported_graphs_lost": [],
+        "historical_supported_graphs_retained": [
+          "c538f9275c07126ee68bfcac61f77db6342697746cfa62468fb13df1b4334670"
+        ],
+        "input_id": "CHEMBL4630839-query-2",
+        "products": 1,
+        "prospective_first_three": [
+          "NC(=O)c1cccc2cn(-c3ccc([C@@H]4CCCN(c5ccc(C(=O)NCC6CC6)nn5)C4)cc3)nc12"
+        ],
+        "prospective_saved_support_available": true,
+        "saved_supported_graphs_present": [
+          "c538f9275c07126ee68bfcac61f77db6342697746cfa62468fb13df1b4334670"
+        ],
+        "saved_supported_graphs_within_first_three": [
+          "c538f9275c07126ee68bfcac61f77db6342697746cfa62468fb13df1b4334670"
+        ]
+      },
+      {
+        "exact_graphs": 16,
+        "historical_qualified_graphs_lost": [],
+        "historical_qualified_graphs_retained": [],
+        "historical_supported_graphs_lost": [],
+        "historical_supported_graphs_retained": [
+          "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+          "1dd42d6994e2f6d5d30bd77e6b4d701b05dab24bc6776fb3e40e59a6993545db",
+          "67888699e48ec30d7ddae382f3fd4c42055501652843ccb80d3879277d94e005"
+        ],
+        "input_id": "CHEMBL4247-query-1",
+        "products": 11,
+        "prospective_first_three": [
+          "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+          "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+          "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC"
+        ],
+        "prospective_saved_support_available": true,
+        "saved_supported_graphs_present": [
+          "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+          "1dd42d6994e2f6d5d30bd77e6b4d701b05dab24bc6776fb3e40e59a6993545db",
+          "67888699e48ec30d7ddae382f3fd4c42055501652843ccb80d3879277d94e005"
+        ],
+        "saved_supported_graphs_within_first_three": [
+          "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+          "1dd42d6994e2f6d5d30bd77e6b4d701b05dab24bc6776fb3e40e59a6993545db",
+          "67888699e48ec30d7ddae382f3fd4c42055501652843ccb80d3879277d94e005"
+        ]
+      },
+      {
+        "exact_graphs": 8,
+        "historical_qualified_graphs_lost": [],
+        "historical_qualified_graphs_retained": [],
+        "historical_supported_graphs_lost": [],
+        "historical_supported_graphs_retained": [],
+        "input_id": "CHEMBL4247-query-2",
+        "products": 5,
+        "prospective_first_three": [
+          "COc1cc(C(N)=O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+          "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12"
+        ],
+        "prospective_saved_support_available": true,
+        "saved_supported_graphs_present": [
+          "88624bd8f0faf636857f15fe9814a24679e1a105e2f0427a2049946f987d6d65",
+          "fe00d8dd1927379b078db0418729870585a863da8c54516df6b21e225b9e4b8f"
+        ],
+        "saved_supported_graphs_within_first_three": [
+          "88624bd8f0faf636857f15fe9814a24679e1a105e2f0427a2049946f987d6d65",
+          "fe00d8dd1927379b078db0418729870585a863da8c54516df6b21e225b9e4b8f"
+        ]
+      },
+      {
+        "exact_graphs": 0,
+        "historical_qualified_graphs_lost": [],
+        "historical_qualified_graphs_retained": [],
+        "historical_supported_graphs_lost": [],
+        "historical_supported_graphs_retained": [],
+        "input_id": "CHEMBL5163-query-1",
+        "products": 0,
+        "prospective_first_three": [],
+        "prospective_saved_support_available": false,
+        "saved_supported_graphs_present": [],
+        "saved_supported_graphs_within_first_three": []
+      },
+      {
+        "exact_graphs": 0,
+        "historical_qualified_graphs_lost": [],
+        "historical_qualified_graphs_retained": [],
+        "historical_supported_graphs_lost": [],
+        "historical_supported_graphs_retained": [],
+        "input_id": "CHEMBL5163-query-2",
+        "products": 0,
+        "prospective_first_three": [],
+        "prospective_saved_support_available": false,
+        "saved_supported_graphs_present": [],
+        "saved_supported_graphs_within_first_three": []
+      },
+      {
+        "exact_graphs": 7,
+        "historical_qualified_graphs_lost": [],
+        "historical_qualified_graphs_retained": [],
+        "historical_supported_graphs_lost": [],
+        "historical_supported_graphs_retained": [],
+        "input_id": "CHEMBL3334418-query-1",
+        "products": 7,
+        "prospective_first_three": [
+          "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(OCC1CCCCC1)c2O",
+          "CNc1ccc(Nc2ccc(S(=O)(=O)NC3CCCCC3)cc2)c2c1C(=O)c1ccccc1C2=O",
+          "O=C1c2ccccc2C(=O)c2c1cc(S(=O)(=O)[O-])c(O)c2OCC1CCCCC1"
+        ],
+        "prospective_saved_support_available": true,
+        "saved_supported_graphs_present": [
+          "ff78263b9f0897da1c3f53553e721c765734cad289ef1b8277d614a1cf6947a3"
+        ],
+        "saved_supported_graphs_within_first_three": [
+          "ff78263b9f0897da1c3f53553e721c765734cad289ef1b8277d614a1cf6947a3"
+        ]
+      },
+      {
+        "exact_graphs": 2,
+        "historical_qualified_graphs_lost": [],
+        "historical_qualified_graphs_retained": [],
+        "historical_supported_graphs_lost": [],
+        "historical_supported_graphs_retained": [
+          "40fd767ca6348495290b3af78cdfd4d7955fdfc00499528b92ba548882d6496a",
+          "e4b9f9a9a95ef9479d397883642774a7f301539e5de3c4d42bca78a02ab1dd30"
+        ],
+        "input_id": "CHEMBL3334418-query-2",
+        "products": 2,
+        "prospective_first_three": [
+          "CNc1ccc(NC(C)(C)c2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O",
+          "CNc1ccc(Nc2ccc(S(N)(=O)=O)cc2F)c2c1C(=O)c1ccccc1C2=O"
+        ],
+        "prospective_saved_support_available": true,
+        "saved_supported_graphs_present": [
+          "40fd767ca6348495290b3af78cdfd4d7955fdfc00499528b92ba548882d6496a",
+          "e4b9f9a9a95ef9479d397883642774a7f301539e5de3c4d42bca78a02ab1dd30"
+        ],
+        "saved_supported_graphs_within_first_three": [
+          "40fd767ca6348495290b3af78cdfd4d7955fdfc00499528b92ba548882d6496a",
+          "e4b9f9a9a95ef9479d397883642774a7f301539e5de3c4d42bca78a02ab1dd30"
+        ]
+      },
+      {
+        "exact_graphs": 0,
+        "historical_qualified_graphs_lost": [],
+        "historical_qualified_graphs_retained": [],
+        "historical_supported_graphs_lost": [],
+        "historical_supported_graphs_retained": [],
+        "input_id": "CHEMBL4869-query-1",
+        "products": 0,
+        "prospective_first_three": [],
+        "prospective_saved_support_available": false,
+        "saved_supported_graphs_present": [],
+        "saved_supported_graphs_within_first_three": []
+      },
+      {
+        "exact_graphs": 0,
+        "historical_qualified_graphs_lost": [],
+        "historical_qualified_graphs_retained": [],
+        "historical_supported_graphs_lost": [],
+        "historical_supported_graphs_retained": [],
+        "input_id": "CHEMBL4869-query-2",
+        "products": 0,
+        "prospective_first_three": [],
+        "prospective_saved_support_available": false,
+        "saved_supported_graphs_present": [],
+        "saved_supported_graphs_within_first_three": []
+      },
+      {
+        "exact_graphs": 0,
+        "historical_qualified_graphs_lost": [],
+        "historical_qualified_graphs_retained": [],
+        "historical_supported_graphs_lost": [],
+        "historical_supported_graphs_retained": [],
+        "input_id": "CHEMBL3864-query-1",
+        "products": 0,
+        "prospective_first_three": [],
+        "prospective_saved_support_available": false,
+        "saved_supported_graphs_present": [],
+        "saved_supported_graphs_within_first_three": []
+      },
+      {
+        "exact_graphs": 0,
+        "historical_qualified_graphs_lost": [],
+        "historical_qualified_graphs_retained": [],
+        "historical_supported_graphs_lost": [],
+        "historical_supported_graphs_retained": [],
+        "input_id": "CHEMBL3864-query-2",
+        "products": 0,
+        "prospective_first_three": [],
+        "prospective_saved_support_available": false,
+        "saved_supported_graphs_present": [],
+        "saved_supported_graphs_within_first_three": []
+      }
+    ],
+    "schema": "route-first-v23-entry-analysis-v1",
+    "scope": "Saved exact graph and prospective first-three joins to previously bound supported steps; no chemistry, model or 3D. Development entry feasibility only, not a primary or qualification update.",
+    "source_commit": "9989230e6b2a4ad6a7d1c7eb08fe4c331075b264",
+    "source_result_sha256": "4d9a15671044fc943ebeb8496e6502c3d9954a8409379182026a0ddfa8e89d7f",
+    "status": "complete_saved_json_only",
+    "supply_totals": {
+      "v22_graphs": 66,
+      "v22_products": 59,
+      "v23_graphs": 68,
+      "v23_products": 60
+    },
+    "work_totals": {
+      "catalog_bucket_rankings": {
+        "delta": 0,
+        "v22": 144859,
+        "v23": 144859
+      },
+      "catalog_row_visits": {
+        "delta": 0,
+        "v22": 2859566,
+        "v23": 2859566
+      },
+      "combinations": {
+        "delta": 10,
+        "v22": 1250,
+        "v23": 1260
+      },
+      "context_role_checks_total": {
+        "delta": 408,
+        "v22": 430,
+        "v23": 838
+      },
+      "products_generated": {
+        "delta": 24,
+        "v22": 1416,
+        "v23": 1440
+      },
+      "route_audit_attempts": {
+        "delta": 2,
+        "v22": 66,
+        "v23": 68
+      },
+      "total_fingerprint_calls": {
+        "delta": 113,
+        "v22": 481486,
+        "v23": 481599
+      }
+    }
+  },
+  "artifacts": {
+    "entry-analysis.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v23/entry-analysis.json",
+      "sha256": "10a2e2fd692b4e68b401b7f192e1a4f4f7cb3bfa1fcec1ffd1fc6856c6eda0cb"
+    },
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v23/plan.json",
+      "sha256": "6ff4cdc52a615af98ea2fe1b8f31556ccab8a7cfa8dce64423a9211c3161499f"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v23/probe.py",
+      "sha256": "32d9a7d09d25c0a5be37de94ab65e8ac9aba8637cde502d20c4e74e4dd1e8cb2"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v23/result.json",
+      "sha256": "4d9a15671044fc943ebeb8496e6502c3d9954a8409379182026a0ddfa8e89d7f"
+    },
+    "run.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/development-probe-v23/run.log",
+      "sha256": "53220ec7f5705e226949a5f17e40aebf292e4522a313a23790f6014baea9efbf"
+    }
+  },
+  "date": "2026-10-24",
+  "execution": {
+    "attempts": 1,
+    "entry_exit_input_asset_bindings_equal": true,
+    "entry_exit_source_bindings_equal": true,
+    "exit_code": 0,
+    "full_repository_validation": "benchmarks/results/synthesis-route-development-20261023/marked-policy-port-validation-v1.json",
+    "model_calls": 0,
+    "three_d_calls": 0
+  },
+  "interpretation": {
+    "finding": "11 inputs retain exact eligible product/graph sets and prospective first-three order. CHEMBL4247-query-2 reproduces the single-input prototype exactly, gaining2 products/3graphs and losing1 product/1graph. All historically supported exact route graphs and3 qualified graphs are retained.",
+    "limits": "Development panel reused; no new model/3D run or physical synthesis/activity/conditions evidence. Single generation timing observations partly overlap full-suite tests and establish no speed claim.",
+    "progression": "Six development inputs retain a previously supported exact graph within the first three prospective products, including the mapped-NH positive and new marked-source graphs. This permits considering a fresh fixed actual comparison after independent entry review; it does not update primary coverage."
+  },
+  "marked_work_by_input": [
+    {
+      "event_counts": {
+        "legacy_unknown": 3
+      },
+      "fallback_reasons": {
+        "complete_original_ordinary_pool_unavailable": 1,
+        "static_template_type_inapplicable": 2
+      },
+      "input_id": "CHEMBL4630839-query-1",
+      "work": {
+        "candidate_attempts": 0,
+        "completed_contexts": 0,
+        "context_attempts": 0,
+        "eligibility_role_checks": 0,
+        "events_omitted": 0,
+        "guide_clean_serialization_attempts": 0,
+        "helper_fp_attempts": 0,
+        "projected_serialization_attempts": 0,
+        "ranked_metadata_rows": 0,
+        "shared_generation_fp_reservations": 0,
+        "shared_site_role_reservations": 0,
+        "site_match_requests": 0,
+        "static_template_checks": 1,
+        "structural_units": 33,
+        "tanimoto_attempts": 0
+      }
+    },
+    {
+      "event_counts": {
+        "complete_noop": 2,
+        "legacy_unknown": 6
+      },
+      "fallback_reasons": {
+        "complete_original_ordinary_pool_unavailable": 2,
+        "static_template_type_inapplicable": 4
+      },
+      "input_id": "CHEMBL4630839-query-2",
+      "work": {
+        "candidate_attempts": 32,
+        "completed_contexts": 2,
+        "context_attempts": 2,
+        "eligibility_role_checks": 64,
+        "events_omitted": 0,
+        "guide_clean_serialization_attempts": 4,
+        "helper_fp_attempts": 15,
+        "projected_serialization_attempts": 15,
+        "ranked_metadata_rows": 16376,
+        "shared_generation_fp_reservations": 15,
+        "shared_site_role_reservations": 15,
+        "site_match_requests": 15,
+        "static_template_checks": 3,
+        "structural_units": 11073,
+        "tanimoto_attempts": 13
+      }
+    },
+    {
+      "event_counts": {
+        "legacy_unknown": 6
+      },
+      "fallback_reasons": {
+        "complete_original_ordinary_pool_unavailable": 1,
+        "static_template_type_inapplicable": 5
+      },
+      "input_id": "CHEMBL4247-query-1",
+      "work": {
+        "candidate_attempts": 0,
+        "completed_contexts": 0,
+        "context_attempts": 0,
+        "eligibility_role_checks": 0,
+        "events_omitted": 0,
+        "guide_clean_serialization_attempts": 0,
+        "helper_fp_attempts": 0,
+        "projected_serialization_attempts": 0,
+        "ranked_metadata_rows": 0,
+        "shared_generation_fp_reservations": 0,
+        "shared_site_role_reservations": 0,
+        "site_match_requests": 0,
+        "static_template_checks": 3,
+        "structural_units": 75,
+        "tanimoto_attempts": 0
+      }
+    },
+    {
+      "event_counts": {
+        "complete_noop": 2,
+        "complete_replacement": 2,
+        "legacy_unknown": 13
+      },
+      "fallback_reasons": {
+        "complete_original_ordinary_pool_unavailable": 11,
+        "static_template_type_inapplicable": 2
+      },
+      "input_id": "CHEMBL4247-query-2",
+      "work": {
+        "candidate_attempts": 64,
+        "completed_contexts": 4,
+        "context_attempts": 4,
+        "eligibility_role_checks": 128,
+        "events_omitted": 0,
+        "guide_clean_serialization_attempts": 8,
+        "helper_fp_attempts": 56,
+        "projected_serialization_attempts": 56,
+        "ranked_metadata_rows": 14676,
+        "shared_generation_fp_reservations": 56,
+        "shared_site_role_reservations": 47,
+        "site_match_requests": 47,
+        "static_template_checks": 4,
+        "structural_units": 21084,
+        "tanimoto_attempts": 52
+      }
+    },
+    {
+      "event_counts": {},
+      "fallback_reasons": {},
+      "input_id": "CHEMBL5163-query-1",
+      "work": {
+        "candidate_attempts": 0,
+        "completed_contexts": 0,
+        "context_attempts": 0,
+        "eligibility_role_checks": 0,
+        "events_omitted": 0,
+        "guide_clean_serialization_attempts": 0,
+        "helper_fp_attempts": 0,
+        "projected_serialization_attempts": 0,
+        "ranked_metadata_rows": 0,
+        "shared_generation_fp_reservations": 0,
+        "shared_site_role_reservations": 0,
+        "site_match_requests": 0,
+        "static_template_checks": 0,
+        "structural_units": 0,
+        "tanimoto_attempts": 0
+      }
+    },
+    {
+      "event_counts": {},
+      "fallback_reasons": {},
+      "input_id": "CHEMBL5163-query-2",
+      "work": {
+        "candidate_attempts": 0,
+        "completed_contexts": 0,
+        "context_attempts": 0,
+        "eligibility_role_checks": 0,
+        "events_omitted": 0,
+        "guide_clean_serialization_attempts": 0,
+        "helper_fp_attempts": 0,
+        "projected_serialization_attempts": 0,
+        "ranked_metadata_rows": 0,
+        "shared_generation_fp_reservations": 0,
+        "shared_site_role_reservations": 0,
+        "site_match_requests": 0,
+        "static_template_checks": 0,
+        "structural_units": 0,
+        "tanimoto_attempts": 0
+      }
+    },
+    {
+      "event_counts": {},
+      "fallback_reasons": {},
+      "input_id": "CHEMBL3334418-query-1",
+      "work": {
+        "candidate_attempts": 0,
+        "completed_contexts": 0,
+        "context_attempts": 0,
+        "eligibility_role_checks": 0,
+        "events_omitted": 0,
+        "guide_clean_serialization_attempts": 0,
+        "helper_fp_attempts": 0,
+        "projected_serialization_attempts": 0,
+        "ranked_metadata_rows": 0,
+        "shared_generation_fp_reservations": 0,
+        "shared_site_role_reservations": 0,
+        "site_match_requests": 0,
+        "static_template_checks": 0,
+        "structural_units": 0,
+        "tanimoto_attempts": 0
+      }
+    },
+    {
+      "event_counts": {},
+      "fallback_reasons": {},
+      "input_id": "CHEMBL3334418-query-2",
+      "work": {
+        "candidate_attempts": 0,
+        "completed_contexts": 0,
+        "context_attempts": 0,
+        "eligibility_role_checks": 0,
+        "events_omitted": 0,
+        "guide_clean_serialization_attempts": 0,
+        "helper_fp_attempts": 0,
+        "projected_serialization_attempts": 0,
+        "ranked_metadata_rows": 0,
+        "shared_generation_fp_reservations": 0,
+        "shared_site_role_reservations": 0,
+        "site_match_requests": 0,
+        "static_template_checks": 0,
+        "structural_units": 0,
+        "tanimoto_attempts": 0
+      }
+    },
+    {
+      "event_counts": {
+        "complete_noop": 1,
+        "legacy_unknown": 6
+      },
+      "fallback_reasons": {
+        "complete_original_ordinary_pool_unavailable": 5,
+        "static_template_type_inapplicable": 1
+      },
+      "input_id": "CHEMBL4869-query-1",
+      "work": {
+        "candidate_attempts": 16,
+        "completed_contexts": 1,
+        "context_attempts": 1,
+        "eligibility_role_checks": 32,
+        "events_omitted": 0,
+        "guide_clean_serialization_attempts": 2,
+        "helper_fp_attempts": 2,
+        "projected_serialization_attempts": 2,
+        "ranked_metadata_rows": 335,
+        "shared_generation_fp_reservations": 2,
+        "shared_site_role_reservations": 2,
+        "site_match_requests": 2,
+        "static_template_checks": 2,
+        "structural_units": 4689,
+        "tanimoto_attempts": 1
+      }
+    },
+    {
+      "event_counts": {
+        "complete_noop": 1,
+        "legacy_unknown": 5
+      },
+      "fallback_reasons": {
+        "complete_original_ordinary_pool_unavailable": 4,
+        "static_template_type_inapplicable": 1
+      },
+      "input_id": "CHEMBL4869-query-2",
+      "work": {
+        "candidate_attempts": 16,
+        "completed_contexts": 1,
+        "context_attempts": 1,
+        "eligibility_role_checks": 32,
+        "events_omitted": 0,
+        "guide_clean_serialization_attempts": 2,
+        "helper_fp_attempts": 2,
+        "projected_serialization_attempts": 2,
+        "ranked_metadata_rows": 335,
+        "shared_generation_fp_reservations": 2,
+        "shared_site_role_reservations": 2,
+        "site_match_requests": 2,
+        "static_template_checks": 2,
+        "structural_units": 4695,
+        "tanimoto_attempts": 1
+      }
+    },
+    {
+      "event_counts": {},
+      "fallback_reasons": {},
+      "input_id": "CHEMBL3864-query-1",
+      "work": {
+        "candidate_attempts": 0,
+        "completed_contexts": 0,
+        "context_attempts": 0,
+        "eligibility_role_checks": 0,
+        "events_omitted": 0,
+        "guide_clean_serialization_attempts": 0,
+        "helper_fp_attempts": 0,
+        "projected_serialization_attempts": 0,
+        "ranked_metadata_rows": 0,
+        "shared_generation_fp_reservations": 0,
+        "shared_site_role_reservations": 0,
+        "site_match_requests": 0,
+        "static_template_checks": 0,
+        "structural_units": 0,
+        "tanimoto_attempts": 0
+      }
+    },
+    {
+      "event_counts": {
+        "complete_noop": 1,
+        "complete_replacement": 1,
+        "legacy_unknown": 9
+      },
+      "fallback_reasons": {
+        "complete_original_ordinary_pool_unavailable": 5,
+        "static_template_type_inapplicable": 4
+      },
+      "input_id": "CHEMBL3864-query-2",
+      "work": {
+        "candidate_attempts": 32,
+        "completed_contexts": 2,
+        "context_attempts": 2,
+        "eligibility_role_checks": 64,
+        "events_omitted": 0,
+        "guide_clean_serialization_attempts": 4,
+        "helper_fp_attempts": 28,
+        "projected_serialization_attempts": 28,
+        "ranked_metadata_rows": 16384,
+        "shared_generation_fp_reservations": 28,
+        "shared_site_role_reservations": 22,
+        "site_match_requests": 22,
+        "static_template_checks": 5,
+        "structural_units": 11079,
+        "tanimoto_attempts": 26
+      }
+    }
+  ],
+  "marked_work_totals": {
+    "candidate_attempts": 160,
+    "completed_contexts": 10,
+    "context_attempts": 10,
+    "eligibility_role_checks": 320,
+    "events_omitted": 0,
+    "guide_clean_serialization_attempts": 20,
+    "helper_fp_attempts": 103,
+    "projected_serialization_attempts": 103,
+    "ranked_metadata_rows": 48106,
+    "shared_generation_fp_reservations": 103,
+    "shared_site_role_reservations": 88,
+    "site_match_requests": 88,
+    "static_template_checks": 20,
+    "structural_units": 52728,
+    "tanimoto_attempts": 93
+  },
+  "p1": {
+    "baseline_supported_inputs": 5,
+    "complete": false,
+    "develop_merge": false,
+    "development_panel_inputs": 12,
+    "latest_actual_supported_inputs": 4,
+    "prospective_saved_support_inputs": 6,
+    "required_supported_inputs": 6
+  },
+  "protocol": {
+    "additional_work": {
+      "continuation_ranked_rows_retained_per_search": 65536,
+      "empty_stage_telemetry": "Three logical counters: short circuits, known-empty replacement short circuits, and unvisited source-slot _nearest calls. Unsized guide counts are conservative; production guides are tuples. These counters are not catalog-row or fingerprint savings.",
+      "mapped_nh_proof_contexts_per_search": 128,
+      "mapped_nh_proof_match_requests_per_search": 512,
+      "mapped_nh_proof_structural_units_per_search": 32768,
+      "mapped_nh_ranked_rows_retained_per_search": 32768,
+      "mapped_nh_raw_registries_per_search": 512,
+      "mapped_nh_raw_snapshot_attempts_per_search": 1024,
+      "mapped_nh_raw_snapshot_structural_units_per_search": 262144,
+      "mapped_nh_selected_contexts_per_search": 128,
+      "marked_boolean_role_match_requests_per_search": 512,
+      "marked_candidate_attempts_per_search": 256,
+      "marked_combined_new_role_match_requests_per_search": 1536,
+      "marked_context_attempts_per_search": 16,
+      "marked_fingerprint_attempts_per_search": 1024,
+      "marked_frozen_candidates_per_context": 16,
+      "marked_full_site_match_requests_per_search": 1024,
+      "marked_ranked_metadata_rows_per_search": 131072,
+      "marked_static_template_checks_per_search": 128,
+      "marked_structural_units_per_search": 262144,
+      "marked_work_shared_caps": "All marker projected fingerprints precharge original generation FP ceiling65536 with admission reserve, and all extra role matches precharge original context-role65536 and per-query8192 remaining. No new Catalog/reverse/model calls or source pool refill. Extra runtime/memory must be reported, not assumed free.",
+      "no_extra_reverse_catalog_scan_fingerprint_or_forward_calls": "Pool sharing itself adds no reverse, catalog scan, fingerprint, forward or model calls. Probe observational fingerprints are separately counted outside search cap.",
+      "role_checks_per_context": 8192,
+      "role_matches_per_request": 64,
+      "shared_continuation_and_nh_role_checks_per_search": 65536,
+      "shared_pool_telemetry": "Report first cross-target certified pool reuse and exact avoided bucket-ranking charge once per new target identity; repeated nearest queries still charge candidate rows. No claim of total CPU savings.",
+      "shared_source_stereo_atom_bond_units": 131072,
+      "shared_source_stereo_perceptions": 2048
+    },
+    "base_caps": {
+      "arms": 1,
+      "building_block_top_k": 2,
+      "catalog_index_rows": 250000,
+      "catalog_loads": 1,
+      "catalog_row_visits_per_arm": 262144,
+      "combinations_per_arm": 512,
+      "fingerprint_calls_per_arm": 65536,
+      "inputs": 12,
+      "per_input_per_arm_cooperative_seconds": 960,
+      "products_per_arm": 1024,
+      "reverse_outcomes_per_call": 4,
+      "route_audits_per_arm": 64,
+      "rows_per_query": 8192,
+      "rule_inspections_per_arm": 512,
+      "stereo_atom_bond_units_per_arm": 131072,
+      "stereo_perceptions_per_arm": 2048
+    },
+    "binding_state": "runtime_reviewed_precommit_draft",
+    "bound_file_sha256": {
+      "catalog": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+      "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "manifest:CHEMBL3334418-query-1": "6b12dae1b5d50308a4f785ba393de1eba27ed2756923fafa59fc20571d0fe812",
+      "manifest:CHEMBL3334418-query-2": "c8d906d4231bf602ec241be4ec7ff946b25b2cdfb133eb44f1f49eb262a5b911",
+      "manifest:CHEMBL3864-query-1": "4a968e55ab7c40947beee7db5cdcee24b35e04253feb1faf379007d12eaf525b",
+      "manifest:CHEMBL3864-query-2": "b038c40adf103153dd78182be09cb9c2ee3258e05a5eff7dc8837ebabeb04fc0",
+      "manifest:CHEMBL4247-query-1": "500fda8ed7a5dbc447fe8b9aa1f6ea85c97ac8d389eebf089b919360aa6371cb",
+      "manifest:CHEMBL4247-query-2": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "manifest:CHEMBL4630839-query-1": "4550b2df1b553049fb94a78835fec0544cca3980c044823ad0e9cbc51f521739",
+      "manifest:CHEMBL4630839-query-2": "b8d631a17140f78af64e6ce4f188c5b64aa1f74d5cc6b8acaaaed07f440a10cc",
+      "manifest:CHEMBL4869-query-1": "1669db70ff4d09c9a93d586d872d256d3482e10c6e729c7637f15a176eab262d",
+      "manifest:CHEMBL4869-query-2": "7c4ef94083ab953bb45c9651f3bb80d5d00cbff155849752ec2135655f0ede7b",
+      "manifest:CHEMBL5163-query-1": "cf83f89e9df2e11ccc259628a9f7b59aee066c2f64e4a01a2eda829922926baf",
+      "manifest:CHEMBL5163-query-2": "53066839233b041e4d65b62284a722b995a9ab08c65692cb83ae8f479f335145",
+      "marked_control": "fd23417e6a8006c22a3fac43fca7d7acccea09c044ba60fc7150cf17bd93e3a1",
+      "marked_forward": "f2534b8386c540b24230b5329e2d45da28a6b744c41fdcf6836629798ca5a8a5",
+      "nh_positive_control": "d219efe0726cbbe4b10f24ad1e6a2ce013b9e296bfe08286646dcf2ec1e48cd2",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "v22_result": "6ccd2860d577a7aa10ff15be7a8ea8f5266a108fee29efa54bcfd5eb1ad7a33a"
+    },
+    "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "config_sha256": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+    "diagnostic_fingerprint_counting": "The search fingerprint ceiling65536 excludes inherited pre-evidence probe observations: one reference hit fingerprint/input, one fingerprint per accept callback observation (including repeats), and one per eligible distinct product for a best-score summary. All are counted separately; no equality of total CPU or diagnostic fingerprints versus v21 is inferred. New marker projected FP calls are inside search/generation ceiling, unlike inherited accept-observation/best-score probe FPs.",
+    "execution": "One fixed12 ON run; PYTHONPATH=. OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 with .venv-research/bin/python; preserve first result and partial work. No source/harness/plan mutation or candidate retries after freeze.",
+    "fixed_marked_supported_graph_sha256": [
+      "88624bd8f0faf636857f15fe9814a24679e1a105e2f0427a2049946f987d6d65",
+      "fe00d8dd1927379b078db0418729870585a863da8c54516df6b21e225b9e4b8f"
+    ],
+    "harness_sha256": "32d9a7d09d25c0a5be37de94ab65e8ac9aba8637cde502d20c4e74e4dd1e8cb2",
+    "interpretation": "Development pre-evidence reachability only. Marked selection is an outcome-informed heuristic, not chemical selectivity proof. New marker metadata can reallocate work and lose old graphs; exact v22 gains/losses and historical qualified/forward-supported graph retention must be assessed before any primary comparison. Actual primary remains4/12 until a separate full fixed-panel downstream comparison.",
+    "manifest_sha256": {
+      "CHEMBL3334418-query-1": "6b12dae1b5d50308a4f785ba393de1eba27ed2756923fafa59fc20571d0fe812",
+      "CHEMBL3334418-query-2": "c8d906d4231bf602ec241be4ec7ff946b25b2cdfb133eb44f1f49eb262a5b911",
+      "CHEMBL3864-query-1": "4a968e55ab7c40947beee7db5cdcee24b35e04253feb1faf379007d12eaf525b",
+      "CHEMBL3864-query-2": "b038c40adf103153dd78182be09cb9c2ee3258e05a5eff7dc8837ebabeb04fc0",
+      "CHEMBL4247-query-1": "500fda8ed7a5dbc447fe8b9aa1f6ea85c97ac8d389eebf089b919360aa6371cb",
+      "CHEMBL4247-query-2": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "CHEMBL4630839-query-1": "4550b2df1b553049fb94a78835fec0544cca3980c044823ad0e9cbc51f521739",
+      "CHEMBL4630839-query-2": "b8d631a17140f78af64e6ce4f188c5b64aa1f74d5cc6b8acaaaed07f440a10cc",
+      "CHEMBL4869-query-1": "1669db70ff4d09c9a93d586d872d256d3482e10c6e729c7637f15a176eab262d",
+      "CHEMBL4869-query-2": "7c4ef94083ab953bb45c9651f3bb80d5d00cbff155849752ec2135655f0ede7b",
+      "CHEMBL5163-query-1": "cf83f89e9df2e11ccc259628a9f7b59aee066c2f64e4a01a2eda829922926baf",
+      "CHEMBL5163-query-2": "53066839233b041e4d65b62284a722b995a9ab08c65692cb83ae8f479f335145"
+    },
+    "marked_control_result_sha256": "fd23417e6a8006c22a3fac43fca7d7acccea09c044ba60fc7150cf17bd93e3a1",
+    "marked_forward_result_sha256": "f2534b8386c540b24230b5329e2d45da28a6b744c41fdcf6836629798ca5a8a5",
+    "nh_positive_control_result_sha256": "d219efe0726cbbe4b10f24ad1e6a2ce013b9e296bfe08286646dcf2ec1e48cd2",
+    "panel_sha256": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+    "policy": {
+      "correct_typed_prefix_size": false,
+      "overlay_scope": "Only strict opt-in prefer_marked_continuation_second=True is added to archived v22 effective route-first limits; all original scientific gates and caps are identical. Frozen products/graphs and supported-control references never seed generation.",
+      "prefer_continuation_second": true,
+      "prefer_mapped_nh_second": true,
+      "prefer_marked_continuation_second": true,
+      "preserve_typed_prefix": false,
+      "share_identical_catalog_pools": true,
+      "skip_empty_stage_retrieval": true,
+      "version": "catalog-rule-route-first-v2"
+    },
+    "python_version_preflight": "3.10.12",
+    "rdkit_version_preflight": "2025.09.6",
+    "review": {
+      "astra": "PASS on exact reviewed draft, including guarded finalizer; no policy tuning",
+      "freeze": "One model-free fixed12 ON run authorized under original task; no model/3D or primary promotion",
+      "root": "PASS on fixed12 scope, unchanged limits/gates, newpolicy-only overlay and failure preservation"
+    },
+    "reviewed_draft_sha256": "92773e40d9302f12abc1b80c4fdcf3f16580cb6f0826b158a7350ec40330df96",
+    "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "schema": "route-first-development-probe-v23-plan-v1",
+    "scope": "One fixed 12-input single-ON development pre-evidence search, one shared bound Catalog/Rules load, cooperative 960 s/input. Retained v22 continuation, mapped-NH, empty-stage and shared-pool policies stay enabled; only the default-off marked-site ordinary-second policy is added. Same gates, caps, top2 and source assets. Exact v22 products/full graphs and first-three order compared only after generation; preserve gains, losses, pending/rejected states and failure work. No model, 3D, or qualification calls.",
+    "source_commit": "9989230e6b2a4ad6a7d1c7eb08fe4c331075b264",
+    "source_sha256": {
+      "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+      "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "a8bf7730e5c3f43160c4487f18575a91364be817c524a450bf57e5a3268f1e53",
+      "chembounce_synthesis/route_first_marker.py": "699362c1a2e4389d6d113083782083d92541b827d8aadc4594559ee0c7446893",
+      "chembounce_synthesis/route_first_marker_second.py": "537edc7d9ea9dbecf73a93244cb414e42865d596b30016974e28f6d7cb6fa49f",
+      "chembounce_synthesis/route_first_nh.py": "0905979e52cc5eaa3ff97cb0c9f7a549865c54ec1424307100dfa2c2a5be5bf5",
+      "chembounce_synthesis/routes.py": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+      "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "chembounce_synthesis/workflow.py": "79580260de8c2132ecb60049c0716b8200ba14e8e428047cc1c94033d903ef81",
+      "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+    },
+    "status": "frozen_preexecution",
+    "v22_result_sha256": "6ccd2860d577a7aa10ff15be7a8ea8f5266a108fee29efa54bcfd5eb1ad7a33a",
+    "validation_at_freeze": {
+      "compile": "passed",
+      "focused_tests_passed": 109,
+      "full_repository_suite": "running separately on the same unchanged runtime bytes; required before adoption/full actual comparison",
+      "full_suite_log": "benchmark-results/route-first-development-20261023-v2/marked-policy-port-validation-v1/full-pytest.log",
+      "ruff": "passed",
+      "timing_interpretation": "Model-free diagnostic may overlap read-only full-suite execution; no timing/speed claim."
+    }
+  },
+  "review": {
+    "outcome": "Root and Astra PASS: all entry files independently rehashed, historical route artifacts checked against original completed analysis hashes, exact support/first-three joins and all gains/losses/work deltas recomputed. Six-input entry only; actual coverage remains4/12. Actual-run bundle integrity approval is separate.",
+    "preexecution": "Root and Astra PASS including failure-preserving finalizer; 109 focused tests passed; full-suite subsequently completed 3686 passed,76 skipped,19 subtests,0 failures"
+  },
+  "schema": "route-first-v2-pre-evidence-v23-portable-v1",
+  "status": "complete_fixed12_generation_control"
+}
