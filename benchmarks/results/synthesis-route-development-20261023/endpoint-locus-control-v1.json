@@ -1,0 +1,417 @@
+{
+  "artifacts": {
+    "endpoint.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/endpoint-locus-control-v1/endpoint.py",
+      "sha256": "e241f7ab4ddfbcc9f7dbda83683600757d19a14c33fb5ff5640f12f31f3ddbef"
+    },
+    "execution.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/endpoint-locus-control-v1/execution.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/endpoint-locus-control-v1/plan.json",
+      "sha256": "9eb83513fc8cb7468530a1d5d81aeee8941bcda99fe3c7667956ad0e0aea5cda"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/endpoint-locus-control-v1/probe.py",
+      "sha256": "7ba1f0e52138ee26ecfeb64061a04d3e4168ed584ed87b8ad0cec7085f67f89e"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/endpoint-locus-control-v1/result.json",
+      "sha256": "aec4546e802456983719545d71c197854d7584506eaa71fc81c40a1028b0182a"
+    },
+    "test_endpoint.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/endpoint-locus-control-v1/test_endpoint.py",
+      "sha256": "50be807e7803cf6744f3f95255f48ce9fa3be9b233d3a1d19dd0e46164430e88"
+    }
+  },
+  "date": "2026-10-24",
+  "execution": {
+    "catalog_loads": 0,
+    "exit_code": 0,
+    "model_calls": 0,
+    "reaction_apply_calls": 0,
+    "retries": 0,
+    "rule_loads": 1,
+    "runs": 1,
+    "three_dimensional_calls": 0
+  },
+  "interpretation": {
+    "closed_boolean_policy_remains_closed": true,
+    "does_not_establish": [
+      "chemical competition",
+      "selectivity",
+      "causality of prediction mismatch",
+      "source preference efficacy",
+      "improved whole-route support",
+      "physical synthesis feasibility"
+    ],
+    "next_requirement": "Additional prospectively fixed matched controls and current-pool source availability before any production selection change.",
+    "result": "Matched event has one identical endpoint; both mismatched events have disjoint endpoints on their own concrete source.",
+    "scope": "All three positive catalogue-leaf events in the fixed outcome-informed guide-relative diagnostic; not an independent validation cohort."
+  },
+  "p1": {
+    "acceptance_minimum_supported_inputs": 6,
+    "inputs": 12,
+    "latest_full_actual_supported_inputs": 4,
+    "native_baseline_supported_inputs": 5,
+    "qualified_candidates_last_full_actual": 3,
+    "qualified_input_count_last_full_actual": 1,
+    "status": "incomplete",
+    "v21_saved_step_conditional_possible_inputs": 5
+  },
+  "prior_receipt": "benchmarks/results/synthesis-route-development-20261023/guide-relative-pair-compatibility-v1.json",
+  "result": {
+    "bound_sha256_after": {
+      "prior_result": "e1b68f298b8bcda3d6fda95a5a8927c769cc53df691d0df46a3ea7eaa49c673d",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39"
+    },
+    "bound_sha256_before": {
+      "prior_result": "e1b68f298b8bcda3d6fda95a5a8927c769cc53df691d0df46a3ea7eaa49c673d",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39"
+    },
+    "events": [
+      {
+        "fixed_event": {
+          "actual_ordered_reactants": [
+            "COc1cc(Br)cc(OC)c1OC",
+            "Nc1nccc(Cl)n1"
+          ],
+          "alternative_rule_id": "synllama-rule-036",
+          "applicable_alternative_orientations": [
+            "same"
+          ],
+          "catalog_source_slot": 0,
+          "catalog_source_smiles": "COc1cc(Br)cc(OC)c1OC",
+          "descriptor_index": 1,
+          "input_id": "CHEMBL4247-query-1",
+          "intended_rule_id": "synllama-rule-042",
+          "node_id": "ir",
+          "original_guide": [
+            "COc1cc(Cl)cc(OC)c1OC",
+            "Nc1nccc(Cl)n1"
+          ],
+          "route_graph_sha256": "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+          "saved_forward_status": "matched",
+          "source_kind": [
+            "catalog_leaf",
+            "catalog_leaf"
+          ]
+        },
+        "intended": {
+          "concrete_endpoint_elements": {
+            "4": "C"
+          },
+          "concrete_endpoint_indices": [
+            4
+          ],
+          "full_role_mapping_tuples": [
+            [
+              5,
+              4
+            ]
+          ],
+          "map_number": 1,
+          "matches_observed": 1,
+          "role_atom_index": 1,
+          "role_slot": 0
+        },
+        "orientations": [
+          {
+            "alternative": {
+              "concrete_endpoint_elements": {
+                "4": "C"
+              },
+              "concrete_endpoint_indices": [
+                4
+              ],
+              "full_role_mapping_tuples": [
+                [
+                  4,
+                  5
+                ]
+              ],
+              "map_number": 1,
+              "matches_observed": 1,
+              "role_atom_index": 0,
+              "role_slot": 0
+            },
+            "alternative_source_role_slot": 0,
+            "endpoint_relation": "identical_unique",
+            "orientation": "same"
+          }
+        ],
+        "status": "complete_structural_endpoint_descriptor"
+      },
+      {
+        "fixed_event": {
+          "actual_ordered_reactants": [
+            "COc1cc(CC(=O)O)ccc1Cl",
+            "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1"
+          ],
+          "alternative_rule_id": "synllama-rule-077",
+          "applicable_alternative_orientations": [
+            "same"
+          ],
+          "catalog_source_slot": 0,
+          "catalog_source_smiles": "COc1cc(CC(=O)O)ccc1Cl",
+          "descriptor_index": 8,
+          "input_id": "CHEMBL4247-query-2",
+          "intended_rule_id": "synllama-rule-042",
+          "node_id": "or",
+          "original_guide": [
+            "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+            "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+          ],
+          "route_graph_sha256": "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+          "saved_forward_status": "mismatched",
+          "source_kind": [
+            "catalog_leaf",
+            "replaced_intermediate"
+          ]
+        },
+        "intended": {
+          "concrete_endpoint_elements": {
+            "11": "C"
+          },
+          "concrete_endpoint_indices": [
+            11
+          ],
+          "full_role_mapping_tuples": [
+            [
+              12,
+              11
+            ]
+          ],
+          "map_number": 1,
+          "matches_observed": 1,
+          "role_atom_index": 1,
+          "role_slot": 0
+        },
+        "orientations": [
+          {
+            "alternative": {
+              "concrete_endpoint_elements": {
+                "6": "C"
+              },
+              "concrete_endpoint_indices": [
+                6
+              ],
+              "full_role_mapping_tuples": [
+                [
+                  8,
+                  6,
+                  7
+                ]
+              ],
+              "map_number": 2,
+              "matches_observed": 1,
+              "role_atom_index": 1,
+              "role_slot": 0
+            },
+            "alternative_source_role_slot": 0,
+            "endpoint_relation": "disjoint",
+            "orientation": "same"
+          }
+        ],
+        "status": "complete_structural_endpoint_descriptor"
+      },
+      {
+        "fixed_event": {
+          "actual_ordered_reactants": [
+            "COc1cc(C(=O)O)ccc1Cl",
+            "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1"
+          ],
+          "alternative_rule_id": "synllama-rule-077",
+          "applicable_alternative_orientations": [
+            "same"
+          ],
+          "catalog_source_slot": 0,
+          "catalog_source_smiles": "COc1cc(C(=O)O)ccc1Cl",
+          "descriptor_index": 9,
+          "input_id": "CHEMBL4247-query-2",
+          "intended_rule_id": "synllama-rule-042",
+          "node_id": "or",
+          "original_guide": [
+            "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+            "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+          ],
+          "route_graph_sha256": "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc",
+          "saved_forward_status": "mismatched",
+          "source_kind": [
+            "catalog_leaf",
+            "replaced_intermediate"
+          ]
+        },
+        "intended": {
+          "concrete_endpoint_elements": {
+            "10": "C"
+          },
+          "concrete_endpoint_indices": [
+            10
+          ],
+          "full_role_mapping_tuples": [
+            [
+              11,
+              10
+            ]
+          ],
+          "map_number": 1,
+          "matches_observed": 1,
+          "role_atom_index": 1,
+          "role_slot": 0
+        },
+        "orientations": [
+          {
+            "alternative": {
+              "concrete_endpoint_elements": {
+                "5": "C"
+              },
+              "concrete_endpoint_indices": [
+                5
+              ],
+              "full_role_mapping_tuples": [
+                [
+                  7,
+                  5,
+                  6
+                ]
+              ],
+              "map_number": 2,
+              "matches_observed": 1,
+              "role_atom_index": 1,
+              "role_slot": 0
+            },
+            "alternative_source_role_slot": 0,
+            "endpoint_relation": "disjoint",
+            "orientation": "same"
+          }
+        ],
+        "status": "complete_structural_endpoint_descriptor"
+      }
+    ],
+    "fixed_events": [
+      {
+        "actual_ordered_reactants": [
+          "COc1cc(Br)cc(OC)c1OC",
+          "Nc1nccc(Cl)n1"
+        ],
+        "alternative_rule_id": "synllama-rule-036",
+        "applicable_alternative_orientations": [
+          "same"
+        ],
+        "catalog_source_slot": 0,
+        "catalog_source_smiles": "COc1cc(Br)cc(OC)c1OC",
+        "descriptor_index": 1,
+        "input_id": "CHEMBL4247-query-1",
+        "intended_rule_id": "synllama-rule-042",
+        "node_id": "ir",
+        "original_guide": [
+          "COc1cc(Cl)cc(OC)c1OC",
+          "Nc1nccc(Cl)n1"
+        ],
+        "route_graph_sha256": "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+        "saved_forward_status": "matched",
+        "source_kind": [
+          "catalog_leaf",
+          "catalog_leaf"
+        ]
+      },
+      {
+        "actual_ordered_reactants": [
+          "COc1cc(CC(=O)O)ccc1Cl",
+          "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1"
+        ],
+        "alternative_rule_id": "synllama-rule-077",
+        "applicable_alternative_orientations": [
+          "same"
+        ],
+        "catalog_source_slot": 0,
+        "catalog_source_smiles": "COc1cc(CC(=O)O)ccc1Cl",
+        "descriptor_index": 8,
+        "input_id": "CHEMBL4247-query-2",
+        "intended_rule_id": "synllama-rule-042",
+        "node_id": "or",
+        "original_guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+        ],
+        "route_graph_sha256": "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+        "saved_forward_status": "mismatched",
+        "source_kind": [
+          "catalog_leaf",
+          "replaced_intermediate"
+        ]
+      },
+      {
+        "actual_ordered_reactants": [
+          "COc1cc(C(=O)O)ccc1Cl",
+          "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1"
+        ],
+        "alternative_rule_id": "synllama-rule-077",
+        "applicable_alternative_orientations": [
+          "same"
+        ],
+        "catalog_source_slot": 0,
+        "catalog_source_smiles": "COc1cc(C(=O)O)ccc1Cl",
+        "descriptor_index": 9,
+        "input_id": "CHEMBL4247-query-2",
+        "intended_rule_id": "synllama-rule-042",
+        "node_id": "or",
+        "original_guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+        ],
+        "route_graph_sha256": "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc",
+        "saved_forward_status": "mismatched",
+        "source_kind": [
+          "catalog_leaf",
+          "replaced_intermediate"
+        ]
+      }
+    ],
+    "helper_sha256": "e241f7ab4ddfbcc9f7dbda83683600757d19a14c33fb5ff5640f12f31f3ddbef",
+    "helper_sha256_after": "e241f7ab4ddfbcc9f7dbda83683600757d19a14c33fb5ff5640f12f31f3ddbef",
+    "plan_sha256": "9eb83513fc8cb7468530a1d5d81aeee8941bcda99fe3c7667956ad0e0aea5cda",
+    "plan_sha256_after": "9eb83513fc8cb7468530a1d5d81aeee8941bcda99fe3c7667956ad0e0aea5cda",
+    "probe_sha256": "7ba1f0e52138ee26ecfeb64061a04d3e4168ed584ed87b8ad0cec7085f67f89e",
+    "probe_sha256_after": "7ba1f0e52138ee26ecfeb64061a04d3e4168ed584ed87b8ad0cec7085f67f89e",
+    "rdkit_version": "2025.09.6",
+    "schema": "endpoint-locus-control-v1",
+    "source_sha256_after": {
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26"
+    },
+    "source_sha256_before": {
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26"
+    },
+    "status": "complete",
+    "summary": {
+      "interpretation": "Structural endpoint domains only, under complete bounded full-role mappings. Disjoint/identical/ambiguous is not atom lineage, selectivity, chemical competition, or forward support. Original Boolean preference remains closed.",
+      "status_counts": {
+        "complete_structural_endpoint_descriptor": 3
+      }
+    },
+    "work": {
+      "match_requests": 6,
+      "parse_attempts": 3,
+      "precharged_structural_units": 150
+    }
+  },
+  "schema": "endpoint-locus-control-v1-portable-receipt",
+  "source_commit": "7af618a23dd04f1ce31ee212fa59359f2c4f4fa3",
+  "status": "completed_structural_diagnostic_only",
+  "validation": {
+    "not_a_full_repository_test_run": true,
+    "review_after_execution": "root_and_astra_pass",
+    "review_before_execution": "root_and_astra_pass",
+    "ruff": "pass_before_freeze",
+    "synthetic_tests_passed": 4,
+    "synthetic_tests_run_by": "coding_agent_before_freeze"
+  }
+}

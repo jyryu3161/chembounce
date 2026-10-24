@@ -1,0 +1,919 @@
+{
+  "alternative_rule_inventory": [
+    "synllama-rule-001",
+    "synllama-rule-002",
+    "synllama-rule-003",
+    "synllama-rule-004",
+    "synllama-rule-005",
+    "synllama-rule-006",
+    "synllama-rule-007",
+    "synllama-rule-008",
+    "synllama-rule-015",
+    "synllama-rule-017",
+    "synllama-rule-018",
+    "synllama-rule-020",
+    "synllama-rule-021",
+    "synllama-rule-022",
+    "synllama-rule-023",
+    "synllama-rule-024",
+    "synllama-rule-026",
+    "synllama-rule-027",
+    "synllama-rule-028",
+    "synllama-rule-029",
+    "synllama-rule-030",
+    "synllama-rule-031",
+    "synllama-rule-032",
+    "synllama-rule-033",
+    "synllama-rule-034",
+    "synllama-rule-035",
+    "synllama-rule-036",
+    "synllama-rule-038",
+    "synllama-rule-039",
+    "synllama-rule-040",
+    "synllama-rule-041",
+    "synllama-rule-043",
+    "synllama-rule-044",
+    "synllama-rule-045",
+    "synllama-rule-046",
+    "synllama-rule-047",
+    "synllama-rule-048",
+    "synllama-rule-049",
+    "synllama-rule-053",
+    "synllama-rule-054",
+    "synllama-rule-057",
+    "synllama-rule-060",
+    "synllama-rule-061",
+    "synllama-rule-062",
+    "synllama-rule-063",
+    "synllama-rule-068",
+    "synllama-rule-069",
+    "synllama-rule-070",
+    "synllama-rule-071",
+    "synllama-rule-072",
+    "synllama-rule-073",
+    "synllama-rule-074",
+    "synllama-rule-076",
+    "synllama-rule-077",
+    "synllama-rule-078",
+    "synllama-rule-079",
+    "synllama-rule-080",
+    "synllama-rule-081",
+    "synllama-rule-082",
+    "synllama-rule-083"
+  ],
+  "artifacts": {
+    "execution.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/guide-relative-pair-compatibility-v1/execution.log",
+      "sha256": "fb36c31a9dc5c3928b1730ffdb3df2e9bc094afa8ffe90e880f836e7d6afc633"
+    },
+    "pair_descriptor.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/guide-relative-pair-compatibility-v1/pair_descriptor.py",
+      "sha256": "a5f3e9d81b13eb610208c61412801a8f3e0a166695811bbbb99192f18750b751"
+    },
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/guide-relative-pair-compatibility-v1/plan.json",
+      "sha256": "e689bba1bc599b3ce9ab87b6bd2c42810e4983f7f5492225b160dd23beb87a80"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/guide-relative-pair-compatibility-v1/probe.py",
+      "sha256": "0f948d5fceb08bd632a016446392eb8a48dc0dab1851b30f62b831a7d875e7cf"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/guide-relative-pair-compatibility-v1/result.json",
+      "sha256": "e1b68f298b8bcda3d6fda95a5a8927c769cc53df691d0df46a3ea7eaa49c673d"
+    },
+    "test_pair_descriptor.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/guide-relative-pair-compatibility-v1/test_pair_descriptor.py",
+      "sha256": "70e7f60242d53a036c9885bb383c19a4a5157c58d4ae8f99e1e10cddfd895803"
+    }
+  },
+  "descriptors": [
+    {
+      "catalog_leaf_enabled_rules": [],
+      "cohort": {
+        "expected_product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)O)C2)n1",
+        "input_id": "CHEMBL4247-query-1",
+        "node_id": "ir",
+        "ordered_reactants": [
+          "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+          "O=C(O)[C@H]1CCCNC1"
+        ],
+        "route_graph_sha256": "67888699e48ec30d7ddae382f3fd4c42055501652843ccb80d3879277d94e005",
+        "rule_id": "synllama-rule-042",
+        "saved_forward_status": "matched"
+      },
+      "contributing_stage_ids": [
+        14
+      ],
+      "counterfactual_representation": [
+        [
+          "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+          "O=C(O)[C@H]1CCCNC1"
+        ],
+        "typed",
+        [
+          "catalog_leaf",
+          "catalog_leaf"
+        ]
+      ],
+      "deduplicated_assessment_from": null,
+      "reason": null,
+      "replaced_intermediate_enabled_rules": [],
+      "source_slot_kind": [
+        "catalog_leaf",
+        "catalog_leaf"
+      ],
+      "status": "complete_whole_molecule_boolean_descriptor"
+    },
+    {
+      "catalog_leaf_enabled_rules": [
+        [
+          "synllama-rule-036",
+          0
+        ]
+      ],
+      "cohort": {
+        "expected_product": "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+        "input_id": "CHEMBL4247-query-1",
+        "node_id": "ir",
+        "ordered_reactants": [
+          "COc1cc(Br)cc(OC)c1OC",
+          "Nc1nccc(Cl)n1"
+        ],
+        "route_graph_sha256": "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+        "rule_id": "synllama-rule-042",
+        "saved_forward_status": "matched"
+      },
+      "contributing_stage_ids": [
+        12
+      ],
+      "counterfactual_representation": [
+        [
+          "COc1cc(Cl)cc(OC)c1OC",
+          "Nc1nccc(Cl)n1"
+        ],
+        "typed",
+        [
+          "catalog_leaf",
+          "catalog_leaf"
+        ]
+      ],
+      "deduplicated_assessment_from": null,
+      "reason": null,
+      "replaced_intermediate_enabled_rules": [],
+      "source_slot_kind": [
+        "catalog_leaf",
+        "catalog_leaf"
+      ],
+      "status": "complete_whole_molecule_boolean_descriptor"
+    },
+    {
+      "catalog_leaf_enabled_rules": [],
+      "cohort": {
+        "expected_product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+        "input_id": "CHEMBL4247-query-1",
+        "node_id": "or",
+        "ordered_reactants": [
+          "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+          "C1CNC[C@@H](CN2CCOCC2)C1"
+        ],
+        "route_graph_sha256": "177812835d798567d01b22b7b1d557b5eb6dd5113efe301001a996008cc4f44e",
+        "rule_id": "synllama-rule-042",
+        "saved_forward_status": "matched"
+      },
+      "contributing_stage_ids": [
+        13
+      ],
+      "counterfactual_representation": [
+        [
+          "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+          "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1"
+        ],
+        "typed",
+        [
+          "replaced_intermediate",
+          "catalog_leaf"
+        ]
+      ],
+      "deduplicated_assessment_from": null,
+      "reason": null,
+      "replaced_intermediate_enabled_rules": [],
+      "source_slot_kind": [
+        "replaced_intermediate",
+        "catalog_leaf"
+      ],
+      "status": "complete_whole_molecule_boolean_descriptor"
+    },
+    {
+      "catalog_leaf_enabled_rules": [],
+      "cohort": {
+        "expected_product": "COc1cc(Nc2nccc(Cl)n2)cc(Cl)c1OC",
+        "input_id": "CHEMBL4247-query-1",
+        "node_id": "ir",
+        "ordered_reactants": [
+          "Clc1ccnc(Cl)n1",
+          "COc1cc(N)cc(Cl)c1OC"
+        ],
+        "route_graph_sha256": "50e1848a9af20738013eeb4eedd83358d6701921bc843203011a73f5e64304d0",
+        "rule_id": "synllama-rule-042",
+        "saved_forward_status": "mismatched"
+      },
+      "contributing_stage_ids": [
+        18
+      ],
+      "counterfactual_representation": [
+        [
+          "Clc1ccnc(Cl)n1",
+          "COc1cc(N)cc(OC)c1OC"
+        ],
+        "typed",
+        [
+          "catalog_leaf",
+          "catalog_leaf"
+        ]
+      ],
+      "deduplicated_assessment_from": null,
+      "reason": null,
+      "replaced_intermediate_enabled_rules": [],
+      "source_slot_kind": [
+        "catalog_leaf",
+        "catalog_leaf"
+      ],
+      "status": "complete_whole_molecule_boolean_descriptor"
+    },
+    {
+      "catalog_leaf_enabled_rules": [],
+      "cohort": {
+        "expected_product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(Cl)c1OC",
+        "input_id": "CHEMBL4247-query-1",
+        "node_id": "or",
+        "ordered_reactants": [
+          "COc1cc(Nc2nccc(Cl)n2)cc(Cl)c1OC",
+          "C1CNC[C@@H](CN2CCOCC2)C1"
+        ],
+        "route_graph_sha256": "50e1848a9af20738013eeb4eedd83358d6701921bc843203011a73f5e64304d0",
+        "rule_id": "synllama-rule-042",
+        "saved_forward_status": "matched"
+      },
+      "contributing_stage_ids": [
+        19
+      ],
+      "counterfactual_representation": [
+        [
+          "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+          "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1"
+        ],
+        "typed",
+        [
+          "replaced_intermediate",
+          "catalog_leaf"
+        ]
+      ],
+      "deduplicated_assessment_from": null,
+      "reason": null,
+      "replaced_intermediate_enabled_rules": [],
+      "source_slot_kind": [
+        "replaced_intermediate",
+        "catalog_leaf"
+      ],
+      "status": "complete_whole_molecule_boolean_descriptor"
+    },
+    {
+      "catalog_leaf_enabled_rules": [],
+      "cohort": {
+        "expected_product": "CC(C)(C)OC(=O)Nc1nccc(N2CCC[C@H](C(=O)NCc3cccc(N4CCOCC4)c3)C2)n1",
+        "input_id": "CHEMBL4247-query-1",
+        "node_id": "or",
+        "ordered_reactants": [
+          "CC(C)(C)OC(=O)Nc1nccc(Cl)n1",
+          "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1"
+        ],
+        "route_graph_sha256": "1dd42d6994e2f6d5d30bd77e6b4d701b05dab24bc6776fb3e40e59a6993545db",
+        "rule_id": "synllama-rule-042",
+        "saved_forward_status": "matched"
+      },
+      "contributing_stage_ids": [
+        23
+      ],
+      "counterfactual_representation": [
+        [
+          "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+          "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1"
+        ],
+        "typed",
+        [
+          "catalog_leaf",
+          "replaced_intermediate"
+        ]
+      ],
+      "deduplicated_assessment_from": null,
+      "reason": null,
+      "replaced_intermediate_enabled_rules": [],
+      "source_slot_kind": [
+        "catalog_leaf",
+        "replaced_intermediate"
+      ],
+      "status": "complete_whole_molecule_boolean_descriptor"
+    },
+    {
+      "catalog_leaf_enabled_rules": [],
+      "cohort": {
+        "expected_product": "COc1cc(Nc2nccc(N3CCC[C@H](CN4CCOCC4)C3)n2)cc(OC)c1OC",
+        "input_id": "CHEMBL4247-query-1",
+        "node_id": "or",
+        "ordered_reactants": [
+          "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+          "C1CNC[C@@H](CN2CCOCC2)C1"
+        ],
+        "route_graph_sha256": "a736ce772b8a9aea14a403451a1941eaf3858a64553488b135803adf917acd48",
+        "rule_id": "synllama-rule-042",
+        "saved_forward_status": "matched"
+      },
+      "contributing_stage_ids": [
+        19
+      ],
+      "counterfactual_representation": [
+        [
+          "COc1cc(Nc2nccc(Cl)n2)cc(OC)c1OC",
+          "O=C(NCc1cccc(N2CCOCC2)c1)[C@H]1CCCNC1"
+        ],
+        "typed",
+        [
+          "replaced_intermediate",
+          "catalog_leaf"
+        ]
+      ],
+      "deduplicated_assessment_from": 2,
+      "reason": null,
+      "replaced_intermediate_enabled_rules": [],
+      "source_slot_kind": [
+        "replaced_intermediate",
+        "catalog_leaf"
+      ],
+      "status": "complete_whole_molecule_boolean_descriptor"
+    },
+    {
+      "catalog_leaf_enabled_rules": [],
+      "cohort": {
+        "expected_product": "COc1cc(C(N)=O)ccc1Nc1ncc2c(C)ccc(-c3ccccc3S(C)(=O)=O)c2n1",
+        "input_id": "CHEMBL4247-query-2",
+        "node_id": "or",
+        "ordered_reactants": [
+          "Cc1ccc(-c2ccccc2S(C)(=O)=O)c2nc(Cl)ncc12",
+          "COc1cc(C(N)=O)ccc1N"
+        ],
+        "route_graph_sha256": "a0e584eba8504779abfa2c34df1d4ed2f4f9180236103284c1125679c9022519",
+        "rule_id": "synllama-rule-042",
+        "saved_forward_status": "matched"
+      },
+      "contributing_stage_ids": [
+        17
+      ],
+      "counterfactual_representation": [
+        [
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(Cl)ncc12",
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1N"
+        ],
+        "typed",
+        [
+          "replaced_intermediate",
+          "catalog_leaf"
+        ]
+      ],
+      "deduplicated_assessment_from": null,
+      "reason": null,
+      "replaced_intermediate_enabled_rules": [],
+      "source_slot_kind": [
+        "replaced_intermediate",
+        "catalog_leaf"
+      ],
+      "status": "complete_whole_molecule_boolean_descriptor"
+    },
+    {
+      "catalog_leaf_enabled_rules": [
+        [
+          "synllama-rule-077",
+          0
+        ]
+      ],
+      "cohort": {
+        "expected_product": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+        "input_id": "CHEMBL4247-query-2",
+        "node_id": "or",
+        "ordered_reactants": [
+          "COc1cc(CC(=O)O)ccc1Cl",
+          "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1"
+        ],
+        "route_graph_sha256": "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+        "rule_id": "synllama-rule-042",
+        "saved_forward_status": "mismatched"
+      },
+      "contributing_stage_ids": [
+        26
+      ],
+      "counterfactual_representation": [
+        [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+        ],
+        "typed",
+        [
+          "catalog_leaf",
+          "replaced_intermediate"
+        ]
+      ],
+      "deduplicated_assessment_from": null,
+      "reason": null,
+      "replaced_intermediate_enabled_rules": [],
+      "source_slot_kind": [
+        "catalog_leaf",
+        "replaced_intermediate"
+      ],
+      "status": "complete_whole_molecule_boolean_descriptor"
+    },
+    {
+      "catalog_leaf_enabled_rules": [
+        [
+          "synllama-rule-077",
+          0
+        ]
+      ],
+      "cohort": {
+        "expected_product": "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+        "input_id": "CHEMBL4247-query-2",
+        "node_id": "or",
+        "ordered_reactants": [
+          "COc1cc(C(=O)O)ccc1Cl",
+          "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1"
+        ],
+        "route_graph_sha256": "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc",
+        "rule_id": "synllama-rule-042",
+        "saved_forward_status": "mismatched"
+      },
+      "contributing_stage_ids": [
+        26
+      ],
+      "counterfactual_representation": [
+        [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+        ],
+        "typed",
+        [
+          "catalog_leaf",
+          "replaced_intermediate"
+        ]
+      ],
+      "deduplicated_assessment_from": null,
+      "reason": null,
+      "replaced_intermediate_enabled_rules": [],
+      "source_slot_kind": [
+        "catalog_leaf",
+        "replaced_intermediate"
+      ],
+      "status": "complete_whole_molecule_boolean_descriptor"
+    }
+  ],
+  "diagnostic_work": {
+    "parse_attempts": 2160,
+    "role_match_requests": 5451,
+    "rule_inventory_checks": 91
+  },
+  "execution": {
+    "catalog_loads": 1,
+    "input_replays": 2,
+    "model_calls": 0,
+    "new_candidate_selection_controls": 0,
+    "qualification_runs": 0,
+    "retries": 0,
+    "runs": 1,
+    "session_id": 88111,
+    "terminal_exit_code": 0,
+    "three_dimensional_calls": 0
+  },
+  "interpretation": {
+    "cost": "Two normal fixed-budget search replays plus one shared Catalog load are included, not cost-free metadata. Diagnosticmatching adds5451role requests and2160parses; runtimeinventory91template checks. Test and preparatory template-only inventory work are outside these runtime counters; preparatory repetition count was not separately logged. Observer fingerprints are separately recorded for both inputs.",
+    "decision": "Close generic any-new-compatible-template preference; no per-rule mask, source choice, ranking change, candidate retry, model or3D is justified by this result. Production code unchanged; P1 actual4/12, samev21cohort conditionalupper5/12, acceptance>=6/12 still unmet.",
+    "descriptor": "Only a whole-molecule SMARTS compatibility difference is established. Both assignments are tested: an actual pair matches a rule and the one-guide-substituted pair matches neither assignment. No claim about introduced atoms, chemical competition, reaction preference, conditions or causal failure.",
+    "outcome": "Among9distinctpairs (6matched/3mismatched), one matched pair and two mismatched pairs have a positive catalog-leaf delta; unknown0. Matched record1 gains036 compatibility; failedrecords8/9 gain077. Acid-containing matchedcontrolrecord0 has no delta, but the other matchedpositive still violates the prespecified generic-preference criterion.",
+    "portable_scope": "Scalar search counters and original limits are copied here; complete nested work, stage/cache/source-return associations and orientation-wise rule descriptors remain in the hash-bound raw result.",
+    "provenance": "Exact current invocation guide, actual partner, source slots and all generation/nearest return associations were restored without altering search. Both inputs reproduce v21 exact products/routes/order/pending/work/rejections before descriptor matching. Ten source graph/step associations resolve to nine distinct ordered pairs; one duplicate step assessment is reused after all provenance checks."
+  },
+  "protocol": {
+    "alternative_rule_inventory_count": 60,
+    "alternative_rule_inventory_policy": "Every non-intended rule in sorted fixed Rules.rules whose topology_rule_specification returns a supported product cut with exactly two reactant templates, one product, and no template-map issues. Inventory computed and SHA checked independently of saved forward labels and before cohort filtering; no per-input selected-rule filtering or rule-ID exception.",
+    "alternative_rule_inventory_sha256": "b529055394a6d14a8dab100cb1567717f5ab631b5adb1152afb5f497e02da1e3",
+    "bound_sha256": {
+      "catalog": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+      "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "manifest:CHEMBL4247-query-1": "500fda8ed7a5dbc447fe8b9aa1f6ea85c97ac8d389eebf089b919360aa6371cb",
+      "manifest:CHEMBL4247-query-2": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "reactive_site_result": "35ccdaa4779cb3925b370cb454a5aacbc9b4a80cdac72e5e08f0da030bf29395",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "v21_result": "acb6a56b1260a5f4ce4c760f28d6af4869537c5e80619cfd225f9a88b15518fa"
+    },
+    "caps": {
+      "atoms_per_molecule_or_query": 256,
+      "bonds_per_molecule_or_query": 512,
+      "catalog_loads": 1,
+      "diagnostic_cooperative_seconds_total": 300,
+      "generation_apply_observations_per_input": 512,
+      "generation_cooperative_seconds_per_input": 960,
+      "inputs": 2,
+      "nearest_observations_per_input": 2048,
+      "original_search_caps": "exact v21 effective limits, including 8192 retrieval rows/query, 512 combinations/input and 65536 search-accounted FPs/input",
+      "parse_attempts_total": 4096,
+      "role_match_requests_total": 65536,
+      "stage_observations_per_input": 1024
+    },
+    "catalog_manifest_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv.manifest.json",
+    "catalog_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv",
+    "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+    "decision_boundary": "Only catalog_leaf slot rule_enabled_by_slot = any(actual orientation compatible) AND NOT any(nominal-one-guide orientation compatible) can motivate a future catalog-source preference. Replaced-intermediate deltas are separate observations. Any matched catalog-leaf positive, necessary failed/matched unknown provenance or incomplete descriptor, or no failed catalog-leaf positive closes the generic preference lead. Otherwise this is fixed-cohort descriptor evidence only, requiring independent prospective product/gate/model validation; no automatic source exclusion.",
+    "descriptor": "For each fixed source pair and exact stage guide, compare actual source pair against replacing exactly one source by its requested guide while holding the other actual partner fixed. For every common strict mapped binary topology-supported alternative rule in fixed rule-ID order, excluding intended 042, test both source orientations with existential useChirality=True full-molecule role matches. Typed guide and both nominal guide slots must satisfy intended roles or descriptor unknown. This is a Boolean role-pair descriptor, not atom introduction, reactivity, reaction preference, or model support. Require both actual sources and typed guides to satisfy original intended roles. Report per-orientation and any-orientation rule-enabled deltas, all matched controls; if positives also characterize matched controls or provenance unresolved, close preference hypothesis.",
+    "helper_sha256": "a5f3e9d81b13eb610208c61412801a8f3e0a166695811bbbb99192f18750b751",
+    "manifest_sha256": {
+      "CHEMBL4247-query-1": "500fda8ed7a5dbc447fe8b9aa1f6ea85c97ac8d389eebf089b919360aa6371cb",
+      "CHEMBL4247-query-2": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f"
+    },
+    "policy": "Run original v21 ON search once per fixed input with unchanged gates/assets/caps and one shared Catalog. Passive wrappers capture existing stage, nearest and Rules.apply outputs. Require exact v21 eligible routes/order/products, pending graph/order/products, full work projection, first-three, original rejection and observation counts before any descriptor matching. Every full-graph stage and every identical repeated invocation is retained before deduplicating source pairs. Repeated invocations may share one descriptor only when requested guide tuple, guide quality, ordered actual pair, and per-slot catalog-leaf/replaced-intermediate kind all agree; divergent or unresolved contributors, products or labels yield unknown. An ambiguous or unresolved stage/guide yields unknown. No extra generation/forward/model/3D.",
+    "probe_sha256": "0f948d5fceb08bd632a016446392eb8a48dc0dab1851b30f62b831a7d875e7cf",
+    "rdkit_version": "2025.09.6",
+    "review": "root_and_astra_pass_before_execution",
+    "reviewed_draft_sha256": "83d9c5a9137d23921680bd61908e8b19583660f1e837d650fc712fbf7b598921",
+    "rules_path": "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/rules.json",
+    "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+    "schema": "guide-relative-pair-compatibility-v1-plan",
+    "scope": {
+      "cohort": "All reactive-site-v2 q4247q1/q2 step records with intended rule042 and saved matched/mismatched labels: 10 records / 9 distinct exact ordered source pairs. Deduplicate exact ordered pairs after preserving graph associations. No other inputs or selected witnesses.",
+      "inputs": [
+        "CHEMBL4247-query-1",
+        "CHEMBL4247-query-2"
+      ]
+    },
+    "source_commit": "7af618a23dd04f1ce31ee212fa59359f2c4f4fa3",
+    "source_sha256": {
+      "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+      "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26",
+      "chembounce_synthesis/route_first_nh.py": "0905979e52cc5eaa3ff97cb0c9f7a549865c54ec1424307100dfa2c2a5be5bf5",
+      "chembounce_synthesis/routes.py": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+      "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "chembounce_synthesis/workflow.py": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9",
+      "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+    },
+    "status": "frozen_preexecution",
+    "tests_sha256": "70e7f60242d53a036c9885bb383c19a4a5157c58d4ae8f99e1e10cddfd895803"
+  },
+  "replayed_inputs": [
+    {
+      "diagnostic_fingerprint_calls": {
+        "accept_observation": 74,
+        "best_eligible": 11,
+        "hit_reference": 1
+      },
+      "input_id": "CHEMBL4247-query-1",
+      "limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "generation_fingerprint_budget"
+      ],
+      "observed_generation_apply_calls": 96,
+      "observed_nearest_calls": 64,
+      "observed_stage_calls": 49,
+      "original_search_limits": {
+        "beam_width": 12,
+        "building_block_top_k": 2,
+        "fallback_rules": 2,
+        "max_catalog_index_rows": 250000,
+        "max_catalog_row_visits": 262144,
+        "max_catalog_rows_per_query": 8192,
+        "max_combinations": 512,
+        "max_fingerprint_calls": 65536,
+        "max_inner_rules": 4,
+        "max_outer_guides": 8,
+        "max_products": 1024,
+        "max_reverse_outcomes": 4,
+        "max_routes": 64,
+        "max_rule_inspections": 512,
+        "max_rule_scans_per_target": 128,
+        "max_rules": 16,
+        "max_steps": 2,
+        "prefer_continuation_second": true,
+        "prefer_mapped_nh_second": true,
+        "reaction_product_limit": 16,
+        "skip_empty_stage_retrieval": true,
+        "version": "catalog-rule-route-first-v2"
+      },
+      "scalar_work_counts": {
+        "admission_attempted_products": 74,
+        "admission_callback_unattempted_products": 0,
+        "admission_fingerprint_calls": 14,
+        "admission_fingerprint_reserve": 2048,
+        "admission_fp_unassessed_products": 0,
+        "admission_pending_unique_products": 74,
+        "admission_rank_fingerprint_calls": 73,
+        "admission_ranked_products": 74,
+        "admission_reserved_cost_units": 147,
+        "anchor_index_incomplete": false,
+        "anchor_index_match_checks": 238542,
+        "anchor_index_queries": 1,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_posting_metadata_visits": 1792,
+        "anchor_role_checks": 1792,
+        "anchor_role_compatible": 846,
+        "catalog_bucket_rankings": 8636,
+        "catalog_index_buckets": 920,
+        "catalog_index_hashes": 238542,
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_size": 238542,
+        "catalog_row_visits": 128887,
+        "catalog_stereo_atom_bond_charges": 1517,
+        "catalog_stereo_cache_hits": 11,
+        "catalog_stereo_exclusion_samples_truncated": 3,
+        "catalog_stereo_exclusions": 19,
+        "catalog_stereo_perceptions": 55,
+        "combinations": 96,
+        "context_role_checks_total": 91,
+        "depth_one_fingerprint_ceiling": 32768,
+        "distinct_exact_products": 11,
+        "empty_replacement_stage_short_circuits": 0,
+        "empty_stage_short_circuits": 33,
+        "empty_stage_unvisited_role_queries": 27,
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_queries": 0,
+        "fallback_hit_second_replacements": 0,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_samples_omitted": 0,
+        "fallback_hit_second_tanimotos": 0,
+        "fingerprint_calls": 63561,
+        "generation_fingerprint_calls": 63487,
+        "generation_fingerprint_ceiling": 63488,
+        "guide_anchor_checks": 13,
+        "hit_fingerprint_calls": 1,
+        "inner_role_checks": 32,
+        "inner_role_compatible": 30,
+        "inner_role_rejected": 2,
+        "outer_center_metadata_check_limit": 32768,
+        "outer_center_metadata_checks": 2798,
+        "outer_center_metadata_incomplete": 0,
+        "outer_distinct_cut_centers": 11,
+        "outer_plan_candidates": 28,
+        "phase2_plan_trace_truncated": 0,
+        "products_generated": 116,
+        "reaction_pool_caller_only_sites": 4,
+        "reaction_pool_graph_visits": 3041,
+        "reaction_pool_index_applied": 11,
+        "reaction_pool_index_disabled_incomplete": 0,
+        "reaction_pool_index_only_sites": 3,
+        "reaction_pool_indexed_bucket_rankings": 4036,
+        "reaction_pool_indexed_rows_selected": 81920,
+        "reaction_pool_metadata_cache_hits": 1,
+        "reaction_pool_ordinary_bucket_rankings": 4600,
+        "reaction_pool_ordinary_rows_selected": 40960,
+        "reaction_pool_query_pairs": 15,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_role_index_complete": true,
+        "reaction_pool_site_match_requests": 18,
+        "reaction_pool_window_match_requests": 15,
+        "representative_origin_checks": 0,
+        "representative_origin_guide_entries": 0,
+        "representative_origin_known_guides": 0,
+        "representative_origin_score_corrections": 0,
+        "representative_origin_structural_units": 0,
+        "retrieval_guides_normalized": 13,
+        "retrieval_guides_unusable": 0,
+        "reverse_attempts": 37,
+        "reverse_failures": 9,
+        "reverse_fallbacks": 0,
+        "reverse_local_template_compiles": 16,
+        "reverse_nonring_compile_failures": 0,
+        "reverse_nonring_empty": 4,
+        "reverse_nonring_query_calls": 37,
+        "reverse_nonring_query_compiles": 16,
+        "reverse_outcomes": 62,
+        "reverse_partition_checks": 75,
+        "reverse_role_match_checks": 259,
+        "reverse_role_trials": 264,
+        "reverse_role_work": 264,
+        "role_queries": 49,
+        "route_audit_attempts": 16,
+        "routes_verified": 16,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_assessment_cache_hits": 0,
+        "topology_match_requests": 42,
+        "topology_pruned_rules": 21,
+        "topology_spec_graph_visits": 21484,
+        "topology_static_cache_hits": 61,
+        "topology_static_checks": 18,
+        "total_fingerprint_calls": 63575
+      },
+      "status": "exact_v21_parity"
+    },
+    {
+      "diagnostic_fingerprint_calls": {
+        "accept_observation": 60,
+        "best_eligible": 4,
+        "hit_reference": 1
+      },
+      "input_id": "CHEMBL4247-query-2",
+      "limits_reached": [
+        "max_outer_guides",
+        "depth_one_fingerprint_budget",
+        "max_rule_inspections",
+        "max_catalog_row_visits"
+      ],
+      "observed_generation_apply_calls": 124,
+      "observed_nearest_calls": 92,
+      "observed_stage_calls": 65,
+      "original_search_limits": {
+        "beam_width": 12,
+        "building_block_top_k": 2,
+        "fallback_rules": 2,
+        "max_catalog_index_rows": 250000,
+        "max_catalog_row_visits": 262144,
+        "max_catalog_rows_per_query": 8192,
+        "max_combinations": 512,
+        "max_fingerprint_calls": 65536,
+        "max_inner_rules": 4,
+        "max_outer_guides": 8,
+        "max_products": 1024,
+        "max_reverse_outcomes": 4,
+        "max_routes": 64,
+        "max_rule_inspections": 512,
+        "max_rule_scans_per_target": 128,
+        "max_rules": 16,
+        "max_steps": 2,
+        "prefer_continuation_second": true,
+        "prefer_mapped_nh_second": true,
+        "reaction_product_limit": 16,
+        "skip_empty_stage_retrieval": true,
+        "version": "catalog-rule-route-first-v2"
+      },
+      "scalar_work_counts": {
+        "admission_attempted_products": 60,
+        "admission_callback_unattempted_products": 0,
+        "admission_fingerprint_calls": 21,
+        "admission_fingerprint_reserve": 2048,
+        "admission_fp_unassessed_products": 0,
+        "admission_pending_unique_products": 60,
+        "admission_rank_fingerprint_calls": 60,
+        "admission_ranked_products": 60,
+        "admission_reserved_cost_units": 120,
+        "anchor_index_incomplete": false,
+        "anchor_index_match_checks": 0,
+        "anchor_index_queries": 0,
+        "anchor_index_queries_unindexed": 0,
+        "anchor_posting_metadata_visits": 0,
+        "anchor_role_checks": 0,
+        "anchor_role_compatible": 0,
+        "catalog_bucket_rankings": 19806,
+        "catalog_index_buckets": 920,
+        "catalog_index_hashes": 238542,
+        "catalog_index_rows_scanned": 238542,
+        "catalog_index_size": 238542,
+        "catalog_row_visits": 262144,
+        "catalog_stereo_atom_bond_charges": 1477,
+        "catalog_stereo_cache_hits": 9,
+        "catalog_stereo_exclusion_samples_truncated": 0,
+        "catalog_stereo_exclusions": 2,
+        "catalog_stereo_perceptions": 57,
+        "combinations": 124,
+        "context_role_checks_total": 23,
+        "depth_one_fingerprint_ceiling": 32768,
+        "distinct_exact_products": 4,
+        "empty_replacement_stage_short_circuits": 0,
+        "empty_stage_short_circuits": 40,
+        "empty_stage_unvisited_role_queries": 30,
+        "fallback_hit_second_limit": 65536,
+        "fallback_hit_second_queries": 0,
+        "fallback_hit_second_replacements": 0,
+        "fallback_hit_second_sample_limit": 16,
+        "fallback_hit_second_samples_omitted": 0,
+        "fallback_hit_second_tanimotos": 0,
+        "fingerprint_calls": 48860,
+        "generation_fingerprint_calls": 48799,
+        "generation_fingerprint_ceiling": 63488,
+        "guide_anchor_checks": 0,
+        "hit_fingerprint_calls": 1,
+        "inner_role_checks": 64,
+        "inner_role_compatible": 28,
+        "inner_role_rejected": 36,
+        "outer_center_metadata_check_limit": 32768,
+        "outer_center_metadata_checks": 2977,
+        "outer_center_metadata_incomplete": 0,
+        "outer_distinct_cut_centers": 12,
+        "outer_plan_candidates": 32,
+        "phase2_plan_trace_truncated": 0,
+        "products_generated": 128,
+        "reaction_pool_caller_only_sites": 21,
+        "reaction_pool_graph_visits": 13593,
+        "reaction_pool_index_applied": 12,
+        "reaction_pool_index_disabled_incomplete": 0,
+        "reaction_pool_index_only_sites": 24,
+        "reaction_pool_indexed_bucket_rankings": 3246,
+        "reaction_pool_indexed_rows_selected": 81920,
+        "reaction_pool_metadata_cache_hits": 8,
+        "reaction_pool_ordinary_bucket_rankings": 16560,
+        "reaction_pool_ordinary_rows_selected": 147456,
+        "reaction_pool_query_pairs": 56,
+        "reaction_pool_role_index_checks": 477084,
+        "reaction_pool_role_index_complete": true,
+        "reaction_pool_site_match_requests": 153,
+        "reaction_pool_window_match_requests": 56,
+        "representative_origin_checks": 0,
+        "representative_origin_guide_entries": 0,
+        "representative_origin_known_guides": 0,
+        "representative_origin_score_corrections": 0,
+        "representative_origin_structural_units": 0,
+        "retrieval_guides_normalized": 17,
+        "retrieval_guides_unusable": 0,
+        "reverse_attempts": 43,
+        "reverse_failures": 5,
+        "reverse_fallbacks": 0,
+        "reverse_local_template_compiles": 16,
+        "reverse_nonring_compile_failures": 0,
+        "reverse_nonring_empty": 1,
+        "reverse_nonring_query_calls": 42,
+        "reverse_nonring_query_compiles": 15,
+        "reverse_outcomes": 81,
+        "reverse_partition_checks": 88,
+        "reverse_role_match_checks": 266,
+        "reverse_role_trials": 271,
+        "reverse_role_work": 271,
+        "role_queries": 70,
+        "route_audit_attempts": 6,
+        "routes_verified": 6,
+        "rule_inspections": 512,
+        "rule_template_checks": 91,
+        "topology_assessment_cache_hits": 0,
+        "topology_match_requests": 33,
+        "topology_pruned_rules": 6,
+        "topology_spec_graph_visits": 11068,
+        "topology_static_cache_hits": 60,
+        "topology_static_checks": 16,
+        "total_fingerprint_calls": 48881
+      },
+      "status": "exact_v21_parity"
+    }
+  ],
+  "review": {
+    "lint_and_compile": "Ruff and py_compile passed",
+    "outcome": "root and Astra PASS on exact parity, all10associations/9pairs, fixed60rule inventory, costs and immutable bindings",
+    "protocol": "root and Astra PASS before freeze; all reported preexecution defects repaired before real replay/matching",
+    "synthetic_tests_passed": 7
+  },
+  "schema": "guide-relative-pair-compatibility-v1-receipt",
+  "source_commit": "7af618a23dd04f1ce31ee212fa59359f2c4f4fa3",
+  "source_sha256": {
+    "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+    "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+    "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+    "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+    "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+    "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+    "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+    "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26",
+    "chembounce_synthesis/route_first_nh.py": "0905979e52cc5eaa3ff97cb0c9f7a549865c54ec1424307100dfa2c2a5be5bf5",
+    "chembounce_synthesis/routes.py": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+    "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+    "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+    "chembounce_synthesis/workflow.py": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9",
+    "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+  },
+  "status": "complete_generic_preference_hypothesis_closed",
+  "summary": {
+    "generic_preference_status": "inconclusive_or_not_discriminative",
+    "matched_catalog_leaf_rule_enabled": [
+      [
+        1,
+        "synllama-rule-036",
+        0
+      ]
+    ],
+    "mismatched_catalog_leaf_rule_enabled": [
+      [
+        8,
+        "synllama-rule-077",
+        0
+      ],
+      [
+        9,
+        "synllama-rule-077",
+        0
+      ]
+    ],
+    "replaced_intermediate_deltas_are_not_catalog_source_evidence": true,
+    "unknown_record_indices": []
+  }
+}
