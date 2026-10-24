@@ -1,0 +1,198 @@
+{
+  "artifacts": {
+    "marker.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/departing-site-marker-set-control-v1/marker.py",
+      "sha256": "31094037b93c241c8d518ecafead2511bd2bc9e9967112051b83e3ac66361de7"
+    },
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/departing-site-marker-set-control-v1/plan.json",
+      "sha256": "5f9e2a2ef91514295663d4ae9bd5ace03abca220960ad658f296e61a5561d24f"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/departing-site-marker-set-control-v1/probe.py",
+      "sha256": "89d7f38741c21d9bf7ee4af7264ec815f24e1a1613aeabb60075cd268b0ce6cf"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/departing-site-marker-set-control-v1/result.json",
+      "sha256": "6de490cc139345472617dcb97b26e88b28489ab59c52a992b564258b4ffcdd99"
+    },
+    "run.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/departing-site-marker-set-control-v1/run.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "test_marker_set.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/departing-site-marker-set-control-v1/test_marker_set.py",
+      "sha256": "b173681088b201c0919ca4bc0fdf4156cd78879b0b4e5f225bf88ce0231f759c"
+    }
+  },
+  "date": "2026-10-24",
+  "execution": {
+    "attempts": 1,
+    "catalog_loads": 0,
+    "entry_exit_bindings_equal": true,
+    "exit_code": 0,
+    "forward_product_generation": 0,
+    "model_calls": 0,
+    "saved_pool_rankings": 0,
+    "three_d_calls": 0
+  },
+  "interpretation": {
+    "finding": "One actual tagged reverse outcome gives the same projected guide for Cl/Br representatives while preserving parent-derived spectator chlorine. Two source sites and views are retained; the maximum score is 0.25.",
+    "limits": "Representation consistency on one synthetic example only. No reaction-site selection, catalog-ranking improvement, selectivity, supported route, or physical synthesis established. Outcome-informed development heuristic, not a correctness fix.",
+    "next": "Freeze a separate bounded general policy with exact raw provenance and context cache keys, all-view cost accounting inside existing caps, unknown-to-legacy fallback, first/anchor/top2 preservation and multiplicity-bias controls before catalog scoring."
+  },
+  "p1": {
+    "baseline_supported_inputs": 5,
+    "complete": false,
+    "current_cohort_saved_step_conditional_upper_bound": 5,
+    "develop_merge": false,
+    "development_panel_inputs": 12,
+    "latest_actual_supported_inputs": 4,
+    "required_supported_inputs": 6
+  },
+  "protocol": {
+    "bound_sha256": {
+      "common": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "helper": "31094037b93c241c8d518ecafead2511bd2bc9e9967112051b83e3ac66361de7",
+      "probe": "89d7f38741c21d9bf7ee4af7264ec815f24e1a1613aeabb60075cd268b0ce6cf",
+      "reactions": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "route_audit": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "route_first": "f6d8f9d2557d7ea411e73064ff01f00f21f2273f87287d67e61780fd4f3ac835",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "tests": "b173681088b201c0919ca4bc0fdf4156cd78879b0b4e5f225bf88ce0231f759c"
+    },
+    "caps": {
+      "atoms_per_molecule": 256,
+      "bonds_per_molecule": 512,
+      "cooperative_seconds": 10,
+      "explicit_full_chiral_match_requests": 20,
+      "match_sentinel": 65,
+      "matches_per_request": 64,
+      "new_fingerprints": 20,
+      "parses": 20,
+      "prepaid_structural_units": 8192,
+      "raw_reverse_outcomes": 4,
+      "tagged_reverse_attempts": 1,
+      "tanimoto_attempts": 20,
+      "typed_trials": 8
+    },
+    "controls": "Unit preflight covers Cl/Br marker invariance, spectator Cl preservation, asymmetric two-site views and fixed maximum, symmetric two-site/one-view site-disconnect counterexample, 65 sentinel unknown, unsafe second view invalidates whole source, nonterminal template, adjacent stereo, charge/isotope and budget rejection, unchanged original molecules. The actual one-call reverse provenance is intentionally deferred until frozen execution. An element-changing mapped endpoint is rejected, and zero-score budget fails before a Tanimoto call.",
+    "execution": "Frozen for one synthetic control run. No saved-pool ranking or source selection. Preserve first result, partial counters and entry/exit bindings; native RDKit calls use a cooperative deadline.",
+    "fixed_rule_id": "synllama-rule-036",
+    "fixed_synthetic_multisite_source": "Clc1cc(OC)ccc1Cl",
+    "fixed_synthetic_parent": "Clc1ccc(C=CC)cc1",
+    "freeze_source_commit": "e0709e0",
+    "future_integration_boundary": "With prefer_continuation_second enabled, _reverse already snapshots phase2 raw alternatives in _continuation_raw under (rule.id, inner_target, fallback) and guide; an exact inner rule/target/guide/source-slot context could bind that registry without another reverse call. _stage/_nearest currently pass continuation_context only for its proven outer-role slot; a separate exact score-context argument would be needed for other slots. The ordinary _nearest_cache key (target,role,fallback) and cached top2 cannot certify a context-specific score. Keep base pair immutable and fallback if a complete raw registry/ranked pool predates the context; never refill it. Any prospective pool control must preflight full per-query site-view and fingerprint cost against the existing generation fingerprint ceiling/reserve, charge all role matches/copy work under explicit caps, and return the exact legacy pair on uncertainty. Preserve first source, anchor reservation, top2 width and every final gate.",
+    "interpretation": "This is an outcome-informed heuristic diagnostic, not a correctness fix. A maximum across complete views may favor a departure site different from the one that reacts; raw guide origin does not establish candidate atom lineage or reaction selectivity. The prior unique-site draft stays unchanged/unexecuted. The saved R3 two-Cl ranked row has no archived raw origin in that observer; no source rank, route product, model outcome or P1 metric follows.",
+    "parse_counting": "At most20 total explicit parse attempts plus conservative reservations of one internal canonical SMILES parse per typed trial. The receipt reports explicit and reserved counts separately; a reserved parse may not occur when a typed trial rejects early.",
+    "policy": "The unchanged rule036 reactant/product maps prove one neutral nonisotopic terminal halogen template atom per slot, absent from product and single-bonded to the retained mapped cross-bond endpoint. A tagged raw reverse outcome proves the guide representative has no parent origin; every bounded raw alternative must agree. A source is assessed using ALL complete chiral role embeddings (65th match means unknown), with distinct departure/attachment site pairs retained. Every site is replaced with dummy atomic number0 in an isolated copy, sanitized and all other atom/bond fields checked; any unsafe site, truncation, budget or deadline makes the WHOLE source unknown. Fingerprints are deduplicated by exact canonical projected view. A single fixed maximum projected-source/independently-proven projected-guide Tanimoto is reported as an optimistic score; no site is chosen or injected into a reaction. Both mapped cross-bond endpoint elements must be fixed and equal in the reactant and product template query; ambiguous/broadened or element-changing predicates are unknown. Every projected-view Tanimoto is precharged under a 20-attempt cap and the deadline is rechecked after each score.",
+    "preflight_tests": ".venv/bin/python -m pytest -q benchmark-results/route-first-development-20261023-v2/departing-site-marker-set-control-v1/test_marker_set.py: 5 passed; Ruff clean",
+    "probe_sha256": "89d7f38741c21d9bf7ee4af7264ec815f24e1a1613aeabb60075cd268b0ce6cf",
+    "rdkit_version": "2025.09.6",
+    "review": "Root and Astra preexecution PASS on revised helper/probe/tests; synthetic-only scope, no saved-pool ranking or adoption.",
+    "schema": "departing-site-marker-set-control-plan-v1",
+    "scope": "Synthetic-only actual rule036 TEMPLATE metadata and one fixed tagged reverse RunReactants call on the fixed synthetic aryl-vinyl parent with the existing nonring query restriction, maxProducts4. Two typed representative trials (Cl,Br) per returned raw outcome use unchanged typed_reverse_hint checks; no alternate parent or retry. One synthetic multisite source is projected. No saved drug, candidate pool, Catalog, forward Rules.apply, final gates, model or 3D. Typed template trials, their bounded full-role checks and one conservative internal canonical-parse reservation per trial are reported separately from helper structural units and projected-view serialization attempts; none is described as complete CPU accounting.",
+    "source_commit": "74755a37cf20861021af6f290496109c12d88a2f",
+    "status": "frozen_preexecution"
+  },
+  "result": {
+    "entry_sha256": {
+      "common": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "helper": "31094037b93c241c8d518ecafead2511bd2bc9e9967112051b83e3ac66361de7",
+      "plan": "5f9e2a2ef91514295663d4ae9bd5ace03abca220960ad658f296e61a5561d24f",
+      "probe": "89d7f38741c21d9bf7ee4af7264ec815f24e1a1613aeabb60075cd268b0ce6cf",
+      "reactions": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "route_audit": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "route_first": "f6d8f9d2557d7ea411e73064ff01f00f21f2273f87287d67e61780fd4f3ac835",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "tests": "b173681088b201c0919ca4bc0fdf4156cd78879b0b4e5f225bf88ce0231f759c"
+    },
+    "exit_sha256": {
+      "common": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "helper": "31094037b93c241c8d518ecafead2511bd2bc9e9967112051b83e3ac66361de7",
+      "plan": "5f9e2a2ef91514295663d4ae9bd5ace03abca220960ad658f296e61a5561d24f",
+      "probe": "89d7f38741c21d9bf7ee4af7264ec815f24e1a1613aeabb60075cd268b0ce6cf",
+      "reactions": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "route_audit": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "route_first": "f6d8f9d2557d7ea411e73064ff01f00f21f2273f87287d67e61780fd4f3ac835",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "tests": "b173681088b201c0919ca4bc0fdf4156cd78879b0b4e5f225bf88ce0231f759c"
+    },
+    "fixed_parent": "Clc1ccc(C=CC)cc1",
+    "fixed_source": "Clc1cc(OC)ccc1Cl",
+    "raw_alternatives": [
+      {
+        "raw_outcome_index": 0,
+        "representatives": {
+          "Br": {
+            "parent_derived_spectator_cl": true,
+            "projected": "*c1ccc(Cl)cc1",
+            "smiles": "Clc1ccc(Br)cc1"
+          },
+          "Cl": {
+            "parent_derived_spectator_cl": true,
+            "projected": "*c1ccc(Cl)cc1",
+            "smiles": "Clc1ccc(Cl)cc1"
+          }
+        }
+      }
+    ],
+    "rdkit_version": "2025.09.6",
+    "schema": "departing-site-marker-set-control-result-v1",
+    "scope": "One tagged reverse call and bounded projections of synthetic structures only",
+    "source_view_set": {
+      "all_departing_sites": [
+        {
+          "attachment_atom_index": 1,
+          "departing_atom_index": 0,
+          "projected_smiles": "*c1cc(OC)ccc1Cl"
+        },
+        {
+          "attachment_atom_index": 8,
+          "departing_atom_index": 9,
+          "projected_smiles": "*c1ccc(OC)cc1Cl"
+        }
+      ],
+      "optimistic_max_tanimoto": 0.25,
+      "site_assignment_proven": false,
+      "unique_projected_views": [
+        "*c1cc(OC)ccc1Cl",
+        "*c1ccc(OC)cc1Cl"
+      ]
+    },
+    "status": "complete_synthetic_only",
+    "template_departures": [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "work": {
+      "explicit_parses": 2,
+      "full_chiral_match_requests": 5,
+      "internal_canonical_parse_reservations": 2,
+      "new_fingerprint_attempts": 3,
+      "parse_attempts_or_reservations": 4,
+      "partition_checks": 1,
+      "projected_serialization_attempts": 4,
+      "raw_outcomes_observed": 1,
+      "reverse_attempts": 1,
+      "structural_units": 753,
+      "tagged_reverse_compiles": 1,
+      "tanimoto_attempts": 2,
+      "template_checks": 1,
+      "typed_role_match_requests": 2,
+      "typed_trials": 2
+    }
+  },
+  "review": {
+    "outcome": "Root and Astra PASS for synthetic-only interpretation",
+    "preexecution": "Root and Astra PASS on revised draft"
+  },
+  "schema": "departing-site-marker-set-control-portable-v1",
+  "status": "complete_synthetic_only"
+}
