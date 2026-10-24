@@ -1,0 +1,921 @@
+{
+  "artifacts": {
+    "execution.log": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-same-partner-control-v1/execution.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "identity_scan.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-same-partner-control-v1/identity_scan.py",
+      "sha256": "dccf2a1068f52fbce97b39acccb4d6d3f0df9c8a0310e0f75cf28351f6338526"
+    },
+    "plan.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-same-partner-control-v1/plan.json",
+      "sha256": "5392ce824213af1d46d63a9309bc708e1232bef0ad109533cd68bae808e2dfa4"
+    },
+    "probe.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-same-partner-control-v1/probe.py",
+      "sha256": "45ca5bb63c2c3a643fbef404b118abe7eedb194ba8c066f1695e6b9baa8b8c10"
+    },
+    "result.json": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-same-partner-control-v1/result.json",
+      "sha256": "f51c474b46f893b9c621aad1ebebfb060effa59c9608abbfbd80f5e4f6625922"
+    },
+    "route_copy.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-same-partner-control-v1/route_copy.py",
+      "sha256": "108f9831a522fa6342e4975726dcc30449fff51701ec5960f8ce76906c6c77e3"
+    },
+    "test_control.py": {
+      "path": "benchmark-results/route-first-development-20261023-v2/current-pool-same-partner-control-v1/test_control.py",
+      "sha256": "8bbe36406195d11eb4f830d49a1bbbb3681dd37939bb012959149748062eb137"
+    }
+  },
+  "date": "2026-10-24",
+  "execution": {
+    "catalog_tsv_identity_passes": 1,
+    "exit_code": 0,
+    "forward_model_calls": 0,
+    "full_catalog_loads": 0,
+    "new_ordered_pair_generation_calls": 1,
+    "old_source_generation_calls": 0,
+    "retries": 0,
+    "runs": 1,
+    "session_id": 12739,
+    "three_dimensional_calls": 0
+  },
+  "interpretation": {
+    "conclusion": "Close this fixed source-selection variant; no next-ranked source, ester adjustment, gate relaxation, forward model or 3D follow-up.",
+    "new_product": "One untruncated generated product; input bit Tanimoto0.3490566037735849 below0.35 and polar reference capacity7/10=0.70 below0.75. All remaining original components passed.",
+    "old_controls": "Two exact R3-stored products/graphs reused; sequential and independent gates freshly rechecked and passed. No old-source reaction generation in this control, no transfer from different-regioisomer historical vectors.",
+    "scope": "Failure of the original design gates is not an experimental synthesis failure or proof that the catalog has no suitable alternative."
+  },
+  "p1": {
+    "acceptance_minimum_supported_inputs": 6,
+    "inputs": 12,
+    "latest_full_actual_supported_inputs": 4,
+    "native_baseline_supported_inputs": 5,
+    "production_source_selection_changed": false,
+    "status": "incomplete",
+    "v21_saved_step_conditional_possible_inputs": 5
+  },
+  "preexecution_fixes": "Corrected self-referential plan hash-map comparison and effective-config field assertions; required complete passing old vectors, kept unknown-only new assessments inconclusive, preserved full conditional audits and polar internal counts before first execution.",
+  "protocol": {
+    "bound_sha256": {
+      "catalog": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+      "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "gate_helper": "22edb55082d15c691e086b8e6a5d169fd8ef184a0b8cdbb43e9fa452c7039825",
+      "identity_scan": "dccf2a1068f52fbce97b39acccb4d6d3f0df9c8a0310e0f75cf28351f6338526",
+      "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "probe": "45ca5bb63c2c3a643fbef404b118abe7eedb194ba8c066f1695e6b9baa8b8c10",
+      "r3_result": "9f8c171c0f18d9ecd095f54634c46e72e3c82f7cd9e44d64a0da9e2ecc63a942",
+      "route_copy": "108f9831a522fa6342e4975726dcc30449fff51701ec5960f8ce76906c6c77e3",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "tests": "8bbe36406195d11eb4f830d49a1bbbb3681dd37939bb012959149748062eb137",
+      "v21_result": "acb6a56b1260a5f4ce4c760f28d6af4869537c5e80619cfd225f9a88b15518fa"
+    },
+    "caps": {
+      "catalog_identity_max_rows": 262144,
+      "deadline_seconds": 960,
+      "generation_calls": 1,
+      "generation_product_limit": 16,
+      "generation_raw_tuple_sentinel_per_call": 17,
+      "independent_atoms_per_molecule": 256,
+      "independent_bonds_per_molecule": 512,
+      "independent_fingerprints": 18,
+      "independent_vectors": 18,
+      "old_stored_gate_vectors": 2,
+      "returned_product_gate_vectors": 16,
+      "strict_audits": 16,
+      "strict_product_limit": 64,
+      "total_diagnostic_fingerprint_calls": 37,
+      "total_polar_requests": 36
+    },
+    "catalog_manifest_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv.manifest.json",
+    "catalog_path": "/data2/home/jyryu/chembounce/benchmark-results/qualified-development-20261016/catalog-migration-figshare53625473-lineage-v2-attempt1/catalog.tsv",
+    "effective_minimum_scores": {
+      "hit_pharmacophore": 0.5,
+      "hit_shape": 0.7,
+      "hit_tanimoto": 0.35
+    },
+    "expected_catalog_records": 238542,
+    "fixed_inner_ancestor": [
+      {
+        "building_block_id": "structure-sha256:316e80d38513733768c3561eb630f2593faf7ba89b540e4d844c0d4c813c2e12",
+        "id": "ib0"
+      },
+      {
+        "building_block_id": "structure-sha256:e27f3dd1ad7b0f8b038cd547937293eda206710bfb4cf179453f4ea05245ac93",
+        "id": "ib1"
+      },
+      {
+        "id": "ir",
+        "product": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+        "reactants": [
+          "ib0",
+          "ib1"
+        ],
+        "rule_id": "synllama-rule-036"
+      }
+    ],
+    "fixed_new_source": {
+      "group_rank": 5,
+      "id": "structure-sha256:3d4e5913015e997e924d19282b67bb59fdb07d40a35a3f6a268e1cc7874c7c30",
+      "smiles": "CCOC(=O)Cc1ccc(Cl)c(OC)c1"
+    },
+    "fixed_partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+    "input_id": "CHEMBL4247-query-2",
+    "interpretation": "A truncated generation call retains up to16 observed products and an unknown unreturned tail; zero gate-passing retained products under truncation is inconclusive, not absence. Only a new product passing original gates and exact strict whole-route audit warrants a separately reviewed forward request. This development-selected source is not an actual panel gain or policy adoption. Definite closure additionally requires a fully assessed original independent vector with at least one failed gate; any size/error/unknown vector or incomplete route audit is inconclusive. A passing sequential gate with a disagreeing vector cannot advance to forward review.",
+    "old_graph_associations": [
+      {
+        "contributor": [
+          {
+            "apply_id": 93,
+            "guide": [
+              "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+              "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+            ],
+            "guide_quality": "typed",
+            "source_evidence": [
+              {
+                "building_block_id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+                "kind": "catalog_leaf",
+                "nearest_call_id": 42,
+                "node_id": "ob0",
+                "slot": 0
+              },
+              {
+                "kind": "replaced_intermediate",
+                "node_id": "ir",
+                "slot": 1
+              }
+            ],
+            "source_slot_kind": [
+              "catalog_leaf",
+              "replaced_intermediate"
+            ],
+            "stage_id": 26
+          }
+        ],
+        "disjoint_alternative_rule": "synllama-rule-077",
+        "graph": "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+        ],
+        "guide_quality": "typed",
+        "node_id": "or",
+        "old_source": "COc1cc(CC(=O)O)ccc1Cl",
+        "old_source_id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+        "partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+        "rule_id": "synllama-rule-042",
+        "source_slot": 0
+      },
+      {
+        "contributor": [
+          {
+            "apply_id": 97,
+            "guide": [
+              "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+              "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+            ],
+            "guide_quality": "typed",
+            "source_evidence": [
+              {
+                "building_block_id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+                "kind": "catalog_leaf",
+                "nearest_call_id": 42,
+                "node_id": "ob0",
+                "slot": 0
+              },
+              {
+                "kind": "replaced_intermediate",
+                "node_id": "ir",
+                "slot": 1
+              }
+            ],
+            "source_slot_kind": [
+              "catalog_leaf",
+              "replaced_intermediate"
+            ],
+            "stage_id": 26
+          }
+        ],
+        "disjoint_alternative_rule": "synllama-rule-077",
+        "graph": "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc",
+        "guide": [
+          "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+          "Cc1cc(-c2ccccc2N(C)S(C)(=O)=O)n2nc(N)ncc12"
+        ],
+        "guide_quality": "typed",
+        "node_id": "or",
+        "old_source": "COc1cc(C(=O)O)ccc1Cl",
+        "old_source_id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+        "partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+        "rule_id": "synllama-rule-042",
+        "source_slot": 0
+      }
+    ],
+    "old_products": [
+      "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+      "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12"
+    ],
+    "outer_rule_id": "synllama-rule-042",
+    "purpose": "One source fixed before generation by R3; one ordered outer Rules.apply at product_limit16 with the exact same previously generated inner partner. Evaluate all returned products with unchanged sequential original admission and independent original gate vectors. Strict verify/audit only gate-passing full routes. No forward model or 3D.",
+    "rdkit_version": "2025.09.6",
+    "review": "root_and_astra_pass_before_execution",
+    "reviewed_draft_sha256": "cbc7530def2ce4c40e00677fba0f60b3452d5ad3af001f43dcfdcdea3076e15a",
+    "rules_path": "/data2/home/jyryu/chembounce/.chembounce-data-synthesis/rules.json",
+    "runtime_commit": "d99b962694f7a0c228b09ffbbc9002e8476fab09",
+    "runtime_nearest_key": [
+      "COc1cc(C2CCN(CC(N)=O)CC2)ccc1Cl",
+      "[Cl,Br,I][c&$(c1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):1]",
+      false
+    ],
+    "schema": "current-pool-same-partner-control-v1",
+    "scope": "Two old full graphs/products are linked exactly to R3 current-v21 replay and v21 eligibility; do not regenerate old source products. Fresh gate+independent vectors on those two stored old products validate the reviewed gate helper at this exact regio partner, with separate costs. Neither old product has an independently archived exact vector from the different-regio ring-core control. One new catalog source fixed by R3; no later candidate or score walk. A single bounded TSV identity pass confirms the selected ID, exact canonical SMILES and availability before the sole new reaction; its rows/attempt are charged separately. Full Catalog construction is conditional on a new gate-passing product.",
+    "source_sha256": {
+      "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+      "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26",
+      "chembounce_synthesis/route_first_nh.py": "0905979e52cc5eaa3ff97cb0c9f7a549865c54ec1424307100dfa2c2a5be5bf5",
+      "chembounce_synthesis/routes.py": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+      "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "chembounce_synthesis/workflow.py": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9",
+      "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+    },
+    "status": "frozen_preexecution"
+  },
+  "result": {
+    "catalog_identity": {
+      "availability": "catalogued",
+      "id": "structure-sha256:3d4e5913015e997e924d19282b67bb59fdb07d40a35a3f6a268e1cc7874c7c30",
+      "rows_scanned": 238542,
+      "smiles": "CCOC(=O)Cc1ccc(Cl)c(OC)c1"
+    },
+    "decision": "fixed_source_variant_closed_no_new_strict_route",
+    "entry_sha256": {
+      "catalog": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+      "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "gate_helper": "22edb55082d15c691e086b8e6a5d169fd8ef184a0b8cdbb43e9fa452c7039825",
+      "identity_scan": "dccf2a1068f52fbce97b39acccb4d6d3f0df9c8a0310e0f75cf28351f6338526",
+      "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "plan": "5392ce824213af1d46d63a9309bc708e1232bef0ad109533cd68bae808e2dfa4",
+      "probe": "45ca5bb63c2c3a643fbef404b118abe7eedb194ba8c066f1695e6b9baa8b8c10",
+      "r3_result": "9f8c171c0f18d9ecd095f54634c46e72e3c82f7cd9e44d64a0da9e2ecc63a942",
+      "route_copy": "108f9831a522fa6342e4975726dcc30449fff51701ec5960f8ce76906c6c77e3",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "tests": "8bbe36406195d11eb4f830d49a1bbbb3681dd37939bb012959149748062eb137",
+      "v21_result": "acb6a56b1260a5f4ce4c760f28d6af4869537c5e80619cfd225f9a88b15518fa"
+    },
+    "exit_sha256": {
+      "catalog": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+      "catalog_manifest": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+      "config": "74654f13afa7ab67e3ece19315ce5dd08a143ce64a1cfcb9180c171f426855c2",
+      "gate_helper": "22edb55082d15c691e086b8e6a5d169fd8ef184a0b8cdbb43e9fa452c7039825",
+      "identity_scan": "dccf2a1068f52fbce97b39acccb4d6d3f0df9c8a0310e0f75cf28351f6338526",
+      "manifest": "78128bd57e83c3dfc1b5ac94fa48641504e672eee0b09827bbde7c416b2bbf6f",
+      "panel": "3dc41136cc5a528b1002febad3210bcd2ab9bcd66d6e4b083c207658f4d8cea5",
+      "plan": "5392ce824213af1d46d63a9309bc708e1232bef0ad109533cd68bae808e2dfa4",
+      "probe": "45ca5bb63c2c3a643fbef404b118abe7eedb194ba8c066f1695e6b9baa8b8c10",
+      "r3_result": "9f8c171c0f18d9ecd095f54634c46e72e3c82f7cd9e44d64a0da9e2ecc63a942",
+      "route_copy": "108f9831a522fa6342e4975726dcc30449fff51701ec5960f8ce76906c6c77e3",
+      "rules": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+      "tests": "8bbe36406195d11eb4f830d49a1bbbb3681dd37939bb012959149748062eb137",
+      "v21_result": "acb6a56b1260a5f4ce4c760f28d6af4869537c5e80619cfd225f9a88b15518fa"
+    },
+    "fixed_partner": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+    "fixed_source": {
+      "group_rank": 5,
+      "id": "structure-sha256:3d4e5913015e997e924d19282b67bb59fdb07d40a35a3f6a268e1cc7874c7c30",
+      "smiles": "CCOC(=O)Cc1ccc(Cl)c(OC)c1"
+    },
+    "new_generation": {
+      "candidates": [
+        {
+          "audit": null,
+          "audit_detail": null,
+          "independent_vector": {
+            "status": "complete_vector",
+            "vector": {
+              "anchor": {
+                "status": "passed",
+                "value": null
+              },
+              "hit_bit_tanimoto": {
+                "margin": -0.0009433962264150941,
+                "minimum": 0.35,
+                "score": 0.3490566037735849,
+                "status": "failed"
+              },
+              "polar_capacity": {
+                "authoritative_gate_blocked": true,
+                "missing_feature_families": {
+                  "Donor": 2,
+                  "PosIonizable": 1
+                },
+                "status": "failed",
+                "value": {
+                  "candidate_counts": {
+                    "Acceptor": 7,
+                    "Donor": 1
+                  },
+                  "constraint_policy_sha256": "7042c736df62f4bc7a116a37dbae698a9860dc85aa4a5f7aac2c78fbc6b2b4da",
+                  "denominator": 10,
+                  "eligible": false,
+                  "minimum_polar_reference_recall": 0.75,
+                  "numerator": 7,
+                  "product": "CCOC(=O)Cc1ccc(Nc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)c(OC)c1",
+                  "reason": "polar_reference_capacity_below_minimum",
+                  "recall_upper_bound": 0.7,
+                  "reference_counts": {
+                    "Acceptor": 6,
+                    "Donor": 3,
+                    "PosIonizable": 1
+                  },
+                  "status": "capacity_rejected"
+                }
+              },
+              "properties": {
+                "reasons": [],
+                "status": "passed"
+              },
+              "scaffold_and_core": {
+                "status": "passed",
+                "value": null
+              },
+              "specified_stereo": {
+                "status": "passed",
+                "value": 0
+              },
+              "typed_preflight": {
+                "status": "passed",
+                "value": null
+              }
+            }
+          },
+          "product": "CCOC(=O)Cc1ccc(Nc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)c(OC)c1",
+          "sequential_gate": {
+            "fingerprint_calls": 0,
+            "hit_bit_tanimoto": null,
+            "passed": false,
+            "reason": "polar_reference_capacity_below_minimum"
+          },
+          "verification": null
+        }
+      ],
+      "ordered_reactants": [
+        "CCOC(=O)Cc1ccc(Cl)c(OC)c1",
+        "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1"
+      ],
+      "products": [
+        "CCOC(=O)Cc1ccc(Nc2ncc(-c3ccccc3S(C)(=O)=O)n3nc(C)cc23)c(OC)c1"
+      ],
+      "raw_tuple_sentinel_per_call": 17,
+      "truncated": false
+    },
+    "old_reused_routes": [
+      {
+        "generation_source": "R3_exact_v21_replay_not_new_apply",
+        "graph_sha256": "df001d824aafbd230888de760470f245fa37577638a43396803d329ddac3789e",
+        "new_independent_gate_vector": {
+          "status": "complete_vector",
+          "vector": {
+            "anchor": {
+              "status": "passed",
+              "value": null
+            },
+            "hit_bit_tanimoto": {
+              "margin": 0.009223300970873816,
+              "minimum": 0.35,
+              "score": 0.3592233009708738,
+              "status": "passed"
+            },
+            "polar_capacity": {
+              "authoritative_gate_blocked": false,
+              "missing_feature_families": {
+                "Donor": 1,
+                "PosIonizable": 1
+              },
+              "status": "passed",
+              "value": {
+                "candidate_counts": {
+                  "Acceptor": 7,
+                  "Donor": 2,
+                  "NegIonizable": 1
+                },
+                "constraint_policy_sha256": "7042c736df62f4bc7a116a37dbae698a9860dc85aa4a5f7aac2c78fbc6b2b4da",
+                "denominator": 10,
+                "eligible": true,
+                "minimum_polar_reference_recall": 0.75,
+                "numerator": 8,
+                "product": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+                "reason": null,
+                "recall_upper_bound": 0.8,
+                "reference_counts": {
+                  "Acceptor": 6,
+                  "Donor": 3,
+                  "PosIonizable": 1
+                },
+                "status": "possible"
+              }
+            },
+            "properties": {
+              "reasons": [],
+              "status": "passed"
+            },
+            "scaffold_and_core": {
+              "status": "passed",
+              "value": null
+            },
+            "specified_stereo": {
+              "status": "passed",
+              "value": 0
+            },
+            "typed_preflight": {
+              "status": "passed",
+              "value": null
+            }
+          }
+        },
+        "new_sequential_gate_check": {
+          "fingerprint_calls": 1,
+          "hit_bit_tanimoto": 0.3592233009708738,
+          "passed": true
+        },
+        "route": {
+          "nodes": [
+            {
+              "building_block_id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+              "id": "ob0"
+            },
+            {
+              "building_block_id": "structure-sha256:316e80d38513733768c3561eb630f2593faf7ba89b540e4d844c0d4c813c2e12",
+              "id": "ib0"
+            },
+            {
+              "building_block_id": "structure-sha256:e27f3dd1ad7b0f8b038cd547937293eda206710bfb4cf179453f4ea05245ac93",
+              "id": "ib1"
+            },
+            {
+              "id": "ir",
+              "product": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+              "reactants": [
+                "ib0",
+                "ib1"
+              ],
+              "rule_id": "synllama-rule-036"
+            },
+            {
+              "id": "or",
+              "product": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+              "reactants": [
+                "ob0",
+                "ir"
+              ],
+              "rule_id": "synllama-rule-042"
+            }
+          ],
+          "root": "or",
+          "schema_version": 1
+        },
+        "verification": {
+          "building_blocks": [
+            {
+              "availability": "catalogued",
+              "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+              "current_stock_verified": false,
+              "id": "structure-sha256:7024d9dbf1bb9e028728384634deba1d2f5927ae8c947bab2f6e61a5c1a99eb4",
+              "identifier_provenance": {
+                "manifest_sha256": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+                "source_records": [
+                  {
+                    "identifier_origin": "generated_structure_sha256",
+                    "input_index": 0,
+                    "input_path": "/data2/home/jyryu/chembounce/backup/synllama-reference/extracted/synllama-data/inference/reconstruction/91rxns/processed/fpindex.pkl",
+                    "input_sha256": "7cb1fd0d1a8b531fc0f8c69e8f6a4ebbd30b54d2185940d5bc30bf9523dad482",
+                    "record_index": 39855
+                  }
+                ],
+                "status": "recorded"
+              },
+              "node_id": "ob0",
+              "smiles": "COc1cc(CC(=O)O)ccc1Cl",
+              "snapshot": "53625473 archive sha256 d46ceb49c3e2949c6e65386187d07c8866852de93f20d710daebb57597acebed",
+              "source": "SynLlama published Enamine reconstruction snapshot; Figshare file 53625473",
+              "supplier_sku_verified": false
+            },
+            {
+              "availability": "catalogued",
+              "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+              "current_stock_verified": false,
+              "id": "structure-sha256:316e80d38513733768c3561eb630f2593faf7ba89b540e4d844c0d4c813c2e12",
+              "identifier_provenance": {
+                "manifest_sha256": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+                "source_records": [
+                  {
+                    "identifier_origin": "generated_structure_sha256",
+                    "input_index": 0,
+                    "input_path": "/data2/home/jyryu/chembounce/backup/synllama-reference/extracted/synllama-data/inference/reconstruction/91rxns/processed/fpindex.pkl",
+                    "input_sha256": "7cb1fd0d1a8b531fc0f8c69e8f6a4ebbd30b54d2185940d5bc30bf9523dad482",
+                    "record_index": 79775
+                  }
+                ],
+                "status": "recorded"
+              },
+              "node_id": "ib0",
+              "smiles": "Cc1cc2c(N)ncc(I)n2n1",
+              "snapshot": "53625473 archive sha256 d46ceb49c3e2949c6e65386187d07c8866852de93f20d710daebb57597acebed",
+              "source": "SynLlama published Enamine reconstruction snapshot; Figshare file 53625473",
+              "supplier_sku_verified": false
+            },
+            {
+              "availability": "catalogued",
+              "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+              "current_stock_verified": false,
+              "id": "structure-sha256:e27f3dd1ad7b0f8b038cd547937293eda206710bfb4cf179453f4ea05245ac93",
+              "identifier_provenance": {
+                "manifest_sha256": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+                "source_records": [
+                  {
+                    "identifier_origin": "generated_structure_sha256",
+                    "input_index": 0,
+                    "input_path": "/data2/home/jyryu/chembounce/backup/synllama-reference/extracted/synllama-data/inference/reconstruction/91rxns/processed/fpindex.pkl",
+                    "input_sha256": "7cb1fd0d1a8b531fc0f8c69e8f6a4ebbd30b54d2185940d5bc30bf9523dad482",
+                    "record_index": 205651
+                  }
+                ],
+                "status": "recorded"
+              },
+              "node_id": "ib1",
+              "smiles": "CS(=O)(=O)c1ccccc1Cl",
+              "snapshot": "53625473 archive sha256 d46ceb49c3e2949c6e65386187d07c8866852de93f20d710daebb57597acebed",
+              "source": "SynLlama published Enamine reconstruction snapshot; Figshare file 53625473",
+              "supplier_sku_verified": false
+            }
+          ],
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "enumeration_truncated": false,
+          "experimental_validation": false,
+          "has_implicit_atom_sources": false,
+          "product": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "reagents_and_conditions_validated": false,
+          "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+          "status": "catalog_and_rule_verified",
+          "steps": [
+            {
+              "enumeration_truncated": false,
+              "node_id": "ir",
+              "product": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+              "reactants": [
+                "Cc1cc2c(N)ncc(I)n2n1",
+                "CS(=O)(=O)c1ccccc1Cl"
+              ],
+              "rule_id": "synllama-rule-036",
+              "smarts": "[#6;$(C=C-[#6]),$(c:c):1][Br,I].[Cl,Br,I][c:2]>>[c:2][#6:1]",
+              "source": "THGLab/SynLlama 57a98b658eae8ba4f6f1d04aa99c4f91da566fb0; 91-reaction set",
+              "template_validation_warnings": 0,
+              "unmapped_product_template_atoms": []
+            },
+            {
+              "enumeration_truncated": false,
+              "node_id": "or",
+              "product": "COc1cc(CC(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+              "reactants": [
+                "COc1cc(CC(=O)O)ccc1Cl",
+                "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1"
+              ],
+              "rule_id": "synllama-rule-042",
+              "smarts": "[Cl,Br,I][c;$(c1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):1].[N;$(NC)&!$(N=*)&!$([N-])&!$(N#*)&!$([ND3])&!$([ND4])&!$(N[c,O])&!$(N[C,S]=[S,O,N]),H2&$(Nc1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):2]>>[c:1][N:2]",
+              "source": "THGLab/SynLlama 57a98b658eae8ba4f6f1d04aa99c4f91da566fb0; 91-reaction set",
+              "template_validation_warnings": 0,
+              "unmapped_product_template_atoms": []
+            }
+          ]
+        }
+      },
+      {
+        "generation_source": "R3_exact_v21_replay_not_new_apply",
+        "graph_sha256": "faa6fd2eb66b5f085494135d0fb02630dd37c1e0bb6c648606fd1f9f1a44a0dc",
+        "new_independent_gate_vector": {
+          "status": "complete_vector",
+          "vector": {
+            "anchor": {
+              "status": "passed",
+              "value": null
+            },
+            "hit_bit_tanimoto": {
+              "margin": 0.006435643564356441,
+              "minimum": 0.35,
+              "score": 0.3564356435643564,
+              "status": "passed"
+            },
+            "polar_capacity": {
+              "authoritative_gate_blocked": false,
+              "missing_feature_families": {
+                "Donor": 1,
+                "PosIonizable": 1
+              },
+              "status": "passed",
+              "value": {
+                "candidate_counts": {
+                  "Acceptor": 7,
+                  "Donor": 2,
+                  "NegIonizable": 1
+                },
+                "constraint_policy_sha256": "7042c736df62f4bc7a116a37dbae698a9860dc85aa4a5f7aac2c78fbc6b2b4da",
+                "denominator": 10,
+                "eligible": true,
+                "minimum_polar_reference_recall": 0.75,
+                "numerator": 8,
+                "product": "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+                "reason": null,
+                "recall_upper_bound": 0.8,
+                "reference_counts": {
+                  "Acceptor": 6,
+                  "Donor": 3,
+                  "PosIonizable": 1
+                },
+                "status": "possible"
+              }
+            },
+            "properties": {
+              "reasons": [],
+              "status": "passed"
+            },
+            "scaffold_and_core": {
+              "status": "passed",
+              "value": null
+            },
+            "specified_stereo": {
+              "status": "passed",
+              "value": 0
+            },
+            "typed_preflight": {
+              "status": "passed",
+              "value": null
+            }
+          }
+        },
+        "new_sequential_gate_check": {
+          "fingerprint_calls": 1,
+          "hit_bit_tanimoto": 0.3564356435643564,
+          "passed": true
+        },
+        "route": {
+          "nodes": [
+            {
+              "building_block_id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+              "id": "ob0"
+            },
+            {
+              "building_block_id": "structure-sha256:316e80d38513733768c3561eb630f2593faf7ba89b540e4d844c0d4c813c2e12",
+              "id": "ib0"
+            },
+            {
+              "building_block_id": "structure-sha256:e27f3dd1ad7b0f8b038cd547937293eda206710bfb4cf179453f4ea05245ac93",
+              "id": "ib1"
+            },
+            {
+              "id": "ir",
+              "product": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+              "reactants": [
+                "ib0",
+                "ib1"
+              ],
+              "rule_id": "synllama-rule-036"
+            },
+            {
+              "id": "or",
+              "product": "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+              "reactants": [
+                "ob0",
+                "ir"
+              ],
+              "rule_id": "synllama-rule-042"
+            }
+          ],
+          "root": "or",
+          "schema_version": 1
+        },
+        "verification": {
+          "building_blocks": [
+            {
+              "availability": "catalogued",
+              "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+              "current_stock_verified": false,
+              "id": "structure-sha256:bafa3e71e720cb54a478c43b825d25ccec8ed7b5d0b7e24561d1a415f1fb700c",
+              "identifier_provenance": {
+                "manifest_sha256": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+                "source_records": [
+                  {
+                    "identifier_origin": "generated_structure_sha256",
+                    "input_index": 0,
+                    "input_path": "/data2/home/jyryu/chembounce/backup/synllama-reference/extracted/synllama-data/inference/reconstruction/91rxns/processed/fpindex.pkl",
+                    "input_sha256": "7cb1fd0d1a8b531fc0f8c69e8f6a4ebbd30b54d2185940d5bc30bf9523dad482",
+                    "record_index": 106726
+                  }
+                ],
+                "status": "recorded"
+              },
+              "node_id": "ob0",
+              "smiles": "COc1cc(C(=O)O)ccc1Cl",
+              "snapshot": "53625473 archive sha256 d46ceb49c3e2949c6e65386187d07c8866852de93f20d710daebb57597acebed",
+              "source": "SynLlama published Enamine reconstruction snapshot; Figshare file 53625473",
+              "supplier_sku_verified": false
+            },
+            {
+              "availability": "catalogued",
+              "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+              "current_stock_verified": false,
+              "id": "structure-sha256:316e80d38513733768c3561eb630f2593faf7ba89b540e4d844c0d4c813c2e12",
+              "identifier_provenance": {
+                "manifest_sha256": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+                "source_records": [
+                  {
+                    "identifier_origin": "generated_structure_sha256",
+                    "input_index": 0,
+                    "input_path": "/data2/home/jyryu/chembounce/backup/synllama-reference/extracted/synllama-data/inference/reconstruction/91rxns/processed/fpindex.pkl",
+                    "input_sha256": "7cb1fd0d1a8b531fc0f8c69e8f6a4ebbd30b54d2185940d5bc30bf9523dad482",
+                    "record_index": 79775
+                  }
+                ],
+                "status": "recorded"
+              },
+              "node_id": "ib0",
+              "smiles": "Cc1cc2c(N)ncc(I)n2n1",
+              "snapshot": "53625473 archive sha256 d46ceb49c3e2949c6e65386187d07c8866852de93f20d710daebb57597acebed",
+              "source": "SynLlama published Enamine reconstruction snapshot; Figshare file 53625473",
+              "supplier_sku_verified": false
+            },
+            {
+              "availability": "catalogued",
+              "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+              "current_stock_verified": false,
+              "id": "structure-sha256:e27f3dd1ad7b0f8b038cd547937293eda206710bfb4cf179453f4ea05245ac93",
+              "identifier_provenance": {
+                "manifest_sha256": "5543fdf7769592d939054e01635cc9deb0598fbc9dc042d97426d3babcbdd274",
+                "source_records": [
+                  {
+                    "identifier_origin": "generated_structure_sha256",
+                    "input_index": 0,
+                    "input_path": "/data2/home/jyryu/chembounce/backup/synllama-reference/extracted/synllama-data/inference/reconstruction/91rxns/processed/fpindex.pkl",
+                    "input_sha256": "7cb1fd0d1a8b531fc0f8c69e8f6a4ebbd30b54d2185940d5bc30bf9523dad482",
+                    "record_index": 205651
+                  }
+                ],
+                "status": "recorded"
+              },
+              "node_id": "ib1",
+              "smiles": "CS(=O)(=O)c1ccccc1Cl",
+              "snapshot": "53625473 archive sha256 d46ceb49c3e2949c6e65386187d07c8866852de93f20d710daebb57597acebed",
+              "source": "SynLlama published Enamine reconstruction snapshot; Figshare file 53625473",
+              "supplier_sku_verified": false
+            }
+          ],
+          "catalog_sha256": "88d9b1295bdee30be926283a707743df568d96413ac2650b1ab93fb551d7e1ee",
+          "enumeration_truncated": false,
+          "experimental_validation": false,
+          "has_implicit_atom_sources": false,
+          "product": "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+          "reagents_and_conditions_validated": false,
+          "rules_sha256": "3c16817e7dee2608f67d4b353e9aee8f08107cd0035a0e3255b3678f013e7c39",
+          "status": "catalog_and_rule_verified",
+          "steps": [
+            {
+              "enumeration_truncated": false,
+              "node_id": "ir",
+              "product": "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1",
+              "reactants": [
+                "Cc1cc2c(N)ncc(I)n2n1",
+                "CS(=O)(=O)c1ccccc1Cl"
+              ],
+              "rule_id": "synllama-rule-036",
+              "smarts": "[#6;$(C=C-[#6]),$(c:c):1][Br,I].[Cl,Br,I][c:2]>>[c:2][#6:1]",
+              "source": "THGLab/SynLlama 57a98b658eae8ba4f6f1d04aa99c4f91da566fb0; 91-reaction set",
+              "template_validation_warnings": 0,
+              "unmapped_product_template_atoms": []
+            },
+            {
+              "enumeration_truncated": false,
+              "node_id": "or",
+              "product": "COc1cc(C(=O)O)ccc1Nc1ncc(-c2ccccc2S(C)(=O)=O)n2nc(C)cc12",
+              "reactants": [
+                "COc1cc(C(=O)O)ccc1Cl",
+                "Cc1cc2c(N)ncc(-c3ccccc3S(C)(=O)=O)n2n1"
+              ],
+              "rule_id": "synllama-rule-042",
+              "smarts": "[Cl,Br,I][c;$(c1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):1].[N;$(NC)&!$(N=*)&!$([N-])&!$(N#*)&!$([ND3])&!$([ND4])&!$(N[c,O])&!$(N[C,S]=[S,O,N]),H2&$(Nc1:[c,n]:[c,n]:[c,n]:[c,n]:[c,n]:1):2]>>[c:1][N:2]",
+              "source": "THGLab/SynLlama 57a98b658eae8ba4f6f1d04aa99c4f91da566fb0; 91-reaction set",
+              "template_validation_warnings": 0,
+              "unmapped_product_template_atoms": []
+            }
+          ]
+        }
+      }
+    ],
+    "plan_sha256_entry": "5392ce824213af1d46d63a9309bc708e1232bef0ad109533cd68bae808e2dfa4",
+    "plan_sha256_exit": "5392ce824213af1d46d63a9309bc708e1232bef0ad109533cd68bae808e2dfa4",
+    "schema": "current-pool-same-partner-control-v1",
+    "source_sha256_after": {
+      "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+      "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26",
+      "chembounce_synthesis/route_first_nh.py": "0905979e52cc5eaa3ff97cb0c9f7a549865c54ec1424307100dfa2c2a5be5bf5",
+      "chembounce_synthesis/routes.py": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+      "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "chembounce_synthesis/workflow.py": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9",
+      "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+    },
+    "source_sha256_before": {
+      "chembounce.py": "04bf2033dc16a720074c63fb5ab16e80a2ef7168b9dfe5e49562b3684aa19dff",
+      "chembounce_synthesis/catalog.py": "dd3ec2d632e212be32fbcc572cf7bd192c1fe17ff356f18bc3f6f56647be3931",
+      "chembounce_synthesis/common.py": "83226cd0a354003a350491ad018546d78a1cfbb86338d855a6216d822552164b",
+      "chembounce_synthesis/conformers.py": "ecf3ac0bd47f6871ff67540eb8220c3df175fe3ef756d4fe4596b4525dc477fe",
+      "chembounce_synthesis/polar_capacity.py": "5ebbacb85433976ba0e360b4ad11e255546882637f4b8608887460dd5d9074c9",
+      "chembounce_synthesis/reactions.py": "725bea2abab883bf55953a1bc4d45a285378c19a1524719ca3f2d54c96b02329",
+      "chembounce_synthesis/route_audit.py": "fdf5ad3dd291ed1fad0475ade6432daa9f4f63fd0e6e7feaaed1fe701c0abc3d",
+      "chembounce_synthesis/route_first.py": "fa8eefaff51bab285290e64219dea6c406dfea1cd8f9f20f695372d0f1e2ae26",
+      "chembounce_synthesis/route_first_nh.py": "0905979e52cc5eaa3ff97cb0c9f7a549865c54ec1424307100dfa2c2a5be5bf5",
+      "chembounce_synthesis/routes.py": "b5d0a0c8972119f6ba97427822889176232f1c63196bb7e1180f963f19f68ac2",
+      "chembounce_synthesis/selective_scoring.py": "7d67f23989752bf3fe194a313bd83ea5b9c505d5edfd12102ad9b3136bfcdaa1",
+      "chembounce_synthesis/similarity_constraints.py": "7cd71c984d156d5de31e4ac6e350f03ae74a7137040f6dfdbe8d7bdfa99c49fd",
+      "chembounce_synthesis/workflow.py": "ebc033185ba5bd8dedbb67712e2d0e9ac1a45391c3d9996e7d8133e468b74ed9",
+      "utils.py": "d7a30cb8f5298de5e2b221d67986892f5c2fdd3001a9f7cc800a967041b028e3"
+    },
+    "status": "complete",
+    "work": {
+      "audit_apply_attempts": 0,
+      "audit_apply_cache_misses": 0,
+      "audit_route_attempts": 0,
+      "catalog_identity_rows": 238542,
+      "catalog_identity_scan_attempts": 1,
+      "catalog_load_attempts": 0,
+      "configured_constraints_attempts": 1,
+      "gate_anchor_checks": 3,
+      "gate_fingerprint_calls": 2,
+      "gate_polar_checks": 3,
+      "gate_property_checks": 2,
+      "gate_scaffold_checks": 3,
+      "gate_stereo_checks": 3,
+      "gate_typed_preflights": 3,
+      "generation_apply_attempts": 1,
+      "generation_apply_cache_misses": 1,
+      "generation_retained_product_instances": 1,
+      "generation_truncated_calls": 0,
+      "hit_fingerprint_attempts": 1,
+      "independent_component_attempts": {
+        "anchor": 3,
+        "polar_capacity": 3,
+        "properties": 3,
+        "scaffold_and_core": 3,
+        "specified_stereo": 3,
+        "typed_preflight": 3
+      },
+      "independent_fingerprint_attempts": 3,
+      "independent_parse_attempts": 3,
+      "independent_vector_attempts": 3,
+      "new_gate_attempts": 1,
+      "old_gate_attempts": 2,
+      "polar_counts": {
+        "cache_hits": 3,
+        "capacity_rejections": 1,
+        "deadline_events": 0,
+        "evaluations": 3,
+        "evictions": 0,
+        "preflight_failures": 0,
+        "requests": 6
+      },
+      "rules_load_attempts": 1,
+      "verification_apply_attempts": 0,
+      "verification_apply_cache_misses": 0,
+      "verify_route_attempts": 0
+    }
+  },
+  "schema": "current-pool-same-partner-control-v1-portable-receipt",
+  "source_commit": "d99b962694f7a0c228b09ffbbc9002e8476fab09",
+  "status": "fixed_source_variant_closed_no_new_strict_route",
+  "validation": {
+    "focused_synthetic_and_json_tests_passed": 5,
+    "not_a_full_repository_test_run": true,
+    "py_compile": "pass",
+    "review_after_execution": "root_and_astra_pass",
+    "review_before_execution": "root_and_astra_pass",
+    "ruff_check_and_format": "pass",
+    "tests_run_by": "coding_agent_before_freeze"
+  }
+}
