@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-24",
+  "earlier_preflight_failures": "An initial system-Python focused run lacked scaffoldgraph (six import failures) and exposed the expected helper-provenance fixture delta. No scientific dependency was changed. The final research-venv focused and full suites passed.",
+  "files_sha256": {
+    "chembounce_synthesis/route_first.py": "a8bf7730e5c3f43160c4487f18575a91364be817c524a450bf57e5a3268f1e53",
+    "chembounce_synthesis/route_first_marker.py": "699362c1a2e4389d6d113083782083d92541b827d8aadc4594559ee0c7446893",
+    "chembounce_synthesis/route_first_marker_second.py": "537edc7d9ea9dbecf73a93244cb414e42865d596b30016974e28f6d7cb6fa49f",
+    "chembounce_synthesis/workflow.py": "79580260de8c2132ecb60049c0716b8200ba14e8e428047cc1c94033d903ef81",
+    "tests/synthesis/test_route_first.py": "30bdd787dc6b783ceab55bb53d5457f7ae0823d5b91b2a3488e55ccd4de70da2",
+    "tests/synthesis/test_route_first_marker_projection.py": "8836ea138781c8bd79c15fe575fec78009fd3d172850775aeba41595f3f97a40",
+    "tests/synthesis/test_route_first_marker_second.py": "4623461a0dba1f80ce8e124911986490a16bb879ca3cd43eb7a622a2e78e0c06",
+    "tests/test_phase_telemetry_develop_source_parity.py": "11eb868abb5cb5bcce0ac9902462edf8a1663ee8e6becc79d4c1fab33e5ec5a0"
+  },
+  "focused": {
+    "environment": ".venv-research",
+    "passed": 109,
+    "py_compile": "passed",
+    "ruff": "passed"
+  },
+  "full_repository": {
+    "command": "env OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 .venv-research/bin/python -m pytest -q",
+    "elapsed_seconds": 560.67,
+    "exit_code": 0,
+    "failed": 0,
+    "log": "benchmark-results/route-first-development-20261023-v2/marked-policy-port-validation-v1/full-pytest.log",
+    "log_sha256": "a925b09b5b96f7129b92bcef3f87e7fa5968741c5ad4c4bc7434396821324963",
+    "passed": 3686,
+    "skip_scope": "Optional dependencies, dedicated external baseline assets/environments, and minimum-runtime capability checks; full skip reasons preserved in log.",
+    "skipped": 76,
+    "subtests_passed": 19
+  },
+  "independent_review": "Astra PASS on runtime/helper hashes, default-OFF behavior, exact frozen-policy port and shared work caps; workflow AST parity fixture permits only two new provenance filenames while retaining historical pins.",
+  "schema": "marked-policy-port-validation-v1",
+  "scope": "Software verification only; no synthesis, activity, qualification or primary-coverage claim. Full-suite execution overlapped part of the model-free v23 diagnostic; no speed comparison is claimed.",
+  "source_commit": "9989230e6b2a4ad6a7d1c7eb08fe4c331075b264",
+  "status": "passed_with_declared_skips"
+}
