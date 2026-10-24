@@ -47,6 +47,19 @@ rankings separately; these counts do not measure total CPU savings. This
 experimental allocation change can alter which later queries fit the shared
 work budget, so route gains and losses require a fixed-panel comparison.
 
+The optional `route_first.prefer_marked_continuation_second` boolean also
+defaults to `false` and requires `prefer_continuation_second=true`. It compares
+proven departing-site projections for the incumbent second source and a fixed
+panel of 15 alternatives from the already ranked catalog pool. It preserves
+the first source, anchor reservation and top-two source limit per role. All safe
+site projections must be complete; uncertainty or exhausted work budgets keep
+the incoming pair. Extra fingerprints and role matches consume the existing
+shared caps. This score does not establish the reacting site or selectivity.
+In a [single development-input control](../benchmarks/results/synthesis-route-development-20261023/marked-continuation-forward-support-control-v1.json),
+two of three newly gained routes had exact all-step forward support, while the
+third had an inner-step mismatch. Full-panel retention, 3D qualification and
+independent validation remain required; the latest actual coverage stays 4/12.
+
 Specified hit tetrahedral and E/Z centers compile unique, self-matching local
 anchors from the original hit before any product is considered. The radius
 grows only within fixed atom/match bounds until source stereo is representable;

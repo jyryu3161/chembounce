@@ -14,6 +14,10 @@ from rdkit.Chem import rdChemReactions
 from .common import FP, absolute_smiles, canonical, molecule, positive
 from .route_audit import audit_route, stereo_state, template_maps
 from .route_first_nh import candidate_role_n_site, prove_parent_n, prove_raw_n, same_n_origin_and_bonds
+from .route_first_marker_second import ChargedMeter as MarkedSecondMeter
+from .route_first_marker_second import Selector as MarkedSecondSelector
+from .route_first_marker_second import UnknownMarker as MarkedSecondUnknown
+from .route_first_marker_second import existing_tags as marked_existing_tags
 from .routes import verify_route
 
 VERSION = "catalog-rule-route-first-v2"
@@ -914,6 +918,7 @@ class RouteFirstLimits:
     prefer_mapped_nh_second: bool = False
     skip_empty_stage_retrieval: bool = False
     share_identical_catalog_pools: bool = False
+    prefer_marked_continuation_second: bool = False
 
     def __post_init__(self):
         if self.version != VERSION:
@@ -923,6 +928,7 @@ class RouteFirstLimits:
             "prefer_mapped_nh_second",
             "skip_empty_stage_retrieval",
             "share_identical_catalog_pools",
+            "prefer_marked_continuation_second",
         ):
             if type(getattr(self, name)) is not bool:
                 raise ValueError(f"route_first.{name} must be a boolean")
@@ -933,8 +939,11 @@ class RouteFirstLimits:
                 "prefer_mapped_nh_second",
                 "skip_empty_stage_retrieval",
                 "share_identical_catalog_pools",
+                "prefer_marked_continuation_second",
             ):
                 positive(value, f"route_first.{key}")
+        if self.prefer_marked_continuation_second and not self.prefer_continuation_second:
+            raise ValueError("route_first.prefer_marked_continuation_second requires prefer_continuation_second")
         if self.max_steps not in (1, 2):
             raise ValueError("route_first.max_steps must be 1 or 2")
         if self.max_rules > self.max_rule_inspections or self.fallback_rules > self.max_rules:
@@ -1268,6 +1277,155 @@ class RouteFirstSearch:
         self.routes = []
         self._route_keys = set()
         self._pending = []
+        self._prefer_marked_continuation_second = limits.prefer_marked_continuation_second
+        self._marked_query_role_remaining = 0
+        self._marked_eligibility_role_checks = 0
+        self._marked_events = []
+        self._marked_events_omitted = 0
+        self._marked_meter = None
+        self._marked_selector = None
+        if self._prefer_marked_continuation_second:
+            self._marked_meter = MarkedSecondMeter(
+                self.deadline if self.deadline is not None else float("inf"),
+                self._reserve_marked_fingerprint, self._reserve_marked_role,
+            )
+            self._marked_selector = MarkedSecondSelector(self._marked_meter)
+            self.report["marked_continuation_second"] = self._marked_work()
+
+    def _reserve_marked_fingerprint(self):
+        if (self.report["fingerprint_calls"] + getattr(self.accept, "fingerprint_calls", 0)
+                >= self._generation_fp_ceiling):
+            return False
+        self.report["fingerprint_calls"] += 1
+        self.report["generation_fingerprint_calls"] += 1
+        return True
+
+    def _reserve_marked_role(self):
+        if (self._marked_query_role_remaining <= 0
+                or self._context_role_checks >= MAX_CONTINUATION_ROLE_CHECKS_PER_SEARCH):
+            return False
+        self._marked_query_role_remaining -= 1
+        self._context_role_checks += 1
+        self.report["context_role_checks_total"] += 1
+        return True
+
+    def _marked_work(self):
+        meter, selector = self._marked_meter, self._marked_selector
+        return {
+            "limits": {
+                "context_attempts": 16, "candidate_attempts": 256,
+                "candidates_per_context": 16, "new_projected_fingerprints": 1024,
+                "site_match_requests": 1024, "boolean_eligibility_match_requests": 512,
+                "structural_units": 262144, "ranked_metadata_rows": 131072,
+                "static_template_checks": 128,
+            },
+            "context_attempts": selector.attempted_contexts,
+            "completed_contexts": selector.completed_contexts,
+            "candidate_attempts": selector.candidate_attempts,
+            "ranked_metadata_rows": selector.ranked_metadata_rows,
+            "static_template_checks": selector.static_template_checks,
+            "shared_generation_fp_reservations": meter.global_fingerprint_reservations,
+            "helper_fp_attempts": meter.fingerprints,
+            "site_match_requests": meter.match_requests,
+            "shared_site_role_reservations": meter.shared_role_match_reservations,
+            "eligibility_role_checks": self._marked_eligibility_role_checks,
+            "structural_units": meter.structural_units,
+            "guide_clean_serialization_attempts": meter.guide_clean_serialization_attempts,
+            "projected_serialization_attempts": meter.projected_serialization_attempts,
+            "tanimoto_attempts": meter.tanimoto_attempts,
+            "events": self._marked_events,
+            "events_omitted": self._marked_events_omitted,
+        }
+
+    def _marked_second(self, base_key, incoming, context, *, target, role, rule_id,
+                       role_slot, marked_role_before):
+        """Refine the final incumbent pair only from complete retained metadata."""
+        if not self._prefer_marked_continuation_second or self._phase != 2 or context is None:
+            return incoming
+        outer_rule, outer_slot, source_slot, inner_rule_id, inner_target, guide = context
+        spent = self._context_role_checks - marked_role_before
+        self._marked_query_role_remaining = max(0, MAX_CONTINUATION_ROLE_CHECKS_PER_QUERY - spent)
+        event = {
+            "base_key": base_key, "inner_rule_id": inner_rule_id,
+            "inner_target": inner_target, "guide": guide, "source_slot": source_slot,
+            "outer_rule_id": outer_rule.id, "outer_slot": outer_slot,
+            "incoming": [{"id": block.id, "smiles": block.smiles} for block in incoming],
+        }
+        try:
+            if (source_slot not in range(len(guide)) or guide[source_slot] != target
+                    or rule_id != inner_rule_id or role_slot != source_slot):
+                raise MarkedSecondUnknown("continuation_context_or_slot_mismatch")
+            stored = self._continuation_ranked.get(base_key)
+            if stored is None or len(incoming) != 2 or not stored[1]:
+                raise MarkedSecondUnknown("complete_original_ordinary_pool_unavailable")
+            inner_rule = self.rules.get(inner_rule_id)
+            registry = self._continuation_raw.get((inner_rule_id, inner_target, False))
+            if (not isinstance(registry, dict) or "incomplete" not in registry
+                    or registry["incomplete"] is not None
+                    or registry.get("raw_cap_saturated") is not False
+                    or not isinstance(registry.get("by_guide"), dict)
+                    or not registry["by_guide"].get(guide)):
+                raise MarkedSecondUnknown("complete_exact_raw_guide_provenance_unavailable")
+            if not self._marked_selector.static_departure_supported(
+                inner_rule.reaction, inner_rule_id, source_slot
+            ):
+                raise MarkedSecondUnknown("static_template_type_inapplicable")
+            tags = marked_existing_tags(self._tagged_reverse_cache, inner_rule_id)
+            source_role = inner_rule.reaction.GetReactants()[source_slot]
+            outer_role = outer_rule.reaction.GetReactants()[outer_slot]
+            for query in (source_role, outer_role):
+                if query.GetNumAtoms() > 256 or query.GetNumBonds() > 512:
+                    raise MarkedSecondUnknown("role_query_size")
+
+            def eligible(smiles):
+                if self.deadline is not None and time.monotonic() >= self.deadline:
+                    return None
+                mol = self.catalog.mols.get(smiles)
+                if mol is None:
+                    return None
+                for query in (source_role, outer_role):
+                    try:
+                        self._marked_meter.charge_structure(mol, query)
+                    except (ValueError, RuntimeError, AttributeError):
+                        return None
+                    if not self._reserve_marked_role():
+                        return None
+                    self._marked_eligibility_role_checks += 1
+                    try:
+                        if not mol.HasSubstructMatch(query, useChirality=True):
+                            return False
+                    except (ValueError, RuntimeError):
+                        return None
+                return self._catalog_block_stereo_eligible(smiles)
+
+            catalog = self.catalog
+
+            class ExistingBlocks:
+                def __contains__(self, smiles):
+                    return smiles in catalog.by_smiles
+
+                def __getitem__(self, smiles):
+                    return catalog.blocks[sorted(catalog.by_smiles[smiles])[0]]
+
+            selected, receipt = self._marked_selector.choose(
+                context_key=(base_key, inner_rule_id, inner_target, guide, source_slot,
+                             outer_rule.id, outer_slot, role),
+                legacy_pair=incoming, ordinary_rows=stored[0], pool_complete=True,
+                registry=registry, guide=guide, reaction=inner_rule.reaction,
+                rule_id=inner_rule_id, source_slot=source_slot, tags=tags,
+                molecules=catalog.mols, blocks=ExistingBlocks(), eligible=eligible,
+            )
+        except (ValueError, RuntimeError, AttributeError, KeyError, IndexError) as exc:
+            selected, receipt = incoming, {"status": "legacy_unknown", "reason": str(exc)}
+        self._marked_query_role_remaining = 0
+        event.update(receipt=receipt,
+                     returned=[{"id": block.id, "smiles": block.smiles} for block in selected])
+        if len(self._marked_events) < 128:
+            self._marked_events.append(event)
+        else:
+            self._marked_events_omitted += 1
+        self.report["marked_continuation_second"] = self._marked_work()
+        return selected
 
     def _stop(self, name=None):
         if self.deadline is not None and time.monotonic() >= self.deadline:
@@ -2938,6 +3096,7 @@ class RouteFirstSearch:
     ):
         # This context changes only the second block. Keep its completed
         # selection separate from the ordinary nearest result for this query.
+        marked_role_before = self._context_role_checks if self._prefer_marked_continuation_second else 0
         key = (target, role, fallback_missing_role)
         trace = self._active_phase2_slot
         if trace is not None:
@@ -2947,7 +3106,11 @@ class RouteFirstSearch:
                 trace["pool_cache_hits"] += 1
                 trace["pool_selected_blocks"] += len(self._nearest_cache[key])
             base = self._continuation_second(key, self._nearest_cache[key], continuation_context)
-            return self._mapped_nh_second(key, base, mapped_nh_context)
+            base = self._mapped_nh_second(key, base, mapped_nh_context)
+            return self._marked_second(
+                key, base, continuation_context, target=target, role=role,
+                rule_id=rule_id, role_slot=role_slot, marked_role_before=marked_role_before,
+            )
         self.report["role_queries"] += 1
         query = Chem.MolFromSmarts(role)
         retrieval_target = self._retrieval_target(target)
@@ -3198,7 +3361,11 @@ class RouteFirstSearch:
                     )
                     report["ranked_rows_retained"] += len(ordinary)
         base = self._continuation_second(key, blocks, continuation_context)
-        return self._mapped_nh_second(key, base, mapped_nh_context)
+        base = self._mapped_nh_second(key, base, mapped_nh_context)
+        return self._marked_second(
+            key, base, continuation_context, target=target, role=role,
+            rule_id=rule_id, role_slot=role_slot, marked_role_before=marked_role_before,
+        )
 
     def _stage(
         self,

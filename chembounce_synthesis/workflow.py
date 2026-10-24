@@ -1537,6 +1537,8 @@ def run(hit, designs, config, output_dir, *, deadline_monotonic=None, scoring_mo
                     for name in (
                         "route_first.py",
                         "route_first_nh.py",
+                        "route_first_marker.py",
+                        "route_first_marker_second.py",
                         "routes.py",
                         "reactions.py",
                         "catalog.py",

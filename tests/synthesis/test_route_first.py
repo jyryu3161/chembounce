@@ -3337,6 +3337,8 @@ def test_real_workflow_uses_generated_route_without_proposal_provider_or_native_
     assert manifest["provider"] is None
     assert manifest["route_first"]["source_sha256"]["route_first.py"]
     assert manifest["route_first"]["source_sha256"]["route_first_nh.py"]
+    assert manifest["route_first"]["source_sha256"]["route_first_marker.py"]
+    assert manifest["route_first"]["source_sha256"]["route_first_marker_second.py"]
     generated = json.loads((output / "route_first_candidates.json").read_text())
     assert generated["candidates"] and len(generated["selected_designs"]) <= 3
     summary = json.loads((output / "summary.json").read_text())

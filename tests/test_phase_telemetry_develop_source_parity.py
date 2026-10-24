@@ -183,6 +183,42 @@ MAPPED_NH_REVIEWED = {
     "workflow_ast_sha256": "78df6c387a5be9f9ef732e9118248adc7a492bb939ee170180352ea9a6573a98",
 }
 
+MARKED_SECOND_REVIEWED = {
+    "base_commit": "e6cf009",
+    "scope": "The route-first manifest adds only two marked-site helper source hashes; prior source pins remain historical",
+    "workflow_source_sha256": "79580260de8c2132ecb60049c0716b8200ba14e8e428047cc1c94033d903ef81",
+    "workflow_ast_sha256": "f2fb8737c77c71f41731c2d1aec90b12ee69f51e25601a952217743768ab5d11",
+}
+
+
+def without_marked_manifest_sources(source):
+    """Remove only the two newly reviewed helper names from the manifest tuple."""
+    new = expression(
+        '{name: _SOURCE_HASHES[name] for name in ('
+        '"route_first.py", "route_first_nh.py", "route_first_marker.py", '
+        '"route_first_marker_second.py", "routes.py", "reactions.py", '
+        '"catalog.py", "workflow.py")}'
+    )
+
+    class RemoveMarkedNames(ast.NodeTransformer):
+        count = 0
+
+        def visit_DictComp(self, node):
+            if dump(node) == new:
+                self.count += 1
+                return ast.parse(
+                    '{name: _SOURCE_HASHES[name] for name in ('
+                    '"route_first.py", "route_first_nh.py", "routes.py", '
+                    '"reactions.py", "catalog.py", "workflow.py")}',
+                    mode="eval",
+                ).body
+            return self.generic_visit(node)
+
+    transformer = RemoveMarkedNames()
+    tree = transformer.visit(ast.parse(source))
+    assert transformer.count == 1
+    return ast.unparse(tree)
+
 
 def structural_digest_without_mapped_nh_manifest_source(source):
     """Remove only the reviewed helper name from one exact manifest tuple."""
@@ -220,10 +256,12 @@ def test_disabled_current_reviewed_source_structure_preserved(path, expected):
     if path in CURRENT_REVIEWED["files"]:
         expected = CURRENT_REVIEWED["files"][path]
         if path == "chembounce_synthesis/workflow.py":
-            assert hashlib.sha256(source).hexdigest() == MAPPED_NH_REVIEWED["workflow_source_sha256"]
-            assert structural_digest(source.decode()) == MAPPED_NH_REVIEWED["workflow_ast_sha256"]
+            assert hashlib.sha256(source).hexdigest() == MARKED_SECOND_REVIEWED["workflow_source_sha256"]
+            assert structural_digest(source.decode()) == MARKED_SECOND_REVIEWED["workflow_ast_sha256"]
+            prior = without_marked_manifest_sources(source.decode())
+            assert structural_digest(prior) == MAPPED_NH_REVIEWED["workflow_ast_sha256"]
             assert (
-                structural_digest_without_mapped_nh_manifest_source(source.decode()) == expected["ast_sha256"]
+                structural_digest_without_mapped_nh_manifest_source(prior) == expected["ast_sha256"]
             )
             return
         assert hashlib.sha256(source).hexdigest() == expected["source_sha256"]
